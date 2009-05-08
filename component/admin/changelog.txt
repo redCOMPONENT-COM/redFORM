@@ -1,0 +1,80 @@
+/**
+ * Changelog redFORM
+ *
+ * Version: 1.0 beta 50
+ * Date: 27 February 2009
+*/
+
+Version 2.0 beta 2
+* Fixed language file not installing
++ Added support for VirtueMart products
+/ Clarified mailinglists
+
+Version 2.0 beta 1.1
+* Fixed installer to work on clean installations
+/ Updated installer to no longer required un-installation
+
+Version 2.0 beta 1
+/ Complete rewrite of many parts of the program
+
+Version 1.0 beta 50
++ Added tooltip to captcha
+* Fixed accented characters
++ Added Dutch language file to plugin
+/ Changed formname in subject check to case-insensitive
+* Fixed URL check on images
+
+Version 1.0 beta 49
++ Added more CSS control to the form layout
+/ Fixed undefined error when saving email value without newsletter
+/ Fixed saving the form without newsletter
+
+Version 1.0 beta 48
+/ Moved mailing list integration from form to e-mail field
++ Added jQuery library v1.3.2
+* Fixed form validation
+
+Version 1.0 beta 47
++ Added access control
+* Fixed German language not installing
+* Fixed images not showing in e-mail
+* Fixed HTML output lost
++ Added CSS id submitredform to submit button
+/ Updated images
+
+Version 1.0 beta 46
+* Fixed reply to address malformed
+/ Updated German language files
+/ Updated Danish language files
+/ Updated English language files
+
+Version 1.0 beta 45
+* Fixed sanitize option to give error 500, not found
+/ Changed quoting of database column names
+/ Updated Danish language files
+
+Version 1.0 beta 44
+/ Improved ordering to be sequential
++ Added sanitize option to delete columns that are no longer being used
+/ Changed field order in new submission mail to match ordering in fields display
+/ Changed field name in new submission mail to the user input name instead of database name
++ Added warning message with error in case no confirmation mail can be send
+
+Version 1.0 beta 43
+* Fixed images not showing on subfolder
+* Fixed Bigo integration
++ Added plugin to component
++ Added German language
++ Added Dutch language
+/ Changed VirtueMart integration to default to No
++ Added Acajoom mailinglist support
+* Fixed field not removed from database
+* Fixed undefined error in case redEVENT has no menu entry
+/ Changed order layout values
+* Fixed problems with special characters like ? and * in fieldnames
++ Added required field notification
+* Fixed field still show unique when not being able to set it to unique
++ Added tooltips to fields for front-end display
+
+Version 1.0 beta 42
+* Fixed fields not handled correctly

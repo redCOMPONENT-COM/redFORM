@@ -1,0 +1,13 @@
+# The component(s), modules(s) and or plugin(s) containing this license file and claiming license conditions as per this license file originates from redCOMPONENT.com and as such all the below regulations and conditions apply to this piece of software.
+
+# All component(s), modules(s) and or plugin(s) on redCOMPONENT.com are released under similar rights and conditions as under the Open Source GNU GPL v2 license with the explicit addition forbidding anyone except redCOMPONENT.com to charge any amount of money what so ever for making the files available for download or general distribution of the files that the component(s), modules(s) and or plugin(s) on redCOMPONENT.com consist of and any form of redestribution or reselling not approved by redCOMPONENT.com is forbidden unless the component(s), modules(s) and or plugin(s) attained from redCOMPONENT.com are based on a fork of previous work prohibting such limitation on the component(s), modules(s) and or plugin(s) itself.
+
+# It is, as per the similar to GNU GPL v2 license conditions accepted to alter and develop the extensions available from this site - also commercially - however noone can without the permission of redCOMPONENT.com resell the component(s), modules(s) and or plugin(s) as such on a larger scale then single case custom fitting or single user alterations for a specific single domain or website unless the component(s), modules(s) and or plugin(s) attained from redCOMPONENT.com are based on a fork of previous work prohibting such limitation on the component(s), modules(s) and or plugin(s) itself by beeing based purely on GNU GPL v2 license.
+
+# There is no warranty or in any other way any form of liability on the side of redCOMPONENT.com or the developers of the component(s), modules(s) and or plugin(s) made available for subscribers to redCOMPONENT.com.
+
+# The subscription to redCOMPONENT.com is a annual recurring subscription plan and as such you, the subscriber, are to discontinue your subscription before the end date of your current subscription or you will be billed as per your subscription for the next periode. redCOMPONENT.com attain the right to change and or alter conditions and pricing of the component(s), modules(s) and or plugin(s) attained from redCOMPONENT.com
+
+# If you are a webdesign company, webdeveloper, webdesigner, coder or in any other way make, develop, design or install websites using the component(s), modules(s) and or plugin(s) attained from redCOMPONENT.com at a fee or commercially on more then 1 single domain you will not sign up for a Single Site Subscription Plan at redCOMPONENT.com but instead you will sign up for a Developer Subscription Plan.
+
+# Copyright 2008 and all rights reserved for redCOMPONENT.com

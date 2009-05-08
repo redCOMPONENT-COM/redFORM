@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install SYSTEM "http://www.joomla.org/xml/dtd/1.5/component-install.dtd">
+<install type="component" version="1.5">
+	<name>redFORM</name>
+	<creationDate>07 May 2009</creationDate>
+	<author>Redweb.dk</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redweb.dk</authorUrl>
+	<copyright>(c) 2008 - 2009 Redweb.dk</copyright>
+	<license>GNU/GPL</license>
+	<version>2.0 beta 2</version>
+	<description>Create forms on your site</description>
+	<!-- Custom installer -->
+	<installfile>install.redform.php</installfile>
+	
+	<!-- Custom uninstaller -->
+	<uninstallfile>uninstall.redform.php</uninstallfile>
+	
+	<!-- SQL queries -->
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+	
+	<!-- Uninstall SQL queries -->
+	<uninstall>
+		<sql>
+		</sql>
+	</uninstall>
+	
+	<!-- Core files site -->
+	<files folder="site">
+		<filename>controller.php</filename>
+		<filename>index.html</filename>
+		<filename>redform.php</filename>
+		<folder>controllers</folder>
+		<folder>helpers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+	</files>
+	
+	<!-- Language files -->
+	<languages folder="site/languages">
+		<language tag="en-GB">en-GB.com_redform.ini</language>
+		<language tag="da-DK">da-DK.com_redform.ini</language>
+		<language tag="de-DE">de-DE.com_redform.ini</language>
+		<language tag="nl-NL">nl-NL.com_redform.ini</language>
+	</languages>
+	
+	<!-- Image files -->
+	<!-- These are actually for the administrator but this is not supported by Joomla -->
+	<media folder="admin/images" destination="com_redform">
+		<filename>redform_answers_16.png</filename>
+		<filename>redform_answers_32.png</filename>
+		<filename>redform_answers_48.png</filename>
+		<filename>redform_contes_16.png</filename>
+		<filename>redform_contes_32.png</filename>
+		<filename>redform_contes_48.png</filename>
+		<filename>redform_details_16.png</filename>
+		<filename>redform_details_32.png</filename>
+		<filename>redform_details_48.png</filename>
+		<filename>redform_plus_16.png</filename>
+		<filename>redform_plus_32.png</filename>
+		<filename>redform_plus_48.png</filename>
+		<filename>redform_quest_16.png</filename>
+		<filename>redform_quest_32.png</filename>
+		<filename>redform_quest_48.png</filename>
+		<filename>redform_red_16.png</filename>
+		<filename>redform_red_32.png</filename>
+		<filename>redform_red_48.png</filename>
+		<filename>logoredform_400.png</filename>
+		<filename>logoredform_800.png</filename>
+		<filename>logoredform_1200.png</filename>
+	</media>
+	
+	<administration>
+	<!-- Menu entries -->
+	<menu img="../media/com_redform/redform_red_16.png" task="redform">redFORM</menu>
+	<submenu>
+		<menu img="../media/com_redform/redform_red_16.png" task="redform" controller="redform">redFORM</menu>
+		<menu img="../media/com_redform/redform_quest_16.png" task="fields" controller="fields">Fields</menu>
+		<menu img="../media/com_redform/redform_answers_16.png" task="values" controller="values">Values</menu>
+		<menu img="../media/com_redform/redform_contes_16.png" task="submitters" controller="submitters">Submitters</menu>
+		<menu img="../media/com_redform/redform_red_16.png" task="configuration" controller="configuration">Configuration</menu>
+	</submenu>
+	
+	<!-- Core files admin -->
+	<files folder="admin">
+		<filename>changelog.txt</filename>
+		<filename>controller.php</filename>
+		<filename>install.mysql.utf8.sql</filename>
+		<filename>license.txt</filename>
+		<filename>redform.php</filename>
+		<folder>css</folder>
+		<folder>js</folder>
+		<folder>controllers</folder>
+		<folder>models</folder>
+		<folder>plugins</folder>
+		<folder>tables</folder>
+		<folder>views</folder>
+	</files>
+	
+	<!-- Language files -->
+	<languages folder="admin/languages">
+		<language tag="en-GB">en-GB.com_redform.ini</language>
+		<language tag="en-GB">en-GB.com_redform.menu.ini</language>
+		<language tag="da-DK">da-DK.com_redform.ini</language>
+		<language tag="da-DK">da-DK.com_redform.menu.ini</language>
+		<language tag="nl-NL">nl-NL.com_redform.ini</language>
+		<language tag="nl-NL">nl-NL.com_redform.menu.ini</language>
+		<language tag="de-DE">de-DE.com_redform.ini</language>
+		<language tag="de-DE">de-DE.com_redform.menu.ini</language>
+	</languages>
+	</administration>
+</install>
