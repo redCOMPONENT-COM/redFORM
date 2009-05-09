@@ -189,7 +189,8 @@ class RedformModelFields extends JModel {
 			$fields = $db->loadObjectList();
 			
 			foreach ($fields as $key => $field) {
-				$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$field->form_id)." DROP ".$db->nameQuote($field->field);
+				$tablefield = str_replace(' ', '', strtolower($field->field));
+				$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$field->form_id)." DROP ".$db->nameQuote($tablefield);
 				$db->setQuery($q);
 				if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot remove field from old form').' '.$db->getErrorMsg());
 			}
@@ -254,14 +255,8 @@ class RedformModelFields extends JModel {
 	private function AddFieldTable($row, $oldrow) {
 		$db = & JFactory::getDBO();
 		/* Make sure that field name is valid */
-		//TODO: couldn't this be done with just php ?
-		$q = "SELECT REPLACE(LOWER(".$db->Quote($row->field)."), ' ', '')";
-		$db->setQuery($q);
-		$field = $db->loadResult();
-		
-		$q = "SELECT REPLACE(LOWER(".$db->Quote($oldrow->field)."), ' ', '')";
-		$db->setQuery($q);
-		$oldfield = $db->loadResult();
+		$field = str_replace(' ', '', strtolower($row->field));
+		$oldfield = str_replace(' ', '', strtolower($oldrow->field));
 		
 		/* Get columns from the active form */
 		$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$row->form_id))." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($oldfield);
