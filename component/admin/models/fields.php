@@ -247,10 +247,14 @@ class RedformModelFields extends JModel {
 	
 	/**
 	 * Adds a table if it doesn't exist yet
+	 *
+	 * @param object field table record object with updated value
+	 * @param object previously recorded field table record object corresponding to current field id
 	 */
 	private function AddFieldTable($row, $oldrow) {
-		$db = JFactory::getDBO();
-		/* Fix field */
+		$db = & JFactory::getDBO();
+		/* Make sure that field name is valid */
+		//TODO: couldn't this be done with just php ?
 		$q = "SELECT REPLACE(LOWER(".$db->Quote($row->field)."), ' ', '')";
 		$db->setQuery($q);
 		$field = $db->loadResult();
@@ -283,7 +287,7 @@ class RedformModelFields extends JModel {
 		}
 		
 		/* Check if the field moved form */
-		if ($row->form_id <> $oldrow->form_id) {
+		if ($oldrow->form_id && $row->form_id <> $oldrow->form_id) {
 			$result = array();
 			/* Check if the column exists on the old table */
 			$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$oldrow->form_id))." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
