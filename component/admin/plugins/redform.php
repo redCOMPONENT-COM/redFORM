@@ -50,7 +50,7 @@ function FormPage ($matches) {
 	/* Load the language file as Joomla doesn't do it */
 	$language = JFactory::getLanguage();
 	$language->load('plg_content_redform');
-	dump($matches);
+	
 	if (!isset($matches[1])) return false;
 	else {
 		/* Reset matches result */
