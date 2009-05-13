@@ -12,15 +12,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 $mainframe->registerEvent('onPrepareContent', 'PlgRedform');
 $mainframe->registerEvent('PrepareEvent', 'PlgRedform');
 
-if (JRequest::getVar('format', 'html') != 'raw') {
-	$document = JFactory::getDocument();
-	$document->addCustomTag( '<script type="text/javascript" src="'.JURI::root().'administrator/components/com_redform/js/jquery.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript">jQuery.noConflict();</script>' );
-	jimport('joomla.html.html');
-	JHTML::_('behavior.tooltip');
-}
-
-function PlgRedform($row) {
+function PlgRedform(& $row) {
 	/* Check if there are forms to be started or stopped */
 	CheckForms();
 	
@@ -31,8 +23,21 @@ function PlgRedform($row) {
 	/* Regex to find categorypage references */
 	$regex = "#{redform}(.*?){/redform}#s";
 	
-	/* Execute the code */
-	return $row->text = preg_replace_callback( $regex, 'FormPage', $row->text );
+	if (preg_match($regex, $row->text)) 
+	{
+		// load jquery for the form javascript
+		if (JRequest::getVar('format', 'html') != 'raw') {
+			$document = JFactory::getDocument();
+			$document->addCustomTag( '<script type="text/javascript" src="'.JURI::root().'administrator/components/com_redform/js/jquery.js"></script>' );
+			$document->addCustomTag( '<script type="text/javascript">jQuery.noConflict();</script>' );
+			jimport('joomla.html.html');
+			JHTML::_('behavior.tooltip');
+		}
+				
+		/* Execute the code */
+		$row->text = preg_replace_callback( $regex, 'FormPage', $row->text );
+	}
+	return $row->text;
 }
 
 /**
@@ -45,7 +50,7 @@ function FormPage ($matches) {
 	/* Load the language file as Joomla doesn't do it */
 	$language = JFactory::getLanguage();
 	$language->load('plg_content_redform');
-	
+	dump($matches);
 	if (!isset($matches[1])) return false;
 	else {
 		/* Reset matches result */
@@ -72,6 +77,7 @@ function FormPage ($matches) {
 			
 			/* Draw the form form */
 			return getFormForm($form, $fields, $matches[1]);
+
 		}
 	}
 }
@@ -515,7 +521,7 @@ function getFormForm($form, $fields, $multi=1) {
 	$html .= '</div>';
 	if ($footnote) $html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline"><div id="validate_footnote">'.JText::_('VALIDATE_FOOTNOTE').'</div></div>';
 	}
-	
+		
 	if ($pdf) JRequest::setVar('pdfform', $pdfform);
 	else return $html;
 }
