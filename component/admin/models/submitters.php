@@ -585,7 +585,7 @@ class RedformModelSubmitters extends JModel {
 	 */
 	public function getCourseTitle() {
 		$db = JFactory::getDBO();
-		$xref = JRequest::getInt('xref');
+		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
 		$q = "SELECT CONCAT(e.title, ' ', v.venue, ' ', dates, ' - ', enddates, ' ', times, ' - ', endtimes) AS coursetitle
 			FROM #__redevent_event_venue_xref x
 			LEFT JOIN #__redevent_events e

@@ -10,8 +10,10 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 header('Content-Type: application/csv');
 header('Content-Encoding: UTF-8');
 header('Content-Disposition: inline; filename="submitters.csv"');
+	$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
 	echo JText::_('Submission date').",";
 	echo JText::_('Form name').",";
+	if ($xref) echo JText::_('EVENT').",";
 	$fields = '';
 	foreach ($this->fields as $key => $value) {
 		$fields .= $value.",";
@@ -24,6 +26,7 @@ header('Content-Disposition: inline; filename="submitters.csv"');
 		foreach ($this->submitters as $id => $value) {
 			echo $value->submission_date.",";
 			echo $value->formname.",";
+			if ($xref) echo $this->event.",";
 			$fields = '';
 			$find = array("\r\n", "\n", "\r");
 			$replace = ' ';

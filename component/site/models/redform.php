@@ -503,7 +503,7 @@ class RedformModelRedform extends JModel {
 				}
 				else {
 					$redirect .= '&view=confirmation&page=confirmation&event_task=review';
-					if (JRequest::getVar('submit') == JText::_('SUBMIT_AND_PRINT')) $redirect .= '&action=print';
+					if (strtolower(JRequest::getVar('submit')) == strtolower(JText::_('SUBMIT_AND_PRINT'))) $redirect .= '&action=print';
 				}
 				if ($form->virtuemartactive) {
 					$redirect .= '&redformback=1';

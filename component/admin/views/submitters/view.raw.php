@@ -24,11 +24,13 @@ class RedformViewSubmitters extends JView {
 	function display($tpl = null) {
 		/* Get the submitters list */
 		$submitters = $this->get('Submitters');
+		$event = $this->get('CourseTitle');
 		$fields = $this->get('Fields');
 		$export_data = $this->get('SubmittersExport');
 				
 		$this->assignRef('export_data', $export_data);
 		$this->assignRef('fields', $fields);
+		$this->assignRef('event', $event);
 		$this->assignRef('submitters', $submitters);
 		
 		parent::display($tpl);
