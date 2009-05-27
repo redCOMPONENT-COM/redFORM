@@ -45,10 +45,13 @@ class RedformModelRedform extends JModel {
 			/* Check if Captcha is correct */
 			$word = JRequest::getVar('captchaword', false, '', 'CMD');
 			$return = $mainframe->triggerEvent('onCaptcha_confirm', array($word, $return));
+			
+			if (!$return[0]) {
+	      $mainframe->enqueueMessage(JText::_('CAPTCHA_WRONG'));
+	      return false;				
+			}
 		}
-		else $return = array(0 => true);
-		
-		if ($return[0]) {
+
 			/* Load the configuration */
 			$db = JFactory::getDBO();
 			
@@ -281,6 +284,7 @@ class RedformModelRedform extends JModel {
 				$this->getConfirmAttendees();
 				
 				if (JRequest::getVar('event_task', 'review') == 'review' && count($listnames) > 0) {
+					exit();
 					foreach ($listnames as $key => $alllistname) {
 						foreach ($alllistname as $listkey => $mailinglistname) {
 							/* Check if we have a fullname */
@@ -517,11 +521,6 @@ class RedformModelRedform extends JModel {
 				$mainframe->redirect($redirect);
 			}
 			return array($form->submitnotification, $form->notificationtext);
-		}
-		else {
-			$mainframe->enqueueMessage(JText::_('CAPTCHA_WRONG'));
-			return false;
-		}
 	}
 	
 	/**
