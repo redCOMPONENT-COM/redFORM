@@ -284,7 +284,6 @@ class RedformModelRedform extends JModel {
 				$this->getConfirmAttendees();
 				
 				if (JRequest::getVar('event_task', 'review') == 'review' && count($listnames) > 0) {
-					exit();
 					foreach ($listnames as $key => $alllistname) {
 						foreach ($alllistname as $listkey => $mailinglistname) {
 							/* Check if we have a fullname */
