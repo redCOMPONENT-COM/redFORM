@@ -305,7 +305,8 @@ class plgContentRedform extends JPlugin {
 							$footnote = true;
 						}
 						if (strlen($field->tooltip) > 0) {
-							$html .= ' '.JHTML::tooltip($field->tooltip, $field->field, 'tooltip.png', '', '', false);
+              $img = JHTML::image(JURI::root().'/includes/js/ThemeOffice/tooltip.png', JText::_('ToolTip'));
+							$html .= ' <span class="editlinktip hasTip" title="'.$field->field.'::'.$field->tooltip.'" style="text-decoration: none; color: #333;">'. $img .'</span>';
 						}
 						$html .='</div>';
 					}
