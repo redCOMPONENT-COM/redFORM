@@ -292,10 +292,12 @@ class plgContentRedform extends JPlugin {
 			
 			if ($answers && $multi > 1) $html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->id.'" checked="checked" />'.JText::_('INCLUDE_REGISTRATION').'</div>';
 			
+			dump($fields);
 			foreach ($fields as $key => $field) {
 				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
 				if (!$pdf) $html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline">';
 				$values = $this->getFormValues($field->id);
+				dump($values);
 				if (count($values) > 0) {
 					
 					if (!$pdf) {
@@ -319,6 +321,7 @@ class plgContentRedform extends JPlugin {
 					$checkbox = '';
 					$select = '';
 					$fileupload = '';
+          $wysiwyg = '';
 					$finalid = end(array_keys($values));
 					$cleanfield = $field->cleanfield;
 					foreach ($values as $id => $value) {
@@ -352,6 +355,27 @@ class plgContentRedform extends JPlugin {
 									$pdfform->Ln();
 								}
 								break;
+								
+              case 'wysiwyg':
+                if (!$pdf) {
+                  $editor = & JFactory::getEditor();
+                  if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+                    $content = $answers[($signup-1)]->$cleanfield;
+                  }
+                  else {
+                    $content = '';
+                  }
+                  
+                  $wysiwyg .= "<div class=\"field".$value->fieldtype."\">";
+                  $wysiwyg .= $editor->display( "field".$field->id.'.'.$signup."[wysiwyg]", $content, '100%;', '200', '75', '20', array('pagebreak', 'readmore') ) ;
+                  $wysiwyg .= "</div>\n";
+                }
+                else {
+                  $pdfform->Rect($pdfform->getX(), $pdfform->getY(), 100, 15);
+                  $pdfform->Ln();
+                }
+                break;
+                
 							case 'email':
 								if (!$pdf) {
 									$textfield .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
@@ -464,6 +488,7 @@ class plgContentRedform extends JPlugin {
 						else if (!empty($checkbox)) $html .= $checkbox;
 						else if (!empty($select)) $html .= $select;
 						else if (!empty($fileupload)) $html .= $fileupload;
+            else if (!empty($wysiwyg)) $html .= $wysiwyg;
 					}
 				}
 				if (!$pdf) $html .= '</div>';
