@@ -292,12 +292,10 @@ class plgContentRedform extends JPlugin {
 			
 			if ($answers && $multi > 1) $html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->id.'" checked="checked" />'.JText::_('INCLUDE_REGISTRATION').'</div>';
 			
-			dump($fields);
 			foreach ($fields as $key => $field) {
 				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
 				if (!$pdf) $html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline">';
 				$values = $this->getFormValues($field->id);
-				dump($values);
 				if (count($values) > 0) {
 					
 					if (!$pdf) {
