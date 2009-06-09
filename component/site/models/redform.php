@@ -131,6 +131,7 @@ class RedformModelRedform extends JModel {
 							$answer = $db->loadResult();
 						}
 						else if (isset($postvalues['field'.$key]['textarea'])) $answer = $postvalues['field'.$key]['textarea'];
+            else if (isset($postvalues['field'.$key]['wysiwyg']))  $answer = $postvalues['field'.$key]['wysiwyg'];
 						else if (isset($postvalues['field'.$key]['fullname'])) $answer = $fullname = $postvalues['field'.$key]['fullname'][0];
 						else if (isset($postvalues['field'.$key]['username'])) $answer = $postvalues['field'.$key]['username'][0];
 						else if (isset($postvalues['field'.$key]['email'])) {
