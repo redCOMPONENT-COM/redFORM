@@ -146,7 +146,8 @@ class RedformModelSubmitters extends JModel {
 	/**
     * Deletes one or more submitters
     */
-   function getRemoveSubmitter() {
+   function getRemoveSubmitter() 
+   {
       global $mainframe;
       $database = JFactory::getDBO();
       $cid = JRequest::getVar('cid');
@@ -157,30 +158,43 @@ class RedformModelSubmitters extends JModel {
          return false;
       }
       if (count($cid)) {
-		  /* Delete the submitters */
-		 $cids = 'answer_id=' . implode( ' OR answer_id=', $cid );
-		 $query = "DELETE FROM #__rwf_submitters"
-		 . "\n  WHERE ( $cids )
-		 AND form_id = ".JRequest::getInt('form_id');
-		 $database->setQuery( $query );
-		 if (!$database->query()) {
-			$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitter'));
-		 }
-		 else {
-			 /* Delete the submitters values */
-			 $cids = 'id=' . implode( ' OR id=', $cid );
-			 $query = "DELETE from #__rwf_forms_".JRequest::getInt('form_id')."
+      	$cids = ' answer_id IN (' . implode( ',', $cid ) .') ';
+
+      	// first, check that there is no eventlist registrations among these 'submitter'
+      	$query = ' SELECT COUNT(*) FROM #__rwf_submitters WHERE ' . $cids . ' AND xref > 0 ';
+        $database->setQuery( $query );
+        $res = $database->loadResult();        
+        if ($res) {
+        	$msg = JText::_('CANNOT DELETE REDEVENT REGISTRATION');
+        	$this->setError($msg);
+        	JError::raiseWarning(0, $msg);
+        	return false;
+        }
+      	
+      	/* Delete the submitters */
+      	$query = ' DELETE FROM #__rwf_submitters '
+      	      . ' WHERE ' . $cids
+      	      . '	AND form_id = '.JRequest::getInt('form_id');
+      	$database->setQuery( $query );
+      	
+      	if (!$database->query()) {
+      		$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitter'));
+      	}
+      	else {
+      		/* Delete the submitters values */
+      		$cids = 'id=' . implode( ' OR id=', $cid );
+      		$query = "DELETE from #__rwf_forms_".JRequest::getInt('form_id')."
 					WHERE (".$cids.")";
-			 $database->setQuery($query);
-			 if (!$database->query()) {
-				$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitter values'));
-			 }
-			 else {
-				 if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Submitters have been deleted'));
-				 else $mainframe->enqueueMessage(JText::_('Submitter has been deleted'));
-			 }
-		 }
-	  }
+      		$database->setQuery($query);
+      		if (!$database->query()) {
+      			$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitter values'));
+      		}
+      		else {
+      			if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Submitters have been deleted'));
+      			else $mainframe->enqueueMessage(JText::_('Submitter has been deleted'));
+      		}
+      	}
+      }
    	}
 	
 	/**
