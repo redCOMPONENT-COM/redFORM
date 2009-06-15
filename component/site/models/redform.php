@@ -79,13 +79,13 @@ class RedformModelRedform extends JModel {
 			/* See if we have an event ID */
 			if (JRequest::getInt('event_id', false)) {
 				$event_id = JRequest::getInt('event_id', 0);
-				$posted['event_id'] = $event_id;
+				$posted['xref'] = $event_id;
 			}
 			else if (JRequest::getInt('competition_id', false)) {
 				$event_id = JRequest::getInt('competition_id', 0);
-				$post['event_id'] = $event_id;
+				$post['xref'] = $event_id;
 			}
-			else $post['event_id'] = 0;
+			else $post['xref'] = 0;
 			
 			/* Loop through the different forms */
 			$totalforms = JRequest::getInt('curform');
@@ -110,7 +110,7 @@ class RedformModelRedform extends JModel {
 				$postvalues['submit_key'] = $submit_key;
 				
 				/* Get the raw form data */
-				$postvalues['rawformdata'] = serialize($postvalues);
+				$postvalues['rawformdata'] = serialize($posted);
 				
 				/* Clear the field and answer lists */
 				$qfields = '';
@@ -131,7 +131,7 @@ class RedformModelRedform extends JModel {
 							$answer = $db->loadResult();
 						}
 						else if (isset($postvalues['field'.$key]['textarea'])) $answer = $postvalues['field'.$key]['textarea'];
-            else if (isset($postvalues['field'.$key]['wysiwyg']))  $answer = $postvalues['field'.$key]['wysiwyg'];
+						else if (isset($postvalues['field'.$key]['wysiwyg']))  $answer = $postvalues['field'.$key]['wysiwyg'];
 						else if (isset($postvalues['field'.$key]['fullname'])) $answer = $fullname = $postvalues['field'.$key]['fullname'][0];
 						else if (isset($postvalues['field'.$key]['username'])) $answer = $postvalues['field'.$key]['username'][0];
 						else if (isset($postvalues['field'.$key]['email'])) {
@@ -517,7 +517,7 @@ class RedformModelRedform extends JModel {
 			
 			/* All is good, check if we have an competition in that case redirect to redCOMPETITION */
 			if (JRequest::getVar('competition_id', false)) {
-				$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$post['answer_id'].'&form_id='.JRequest::getInt('form_id');
+				$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$postvalues['answer_id'].'&form_id='.JRequest::getInt('form_id');
 				$mainframe->redirect($redirect);
 			}
 			return array($form->submitnotification, $form->notificationtext);
