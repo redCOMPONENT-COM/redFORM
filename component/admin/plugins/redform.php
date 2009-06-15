@@ -12,8 +12,19 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 jimport( 'joomla.plugin.plugin' );
 
 class plgContentRedform extends JPlugin {
-	
+	/**
+	 * joomla generic plugin parameters
+	 *
+	 * @var JParameter object
+	 */
 	var $_params = null;
+	
+	/**
+	 * specific parameters for redform plugin, set by the caller.
+	 *
+	 * @var unknown_type
+	 */
+	var $_rf_params = null;
 
 	function plgContentRedform( &$subject, $params )
 	{
@@ -32,7 +43,7 @@ class plgContentRedform extends JPlugin {
 	
 	function _process(&$row, &$params = null) 
 	{
-		$this->_params = $params;
+		$this->_rf_params = $params;
 		
 		/* Check if there are forms to be started or stopped */
 		$this->CheckForms();
@@ -529,7 +540,7 @@ class plgContentRedform extends JPlugin {
 			/* Get the user details form */
 			if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
 				$html .= '<div id="submit_button" style="display: '.$display.';"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('Submit').'" />';
-				if (JRequest::getInt('xref', false) && $this->_params['show_submission_type_webform_formal_offer']) $html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
+				if (JRequest::getInt('xref', false) && $this->_rf_params['show_submission_type_webform_formal_offer']) $html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
 				$html .= '</div>';
 			}
 			else if (!JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
