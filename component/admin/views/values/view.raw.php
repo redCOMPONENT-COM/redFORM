@@ -25,7 +25,8 @@ class RedformViewValues extends JView {
 				array('fieldtype' => 'fullname', 'fieldname' => JText::_('fullname')),
 				array('fieldtype' => 'select', 'fieldname' => JText::_('select')),
 				array('fieldtype' => 'multiselect', 'fieldname' => JText::_('multiselect')),
-				array('fieldtype' => 'fileupload', 'fieldname' => JText::_('fileupload'))
+				array('fieldtype' => 'fileupload', 'fieldname' => JText::_('fileupload')),
+        array('fieldtype' => 'wysiwyg', 'fieldname' => JText::_('wysiwyg'))
 				);
 			echo JHTML::_('select.genericlist',  $fieldtypes, 'fieldtype', '', 'fieldtype', 'fieldname') ;
 		}
