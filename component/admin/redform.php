@@ -11,9 +11,13 @@
 /* No direct access */
 defined('_JEXEC') or die('Restricted access');
 
+// log helper class
+require_once (JPATH_COMPONENT_SITE.DS.'helpers'.DS.'log.php');
+
 /* Load the necessary stylesheet */
 $document = JFactory::getDocument();
 $document->addStyleSheet( JURI::root().'administrator/components/com_redform/css/redform.css' );
+
 
 // Require the base controller
 require_once (JPATH_COMPONENT.DS.'controller.php');
