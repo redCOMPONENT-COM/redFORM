@@ -110,6 +110,28 @@ class RedformControllerRedform extends JController
 		$view->setModel( $this->getModel( 'redform', 'RedformModel' ));
 		$view->setLayout('submitters');
 		$view->display();
-	}
+	}	
+
+  /**
+   * Clears log file
+   *
+   */
+  function Log()
+  {
+    JRequest::setVar('view', 'log');
+    parent::display();
+  }
+	
+  /**
+   * Clears log file
+   *
+   */
+  function clearlog()
+  {
+    RedFormHelperLog::clear();
+    $msg = JText::_('LOG CLEARED');
+    $this->setRedirect('index.php?option=com_redform&task=log', $msg);
+    $this->redirect();
+  }
 }
 ?>

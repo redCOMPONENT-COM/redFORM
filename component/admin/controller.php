@@ -22,6 +22,6 @@ class RedformController extends JController
 	 */
 	function display() {
 		parent::display();
-	}
+	}	
 }
 ?>

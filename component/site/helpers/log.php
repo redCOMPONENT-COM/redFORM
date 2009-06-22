@@ -31,5 +31,17 @@ class RedformHelperLog
         $log = &JLog::getInstance('com_redevent.log', $options);
         $log->addEntry(array('comment' => $comment, 'user_id' => $userId));
     }
+    
+
+    function clear()
+    {
+      $app = & JFactory::getApplication();
+      
+      $file = $app->getCfg('log_path').DS.'com_redevent.log';
+      if (file_exists($file)) {
+        unlink($file);
+      }
+      return true;
+    }
 }
 ?>
