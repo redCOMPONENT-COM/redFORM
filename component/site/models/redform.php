@@ -419,7 +419,8 @@ class RedformModelRedform extends JModel {
 					
 					/* Send the mail */
 					if (!$this->mailer->Send()) {
-						JError::raiseWarning(0, JText::_('NO_MAIL_SEND').' '.$this->mailer->error);
+						JError::raiseWarning(0, JText::_('NO_MAIL_SEND').' (to submitter): '.$this->mailer->error);
+						RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' '.$this->mailer->error);
 					}
 					
 					/* Clear the mail details */
@@ -492,7 +493,9 @@ class RedformModelRedform extends JModel {
 					}
 					$htmlmsg .= '</body></html>';
 					$this->mailer->setBody($htmlmsg);
-					$this->mailer->Send();
+					if (!$this->mailer->Send()) {
+            RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$this->mailer->error);;
+					}
 					$this->mailer->ClearAddresses();
 				}
 			}
