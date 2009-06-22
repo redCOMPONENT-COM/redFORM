@@ -28,7 +28,7 @@ class RedformHelperLog
             'format' => "{DATE}\t{TIME}\t{USER_ID}\t{COMMENT}"
         );
         // Create the instance of the log file in case we use it later
-        $log = &JLog::getInstance('com_redevent.log', $options);
+        $log = &JLog::getInstance('com_redform.log', $options);
         $log->addEntry(array('comment' => $comment, 'user_id' => $userId));
     }
     
@@ -37,7 +37,7 @@ class RedformHelperLog
     {
       $app = & JFactory::getApplication();
       
-      $file = $app->getCfg('log_path').DS.'com_redevent.log';
+      $file = $app->getCfg('log_path').DS.'com_redform.log';
       if (file_exists($file)) {
         unlink($file);
       }
