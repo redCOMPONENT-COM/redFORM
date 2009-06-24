@@ -227,6 +227,7 @@ class RedformModelRedform extends JModel {
 					if (!$db->query()) {
 						/* We cannot save the answers, do not continue */
 						JError::raiseWarning('error', JText::_('Cannot save form answers').' '.$db->getErrorMsg());
+						RedformHelperLog::simpleLog(JText::_('Cannot save form answers').' '.$db->getErrorMsg());
 						return false;
 					}
 					$postvalues['answer_id'] = $db->insertid();
@@ -261,6 +262,7 @@ class RedformModelRedform extends JModel {
 					
 					if (!$row->bind($postvalues)) {
 						$mainframe->enqueueMessage(JText::_('There was a problem binding the submitter data').': '.$row->getError(), 'error');
+            RedformHelperLog::simpleLog(JText::_('There was a problem binding the submitter data').': '.$row->getError());
 						return false;
 					}
 					/* Set the date */
@@ -269,13 +271,20 @@ class RedformModelRedform extends JModel {
 					/* pre-save checks */
 					if (!$row->check()) {
 						$mainframe->enqueueMessage(JText::_('There was a problem checking the submitter data').': '.$row->getError(), 'error');
+            RedformHelperLog::simpleLog(JText::_('There was a problem checking the submitter data').': '.$row->getError());
 						return false;
 					}
 					
 					/* save the changes */
 					if (!$row->store()) {
-						if (stristr($db->getErrorMsg(), 'Duplicate entry')) $mainframe->enqueueMessage(JText::_('You have already entered this form'), 'error');
-						else $mainframe->enqueueMessage(JText::_('There was a problem storing the submitter data').': '.$row->getError(), 'error');
+						if (stristr($db->getErrorMsg(), 'Duplicate entry')) {
+							$mainframe->enqueueMessage(JText::_('You have already entered this form'), 'error');
+              RedformHelperLog::simpleLog(JText::_('You have already entered this form'));
+						}
+						else {
+							$mainframe->enqueueMessage(JText::_('There was a problem storing the submitter data').': '.$row->getError(), 'error');
+              RedformHelperLog::simpleLog(JText::_('There was a problem storing the submitter data').': '.$row->getError());
+						}
 						return false;
 					}
 					
