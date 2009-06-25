@@ -13,50 +13,43 @@ jimport( 'joomla.plugin.plugin' );
 
 class plgContentRedform extends JPlugin {
 	/**
-	 * joomla generic plugin parameters
+	 * specific redform plugin parameters
 	 *
 	 * @var JParameter object
 	 */
 	var $_params = null;
 	
-	/**
-	 * specific parameters for redform plugin, set by the caller.
-	 *
-	 * @var unknown_type
-	 */
-	var $_rf_params = null;
-
-	function plgContentRedform( &$subject, $params )
+	function plgContentRedform( &$subject, $config = array() )
 	{
-		parent::__construct( $subject, $params );
+		parent::__construct( $subject, $config );     
 	}	
 	
-	function onPrepareEvent(&$row, &$params = null) 
+	function onPrepareEvent(&$row, &$params = array()) 
 	{
 		return $this->_process($row, $params);
 	}
 	
-	function onPrepareContent(&$row, &$params = null)
+	function onPrepareContent(&$row, &$params = array()) 
 	{
     return $this->_process($row, $params);		
 	}
 	
-	function _process(&$row, &$params = null) 
+	function _process(&$row, &$params = array()) 
 	{
-		$this->_rf_params = $params;
-		
-		/* Check if there are forms to be started or stopped */
-		$this->CheckForms();
-		
-		/* Hook up other red components */
-		if (isset($row->eventid)) JRequest::setVar('redevent', $row);
-		else if (isset($row->competitionid)) JRequest::setVar('redcompetition', $row);
+		$this->_params = $params;
 		
 		/* Regex to find categorypage references */
 		$regex = "#{redform}(.*?){/redform}#s";
 		
 		if (preg_match($regex, $row->text)) 
-		{
+		{			
+			/* Check if there are forms to be started or stopped */
+			$this->CheckForms();		
+			
+			/* Hook up other red components */
+			if (isset($row->eventid)) JRequest::setVar('redevent', $row);
+			else if (isset($row->competitionid)) JRequest::setVar('redcompetition', $row);
+
 			// load jquery for the form javascript
 			if (JRequest::getVar('format', 'html') != 'raw') {
 				$document = JFactory::getDocument();
@@ -540,7 +533,7 @@ class plgContentRedform extends JPlugin {
 			/* Get the user details form */
 			if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
 				$html .= '<div id="submit_button" style="display: '.$display.';"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('Submit').'" />';
-				if (JRequest::getInt('xref', false) && $this->_rf_params['show_submission_type_webform_formal_offer']) $html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
+				if (JRequest::getInt('xref', false) && $this->_params['show_submission_type_webform_formal_offer']) $html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
 				$html .= '</div>';
 			}
 			else if (!JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
