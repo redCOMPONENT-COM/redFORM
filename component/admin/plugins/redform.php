@@ -368,8 +368,18 @@ class plgContentRedform extends JPlugin {
                     $content = '';
                   }
                   
+                  // it seems like tinymce doesn't work if you are not logged...
                   $wysiwyg .= "<div class=\"field".$value->fieldtype."\">";
-                  $wysiwyg .= $editor->display( "field".$field->id.'.'.$signup."[wysiwyg]", $content, '100%;', '200', '75', '20', array('pagebreak', 'readmore') ) ;
+                  if (!$user->get('id')) 
+                  {
+                  	$wysiwyg .= "<textarea class=\"".$form->classname." ";
+                    $wysiwyg .= "\" name=\"field".$field->id.'.'.$signup."[textarea]\">";
+                    if ($answers && isset($answers[($signup-1)]->$cleanfield)) $wysiwyg .= $answers[($signup-1)]->$cleanfield;
+                    $wysiwyg .= "</textarea>";
+                  }
+                  else {
+	                  $wysiwyg .= $editor->display( "field".$field->id.'.'.$signup."[wysiwyg]", $content, '100%;', '200', '75', '20', array('pagebreak', 'readmore') ) ;
+                  }
                   $wysiwyg .= "</div>\n";
                 }
                 else {
