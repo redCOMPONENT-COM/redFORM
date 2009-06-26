@@ -295,12 +295,18 @@ class plgContentRedform extends JPlugin {
 			$footnote = false;
 			
 			if ($answers && $multi > 1) $html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->id.'" checked="checked" />'.JText::_('INCLUDE_REGISTRATION').'</div>';
-			
+
 			foreach ($fields as $key => $field) {
 				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
 				if (!$pdf) $html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline">';
+				
 				$values = $this->getFormValues($field->id);
 				if (count($values) > 0) {
+
+					if ($values[0]->fieldtype == 'info') {
+						$html .= '<div class="infofield">' . $values[0]->value . '</div>';
+						continue;
+					}
 					
 					if (!$pdf) {
 						$html .= '<div id="field_'.$field->cssfield.'">'.$field->field;
@@ -344,6 +350,7 @@ class plgContentRedform extends JPlugin {
 									$pdfform->Ln();
 								}
 								break;
+								
 							case 'textarea':
 								if (!$pdf) {
 									$textarea .= "<div class=\"field".$value->fieldtype."\"><textarea class=\"".$form->classname." ";
@@ -356,8 +363,8 @@ class plgContentRedform extends JPlugin {
 									$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 100, 15);
 									$pdfform->Ln();
 								}
-								break;
-								
+								break;								
+																
               case 'wysiwyg':
                 if (!$pdf) {
                   $editor = & JFactory::getEditor();

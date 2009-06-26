@@ -78,11 +78,14 @@ class RedformModelSubmitters extends JModel {
 	function getFields() {
 		$db = JFactory::getDBO();
 		$form_id = JRequest::getInt('form_id', false);
-		$query = "SELECT LOWER(REPLACE(".$db->nameQuote('field').", ' ','')) AS ".$db->nameQuote('field')."
-			FROM #__rwf_fields ";
-		if ($form_id) $query .= "WHERE form_id = ".$form_id." ";
+		$query = ' SELECT LOWER(REPLACE('.$db->nameQuote('f.field').', " " ,"")) AS '.$db->nameQuote('field')
+		       . ' FROM #__rwf_fields AS f '
+		       . ' INNER JOIN #__rwf_values AS v ON v.field_id = f.id '
+		       . ' WHERE v.fieldtype <> "info" '
+		       ;		
+		if ($form_id) $query .= ' AND form_id = ' . $db->Quote($form_id);
 		$query .= "GROUP BY field
-				ORDER BY ordering ";
+				ORDER BY f.ordering ";
 		$db->setQuery($query);
 		return $db->loadResultArray();
 	}
