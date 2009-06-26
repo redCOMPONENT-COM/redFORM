@@ -219,7 +219,7 @@ class plgContentRedform extends JPlugin {
 		$user = JFactory::getUser();
 		
 		/* Stuff to find and replace */
-		$find = array(' ', '_', '-', '.', '/', '&');
+		$find = array(' ', '_', '-', '.', '/', '&', ';', ':');
 		$replace = '';
 		
 		/* Set the css class */
@@ -487,7 +487,7 @@ class plgContentRedform extends JPlugin {
 								break;
 							case 'fileupload':
 								if ($submitter_id == 0) {
-								$fileupload .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" size=\"40\" />";
+								$fileupload .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" size=\"40\" class="fileupload" id="fileupload_'.$field->cssfield.'"/>";								
 								}
 								break;
 						}
