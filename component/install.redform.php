@@ -162,6 +162,17 @@ function com_install() {
 		$db->query();
 	}
 	
+	 /* Get the current columns */
+  $q = "SHOW COLUMNS FROM #__rwf_values";
+  $db->setQuery($q);
+  $cols = $db->loadObjectList('Field');
+  
+  if (!stristr($cols['value']->Type, 'text')) {
+    $q = "ALTER TABLE `#__rwf_values` CHANGE `value` `value` TEXT NULL DEFAULT NULL";
+    $db->setQuery($q);
+    $db->query();
+  }
+	
 if ($upgrade) {
 	/* The event values need to be updated with the equivalent xref */
 	$q = "SELECT id, event_id FROM #__rwf_submitters";

@@ -123,6 +123,9 @@ class RedformModelValues extends JModel {
 	  
 	  /* Get the posted data */
 	  $post = JRequest::get('post');
+	  if ($post['fieldtype'] == 'info') {
+	  	$post['value'] = JRequest::getVar('value', '', 'post', 'string', JREQUEST_ALLOWHTML);
+	  }
 	  $row->load($post['id']);
 	  if (empty($row->ordering)) $post['ordering'] = $row->getNextOrder();
 	  

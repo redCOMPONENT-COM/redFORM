@@ -78,7 +78,18 @@ else { ?>
 				} else {
 					?>
 					<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit field'); ?>">
-					<?php echo $row->value; ?>
+					<?php 
+					 if ($row->fieldtype == 'info') {
+					   $val = JFilterInput::clean($row->value, 'string');
+					   if (strlen($val) > 40) {
+					     $val = substr($val, 0, 47) . '...';
+					   }
+					   echo $val;
+				   }
+				   else {
+				     echo $row->value;
+				   }
+				  ?>
 					</a>
 					<?php
 				}

@@ -16,13 +16,16 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewValues extends JView {
+class RedformViewValues extends JView 
+{
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) {
-		global $mainframe;
+	function display($tpl = null) 
+	{
+		$mainframe = & JFactory::getApplication();
+		
 		/* Get the task */
 		$task = JRequest::getCmd('task');
 		
@@ -61,6 +64,8 @@ class RedformViewValues extends JView {
 						);
 				$lists['fieldtypes']= JHTML::_('select.genericlist',  $fieldtypes, 'fieldtype', '', 'fieldtype', 'fieldname', $row->fieldtype) ;
 				
+				$editor = &JFactory::getEditor();
+				
 				/* Create the published field */
 				$lists['published']= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published) ;
 				
@@ -83,6 +88,7 @@ class RedformViewValues extends JView {
 				$this->assignRef('row', $row);
 				$this->assignRef('lists', $lists);
 				$this->assignRef('uselists', $uselists);
+        $this->assignRef('editor', $editor);
 				break;
 			default:
 				switch($task) {

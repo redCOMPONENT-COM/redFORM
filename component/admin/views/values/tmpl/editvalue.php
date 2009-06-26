@@ -16,7 +16,11 @@ JHTML::_('behavior.tooltip');
 			<?php echo JText::_('Value'); ?>
 			</td>
 			<td>
+			<?php if ($this->row->fieldtype == 'info'): ?>
+			<?php echo $this->editor->display( 'value',  $this->row->value, '100%;', '300', '75', '20', array('pagebreak', 'readmore') ) ; ?>
+			<?php else: ?>
 			<input class="inputbox" type="text" size="80" name="value" value="<?php echo $this->row->value; ?>">
+	    <?php endif; ?>
 			<?php echo JHTML::tooltip(JText::_('Enter the value here'), JText::_('Value'), 'tooltip.png', '', '', false); ?>
 			</td>
 		</tr>
