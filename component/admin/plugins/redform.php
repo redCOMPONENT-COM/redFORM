@@ -219,7 +219,7 @@ class plgContentRedform extends JPlugin {
 		$user = JFactory::getUser();
 		
 		/* Stuff to find and replace */
-		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', '\,');
+		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', ',');
 		$replace = '';
 		
 		/* Set the css class */
