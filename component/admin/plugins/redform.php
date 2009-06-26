@@ -305,6 +305,7 @@ class plgContentRedform extends JPlugin {
 
 					if ($values[0]->fieldtype == 'info') {
 						$html .= '<div class="infofield">' . $values[0]->value . '</div>';
+						$html .= '</div>';						
 						continue;
 					}
 					
