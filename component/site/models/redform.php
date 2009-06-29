@@ -226,7 +226,7 @@ class RedformModelRedform extends JModel {
 					$db->setQuery($q);
 					if (!$db->query()) {
 						/* We cannot save the answers, do not continue */
-						JError::raiseWarning('error', JText::_('Cannot save form answers').' '.$db->getErrorMsg());
+						JError::raiseWarning('error', JText::_('Cannot save form answers'));
 						RedformHelperLog::simpleLog(JText::_('Cannot save form answers').' '.$db->getErrorMsg());
 						return false;
 					}
@@ -261,7 +261,7 @@ class RedformModelRedform extends JModel {
 					}
 					
 					if (!$row->bind($postvalues)) {
-						$mainframe->enqueueMessage(JText::_('There was a problem binding the submitter data').': '.$row->getError(), 'error');
+						$mainframe->enqueueMessage(JText::_('There was a problem binding the submitter data'), 'error');
             RedformHelperLog::simpleLog(JText::_('There was a problem binding the submitter data').': '.$row->getError());
 						return false;
 					}
@@ -270,7 +270,7 @@ class RedformModelRedform extends JModel {
 					
 					/* pre-save checks */
 					if (!$row->check()) {
-						$mainframe->enqueueMessage(JText::_('There was a problem checking the submitter data').': '.$row->getError(), 'error');
+						$mainframe->enqueueMessage(JText::_('There was a problem checking the submitter data'), 'error');
             RedformHelperLog::simpleLog(JText::_('There was a problem checking the submitter data').': '.$row->getError());
 						return false;
 					}
@@ -282,7 +282,7 @@ class RedformModelRedform extends JModel {
               RedformHelperLog::simpleLog(JText::_('You have already entered this form'));
 						}
 						else {
-							$mainframe->enqueueMessage(JText::_('There was a problem storing the submitter data').': '.$row->getError(), 'error');
+							$mainframe->enqueueMessage(JText::_('There was a problem storing the submitter data'), 'error');
               RedformHelperLog::simpleLog(JText::_('There was a problem storing the submitter data').': '.$row->getError());
 						}
 						return false;
@@ -428,8 +428,8 @@ class RedformModelRedform extends JModel {
 					
 					/* Send the mail */
 					if (!$this->mailer->Send()) {
-						JError::raiseWarning(0, JText::_('NO_MAIL_SEND').' (to submitter): '.$this->mailer->error);
-						RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' '.$this->mailer->error);
+						JError::raiseWarning(0, JText::_('NO_MAIL_SEND').' (to submitter)');
+						RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (to submitter):'.$this->mailer->error);
 					}
 					
 					/* Clear the mail details */
