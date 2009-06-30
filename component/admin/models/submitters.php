@@ -182,6 +182,7 @@ class RedformModelSubmitters extends JModel {
       	
       	if (!$database->query()) {
       		$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitter'));
+          RedformHelperLog::simpleLog(JText::_('A problem occured when deleting the submitter') . ': ' . $database->getErrorMsg());
       	}
       	else {
       		/* Delete the submitters values */
@@ -191,10 +192,15 @@ class RedformModelSubmitters extends JModel {
       		$database->setQuery($query);
       		if (!$database->query()) {
       			$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitter values'));
+            RedformHelperLog::simpleLog(JText::_('A problem occured when deleting the submitter values') . ': ' . $database->getErrorMsg());
       		}
       		else {
-      			if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Submitters have been deleted'));
-      			else $mainframe->enqueueMessage(JText::_('Submitter has been deleted'));
+      			if (count($cid) > 1) {
+      				$mainframe->enqueueMessage(JText::_('Submitters have been deleted'));
+      			}
+      			else {
+      				$mainframe->enqueueMessage(JText::_('Submitter has been deleted'));
+      			}
       		}
       	}
       }
