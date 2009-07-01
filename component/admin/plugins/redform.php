@@ -368,26 +368,17 @@ class plgContentRedform extends JPlugin {
 																
               case 'wysiwyg':
                 if (!$pdf) {
-                  $editor = & JFactory::getEditor();
                   if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
                     $content = $answers[($signup-1)]->$cleanfield;
                   }
                   else {
                     $content = '';
                   }
+                  $editor = & JFactory::getEditor();
                   
-                  // it seems like tinymce doesn't work if you are not logged...
                   $wysiwyg .= "<div class=\"field".$value->fieldtype."\">";
-                  if (!$user->get('id')) 
-                  {
-                  	$wysiwyg .= "<textarea class=\"".$form->classname." ";
-                    $wysiwyg .= "\" name=\"field".$field->id.'.'.$signup."[textarea]\">";
-                    if ($answers && isset($answers[($signup-1)]->$cleanfield)) $wysiwyg .= $answers[($signup-1)]->$cleanfield;
-                    $wysiwyg .= "</textarea>";
-                  }
-                  else {
-	                  $wysiwyg .= $editor->display( "field".$field->id.'.'.$signup."[wysiwyg]", $content, '100%;', '200', '75', '20', array('pagebreak', 'readmore') ) ;
-                  }
+                  // Cannot have buttons, it triggers an error with tinymce for unregistered users
+                  $wysiwyg .= $editor->display( "field".$field->id.'.'.$signup."[wysiwyg]", $content, '100%;', '200', '75', '20', false ) ;
                   $wysiwyg .= "</div>\n";
                 }
                 else {
