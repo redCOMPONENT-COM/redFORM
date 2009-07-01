@@ -293,6 +293,9 @@ class RedformModelRedform extends JModel {
 				/* Clean up any signups that need to be removed */
 				$this->getConfirmAttendees();
 				
+				/**
+				 * mailing list handling
+				 */
 				if (JRequest::getVar('event_task', 'review') == 'review' && count($listnames) > 0) {
 					foreach ($listnames as $key => $alllistname) {
 						foreach ($alllistname as $listkey => $mailinglistname) {
@@ -409,7 +412,8 @@ class RedformModelRedform extends JModel {
 				/* Reset the db */
 				$db->select($mainframe->getCfg('db'));
 			} /* End multi-user signup */
-			
+						
+      /* Mail management */
 			if (JRequest::getVar('event_task', 'review') == 'review') {
 				/* Load the mailer in case we need to inform someone */
 				if ($form->submitterinform || $form->contactpersoninform) {
@@ -508,6 +512,7 @@ class RedformModelRedform extends JModel {
 					$this->mailer->ClearAddresses();
 				}
 			}
+			/* end mail management */
 			
 			/* All is good, check if we have an event in that case redirect to redEVENT */
 			if (JRequest::getInt('xref', false)) {
