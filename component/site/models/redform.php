@@ -13,35 +13,101 @@ defined('_JEXEC') or die( 'Restricted access' );
 
 jimport('joomla.application.component.model');
 
+require_once JPATH_COMPONENT.DS.'classes'.DS.'answers.php';
+
 /**
  */
 class RedformModelRedform extends JModel {
+	
+	var $_form_id = 0;
+	
+  var $_event = null;
+	
+  var $_form  = null;
+	
 	function __construct() {
 		parent::__construct();
+		
+		$this->setFormId(JRequest::getInt('form_id'));
 	}
 
+  /**
+   * Method to set the form identifier
+   *
+   * @access  public
+   * @param int event identifier
+   */
+  function setFormId($id)
+  {
+    // Set event id and wipe data
+    $this->_form_id      = $id;
+    $this->_data  = null;
+  }
+
+  /**
+   * returns form object
+   *
+   * @param int form id
+   * @return object form
+   */
+  function &getForm($id)
+  {
+    /* Get the form details */
+    $form = $this->getTable('Redform');
+    $form->load(JRequest::getInt('form_id'));
+    
+    if ($form) {
+    	$this->_form = $form;
+    }
+    
+  	return $this->_form;
+  }
+
+  /**
+   * get the form fields name
+   *
+   * @param int $form_id
+   */
+  function getfields($form_id = 0)
+  {
+  	if (!$form_id) {
+  		$form_id = $this->_form_id;
+  	}
+
+  	$db = & $this->_db;
+  	
+  	/* Load the fields */
+  	$q = "SELECT id, LOWER(REPLACE(".$db->nameQuote('field').", ' ','')) AS ".$db->nameQuote('field').", field AS userfield, ordering
+        FROM ".$db->nameQuote('#__rwf_fields')."
+        WHERE form_id = ".$form_id."
+        AND published = 1
+        ORDER BY ordering";
+  	$db->setQuery($q);
+  	return $db->loadObjectList('id');
+  }
+      
 	/**
 	 * Save a form
 	 *
 	 * @todo take field names from fields table
 	 */
-	function getSaveForm() {
-		global $mainframe;
+	function saveform() 
+	{
+		$mainframe = & JFactory::getApplication();
+		$db = & $this->_db;
 		
 		/* Default values */
-		$qfields = '';
-		$qpart = '';
-		$answer = '';
-		$return = false;
+		$answer  = '';
+		$return  = false;
 		/* Check for the submit key */
 		$submit_key = JRequest::getVar('submit_key', false);
 		if (!$submit_key) $submit_key = md5(uniqid());
 		
 		/* Get the form details */
-		$form = $this->getTable('Redform');
-		$form->load(JRequest::getInt('form_id'));
+		$form = $this->getForm(JRequest::getInt('form_id'));
 		
-		if ($form->captchaactive) {
+		if ($form->captchaactive) 
+		{
 			/* Check if Captcha is correct */
 			$word = JRequest::getVar('captchaword', false, '', 'CMD');
 			$return = $mainframe->triggerEvent('onCaptcha_confirm', array($word, $return));
@@ -51,254 +117,109 @@ class RedformModelRedform extends JModel {
 	      return false;				
 			}
 		}
+			
+		/* Load the fields */
+		$fieldlist = $this->getfields($form->id);
+			
+		/* Load the posted variables */
+		$post = JRequest::get('post');
+		$files = JRequest::get('files');
+		$posted = array_merge($post, $files);
 
-			/* Load the configuration */
-			$db = JFactory::getDBO();
+		/* See if we have an event ID */
+		if (JRequest::getInt('event_id', false)) {
+			$event_id = JRequest::getInt('event_id', 0);
+			$posted['xref'] = $event_id;
+		}
+		else if (JRequest::getInt('competition_id', false)) {
+			$event_id = JRequest::getInt('competition_id', 0);
+			$post['xref'] = $event_id;
+		}
+		else $post['xref'] = 0;
+		
+		if ($post['xref']) {
+			$event = $this->getEvent($post['xref']);
+		}
+		else {
+			$event = null;
+		}
+				
+		/* Loop through the different forms */
+		$totalforms = JRequest::getInt('curform');
+		if (JRequest::getVar('event_task') == 'userregister') $totalforms--;
+		/* Sign up minimal 1 */
+		if ($totalforms == 0) $totalforms++;
 			
-			/* Get the file path */
-			$query = "SELECT value
-					FROM #__rwf_configuration
-					WHERE name = ".$db->Quote('filelist_path');
-			$db->setQuery($query);
-			$filepath = $db->loadResult();
+		for ($signup = 1; $signup <= $totalforms; $signup++) 
+		{
+			// new answers object
+			$answers = new rfanswers();
+			$answers->setFormId($form->id);
 			
-			/* Load the fields */
-			$q = "SELECT id, LOWER(REPLACE(".$db->nameQuote('field').", ' ','')) AS ".$db->nameQuote('field').", field AS userfield, ordering
-				FROM ".$db->nameQuote('#__rwf_fields')."
-				WHERE form_id = ".$form->id."
-				AND published = 1
-				ORDER BY ordering";
-			$db->setQuery($q);
-			$fieldlist = $db->loadObjectList('id');
-			
-			/* Load the posted variables */
-			$post = JRequest::get('post');
-			$files = JRequest::get('files');
-			$posted = array_merge($post, $files);
-			
-			/* See if we have an event ID */
-			if (JRequest::getInt('event_id', false)) {
-				$event_id = JRequest::getInt('event_id', 0);
-				$posted['xref'] = $event_id;
+			/* Create an array of values to store */
+			$postvalues = array();
+			// remove the _X parts, where X is the form (signup) number
+			foreach ($posted as $key => $value) {
+				if ((strpos($key, 'field') === 0) && (strpos($key, '_'.$signup, 5) > 0)) {
+					$postvalues[str_replace('_'.$signup, '', $key)] = $value;
+				}
 			}
-			else if (JRequest::getInt('competition_id', false)) {
-				$event_id = JRequest::getInt('competition_id', 0);
-				$post['xref'] = $event_id;
+
+			/* Some default values needed */
+			if (isset($post['xref'])) {
+				$postvalues['xref'] = $post['xref'];
 			}
-			else $post['xref'] = 0;
+			else {
+				$postvalues['xref'] = 0;
+			}
+			$postvalues['form_id'] = $post['form_id'];
+			$postvalues['submitternewsletter'] = JRequest::getVar('submitternewsletter', '');
+			$postvalues['submit_key'] = $submit_key;
+				
+			/* Get the raw form data */
+			$postvalues['rawformdata'] = serialize($posted);
+
+			/* Build up field list */
+			foreach ($fieldlist as $key => $field)
+			{
+				if (isset($postvalues['field'.$key]))
+				{
+					/* Get the answers */
+					$answers->addPostAnswer($db->nameQuote($field->field), $postvalues['field'.$key]);
+				}
+			}
 			
-			/* Loop through the different forms */
-			$totalforms = JRequest::getInt('curform');
-			if (JRequest::getVar('event_task') == 'userregister') $totalforms--;
-			/* Sign up minimal 1 */
-			if ($totalforms == 0) $totalforms++; 
-			
-			for ($signup = 1; $signup <= $totalforms; $signup++) {
-				/* Create an array of values to store */
-				$postvalues = array();
-				foreach ($posted as $key => $value) {
-					if ((strpos($key, 'field') === 0) && (strpos($key, '_'.$signup, 5) > 0)) {
-						$postvalues[str_replace('_'.$signup, '', $key)] = $value;
-					}
+			if (JRequest::getVar('event_task') == 'review')
+			{
+				if (isset($posted['confirm'][($signup-1)])) 
+				{
+					// this 'anwers' were already posted
+					$answers->setAnswersId($posted['confirm'][($signup-1)]);
+					// update answers
+          $answers->save($postvalues); 
 				}
-				
-				/* Some default values needed */
-				if (isset($post['xref'])) $postvalues['xref'] = $post['xref'];
-				else $postvalues['xref'] = 0;
-				$postvalues['form_id'] = $post['form_id'];
-				$postvalues['submitternewsletter'] = JRequest::getVar('submitternewsletter', '');
-				$postvalues['submit_key'] = $submit_key;
-				
-				/* Get the raw form data */
-				$postvalues['rawformdata'] = serialize($posted);
-				
-				/* Clear the field and answer lists */
-				$qfields = '';
-				$qpart = '';
-				$listnames = array();
-				
-				/* Build up field list */
-				foreach ($fieldlist as $key => $field) {
-					if (isset($postvalues['field'.$key])) {
-						$qfields .= '`'.$field->field.'`,';
-						/* Get the answers */
-						if (isset($postvalues['field'.$key]['radio'])) {
-							/* Get the real value from the database */
-							$q = "SELECT value
-								FROM #__rwf_values
-								WHERE id = ".$postvalues['field'.$key]['radio'][0];
-							$db->setQuery($q);
-							$answer = $db->loadResult();
-						}
-						else if (isset($postvalues['field'.$key]['textarea'])) $answer = $postvalues['field'.$key]['textarea'];
-						else if (isset($postvalues['field'.$key]['wysiwyg']))  $answer = $postvalues['field'.$key]['wysiwyg'];
-						else if (isset($postvalues['field'.$key]['fullname'])) $answer = $fullname = $postvalues['field'.$key]['fullname'][0];
-						else if (isset($postvalues['field'.$key]['username'])) $answer = $postvalues['field'.$key]['username'][0];
-						else if (isset($postvalues['field'.$key]['email'])) {
-							$answer = $submitter_email = $postvalues['field'.$key]['email'][0];
-							if (array_key_exists('listnames', $postvalues['field'.$key]['email'])) {
-								$listnames[] = $postvalues['field'.$key]['email']['listnames'];
-							}
-						}
-						else if (isset($postvalues['field'.$key]['text'])) $answer = $postvalues['field'.$key]['text'][0];
-						else if (isset($postvalues['field'.$key]['select'])) $answer = $postvalues['field'.$key]['select'][0];
-						else if (isset($postvalues['field'.$key]['checkbox'])) {
-							$submittervalues = '';
-							foreach ($postvalues['field'.$key]['checkbox'] as $key => $submitteranswer) {
-								$submittervalues .= $submitteranswer."~~~";
-							}
-							$answer = substr($submittervalues, 0, -3);
-						}
-						else if (isset($postvalues['field'.$key]['multiselect'])) {
-							$submittervalues = '';
-							foreach ($postvalues['field'.$key]['multiselect'] as $key => $submitteranswer) {
-								$submittervalues .= $submitteranswer."~~~";
-							}
-							$answer = substr($submittervalues, 0, -3);
-						}
-						else if (isset($postvalues['field'.$key]['name']['fileupload'])) {
-							$answer = '';
-							/* Check if the folder exists */
-							jimport('joomla.filesystem.folder');
-							jimport('joomla.filesystem.file');
-							$fullpath = $filepath.DS.'redform_'.$form->id;
-							if (!JFolder::exists($fullpath)) {
-								if (!JFolder::create($fullpath)) {
-									JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDER').' '.$fullpath);
-									$status = false;
-								}
-							}
-							clearstatcache();
-							if (JFolder::exists($fullpath)) {
-								if (JFile::exists($fullpath.DS.basename($postvalues['field'.$key]['name']['fileupload'][0]))) {
-									JError::raiseWarning(0, JText::_('FILENAME_ALREADY_EXISTS').': '.basename($postvalues['field'.$key]['name']['fileupload'][0]));
-									return false;
-								}
-								else {
-									/* Start processing uploaded file */
-									if (is_uploaded_file($postvalues['field'.$key]['tmp_name']['fileupload'][0])) {
-										if (JFolder::exists($fullpath) && is_writable($fullpath)) {
-											if (move_uploaded_file($postvalues['field'.$key]['tmp_name']['fileupload'][0], $fullpath.DS.basename($postvalues['field'.$key]['name']['fileupload'][0]))) {
-												$answer = $fullpath.DS.basename($postvalues['field'.$key]['name']['fileupload'][0]);
-											}
-											else {
-												JError::raiseWarning(0, JText::_('CANNOT_UPLOAD_FILE'));
-												return false;
-											}
-										}
-										else {
-											JError::raiseWarning(0, JText::_('FOLDER_DOES_NOT_EXIST'));
-											return false;
-										}
-									}
-								}
-							}
-							else {
-								JError::raiseWarning(0, JText::_('FOLDER_DOES_NOT_EXIST'));
-								return false;
-							}
-						}
-						else $answer = '';
-						$qpart .= $db->Quote($answer).',';
-					}
-				}
-				if (JRequest::getVar('event_task') == 'review') {
-					if (isset($posted['confirm'][($signup-1)])) {
-						/* Updating the values */
-						$ufields = explode(',', substr($qfields, 0, -1));
-						$upart = explode(',', substr($qpart, 0, -1));
-						
-						$q = "UPDATE ".$db->nameQuote('#__rwf_forms_'.$form->id)."
-							SET ";
-						foreach ($ufields as $ukey => $field) {
-							$q .= trim($field)." = ".trim($upart[$ukey]).", ";
-						}
-						$q = substr($q, 0, -2)." WHERE ID = ".$posted['confirm'][($signup-1)];
-						$db->setQuery($q);
-						$db->query();
-					}
-				}
-				else {
-					/* Construct the query */
-					$q = "INSERT INTO ".$db->nameQuote('#__rwf_forms_'.$form->id)."
-						(".substr($qfields, 0, -1).")
-						VALUES (".substr($qpart, 0, -1).")";
-					$db->setQuery($q);
-					if (!$db->query()) {
-						/* We cannot save the answers, do not continue */
-						JError::raiseWarning('error', JText::_('Cannot save form answers'));
-						RedformHelperLog::simpleLog(JText::_('Cannot save form answers').' '.$db->getErrorMsg());
-						return false;
-					}
-					$postvalues['answer_id'] = $db->insertid();
-					
-					/* Store the submitter details */
-					$row = $this->getTable('Submitters');
-					
-					if ($postvalues['xref'] > 0) {
-						/* Add some settings */
-						/* Get activate setting for event */
-						$q = "SELECT activate
-							FROM #__redevent_events AS e
-							LEFT JOIN #__redevent_event_venue_xref AS x
-							ON e.id = x.eventid
-							WHERE x.id = ".JRequest::getInt('xref');
-						$db->setQuery($q);
-						$activate = $db->loadResult();
-						
-						/* Check if the user needs to confirm */
-						if ($activate) $postvalues['confirmed'] = 0;
-						else {
-							/* Automatically confirm user */
-							$postvalues['confirmed'] = 1;
-							$postvalues['confirmdate'] = gmdate('Y-m-d H:i:s');
-						}
-					}
-					else {
-						/* Automatically confirm user */
-						$postvalues['confirmed'] = 1;
-						$postvalues['confirmdate'] = gmdate('Y-m-d H:i:s');
-					}
-					
-					if (!$row->bind($postvalues)) {
-						$mainframe->enqueueMessage(JText::_('There was a problem binding the submitter data'), 'error');
-            RedformHelperLog::simpleLog(JText::_('There was a problem binding the submitter data').': '.$row->getError());
-						return false;
-					}
-					/* Set the date */
-					$row->submission_date = date('Y-m-d H:i:s' , time());
-					
-					/* pre-save checks */
-					if (!$row->check()) {
-						$mainframe->enqueueMessage(JText::_('There was a problem checking the submitter data'), 'error');
-            RedformHelperLog::simpleLog(JText::_('There was a problem checking the submitter data').': '.$row->getError());
-						return false;
-					}
-					
-					/* save the changes */
-					if (!$row->store()) {
-						if (stristr($db->getErrorMsg(), 'Duplicate entry')) {
-							$mainframe->enqueueMessage(JText::_('You have already entered this form'), 'error');
-              RedformHelperLog::simpleLog(JText::_('You have already entered this form'));
-						}
-						else {
-							$mainframe->enqueueMessage(JText::_('There was a problem storing the submitter data'), 'error');
-              RedformHelperLog::simpleLog(JText::_('There was a problem storing the submitter data').': '.$row->getError());
-						}
-						return false;
-					}
-					
-				}
+			}
+			else {
+				// save answers
+				$answers->save($postvalues);		
+			}
 				
 				/* Clean up any signups that need to be removed */
 				$this->getConfirmAttendees();
 				
-				/**
-				 * mailing list handling
-				 */
-				if (JRequest::getVar('event_task', 'review') == 'review' && count($listnames) > 0) {
-					foreach ($listnames as $key => $alllistname) {
-						foreach ($alllistname as $listkey => $mailinglistname) {
+				// mailing lists management
+				// get info from answers
+        $fullname = $answers->getFullname();
+				$submitter_email = $answers->getSubmitterEmail();
+				$listnames = $answers->getListNames();
+				
+				if ( count($listnames) > 0 
+				  && (empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message))) 
+				{
+					foreach ($listnames as $key => $alllistname) 
+					{
+						foreach ((array) $alllistname as $listkey => $mailinglistname) 
+						{
 							/* Check if we have a fullname */
 							if (!isset($fullname)) $fullname = $submitter_email;
 							/* Check if mailinglist integration is enabled */
@@ -412,9 +333,10 @@ class RedformModelRedform extends JModel {
 				/* Reset the db */
 				$db->select($mainframe->getCfg('db'));
 			} /* End multi-user signup */
-						
-      /* Mail management */
-			if (JRequest::getVar('event_task', 'review') == 'review') {
+			
+			// send the notifications mails if not a redevent registration, or if this is the review, or if there is no review
+      if (empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message)) 
+			{
 				/* Load the mailer in case we need to inform someone */
 				if ($form->submitterinform || $form->contactpersoninform) {
 					$this->Mailer();
@@ -512,12 +434,14 @@ class RedformModelRedform extends JModel {
 					$this->mailer->ClearAddresses();
 				}
 			}
-			/* end mail management */
 			
 			/* All is good, check if we have an event in that case redirect to redEVENT */
-			if (JRequest::getInt('xref', false)) {
+			if (JRequest::getInt('xref', false)) 
+			{
 				$redirect = 'index.php?option=com_redevent&task='.JRequest::getVar('event_task').'&xref='.JRequest::getInt('xref').'&submit_key='.$submit_key.'&form_id='.JRequest::getInt('form_id');
-				if (JRequest::getVar('event_task') == 'review') {
+				// go to final if this was the review screen, or if there is no review screen
+				if (JRequest::getVar('event_task') == 'review' || empty($event->review_message)) 
+				{
 					$redirect .= '&view=confirmation&page=final';
 					$arkeys = array_keys(JRequest::getVar('submit'));
 					$redirect .= '&action='.$arkeys[0];
@@ -557,7 +481,8 @@ class RedformModelRedform extends JModel {
 	 /**
 	  * Get the VirtueMart settings
 	  */
-	 public function getVmSettings() {
+	 public function getVmSettings() 
+	 {
 		$db = JFactory::getDBO();
 		$q = "SELECT virtuemartactive, vmproductid, vmitemid
 			FROM #__rwf_forms
@@ -612,6 +537,24 @@ class RedformModelRedform extends JModel {
 		$q = "SELECT product_full_image, product_name FROM #__vm_product WHERE product_id = ".JRequest::getInt('productid');
 		$db->setQuery($q);
 		return $db->loadObject(); 
+	 }
+	 
+	 /**
+	  * returns event associated to xref
+	  *
+	  * @param int $xref
+	  * @return object
+	  */
+	 function getEvent($xref)
+	 {
+     $db = JFactory::getDBO();
+	 	 $query = ' SELECT e.*, x.* '
+	 	        . ' FROM #__redevent_event_venue_xref AS x '
+	 	        . ' INNER JOIN #__redevent_events AS e ON e.id = x.eventid '
+	 	        . ' WHERE x.id = '. $db->Quote((int) $xref)
+	 	        ;
+	 	 $db->setQuery($query);
+	 	 return $db->loadObject();
 	 }
 }
 ?>

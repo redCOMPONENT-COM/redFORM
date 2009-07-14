@@ -6,62 +6,50 @@
  * Developed by email@recomponent.com - redCOMPONENT.com 
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-if ($this->countforms == 0) {
-	echo JText::_('No forms found');
-}
-else { ?>
+defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?>
 <form action="index.php" method="post" name="adminForm">
-	<table>
-      <tr>
-         <td align="left" width="100%">
-            <?php echo JText::_('Filter'); ?>:
-			<?php echo $this->lists['form_id']; ?>
-            <button onclick="this.form.submit();"><?php echo JText::_('Go'); ?></button>
-         </td>
-      </tr>
-    </table>
 	<table class="adminlist">
-		<thead>
 		<tr>
 			<th width="20">
 			<?php echo JText::_('ID'); ?>
 			</th>
 			<th width="20">
-			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->fields ); ?>);" />
+			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->forms ); ?>);" />
 			</th>
 			<th class="title">
-			<?php echo JText::_('Field'); ?>
+			<?php echo JText::_('Form name'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Validate'); ?>
+			<?php echo JText::_('Start date'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Unique'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('Form'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('Ordering'); ?>
-			<?php echo JHTML::_('grid.order',  $this->fields ); ?>
+			<?php echo JText::_('End date'); ?>
 			</th>
 			<th class="title">
 			<?php echo JText::_('Published'); ?>
 			</th>
+			<th class="title">
+			<?php echo JText::_('Form started'); ?>
+			</th>
+			<th class="title">
+			<?php echo JText::_('Submitters'); ?>
+			</th>
+			<th class="title">
+			<?php echo JText::_('Tag'); ?>
+			</th>
 		</tr>
-		</thead>
 		<?php
 		$k = 0;
-		for ($i=0, $n=count( $this->fields ); $i < $n; $i++) {
-			$row = $this->fields[$i];
+		for ($i=0, $n=count( $this->forms ); $i < $n; $i++) {
+			$row = $this->forms[$i];
 			
 			JFilterOutput::objectHTMLSafe($row);
-			$link 	= 'index2.php?option=com_redform&task=edit&controller=fields&hidemainmenu=1&cid[]='. $row->id;
+			$link 	= 'index.php?option=com_redform&task=edit&controller=forms&cid[]='. $row->id;
 
 			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
 			$task 	= $row->published ? 'unpublish' : 'publish';
 			$alt 	= $row->published ? JText::_('Published') : JText::_('Unpublished');
+			$form 	= $row->formstarted ? 'tick.png' : 'publish_x.png';
 			
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
 			$my  = JFactory::getUser();
@@ -77,40 +65,48 @@ else { ?>
 				<?php
 				if ( $row->checked_out && ( $row->checked_out != $my->id ) ) {
 					?>
-					<?php echo $row->field; ?>
+					<?php echo $row->formname; ?>
 					&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
 					<?php
 				} else {
 					?>
-					<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit field'); ?>">
-					<?php echo $row->field; ?>
+					<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit form'); ?>">
+					<?php echo $row->formname; ?>
 					</a>
 					<?php
 				}
 				?>
 				</td>
 				<td>
-					<?php 
-					if ($row->validate) echo JText::_('Yes');
-					else echo JText::_('No');
-					?>
+				<?php
+					$date = JFactory::getDate($row->startdate);
+					echo $date->toFormat('%d-%m-%Y  %H:%M:%S');
+				?>
 				</td>
 				<td>
-					<?php 
-					if ($row->unique) echo JText::_('Yes');
-					else echo JText::_('No');
-					?>
-				</td>
-				<td>
-					<?php echo $row->formname; ?>
-				</td>
-				<td>
-					<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="text_area" style="text-align: center" />
+				<?php 
+					$date = JFactory::getDate($row->enddate);
+					echo $date->toFormat('%d-%m-%Y  %H:%M:%S');
+				?>
 				</td>
 				<td width="10%" align="center">
 				<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $task;?>')">
 				<img src="images/<?php echo $img;?>" border="0" alt="<?php echo $alt; ?>" />
 				</a>
+				</td>
+				<td width="10%" align="center">
+				<img src="images/<?php echo $form;?>" border="0" alt="<?php echo JText::_('Form started'); ?>" />
+				</td>
+				<td>
+				<?php
+					if (isset($this->submitters[$row->id])) echo $this->submitters[$row->id]->total;
+					else echo '0';
+				?>
+				</td>
+				<td>
+				<?php 
+					echo "{redform}".$row->id."{/redform}";
+				?>
 				</td>
 			</tr>
 			<?php
@@ -118,12 +114,11 @@ else { ?>
 		}
 		?>
 		<tr>
-            <td colspan="8"><?php echo $this->pagination->getListFooter(); ?></td>
+            <td colspan="9"><?php echo $this->pagination->getListFooter(); ?></td>
          </tr>
 		</table>
 	<input type="hidden" name="option" value="com_redform" />
-	<input type="hidden" name="task" value="fields" />
+	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="controller" value="fields" />
+	<input type="hidden" name="controller" value="forms" />
 </form>
-<?php } ?>

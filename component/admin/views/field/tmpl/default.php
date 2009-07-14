@@ -67,10 +67,11 @@ JHTML::_('behavior.tooltip');
 			</td>
 		</tr>
 		</table>
+  <?php echo JHTML::_( 'form.token' ); ?>
 	<input type="hidden" name="id" value="<?php echo $this->row->id; ?>" />
 	<?php if ($this->state == 'disabled') { ?><input type="hidden" name="form_id" value="<?php echo $this->form_id; ?>" /><?php } ?>
 	<input type="hidden" name="ordering" value="<?php echo $this->row->ordering; ?>" />
 	<input type="hidden" name="option" value="com_redform" />
-	<input type="hidden" name="task" value="fields" />
+	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="controller" value="fields" />
 </form>

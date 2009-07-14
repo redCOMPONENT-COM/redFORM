@@ -34,6 +34,7 @@
 		<filename>controller.php</filename>
 		<filename>index.html</filename>
 		<filename>redform.php</filename>
+    <folder>classes</folder>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
 		<folder>models</folder>
@@ -76,13 +77,13 @@
 	
 	<administration>
 	<!-- Menu entries -->
-	<menu img="../media/com_redform/redform_red_16.png" task="redform">redFORM</menu>
+	<menu img="../media/com_redform/redform_red_16.png" view="forms">redFORM</menu>
 	<submenu>
-		<menu img="../media/com_redform/redform_red_16.png" task="redform" controller="redform">redFORM</menu>
-		<menu img="../media/com_redform/redform_quest_16.png" task="fields" controller="fields">Fields</menu>
-		<menu img="../media/com_redform/redform_answers_16.png" task="values" controller="values">Values</menu>
-		<menu img="../media/com_redform/redform_contes_16.png" task="submitters" controller="submitters">Submitters</menu>
-		<menu img="../media/com_redform/redform_red_16.png" task="configuration" controller="configuration">Configuration</menu>
+		<menu img="../media/com_redform/redform_red_16.png" view="forms">redFORM</menu>
+		<menu img="../media/com_redform/redform_quest_16.png" view="fields">Fields</menu>
+		<menu img="../media/com_redform/redform_answers_16.png" view="values">Values</menu>
+		<menu img="../media/com_redform/redform_contes_16.png" view="submitters">Submitters</menu>
+		<menu img="../media/com_redform/redform_red_16.png" view="configuration">Configuration</menu>
 	</submenu>
 	
 	<!-- Core files admin -->

@@ -133,5 +133,14 @@ class RedformControllerRedform extends JController
     $this->setRedirect('index.php?option=com_redform&task=log', $msg);
     $this->redirect();
   }
+  
+  function display()
+  {
+  	// set a default view
+  	if (JRequest::getVar('view', '') == '') {
+      JRequest::setVar('view', 'forms');		
+  	}
+    parent::display();
+  }
 }
 ?>

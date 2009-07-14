@@ -15,17 +15,11 @@ jimport( 'joomla.application.component.view');
 /**
  */
 class RedformViewRedform extends JView {
-	function display($tpl = null) {
+	
+	function display($tpl = null) 
+	{
 		global $mainframe;
-		
-		/* See if we need to save any form */
-		if (JRequest::getCmd('task') == 'save') $save = $this->get('SaveForm');
-		else if (JRequest::getCmd('task') == 'redeventvm') {
-			$save = array();
-		}
-		if (is_array($save)) $ok = true;
-		else $ok = false;
-		
+				
 		/* Get the VirtueMart settings */
 		$vmsettings = $this->get('VmSettings');
 		
@@ -37,8 +31,6 @@ class RedformViewRedform extends JView {
 		$productdetails = $this->get('ProductDetails');
 		
 		/* Assign the necessary data */
-		$this->assignRef('save', $save);
-		$this->assignRef('ok', $ok);
 		$this->assignRef('vmsettings', $vmsettings);
 		$this->assignRef('productdetails', $productdetails);
 		

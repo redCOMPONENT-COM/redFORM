@@ -1,0 +1,130 @@
+<?php
+/** 
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+ * @license can be read in this package of software in the file license.txt or 
+ * read on http://redcomponent.com/license.txt  
+ * Developed by email@recomponent.com - redCOMPONENT.com 
+ *
+ * redFORM view
+ */
+
+/* No direct access */
+defined('_JEXEC') or die('Restricted access');
+
+jimport( 'joomla.application.component.view' );
+
+/**
+ * redFORM View
+ */
+class RedformViewForm extends JView {
+	
+	/**
+	 * redFORM view display method
+	 * @return void
+	 **/
+	function display($tpl = null) 
+	{
+		global $mainframe;
+		
+		if ($this->getLayout() == 'detailsform') {
+		  $this->_displayDetails($tpl);
+		  return;
+		}
+		else {
+			$this->setLayout('editform');
+		}
+
+		$row = $this->get('Data');
+
+		/* Get the show name option */
+		$lists['showname']= JHTML::_('select.booleanlist',  'showname', 'class="inputbox"', $row->showname);
+
+		/* Get the published option */
+		$lists['published']= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published);
+
+		/* Get the access level option */
+		$lists['access'] = JHTML::_('list.accesslevel',  $row );
+
+		/* Get the contactperson info option */
+		$lists['contactpersoninform']= JHTML::_('select.booleanlist',  'contactpersoninform', 'class="inputbox"', $row->contactpersoninform);
+
+		/* Get the contactperson post option */
+		$lists['contactpersonfullpost']= JHTML::_('select.booleanlist',  'contactpersonfullpost', 'class="inputbox"', $row->contactpersonfullpost);
+
+		/* Get the submitter info option */
+		$lists['submitterinform']= JHTML::_('select.booleanlist',  'submitterinform', 'class="inputbox"', $row->submitterinform);
+
+		/* Get the notification option */
+		$lists['submitnotification']= JHTML::_('select.booleanlist',  'submitnotification', 'class="inputbox"', $row->submitnotification);
+
+		/* Get the form expires option */
+		$lists['formexpires']= JHTML::_('select.booleanlist',  'formexpires', 'class="inputbox"', $row->formexpires);
+
+		/* Get the form expires option */
+		$lists['captchaactive']= JHTML::_('select.booleanlist',  'captchaactive', 'class="inputbox"', $row->captchaactive);
+
+		/* Get the VirtueMart option */
+		$lists['virtuemartactive']= JHTML::_('select.booleanlist',  'virtuemartactive', 'class="inputbox"', $row->virtuemartactive);
+
+		/* Check if VirtueMart is installed */
+		$vmok = $this->get('VmInstalled');
+
+		if ($vmok) {
+			/* Get the VirtueMart products */
+			$products = $this->get('VmProducts');
+			$lists['vmproductid'] = JHTML::_('select.genericlist', $products, 'vmproductid', 'class="inputbox"', 'product_id', 'product_name', $row->vmproductid);
+		}
+		else $lists['vmproductid'] = '';
+
+		/* Set variabels */
+		$this->assignRef('row', $row);
+		$this->assignRef('lists', $lists);
+
+		/* Get the toolbar */
+		switch (JRequest::getCmd('task')) {
+			case 'add':
+				JToolBarHelper::title(JText::_( 'Add Form' ), 'redform_plus');
+				break;
+			default:
+				JToolBarHelper::title(JText::_( 'Edit Form' ), 'redform_plus');
+				break;
+		}
+		JToolBarHelper::save();
+		JToolBarHelper::apply();
+		JToolBarHelper::cancel();
+
+		/* Display the page */
+		parent::display($tpl);
+	}
+
+	function _displayDetails($tpl = null)
+	{
+		/* Get competition details */
+		$form = $this->get('Data');
+
+		/* Get submitters */
+		$cid = JRequest::getVar('cid');
+		JRequest::setVar('form_id', $cid[0]);
+		$submitters = $this->get('Submitters', 'submitters');
+
+		/* Newsletter signup */
+		$newsletter = $this->get('NewsletterSignup', 'submitters');
+
+		/* menu */
+		RedformHelper::setMenu();
+		
+		/* set the toolbar */
+		JToolBarHelper::title(JText::_( 'Details Form' ), 'redform_details');
+		JToolBarHelper::back();
+
+    /* Set variabels */
+		$this->assignRef('form', $form);
+		$this->assignRef('submitters', $submitters);
+		$this->assignRef('newsletter', $newsletter);
+
+		/* Display the page */
+		parent::display($tpl);
+
+	}
+}
+?>

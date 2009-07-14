@@ -16,52 +16,60 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewFields extends JView {
+class RedformViewField extends JView {
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
 	function display($tpl = null) 
 	{
-		/* Get the pagination */
-		$pagination = $this->get('Pagination');
+		$row = $this->get('Data');
 
-		/* Get the fields list */
-		$fields = $this->get('Fields');
+		/* Get the published field */
+		$lists['published']= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published);
+
+		/* Get the field validation */
+		$lists['validate']= JHTML::_('select.booleanlist',  'validate', 'class="inputbox"', $row->validate);
+
+		/* Get the field validation */
+		$lists['unique']= JHTML::_('select.booleanlist',  'unique', 'class="inputbox"', $row->unique);
 
 		/* Get the forms */
-		$forms = array();
-		$forms[] = JHTML::_('select.option', 0, JText::_('All'));
-		$forms = array_merge($forms, $this->get('FormsOptions'));
+		$forms = $this->get('FormsOptions');
+		$state = '';
+		for ($i = 0; $i < count($forms); $i++) {
+			if ($forms[$i]->value == $row->form_id && $forms[$i]->startdate < date('Y-m-d H:i:s', time())) {
+				$state = 'disabled';
+				break;
+			}
+		}
+		if ($row->form_id > 0) {
+			$selected = $row->form_id;
+		}
+		else {
+			$selected = JRequest::getInt('form_id');
+		}
+		$lists['forms']= JHTML::_('select.genericlist',  $forms, 'form_id', $state, 'value', 'text', $selected) ;
 
-		/* Create the dropdown list */
-		$lists['form_id'] = JHTML::_('select.genericlist',  $forms, 'form_id', '', 'value', 'text', JRequest::getVar('form_id')) ;
-
-		/* Check if there are any forms */
-		$countforms = (count($forms) > 1);
+		/* Get the toolbar */
+		switch (JRequest::getCmd('task')) {
+			case 'add':
+				JToolBarHelper::title(JText::_( 'Add Field' ), 'redform_plus');
+				break;
+			default:
+				JToolBarHelper::title(JText::_( 'Edit Field' ), 'redform_plus');
+				break;
+		}
+		JToolBarHelper::save();
+		JToolBarHelper::apply();
+		JToolBarHelper::cancel();
 
 		/* Set variabels */
-		$this->assignRef('pagination', $pagination);
-		$this->assignRef('fields', $fields);
+		$this->assignRef('form_id', $row->form_id);
+		$this->assignRef('row', $row);
 		$this->assignRef('lists', $lists);
-		$this->assignRef('countforms', $countforms);
-				
-		// set menu
-		RedformHelper::setMenu();
-		
-    /* Get the toolbar */
-		JToolBarHelper::title(JText::_( 'Fields' ), 'redform_fields');
-		/* Only show add if there are forms */
-		if ($countforms) {
-			JToolBarHelper::custom('sanitize', 'redform_details', 'redform_details', JText::_('SANITIZE'), false);
-			JToolBarHelper::publishList();
-			JToolBarHelper::unpublishList();
-			JToolBarHelper::spacer();
-			JToolBarHelper::deleteList(JText::_('Are you sure you want to delete the fields and related values?'));
-			JToolBarHelper::editListX();
-			JToolBarHelper::addNew();
-		}
-		
+		$this->assignRef('state', $state);
+
 		/* Display the page */
 		parent::display($tpl);
 	}

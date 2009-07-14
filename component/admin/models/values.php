@@ -13,7 +13,16 @@ jimport( 'joomla.application.component.model' );
 
 /**
  */
-class RedformModelValues extends JModel {
+class RedformModelValues extends JModel 
+{
+
+	/**
+   * the data
+   *
+   * @var array
+   */
+  protected $_data = null;
+  
 	/** @var integer Total entries */
 	protected $_total = null;
 	
@@ -24,20 +33,37 @@ class RedformModelValues extends JModel {
 	protected $_limit = null;
 	   
 	/**
-	 * Show all orders for which an invitation to fill in
-	 * a testimonal has been sent
+	 * return values
+	 *
+	 * @return array
 	 */
-	function getValues() {
-		/* Get all the orders based on the limits */
-		$q = "SELECT a.*, q.field, CONCAT(c.formname, ' :: ', q.field) AS fieldname
-				FROM #__rwf_values a, #__rwf_fields q, #__rwf_forms c
-				WHERE a.field_id = q.id
-				AND q.form_id = c.id ";
-		$form_id = JRequest::getInt('form_id', false);
-		if ($form_id) $q .= "AND c.id = ".$form_id." ";
-		$q .= "ORDER BY c.formname, ordering";
-		return $this->_getList($q, $this->_limitstart, $this->_limit);
+	function getValues() 
+	{
+    if (empty($this->_data))
+    {
+      $db = & JFactory::getDBO();
+
+      // first, call the pagination to set the limits
+      $this->getPagination();
+      
+      $db->setQuery($this->_buildQuery(), $this->_limitstart, $this->_limit);
+      $this->_data = $db->loadObjectList();
+    }
+    return $this->_data;
 	}
+
+  function _buildQuery()
+  {
+    /* Get all the orders based on the limits */
+    $q = "SELECT a.*, q.field, CONCAT(c.formname, ' :: ', q.field) AS fieldname
+        FROM #__rwf_values a, #__rwf_fields q, #__rwf_forms c
+        WHERE a.field_id = q.id
+        AND q.form_id = c.id ";
+    $form_id = JRequest::getInt('form_id', false);
+    if ($form_id) $q .= "AND c.id = ".$form_id." ";
+    $q .= "ORDER BY c.formname, ordering";
+    return $q;
+  }
 	
 	function getPagination() {
 		global $mainframe, $option;
@@ -52,164 +78,94 @@ class RedformModelValues extends JModel {
 		
 		return $this->_pagination;
 	}
-	
-	/**
-	 * Method to get the total number of testimonial items for the category
-	 *
-	 * @access public
-	 * @return integer
-	 */
-	function getTotal() {
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_total))
-		{
-			$query = "SELECT *"
-			. "\n FROM #__rwf_values";
-			$this->_total = $this->_getListCount($query);
-		}
 
-		return $this->_total;
-	}
-	
-	/**
-    * Publish or Unpublish values
-    */
-   function getPublish() {
-      global $mainframe;
+  /**
+   * Method to get the total number of items return by the query
+   *
+   * @access public
+   * @return integer
+   */
+  function getTotal() 
+  {
+    // Lets load the content if it doesn't already exist
+    if (empty($this->_total))
+    {
+      $this->_total = $this->_getListCount($this->_buildQuery());
+    }
 
-      $cids = JRequest::getVar('cid');
-      $task = JRequest::getCmd('task');
-      $state = ($task == 'publish') ? 1 : 0;
-      $user = &JFactory::getUser();
-      $row =& $this->getTable();
-	  
-      if ($row->Publish($cids, $state, $user->id)) {
-         if ($state == 1) $mainframe->enqueueMessage(JText::_('Values have been published'));
-         else $mainframe->enqueueMessage(JText::_('Values have been unpublished'));
-      }
-      else {
-         if ($state == 1) $mainframe->enqueueMessage(JText::_('Values could not be published'));
-         else $mainframe->enqueueMessage(JText::_('Values could not be unpublished'));
-      }
-   }
+    return $this->_total;
+  }
+  
+  /**
+   * returns options for forms selecto list
+   *
+   * @return array
+   */
+  function getFormsOptions()
+  {
+    $query = "SELECT id AS value, formname AS text FROM #__rwf_forms";
+    $this->_db->setQuery($query);
+    return $this->_db->loadObjectList();
+  }  
+
+  /**
+   * returns options for forms selecto list
+   *
+   * @return array
+   */
+  function getTotalFields()
+  {
+    $query = "SELECT COUNT(*) FROM #__rwf_fields";
+    $this->_db->setQuery($query);
+    return $this->_db->loadResult();
+  }	
+
+ /**
+   * Method to (un)publish
+   *
+   * @access  public
+   * @return  boolean True on success
+   * @since 0.9
+   */
+  function publish($cid = array(), $publish = 1, $user_id = 0)
+  {
+    $user   =& JFactory::getUser();
+
+    $table = & $this->getTable('Values');
+    if (!$table->publish($cid, $publish)) {
+      $this->setError($table->getError());
+      return false;
+    }
+    
+    return true;
+  }
+    
    
-   /**
-    * Retrieve an value to edit
-    */
-   function getValue() {
-      $row = $this->getTable();
-      $my = JFactory::getUser();
-      $id = JRequest::getVar('cid');
-
-      /* load the row from the db table */
-      $row->load($id[0]);
-
-      if ($id[0]) {
-         // do stuff for existing records
-         $result = $row->checkout( $my->id );
-      } else {
-         // do stuff for new records
-         $row->published    = 1;
-      }
-      return $row;
-   }
-   
-   /**
-    * Save an value
-    */
-   function getSaveValue() {
-      global $mainframe;
-      $row = $this->getTable();
-	  
-	  /* Get the posted data */
-	  $post = JRequest::get('post');
-	  if ($post['fieldtype'] == 'info') {
-	  	$post['value'] = JRequest::getVar('value', '', 'post', 'string', JREQUEST_ALLOWHTML);
-	  }
-	  $row->load($post['id']);
-	  if (empty($row->ordering)) $post['ordering'] = $row->getNextOrder();
-	  
-	  /* Get the posted data */
-      if (!$row->bind($post)) {
-         $mainframe->enqueueMessage(JText::_('There was a problem binding the value data').' '.$row->getError(), 'error');
-         return false;
-      }
-	  
-      /* pre-save checks */
-      if (!$row->check()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem checking the value data').' '.$row->getError(), 'error');
-         return false;
-      }
-
-      /* save the changes */
-      if (!$row->store()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem storing the value data').' '.$row->getError(), 'error');
-         return false;
-      }
-	  
-      $row->checkin();
-      $row->reorder();
-	  
-	  /* Store the mailinglists */
-	  if ($post['fieldtype'] == 'email') {
-		 
-		  /* Load the table */
-		  $mailinglistrow = $this->getTable('Mailinglists');
-		 
-		 /* Fix up the mailinglist */
-		 if (isset($post['listname'])) $post['listnames'] = implode(';', $post['listname']);
-		 else $post['listnames'] = '';
-		 
-		 if (!$mailinglistrow->bind($post)) {
-			 $mainframe->enqueueMessage(JText::_('There was a problem binding the mailinglist data').' '.$row->getError(), 'error');
-			 return false;
-		  }
-		  
-		  /* Pass on the ID */
-		 $mailinglistrow->id = $row->id;
-		  
-		  /* save the changes */
-		  if (!$mailinglistrow->store()) {
-			 $mainframe->enqueueMessage(JText::_('There was a problem storing the mailinglist data').' '.$row->getError(), 'error');
-			 return false;
-		  }
-		 
-	  }
-      $mainframe->enqueueMessage(JText::_('The value has been saved'));
-      return $row;
-   }
-   
-   /**
-    * Delete an value
-    */
-   function getRemoveValue() {
-      global $mainframe;
-      $database = JFactory::getDBO();
-      $cid = JRequest::getVar('cid');
-      JArrayHelper::toInteger( $cid );
-	  
-      if (!is_array( $cid ) || count( $cid ) < 1) {
-         $mainframe->enqueueMessage(JText::_('No value found to delete'));
-         return false;
-      }
-      if (count($cid)) {
-         $cids = 'id=' . implode( ' OR id=', $cid );
-         $query = "DELETE FROM #__rwf_values"
-         . "\n  WHERE ( $cids )";
-         $database->setQuery( $query );
-         if (!$database->query()) {
-            $mainframe->enqueueMessage(JText::_('A problem occured when deleting the value'));
-         }
-         else {
-			 $query = "DELETE FROM #__rwf_mailinglists"
-			 . "\n  WHERE ( $cids )";
-			 $database->setQuery( $query );
-			 $database->query();
-            if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Values have been deleted'));
-            else $mainframe->enqueueMessage(JText::_('Value has been deleted'));
-         }
-      }
-   }
+  /**
+   * Delete items
+   */
+  function delete($cid)
+  {
+  	global $mainframe;
+  	$database = & JFactory::getDBO();
+  	JArrayHelper::toInteger( $cid );
+  	 
+  	$cids = 'id=' . implode( ' OR id=', $cid );
+  	$query = "DELETE FROM #__rwf_values"
+  	. "\n  WHERE ( $cids )";
+  	$database->setQuery( $query );
+  	if (!$database->query()) {
+  		$mainframe->enqueueMessage(JText::_('A problem occured when deleting the value'));
+  	}
+  	else {
+  		$query = "DELETE FROM #__rwf_mailinglists"
+  		. "\n  WHERE ( $cids )";
+  		$database->setQuery( $query );
+  		$database->query();
+  		if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Values have been deleted'));
+  		else $mainframe->enqueueMessage(JText::_('Value has been deleted'));
+  	}
+  }
    
    /**
     * Reorder values

@@ -67,7 +67,7 @@ class RedformModelConfiguration extends JModel {
 	/**
 	* Save the configuration
 	*/
-	function getSaveConfiguration() {
+	function store() {
 		global $mainframe;
 		$db = JFactory::getDBO();
 		

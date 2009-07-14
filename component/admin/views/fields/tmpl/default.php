@@ -5,10 +5,10 @@
  * read on http://redcomponent.com/license.txt  
  * Developed by email@recomponent.com - redCOMPONENT.com 
  */
- 
+
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-if ($this->fields == 0) {
-	echo JText::_('No fields found');
+if ($this->countforms == 0) {
+	echo JText::_('No forms found');
 }
 else { ?>
 <form action="index.php" method="post" name="adminForm">
@@ -22,44 +22,49 @@ else { ?>
       </tr>
     </table>
 	<table class="adminlist">
+		<thead>
 		<tr>
 			<th width="20">
 			<?php echo JText::_('ID'); ?>
 			</th>
 			<th width="20">
-			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->values ); ?>);" />
-			</th>
-			<th class="title">
-			<?php echo JText::_('Value'); ?>
+			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->fields ); ?>);" />
 			</th>
 			<th class="title">
 			<?php echo JText::_('Field'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Field type'); ?>
+			<?php echo JText::_('Validate'); ?>
+			</th>
+			<th class="title">
+			<?php echo JText::_('Unique'); ?>
+			</th>
+			<th class="title">
+			<?php echo JText::_('Form'); ?>
 			</th>
 			<th class="title">
 			<?php echo JText::_('Ordering'); ?>
-			<?php echo JHTML::_('grid.order',  $this->values ); ?>
+			<?php echo JHTML::_('grid.order',  $this->fields ); ?>
 			</th>
 			<th class="title">
 			<?php echo JText::_('Published'); ?>
 			</th>
 		</tr>
+		</thead>
 		<?php
 		$k = 0;
-		for ($i=0, $n=count( $this->values ); $i < $n; $i++) {
-			$row = &$this->values[$i];
+		for ($i=0, $n=count( $this->fields ); $i < $n; $i++) {
+			$row = $this->fields[$i];
 			
 			JFilterOutput::objectHTMLSafe($row);
-			$link 	= 'index2.php?option=com_redform&task=edit&controller=values&hidemainmenu=1&cid[]='. $row->id;
+			$link 	= 'index.php?option=com_redform&task=edit&controller=fields&hidemainmenu=1&cid[]='. $row->id;
 
 			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
 			$task 	= $row->published ? 'unpublish' : 'publish';
 			$alt 	= $row->published ? JText::_('Published') : JText::_('Unpublished');
 			
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
-			$my  = &JFactory::getUser();
+			$my  = JFactory::getUser();
 			?>
 			<tr class="<?php echo 'row'. $k; ?>">
 				<td align="center">
@@ -72,34 +77,32 @@ else { ?>
 				<?php
 				if ( $row->checked_out && ( $row->checked_out != $my->id ) ) {
 					?>
-					<?php echo $row->value; ?>
+					<?php echo $row->field; ?>
 					&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
 					<?php
 				} else {
 					?>
 					<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit field'); ?>">
-					<?php 
-					 if ($row->fieldtype == 'info') {
-					   $val = JFilterInput::clean($row->value, 'string');
-					   if (strlen($val) > 40) {
-					     $val = substr($val, 0, 47) . '...';
-					   }
-					   echo $val;
-				   }
-				   else {
-				     echo $row->value;
-				   }
-				  ?>
+					<?php echo $row->field; ?>
 					</a>
 					<?php
 				}
 				?>
 				</td>
 				<td>
-					<?php echo $row->fieldname; ?>
+					<?php 
+					if ($row->validate) echo JText::_('Yes');
+					else echo JText::_('No');
+					?>
 				</td>
 				<td>
-					<?php echo JText::_($row->fieldtype); ?>
+					<?php 
+					if ($row->unique) echo JText::_('Yes');
+					else echo JText::_('No');
+					?>
+				</td>
+				<td>
+					<?php echo $row->formname; ?>
 				</td>
 				<td>
 					<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="text_area" style="text-align: center" />
@@ -119,8 +122,8 @@ else { ?>
          </tr>
 		</table>
 	<input type="hidden" name="option" value="com_redform" />
-	<input type="hidden" name="task" value="values" />
+	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="controller" value="values" />
+	<input type="hidden" name="controller" value="fields" />
 </form>
 <?php } ?>

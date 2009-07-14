@@ -24,13 +24,14 @@ class RedformController extends JController
 	 * @access	public
 	 */
 	function display() {
-		
 		// Set a default view if none exists
 		if ( ! JRequest::getCmd( 'view' ) ) {
 			JRequest::setVar('view', 'redform' );
 			JRequest::setVar('layout', 'redform' );
 		}
+		return;
 		parent::display();
 	}
+	
 }
 ?>

@@ -48,6 +48,9 @@ class RedFormViewLog extends JView {
 		// Get data from the model
 		$log      = & $this->get( 'Data');
 
+		// set menu
+		RedformHelper::setMenu();
+		
 		//assign vars to the template
 		$this->assignRef('log'		, $log);
 

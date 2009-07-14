@@ -40,12 +40,9 @@ class TableValues extends JTable {
 	/**
 	 * Get the next row order
 	 */
-	public function getNextOrder() {
+	public function getNextOrder($form_id = 0) {
 		$db = JFactory::getDBO();
-		
-		/* Check if we can get a form_id */
-		$form_id = JRequest::getInt('form_id', false);
-		
+				
 		if (!$form_id || $form_id == 0) {
 			/* Find the form ID */
 			$q = "SELECT form_id

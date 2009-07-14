@@ -22,12 +22,13 @@ class RedformControllerRedform extends RedformController {
     *
     * @access   public
     */
-   function __construct() {
+   function __construct() 
+   {
       parent::__construct();
 
       /* Redirect templates to templates as this is the standard call */
-      $this->registerTask('save','redform');
-	  $this->registerTask('redeventvm','redform');
+      //$this->registerTask('save','redform');
+	    $this->registerTask('redeventvm','redform');
    }
 
 	
@@ -56,6 +57,25 @@ class RedformControllerRedform extends RedformController {
 		$document = $doc;
 		$mainframe->triggerEvent('onCaptcha_display', array());
    }
+  
+  /**
+   * save the posted form data.
+   *
+   */
+  function save()
+  {
+    $model = $this->getModel('redform');
+    
+    $result = $model->saveform();
+    
+    if (!$result) {
+    	echo JText::_('Sorry, there was a problem with your submission');
+    	return;
+    }
+    
+    echo $result[1];
+    return;
+  }
 }
 
 ?>

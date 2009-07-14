@@ -41,5 +41,24 @@ class TableFields extends JTable {
 	function __construct( &$db ) {
 		parent::__construct('#__rwf_fields', 'id', $db );
 	}
+	
+
+  /**
+   * returns values records ids associated to this field
+   *
+   * @return array
+   */
+  function getValues()
+  {
+    if (empty($this->id)) {
+      return array();
+    }
+    
+    $db =& $this->getDBO();
+    
+    $query = ' SELECT * FROM #__rwf_values WHERE field_id ='. $db->Quote($this->id);
+    $db->setQuery($query);
+    return $db->loadResultArray();
+  }
 }
 ?>

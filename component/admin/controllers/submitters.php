@@ -24,22 +24,49 @@ class RedformControllerSubmitters extends JController
 		parent::__construct();
 		
 		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('remove','submitters');
-		$this->registerTask('cancel','submitters');
-		$this->registerTask('save','submitters');
-		$this->registerTask('add','edit');
+		$this->registerTask('save','apply');
 	}
+	
+	function remove()
+	{		
+    $cid = JRequest::getVar( 'cid', array(0), 'post', 'array' );
+
+    if (!is_array( $cid ) || count( $cid ) < 1) {
+      JError::raiseError(500, JText::_( 'Select an item to delete' ) );
+    }
+
+    $model = $this->getModel('submitters');
+
+    $msg = $model->delete($cid);
+
+    $cache = &JFactory::getCache('com_redform');
+    $cache->clean();
+
+    $form_id = JRequest::getVar('form_id', 0);
+    
+    $this->setRedirect( 'index.php?option=com_redform&view=submitters' . ($form_id ? '&form_id='.$form_id : ''), $msg );
+	}
+	
+  /**
+   * logic for cancel an action
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function cancel()
+  {
+    // Check for request forgeries
+    // JRequest::checkToken() or die( 'Invalid Token' );
+    $this->setRedirect( 'index.php?option=com_redform&view=submitters' );
+  }
 	
 	/**
 	 * Submitters
 	 */
 	function Submitters() {
-		$view = $this->getView('submitters', 'html');
-		$view->setModel( $this->getModel( 'submitters', 'RedformModel' ), true );
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' );
-		$view->setModel( $this->getModel( 'redform', 'RedformModel' ));
-		$view->setLayout('submitters');
-		$view->display();
+    JRequest::setVar( 'view', 'submitters' );
+    parent::display();
 	}
 	
 	/**
@@ -54,16 +81,21 @@ class RedformControllerSubmitters extends JController
 		$view->display();
 	}
 	
-	/**
-	 * Edit a submission
-	 */
-	function Edit() {
-		/* Hide the mainmenu so the user must save or cancel the template settings */
-		JRequest::setVar('hidemainmenu', 1);
-		JRequest::setVar('view', 'submitters');
-		JRequest::setVar('layout', 'editsubmitter');
-		parent::display();
-	}
+
+  /**
+   * logic to create the edit event screen
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function edit( )
+  {
+    JRequest::setVar( 'view', 'submitter' );
+    JRequest::setVar( 'hidemainmenu', 1 );
+
+    parent::display();
+  }
 	
 	
 	/**
@@ -72,6 +104,15 @@ class RedformControllerSubmitters extends JController
 	public function RedEvent() {
 		global $mainframe;
 		$mainframe->redirect('index.php?option=com_redevent&view=attendees&xref='.JRequest::getInt('xref'));
+	}
+	
+	function save()
+	{		
+    $model = $this->getModel('submitter');
+    $model->store();
+    $form_id = JRequest::getVar('form_id', 0);
+    
+    $this->setRedirect( 'index.php?option=com_redform&view=submitters' . ($form_id ? '&form_id='.$form_id : ''), $msg );    
 	}
 }
 ?>

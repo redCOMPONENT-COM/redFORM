@@ -65,5 +65,23 @@ class TableRedform extends JTable {
 	function __construct( &$db ) {
 		parent::__construct('#__rwf_forms', 'id', $db );
 	}
+	
+	/**
+	 * returns fields records ids associated to this form
+	 *
+	 * @return array
+	 */
+	function getFields()
+	{
+		if (empty($this->id)) {
+			return array();
+		}
+		
+		$db =& $this->getDBO();
+		
+		$query = ' SELECT * FROM #__rwf_fields WHERE form_id ='. $db->Quote($this->id);
+		$db->setQuery($query);
+		return $db->loadResultArray();
+	}
 }
 ?>

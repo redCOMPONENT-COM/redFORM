@@ -58,7 +58,7 @@ class plgContentRedform extends JPlugin {
 				jimport('joomla.html.html');
 				JHTML::_('behavior.tooltip');
 			}
-					
+								
 			/* Execute the code */
 			$row->text = preg_replace_callback( $regex, array($this, 'FormPage'), $row->text );
 		}
@@ -294,7 +294,12 @@ class plgContentRedform extends JPlugin {
 			}
 			$footnote = false;
 			
-			if ($answers && $multi > 1) $html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->id.'" checked="checked" />'.JText::_('INCLUDE_REGISTRATION').'</div>';
+			if ($answers && $multi > 1) {
+				$html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->id.'" checked="checked" />'.JText::_('INCLUDE_REGISTRATION').'</div>';
+			}
+			else if ($answers) {
+				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->id.'" />';	
+			}
 
 			foreach ($fields as $key => $field) {
 				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));

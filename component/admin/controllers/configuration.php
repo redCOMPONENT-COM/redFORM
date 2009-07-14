@@ -24,17 +24,43 @@ class RedformControllerConfiguration extends JController
 		parent::__construct();
 		
 		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('apply','configuration');
+		$this->registerTask('apply','save');
 	}
 	
 	/**
 	 * Fields competition
 	 */
-	function Configuration() {
+	function display() {
 		JRequest::setVar('view', 'configuration');
-		JRequest::setVar('layout', 'configuration');
+    JRequest::setVar('hidemainmenu', 1);
 		
 		parent::display();
 	}
+	
+	function save()
+	{
+		$model = $this->getModel('configuration');
+		$model->store();
+	
+    $task   = JRequest::getVar('task');
+    
+    switch ($task)
+    {
+    	case 'apply':
+    		$link = 'index.php?option=com_redform&controller=configuration&task=edit';
+    		break;
+
+    	default:
+    		$link = 'index.php?option=com_redform&view=forms';
+    		break;
+    }
+    
+    $this->setRedirect( $link );		
+	}
+  
+  function cancel()
+  {    
+    $this->setRedirect( 'index.php?option=com_redform&view=forms' );    
+  }
 }
 ?>

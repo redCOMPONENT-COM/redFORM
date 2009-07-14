@@ -16,70 +16,209 @@ jimport('joomla.application.component.controller');
  */
 class RedformControllerFields extends JController
 {
-	/**
-	 * Method to display the view
-	 *
-	 * @access	public
-	 */
-	function __construct() {
-		parent::__construct();
+  /**
+   * constructor
+   *
+   */
+  function __construct() 
+  {
+    parent::__construct();
+    $this->registerTask('apply','save');
+  }
 		
-		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('save','fields');
-		$this->registerTask('remove','fields');
-		$this->registerTask('publish','fields');
-		$this->registerTask('unpublish','fields');
+  /**
+   * logic to create the new event screen
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function add( )
+  {
+    global $option;
 
-		$this->registerTask('sanitize','fields');
-		$this->registerTask('add','edit');
-		$this->registerTask('apply','edit');
-		$this->registerTask('cancel','fields');
-		$this->registerTask('saveorder','fields');
-	}
-	
-	/**
-	 * Fields competition
-	 */
-	function Fields() {
-		/* Create the view */
-		$view = $this->getView('fields', 'html');
-					
-		/* Add the main model */
-		$view->setModel( $this->getModel( 'fields', 'RedformModel' ), true );
-		
-		/* Add extra models */
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' );
-		$view->setModel( $this->getModel( 'redform', 'RedformModel' ));
-		
-		/* Add the layout */
-		$view->setLayout('fields');
-		
-		/* Display it all */
-		$view->display();
-	}
-	
-	/**
-	 * Editing a competition
-	 */
-	function Edit() {
-		/* Create the view */
-		$view = $this->getView('fields', 'html');
-					
-		/* Add the main model */
-		$view->setModel( $this->getModel( 'fields', 'RedformModel' ), true );
-		
-		/* Add extra models */
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' );
-		$view->setModel( $this->getModel( 'redform', 'RedformModel' ));
-		
-		/* Hide the main menu */
-		JRequest::setVar('hidemainmenu', 1);
-		
-		/* Add the layout */
-		$view->setLayout('editfield');
-		
-		/* Display it all */
-		$view->display();
-	}
+    $this->setRedirect( 'index.php?option=com_redform&view=field' );
+  }
+  
+  /**
+   * logic to create the edit element screen
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function edit( )
+  {
+    JRequest::setVar( 'view', 'field' );
+    JRequest::setVar( 'hidemainmenu', 1 );
+
+    $model  = $this->getModel('field');
+    $task   = JRequest::getVar('task');
+
+    $user =& JFactory::getUser();
+    // Error if checkedout by another administrator
+    if ($model->isCheckedOut( $user->get('id') )) {
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_( 'EDITED BY ANOTHER ADMIN' ) );
+    }
+    $model->checkout();
+
+    parent::display();
+  }
+  
+  function save()
+  {   
+    // Check for request forgeries
+    JRequest::checkToken() or die( 'Invalid Token' );
+    
+    $task   = JRequest::getVar('task');
+
+    // Sanitize
+    $post = JRequest::get('post');
+
+    $model = $this->getModel('field');
+
+    if ($row = $model->store($post)) {
+
+      switch ($task)
+      {
+        case 'apply':
+          $link = 'index.php?option=com_redform&view=field&hidemainmenu=1&cid[]='.$row->id;
+          break;
+
+        default:
+          $link = 'index.php?option=com_redform&view=fields';
+          break;
+      }
+      $msg  = JText::_( 'FIELD SAVED');
+
+      $cache = &JFactory::getCache('com_redform');
+      $cache->clean();
+
+    } else {
+      $msg  = '';
+      $link   = 'index.php?option=com_redform&view=fields';
+    }
+
+    $model->checkin();
+    $this->setRedirect( $link, $msg );
+  }
+  
+  /**
+   * logic for cancel an action
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function cancel()
+  {
+    // Check for request forgeries
+    JRequest::checkToken() or die( 'Invalid Token' );
+    
+    $row = & JTable::getInstance('Fields', 'Table');
+    $row->bind(JRequest::get('post'));
+    $row->checkin();
+
+    $this->setRedirect( 'index.php?option=com_redform&view=fields' );
+  }
+   
+ /**
+   * Logic to publish
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function publish()
+  {
+    $cid  = JRequest::getVar( 'cid', array(0), 'post', 'array' );
+
+    if (!is_array( $cid ) || count( $cid ) < 1) {
+      JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+    }
+
+    $model = $this->getModel('fields');
+
+    if(!$model->publish($cid, 1)) {
+      echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
+    }
+
+    $total = count( $cid );
+    $msg  = $total.' '.JText::_( 'FIELDS PUBLISHED');
+
+    $this->setRedirect( 'index.php?option=com_redform&view=fields', $msg );
+  }
+
+  /**
+   * Logic to unpublish
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function unpublish()
+  {
+    $cid  = JRequest::getVar( 'cid', array(0), 'post', 'array' );
+
+    if (!is_array( $cid ) || count( $cid ) < 1) {
+      JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+    }
+
+    $model = $this->getModel('fields');
+
+    if(!$model->publish($cid, 0)) {
+      echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
+    }
+
+    $total = count( $cid );
+    $msg  = $total.' '.JText::_( 'FIELDS UNPUBLISHED');
+
+    $this->setRedirect( 'index.php?option=com_redform&view=fields', $msg );
+  }
+  
+
+  /**
+   * Logic to delete element
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function remove()
+  {
+    global $option;
+
+    $cid    = JRequest::getVar( 'cid', array(0), 'post', 'array' );
+
+    if (!is_array( $cid ) || count( $cid ) < 1) {
+      JError::raiseError(500, JText::_( 'Select an item to delete' ) );
+    }
+
+    $model = $this->getModel('fields');
+
+    if ($model->delete($cid)) {
+    	$msg = JText::_('FIELDS DELETED');
+    }
+    else {    	
+      $msg = JText::_('FIELDS DELETION ERROR' . ': ' . $model->getError());
+    }
+
+    $cache = &JFactory::getCache('com_redform');
+    $cache->clean();
+
+    $this->setRedirect( 'index.php?option=com_redform&view=fields', $msg );
+  }
+  
+  function sanitize()
+  {  	
+    $model = $this->getModel('fields');
+    
+    if ($model->sanitize()) {
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('SANITIZE_COMPLETE'));
+    }
+    else {
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('SANITIZE_ERROR'));    	
+    }
+  }
 }
 ?>

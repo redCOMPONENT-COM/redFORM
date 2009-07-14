@@ -75,6 +75,6 @@ JHTML::_('behavior.tooltip');
 	echo $pane->endPane();
 	?>
 	<input type="hidden" name="option" value="com_redform" />
-	<input type="hidden" name="task" value="configuration" />
+	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="controller" value="configuration" />
 </form>

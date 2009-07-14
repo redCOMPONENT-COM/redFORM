@@ -20,8 +20,25 @@ class RedformController extends JController
 	 *
 	 * @access	public
 	 */
-	function display() {
-		parent::display();
-	}	
+  function display()
+  {
+    // set a default view
+    if (JRequest::getVar('view', '') == '') {
+      JRequest::setVar('view', 'forms');    
+    }
+    parent::display();
+  }
+  
+  /**
+   * Clears log file
+   *
+   */
+  function clearlog()
+  {
+    RedformHelperLog::clear();
+    $msg = JText::_('LOG CLEARED');
+    $this->setRedirect('index.php?option=com_redform&view=log', $msg);
+    $this->redirect();
+  }
 }
 ?>

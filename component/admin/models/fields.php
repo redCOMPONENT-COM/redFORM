@@ -16,6 +16,14 @@ jimport( 'joomla.application.component.model' );
  * Fields Model
  */
 class RedformModelFields extends JModel {
+
+	/**
+	 * the data
+	 *
+	 * @var array
+	 */
+	protected $_data = null;
+	
 	/** @var integer Total entries */
 	protected $_total = null;
 	
@@ -28,20 +36,42 @@ class RedformModelFields extends JModel {
 	/**
 	 * Show all fields that can be used for a value
 	 */
-	function getFields() {
-		$db = JFactory::getDBO();
-		$form_id = JRequest::getInt('form_id', false);
-		
-		/* Get all the fields based on the limits */
-		$query = "SELECT q.*, c.formname, CONCAT(c.formname, ' :: ', q.field) AS fieldname
-				FROM #__rwf_fields q, #__rwf_forms c
-				WHERE q.form_id = c.id ";
-		if ($form_id && $form_id > 0) {
-			$query .= "AND c.id = ".$form_id." ";
+	function getFields() 
+	{
+		if (empty($this->_data))
+		{
+			$db = & JFactory::getDBO();
+
+			// first, call the pagination to set the limits
+			$this->getPagination();
+			
+			$db->setQuery($this->_buildQuery(), $this->_limitstart, $this->_limit);
+			$this->_data = $db->loadObjectList();
 		}
-		$query .= "ORDER BY c.id, q.ordering";
-		$db->setQuery($query, $this->_limitstart, $this->_limit);
-		return $db->loadObjectList();
+		return $this->_data;
+	}
+	
+	function _buildQuery()
+	{
+		$form_id = JRequest::getInt('form_id', false);
+      
+		/* Get all the fields based on the limits */
+		$query = ' SELECT q.*, c.formname, CONCAT(c.formname, " :: ", q.field) AS fieldname '
+		       . ' FROM #__rwf_fields q, #__rwf_forms c '
+		       . ' WHERE q.form_id = c.id '
+		       ;
+		if ($form_id && $form_id > 0) {
+			$query .= ' AND c.id = '.$form_id;
+		}
+		$query .= ' ORDER BY c.id, q.ordering ';
+		return $query;
+	}
+	
+	function getFormsOptions()
+	{
+		$query = "SELECT id AS value, formname AS text FROM #__rwf_forms";
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
 	}
 	
 	function getPagination() {
@@ -59,166 +89,90 @@ class RedformModelFields extends JModel {
 	}
 	
 	/**
-	 * Method to get the total number of testimonial items for the category
+	 * Method to get the total number of items return by the query
 	 *
 	 * @access public
 	 * @return integer
 	 */
-	function getTotal() {
+	function getTotal() 
+	{
 		// Lets load the content if it doesn't already exist
 		if (empty($this->_total))
 		{
-			$query = "SELECT *"
-			. "\n FROM #__rwf_fields";
-			$this->_total = $this->_getListCount($query);
+			$this->_total = $this->_getListCount($this->_buildQuery());
 		}
 
 		return $this->_total;
 	}
-	
-	/**
-    * Publish or Unpublish fields
-    */
-   function getPublish() {
-      global $mainframe;
+	 
+ /**
+   * Method to (un)publish
+   *
+   * @access  public
+   * @return  boolean True on success
+   * @since 0.9
+   */
+  function publish($cid = array(), $publish = 1, $user_id = 0)
+  {
+    $user   =& JFactory::getUser();
 
-      $cids = JRequest::getVar('cid');
-      $task = JRequest::getCmd('task');
-      $state = ($task == 'publish') ? 1 : 0;
-      $user = JFactory::getUser();
-      $row = $this->getTable();
+    $table = & $this->getTable('Fields');
+    if (!$table->publish($cid, $publish)) {
+      $this->setError($table->getError());
+      return false;
+    }
+    
+    return true;
+  }
 	  
-      if ($row->Publish($cids, $state, $user->id)) {
-         if ($state == 1) $mainframe->enqueueMessage(JText::_('Fields have been published'));
-         else $mainframe->enqueueMessage(JText::_('Fields have been unpublished'));
-      }
-      else {
-         if ($state == 1) $mainframe->enqueueMessage(JText::_('Fields could not be published'));
-         else $mainframe->enqueueMessage(JText::_('Fields could not be unpublished'));
-      }
-   }
-   
    /**
-    * Retrieve a field to edit
+    * Delete items
     */
-   function getField() {
-      $row = $this->getTable();
-      $my = JFactory::getUser();
-      $id = JRequest::getVar('cid');
-
-      /* load the row from the db table */
-      $row->load($id[0]);
-
-      if ($id[0]) {
-         // do stuff for existing records
-         $result = $row->checkout( $my->id );
-      } else {
-         // do stuff for new records
-         $row->published    = 1;
-      }
-      return $row;
-   }
-   
-   /**
-    * Save a field
-    */
-   function getSaveField() {
-      global $mainframe;
-      $row = $this->getTable();
-	 $oldrow = $this->getTable();
-	 $field_id = JRequest::getInt('id', false);
-	 /* Check if a field moved form */
-	 if ($field_id)  {
-		 $oldrow->load($field_id);
-	 }
-	 
-	 /* Get the posted data */
-	 $post = JRequest::get('post');
-	 
-	 /* Check field order */
-	 $row->load($field_id);
-	 if (empty($row->ordering)) $post['ordering'] = $row->getNextOrder();
-	 
-      if (!$row->bind($post)) {
-         $mainframe->enqueueMessage(JText::_('There was a problem binding the field data'), 'error');
-         return false;
-      }
-	  
-      /* pre-save checks */
-      if (!$row->check()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem checking the field data'), 'error');
-         return false;
-      }
-
-      /* save the changes */
-      if (!$row->store()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem storing the field data'), 'error');
-         return false;
-      }
-	  
-      $row->checkin();
-      $mainframe->enqueueMessage(JText::_('The field has been saved'));
-	 
-	 /* Add form table */
-	 $this->AddFieldTable($row, $oldrow);
-	 
-      return $row;
-   }
-   
-   /**
-    * Delete a field
-    */
-	function getRemoveField() {
-		global $mainframe;
+	function delete($cid) 
+	{
+		$mainframe = & JFactory::getApplication();
 		$db = JFactory::getDBO();
-		$cid = JRequest::getVar('cid');
 		JArrayHelper::toInteger( $cid );
-		
-		if (!is_array( $cid ) || count( $cid ) < 1) {
-			$mainframe->enqueueMessage(JText::_('No field found to delete'));
+
+		$cids = 'id=' . implode( ' OR id=', $cid );
+		/* Check each field the form it belongs to and delete the column */
+		$q = "SELECT field, form_id
+					FROM #__rwf_fields
+					WHERE ( $cids )";
+		$db->setQuery($q);
+		$fields = $db->loadObjectList();
+			
+		foreach ($fields as $key => $field) {
+			$tablefield = str_replace(' ', '', strtolower($field->field));
+			$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$field->form_id)." DROP ".$db->nameQuote($tablefield);
+			$db->setQuery($q);
+			if (!$db->query()) {
+				JError::raiseWarning('error', JText::_('Cannot remove field from old form').' '.$db->getErrorMsg());
+			}
+		}
+			
+		/* Delete the fields */
+		$query = "DELETE FROM #__rwf_fields"
+		       . "\n  WHERE ( $cids )";
+		$db->setQuery( $query );
+		if (!$db->query()) {
+			$this->setError(JText::_('A problem occured when deleting the field'));
 			return false;
 		}
-		
-		if (count($cid)) {
-			$cids = 'id=' . implode( ' OR id=', $cid );
-			/* Check each field the form it belongs to and delete the column */
-			$q = "SELECT field, form_id
-				FROM #__rwf_fields
-				WHERE ( $cids )";
+		else {
+			/* Delete the values */
+			$cids = 'field_id=' . implode( ' OR id=', $cid );
+			$q = "DELETE FROM #__rwf_values
+			WHERE ( $cids )";
 			$db->setQuery($q);
-			$fields = $db->loadObjectList();
-			
-			foreach ($fields as $key => $field) {
-				$tablefield = str_replace(' ', '', strtolower($field->field));
-				$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$field->form_id)." DROP ".$db->nameQuote($tablefield);
-				$db->setQuery($q);
-				if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot remove field from old form').' '.$db->getErrorMsg());
-			}
-			
-			/* Delete the fields */
-			$query = "DELETE FROM #__rwf_fields"
-			. "\n  WHERE ( $cids )";
-			$db->setQuery( $query );
 			if (!$db->query()) {
-				$mainframe->enqueueMessage(JText::_('A problem occured when deleting the field'));
+				$this->setError(JText::_('A problem occured when deleting the field values'));
 			}
 			else {
-				if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Fields have been deleted'));
-				else $mainframe->enqueueMessage(JText::_('Field has been deleted'));
-				
-				/* Delete the values */
-				$cids = 'field_id=' . implode( ' OR id=', $cid );
-				$q = "DELETE FROM #__rwf_values
-				WHERE ( $cids )";
-				$db->setQuery($q);
-				if (!$db->query()) {
-					$mainframe->enqueueMessage(JText::_('A problem occured when deleting the field values'));
-				}
-				else {
-					$mainframe->enqueueMessage(JText::_('Field values have been deleted'));
-				}
+				$mainframe->enqueueMessage(JText::_('Field values have been deleted'));
 			}
 		}
+		return true;
 	}
    
    /**
@@ -245,116 +199,12 @@ class RedformModelFields extends JModel {
 			}
 		}
 	}
-	
-	/**
-	 * Adds a table if it doesn't exist yet
-	 *
-	 * @param object field table record object with updated value
-	 * @param object previously recorded field table record object corresponding to current field id
-	 */
-	private function AddFieldTable($row, $oldrow) {
-		$db = & JFactory::getDBO();
-		/* Make sure that field name is valid */
-		$field = str_replace(' ', '', strtolower($row->field));
-		$oldfield = str_replace(' ', '', strtolower($oldrow->field));
-		
-		/* Get columns from the active form */
-		$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$row->form_id))." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($oldfield);
-		$db->setQuery($q);
-		$db->query();
-		$result = $db->loadResult();
-		
-		/* Check if the name has changed */
-		if ($result && $row->field != $oldrow->field) {
-			$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$row->form_id)."
-				CHANGE `".$oldfield."` `".$field."` TEXT";
-			$db->setQuery($q);
-			if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot rename fieldname').' '.$db->getErrorMsg());
-		}
-		else {
-			/* Check if the field already exists */
-			if (!$result) {
-				/* Field doesn't exist, need to create it */
-				$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$row->form_id). " ADD `".$field."` TEXT NULL";
-				$db->setQuery($q);
-				if (!$db->query()) JError::raiseWarning('error', $db->getErrorMsg());
-			}
-		}
-		
-		/* Check if the field moved form */
-		if ($oldrow->form_id && $row->form_id <> $oldrow->form_id) {
-			$result = array();
-			/* Check if the column exists on the old table */
-			$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$oldrow->form_id))." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
-			$db->setQuery($q);
-			$db->query();
-			$result = $db->loadResult();
 			
-			/* Check if the field already exists */
-			if ($result) {
-				/* Drop the old column */
-				$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$oldrow->form_id)." DROP ".$db->nameQuote($field);
-				$db->setQuery($q);
-				if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot remove field from old form').' '.$db->getErrorMsg());
-			}
-		}
-		
-		/* Get indexes from the active form */
-		$indexresult = null;
-		$q = "SHOW KEYS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$row->form_id))." WHERE key_name = ".$db->Quote($field);
-		$db->setQuery($q);
-		$db->query();
-		$indexresult = $db->loadAssocList('Key_name');
-		
-		/* Check if the field has to be unique */
-		$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$row->form_id);
-		if ($row->unique && !isset($indexresult[$field])) {
-			$q .= " ADD UNIQUE (`".$field."` (255))";
-			$db->setQuery($q);
-			if (!$db->query()) {
-				JError::raiseWarning('error', JText::_('Cannot make the field unique').' '.$db->getErrorMsg());
-				/* Remove unique status */
-				$q = "UPDATE ".$db->nameQuote('#__rwf_fields')."
-					SET ".$db->nameQuote('unique')." = 0
-					WHERE id = ".$row->id;
-				$db->setQuery($q);
-				$db->query();
-			}
-		}
-		else if (isset($indexresult[$field])) {
-			$q .= " DROP INDEX `".$field."`";
-			$db->setQuery($q);
-			if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot remove the field unique status').' '.$db->getErrorMsg());
-		}
-	}
-	
-	/**
-	 * Add the field to the library
-	 */
-	public function getAddLibrary() {
-		$db = JFactory::getDBO();
-		$cid = JRequest::getVar('cid');
-		$q = "INSERT INTO #__rwf_library_fields (`field`, `published`, `checked_out`, `checked_out_time`, `ordering`, `validate`, `unique`, `tooltip`)
-			(SELECT `field`, `published`, 0 AS `checked_out`, `checked_out_time`, `ordering`, `validate`, `unique`, `tooltip` 
-				FROM #__rwf_fields 
-				WHERE id = ".$cid[0].")";
-		$db->setQuery($q);
-		if (!$db->query()) JError::raisewarning(0, $db->getErrorMsg());
-		else {
-			/* Add the field values */
-			$q = "INSERT INTO #__rwf_library_values (`value`, `published`, `checked_out`, `checked_out_time`, `field_id`, `fieldtype`, `ordering`)
-			(SELECT `value`, `published`, 0 AS `checked_out`, `checked_out_time`, ".$db->insertid()." AS `field_id`, `fieldtype`, `ordering` 
-				FROM #__rwf_values 
-				WHERE field_id = ".$cid[0].")";
-			$db->setQuery($q);
-			if (!$db->query()) JError::raisewarning(0, $db->getErrorMsg());
-		}
-	}
-	
 	/**
 	 * Function to clean up the database of unused fields
 	 */
-	public function getSanitize() {
+	public function sanitize() 
+	{
 		$db = JFactory::getDBO();
 		/* Get the form IDs */
 		$q = "SELECT id FROM #__rwf_forms";
@@ -390,7 +240,7 @@ class RedformModelFields extends JModel {
 				$db->query();
 			}
 		}
-		JError::raiseNotice(0, JText::_('SANITIZE_COMPLETE'));
+		return true;
 	}
 }
 ?>

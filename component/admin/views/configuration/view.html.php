@@ -22,11 +22,7 @@ class RedformViewConfiguration extends JView {
 	 * @return void
 	 **/
 	function display($tpl = null) {
-		/* Get the task */
-		$task = JRequest::getCmd('task');
-		
-		if ($task == 'apply') $this->get('SaveConfiguration');
-		
+				
 		/* Get the configuration */
 		$configuration = $this->get('Configuration');
 		
@@ -48,7 +44,9 @@ class RedformViewConfiguration extends JView {
 	
 	function toolbar() {
 		JToolBarHelper::title(JText::_('Configuration'), 'redform_config');
+    JToolBarHelper::save();
 		JToolBarHelper::apply();
+    JToolBarHelper::cancel();
 	}
 }
 ?>

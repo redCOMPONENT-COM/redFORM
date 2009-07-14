@@ -12,8 +12,8 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 JPluginHelper::importPlugin( 'content' );
 $dispatcher = JDispatcher::getInstance();
 $form = new stdClass();
-$form->text = '{redform}'.JRequest::getInt('form_id').',1{/redform}';
-$results = $dispatcher->trigger('PrepareEvent', array($form));
+$form->text = '{redform}'.$this->submitter->form_id.',1{/redform}';
+$results = $dispatcher->trigger('onPrepareEvent', array($form));
 if (!isset($results[0])) {
 	$redform = JText::_('REGISTRATION_NOT_POSSIBLE');
 }

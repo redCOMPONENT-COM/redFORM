@@ -7,10 +7,7 @@
  */
 
 defined('_JEXEC') or die('Restricted access');
-if (!$this->ok) {
-	echo JText::_('Sorry, there was a problem with your submission');
-}
-else {
+
 	if ($this->vmsettings->virtuemartactive) {
 		global $mainframe;
 		$mainframe->redirect(JRoute::_('index.php?page=shop.product_details&product_id='.$this->vmsettings->vmproductid.'&option=com_virtuemart&Itemid='.$this->vmsettings->vmitemid));
@@ -24,8 +21,6 @@ else {
 			echo '<div id="productimage">'.JHTML::_('image', $productimage, $this->productdetails->product_name).'</div>';
 			echo '<div id="productname">'.$this->productdetails->product_name.'</div>';
 		}
-		if ($this->ok && $this->save[0]) echo $this->save[1];
 	}
-}
 ?>
 
