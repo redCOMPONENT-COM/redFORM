@@ -25,7 +25,10 @@ class RedformModelRedform extends JModel {
 	
   var $_form  = null;
 	
-	function __construct() {
+  var $mailer = null;
+  
+	function __construct() 
+	{
 		parent::__construct();
 		
 		$this->setFormId(JRequest::getInt('form_id'));
@@ -342,14 +345,18 @@ class RedformModelRedform extends JModel {
 	 */
 	 private function Mailer() 
 	 {
-		 global $mainframe;
-		 jimport('joomla.mail.helper');
-		 /* Start the mailer object */
-		 $this->mailer = &JFactory::getMailer();
-		 $this->mailer->isHTML(true);
-		 $this->mailer->From = $mainframe->getCfg('mailfrom');
-		 $this->mailer->FromName = $mainframe->getCfg('sitename');
-		 $this->mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
+	 	 if (empty($this->mailer))
+	 	 {
+			 $mainframe = & JFactory::getApplication();
+			 jimport('joomla.mail.helper');
+			 /* Start the mailer object */
+			 $this->mailer = &JFactory::getMailer();
+			 $this->mailer->isHTML(true);
+			 $this->mailer->From = $mainframe->getCfg('mailfrom');
+			 $this->mailer->FromName = $mainframe->getCfg('sitename');
+			 $this->mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
+	 	 }
+	 	 return $this->mailer;
 	 }
 	 
 	 /**
@@ -564,23 +571,25 @@ class RedformModelRedform extends JModel {
 	{
 		$submitter_email = $answers->getSubmitterEmail();
 		
+		$mailer = & $this->Mailer();
+		
 		if (JMailHelper::isEmailAddress($submitter_email))
 		{
 			/* Add the email address */
-			$this->mailer->AddAddress($submitter_email);
+			$mailer->AddAddress($submitter_email);
 	
 			/* Mail submitter */
 			$htmlmsg = '<html><head><title>Welcome</title></title></head><body>'.$form->submissionbody.'</body></html>';
-			$this->mailer->setBody($htmlmsg);
-			$this->mailer->setSubject($form->submissionsubject);
+			$mailer->setBody($htmlmsg);
+			$mailer->setSubject($form->submissionsubject);
 	
 			/* Send the mail */
-			if (!$this->mailer->Send()) {
+			if (!$mailer->Send()) {
 				JError::raiseWarning(0, JText::_('NO_MAIL_SEND').' (to submitter)');
-				RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (to submitter):'.$this->mailer->error);
+				RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (to submitter):'.$mailer->error);
 			}
 			/* Clear the mail details */
-			$this->mailer->ClearAddresses();
+			$mailer->ClearAddresses();
 		}	
 	}
 }
