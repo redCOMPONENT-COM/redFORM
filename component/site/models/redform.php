@@ -149,7 +149,8 @@ class RedformModelRedform extends JModel {
 		if (JRequest::getVar('event_task') == 'userregister') $totalforms--;
 		/* Sign up minimal 1 */
 		if ($totalforms == 0) $totalforms++;
-			
+		
+		$allanswers = array();
 		for ($signup = 1; $signup <= $totalforms; $signup++) 
 		{
 			// new answers object
@@ -203,237 +204,109 @@ class RedformModelRedform extends JModel {
 				// save answers
 				$answers->save($postvalues);		
 			}
-				
-				/* Clean up any signups that need to be removed */
-				$this->getConfirmAttendees();
-				
-				// mailing lists management
-				// get info from answers
-        $fullname = $answers->getFullname();
-				$submitter_email = $answers->getSubmitterEmail();
-				$listnames = $answers->getListNames();
-				
-				if ( count($listnames) > 0 
-				  && (empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message))) 
-				{
-					foreach ($listnames as $key => $alllistname) 
-					{
-						foreach ((array) $alllistname as $listkey => $mailinglistname) 
-						{
-							/* Check if we have a fullname */
-							if (!isset($fullname)) $fullname = $submitter_email;
-							/* Check if mailinglist integration is enabled */
-							if ($submitter_email) {
-								/* Check to which  mailinglist user should be added */
-								$q = "SELECT name, value
-									FROM #__rwf_configuration
-									WHERE name in ('use_phplist', 'use_acajoom', 'use_ccnewsletter', 'phplist_path')";
-								$db->setQuery($q);
-								$configuration = $db->loadObjectList('name');
-								
-								/* Add the user to ccNewsletter */
-								if (isset($configuration['use_ccnewsletter']) && $configuration['use_ccnewsletter']->value) {
-									/* Check if ccNewsletter is installed */
-									$q = "SELECT COUNT(id) FROM #__components WHERE link = 'option=com_ccnewsletter'";
-									$db->setQuery($q);
-									
-									if ($db->loadResult() > 0) {
-										/* ccNewsletter is installed, let's add the user */
-										$this->addTablePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_ccnewsletter' . DS . 'tables' );
-										$ccsubscriber = $this->getTable('subscriber');
-										$ccsettings = array('name' => $fullname,
-															'email' => $submitter_email,
-															'plainText' => '0',
-															'enabled' => '1',
-															'sdate' => date('Y-m-d H:i:s'));
-										$ccsubscriber->bind($ccsettings);
-										$ccsubscriber->store();
-									}
-									
-								}
-								
-								/* Add the user to Acajoom */
-								if (isset($configuration['use_acajoom']) && $configuration['use_acajoom']->value) {
-									/* Check if Acajoom is installed */
-									$q = "SELECT COUNT(id) FROM #__components WHERE link = 'option=com_acajoom'";
-									$db->setQuery($q);
-									
-									if ($db->loadResult() > 0) {
-										/* Acajoom is installed, let's add the user */
-										$acajoomsubscriber = $this->getTable('acajoom_subscribers');
-										$myid = JFactory::getUser();
-										if (!isset($myid->id)) $myid->id = 0;
-										$acajoomsettings = array('user_id' => $myid->id,
-															'name' => $fullname,
-															'email' => $submitter_email,
-															'subscribe_date' => date('Y-m-d H:i:s'));
-										$acajoomsubscriber->bind($acajoomsettings);
-										if (!$acajoomsubscriber->store()) {
-											if (stristr($db->getErrorMsg(), 'duplicate entry')) {
-												$mainframe->enqueueMessage(JText::_('This e-mail address is already signed up for the newsletter'), 'error');
-											}
-											else $mainframe->enqueueMessage(JText::_('There was a problem signing up for the newsletter').' '.$db->getErrorMsg(),'error');
-										}
-										
-										/* Check if the mailinglist exists, add the user to it */
-										$list = false;
-										$q = "SELECT id, acc_id FROM #__acajoom_lists WHERE list_name = ".$db->Quote($mailinglistname)." LIMIT 1";
-										$db->setQuery($q);
-										$list = $db->loadObject();
-										
-										if ($db->getAffectedRows() > 0) {
-											/* Load the queue table */
-											$acajoomqueue = $this->getTable('acajoom_queue');
-											
-											/* Collect subscriber details */
-											$queue = new stdClass;
-											$queue->id = 0;
-											$queue->subscriber_id = $acajoomsubscriber->id;
-											$queue->list_id = $list->id;
-											$queue->type = 1;
-											$queue->mailing_id = 0;
-											$queue->send_date = '0000-00-00 00:00:00';
-											$queue->suspend = 0;
-											$queue->delay = 0;
-											$queue->acc_level = $list->acc_id;
-											$queue->issue_nb = 0;
-											$queue->published = 0;
-											$queue->params = '';
-											
-											$acajoomqueue->bind($queue);
-											$acajoomqueue->store();
-										}
-									}
-								}
-								
-								/* Add the user to PHPList */
-								if (isset($configuration['use_phplist']) && $configuration['use_phplist']->value && !empty($mailinglistname)) {
-									if (JFolder::exists(JPATH_SITE.DS.$configuration['phplist_path']->value)) {
-										/* Include the PHPList API */
-										require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'phplistuser.php');
-										require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'simpleemail.php');
-										require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'query.php');
-										require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'errorhandler.php');
-										
-										/* Get the PHPList path configuration */
-										PhpListUser::$PHPListPath = JPATH_SITE.DS.$configuration['phplist_path']->value;
-										
-										$user = new PhpListUser();
-										$user->set_email($submitter_email);
-										$listid = $user->getListId($mailinglistname);
-										$user->addListId($listid);
-										$user->save();
-									}
-								}
-							}
-						}
-					}
-				}
-				
-				/* Reset the db */
-				$db->select($mainframe->getCfg('db'));
-			} /* End multi-user signup */
-			
-			// send the notifications mails if not a redevent registration, or if this is the review, or if there is no review
-      if (empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message)) 
+
+			/* Clean up any signups that need to be removed */
+			$this->getConfirmAttendees();
+
+
+			if ( empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message))
 			{
-				/* Load the mailer in case we need to inform someone */
-				if ($form->submitterinform || $form->contactpersoninform) {
-					$this->Mailer();
+				$this->updateMailingList($answers);
+			}
+
+			$allanswers[] = $answers;
+		} /* End multi-user signup */
+			
+		// send the notifications mails if not a redevent registration, or if this is the review, or if there is no review
+		if (empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message))
+		{
+			/* Load the mailer in case we need to inform someone */
+			if ($form->submitterinform || $form->contactpersoninform) {
+				$this->Mailer();
+			}
+
+			/* Send a submission mail to the submitters if set */
+			if ($form->submitterinform) 
+			{
+				foreach ($allanswers as $answers)
+				{
+					$this->notifysubmitter($answers, $form);
 				}
+			}
 				
-				/* Send a submission mail to the submitter if set */
-				if ($form->submitterinform && $submitter_email) {
-					/* Add the email address */
-					$this->mailer->AddAddress($submitter_email);
-					
-					/* Mail submitter */
-					$htmlmsg = '<html><head><title>Welcome</title></title></head><body>'.$form->submissionbody.'</body></html>';
-					$this->mailer->setBody($htmlmsg);
-					$this->mailer->setSubject($form->submissionsubject);
-					
-					/* Send the mail */
-					if (!$this->mailer->Send()) {
-						JError::raiseWarning(0, JText::_('NO_MAIL_SEND').' (to submitter)');
-						RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (to submitter):'.$this->mailer->error);
-					}
-					
-					/* Clear the mail details */
-					$this->mailer->ClearAddresses();
-				}
-				
-				/* Inform contact person if need */
-				if ($form->contactpersoninform) {
-					if (!isset($fullname)) $fullname = $submitter_email;
-					$this->mailer->AddAddress($form->contactpersonemail, $fullname);
-					/* Get the event name */
-					$eventname = '';
-					if (JRequest::getInt('xref', false)) {
-						$q = "SELECT title
+			/* Inform contact person if need */
+			if ($form->contactpersoninform) 
+			{
+				if (!isset($fullname)) $fullname = $submitter_email;
+				$this->mailer->AddAddress($form->contactpersonemail, $fullname);
+				/* Get the event name */
+				$eventname = '';
+				if (JRequest::getInt('xref', false)) {
+					$q = "SELECT title
 							FROM #__redevent_events e
 							LEFT JOIN #__redevent_event_venue_xref x
 							ON x.eventid = e.id
 							WHERE x.id = ".JRequest::getInt('xref');
-						$db->setQuery($q);
-						$eventname = $db->loadResult();
-					}
-					if (JRequest::getInt('xref', false)) {
-						$tags = array('[formname]', '[eventname]');
-						$values = array($form->formname, $eventname);
-						$this->mailer->setSubject(str_replace($tags, $values, JText::_('A new submission for form [formname] and event [eventname]')));
-					}
-					else {
-						$this->mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('A new submission for form [formname]')));
-					}
-					$htmlmsg = '<html><head><title></title></title></head><body>';
-					$htmlmsg .= JText::_('A new submission has been received.');
-					/* Add user submitted data if set */
-					if ($form->contactpersonfullpost) {
-						if (JRequest::getInt('productid', false)) {
-							$productdetails = $this->getProductDetails();
-							if (!stristr('http', $productdetails->product_full_image)){ 
-								$productimage = JURI::root().'/components/com_virtuemart/shop_image/product/'.$productdetails->product_full_image;
-							}
-							else $productimage = $productdetails->product_full_image;
-							$htmlmsg .= '<div id="productimage">'.JHTML::_('image', $productimage, $productdetails->product_name).'</div>';
-							$htmlmsg .= '<div id="productname">'.$productdetails->product_name.'</div>';
+					$db->setQuery($q);
+					$eventname = $db->loadResult();
+				}
+				if (JRequest::getInt('xref', false)) {
+					$tags = array('[formname]', '[eventname]');
+					$values = array($form->formname, $eventname);
+					$this->mailer->setSubject(str_replace($tags, $values, JText::_('A new submission for form [formname] and event [eventname]')));
+				}
+				else {
+					$this->mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('A new submission for form [formname]')));
+				}
+				$htmlmsg = '<html><head><title></title></title></head><body>';
+				$htmlmsg .= JText::_('A new submission has been received.');
+				/* Add user submitted data if set */
+				if ($form->contactpersonfullpost) {
+					if (JRequest::getInt('productid', false)) {
+						$productdetails = $this->getProductDetails();
+						if (!stristr('http', $productdetails->product_full_image)){
+							$productimage = JURI::root().'/components/com_virtuemart/shop_image/product/'.$productdetails->product_full_image;
 						}
-						$q = "SELECT *
+						else $productimage = $productdetails->product_full_image;
+						$htmlmsg .= '<div id="productimage">'.JHTML::_('image', $productimage, $productdetails->product_name).'</div>';
+						$htmlmsg .= '<div id="productname">'.$productdetails->product_name.'</div>';
+					}
+					$q = "SELECT *
 							FROM ".$db->nameQuote('#__rwf_forms_'.$form->id)." f
 							LEFT JOIN #__rwf_submitters s
 							ON s.answer_id = f.id
 							WHERE submit_key = ".$db->Quote($submit_key);
-						$db->setQuery($q);
-						$results = $db->loadObjectList();
-						if (is_array($results)) {
-							$patterns[0] = '/\r\n/';
-							$patterns[1] = '/\r/';
-							$patterns[2] = '/\n/';
-							$replacements[2] = '<br />';
-							$replacements[1] = '<br />';
-							$replacements[0] = '<br />';
-							foreach ($results as $rkey => $result) {
-								$htmlmsg .= '<br /><table border="1">';
-								foreach ($fieldlist as $key => $field) {
-									$value = $field->field;
-									$userinput = preg_replace($patterns, $replacements, $results[$rkey]->$value);
-									$htmlmsg .= '<tr><td>'.$field->userfield.'</td><td>';
-									$htmlmsg .= str_replace('~~~', '<br />', $userinput);
-									$htmlmsg .= '&nbsp;';
-									$htmlmsg .= '</td></tr>'."\n";
-								}
-								$htmlmsg .= "</table><br />";
+					$db->setQuery($q);
+					$results = $db->loadObjectList();
+					if (is_array($results)) {
+						$patterns[0] = '/\r\n/';
+						$patterns[1] = '/\r/';
+						$patterns[2] = '/\n/';
+						$replacements[2] = '<br />';
+						$replacements[1] = '<br />';
+						$replacements[0] = '<br />';
+						foreach ($results as $rkey => $result) {
+							$htmlmsg .= '<br /><table border="1">';
+							foreach ($fieldlist as $key => $field) {
+								$value = $field->field;
+								$userinput = preg_replace($patterns, $replacements, $results[$rkey]->$value);
+								$htmlmsg .= '<tr><td>'.$field->userfield.'</td><td>';
+								$htmlmsg .= str_replace('~~~', '<br />', $userinput);
+								$htmlmsg .= '&nbsp;';
+								$htmlmsg .= '</td></tr>'."\n";
 							}
+							$htmlmsg .= "</table><br />";
 						}
 					}
-					$htmlmsg .= '</body></html>';
-					$this->mailer->setBody($htmlmsg);
-					if (!$this->mailer->Send()) {
-            RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$this->mailer->error);;
-					}
-					$this->mailer->ClearAddresses();
 				}
+				$htmlmsg .= '</body></html>';
+				$this->mailer->setBody($htmlmsg);
+				if (!$this->mailer->Send()) {
+					RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$this->mailer->error);;
+				}
+				$this->mailer->ClearAddresses();
 			}
+		}
 			
 			/* All is good, check if we have an event in that case redirect to redEVENT */
 			if (JRequest::getInt('xref', false)) 
@@ -467,15 +340,16 @@ class RedformModelRedform extends JModel {
 	/**
 	 * Initialise the mailer object to start sending mails
 	 */
-	 private function Mailer() {
+	 private function Mailer() 
+	 {
 		 global $mainframe;
-		jimport('joomla.mail.helper');
-		/* Start the mailer object */
-		$this->mailer = &JFactory::getMailer();
-		$this->mailer->isHTML(true);
-		$this->mailer->From = $mainframe->getCfg('mailfrom');
-		$this->mailer->FromName = $mainframe->getCfg('sitename');
-		$this->mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
+		 jimport('joomla.mail.helper');
+		 /* Start the mailer object */
+		 $this->mailer = &JFactory::getMailer();
+		 $this->mailer->isHTML(true);
+		 $this->mailer->From = $mainframe->getCfg('mailfrom');
+		 $this->mailer->FromName = $mainframe->getCfg('sitename');
+		 $this->mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
 	 }
 	 
 	 /**
@@ -556,5 +430,158 @@ class RedformModelRedform extends JModel {
 	 	 $db->setQuery($query);
 	 	 return $db->loadObject();
 	 }
+
+  /**
+   * Adds email from answers to mailing list
+   *
+   * @param rfanswers object
+   */
+  function updateMailingList($rfanswers)
+	{
+    $db = JFactory::getDBO();
+     
+	 	// mailing lists management
+	 	// get info from answers
+	 	$fullname = $rfanswers->getFullname();
+	 	$submitter_email = $rfanswers->getSubmitterEmail();
+	 	$listnames = $rfanswers->getListNames();
+
+	 	foreach ((array) $listnames as $key => $alllistname)
+	 	{
+	 		foreach ((array) $alllistname as $listkey => $mailinglistname)
+	 		{
+	 			/* Check if we have a fullname */
+	 			if (!isset($fullname)) $fullname = $submitter_email;
+	 			/* Check if mailinglist integration is enabled */
+	 			if ($submitter_email) {
+	 				/* Check to which  mailinglist user should be added */
+	 				$q = "SELECT name, value
+                  FROM #__rwf_configuration
+                  WHERE name in ('use_phplist', 'use_acajoom', 'use_ccnewsletter', 'phplist_path')";
+	 				$db->setQuery($q);
+	 				$configuration = $db->loadObjectList('name');
+
+	 				/* Add the user to ccNewsletter */
+	 				if (isset($configuration['use_ccnewsletter']) && $configuration['use_ccnewsletter']->value) {
+	 					/* Check if ccNewsletter is installed */
+	 					$q = "SELECT COUNT(id) FROM #__components WHERE link = 'option=com_ccnewsletter'";
+	 					$db->setQuery($q);
+
+	 					if ($db->loadResult() > 0) {
+	 						/* ccNewsletter is installed, let's add the user */
+	 						$this->addTablePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_ccnewsletter' . DS . 'tables' );
+	 						$ccsubscriber = $this->getTable('subscriber');
+	 						$ccsettings = array('name' => $fullname,
+                              'email' => $submitter_email,
+                              'plainText' => '0',
+                              'enabled' => '1',
+                              'sdate' => date('Y-m-d H:i:s'));
+	 						$ccsubscriber->bind($ccsettings);
+	 						$ccsubscriber->store();
+	 					}
+
+	 				}
+
+	 				/* Add the user to Acajoom */
+	 				if (isset($configuration['use_acajoom']) && $configuration['use_acajoom']->value) {
+	 					/* Check if Acajoom is installed */
+	 					$q = "SELECT COUNT(id) FROM #__components WHERE link = 'option=com_acajoom'";
+	 					$db->setQuery($q);
+
+	 					if ($db->loadResult() > 0) {
+	 						/* Acajoom is installed, let's add the user */
+	 						$acajoomsubscriber = $this->getTable('acajoom_subscribers');
+	 						$myid = JFactory::getUser();
+	 						if (!isset($myid->id)) $myid->id = 0;
+	 						$acajoomsettings = array('user_id' => $myid->id,
+                              'name' => $fullname,
+                              'email' => $submitter_email,
+                              'subscribe_date' => date('Y-m-d H:i:s'));
+	 						$acajoomsubscriber->bind($acajoomsettings);
+	 						if (!$acajoomsubscriber->store()) {
+	 							if (stristr($db->getErrorMsg(), 'duplicate entry')) {
+	 								$mainframe->enqueueMessage(JText::_('This e-mail address is already signed up for the newsletter'), 'error');
+	 							}
+	 							else $mainframe->enqueueMessage(JText::_('There was a problem signing up for the newsletter').' '.$db->getErrorMsg(),'error');
+	 						}
+
+	 						/* Check if the mailinglist exists, add the user to it */
+	 						$list = false;
+	 						$q = "SELECT id, acc_id FROM #__acajoom_lists WHERE list_name = ".$db->Quote($mailinglistname)." LIMIT 1";
+	 						$db->setQuery($q);
+	 						$list = $db->loadObject();
+
+	 						if ($db->getAffectedRows() > 0) {
+	 							/* Load the queue table */
+	 							$acajoomqueue = $this->getTable('acajoom_queue');
+
+	 							/* Collect subscriber details */
+	 							$queue = new stdClass;
+	 							$queue->id = 0;
+	 							$queue->subscriber_id = $acajoomsubscriber->id;
+	 							$queue->list_id = $list->id;
+	 							$queue->type = 1;
+	 							$queue->mailing_id = 0;
+	 							$queue->send_date = '0000-00-00 00:00:00';
+	 							$queue->suspend = 0;
+	 							$queue->delay = 0;
+	 							$queue->acc_level = $list->acc_id;
+	 							$queue->issue_nb = 0;
+	 							$queue->published = 0;
+	 							$queue->params = '';
+
+	 							$acajoomqueue->bind($queue);
+	 							$acajoomqueue->store();
+	 						}
+	 					}
+	 				}
+
+	 				/* Add the user to PHPList */
+	 				if (isset($configuration['use_phplist']) && $configuration['use_phplist']->value && !empty($mailinglistname)) {
+	 					if (JFolder::exists(JPATH_SITE.DS.$configuration['phplist_path']->value)) {
+	 						/* Include the PHPList API */
+	 						require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'phplistuser.php');
+	 						require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'simpleemail.php');
+	 						require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'query.php');
+	 						require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'errorhandler.php');
+
+	 						/* Get the PHPList path configuration */
+	 						PhpListUser::$PHPListPath = JPATH_SITE.DS.$configuration['phplist_path']->value;
+
+	 						$user = new PhpListUser();
+	 						$user->set_email($submitter_email);
+	 						$listid = $user->getListId($mailinglistname);
+	 						$user->addListId($listid);
+	 						$user->save();
+	 					}
+	 				}
+	 			}
+	 		}
+	 	}
+	}
+	
+	function notifysubmitter($answers, $form)
+	{
+		$submitter_email = $answers->getSubmitterEmail();
+		
+		if (JMailHelper::isEmailAddress($submitter_email))
+		{
+			/* Add the email address */
+			$this->mailer->AddAddress($submitter_email);
+	
+			/* Mail submitter */
+			$htmlmsg = '<html><head><title>Welcome</title></title></head><body>'.$form->submissionbody.'</body></html>';
+			$this->mailer->setBody($htmlmsg);
+			$this->mailer->setSubject($form->submissionsubject);
+	
+			/* Send the mail */
+			if (!$this->mailer->Send()) {
+				JError::raiseWarning(0, JText::_('NO_MAIL_SEND').' (to submitter)');
+				RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (to submitter):'.$this->mailer->error);
+			}
+			/* Clear the mail details */
+			$this->mailer->ClearAddresses();
+		}	
+	}
 }
 ?>
