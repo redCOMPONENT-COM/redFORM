@@ -122,5 +122,6 @@ else { ?>
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="controller" value="values" />
+  <input type="hidden" name="view" value="values" />
 </form>
 <?php } ?>
