@@ -189,7 +189,7 @@ class RedformModelRedform extends JModel {
 				if (isset($postvalues['field'.$key]))
 				{
 					/* Get the answers */
-					$answers->addPostAnswer($db->nameQuote($field->field), $postvalues['field'.$key]);
+					$answers->addPostAnswer($field->field, $postvalues['field'.$key]);
 				}
 			}
 			

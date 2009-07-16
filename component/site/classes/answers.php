@@ -187,7 +187,7 @@ class rfanswers
     	$q = "UPDATE ".$db->nameQuote('#__rwf_forms_'. $this->_form_id);
     	$set = array();
     	foreach ($this->_fields as $ukey => $col) {
-    		$set[] = $col ." = ". $db->Quote($this->_values[$ukey]);
+    		$set[] = $db->nameQuote($col) ." = ". $db->Quote($this->_values[$ukey]);
     	}
     	$q .= ' SET '. implode(', ', $set);
     	$q .= " WHERE ID = ". $this->_answer_id;
@@ -200,12 +200,16 @@ class rfanswers
     else
     {
     	$values = array();
+    	$fields = array();
+      foreach ($this->_fields as $v) {
+        $fields[] = $db->nameQuote($v);
+      }
     	foreach ($this->_values as $v) {
     		$values[] = $db->Quote($v);
     	}
     	/* Construct the query */
     	$q = "INSERT INTO ".$db->nameQuote('#__rwf_forms_'. $this->_form_id)."
-            (" . implode(', ', $this->_fields) . ")
+            (" . implode(', ', $fields) . ")
             VALUES (" . implode(', ', $values) . ")";
     	$db->setQuery($q);
     	
