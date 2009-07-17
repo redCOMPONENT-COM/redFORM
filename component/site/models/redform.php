@@ -263,9 +263,12 @@ class RedformModelRedform extends JModel {
 				}
 				$htmlmsg = '<html><head><title></title></title></head><body>';
 				$htmlmsg .= JText::_('A new submission has been received.');
-				/* Add user submitted data if set */
-				if ($form->contactpersonfullpost) {
-					if (JRequest::getInt('productid', false)) {
+				
+        /* Add user submitted data if set */
+				if ($form->contactpersonfullpost) 
+				{
+					if (JRequest::getInt('productid', false)) 
+					{
 						$productdetails = $this->getProductDetails();
 						if (!stristr('http', $productdetails->product_full_image)){
 							$productimage = JURI::root().'/components/com_virtuemart/shop_image/product/'.$productdetails->product_full_image;
@@ -274,6 +277,7 @@ class RedformModelRedform extends JModel {
 						$htmlmsg .= '<div id="productimage">'.JHTML::_('image', $productimage, $productdetails->product_name).'</div>';
 						$htmlmsg .= '<div id="productname">'.$productdetails->product_name.'</div>';
 					}
+					
 					$q = "SELECT *
 							FROM ".$db->nameQuote('#__rwf_forms_'.$form->id)." f
 							LEFT JOIN #__rwf_submitters s
@@ -281,18 +285,23 @@ class RedformModelRedform extends JModel {
 							WHERE submit_key = ".$db->Quote($submit_key);
 					$db->setQuery($q);
 					$results = $db->loadObjectList();
-					if (is_array($results)) {
+					
+					if (is_array($results)) 
+					{
 						$patterns[0] = '/\r\n/';
 						$patterns[1] = '/\r/';
 						$patterns[2] = '/\n/';
 						$replacements[2] = '<br />';
 						$replacements[1] = '<br />';
 						$replacements[0] = '<br />';
-						foreach ($results as $rkey => $result) {
+						
+						foreach ($results as $rkey => $result) 
+						{
 							$htmlmsg .= '<br /><table border="1">';
-							foreach ($fieldlist as $key => $field) {
-								$value = $field->field;
-								$userinput = preg_replace($patterns, $replacements, $results[$rkey]->$value);
+							foreach ($fieldlist as $key => $field) 
+							{
+								$value = 'field_'. $field->id;
+								$userinput = preg_replace($patterns, $replacements, $result->$value);
 								$htmlmsg .= '<tr><td>'.$field->userfield.'</td><td>';
 								$htmlmsg .= str_replace('~~~', '<br />', $userinput);
 								$htmlmsg .= '&nbsp;';
