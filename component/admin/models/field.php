@@ -230,35 +230,27 @@ class RedformModelField extends JModel
 	private function AddFieldTable($row, $oldrow) 
 	{
 		$db = & JFactory::getDBO();
-		/* Make sure that field name is valid */
-		$field = str_replace(' ', '', strtolower($row->field));
-		$oldfield = str_replace(' ', '', strtolower($oldrow->field));
+		
+		/* column name for this field */
+		$field = 'field_'. $row->id;
 		
 		/* Get columns from the active form */
-		$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$row->form_id))." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($oldfield);
+		$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$row->form_id))." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
 		$db->setQuery($q);
 		$db->query();
 		$result = $db->loadResult();
 		
-		/* Check if the name has changed */
-		if ($result && $row->field != $oldrow->field) {
-			$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$row->form_id)."
-				CHANGE `".$oldfield."` `".$field."` TEXT";
+		/* Check if the field already exists */
+		if (!$result) {
+			/* Field doesn't exist, need to create it */
+			$q = ' ALTER TABLE '. $db->nameQuote('#__rwf_forms_'.$row->form_id) .' ADD '. $db->nameQuote($field) .' TEXT NULL';
 			$db->setQuery($q);
-			if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot rename fieldname').' '.$db->getErrorMsg());
-		}
-		else {
-			/* Check if the field already exists */
-			if (!$result) {
-				/* Field doesn't exist, need to create it */
-				$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$row->form_id). " ADD `".$field."` TEXT NULL";
-				$db->setQuery($q);
-				if (!$db->query()) JError::raiseWarning('error', $db->getErrorMsg());
-			}
+			if (!$db->query()) JError::raiseWarning('error', $db->getErrorMsg());
 		}
 		
 		/* Check if the field moved form */
-		if ($oldrow->form_id && $row->form_id <> $oldrow->form_id) {
+		if ($oldrow->form_id && $row->form_id <> $oldrow->form_id) 
+		{
 			$result = array();
 			/* Check if the column exists on the old table */
 			$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$oldrow->form_id))." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
@@ -284,10 +276,12 @@ class RedformModelField extends JModel
 		
 		/* Check if the field has to be unique */
 		$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$row->form_id);
-		if ($row->unique && !isset($indexresult[$field])) {
-			$q .= " ADD UNIQUE (`".$field."` (255))";
+		if ($row->unique && !isset($indexresult[$field])) 
+		{
+			$q .= ' ADD UNIQUE ('. $db->nameQuote($field) .' (255))';
 			$db->setQuery($q);
-			if (!$db->query()) {
+			if (!$db->query()) 
+			{
 				JError::raiseWarning('error', JText::_('Cannot make the field unique').' '.$db->getErrorMsg());
 				/* Remove unique status */
 				$q = "UPDATE ".$db->nameQuote('#__rwf_fields')."
@@ -297,8 +291,9 @@ class RedformModelField extends JModel
 				$db->query();
 			}
 		}
-		else if (isset($indexresult[$field])) {
-			$q .= " DROP INDEX `".$field."`";
+		else if (isset($indexresult[$field])) 
+		{
+			$q .= ' DROP INDEX' . $db->nameQuote($field);
 			$db->setQuery($q);
 			if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot remove the field unique status').' '.$db->getErrorMsg());
 		}

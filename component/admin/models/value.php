@@ -65,7 +65,11 @@ class RedformModelValue extends JModel
   
   function getFieldsOptions()
   {
-    $query = "SELECT id AS value, field AS text FROM #__rwf_fields";
+    $query = ' SELECT fd.id AS value, CONCAT(f.formname, "::", fd.field) AS text '
+           . ' FROM #__rwf_fields AS fd '
+           . ' INNER JOIN #__rwf_forms AS f ON f.id = fd.form_id '
+           . ' ORDER BY f.formname, fd.field, fd.ordering '
+           ;
     $this->_db->setQuery($query);
     return $this->_db->loadObjectList();
   }

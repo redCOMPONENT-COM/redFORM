@@ -181,7 +181,16 @@ class rfanswers
   	if (empty($this->_form_id)) {
   		JError::raiseError(0, JText::_('ERROR NO FORM ID'));
   	}
-  	
+  
+  	$values = array();
+  	$fields = array();
+  	foreach ($this->_fields as $v) {
+  		$fields[] = $db->nameQuote('field_'. $v);
+  	}
+  	foreach ($this->_values as $v) {
+  		$values[] = $db->Quote($v);
+  	}
+      
     if ($this->_answer_id) // answers were already recorder, update them
     {
     	$q = "UPDATE ".$db->nameQuote('#__rwf_forms_'. $this->_form_id);
@@ -199,14 +208,6 @@ class rfanswers
     }
     else
     {
-    	$values = array();
-    	$fields = array();
-      foreach ($this->_fields as $v) {
-        $fields[] = $db->nameQuote($v);
-      }
-    	foreach ($this->_values as $v) {
-    		$values[] = $db->Quote($v);
-    	}
     	/* Construct the query */
     	$q = "INSERT INTO ".$db->nameQuote('#__rwf_forms_'. $this->_form_id)."
             (" . implode(', ', $fields) . ")

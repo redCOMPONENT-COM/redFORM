@@ -5,23 +5,22 @@
  * read on http://redcomponent.com/license.txt  
  * Developed by email@recomponent.com - redCOMPONENT.com 
  */
- 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-header('Content-Type: application/csv');
-header('Content-Encoding: UTF-8');
-header('Content-Disposition: inline; filename="submitters.csv"');
+	 
+	defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
+	header('Content-Type: application/csv');
+	header('Content-Encoding: UTF-8');
+	header('Content-Disposition: inline; filename="submitters.csv"');
 	$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
 	echo JText::_('Submission date').",";
 	echo JText::_('Form name').",";
 	if ($xref) echo JText::_('EVENT').",";
 	$fields = '';
 	foreach ($this->fields as $key => $value) {
-		$fields .= $value.",";
+		$fields .= $value->field.",";
 	}
 	echo substr($fields, 0, -1)."\n";
 	
 	/* Data */
-	$orderindex = array_flip($this->fields);
 	if (count($this->submitters) > 0) {
 		foreach ($this->submitters as $id => $value) {
 			echo $value->submission_date.",";
@@ -30,10 +29,12 @@ header('Content-Disposition: inline; filename="submitters.csv"');
 			$fields = '';
 			$find = array("\r\n", "\n", "\r");
 			$replace = ' ';
-			foreach ($orderindex as $field => $index) {
-				if (isset($value->$field)) {
-					$value->$field = str_replace($find, $replace, $value->$field);
-					$fields .= str_replace("~~~", ";", $value->$field).",";
+			foreach ($this->fields as $key => $field) {
+        $fieldname = 'field_'. $field->id;
+        if (isset($value->$fieldname)) 
+        {
+					$value->$fieldname = str_replace($find, $replace, $value->$fieldname);
+					$fields .= str_replace("~~~", ";", $value->$fieldname).",";
 				}
 				else $fields .= ",";
 			}

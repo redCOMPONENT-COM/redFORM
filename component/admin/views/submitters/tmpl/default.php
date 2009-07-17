@@ -39,17 +39,18 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 	<th><?php echo JText::_('Submission date'); ?></th>
 	<th><?php echo JText::_('Form name');?></th>
 	<?php foreach ($this->fields as $key => $value) { ?>
-		<th><?php echo $value; ?></th>
+		<th><?php echo $value->field; ?></th>
 	<?php } ?> 
 	</tr></thead>
 	<tbody>
 	<?php
 	/* Data */
-	$nofields = count($this->fields);
-	$orderindex = array_flip($this->fields);
+	$nbfields = count($this->fields);
 	$k = 1;
-	if (count($this->submitters) > 0) {
-		foreach ($this->submitters as $id => $value) {
+	if (count($this->submitters) > 0) 
+	{
+		foreach ($this->submitters as $id => $value) 
+		{
 			?>
 			<tr class="row<?php echo $k = $k - 1; ?>">
 			<td align="center">
@@ -61,9 +62,12 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 			<td><?php echo $value->submission_date; ?></td>
 			<td><?php echo $value->formname; ?></td>
 			<?php
-			foreach ($orderindex as $field => $index) {
-				if (isset($value->$field)) {
-					$data = str_replace('~~~', '<br />', $value->$field);
+			foreach ($this->fields as $key => $field) 
+			{
+				$fieldname = 'field_'. $field->id;
+				if (isset($value->$fieldname)) 
+				{
+					$data = str_replace('~~~', '<br />', $value->$fieldname);
 					if (stristr($data, JPATH_ROOT)) $data = '<a href="'.str_replace(DS, '/', str_replace(JPATH_ROOT, JURI::root(true), $data)).'" target="_blank">'.$data.'</a>';
 					echo '<td>'.$data.'</td>';
 				}
@@ -78,7 +82,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 	</tbody>
 	<tfoot>
 	<tr>
-		<th colspan="<?php echo $nofields+4;?>"><?php echo $this->pagination->getListFooter(); ?></th>
+		<th colspan="<?php echo $nbfields+4;?>"><?php echo $this->pagination->getListFooter(); ?></th>
 	 </tr>
 	 </tfoot>
 </table>

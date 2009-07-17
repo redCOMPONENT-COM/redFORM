@@ -11,6 +11,104 @@
 /* ensure this file is being included by a parent file */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+
+function upgradeFormColumns()
+{
+  $db = JFactory::getDBO();
+  
+  /** Migration of rwf_form_x tables => the column name must be changed from 'fieldname' to 'field'+'field_id' **/
+  //first get all forms
+  $query = ' SELECT id FROM #__rwf_forms ';
+  $db->setQuery($query);
+  $form_ids = $db->loadResultArray();
+  
+  if (!empty($form_ids))
+  {
+    $need_upgrade = array();
+    // first a quick check to see if we already upgraded
+    $q = " SHOW COLUMNS FROM " . $db->nameQuote('#__rwf_forms_'. $form_ids[0]);
+    $db->setQuery($q);
+    $cols = $db->loadObjectList();
+    
+    foreach ($cols as $col)
+    {
+      if ($col->Field == 'id') {
+        continue;
+      }
+      if (!preg_match('/^field_[0-9]+$/', $col->Field)) {
+        $need_upgrade[] = $col->Field;
+      }
+    }
+    
+    if (!empty($need_upgrade))
+    {
+      foreach ($form_ids as $form_id)
+      {
+        $need_upgrade = array();
+        $q = " SHOW COLUMNS FROM " . $db->nameQuote('#__rwf_forms_'. $form_id);
+		    $db->setQuery($q);
+		    $cols = $db->loadObjectList();
+		    
+		    foreach ($cols as $col)
+		    {
+		      if ($col->Field == 'id') {
+		        continue;
+		      }
+		      if (!preg_match('/^field_[0-9]+$/', $col->Field)) {
+		        $need_upgrade[] = $col->Field;
+		      }
+		    }
+    
+		    if (empty($need_upgrade)) {
+		    	continue;
+		    }
+        echo '#__rwf_forms_'. $form_id .' '. 'NEEDS UPGRADE => '. implode(', ', $need_upgrade) .'<br/>';
+        // backup the table
+        $query = ' CREATE TABLE '. $db->nameQuote('#__rwf_forms_'. $form_id .'_bak_b39')
+               . ' SELECT * FROM '. $db->nameQuote('#__rwf_forms_'. $form_id)
+               ;
+        $db->setQuery($query);
+        $db->query();
+        
+        // get fields from fields table
+        $query = ' SELECT id, field FROM #__rwf_fields WHERE form_id = '. $db->quote($form_id);
+        $db->setQuery($query);
+        $fields = $db->loadObjectList();
+        
+        $replaced = array();
+        foreach ($fields as $field)
+        {
+          $colname = str_replace(' ', '', strtolower($field->field));
+          if (in_array($colname, $need_upgrade))
+          {
+          	if (strstr($colname, '.')) {
+          		$quotedcol = '`' . $colname . '`';
+          	}
+          	else {
+              $quotedcol = $db->nameQuote($colname);          		
+          	}
+          	$query = ' ALTER TABLE '. $db->nameQuote('#__rwf_forms_'. $form_id)
+          	       . ' CHANGE '. $quotedcol .' '. $db->nameQuote('field_'. $field->id) . ' TEXT'
+          	       ;
+	          $db->setQuery($query);
+	          if (!$db->query()) {
+	          	// try to force mysql style quoting (if there are points in field name)
+	          	echo $db->getErrorMsg() . '<br/>';    
+	          }
+	          else {
+	          	$replaced[] = $colname;
+	          }
+	        }
+        }
+        
+        if (count($replaced) != count($need_upgrade)) {
+            echo JText::_('ERROR NOT ALL COLUMNS COULD BE MATCHED AND REPLACED') . ': '. implode(', ', array_diff($need_upgrade, $replaced)) . '<br/>';        	
+        }        
+      }
+    }
+  }
+}
+
 function com_install() {
 	$db = JFactory::getDBO();
 	
@@ -172,6 +270,9 @@ function com_install() {
     $db->setQuery($q);
     $db->query();
   }
+  
+  // new structure for rwf_forms_x tables
+  upgradeFormColumns();
 	
 if ($upgrade) {
 	/* The event values need to be updated with the equivalent xref */
@@ -208,6 +309,7 @@ if ($upgrade) {
 		$db->query();
 	}
 }
+
 	/* Install plugin */
 	jimport('joomla.filesystem.file');
 	jimport('joomla.filesystem.folder');

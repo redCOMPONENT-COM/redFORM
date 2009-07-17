@@ -119,19 +119,20 @@ class RedformModelSubmitters extends JModel {
 		return $db->loadObjectList();
 	}
 	
-	function getFields() {
+	function getFields() 
+	{
 		$db = JFactory::getDBO();
 		$form_id = JRequest::getInt('form_id', false);
-		$query = ' SELECT LOWER(REPLACE('.$db->nameQuote('f.field').', " " ,"")) AS '.$db->nameQuote('field')
+		$query = ' SELECT f.id, f.field '
 		       . ' FROM #__rwf_fields AS f '
 		       . ' INNER JOIN #__rwf_values AS v ON v.field_id = f.id '
 		       . ' WHERE v.fieldtype <> "info" '
 		       ;		
 		if ($form_id) $query .= ' AND form_id = ' . $db->Quote($form_id);
-		$query .= "GROUP BY field
+		$query .= "GROUP BY f.id
 				ORDER BY f.ordering ";
 		$db->setQuery($query);
-		return $db->loadResultArray();
+		return $db->loadObjectList();
 	}
 	
 	function getPagination() {
@@ -265,9 +266,14 @@ class RedformModelSubmitters extends JModel {
 	/**
 	 * Get the course title
 	 */
-	public function getCourseTitle() {
+	public function getCourseTitle() 
+	{
 		$db = JFactory::getDBO();
 		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
+		
+		if (!$xref) {
+			return false;
+		}
 		$q =  ' SELECT e.title, v.venue, dates, enddates, times, endtimes '
 		    . ' FROM #__redevent_event_venue_xref x '
 		    . '	LEFT JOIN #__redevent_events e ON e.id = x.eventid '
