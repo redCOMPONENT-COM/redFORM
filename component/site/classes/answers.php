@@ -49,6 +49,7 @@ class rfanswers
 	
   public function addPostAnswer($field, $postedvalue)
   {
+    $db = &JFactory::getDBO();
     // get the type, it is the field first and only key
     $keys = array_keys($postedvalue);
     $answer = '';
@@ -96,10 +97,17 @@ class rfanswers
         $answer = substr($submittervalues, 0, -3);
         break;
       case 'name':
-        if (in_array('fileupload', $postedvalue['name'])) {
-          $answer = $this->_fileupload($postedvalue['field'.$key]);
+        if (in_array('fileupload', array_keys($postedvalue['name']))) {
+          $answer = $this->_fileupload($postedvalue);
         }
-        break;
+        break;        
+      case 'radio':
+      	/* Get the real value from the database */
+      	$q = "SELECT value
+                FROM #__rwf_values
+                WHERE id = ".$postedvalue['radio'][0];
+      	$db->setQuery($q);
+      	$answer = $db->loadResult();
     }
     $this->_fields[] = $field;
     $this->_values[] = $answer;
@@ -128,7 +136,7 @@ class rfanswers
     jimport('joomla.filesystem.folder');
     jimport('joomla.filesystem.file');
     
-    $fullpath = $filepath.DS.'redform_'.$form->id;
+    $fullpath = $filepath.DS.'redform_'.$this->_form_id;
     if (!JFolder::exists($fullpath)) {
       if (!JFolder::create($fullpath)) {
         JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDER').' '.$fullpath);
