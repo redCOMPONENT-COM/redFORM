@@ -240,20 +240,24 @@ class RedformModelRedform extends JModel {
 			/* Inform contact person if need */
 			if ($form->contactpersoninform) 
 			{
-				if (!isset($fullname)) $fullname = $submitter_email;
-				$this->mailer->AddAddress($form->contactpersonemail, $fullname);
+				$this->mailer->AddAddress($form->contactpersonemail);
 				/* Get the event name */
 				$eventname = '';
 				if (JRequest::getInt('xref', false)) {
-					$q = "SELECT title
+					$q = "SELECT title, v.venue, x.dates, x.times
 							FROM #__redevent_events e
-							LEFT JOIN #__redevent_event_venue_xref x
-							ON x.eventid = e.id
+							INNER JOIN #__redevent_event_venue_xref x ON x.eventid = e.id
+							INNER JOIN #__redevent_venues as v ON x.venueid = v.id
 							WHERE x.id = ".JRequest::getInt('xref');
 					$db->setQuery($q);
-					$eventname = $db->loadResult();
-				}
-				if (JRequest::getInt('xref', false)) {
+					$res = $db->loadObject();
+					$eventname = $res->title .' / '. $res->venue;
+					if ($res->dates) {
+						$eventname .= ' / '.  $res->dates;
+						if ($res->times) {
+							$eventname .= $res->times;
+						}
+					}
 					$tags = array('[formname]', '[eventname]');
 					$values = array($form->formname, $eventname);
 					$this->mailer->setSubject(str_replace($tags, $values, JText::_('A new submission for form [formname] and event [eventname]')));
