@@ -267,6 +267,7 @@ class RedformModelRedform extends JModel {
 				}
 				$htmlmsg = '<html><head><title></title></title></head><body>';
 				$htmlmsg .= JText::_('A new submission has been received.');
+        $htmlmsg .= $form->notificationtext;
 				
         /* Add user submitted data if set */
 				if ($form->contactpersonfullpost) 
