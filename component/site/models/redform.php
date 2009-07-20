@@ -189,7 +189,7 @@ class RedformModelRedform extends JModel {
 				if (isset($postvalues['field'.$key]))
 				{
 					/* Get the answers */
-					$answers->addPostAnswer($field->id, $postvalues['field'.$key]);
+					$answers->addPostAnswer($field, $postvalues['field'.$key]);
 				}
 			}
 			
@@ -593,7 +593,20 @@ class RedformModelRedform extends JModel {
 			$mailer->AddAddress($submitter_email);
 	
 			/* Mail submitter */
-			$htmlmsg = '<html><head><title>Welcome</title></title></head><body>'.$form->submissionbody.'</body></html>';
+			$submission_body = $form->submissionbody;
+			if (strstr($submission_body, '[info]')) 
+			{
+				$info = "<table>";
+				foreach ($answers->getAnswers() as $answer) {
+					$info .= "<tr>";
+					$info .= "<th>". $answer['field'] ."</th>";
+          $info .= "<td>". $answer['value'] ."</td>";
+          $info .= "</tr>";
+				}
+				$info .= "</table>";
+				$submission_body = str_replace('[info]', $info, $submission_body);
+			}
+			$htmlmsg = '<html><head><title>Welcome</title></title></head><body>'. $submission_body .'</body></html>';
 			$mailer->setBody($htmlmsg);
 			$mailer->setSubject($form->submissionsubject);
 	
