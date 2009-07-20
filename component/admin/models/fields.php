@@ -178,7 +178,8 @@ class RedformModelFields extends JModel {
    /**
     * Reorder fields
 	*/
-	function getSaveOrder() {
+	function saveorder() 
+	{
 		$db = JFactory::getDBO();
 		$cid = JRequest::getVar('cid');
 		$order = JRequest::getVar('order');

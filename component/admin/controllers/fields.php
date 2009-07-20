@@ -220,5 +220,18 @@ class RedformControllerFields extends JController
       $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('SANITIZE_ERROR'));    	
     }
   }
+  
+  function saveorder()
+  {
+    $model = $this->getModel('fields');
+    
+    if ($model->saveorder()) {
+      $this->setRedirect( 'index.php?option=com_redform&view=fields');
+    }
+    else {
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('ERROR REORDERING'));      
+    }
+  	
+  }
 }
 ?>
