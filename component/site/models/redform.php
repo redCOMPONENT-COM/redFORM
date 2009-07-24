@@ -224,8 +224,6 @@ class RedformModelRedform extends JModel {
 
 			$allanswers[] = $answers;
 		} /* End multi-user signup */
-
-		dump($allanswers);
 		
 		// send the notifications mails if not a redevent registration, or if this is the review, or if there is no review
 		if (empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message))
@@ -356,7 +354,7 @@ class RedformModelRedform extends JModel {
 			/* All is good, check if we have an competition in that case redirect to redCOMPETITION */
 			if ($redcompetition) 
 			{
-				$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$postvalues['answer_id'].'&form_id='.JRequest::getInt('form_id');
+				$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$allanswers[0]->getAnswerId().'&form_id='.JRequest::getInt('form_id');
 				$mainframe->redirect($redirect);
 			}
 			return array($form->submitnotification, $form->notificationtext);
