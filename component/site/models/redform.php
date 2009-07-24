@@ -102,6 +102,9 @@ class RedformModelRedform extends JModel {
 		/* Default values */
 		$answer  = '';
 		$return  = false;
+		$redcompetition = false;
+		$redevent = false;
+		
 		/* Check for the submit key */
 		$submit_key = JRequest::getVar('submit_key', false);
 		if (!$submit_key) $submit_key = md5(uniqid());
@@ -131,16 +134,18 @@ class RedformModelRedform extends JModel {
 
 		/* See if we have an event ID */
 		if (JRequest::getInt('event_id', false)) {
+      $redevent = true;
 			$event_id = JRequest::getInt('event_id', 0);
 			$posted['xref'] = $event_id;
 		}
 		else if (JRequest::getInt('competition_id', false)) {
+			$redcompetition = true;
 			$event_id = JRequest::getInt('competition_id', 0);
 			$post['xref'] = $event_id;
 		}
 		else $post['xref'] = 0;
 		
-		if ($post['xref']) {
+		if ($post['xref'] && $redevent) {
 			$event = $this->getEvent($post['xref']);
 		}
 		else {
@@ -198,7 +203,7 @@ class RedformModelRedform extends JModel {
 				if (isset($posted['confirm'][($signup-1)])) 
 				{
 					// this 'anwers' were already posted
-					$answers->setAnswersId($posted['confirm'][($signup-1)]);
+					$answers->setAnswerId($posted['confirm'][($signup-1)]);
 					// update answers
           $answers->save($postvalues); 
 				}
@@ -219,7 +224,9 @@ class RedformModelRedform extends JModel {
 
 			$allanswers[] = $answers;
 		} /* End multi-user signup */
-			
+
+		dump($allanswers);
+		
 		// send the notifications mails if not a redevent registration, or if this is the review, or if there is no review
 		if (empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message))
 		{
@@ -326,7 +333,7 @@ class RedformModelRedform extends JModel {
 		}
 			
 			/* All is good, check if we have an event in that case redirect to redEVENT */
-			if (JRequest::getInt('xref', false)) 
+			if ($redevent) 
 			{
 				$redirect = 'index.php?option=com_redevent&task='.JRequest::getVar('event_task').'&xref='.JRequest::getInt('xref').'&submit_key='.$submit_key.'&form_id='.JRequest::getInt('form_id');
 				// go to final if this was the review screen, or if there is no review screen
@@ -347,7 +354,8 @@ class RedformModelRedform extends JModel {
 			}
 			
 			/* All is good, check if we have an competition in that case redirect to redCOMPETITION */
-			if (JRequest::getVar('competition_id', false)) {
+			if ($redcompetition) 
+			{
 				$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$postvalues['answer_id'].'&form_id='.JRequest::getInt('form_id');
 				$mainframe->redirect($redirect);
 			}

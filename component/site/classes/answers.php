@@ -27,9 +27,14 @@ class rfanswers
 	}
 	
 
-  public function setAnswersId($id)
+  public function setAnswerId($id)
   {
     $this->_answer_id = (int) $id;
+  }
+
+  public function getAnswerId($id)
+  {
+    return $this->_answer_id;
   }
   
   public function getListNames()
