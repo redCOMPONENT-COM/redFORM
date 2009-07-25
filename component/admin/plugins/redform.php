@@ -36,6 +36,8 @@ class plgContentRedform extends JPlugin {
 	
 	function _process(&$row, &$params = array()) 
 	{
+    JPlugin::loadLanguage( 'plg_content_redform', JPATH_SITE );
+    
 		$this->_params = $params;
 		
 		/* Regex to find categorypage references */
