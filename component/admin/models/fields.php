@@ -136,14 +136,15 @@ class RedformModelFields extends JModel {
 
 		$cids = 'id=' . implode( ' OR id=', $cid );
 		/* Check each field the form it belongs to and delete the column */
-		$q = "SELECT field, form_id
+		$q = "SELECT id, field, form_id
 					FROM #__rwf_fields
 					WHERE ( $cids )";
 		$db->setQuery($q);
 		$fields = $db->loadObjectList();
 			
-		foreach ($fields as $key => $field) {
-			$tablefield = str_replace(' ', '', strtolower($field->field));
+		foreach ($fields as $key => $field) 
+		{
+			$tablefield = 'field_'. $field->id;
 			$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$field->form_id)." DROP ".$db->nameQuote($tablefield);
 			$db->setQuery($q);
 			if (!$db->query()) {
