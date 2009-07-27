@@ -209,7 +209,7 @@ class rfanswers
     	$q = "UPDATE ".$db->nameQuote('#__rwf_forms_'. $this->_form_id);
     	$set = array();
     	foreach ($this->_fields as $ukey => $col) {
-    		$set[] = $db->nameQuote($col->id) ." = ". $db->Quote($this->_values[$ukey]);
+    		$set[] = $db->nameQuote('field_'. $col->id) ." = ". $db->Quote($this->_values[$ukey]);
     	}
     	$q .= ' SET '. implode(', ', $set);
     	$q .= " WHERE ID = ". $this->_answer_id;
@@ -217,6 +217,7 @@ class rfanswers
     	
     	if (!$db->query()) {
     		JError::raiseError(0, JText::_('UPDATE ANSWERS FAILED'));
+        RedformHelperLog::simpleLog(JText::_('Cannot update answers').' '.$db->getErrorMsg());
     	}
     }
     else
