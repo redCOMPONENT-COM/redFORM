@@ -302,12 +302,13 @@ class plgContentRedform extends JPlugin {
 			else if ($answers) {
 				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->id.'" />';	
 			}
-
-			foreach ($fields as $key => $field) {
+			foreach ($fields as $key => $field) 
+			{
 				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
 				if (!$pdf) $html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline">';
 				
 				$values = $this->getFormValues($field->id);
+				
 				if (count($values) > 0) {
 
 					if ($values[0]->fieldtype == 'info') {
@@ -339,7 +340,7 @@ class plgContentRedform extends JPlugin {
 					$fileupload = '';
           $wysiwyg = '';
 					$finalid = end(array_keys($values));
-					$cleanfield = $field->cleanfield;
+					$cleanfield = 'field_'. $field->id;
 					foreach ($values as $id => $value) {
 						switch ($value->fieldtype) {
 							case 'radio':
