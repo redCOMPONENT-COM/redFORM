@@ -214,10 +214,11 @@ class RedformModelFields extends JModel {
 		$forms = $db->loadResultArray();
 		
 		/* Go through all the forms */
-		foreach ($forms as $key => $form_id) {
+		foreach ($forms as $key => $form_id) 
+		{
 			/* Load the list of fields used for this form */
 			$fields = array();
-			$q = "SELECT REPLACE(LOWER(field), ' ', '') AS field
+			$q = "SELECT CONCAT('field_', id) AS field
 				FROM #__rwf_fields
 				WHERE form_id = ".$form_id;
 			$db->setQuery($q);
@@ -231,7 +232,6 @@ class RedformModelFields extends JModel {
 			$db->setQuery($q);
 			$db->query();
 			$columns = $db->loadResultArray();
-			
 			/* Get the columns to be deleted */
 			$del_columns = array_diff($columns, $fields);
 			
