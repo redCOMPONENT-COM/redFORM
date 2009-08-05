@@ -248,9 +248,9 @@ class RedformModelRedform extends JModel {
 				$this->mailer->AddAddress($form->contactpersonemail);
 				/* Get the event details */
 				$eventname = '';
-				if (JRequest::getInt('xref', false)) 
+				if ($redevent) 
 				{
-					$q = "SELECT title, v.venue, x.dates, x.times
+					$q = "SELECT x.id, title, v.venue, x.dates, x.times
 							FROM #__redevent_events e
 							INNER JOIN #__redevent_event_venue_xref x ON x.eventid = e.id
 							INNER JOIN #__redevent_venues as v ON x.venueid = v.id

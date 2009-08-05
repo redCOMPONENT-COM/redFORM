@@ -25,11 +25,19 @@ class RedformControllerRedform extends RedformController {
    function __construct() 
    {
       parent::__construct();
-
-      /* Redirect templates to templates as this is the standard call */
-      //$this->registerTask('save','redform');
-	    $this->registerTask('redeventvm','redform');
    }
+
+  public function redeventvm() {
+    /* Set a default view if none exists */
+    JRequest::setVar('view', 'redform' );
+    JRequest::setVar('layout', 'redform' );
+    
+    $view =& $this->getView('redform', 'html');
+    $model =& $this->getModel('redform');
+    $view->setModel($model, true);
+    $view->display();
+//    parent::display();
+  }
 
 	
 	/**
@@ -42,7 +50,9 @@ class RedformControllerRedform extends RedformController {
 		JRequest::setVar('view', 'redform' );
 		JRequest::setVar('layout', 'redform' );
 		
-		parent::display();
+    $view =& $this->getView('redform', 'html');
+		$view->display();
+//		parent::display();
 	}
 	
 	/**
