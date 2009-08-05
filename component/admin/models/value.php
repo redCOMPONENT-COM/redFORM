@@ -117,6 +117,7 @@ class RedformModelValue extends JModel
   function _initData()
   {
     $this->_data = & JTable::getInstance('Values', 'Table');
+    $this->_data->published = 1;
     return $this->_data;
   }
    
