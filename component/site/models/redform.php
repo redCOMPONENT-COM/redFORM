@@ -246,9 +246,10 @@ class RedformModelRedform extends JModel {
 			if ($form->contactpersoninform) 
 			{
 				$this->mailer->AddAddress($form->contactpersonemail);
-				/* Get the event name */
+				/* Get the event details */
 				$eventname = '';
-				if (JRequest::getInt('xref', false)) {
+				if (JRequest::getInt('xref', false)) 
+				{
 					$q = "SELECT title, v.venue, x.dates, x.times
 							FROM #__redevent_events e
 							INNER JOIN #__redevent_event_venue_xref x ON x.eventid = e.id
@@ -257,15 +258,24 @@ class RedformModelRedform extends JModel {
 					$db->setQuery($q);
 					$res = $db->loadObject();
 					$eventname = $res->title .' / '. $res->venue;
-					if ($res->dates) {
-						$eventname .= ' / '.  $res->dates;
-						if ($res->times) {
-							$eventname .= $res->times;
-						}
+					
+					if ($res->dates && $res->dates != '0000-00-00') {
+						$startdate = $res->dates;
 					}
-					$tags = array('[formname]', '[eventname]');
-					$values = array($form->formname, $eventname);
-					$this->mailer->setSubject(str_replace($tags, $values, JText::_('A new submission for form [formname] and event [eventname]')));
+					else {
+						$startdate = JText::_('Open date');
+					}
+					
+					if ($res->times && $res->times != '00:00:00') {
+						$starttime = substr($res->times, 0, 5);
+					}
+					else {
+						$starttime = '';
+					}
+					
+					$tags = array('[formname]', '[eventname]', '[startdate]', '[starttime]');
+					$values = array($form->formname, $eventname, $startdate, $starttime);
+					$this->mailer->setSubject(str_replace($tags, $values, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
 				}
 				else {
 					$this->mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('A new submission for form [formname]')));
