@@ -276,7 +276,7 @@ class RedformModelRedform extends JModel {
 					}
 					
 					$tags = array('[formname]', '[eventname]', '[startdate]', '[starttime]', '[venuename]');
-					$values = array($form->formname, $eventname, $startdate, $starttime);
+					$values = array($form->formname, $eventname, $startdate, $starttime, $venue);
 					$this->mailer->setSubject(str_replace($tags, $values, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT_WITH_EVENT')));
 				}
 				else {
