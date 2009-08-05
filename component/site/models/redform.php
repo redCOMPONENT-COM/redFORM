@@ -277,10 +277,10 @@ class RedformModelRedform extends JModel {
 					
 					$tags = array('[formname]', '[eventname]', '[startdate]', '[starttime]', '[venuename]');
 					$values = array($form->formname, $eventname, $startdate, $starttime);
-					$this->mailer->setSubject(str_replace($tags, $values, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
+					$this->mailer->setSubject(str_replace($tags, $values, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT_WITH_EVENT')));
 				}
 				else {
-					$this->mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('A new submission for form [formname]')));
+					$this->mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
 				}
 				$htmlmsg = '<html><head><title></title></title></head><body>';
 				$htmlmsg .= JText::_('A new submission has been received.');
