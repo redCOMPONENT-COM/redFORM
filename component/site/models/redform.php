@@ -257,7 +257,9 @@ class RedformModelRedform extends JModel {
 							WHERE x.id = ".JRequest::getInt('xref');
 					$db->setQuery($q);
 					$res = $db->loadObject();
-					$eventname = $res->title .' / '. $res->venue;
+					$eventname = $res->title;
+					
+					$venue = $res->venue;
 					
 					if ($res->dates && $res->dates != '0000-00-00') {
 						$startdate = $res->dates;
@@ -273,7 +275,7 @@ class RedformModelRedform extends JModel {
 						$starttime = '';
 					}
 					
-					$tags = array('[formname]', '[eventname]', '[startdate]', '[starttime]');
+					$tags = array('[formname]', '[eventname]', '[startdate]', '[starttime]', '[venuename]');
 					$values = array($form->formname, $eventname, $startdate, $starttime);
 					$this->mailer->setSubject(str_replace($tags, $values, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
 				}
