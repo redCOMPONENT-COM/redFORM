@@ -79,7 +79,7 @@ class RedformControllerRedform extends RedformController {
     $result = $model->saveform();
     
     if (!$result) {
-    	echo JText::_('Sorry, there was a problem with your submission');
+    	echo JText::_('Sorry, there was a problem with your submission') .': '. $model->getError();
     	return;
     }
     
