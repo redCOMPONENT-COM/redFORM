@@ -40,5 +40,60 @@ class RedformController extends JController
     $this->setRedirect('index.php?option=com_redform&view=log', $msg);
     $this->redirect();
   }
+  
+  /**
+   * restore the rwf_forms_x tables after bug in sanitize function (4.0 and 4.0.1)
+   *
+   */
+  function unsanitize()
+  {
+    require_once JPATH_COMPONENT_SITE.DS.'classes'.DS.'answers.php';
+    $db = &JFactory::getDBO();
+    
+    $query = ' SELECT form_id, answer_id, rawformdata FROM #__rwf_submitters ';
+    $db->setQuery($query);
+    $records = $db->loadObjectList();
+    
+    foreach ($records as $r)
+    {
+      $posted = unserialize($r->rawformdata);
+//      print_r($posted);
+      foreach ($posted as $key => $value) 
+      {
+        if ((strpos($key, 'field') === 0)) {
+        	$new_key = explode('_', $key);
+          $posted[$new_key[0]] = $value;
+        }
+      }
+      
+      // new answers object
+      $answers = new rfanswers();
+      $answers->setFormId($r->form_id);
+      $answers->setAnswerId($r->answer_id);
+      
+      /* Load the fields */
+	    $q = "SELECT id 
+	        FROM ".$db->nameQuote('#__rwf_fields')."
+	        WHERE form_id = ".$r->form_id
+	         ;
+	    $db->setQuery($q);
+    
+      $fieldlist = $db->loadObjectList('id');
+      
+      /* Build up field list */
+      foreach ($fieldlist as $key => $field)
+      {
+        if (isset($posted['field'.$key]))
+        {
+          /* Get the answers */
+          $answers->addPostAnswer($field, $posted['field'.$key]);
+        }
+      }
+      // this 'anwers' were already posted
+//      print_r($answers);exit;
+      // update answers
+      $answers->save();
+    }
+  }
 }
 ?>

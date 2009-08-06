@@ -194,7 +194,11 @@ class rfanswers
   	if (empty($this->_form_id)) {
   		JError::raiseError(0, JText::_('ERROR NO FORM ID'));
   	}
-  
+    
+  	if (!count($this->_fields)) {
+  		return true;
+  	}
+  	
   	$values = array();
   	$fields = array();
   	foreach ($this->_fields as $v) {
