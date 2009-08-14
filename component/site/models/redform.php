@@ -246,7 +246,32 @@ class RedformModelRedform extends JModel {
 			/* Inform contact person if need */
 			if ($form->contactpersoninform) 
 			{
-				$this->mailer->AddAddress($form->contactpersonemail);
+			  // init mailer
+			  $mailer = &JFactory::getMailer();
+			  $mailer->isHTML(true);
+			  $mailer->addRecipient($form->contactpersonemail);
+				
+			  // we put the submitter as the email 'from' and reply to.
+			  $user = & JFactory::getUser();
+			  if ($user->get('id')) {
+			    $sender = array($user->email, $user->name);
+			  }
+			  else if ($allanswers[0]->getSubmitterEmail())
+			  {
+			    if ($allanswers[0]->getFullname) {
+			      $sender = array($allanswers[0]->getSubmitterEmail(), $allanswers[0]->getFullname);
+			    }
+			    else {
+			      $sender = $allanswers[0]->getSubmitterEmail();
+			    }
+			  }
+			  else { // default to site settings
+			    $sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
+			  }
+			  $mailer->setSender($sender);
+			  $mailer->addReplyTo($sender);
+
+			  // set the email subject
 				/* Get the event details */
 				$eventname = '';
 				if ($redevent) 
@@ -278,11 +303,13 @@ class RedformModelRedform extends JModel {
 					
 					$tags = array('[formname]', '[eventname]', '[startdate]', '[starttime]', '[venuename]');
 					$values = array($form->formname, $eventname, $startdate, $starttime, $venue);
-					$this->mailer->setSubject(str_replace($tags, $values, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT_WITH_EVENT')));
+					$mailer->setSubject(str_replace($tags, $values, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT_WITH_EVENT')));
 				}
 				else {
-					$this->mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
+					$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
 				}
+				
+				// Mail body
 				$htmlmsg = '<html><head><title></title></title></head><body>';
 				$htmlmsg .= JText::_('A new submission has been received.');
         $htmlmsg .= $form->notificationtext;
@@ -335,11 +362,12 @@ class RedformModelRedform extends JModel {
 					}
 				}
 				$htmlmsg .= '</body></html>';
-				$this->mailer->setBody($htmlmsg);
-				if (!$this->mailer->Send()) {
-					RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$this->mailer->error);;
+				$mailer->setBody($htmlmsg);
+				
+				// send the mail
+				if (!$mailer->Send()) {
+					RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);;
 				}
-				$this->mailer->ClearAddresses();
 			}
 		}
 			
