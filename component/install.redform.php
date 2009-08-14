@@ -312,39 +312,15 @@ if ($upgrade) {
 
 	/* Install plugin */
 	jimport('joomla.filesystem.file');
-	jimport('joomla.filesystem.folder');
-	/* 1. XML file */
-	if(!JFile::copy(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_redform'.DS.'plugins'.DS.'redform.xm', JPATH_SITE.DS.'plugins'.DS.'content'.DS.'redform.xml')){
-		echo JText::_('<b>Failed</b> to copy plugin xml file<br />');
+	jimport('joomla.filesystem.folder');	
+	JFolder::copy(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_redform'.DS.'plugins', JPATH_SITE.DS.'tmp'.DS.'redform_plugin', '', true);
+	JFile::move(JPATH_SITE.DS.'tmp'.DS.'redform_plugin'.DS.'redform.xm', JPATH_SITE.DS.'tmp'.DS.'redform_plugin'.DS.'redform.xml');
+	$installer = & JInstaller::getInstance();
+	if (!$installer->install(JPATH_SITE.DS.'tmp'.DS.'redform_plugin')) {
+	  echo JText::_('Plugin install failed: ') . $installer->getError().'<br />';
 	}
-	/* 2. PHP file */
-	if(!JFile::copy(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_redform'.DS.'plugins'.DS.'redform.php', JPATH_SITE.DS.'plugins'.DS.'content'.DS.'redform.php')){
-		echo JText::_('<b>Failed</b> to copy plugin php file<br />');
-	}
-	
-	/* 3. Language files */
-	$langfiles = JFolder::files(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_redform'.DS.'plugins'.DS.'language');
-	$basefolder = JPATH_SITE.DS.'language';
-	foreach ($langfiles as $key => $langfile) {
-		$lang = substr($langfile, 0, 5);
-		if (JFolder::exists($basefolder.DS.$lang)) {
-			if(!JFile::copy(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_redform'.DS.'plugins'.DS.'language'.DS.$langfile, $basefolder.DS.$lang.DS.$langfile)) {
-				echo JText::_('<b>Failed</b> to copy language file: '.$langfile.'<br />');
-			}
-		}
-	}
-	
-	
-	/* Store the plugin settings */
-	$plugin = JTable::getInstance( 'plugin' );
-	$plugin->name = 'Content - redFORM';
-	$plugin->element = 'redform';
-	$plugin->folder = 'content';
-	$plugin->ordering = 1;
-	$plugin->published = 1;
-	
-	if (!$plugin->store()) {
-		echo JText::_('Plugin install failed:') .$plugin->getError().'<br />';
+	else {
+	  echo JText::_('Succesfully installed redform content plugin').'<br />';
 	}
 }
 ?>
