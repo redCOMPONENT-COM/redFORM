@@ -640,10 +640,17 @@ class plgContentRedform extends JPlugin {
 
 				// only check the form that were activated by the user
 				var forms = jQuery('.formbox');
-				var mycu = jQuery("input[name='curform']")[0];
-				var nb_active = mycu.value;
-				
-				for (var j = 0 ; j < nb_active -1 ; j++)
+				var nb_active;
+				// curform starts at 2 for first form in multiple signup... but 1 for single
+				if (jQuery("input[name='multi']")[0].value > 1) {
+				  var mycu = jQuery("input[name='curform']")[0];
+					nb_active = mycu.value - 1;
+				}
+				else {
+					nb_active = 1;
+				}
+
+				for (var j = 0 ; j < nb_active ; j++)
 				{
 					// get the input data of the form
 					var formelements = jQuery(forms[j]).find(':input');
