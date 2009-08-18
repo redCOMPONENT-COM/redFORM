@@ -24,17 +24,17 @@ class plgContentRedform extends JPlugin {
 		parent::__construct( $subject, $config );     
 	}	
 	
-	function onPrepareEvent(&$row, &$params = array()) 
+	function onPrepareEvent(&$row, $params = array()) 
 	{
 		return $this->_process($row, $params);
 	}
 	
-	function onPrepareContent(&$row, &$params = array()) 
+	function onPrepareContent(&$row, $params = array()) 
 	{
     return $this->_process($row, $params);		
 	}
 	
-	function _process(&$row, &$params = array()) 
+	function _process(&$row, $params = array()) 
 	{
     JPlugin::loadLanguage( 'plg_content_redform', JPATH_SITE );
     
@@ -170,7 +170,7 @@ class plgContentRedform extends JPlugin {
 	function getFormFields($form_id) {
 		$db = JFactory::getDBO();
 		
-		$q = "SELECT id, field, validate, tooltip, LOWER(REPLACE(field,' ', '')) AS cleanfield
+		$q = "SELECT id, field, validate, tooltip
 			FROM #__rwf_fields q
 			WHERE published = 1
 			AND q.form_id = ".$form_id."
@@ -199,20 +199,24 @@ class plgContentRedform extends JPlugin {
 	  return html_entity_decode($str);
 	}
 	
-	function getFormForm($form, $fields, $multi=1) {
-		global $mainframe;
+	function getFormForm($form, $fields, $multi=1) 
+	{
+		$mainframe = & JFactory::getApplication();
 		
-		/* Check if there are any answers to be filled in */
+		/* Check if there are any answers to be filled in (already submitted)*/
 		/* This is an array starting with 0 */
 		$answers = JRequest::getVar('answers', false);
 		$submitter_id = JRequest::getInt('submitter_id', 0);
 		
 		/* Check if we need to output to PDF */
-		if (JRequest::getVar('format', 'html') == 'raw') {
+		if (JRequest::getVar('format', 'html') == 'raw') 
+		{
 			$pdfform = JRequest::getVar('pdfform');
 			$pdf = true;
 		}
-		else $pdf = false;
+		else {
+		  $pdf = false;
+		}
 		
 		/* Load the JS if we are not doing PDF */
 		if (!$pdf) $this->JsCheck();
@@ -225,7 +229,8 @@ class plgContentRedform extends JPlugin {
 		$replace = '';
 		
 		/* Set the css class */
-		if (!$pdf) {
+		if (!$pdf) 
+		{
 			$form->classname = strtolower($this->replace_accents(str_replace($find, $replace,$form->classname)));
 			$html = '<div id="redform_'.$form->classname.'">';
 			if ($form->showname) {
@@ -234,12 +239,16 @@ class plgContentRedform extends JPlugin {
 			
 			$uri = JURI::getInstance();
 			
-			if (JRequest::getInt('productid', false)) {
+			// for virtuemart
+			if (JRequest::getInt('productid', false)) 
+			{
 				$productinfo = $this->getProductinfo();
 				if (!stristr('http', $productinfo->product_full_image)){ 
 					$productimage = $uri->root().'/components/com_virtuemart/shop_image/product/'.$productinfo->product_full_image;
 				}
-				else $productimage = $productinfo->product_full_image;
+				else {
+				  $productimage = $productinfo->product_full_image;
+				}
 				$html .= '<div id="productimage">'.JHTML::_('image', $productimage, $productinfo->product_name).'</div>';
 				$html .= '<div id="productname">'.$productinfo->product_name.'</div>';
 			}
@@ -250,27 +259,41 @@ class plgContentRedform extends JPlugin {
 		}
 		$footnote = false;
 		
-		if (!$pdf) {
-			if ($multi > 1 && $user->id == 0) {
+		// user can submit multiple forms only if he is logged => display notice
+		if (!$pdf) 
+		{
+			if ($multi > 1 && $user->id == 0) 
+			{
 				$html .= '<div id="needlogin">'.JText::_('LOGIN_BEFORE_MULTI_SIGNUP').'</div>';
 				$multi = 1;
 			}
 		}
-		else $multi = 1;
+		else {
+		  $multi = 1;
+		}
 		
 		/* Set display type */
-		if ($multi == 1) $display = 'block';
+		if ($multi == 1) {
+		  $display = 'block';
+		}
 		else $display = 'none';
 		
-		if (!$pdf) {
-			if ($multi > 1) {
-				if (!$answers) $html .= '<div id="signupuser"><a href="#" onclick="AddUser()">'.JText::_('SIGN_UP_USER').'</a></div>';
+		if (!$pdf) 
+		{
+			if ($multi > 1) 
+			{
+				if (!$answers) {
+				  $html .= '<div id="signupuser"><a href="#" onclick="AddUser()">'.JText::_('SIGN_UP_USER').'</a></div>';
+				}
+				
 				$html .= '<div id="signedusers" style="float: right">
 					<a href="#" onclick="ShowAllUsers(true)">'.JText::_('SHOW_ALL_USERS').'</a>
 					<br />
 					<a href="#" onclick="ShowAllUsers(false)">'.JText::_('HIDE_ALL_USERS').'</a>
 					<br />'.JText::_('Signed up:').'<br />';
-				if ($answers) {
+				
+				if ($answers) 
+				{
 					for ($signup = 1; $signup <= count($answers); $signup++) {
 						$html .= '<a href="#" onclick="ShowSingleForm(\'div#formfield'.$signup.'\'); return false;">User '.$signup.'</a><br />';
 					}
@@ -278,14 +301,18 @@ class plgContentRedform extends JPlugin {
 				$html .= '</div>';
 			}
 		}
-		if ($answers) {
+		
+		if ($answers) 
+		{
 			$multi = count($answers);
 			if ($multi > 1) { 
 				$html .= '<div id="event_notify"><input type="checkbox" name="notify_attendants" id="notify_attendants" value="1">'.JText::_('EVENT_NOTIFY').'</input></div>';
 			}
 		}
+		
 		/* Loop through here for as many forms there are */
-		for ($signup = 1; $signup <= $multi; $signup++) {
+		for ($signup = 1; $signup <= $multi; $signup++) 
+		{
 			/* Make a collapsable box */
 			if (!$pdf) {
 				$html .= '<div id="formfield'.$signup.'" class="formbox" style="display: '.$display.';">';
@@ -610,83 +637,94 @@ class plgContentRedform extends JPlugin {
 				var newclass = 'emptyfield';
 				var checkboxmsg = false;
 				var radiomsg = false;
-				for(i=0; i < document.adminForm.elements.length; i++) {
-					var check_element = document.adminForm.elements[i];
-					/* Check field type */
-					/* Fullname */
-					if (check_element.name.match("fullname") && check_element.className.match("validate")) {
-						var fullresult = CheckFill(check_element);
-						if (result) result = fullresult;
-					}
-					
-					/* Text field */
-					if (check_element.name.match("text") && check_element.className.match("validate")) {
-						var textresult = CheckFill(check_element);
-						if (result) result = textresult;
-					}
-					
-					/* Textarea field */
-					if (check_element.name.match("textarea") && check_element.className.match("validate")) {
-						var textarearesult = CheckFill(check_element);
-						if (result) result = textarearesult;
-					}
-					
-					/* Username field */
-					if (check_element.name.match("username") && check_element.className.match("validate")) {
-						var usernameresult = CheckFill(check_element);
-						if (result) result = usernameresult;
-					}
-					
-					/* E-mail */
-					if (check_element.name.match("email") && check_element.className.match("validate")) {
-						if (CheckFill(check_element)) {
-							if (!CheckEmail(check_element.value)) {
-								msg = msg + '<?php echo JText::_('No valid e-mail address'); ?>\n';
-								if (result) result = false;
-							}
-						}
-						else {
-							msg = msg + '<?php echo JText::_('E-mail address is empty'); ?>\n';
-							if (result) result = false;
-						}
-					}
-					
-					/* Radio buttons */
-					if (check_element.name.match("radio") && check_element.className.match("validate")) {
-						radios = document.getElementsByName(check_element.name);
-						var radiocheck = false;
-						for (var rct=radios.length-1; rct > -1; rct--) {
-							if (radios[rct].checked) {
-								radiocheck = true;
-								rct = -1;
-							}
-						}
-						if (radiocheck == false) {
-							addClass(check_element, newclass);
-							if (radiomsg == false) radiomsg = true;
-							if (result) result = false;
-						}
-					}
-					
-					/* Check boxes */
-					if (check_element.name.match("checkbox") && check_element.className.match("validate")) {
-						checkboxes = document.getElementsByName(check_element.name);
-						var checkboxcheck = false;
-						for (var rct=checkboxes.length-1; rct > -1; rct--) {
-							if (checkboxes[rct].checked) {
-								checkboxcheck = true;
-								rct = -1;
-							}
-						}
-						
-						if (checkboxcheck == false) {
-							addClass(check_element, newclass);
-							if (checkboxmsg == false) checkboxmsg = true;
-							if (result) result = false;
-						}
-					}
-				}
+
+				// only check the form that were activated by the user
+				var forms = jQuery('.formbox');
+				var mycu = jQuery("input[name='curform']")[0];
+				var nb_active = mycu.value;
 				
+				for (var j = 0 ; j < nb_active -1 ; j++)
+				{
+					// get the input data of the form
+					var formelements = jQuery(forms[j]).find(':input');
+
+  				for(i=0; i < formelements.length; i++) {
+  					var check_element = formelements[i];
+  					/* Check field type */
+  					/* Fullname */
+  					if (check_element.name.match("fullname") && check_element.className.match("validate")) {
+  						var fullresult = CheckFill(check_element);
+  						if (result) result = fullresult;
+  					}
+  					
+  					/* Text field */
+  					if (check_element.name.match("text") && check_element.className.match("validate")) {
+  						var textresult = CheckFill(check_element);
+  						if (result) result = textresult;
+  					}
+  					
+  					/* Textarea field */
+  					if (check_element.name.match("textarea") && check_element.className.match("validate")) {
+  						var textarearesult = CheckFill(check_element);
+  						if (result) result = textarearesult;
+  					}
+  					
+  					/* Username field */
+  					if (check_element.name.match("username") && check_element.className.match("validate")) {
+  						var usernameresult = CheckFill(check_element);
+  						if (result) result = usernameresult;
+  					}
+  					
+  					/* E-mail */
+  					if (check_element.name.match("email") && check_element.className.match("validate")) {
+  						if (CheckFill(check_element)) {
+  							if (!CheckEmail(check_element.value)) {
+  								msg = msg + '<?php echo JText::_('No valid e-mail address'); ?>\n';
+  								if (result) result = false;
+  							}
+  						}
+  						else {
+  							msg = msg + '<?php echo JText::_('E-mail address is empty'); ?>\n';
+  							if (result) result = false;
+  						}
+  					}
+  					
+  					/* Radio buttons */
+  					if (check_element.name.match("radio") && check_element.className.match("validate")) {
+  						radios = jQuery("[name='"+check_element.name+"']");
+  						var radiocheck = false;
+  						for (var rct=radios.length-1; rct > -1; rct--) {
+  							if (radios[rct].checked) {
+  								radiocheck = true;
+  								rct = -1;
+  							}
+  						}
+  						if (radiocheck == false) {
+  							addClass(check_element, newclass);
+  							if (radiomsg == false) radiomsg = true;
+  							if (result) result = false;
+  						}
+  					}
+  					
+  					/* Check boxes */
+  					if (check_element.name.match("checkbox") && check_element.className.match("validate")) {
+  						checkboxes = jQuery("[name='"+check_element.name+"']");
+  						var checkboxcheck = false;
+  						for (var rct=checkboxes.length-1; rct > -1; rct--) {
+  							if (checkboxes[rct].checked) {
+  								checkboxcheck = true;
+  								rct = -1;
+  							}
+  						}
+  						
+  						if (checkboxcheck == false) {
+  							addClass(check_element, newclass);
+  							if (checkboxmsg == false) checkboxmsg = true;
+  							if (result) result = false;
+  						}
+  					}
+  				}
+				}
 				if (result == false) {
 					if (textresult == false || fullresult == false || textarearesult == false) msg = msg + '<?php echo JText::_('Text field is empty'); ?>\n';
 					if (usernameresult == false) msg = msg + '<?php echo JText::_('Username field is empty'); ?>\n';
@@ -701,6 +739,7 @@ class plgContentRedform extends JPlugin {
 					<?php } ?>
 					
 				}
+
 				return result;
 			}
 			
