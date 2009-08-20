@@ -253,9 +253,7 @@ class plgContentRedform extends JPlugin {
 				$html .= '<div id="productname">'.$productinfo->product_name.'</div>';
 			}
 			
-			
-			$path = $uri->toString(array('path'));
-			$html .= '<form action="'.$path.'" method="post" name="adminForm" enctype="multipart/form-data" onSubmit="return CheckSubmit();">';
+			$html .= '<form action="'.JRoute::_('index.php').'" method="post" name="adminForm" enctype="multipart/form-data" onSubmit="return CheckSubmit();">';			
 		}
 		$footnote = false;
 		

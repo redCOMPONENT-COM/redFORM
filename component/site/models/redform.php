@@ -389,14 +389,15 @@ class RedformModelRedform extends JModel {
 				if ($form->virtuemartactive) {
 					$redirect .= '&redformback=1';
 				}
-				$mainframe->redirect($redirect);
+				
+				$mainframe->redirect(JRoute::_($redirect, false));
 			}
 			
 			/* All is good, check if we have an competition in that case redirect to redCOMPETITION */
 			if ($redcompetition) 
 			{
 				$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$allanswers[0]->getAnswerId().'&form_id='.JRequest::getInt('form_id');
-				$mainframe->redirect($redirect);
+				$mainframe->redirect(JRoute::_($redirect, false));
 			}
 			return array($form->submitnotification, $form->notificationtext);
 	}
