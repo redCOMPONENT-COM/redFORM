@@ -2,13 +2,13 @@
 <!DOCTYPE install SYSTEM "http://www.joomla.org/xml/dtd/1.5/component-install.dtd">
 <install type="component" version="1.5" method="upgrade">
 	<name>redFORM</name>
-	<creationDate>06/08/2009</creationDate>
+	<creationDate>21/08/2009</creationDate>
 	<author>Redweb.dk</author>
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redweb.dk</authorUrl>
 	<copyright>(c) 2008 - 2009 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
-	<version>2.0 beta 4.2</version>
+	<version>2.0 beta 4.3</version>
 	<description>redFORM allows you to create dynamic forms on your Joomla 1.5 website with integrations to redEVENT, redCOMPETITION and the newsletter components Acajoom, ccNewsletter and the open source mailinglist system PHPlist.</description>
 	<!-- Custom installer -->
 	<installfile>install.redform.php</installfile>
