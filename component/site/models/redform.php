@@ -374,16 +374,16 @@ class RedformModelRedform extends JModel {
 			/* All is good, check if we have an event in that case redirect to redEVENT */
 			if ($redevent) 
 			{
-				$redirect = 'index.php?option=com_redevent&task='.JRequest::getVar('event_task').'&xref='.JRequest::getInt('xref').'&submit_key='.$submit_key.'&form_id='.JRequest::getInt('form_id');
+				$redirect = 'index.php?option=com_redevent&view=confirmation&task='.JRequest::getVar('event_task').'&xref='.JRequest::getInt('xref').'&submit_key='.$submit_key.'&form_id='.JRequest::getInt('form_id');
 				// go to final if this was the review screen, or if there is no review screen
 				if (JRequest::getVar('event_task') == 'review' || empty($event->review_message)) 
 				{
-					$redirect .= '&view=confirmation&page=final';
+					$redirect .= '&page=final';
 					$arkeys = array_keys(JRequest::getVar('submit'));
 					$redirect .= '&action='.$arkeys[0];
 				}
 				else {
-					$redirect .= '&view=confirmation&page=confirmation&event_task=review';
+					$redirect .= '&page=confirmation&event_task=review';
 					if (strtolower(JRequest::getVar('submit')) == strtolower(JText::_('SUBMIT_AND_PRINT'))) $redirect .= '&action=print';
 				}
 				if ($form->virtuemartactive) {
