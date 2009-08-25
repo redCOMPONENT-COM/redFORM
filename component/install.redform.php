@@ -310,6 +310,19 @@ if ($upgrade) {
 	}
 }
 
+  /** remove previous instances of the plugin, if there are more than one **/
+  $query = ' SELECT COUNT(*) FROM #__plugins WHERE name = '. $db->Quote('Content - redFORM');
+  $db->setQuery($query);
+  $nb_plug = $db->loadResult();  
+  
+  if ($nb_plug && $nb_plug > 1) {
+    $query = ' DELETE FROM #__plugins WHERE name = '. $db->Quote('Content - redFORM');
+    $db->setQuery($query);
+    if ($db->query()) {
+      echo JText::_('Removed ghost instances of redFORM content plugin').'<br />';
+    }
+  }
+  
 	/* Install plugin */
 	jimport('joomla.filesystem.file');
 	jimport('joomla.filesystem.folder');	
@@ -320,7 +333,16 @@ if ($upgrade) {
 	  echo JText::_('Plugin install failed: ') . $installer->getError().'<br />';
 	}
 	else {
-	  echo JText::_('Succesfully installed redform content plugin').'<br />';
+	  // autopublish the plugin
+	  $query = ' UPDATE #__plugins SET published = 1 WHERE name = '. $db->Quote('Content - redFORM');
+    $db->setQuery($query);
+    if ($db->query()) {
+	    echo JText::_('Succesfully installed redform content plugin').'<br />';
+    }
+    else {
+      echo JText::_('Error publishing redform content plugin').'<br />';      
+    }
+	  
 	}
 }
 ?>
