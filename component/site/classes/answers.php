@@ -248,6 +248,7 @@ class rfanswers
   function updateSubmitter($params = array())
   {
     $db = &JFactory::getDBO();
+    $mainframe = & JFactory::getApplication();
     
   	// prepare data for submitter record
   	$submitterdata['answer_id'] = $this->_answer_id;
