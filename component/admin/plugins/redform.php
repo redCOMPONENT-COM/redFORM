@@ -694,40 +694,40 @@ class plgContentRedform extends JPlugin {
   						}
   					}
   					
-  					/* Radio buttons */
-  					if (check_element.name.match("radio") && check_element.className.match("validate")) {
-  						radios = jQuery("[name='"+check_element.name+"']");
-  						var radiocheck = false;
-  						for (var rct=radios.length-1; rct > -1; rct--) {
-  							if (radios[rct].checked) {
-  								radiocheck = true;
-  								rct = -1;
-  							}
-  						}
-  						if (radiocheck == false) {
-  							addClass(check_element, newclass);
-  							if (radiomsg == false) radiomsg = true;
-  							if (result) result = false;
-  						}
-  					}
-  					
-  					/* Check boxes */
-  					if (check_element.name.match("checkbox") && check_element.className.match("validate")) {
-  						checkboxes = jQuery("[name='"+check_element.name+"']");
-  						var checkboxcheck = false;
-  						for (var rct=checkboxes.length-1; rct > -1; rct--) {
-  							if (checkboxes[rct].checked) {
-  								checkboxcheck = true;
-  								rct = -1;
-  							}
-  						}
-  						
-  						if (checkboxcheck == false) {
-  							addClass(check_element, newclass);
-  							if (checkboxmsg == false) checkboxmsg = true;
-  							if (result) result = false;
-  						}
-  					}
+		        /* Radio buttons */
+	          if (check_element.name.match("radio") && check_element.className.match("validate")) {
+	            radios = document.getElementsByName(check_element.name);
+	            var radiocheck = false;
+	            for (var rct=radios.length-1; rct > -1; rct--) {
+	              if (radios[rct].checked) {
+	                radiocheck = true;
+	                rct = -1;
+	              }
+	            }
+	            if (radiocheck == false) {
+	              addClass(check_element, newclass);
+	              if (radiomsg == false) radiomsg = true;
+	              if (result) result = false;
+	            }
+	          }
+	          
+	          /* Check boxes */
+	          if (check_element.name.match("checkbox") && check_element.className.match("validate")) {
+	            checkboxes = document.getElementsByName(check_element.name);
+	            var checkboxcheck = false;
+	            for (var rct=checkboxes.length-1; rct > -1; rct--) {
+	              if (checkboxes[rct].checked) {
+	                checkboxcheck = true;
+	                rct = -1;
+	              }
+	            }
+	            
+	            if (checkboxcheck == false) {
+	              addClass(check_element, newclass);
+	              if (checkboxmsg == false) checkboxmsg = true;
+	              if (result) result = false;
+	            }
+	          }
   				}
 				}
 				if (result == false) {
