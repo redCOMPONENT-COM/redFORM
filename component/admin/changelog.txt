@@ -5,6 +5,10 @@
  * Date: 27 February 2009
 */
 
+Version 2.0 beta 4.3.4
+* Fixed an undefined notice
+/ Cleaned up redirect to redEVENT
+
 Version 2.0 beta 2
 * Fixed language file not installing
 + Added support for VirtueMart products

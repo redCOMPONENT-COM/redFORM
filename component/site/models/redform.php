@@ -372,14 +372,19 @@ class RedformModelRedform extends JModel {
 		}
 			
 			/* All is good, check if we have an event in that case redirect to redEVENT */
-			if ($redevent) 
-			{
-				$redirect = 'index.php?option=com_redevent&view=confirmation&task='.JRequest::getVar('event_task').'&xref='.JRequest::getInt('xref').'&submit_key='.$submit_key.'&form_id='.JRequest::getInt('form_id');
+			if ($redevent) {
+				$redirect = 'index.php?option=com_redevent&view=confirmation&task='
+						.JRequest::getVar('event_task')
+						.'&xref='.JRequest::getInt('xref')
+						.'&submit_key='.$submit_key
+						.'&form_id='.JRequest::getInt('form_id');
 				// go to final if this was the review screen, or if there is no review screen
 				if (JRequest::getVar('event_task') == 'review' || empty($event->review_message)) 
 				{
 					$redirect .= '&page=final';
-					$arkeys = array_keys(JRequest::getVar('submit'));
+					$submit = JRequest::getVar('submit');
+					if (!is_array($submit)) settype($submit, 'array');
+					$arkeys = array_keys($submit);
 					$redirect .= '&action='.$arkeys[0];
 				}
 				else {
@@ -389,7 +394,6 @@ class RedformModelRedform extends JModel {
 				if ($form->virtuemartactive) {
 					$redirect .= '&redformback=1';
 				}
-				
 				$mainframe->redirect(JRoute::_($redirect, false));
 			}
 			
