@@ -297,12 +297,9 @@ class RedformModelFields extends JModel {
   function move($direction)
   {
     $row =& JTable::getInstance('Fields', 'Table');
-    dump($row);
-    dump($this);
 
     if (!$row->load( $this->_id ) ) {
       $this->setError($this->_db->getErrorMsg());
-    dump($this->_db->getErrorMsg());
       return false;
     }
 
