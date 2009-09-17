@@ -105,6 +105,11 @@ else { ?>
 					<?php echo $row->formname; ?>
 				</td>
 				<td>
+          <span><?php echo $this->pagination->orderUpIcon( $i, true, 'orderup', 'Move Up', $row->ordering ); ?></span>
+  
+          <span><?php echo $this->pagination->orderDownIcon( $i, $n, true, 'orderdown', 'Move Down', $row->ordering );?></span>
+  
+          <?php $disabled = $row->ordering ?  '' : '"disabled=disabled"'; ?>
 					<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="text_area" style="text-align: center" />
 				</td>
 				<td width="10%" align="center">

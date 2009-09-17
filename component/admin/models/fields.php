@@ -33,6 +33,48 @@ class RedformModelFields extends JModel {
 	/** @var integer pagination limit */
 	protected $_limit = null;
 	   
+  /**
+   * field id
+   *
+   * @var int
+   */
+  protected $_id = null;
+  
+  /**
+   * Constructor
+   *
+   * @since 0.9
+   */
+  function __construct()
+  {
+    parent::__construct();
+
+    global $mainframe, $option;
+
+    $limit    = $mainframe->getUserStateFromRequest( $option.'.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+    $limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
+
+    $this->setState('limit', $limit);
+    $this->setState('limitstart', $limitstart);
+
+    $array = JRequest::getVar('cid',  0, '', 'array');
+    $this->setId((int)$array[0]);
+  }
+  
+
+  /**
+   * Method to set the category identifier
+   *
+   * @access  public
+   * @param int Category identifier
+   */
+  function setId($id)
+  {
+    // Set id and wipe data
+    $this->_id   = $id;
+    $this->_data = null;
+  }
+  
 	/**
 	 * Show all fields that can be used for a value
 	 */
@@ -244,5 +286,32 @@ class RedformModelFields extends JModel {
 		}
 		return true;
 	}
+	
+ /**
+   * Method to move
+   *
+   * @access  public
+   * @return  boolean True on success
+   * @since 0.9
+   */
+  function move($direction)
+  {
+    $row =& JTable::getInstance('Fields', 'Table');
+    dump($row);
+    dump($this);
+
+    if (!$row->load( $this->_id ) ) {
+      $this->setError($this->_db->getErrorMsg());
+    dump($this->_db->getErrorMsg());
+      return false;
+    }
+
+    if (!$row->move( $direction )) {
+      $this->setError($this->_db->getErrorMsg());
+      return false;
+    }
+
+    return true;
+  }
 }
 ?>

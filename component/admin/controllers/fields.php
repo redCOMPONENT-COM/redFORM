@@ -233,5 +233,35 @@ class RedformControllerFields extends JController
     }
   	
   }
+  
+  /**
+   * Logic to orderup
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function orderup()
+  {
+    $model = $this->getModel('fields');
+    $model->move(-1);
+
+    $this->setRedirect( 'index.php?option=com_redform&view=fields');
+  }
+
+  /**
+   * Logic to orderdown
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function orderdown()
+  {
+    $model = $this->getModel('fields');
+    $model->move(1);
+
+    $this->setRedirect( 'index.php?option=com_redform&view=fields');
+  }
 }
 ?>
