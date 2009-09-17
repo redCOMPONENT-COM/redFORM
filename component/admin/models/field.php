@@ -197,13 +197,14 @@ class RedformModelField extends JModel
 
   	/* Check field order */
   	$row->load($field_id);
-  	if (empty($row->ordering)) $post['ordering'] = $row->getNextOrder($row->form_id);
 
   	if (!$row->bind($post)) {
   		$this->setError(JText::_('There was a problem binding the field data'), 'error');
   		return false;
   	}
   	 
+  	if (empty($row->ordering)) $post['ordering'] = $row->getNextOrder($row->form_id);
+
   	/* pre-save checks */
   	if (!$row->check()) {
   		$this->setError(JText::_('There was a problem checking the field data'), 'error');
