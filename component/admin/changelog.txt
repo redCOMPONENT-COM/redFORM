@@ -1,9 +1,12 @@
 /**
  * Changelog redFORM
  *
- * Version: 1.0 beta 50
+ * Version: 2.0 beta 4.3.5
  * Date: 27 February 2009
 */
+
+Version 2.0 beta 4.3.5
+/ Changed license information
 
 Version 2.0 beta 4.3.4
 * Fixed an undefined notice

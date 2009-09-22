@@ -91,12 +91,12 @@
 		<filename>changelog.txt</filename>
 		<filename>controller.php</filename>
 		<filename>install.mysql.utf8.sql</filename>
-		<filename>license.txt</filename>
+		<filename>LICENSE.php</filename>
 		<filename>redform.php</filename>
 		<folder>controllers</folder>
 		<folder>css</folder>
-    <folder>helpers</folder>
-    <folder>images</folder>
+		<folder>helpers</folder>
+		<folder>images</folder>
 		<folder>js</folder>
 		<folder>models</folder>
 		<folder>plugins</folder>
