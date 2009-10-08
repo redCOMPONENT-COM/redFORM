@@ -118,6 +118,13 @@ class rfanswers
         }
         $answer = substr($submittervalues, 0, -3);
         break;
+      case 'recipients':
+        $submittervalues = '';
+        foreach ($postedvalue['recipients'] as $key => $submitteranswer) {
+          $submittervalues .= $submitteranswer."~~~";
+        }
+        $answer = substr($submittervalues, 0, -3);
+        break;
       case 'name':
         if (in_array('fileupload', array_keys($postedvalue['name']))) {
           $answer = $this->_fileupload($postedvalue);

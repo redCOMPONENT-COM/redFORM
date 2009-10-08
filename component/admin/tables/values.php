@@ -69,5 +69,20 @@ class TableValues extends JTable {
 		$db->setQuery($q);
 		return $db->loadResult()+1;
 	}
+	
+	public function check()
+	{
+ 
+	  if ($this->fieldtype == 'recipients' || $this->fieldtype == 'email') 
+	  {
+  	  jimport( 'joomla.mail.helper' );
+	    if (! JMailHelper::isEmailAddress($this->value) ) 
+	    {
+	      $this->setError(JText::_('INVALID EMAIL FORMAT'));
+	      return false;
+	    }
+	  }
+	  return true;
+	}
 }
 ?>

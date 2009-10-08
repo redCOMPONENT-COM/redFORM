@@ -528,6 +528,13 @@ class plgContentRedform extends JPlugin {
 								$select .= " >".$value->value."</option>";
 								if ($finalid == $id) $select .= '</select>';
 								break;
+              case 'recipients':
+                if ($select == '') $select = "<select name=\"field".$field->id.'.'.$signup."[recipients][]\" multiple>";
+                $select .= "<option value=\"".$value->value."\"";
+                if ($answers && isset($answers[($signup-1)]->$cleanfield)) $select .= ' selected="selected"';
+                $select .= " >".$value->value."</option>";
+                if ($finalid == $id) $select .= '</select>';
+                break;
 							case 'fileupload':
 								if ($submitter_id == 0) {
 								$fileupload .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" size=\"40\" class=\"fileupload\" id=\"fileupload_".$field->cssfield."\"/>";

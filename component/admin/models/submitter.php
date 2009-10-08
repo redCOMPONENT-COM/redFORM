@@ -300,6 +300,13 @@ class RedformModelSubmitter extends JModel {
 					}
 					$answer = substr($submittervalues, 0, -3);
 				}
+        else if (isset($postvalues['field'.$key]['recipients'])) {
+          $submittervalues = '';
+          foreach ($postvalues['field'.$key]['recipients'] as $key => $submitteranswer) {
+            $submittervalues .= $submitteranswer."~~~";
+          }
+          $answer = substr($submittervalues, 0, -3);
+        }
 				else $answer = '';
 				$qpart .= $db->Quote($answer).',';
 			}
