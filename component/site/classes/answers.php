@@ -19,11 +19,15 @@
 
 class rfanswers
 {
+  public $_test = 0;
+  
 	public $_answer_id = 0;
 	
 	public $_fields = null;
 	
 	public $_values = null;
+	
+  public $_types = null;
 	
 	public $_form_id = 0;
 	
@@ -33,6 +37,8 @@ class rfanswers
 	
 	public $_listnames = array();
 	
+  public $_recipients = array();
+  
 	public function __construct()
 	{
 		
@@ -64,6 +70,11 @@ class rfanswers
     return $this->_submitter_email;
   }
 
+  public function getRecipients()
+  {
+    return $this->_recipients;
+  }
+  
   public function getFullname()
   {
     return $this->_fullname;
@@ -122,6 +133,7 @@ class rfanswers
         $submittervalues = '';
         foreach ($postedvalue['recipients'] as $key => $submitteranswer) {
           $submittervalues .= $submitteranswer."~~~";
+          $this->_recipients[] = $submitteranswer;
         }
         $answer = substr($submittervalues, 0, -3);
         break;
@@ -140,6 +152,7 @@ class rfanswers
     }
     $this->_fields[] = $field;
     $this->_values[] = $answer;
+    $this->_types[] = $keys[0];
     return $answer;
   }
   
@@ -350,7 +363,7 @@ class rfanswers
   	$answers = array();
   	foreach ($this->_fields as $k => $field)
   	{
-  		$answers[] = array( 'field' => $field->field, 'value' => $this->_values[$k] );
+  		$answers[] = array( 'field' => $field->field, 'value' => $this->_values[$k], 'type' => $this->_types[$k] );
   	}
   	return $answers;
   }

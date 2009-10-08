@@ -255,13 +255,21 @@ class RedformModelRedform extends JModel {
 			}
 				
 			/* Inform contact person if need */
-			if ($form->contactpersoninform) 
+			$recipients = $allanswers[0]->getRecipients();
+			if ($form->contactpersoninform || !empty($recipients)) 
 			{
 			  // init mailer
 			  $mailer = &JFactory::getMailer();
 			  $mailer->isHTML(true);
-			  $mailer->addRecipient($form->contactpersonemail);
-				
+			  if (!empty($recipients)) {
+			    foreach ($recipients AS $r) {
+			      $mailer->addRecipient($r);
+			    }
+			  }
+			  else {
+  			  $mailer->addRecipient($form->contactpersonemail);
+			  }
+			  			
 			  // we put the submitter as the email 'from' and reply to.
 			  $user = & JFactory::getUser();
 			  if ($user->get('id')) {
@@ -338,38 +346,31 @@ class RedformModelRedform extends JModel {
 						$htmlmsg .= '<div id="productimage">'.JHTML::_('image', $productimage, $productdetails->product_name).'</div>';
 						$htmlmsg .= '<div id="productname">'.$productdetails->product_name.'</div>';
 					}
-					
-					$q = "SELECT *
-							FROM ".$db->nameQuote('#__rwf_forms_'.$form->id)." f
-							LEFT JOIN #__rwf_submitters s
-							ON s.answer_id = f.id
-							WHERE submit_key = ".$db->Quote($submit_key);
-					$db->setQuery($q);
-					$results = $db->loadObjectList();
-					
-					if (is_array($results)) 
+										
+					foreach ($allanswers as $answers)
 					{
-						$patterns[0] = '/\r\n/';
-						$patterns[1] = '/\r/';
-						$patterns[2] = '/\n/';
-						$replacements[2] = '<br />';
-						$replacements[1] = '<br />';
-						$replacements[0] = '<br />';
-						
-						foreach ($results as $rkey => $result) 
-						{
-							$htmlmsg .= '<br /><table border="1">';
-							foreach ($fieldlist as $key => $field) 
-							{
-								$value = 'field_'. $field->id;
-								$userinput = preg_replace($patterns, $replacements, $result->$value);
-								$htmlmsg .= '<tr><td>'.$field->userfield.'</td><td>';
-								$htmlmsg .= str_replace('~~~', '<br />', $userinput);
-								$htmlmsg .= '&nbsp;';
-								$htmlmsg .= '</td></tr>'."\n";
-							}
-							$htmlmsg .= "</table><br />";
-						}
+					  $rows = $answers->getAnswers();
+            $patterns[0] = '/\r\n/';
+            $patterns[1] = '/\r/';
+            $patterns[2] = '/\n/';
+            $replacements[2] = '<br />';
+            $replacements[1] = '<br />';
+            $replacements[0] = '<br />';
+            
+            $htmlmsg .= '<br /><table border="1">';
+
+            foreach ($rows as $key => $answer)
+            {
+              if ($answer['type'] != 'recipients') // those are used for the mail recipients
+              {
+                $userinput = preg_replace($patterns, $replacements, $answer['value']);
+                $htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+                $htmlmsg .= str_replace('~~~', '<br />', $userinput);
+                $htmlmsg .= '&nbsp;';
+                $htmlmsg .= '</td></tr>'."\n";
+              }
+            }
+            $htmlmsg .= "</table><br />";
 					}
 				}
 				$htmlmsg .= '</body></html>';
