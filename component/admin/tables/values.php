@@ -73,7 +73,7 @@ class TableValues extends JTable {
 	public function check()
 	{
  
-	  if ($this->fieldtype == 'recipients' || $this->fieldtype == 'email') 
+	  if ($this->fieldtype == 'recipients') 
 	  {
   	  jimport( 'joomla.mail.helper' );
 	    if (! JMailHelper::isEmailAddress($this->value) ) 
