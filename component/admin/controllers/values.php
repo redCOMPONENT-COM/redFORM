@@ -83,7 +83,7 @@ class RedformControllerValues extends JController
     $task   = JRequest::getVar('task');
 
     // Sanitize
-    $post = JRequest::get('post');
+    $post = JRequest::get('post', JREQUEST_ALLOWHTML);
     if ($post['fieldtype'] == 'info') {
       $post['value'] = JRequest::getVar('value', '', 'post', 'string', JREQUEST_ALLOWHTML);
     }
