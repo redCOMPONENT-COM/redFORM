@@ -213,6 +213,13 @@ class plgContentRedform extends JPlugin {
 	function getFormForm($form, $fields, $multi=1) 
 	{
 		$mainframe = & JFactory::getApplication();
+		$document  = &JFactory::getDocument();
+    
+    $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
+		
+		// custom tooltip
+		$toolTipArray = array('className'=>'redformtip'.$form->classname);
+    JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
 		
 		/* Check if there are any answers to be filled in (already submitted)*/
 		/* This is an array starting with 0 */
@@ -361,7 +368,7 @@ class plgContentRedform extends JPlugin {
 						}
 						if (strlen($field->tooltip) > 0) {
               $img = JHTML::image(JURI::root().'/includes/js/ThemeOffice/tooltip.png', JText::_('ToolTip'));
-							$html .= ' <span class="editlinktip hasTip" title="'.$field->field.'::'.$field->tooltip.'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+							$html .= ' <span class="editlinktip hasTipField" title="'.$field->field.'::'.$field->tooltip.'" style="text-decoration: none; color: #333;">'. $img .'</span>';
 						}
 						$html .='</div>';
 					}
