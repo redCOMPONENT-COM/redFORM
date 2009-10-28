@@ -50,7 +50,7 @@ class plgContentRedform extends JPlugin {
     JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );
     
 		$this->_params = $params;
-		
+				
 		/* Regex to find categorypage references */
 		$regex = "#{redform}(.*?){/redform}#s";
 		
@@ -64,7 +64,7 @@ class plgContentRedform extends JPlugin {
 			else if (isset($row->competitionid)) JRequest::setVar('redcompetition', $row);
 
 			// load jquery for the form javascript
-			if (JRequest::getVar('format', 'html') != 'raw') {
+			if (JRequest::getVar('format', 'html') == 'html') {
 				$document = JFactory::getDocument();
 				$document->addCustomTag( '<script type="text/javascript" src="'.JURI::root().'administrator/components/com_redform/js/jquery.js"></script>' );
 				$document->addCustomTag( '<script type="text/javascript">jQuery.noConflict();</script>' );
@@ -214,31 +214,30 @@ class plgContentRedform extends JPlugin {
 	{
 		$mainframe = & JFactory::getApplication();
 		$document  = &JFactory::getDocument();
+		$pdf = false;
     
-    $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
-		
-		// custom tooltip
-		$toolTipArray = array('className'=>'redformtip'.$form->classname);
-    JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
+		if (JRequest::getVar('format', 'html') == 'html') 
+		{		
+		  // css
+      $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
+  		
+  		// custom tooltip
+  		$toolTipArray = array('className'=>'redformtip'.$form->classname);
+      JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
+      
+  		$this->JsCheck();
+		}
+		else if (JRequest::getVar('format', 'html') == 'pdf')
+		{
+			$pdfform = JRequest::getVar('pdfform');
+			$pdf = true;		  
+		}
 		
 		/* Check if there are any answers to be filled in (already submitted)*/
 		/* This is an array starting with 0 */
 		$answers = JRequest::getVar('answers', false);
 		$submitter_id = JRequest::getInt('submitter_id', 0);
-		
-		/* Check if we need to output to PDF */
-		if (JRequest::getVar('format', 'html') == 'raw') 
-		{
-			$pdfform = JRequest::getVar('pdfform');
-			$pdf = true;
-		}
-		else {
-		  $pdf = false;
-		}
-		
-		/* Load the JS if we are not doing PDF */
-		if (!$pdf) $this->JsCheck();
-		
+						
 		/* Get the user details */
 		$user = JFactory::getUser();
 		
@@ -600,7 +599,11 @@ class plgContentRedform extends JPlugin {
 			/* Get the user details form */
 			if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
 				$html .= '<div id="submit_button" style="display: '.$display.';"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('Submit').'" />';
-				if (JRequest::getInt('xref', false) && $this->_params['show_submission_type_webform_formal_offer']) $html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
+				if ( JRequest::getInt('xref', false) 
+				     && isset($this->_params['show_submission_type_webform_formal_offer']) 
+				     && $this->_params['show_submission_type_webform_formal_offer'] ) {
+				  $html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
+				}
 				$html .= '</div>';
 			}
 			else if (!JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
