@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://www.joomla.org/xml/dtd/1.5/plugin-install.dtd">
-<install version="1.5" type="plugin" group="content">
+<install version="1.5" type="plugin" group="content" method="upgrade">
 	<name>Content - redFORM</name>
 	<creationDate>14 aug 2009</creationDate>
 	<author>Redweb.dk</author>
