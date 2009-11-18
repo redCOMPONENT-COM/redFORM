@@ -255,19 +255,46 @@ class RedformModelRedform extends JModel {
 			}
 				
 			/* Inform contact person if need */
+			// form recipients
 			$recipients = $allanswers[0]->getRecipients();
-			if ($form->contactpersoninform || !empty($recipients)) 
+			
+			// in case of an event, xref group recipients
+			if ($redevent)
+			{
+				$query = ' SELECT u.email '
+							 . ' FROM #__redevent_event_venue_xref AS x '
+							 . ' INNER JOIN #__redevent_groups AS g ON x.groupid = g.id '
+							 . ' INNER JOIN #__redevent_groupmembers AS gm ON gm.group_id = g.id '
+							 . ' INNER JOIN #__users AS u ON gm.member = u.id '
+							 . ' WHERE x.id = '. $this->_db->Quote(JRequest::getInt('xref'))
+							 . '   AND gm.receive_registrations = 1 '
+							 ;
+				$db->setQuery($query);
+				$xref_group_recipients = $db->loadResultArray();
+			}
+			else {				
+				$xref_group_recipients = array();
+			}
+			dump($xref_group_recipients);
+			if ($form->contactpersoninform || !empty($recipients) || !empty($xref_group_recipients)) 
 			{
 			  // init mailer
 			  $mailer = &JFactory::getMailer();
 			  $mailer->isHTML(true);
-			  if (!empty($recipients)) {
+			  if ($form->contactpersoninform) {
+  			  $mailer->addRecipient($form->contactpersonemail);
+			  }
+			  if (!empty($recipients)) 
+			  {
 			    foreach ($recipients AS $r) {
 			      $mailer->addRecipient($r);
 			    }
 			  }
-			  else {
-  			  $mailer->addRecipient($form->contactpersonemail);
+			  if (!empty($xref_group_recipients)) 
+			  {
+			    foreach ($xref_group_recipients AS $r) {
+			      $mailer->addRecipient($r);
+			    }
 			  }
 			  			
 			  // we put the submitter as the email 'from' and reply to.
