@@ -275,7 +275,7 @@ class RedformModelRedform extends JModel {
 			else {				
 				$xref_group_recipients = array();
 			}
-			dump($xref_group_recipients);
+			
 			if ($form->contactpersoninform || !empty($recipients) || !empty($xref_group_recipients)) 
 			{
 			  // init mailer
