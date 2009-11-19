@@ -116,6 +116,8 @@ class RedformModelRedform extends JModel {
 		$redcompetition = false;
 		$redevent = false;
 		
+		$event_task = JRequest::getVar('event_task');
+		
 		/* Check for the submit key */
 		$submit_key = JRequest::getVar('submit_key', false);
 		if (!$submit_key) $submit_key = md5(uniqid());
@@ -143,7 +145,27 @@ class RedformModelRedform extends JModel {
 		$post = JRequest::get('post');
 		$files = JRequest::get('files');
 		$posted = array_merge($post, $files);
-
+		
+		if (isset($posted['submit']['cancelreg'])) 
+		{
+			if ($event_task == 'edit')
+			{			
+				if (JRequest::getInt('xref', false)) {
+					$redirect = 'index.php?option=com_redevent&view=details&xref='.JRequest::getInt('xref');
+					$mainframe->redirect($redirect, JText::_('Operation cancelled'));
+				}
+				else return true;			
+			}
+			else if ($event_task == 'manageredit')
+			{
+				if (JRequest::getInt('xref', false)) {
+					$redirect = 'index.php?option=com_redevent&view=details&tpl=manage_attendees&xref='.JRequest::getInt('xref');
+					$mainframe->redirect($redirect, JText::_('Operation cancelled'));
+				}
+				else return true;
+			}
+		}
+		
 		/* See if we have an event ID */
 		if (JRequest::getInt('event_id', false)) {
       $redevent = true;
@@ -166,7 +188,7 @@ class RedformModelRedform extends JModel {
 				
 		/* Loop through the different forms */
 		$totalforms = JRequest::getInt('curform');
-		if (JRequest::getVar('event_task') == 'userregister') $totalforms--;
+		if ($event_task == 'userregister') $totalforms--;
 		/* Sign up minimal 1 */
 		if ($totalforms == 0) $totalforms++;
 		
@@ -210,7 +232,7 @@ class RedformModelRedform extends JModel {
 				}
 			}
 			
-			if (JRequest::getVar('event_task') == 'review')
+			if ($event_task == 'review' || $event_task == 'edit' || $event_task == 'manageredit')
 			{
 				if (isset($posted['confirm'][($signup-1)])) 
 				{
@@ -238,7 +260,8 @@ class RedformModelRedform extends JModel {
 		} /* End multi-user signup */
 		
 		// send the notifications mails if not a redevent registration, or if this is the review, or if there is no review
-		if (empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message))
+		if ((empty($event) || $event_task == 'review' || empty($event->review_message))
+		    && $event_task != 'edit' && $event_task != 'manageredit')
 		{
 			/* Load the mailer in case we need to inform someone */
 			if ($form->submitterinform || $form->contactpersoninform) {
@@ -410,8 +433,28 @@ class RedformModelRedform extends JModel {
 			}
 		}
 			
-			/* All is good, check if we have an event in that case redirect to redEVENT */
-			if ($redevent) {
+		/* All is good, check if we have an event in that case redirect to redEVENT */
+		
+		if ($redevent) 
+		{
+			if ($event_task == 'edit')
+			{			
+				if (JRequest::getInt('xref', false)) {
+					$redirect = 'index.php?option=com_redevent&view=details&xref='.JRequest::getInt('xref');
+					$mainframe->redirect($redirect, JText::_('Registration updated'));
+				}
+				else return true;			
+			}
+			else if ($event_task == 'manageredit')
+			{
+				if (JRequest::getInt('xref', false)) {
+					$redirect = 'index.php?option=com_redevent&view=details&tpl=manage_attendees&xref='.JRequest::getInt('xref');
+					$mainframe->redirect($redirect, JText::_('Registration updated'));
+				}
+				else return true;
+			}
+			else
+			{
 				$redirect = 'index.php?option=com_redevent&view=confirmation&task='
 						.JRequest::getVar('event_task')
 						.'&xref='.JRequest::getInt('xref')
@@ -435,14 +478,15 @@ class RedformModelRedform extends JModel {
 				}
 				$mainframe->redirect(JRoute::_($redirect, false));
 			}
+		}
 			
-			/* All is good, check if we have an competition in that case redirect to redCOMPETITION */
-			if ($redcompetition) 
-			{
-				$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$allanswers[0]->getAnswerId().'&form_id='.JRequest::getInt('form_id');
-				$mainframe->redirect(JRoute::_($redirect, false));
-			}
-			return array($form->submitnotification, $form->notificationtext);
+		/* All is good, check if we have an competition in that case redirect to redCOMPETITION */
+		if ($redcompetition)
+		{
+			$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$allanswers[0]->getAnswerId().'&form_id='.JRequest::getInt('form_id');
+			$mainframe->redirect(JRoute::_($redirect, false));
+		}
+		return array($form->submitnotification, $form->notificationtext);
 	}
 	
 	/**
