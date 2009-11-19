@@ -235,9 +235,19 @@ class plgContentRedform extends JPlugin {
 		
 		/* Check if there are any answers to be filled in (already submitted)*/
 		/* This is an array starting with 0 */
-		$answers = JRequest::getVar('answers', false);
-		$submitter_id = JRequest::getInt('submitter_id', 0);
-						
+		if (!isset($this->_params['answers'])) {
+			$answers = JRequest::getVar('answers', false);
+		}
+		else {
+			$answers = $this->_params['answers'];
+		}
+		if (!isset($this->_params['submitter_id'])) {
+			$submitter_id = JRequest::getInt('submitter_id', 0);
+		}
+		else {
+			$submitter_id = $this->_params['submitter_id'];
+		}
+		
 		/* Get the user details */
 		$user = JFactory::getUser();
 		
@@ -270,7 +280,7 @@ class plgContentRedform extends JPlugin {
 				$html .= '<div id="productname">'.$productinfo->product_name.'</div>';
 			}
 			
-			$html .= '<form action="'.JRoute::_('index.php').'" method="post" name="adminForm" enctype="multipart/form-data" onSubmit="return CheckSubmit();">';			
+			$html .= '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="adminForm" enctype="multipart/form-data" onSubmit="return CheckSubmit();">';			
 		}
 		$footnote = false;
 		

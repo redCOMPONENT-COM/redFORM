@@ -222,6 +222,8 @@ class RedformModelSubmitter extends JModel {
 		$submit_key = JRequest::getVar('submit_key', false);
 		if (!$submit_key) $submit_key = md5(uniqid());
 		
+		$event_task = JRequest::getVar('event_task');
+		
 		/* Get the form details */
 		$form = $this->getTable('Redform');
 		$form->load(JRequest::getInt('form_id'));
@@ -312,7 +314,7 @@ class RedformModelSubmitter extends JModel {
 			}
 		}
 		
-		if (JRequest::getVar('event_task') == 'review') {
+		if ($event_task == 'review' || $event_task == 'edit' || $event_task == 'manageredit') {
 			/* Updating the values */
 			$ufields = explode(',', substr($qfields, 0, -1));
 			$upart = explode(',', substr($qpart, 0, -1));
@@ -570,12 +572,32 @@ class RedformModelSubmitter extends JModel {
 				$this->mailer->ClearAddresses();
 			}
 		}
-		/* All is good, check if we have an event in that case redirect to redEVENT */
-		if (JRequest::getInt('xref', false)) {
-			$redirect = 'index.php?option=com_redevent&view=attendees&controller=attendees&task=attendees&action=addattendee&xref='.JRequest::getInt('xref').'&submit_key='.$submit_key.'&form_id='.JRequest::getInt('form_id');
-			$mainframe->redirect($redirect);
+		
+		if ($event_task == 'edit')
+		{			
+			if (JRequest::getInt('xref', false)) {
+				$redirect = 'index.php?option=com_redevent&view=details&xref='.JRequest::getInt('xref');
+				$mainframe->redirect($redirect, JText::_('Registration updated'));
+			}
+			else return true;			
 		}
-		else return true;
+		else if ($event_task == 'manageredit')
+		{
+			if (JRequest::getInt('xref', false)) {
+				$redirect = 'index.php?option=com_redevent&view=details&tpl=manage_attendees&xref='.JRequest::getInt('xref');
+				$mainframe->redirect($redirect, JText::_('Registration updated'));
+			}
+			else return true;
+		}
+		else
+		{
+			/* All is good, check if we have an event in that case redirect to redEVENT */
+			if (JRequest::getInt('xref', false)) {
+				$redirect = 'index.php?option=com_redevent&view=attendees&controller=attendees&task=attendees&action=addattendee&xref='.JRequest::getInt('xref').'&submit_key='.$submit_key.'&form_id='.JRequest::getInt('form_id');
+				$mainframe->redirect($redirect);
+			}
+			else return true;
+		}
 	}
 	
 	/**
