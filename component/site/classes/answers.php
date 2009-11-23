@@ -226,6 +226,7 @@ class rfanswers
    */
   public function save($params = array())
   {
+  	  $mainframe = Jfactory::getApplication();
   	$db = & JFactory::getDBO();
   	
   	if (empty($this->_form_id)) {
@@ -244,7 +245,6 @@ class rfanswers
   	foreach ($this->_values as $v) {
   		$values[] = $db->Quote($v);
   	}
-      
     if ($this->_answer_id) // answers were already recorder, update them
     {
     	$q = "UPDATE ".$db->nameQuote('#__rwf_forms_'. $this->_form_id);
@@ -271,12 +271,16 @@ class rfanswers
     	
     	if (!$db->query()) {
     		/* We cannot save the answers, do not continue */
-    		JError::raiseWarning('error', JText::_('Cannot save form answers'));
+			if (stristr($db->getErrorMsg(), 'duplicate entry')) {
+				JRequest::setVar('ALREADY_ENTERED', true);
+				$mainframe->enqueueMessage(JText::_('ALREADY_ENTERED'), 'error');
+			}
+			else $mainframe->enqueueMessage(JText::_('Cannot save form answers').' '.$db->getErrorMsg(),'error');
+    		/* We cannot save the answers, do not continue */
     		RedformHelperLog::simpleLog(JText::_('Cannot save form answers').' '.$db->getErrorMsg());
     		return false;
     	}
     	$this->_answer_id = $db->insertid();
-
     	return $this->updateSubmitter($params);
     }
     return true;

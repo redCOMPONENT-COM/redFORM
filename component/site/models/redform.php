@@ -168,7 +168,7 @@ class RedformModelRedform extends JModel {
 		
 		/* See if we have an event ID */
 		if (JRequest::getInt('event_id', false)) {
-      $redevent = true;
+			$redevent = true;
 			$event_id = JRequest::getInt('event_id', 0);
 			$posted['xref'] = $event_id;
 		}
@@ -221,7 +221,7 @@ class RedformModelRedform extends JModel {
 				
 			/* Get the raw form data */
 			$postvalues['rawformdata'] = serialize($posted);
-
+			
 			/* Build up field list */
 			foreach ($fieldlist as $key => $field)
 			{
@@ -239,12 +239,12 @@ class RedformModelRedform extends JModel {
 					// this 'anwers' were already posted
 					$answers->setAnswerId($posted['confirm'][($signup-1)]);
 					// update answers
-          $answers->save($postvalues); 
+					if (!$answers->save($postvalues)) return false;
 				}
 			}
 			else {
 				// save answers
-				$answers->save($postvalues);		
+				if (!$answers->save($postvalues)) return false;		
 			}
 
 			/* Clean up any signups that need to be removed */
@@ -381,9 +381,9 @@ class RedformModelRedform extends JModel {
 				// Mail body
 				$htmlmsg = '<html><head><title></title></title></head><body>';
 				$htmlmsg .= JText::_('A new submission has been received.');
-        $htmlmsg .= $form->notificationtext;
+				$htmlmsg .= $form->notificationtext;
 				
-        /* Add user submitted data if set */
+				/* Add user submitted data if set */
 				if ($form->contactpersonfullpost) 
 				{
 					if (JRequest::getInt('productid', false)) 
@@ -434,7 +434,6 @@ class RedformModelRedform extends JModel {
 		}
 			
 		/* All is good, check if we have an event in that case redirect to redEVENT */
-		
 		if ($redevent) 
 		{
 			if ($event_task == 'edit')
