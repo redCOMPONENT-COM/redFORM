@@ -28,7 +28,7 @@ class plgContentRedform extends JPlugin {
 	 *
 	 * @var JParameter object
 	 */
-	var $_params = null;
+	var $_rwfparams = null;
 	
 	function plgContentRedform( &$subject, $config = array() )
 	{
@@ -42,14 +42,14 @@ class plgContentRedform extends JPlugin {
 	
 	function onPrepareContent(&$row, $params = array()) 
 	{
-    return $this->_process($row, $params);		
+    return $this->_process($row, array());		
 	}
 	
 	function _process(&$row, $params = array()) 
 	{
     JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );
     
-		$this->_params = $params;
+		$this->_rwfparams = $params;
 				
 		/* Regex to find categorypage references */
 		$regex = "#{redform}(.*?){/redform}#s";
@@ -235,17 +235,17 @@ class plgContentRedform extends JPlugin {
 		
 		/* Check if there are any answers to be filled in (already submitted)*/
 		/* This is an array starting with 0 */
-		if (!isset($this->_params['answers'])) {
+		if (!isset($this->_rwfparams['answers'])) {
 			$answers = JRequest::getVar('answers', false);
 		}
 		else {
-			$answers = $this->_params['answers'];
+			$answers = $this->_rwfparams['answers'];
 		}
-		if (!isset($this->_params['submitter_id'])) {
+		if (!isset($this->_rwfparams['submitter_id'])) {
 			$submitter_id = JRequest::getInt('submitter_id', 0);
 		}
 		else {
-			$submitter_id = $this->_params['submitter_id'];
+			$submitter_id = $this->_rwfparams['submitter_id'];
 		}
 		
 		/* Get the user details */
@@ -610,8 +610,8 @@ class plgContentRedform extends JPlugin {
 			if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
 				$html .= '<div id="submit_button" style="display: '.$display.';"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('Submit').'" />';
 				if ( JRequest::getInt('xref', false) 
-				     && isset($this->_params['show_submission_type_webform_formal_offer']) 
-				     && $this->_params['show_submission_type_webform_formal_offer'] ) {
+				     && isset($this->_rwfparams['show_submission_type_webform_formal_offer']) 
+				     && $this->_rwfparams['show_submission_type_webform_formal_offer'] ) {
 				  $html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
 				}
 				$html .= '</div>';
