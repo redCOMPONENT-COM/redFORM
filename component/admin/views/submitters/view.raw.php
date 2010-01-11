@@ -44,5 +44,20 @@ class RedformViewSubmitters extends JView {
 		
 		parent::display($tpl);
 	}
+
+	function writecsvrow($fields, $delimiter = ',', $enclosure = '"') 
+	{
+    $delimiter_esc = preg_quote($delimiter, '/');
+    $enclosure_esc = preg_quote($enclosure, '/');
+
+    $output = array();
+    foreach ($fields as $field) {
+        $output[] = preg_match("/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field) ? (
+            $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure
+        ) : $field;
+    }
+
+    return join($delimiter, $output) . "\n";
+	} 
 }
 ?>

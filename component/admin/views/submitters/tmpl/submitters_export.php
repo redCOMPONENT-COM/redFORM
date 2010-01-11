@@ -25,31 +25,36 @@
 	echo JText::_('Submission date').",";
 	echo JText::_('Form name').",";
 	if ($xref) echo JText::_('EVENT').",";
-	$fields = '';
-	foreach ($this->fields as $key => $value) {
-		$fields .= $value->field.",";
+	
+	// echo first line with field names
+	$fields = array();
+	foreach ($this->fields as $key => $value) {		
+		$fields[] = $value->field;
 	}
-	echo substr($fields, 0, -1)."\n";
+	echo $this->writecsvrow($fields);
 	
 	/* Data */
-	if (count($this->submitters) > 0) {
-		foreach ($this->submitters as $id => $value) {
+	if (count($this->submitters) > 0) 
+	{
+		foreach ($this->submitters as $id => $value) 
+		{
 			echo $value->submission_date.",";
 			echo $value->formname.",";
 			if ($xref) echo $this->event.",";
-			$fields = '';
+			
+			$fields = array();
 			$find = array("\r\n", "\n", "\r");
 			$replace = ' ';
-			foreach ($this->fields as $key => $field) {
+			foreach ($this->fields as $key => $field) 
+			{
         $fieldname = 'field_'. $field->id;
         if (isset($value->$fieldname)) 
         {
 					$value->$fieldname = str_replace($find, $replace, $value->$fieldname);
-					$fields .= str_replace("~~~", ";", $value->$fieldname).",";
+					$fields[] = str_replace("~~~", ";", $value->$fieldname);
 				}
-				else $fields .= ",";
 			}
-			echo substr($fields, 0, -1)."\n";
+			echo $this->writecsvrow($fields);
 		}
 	}
 exit;
