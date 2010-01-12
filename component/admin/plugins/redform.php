@@ -405,7 +405,16 @@ class plgContentRedform extends JPlugin {
 									$radio .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
 									if ($field->validate) $radio .= "validate";
 									$radio .= "\"";
-									if ($answers && stristr($answers[($signup-1)]->$cleanfield, $value->value)) $radio .= ' checked="checked"';
+									if ($answers && stristr($answers[($signup-1)]->$cleanfield, $value->value)) {
+										$radio .= ' checked="checked"';
+									}
+									else if ($user->get($field->redmember_field)) 
+									{
+										$fvalues = explode(',', $user->get($field->redmember_field));
+										if (in_array($value->value, $fvalues)) {
+											$radio .= ' checked="checked"';
+										}
+									}
 									$radio .= " type=\"radio\" name=\"field".$field->id.'.'.$signup."[radio][]\" value=\"".$value->id."\"/>".$value->value."</div>\n";
 								}
 								else {
@@ -536,7 +545,16 @@ class plgContentRedform extends JPlugin {
 									$checkbox .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
 									if ($field->validate) $checkbox .= "validate";
 									$checkbox .= "\"";
-									if ($answers && stristr($answers[($signup-1)]->$cleanfield, $value->value)) $checkbox .= ' checked="checked"';
+									if ($answers && stristr($answers[($signup-1)]->$cleanfield, $value->value)) {
+										$checkbox .= ' checked="checked"';
+									}				
+									else if ($user->get($field->redmember_field)) 
+									{
+										$fvalues = explode(',', $user->get($field->redmember_field));
+										if (in_array($value->value, $fvalues)) {
+											$checkbox .= ' checked="checked"';
+										}
+									}
 									$checkbox .= " type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[checkbox][]\" value=\"".$value->value."\" />".$value->value."</div>\n";
 								}
 								else {
@@ -558,14 +576,19 @@ class plgContentRedform extends JPlugin {
 								$select .= " >".$value->value."</option>";
 								if ($finalid == $id) $select .= '</select>';
 								break;
+								
 							case 'multiselect':
 								if ($select == '') $select = "<select name=\"field".$field->id.'.'.$signup."[multiselect][]\" multiple>";
 								$select .= "<option value=\"".$value->value."\"";
 								if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
 									$select .= ' selected="selected"';
 								}
-								else if ($user->get($field->redmember_field) == $value->value) {
-									$select .= ' selected="selected"';
+								else if ($user->get($field->redmember_field)) 
+								{
+									$fvalues = explode(',', $user->get($field->redmember_field));
+									if (in_array($value->value, $fvalues)) {
+										$select .= ' selected="selected"';
+									}
 								}
 								$select .= " >".$value->value."</option>";
 								if ($finalid == $id) $select .= '</select>';
