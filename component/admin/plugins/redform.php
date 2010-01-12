@@ -422,7 +422,12 @@ class plgContentRedform extends JPlugin {
 									$textarea .= "<div class=\"field".$value->fieldtype."\"><textarea class=\"".$form->classname." ";
 									if ($field->validate) $textarea .= "validate";
 									$textarea .= "\" name=\"field".$field->id.'.'.$signup."[textarea]\">";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) $textarea .= $answers[($signup-1)]->$cleanfield;
+									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+										$textarea .= $answers[($signup-1)]->$cleanfield;
+									}
+									else if ($user->get($field->redmember_field)) {
+										$textarea .= $user->get($field->redmember_field);
+									}
 									$textarea .= "</textarea></div>\n";
 								}
 								else {
@@ -433,12 +438,13 @@ class plgContentRedform extends JPlugin {
 																
               case 'wysiwyg':
                 if (!$pdf) {
-                  if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
-                    $content = $answers[($signup-1)]->$cleanfield;
-                  }
-                  else {
-                    $content = '';
-                  }
+                  $content = '';
+									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+										$content = $answers[($signup-1)]->$cleanfield;
+									}
+									else if ($user->get($field->redmember_field)) {
+										$content = $user->get($field->redmember_field);
+									}
                   $editor = & JFactory::getEditor();
                   
                   $wysiwyg .= "<div class=\"field".$value->fieldtype."\">";
@@ -543,14 +549,24 @@ class plgContentRedform extends JPlugin {
 							case 'select':
 								if ($select == '') $select = "<select name=\"field".$field->id.'.'.$signup."[select][]\">";
 								$select .= "<option value=\"".$value->value."\"";
-								if ($answers && isset($answers[($signup-1)]->$cleanfield)) $select .= ' selected="selected"';
+								if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+									$select .= ' selected="selected"';
+								}
+								else if ($user->get($field->redmember_field) == $value->value) {
+									$select .= ' selected="selected"';
+								}
 								$select .= " >".$value->value."</option>";
 								if ($finalid == $id) $select .= '</select>';
 								break;
 							case 'multiselect':
 								if ($select == '') $select = "<select name=\"field".$field->id.'.'.$signup."[multiselect][]\" multiple>";
 								$select .= "<option value=\"".$value->value."\"";
-								if ($answers && isset($answers[($signup-1)]->$cleanfield)) $select .= ' selected="selected"';
+								if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+									$select .= ' selected="selected"';
+								}
+								else if ($user->get($field->redmember_field) == $value->value) {
+									$select .= ' selected="selected"';
+								}
 								$select .= " >".$value->value."</option>";
 								if ($finalid == $id) $select .= '</select>';
 								break;
