@@ -33,6 +33,16 @@ class RedformViewField extends JView {
 	function display($tpl = null) 
 	{
 		$row = $this->get('Data');
+		
+		if (REDMEMBER_INTEGRATION) {
+			$options = array();
+			$options[] = JHTML::_('select.option', '', JText::_('Select corresponding redmember field'));
+			$rm_options = $this->get('RedmemberFieldsOptions');
+			if ($rm_options) {
+				$options = array_merge($options, $rm_options);
+			}
+			$lists['rmfields'] = JHTML::_('select.genericlist', $options, 'redmember_field', 'class="inputbox"', 'value', 'text', $row->redmember_field);
+		}
 
 		/* Get the published field */
 		$lists['published']= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published);

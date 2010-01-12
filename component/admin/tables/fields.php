@@ -43,6 +43,8 @@ class TableFields extends JTable {
 	var $unique = null;
 	/** @var string The tooltip for a field */
 	var $tooltip = null;
+	/** @var string linked redmember field db name */
+	var $redmember_field = null;
 	
 	/**
 	* @param database A database connector object

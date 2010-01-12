@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
   `form_id` int(11) default NULL,
   `ordering` int(11) NOT NULL default '0',
+  `redmember_field` varchar(20) NULL default NULL,
   `validate` tinyint(1) NOT NULL DEFAULT '0',
   `unique` tinyint(1) NOT NULL DEFAULT '0',
   `tooltip` varchar(255) default NULL,

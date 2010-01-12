@@ -148,6 +148,13 @@ function com_install() {
 		$db->setQuery($q);
 		$db->query();
 	}
+
+	/* Check if we have the redmember_field column */
+	if (!array_key_exists('redmember_field', $cols)) {
+		$q = "ALTER IGNORE TABLE `#__rwf_fields` ADD `redmember_field` varchar(20) NULL DEFAULT NULL AFTER `field` ";
+		$db->setQuery($q);
+		$db->query();
+	}
 	
 	/* Get the current columns */
 	$q = "SHOW COLUMNS FROM #__rwf_forms";

@@ -309,5 +309,21 @@ class RedformModelField extends JModel
 			if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot remove the field unique status').' '.$db->getErrorMsg());
 		}
 	}
+	
+	/**
+	 * returns redmember fields as options
+	 * @return aray
+	 */
+	public function getRedmemberFieldsOptions()
+	{
+		$query = ' SELECT f.field_dbname AS value, CONCAT(t.tab_name, " - ", f.field_name) AS text '
+		       . ' FROM #__redmember_fields AS f '
+		       . ' INNER JOIN #__redmember_tab AS t ON t.tab_id = f.field_tabid '
+		       . ' ORDER BY t.tab_name, f.field_name '
+		       ;
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadObjectList();
+		return $res;
+	}
 }
 ?>

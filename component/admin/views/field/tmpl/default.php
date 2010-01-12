@@ -68,6 +68,17 @@ JHTML::_('behavior.tooltip');
 			<?php echo $this->lists['forms']; ?>
 			</td>
 		</tr>
+		<?php if (REDMEMBER_INTEGRATION): ?>
+		<tr>
+			<td valign="top" align="right">
+			<?php echo JHTML::tooltip(JText::_('Select a redmember field to link to this field. This will allow to prefill data using redmember.'), JText::_('Redmember field'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Redmember field'); ?>
+			</td>
+			<td>
+			<?php echo $this->lists['rmfields']; ?>
+			</td>
+		</tr>
+		<?php endif; ?>
 		<tr>
 			<td valign="top" align="right">
 			<?php echo JHTML::tooltip(JText::_('Set to Yes to make the field show on the form'), JText::_('Published'), 'tooltip.png', '', '', false); ?>
