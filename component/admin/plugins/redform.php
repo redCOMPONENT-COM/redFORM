@@ -472,8 +472,15 @@ class plgContentRedform extends JPlugin {
 									$textfield .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
 									if ($field->validate) $textfield .= "validate";
 									$textfield .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\" value=\"";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) $textfield .= $answers[($signup-1)]->$cleanfield;
-									else if ($signup == 1 && $user->email) $textfield .= $user->email;
+									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+										$textfield .= $answers[($signup-1)]->$cleanfield;
+									}
+									else if ($user->get($field->redmember_field)) {
+										$textfield .= $user->get($field->redmember_field);
+									}
+									else if ($signup == 1 && $user->email) {
+										$textfield .= $user->email;
+									}
 									$textfield .= "\" /></div>\n";
 									/* E-mail field let's see */
 									if (strlen($value->listnames) > 0) {
@@ -499,8 +506,15 @@ class plgContentRedform extends JPlugin {
 									$textfield .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
 									if ($field->validate) $textfield .= "validate";
 									$textfield .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\" value=\"";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) $textfield .= $answers[($signup-1)]->$cleanfield;
-									else if ($signup == 1 && $user->name) $textfield .= $user->name;
+									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+										$textfield .= $answers[($signup-1)]->$cleanfield;
+									}
+									else if ($user->get($field->redmember_field)) {
+										$textfield .= $user->get($field->redmember_field);
+									}
+									else if ($signup == 1 && $user->name) {
+										$textfield .= $user->name;
+									}
 									$textfield .= "\" /></div>\n";
 								}
 								else {
@@ -513,8 +527,15 @@ class plgContentRedform extends JPlugin {
 									$textfield .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
 									if ($field->validate) $textfield .= "validate";
 									$textfield .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\" value=\"";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) $textfield .= $answers[($signup-1)]->$cleanfield;
-									else if ($signup == 1 && $user->username) $textfield .= $user->username;
+									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+										$textfield .= $answers[($signup-1)]->$cleanfield;
+									}
+									else if ($user->get($field->redmember_field)) {
+										$textfield .= $user->get($field->redmember_field);
+									}
+									else if ($signup == 1 && $user->username) {
+										$textfield .= $user->username;
+									}
 									$textfield .= "\" /></div>\n";
 								}
 								else {
