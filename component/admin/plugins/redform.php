@@ -181,7 +181,7 @@ class plgContentRedform extends JPlugin {
 	function getFormFields($form_id) {
 		$db = JFactory::getDBO();
 		
-		$q = "SELECT id, field, validate, tooltip
+		$q = "SELECT id, field, validate, tooltip, redmember_field
 			FROM #__rwf_fields q
 			WHERE published = 1
 			AND q.form_id = ".$form_id."
@@ -250,6 +250,11 @@ class plgContentRedform extends JPlugin {
 		
 		/* Get the user details */
 		$user = JFactory::getUser();
+		
+		// redmember integration: pull extra fields
+		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
+			$this->getRedmemberfields($user);
+		}
 		
 		/* Stuff to find and replace */
 		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', ',');
@@ -507,7 +512,12 @@ class plgContentRedform extends JPlugin {
 									$textfield .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
 									if ($field->validate) $textfield .= "validate";
 									$textfield .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\" value=\"";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) $textfield .= $answers[($signup-1)]->$cleanfield;
+									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+										$textfield .= $answers[($signup-1)]->$cleanfield;
+									}
+									else if ($user->get($field->redmember_field)) {
+										$textfield .= $user->get($field->redmember_field);
+									}
 									$textfield .= "\" /></div>\n";
 								}
 								else {
@@ -663,6 +673,34 @@ class plgContentRedform extends JPlugin {
 		$q = "SELECT product_full_image, product_name FROM #__vm_product WHERE product_id = ".JRequest::getInt('productid');
 		$db->setQuery($q);
 		return $db->loadObject();
+	}
+	
+	/**
+	 * adds extra fields from redmember to user object
+	 * @param $user object user
+	 * @return object user
+	 */
+	function getRedmemberfields(&$user)
+	{
+		$db = JFactory::getDBO();
+		$user_id = $user->get('id');
+		if (!$user_id) {
+			return false;
+		}
+		$query = ' SELECT * FROM #__redmember_users WHERE user_id = '. $db->Quote($user_id);
+		$db->setQuery($query, 0, 1);
+		$res = $db->loadObject();
+		
+		if ($res)
+		{	
+			foreach ($res as $name => $value) 
+			{
+				if (preg_match('/^rm_/', $name)) {
+					$user->set($name, $value);
+				}
+			}
+		}
+		return $user;
 	}
 	
 	function JsCheck() {
