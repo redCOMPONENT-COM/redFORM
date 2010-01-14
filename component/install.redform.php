@@ -155,6 +155,31 @@ function com_install() {
 		$db->setQuery($q);
 		$db->query();
 	}
+
+	/* Check if we have the fieldtype column */
+	if (!array_key_exists('fieldtype', $cols)) 
+	{
+		$q = "ALTER IGNORE TABLE `#__rwf_fields` ADD `fieldtype` varchar(30) NOT NULL DEFAULT '' AFTER `field` ";
+		$db->setQuery($q);
+		if ($db->query()) 
+		{
+			$q = "UPDATE #__rwf_fields AS f, jos_rwf_values AS v SET f.fieldtype = v.fieldtype WHERE f.id = v.field_id";
+			$db->setQuery($q);
+			if ($db->query()) 
+			{
+				$q = "ALTER IGNORE TABLE `#__rwf_values` DROP `fieldtype` ";
+				$q = "UPDATE #__rwf_fields AS f, jos_rwf_values AS v SET f.fieldtype = v.fieldtype WHERE f.id = v.field_id";
+				$db->setQuery($q);
+				if ($db->query()) 
+				{
+				
+				}
+			}
+		}
+			
+	}
+		
+	/***************************************************************************************************************/
 	
 	/* Get the current columns */
 	$q = "SHOW COLUMNS FROM #__rwf_forms";

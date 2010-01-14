@@ -35,8 +35,6 @@ class TableValues extends JTable {
 	var $checked_out_time = null;
 	/** @var string The field the value is connected to */
 	var $field_id = null;
-	/** @var string Set the fieldtype of the field */
-	var $fieldtype = null;
 	/** @var string Set the order of the value */
 	var $ordering = null;
 	

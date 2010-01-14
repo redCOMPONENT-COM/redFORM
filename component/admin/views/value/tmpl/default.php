@@ -43,16 +43,6 @@ JHTML::_('behavior.tooltip');
 			<?php echo $this->lists['fields']; ?>
 			</td>
 		</tr>
-		<tr id="trfieldtypes">
-			<td valign="top" align="right">
-			<?php echo JText::_('Field type'); ?>
-			</td>
-			<td>
-			<div id="newfieldtype">
-			<?php echo $this->lists['fieldtypes']; ?>
-			</div>
-			</td>
-		</tr>
 		<?php
 		if (isset($this->mailinglists) && !empty($this->uselists)) {
 			$listnames = explode(';', $this->mailinglists->listnames);

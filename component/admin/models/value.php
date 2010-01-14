@@ -108,9 +108,10 @@ class RedformModelValue extends JModel
       // Lets load the content if it doesn't already exist
       if (empty($this->_data))
       {
-        $query = 'SELECT *'
-            . ' FROM #__rwf_values'
-            . ' WHERE id = '.$this->_id
+        $query = 'SELECT v.*, f.fieldtype '
+            . ' FROM #__rwf_values AS v '
+            . ' INNER JOIN #__rwf_fields AS f ON f.id = v.field_id '
+            . ' WHERE v.id = '.$this->_id
             ;
         $this->_db->setQuery($query);
         $this->_data = $this->_db->loadObject();
@@ -355,7 +356,8 @@ class RedformModelValue extends JModel
 	/**
 	 * Get the mailingslists for the e-mail field
 	 */
-	function getUseMailinglists() {
+	function getUseMailinglists() 
+	{
 		$db = JFactory::getDBO();
 		$q = "SELECT name
 			FROM #__rwf_configuration

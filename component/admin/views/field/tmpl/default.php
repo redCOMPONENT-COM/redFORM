@@ -32,6 +32,16 @@ JHTML::_('behavior.tooltip');
 			<input class="inputbox" type="text" size="80" name="field" value="<?php echo $this->row->field; ?>">
 			</td>
 		</tr>
+		<tr id="trfieldtypes">
+			<td valign="top" align="right">
+			<?php echo JText::_('Field type'); ?>
+			</td>
+			<td>
+			<div id="newfieldtype">
+			<?php echo $this->lists['fieldtypes']; ?>
+			</div>
+			</td>
+		</tr>
 		<tr>
 			<td>
 			<?php echo JHTML::tooltip(JText::_('ENTER_TOOLTIP_INFO'), JText::_('ENTER_TOOLTIP'), 'tooltip.png', '', '', false); ?>

@@ -69,6 +69,24 @@ class RedformViewField extends JView {
 			$selected = JRequest::getInt('form_id');
 		}
 		$lists['forms']= JHTML::_('select.genericlist',  $forms, 'form_id', $state, 'value', 'text', $selected) ;
+		
+		/* Create the value field types */
+		$fieldtypes = array(
+			array('fieldtype' => 'radio', 'fieldname' => JText::_('radio')),
+			array('fieldtype' => 'textarea', 'fieldname' => JText::_('textarea')),
+			array('fieldtype' => 'textfield', 'fieldname' => JText::_('textfield')),
+			array('fieldtype' => 'checkbox', 'fieldname' => JText::_('checkbox')),
+			array('fieldtype' => 'email', 'fieldname' => JText::_('email')),
+			array('fieldtype' => 'username', 'fieldname' => JText::_('username')),
+			array('fieldtype' => 'fullname', 'fieldname' => JText::_('fullname')),
+			array('fieldtype' => 'select', 'fieldname' => JText::_('select')),
+			array('fieldtype' => 'multiselect', 'fieldname' => JText::_('multiselect')),
+			array('fieldtype' => 'fileupload', 'fieldname' => JText::_('fileupload')),
+			array('fieldtype' => 'wysiwyg', 'fieldname' => JText::_('wysiwyg')),
+			array('fieldtype' => 'info', 'fieldname' => JText::_('info')),
+	    array('fieldtype' => 'recipients', 'fieldname' => JText::_('recipients'))
+		);
+		$lists['fieldtypes']= JHTML::_('select.genericlist',  $fieldtypes, 'fieldtype', '', 'fieldtype', 'fieldname', $row->fieldtype) ;
 
 		/* Get the toolbar */
 		switch (JRequest::getCmd('task')) {

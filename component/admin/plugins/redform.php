@@ -123,7 +123,8 @@ class plgContentRedform extends JPlugin {
 	/**
 	 * Check if there are any forms to be started or stopped
 	 */
-	function CheckForms() {
+	function CheckForms() 
+	{
 		$db = JFactory::getDBO();
 		
 		/* Check running forms to be stopped */
@@ -136,8 +137,10 @@ class plgContentRedform extends JPlugin {
 		$db->setQuery($q);
 		$forms = $db->loadObjectList();
 		
-		if (count($forms) > 0) {
-			foreach ($forms as $id => $form_id) {
+		if (count($forms) > 0) 
+		{
+			foreach ($forms as $id => $form_id) 
+			{
 				$q = "UPDATE #__rwf_forms
 				SET published = 0, formstarted = 0
 				WHERE id = ".$form_id->id;
@@ -155,8 +158,10 @@ class plgContentRedform extends JPlugin {
 		$db->setQuery($q);
 		$forms = $db->loadObjectList();
 		
-		if (count($forms) > 0) {
-			foreach ($forms as $id => $form_id) {
+		if (count($forms) > 0) 
+		{
+			foreach ($forms as $id => $form_id) 
+			{
 				$q = "UPDATE #__rwf_forms
 				SET formstarted = 1
 				WHERE id = ".$form_id->id;
@@ -166,7 +171,8 @@ class plgContentRedform extends JPlugin {
 		}
 	}
 	
-	function getForm($form_id) {
+	function getForm($form_id) 
+	{
 		$db = JFactory::getDBO();
 		
 		$q = "SELECT *
@@ -178,10 +184,11 @@ class plgContentRedform extends JPlugin {
 		return $db->loadObject();
 	}
 	
-	function getFormFields($form_id) {
+	function getFormFields($form_id) 
+	{
 		$db = JFactory::getDBO();
 		
-		$q = "SELECT id, field, validate, tooltip, redmember_field
+		$q = "SELECT id, field, validate, tooltip, redmember_field, fieldtype
 			FROM #__rwf_fields q
 			WHERE published = 1
 			AND q.form_id = ".$form_id."
@@ -190,10 +197,11 @@ class plgContentRedform extends JPlugin {
 		return $db->loadObjectList();
 	}
 	
-	function getFormValues($field_id) {
+	function getFormValues($field_id) 
+	{
 		$db = JFactory::getDBO();
 		
-		$q = "SELECT q.id, value, field_id, fieldtype, listnames
+		$q = "SELECT q.id, value, field_id, listnames
 			FROM #__rwf_values q
 			LEFT JOIN #__rwf_mailinglists m
 			ON q.id = m.id
@@ -204,528 +212,23 @@ class plgContentRedform extends JPlugin {
 		return $db->loadObjectList();
 	}
 	
-	function replace_accents($str) {
+	function replace_accents($str) 
+	{
 	  $str = htmlentities($str, ENT_COMPAT, "UTF-8");
 	  $str = preg_replace('/&([a-zA-Z])(uml|acute|grave|circ|tilde|elig|slash|ring);/','$1',$str);
 	  return html_entity_decode($str);
 	}
 	
 	function getFormForm($form, $fields, $multi=1) 
-	{
-		$mainframe = & JFactory::getApplication();
-		$document  = &JFactory::getDocument();
-		$pdf = false;
-    
+	{    
 		if (JRequest::getVar('format', 'html') == 'html') 
-		{		
-		  // css
-      $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
-  		
-  		// custom tooltip
-  		$toolTipArray = array('className'=>'redformtip'.$form->classname);
-      JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
-      
-  		$this->JsCheck();
+		{
+			return $this->getHTMLForm($form, $fields, $multi);
 		}
 		else if (JRequest::getVar('format', 'html') == 'pdf')
 		{
-			$pdfform = JRequest::getVar('pdfform');
-			$pdf = true;		  
+			JRequest::setVar('pdfform', $this->getPDFForm($form, $fields));
 		}
-		
-		/* Check if there are any answers to be filled in (already submitted)*/
-		/* This is an array starting with 0 */
-		if (!isset($this->_rwfparams['answers'])) {
-			$answers = JRequest::getVar('answers', false);
-		}
-		else {
-			$answers = $this->_rwfparams['answers'];
-		}
-		if (!isset($this->_rwfparams['submitter_id'])) {
-			$submitter_id = JRequest::getInt('submitter_id', 0);
-		}
-		else {
-			$submitter_id = $this->_rwfparams['submitter_id'];
-		}
-		
-		/* Get the user details */
-		$user = JFactory::getUser();
-		
-		// redmember integration: pull extra fields
-		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
-			$this->getRedmemberfields($user);
-		}
-		
-		/* Stuff to find and replace */
-		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', ',');
-		$replace = '';
-		
-		/* Set the css class */
-		if (!$pdf) 
-		{
-			$form->classname = strtolower($this->replace_accents(str_replace($find, $replace,$form->classname)));
-			$html = '<div id="redform_'.$form->classname.'">';
-			if ($form->showname) {
-				$html .= '<div id="formname">'.$form->formname.'</div>';
-			}
-			
-			$uri = JURI::getInstance();
-			
-			// for virtuemart
-			if (JRequest::getInt('productid', false)) 
-			{
-				$productinfo = $this->getProductinfo();
-				if (!stristr('http', $productinfo->product_full_image)){ 
-					$productimage = $uri->root().'/components/com_virtuemart/shop_image/product/'.$productinfo->product_full_image;
-				}
-				else {
-				  $productimage = $productinfo->product_full_image;
-				}
-				$html .= '<div id="productimage">'.JHTML::_('image', $productimage, $productinfo->product_name).'</div>';
-				$html .= '<div id="productname">'.$productinfo->product_name.'</div>';
-			}
-			
-			$html .= '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="adminForm" enctype="multipart/form-data" onSubmit="return CheckSubmit();">';			
-		}
-		$footnote = false;
-		
-		// user can submit multiple forms only if he is logged => display notice
-		if (!$pdf) 
-		{
-			if ($multi > 1 && $user->id == 0) 
-			{
-				$html .= '<div id="needlogin">'.JText::_('LOGIN_BEFORE_MULTI_SIGNUP').'</div>';
-				$multi = 1;
-			}
-		}
-		else {
-		  $multi = 1;
-		}
-		
-		/* Set display type */
-		if ($multi == 1) {
-		  $display = 'block';
-		}
-		else $display = 'none';
-		
-		if (!$pdf) 
-		{
-			if ($multi > 1) 
-			{
-				if (!$answers) {
-				  $html .= '<div id="signupuser"><a href="#" onclick="AddUser()">'.JText::_('SIGN_UP_USER').'</a></div>';
-				}
-				
-				$html .= '<div id="signedusers" style="float: right">
-					<a href="#" onclick="ShowAllUsers(true)">'.JText::_('SHOW_ALL_USERS').'</a>
-					<br />
-					<a href="#" onclick="ShowAllUsers(false)">'.JText::_('HIDE_ALL_USERS').'</a>
-					<br />'.JText::_('Signed up:').'<br />';
-				
-				if ($answers) 
-				{
-					for ($signup = 1; $signup <= count($answers); $signup++) {
-						$html .= '<a href="#" onclick="ShowSingleForm(\'div#formfield'.$signup.'\'); return false;">User '.$signup.'</a><br />';
-					}
-				}
-				$html .= '</div>';
-			}
-		}
-		
-		if ($answers) 
-		{
-			$multi = count($answers);
-			if ($multi > 1) { 
-				$html .= '<div id="event_notify"><input type="checkbox" name="notify_attendants" id="notify_attendants" value="1">'.JText::_('EVENT_NOTIFY').'</input></div>';
-			}
-		}
-		
-		/* Loop through here for as many forms there are */
-		for ($signup = 1; $signup <= $multi; $signup++) 
-		{
-			/* Make a collapsable box */
-			if (!$pdf) {
-				$html .= '<div id="formfield'.$signup.'" class="formbox" style="display: '.$display.';">';
-			}
-			else {
-				if ($signup > 1) $pdfform->Addpage('P');
-				$pdfform->Cell(0, 10, JText::_('ATTENDEE').' '.$signup, 0, 1, 'L');
-			}
-			$footnote = false;
-			
-			if ($answers && $multi > 1) {
-				$html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->id.'" checked="checked" />'.JText::_('INCLUDE_REGISTRATION').'</div>';
-			}
-			else if ($answers) {
-				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->id.'" />';	
-			}
-			foreach ($fields as $key => $field) 
-			{
-				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
-				if (!$pdf) $html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline">';
-				
-				$values = $this->getFormValues($field->id);
-				
-				if (count($values) > 0) {
-
-					if ($values[0]->fieldtype == 'info') {
-						$html .= '<div class="infofield">' . $values[0]->value . '</div>';
-						$html .= '</div>';						
-						continue;
-					}
-					
-					if (!$pdf) {
-						$html .= '<div id="field_'.$field->cssfield.'">'.$field->field;
-						if ($field->validate) {
-							$html .= '<sup>'.JText::_('REQUIRED_FIELD_MARKER').'</sup>';
-							$footnote = true;
-						}
-						if (strlen($field->tooltip) > 0) {
-              $img = JHTML::image(JURI::root().'/includes/js/ThemeOffice/tooltip.png', JText::_('ToolTip'));
-							$html .= ' <span class="editlinktip hasTipField" title="'.$field->field.'::'.$field->tooltip.'" style="text-decoration: none; color: #333;">'. $img .'</span>';
-						}
-						$html .='</div>';
-					}
-					else {
-						$pdfform->Cell(0, 10, $field->field, 0, 1, 'L');
-					}
-					$radio = '';
-					$textarea = '';
-					$textfield = '';
-					$checkbox = '';
-					$select = '';
-					$fileupload = '';
-          $wysiwyg = '';
-					$finalid = end(array_keys($values));
-					$cleanfield = 'field_'. $field->id;
-					foreach ($values as $id => $value) {
-						switch ($value->fieldtype) {
-							case 'radio':
-								if (!$pdf) {
-									$radio .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
-									if ($field->validate) $radio .= "validate";
-									$radio .= "\"";
-									if ($answers && stristr($answers[($signup-1)]->$cleanfield, $value->value)) {
-										$radio .= ' checked="checked"';
-									}
-									else if ($user->get($field->redmember_field)) 
-									{
-										$fvalues = explode(',', $user->get($field->redmember_field));
-										if (in_array($value->value, $fvalues)) {
-											$radio .= ' checked="checked"';
-										}
-									}
-									$radio .= " type=\"radio\" name=\"field".$field->id.'.'.$signup."[radio][]\" value=\"".$value->id."\"/>".$value->value."</div>\n";
-								}
-								else {
-									$pdfform->setX($pdfform->getX()+2);
-									$pdfform->Circle($pdfform->getX(), $pdfform->getY(), 2);
-									$pdfform->setXY($pdfform->getX()+3, $pdfform->getY()-5);
-									$pdfform->Write(10, $value->value);
-									$pdfform->Ln();
-								}
-								break;
-								
-							case 'textarea':
-								if (!$pdf) {
-									$textarea .= "<div class=\"field".$value->fieldtype."\"><textarea class=\"".$form->classname." ";
-									if ($field->validate) $textarea .= "validate";
-									$textarea .= "\" name=\"field".$field->id.'.'.$signup."[textarea]\">";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
-										$textarea .= $answers[($signup-1)]->$cleanfield;
-									}
-									else if ($user->get($field->redmember_field)) {
-										$textarea .= $user->get($field->redmember_field);
-									}
-									$textarea .= "</textarea></div>\n";
-								}
-								else {
-									$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 100, 15);
-									$pdfform->Ln();
-								}
-								break;								
-																
-              case 'wysiwyg':
-                if (!$pdf) {
-                  $content = '';
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
-										$content = $answers[($signup-1)]->$cleanfield;
-									}
-									else if ($user->get($field->redmember_field)) {
-										$content = $user->get($field->redmember_field);
-									}
-                  $editor = & JFactory::getEditor();
-                  
-                  $wysiwyg .= "<div class=\"field".$value->fieldtype."\">";
-                  // Cannot have buttons, it triggers an error with tinymce for unregistered users
-                  $wysiwyg .= $editor->display( "field".$field->id.'.'.$signup."[wysiwyg]", $content, '100%;', '200', '75', '20', false ) ;
-                  $wysiwyg .= "</div>\n";
-                }
-                else {
-                  $pdfform->Rect($pdfform->getX(), $pdfform->getY(), 100, 15);
-                  $pdfform->Ln();
-                }
-                break;
-                
-							case 'email':
-								if (!$pdf) {
-									$textfield .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
-									if ($field->validate) $textfield .= "validate";
-									$textfield .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\" value=\"";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
-										$textfield .= $answers[($signup-1)]->$cleanfield;
-									}
-									else if ($user->get($field->redmember_field)) {
-										$textfield .= $user->get($field->redmember_field);
-									}
-									else if ($signup == 1 && $user->email) {
-										$textfield .= $user->email;
-									}
-									$textfield .= "\" /></div>\n";
-									/* E-mail field let's see */
-									if (strlen($value->listnames) > 0) {
-										$listnames = explode(";", $value->listnames);
-										if (count($listnames) > 0) {
-											$textfield .= '<div id="signuptitle">'.JText::_('SIGN_UP_MAILINGLIST').'</div>';
-											$textfield .= "<div class=\"field".$value->fieldtype."_listnames\">";
-											foreach ($listnames AS $listkey => $listname) {
-												$textfield .= "<div class=\"field_".$listkey."\"><input class=\"".$form->classname." ";
-												$textfield .= "\" type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
-											}
-											$textfield .= "</div>\n";
-										}
-									}
-								}
-								else {
-									$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
-									$pdfform->Ln();
-								}
-								break;
-							case 'fullname':
-								if (!$pdf) {
-									$textfield .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
-									if ($field->validate) $textfield .= "validate";
-									$textfield .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\" value=\"";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
-										$textfield .= $answers[($signup-1)]->$cleanfield;
-									}
-									else if ($user->get($field->redmember_field)) {
-										$textfield .= $user->get($field->redmember_field);
-									}
-									else if ($signup == 1 && $user->name) {
-										$textfield .= $user->name;
-									}
-									$textfield .= "\" /></div>\n";
-								}
-								else {
-									$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
-									$pdfform->Ln();
-								}
-								break;
-							case 'username':
-								if (!$pdf) {
-									$textfield .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
-									if ($field->validate) $textfield .= "validate";
-									$textfield .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\" value=\"";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
-										$textfield .= $answers[($signup-1)]->$cleanfield;
-									}
-									else if ($user->get($field->redmember_field)) {
-										$textfield .= $user->get($field->redmember_field);
-									}
-									else if ($signup == 1 && $user->username) {
-										$textfield .= $user->username;
-									}
-									$textfield .= "\" /></div>\n";
-								}
-								else {
-									$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
-									$pdfform->Ln();
-								}
-								break;
-							case 'textfield':
-								if (!$pdf) {
-									$textfield .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
-									if ($field->validate) $textfield .= "validate";
-									$textfield .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\" value=\"";
-									if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
-										$textfield .= $answers[($signup-1)]->$cleanfield;
-									}
-									else if ($user->get($field->redmember_field)) {
-										$textfield .= $user->get($field->redmember_field);
-									}
-									$textfield .= "\" /></div>\n";
-								}
-								else {
-									$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
-									$pdfform->Ln();
-								}
-								break;
-							case 'checkbox':
-								if (!$pdf) {
-									$checkbox .= "<div class=\"field".$value->fieldtype."\"><input class=\"".$form->classname." ";
-									if ($field->validate) $checkbox .= "validate";
-									$checkbox .= "\"";
-									if ($answers && stristr($answers[($signup-1)]->$cleanfield, $value->value)) {
-										$checkbox .= ' checked="checked"';
-									}				
-									else if ($user->get($field->redmember_field)) 
-									{
-										$fvalues = explode(',', $user->get($field->redmember_field));
-										if (in_array($value->value, $fvalues)) {
-											$checkbox .= ' checked="checked"';
-										}
-									}
-									$checkbox .= " type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[checkbox][]\" value=\"".$value->value."\" />".$value->value."</div>\n";
-								}
-								else {
-									$pdfform->Rect($pdfform->getX(), $pdfform->getY()+2, 5, 5);
-									$pdfform->setX($pdfform->getX()+5);
-									$pdfform->Write(10, $value->value);
-									$pdfform->Ln();
-								}
-								break;
-							case 'select':
-								if ($select == '') $select = "<select name=\"field".$field->id.'.'.$signup."[select][]\">";
-								$select .= "<option value=\"".$value->value."\"";
-								if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
-									$select .= ' selected="selected"';
-								}
-								else if ($user->get($field->redmember_field) == $value->value) {
-									$select .= ' selected="selected"';
-								}
-								$select .= " >".$value->value."</option>";
-								if ($finalid == $id) $select .= '</select>';
-								break;
-								
-							case 'multiselect':
-								if ($select == '') $select = "<select name=\"field".$field->id.'.'.$signup."[multiselect][]\" multiple>";
-								$select .= "<option value=\"".$value->value."\"";
-								if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
-									$select .= ' selected="selected"';
-								}
-								else if ($user->get($field->redmember_field)) 
-								{
-									$fvalues = explode(',', $user->get($field->redmember_field));
-									if (in_array($value->value, $fvalues)) {
-										$select .= ' selected="selected"';
-									}
-								}
-								$select .= " >".$value->value."</option>";
-								if ($finalid == $id) $select .= '</select>';
-								break;
-              case 'recipients':
-                if ($select == '') $select = "<select name=\"field".$field->id.'.'.$signup."[recipients][]\" multiple>";
-                $select .= "<option value=\"".$value->value."\"";
-                if ($answers && isset($answers[($signup-1)]->$cleanfield)) $select .= ' selected="selected"';
-                $select .= " >".$value->value."</option>";
-                if ($finalid == $id) $select .= '</select>';
-                break;
-							case 'fileupload':
-								if ($submitter_id == 0) {
-								$fileupload .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" size=\"40\" class=\"fileupload\" id=\"fileupload_".$field->cssfield."\"/>";
-								}
-								break;
-						}
-					}
-					
-					if (!$pdf) {
-						if (!empty($radio)) $html .= $radio;
-						else if (!empty($textfield)) $html .= $textfield;
-						else if (!empty($textarea)) $html .= $textarea;
-						else if (!empty($checkbox)) $html .= $checkbox;
-						else if (!empty($select)) $html .= $select;
-						else if (!empty($fileupload)) $html .= $fileupload;
-            else if (!empty($wysiwyg)) $html .= $wysiwyg;
-					}
-				}
-				if (!$pdf) $html .= '</div>';
-			}
-			/* Close collapsable box */
-			if (!$pdf) $html .= '</div>';
-			else {
-				if ($footnote) $pdfform->Write(10, JText::_('VALIDATE_FOOTNOTE'));
-			}
-		}
-		
-		if (!$pdf) {
-			/* Add any redEVENT values */
-			$redevent = JRequest::getVar('redevent', false);
-			
-			if ($redevent) {
-				$html .= '<input type="hidden" name="event_task" value="'.$redevent->task.'" />';
-				$html .= '<input type="hidden" name="event_id" value="'.$redevent->eventid.'" />';
-				$html .= '<input type="hidden" name="xref" value="'.JRequest::getInt('xref').'" />';
-			}
-			else if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) {
-				$html .= '<input type="hidden" name="xref" value="'.JRequest::getInt('xref').'" />';
-			}
-			
-			/* Add any redCOMPETITION values */
-			$redcompetition = JRequest::getVar('redcompetition', false);
-			
-			if ($redcompetition) {
-				$html .= '<input type="hidden" name="competition_task" value="'.$redcompetition->task.'" />';
-				$html .= '<input type="hidden" name="competition_id" value="'.$redcompetition->competitionid.'" />';
-			}
-			
-			/* Add the captcha */
-			if ($form->captchaactive && $submitter_id == 0) {
-			$html .= '<div id="redformcaptcha"><img src="index.php?option=com_redform&task=displaycaptcha&controller=redform">';
-			$html .= ' '.JHTML::tooltip(JText::_('CAPTCHA_TOOLTIP'), JText::_('CAPTCHA'), 'tooltip.png', '', '', false).'</div>';
-				$html .= '<div id="redformcaptchaword"><input type="text" name="captchaword"></div>';
-			}
-			
-			/* Get the user details form */
-			if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
-				$html .= '<div id="submit_button" style="display: '.$display.';"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('Submit').'" />';
-				if ( JRequest::getInt('xref', false) 
-				     && isset($this->_rwfparams['show_submission_type_webform_formal_offer']) 
-				     && $this->_rwfparams['show_submission_type_webform_formal_offer'] ) {
-				  $html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
-				}
-				$html .= '</div>';
-			}
-			else if (!JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
-				$html .= '<div id="confirmbutton">';
-				$html .= '<input type="submit" id="confirmreg" value="'.JText::_('EVENT_SUBMIT').'" name="submit[confirmreg]" />';
-				$html .= '<input type="submit" id="cancelreg" value="'.JText::_('EVENT_CANCEL').'" name="submit[cancelreg]" />';
-				$html .= '</div>';
-				$html .= '<input type="hidden" name="submit_key" value="'.JRequest::getVar('submit_key').'" />';
-			}
-			$html .= '<input type="hidden" name="option" value="com_redform" />';
-			$html .= '<input type="hidden" name="productid" value="'.JRequest::getInt('productid', 0).'" />';
-			$html .= '<input type="hidden" name="Itemid" value="'.JRequest::getInt('Itemid', 1).'" />';
-			$html .= '<input type="hidden" name="task" value="save" />';
-			if ($submitter_id > 0) {
-				$html .= '<input type="hidden" name="submitter_id" value="'.$submitter_id.'" />';
-				if ($redevent->task == 'manageredit' || $redevent->task == 'edit') {
-					$html .= '<input type="hidden" name="controller" value="redform" />';
-				}
-			}
-			else $html .= '<input type="hidden" name="controller" value="redform" />';
-			
-			if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) {
-				$html .= '<input type="hidden" name="controller" value="submitters" />';
-			}
-			
-			if (JRequest::getVar('redform_edit')) {
-				$html .= '<input type="hidden" name="event_task" value="review" />';
-			}
-			
-			$html .= '<input type="hidden" name="curform" value="';
-			if ($answers) $html .= count($answers)+1;
-			else $html .= '1';
-			$html .= '" />';
-			$html .= '<input type="hidden" name="form_id" value="'.$form->id.'" />';
-			$html .= '<input type="hidden" name="multi" value="'.$multi.'" />';
-			if (JRequest::getVar('close_form', true)) $html .= '</form>';
-		$html .= '</div>';
-		if ($footnote) $html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline"><div id="validate_footnote">'.JText::_('VALIDATE_FOOTNOTE').'</div></div>';
-		}
-			
-		if ($pdf) JRequest::setVar('pdfform', $pdfform);
-		else return $html;
 	}
 	
 	function getProductinfo() {
@@ -970,5 +473,568 @@ class plgContentRedform extends JPlugin {
 		</script>
 		<?php
 	}
+	
+	function getHTMLForm($form, $fields, $multi=1)
+	{
+		$uri       = JURI::getInstance();
+		$user      = JFactory::getUser();
+		$document  = &JFactory::getDocument();
+		
+	  // css
+    $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
+  	
+  	// custom tooltip
+  	$toolTipArray = array('className'=>'redformtip'.$form->classname);
+    JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
+      
+  	$this->JsCheck();
+		
+		// redmember integration: pull extra fields
+		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
+			$this->getRedmemberfields($user);
+		}
+	
+		/* Check if there are any answers to be filled in (already submitted)*/
+		/* This is an array starting with 0 */
+		if (!isset($this->_rwfparams['answers'])) {
+			$answers = JRequest::getVar('answers', false);
+		}
+		else {
+			$answers = $this->_rwfparams['answers'];
+		}
+		if (!isset($this->_rwfparams['submitter_id'])) {
+			$submitter_id = JRequest::getInt('submitter_id', 0);
+		}
+		else {
+			$submitter_id = $this->_rwfparams['submitter_id'];
+		}
+		
+		/* Stuff to find and replace */
+		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', ',');
+		$replace = '';
+		
+		$form->classname = strtolower($this->replace_accents(str_replace($find, $replace,$form->classname)));
+		$html = '<div id="redform_'.$form->classname.'">';
+		
+		if ($form->showname) {
+			$html .= '<div id="formname">'.$form->formname.'</div>';
+		}
+			
+			
+		// for virtuemart
+		if (JRequest::getInt('productid', false))
+		{
+			$productinfo = $this->getProductinfo();
+			if (!stristr('http', $productinfo->product_full_image)){
+				$productimage = $uri->root().'/components/com_virtuemart/shop_image/product/'.$productinfo->product_full_image;
+			}
+			else {
+				$productimage = $productinfo->product_full_image;
+			}
+			$html .= '<div id="productimage">'.JHTML::_('image', $productimage, $productinfo->product_name).'</div>';
+			$html .= '<div id="productname">'.$productinfo->product_name.'</div>';
+		}
+			
+		$html .= '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="adminForm" enctype="multipart/form-data" onSubmit="return CheckSubmit();">';
+
+		$footnote = false;
+
+		if ($multi > 1 && $user->id == 0)
+		{
+			$html .= '<div id="needlogin">'.JText::_('LOGIN_BEFORE_MULTI_SIGNUP').'</div>';
+			$multi = 1;
+		}
+			
+		/* Set display type */
+		if ($multi == 1) {
+			$display = 'block';
+		}
+		else $display = 'none';
+
+		if ($multi > 1)
+		{
+			if (!$answers) {
+				$html .= '<div id="signupuser"><a href="#" onclick="AddUser()">'.JText::_('SIGN_UP_USER').'</a></div>';
+			}
+
+			$html .= '<div id="signedusers" style="float: right">
+					<a href="#" onclick="ShowAllUsers(true)">'.JText::_('SHOW_ALL_USERS').'</a>
+					<br />
+					<a href="#" onclick="ShowAllUsers(false)">'.JText::_('HIDE_ALL_USERS').'</a>
+					<br />'.JText::_('Signed up:').'<br />';
+
+			if ($answers)
+			{
+				for ($signup = 1; $signup <= count($answers); $signup++) {
+					$html .= '<a href="#" onclick="ShowSingleForm(\'div#formfield'.$signup.'\'); return false;">User '.$signup.'</a><br />';
+				}
+			}
+			$html .= '</div>';
+		}
+
+		if ($answers)
+		{
+			if (count($answers)) {
+				$html .= '<div id="event_notify"><input type="checkbox" name="notify_attendants" id="notify_attendants" value="1">'.JText::_('EVENT_NOTIFY').'</input></div>';
+			}
+		}
+
+		/* Loop through here for as many forms there are */
+		for ($signup = 1; $signup <= $multi; $signup++)
+		{
+			/* Make a collapsable box */
+			$html .= '<div id="formfield'.$signup.'" class="formbox" style="display: '.$display.';">';
+			$footnote = false;
+				
+			if ($answers && $multi > 1) {
+				$html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->id.'" checked="checked" />'.JText::_('INCLUDE_REGISTRATION').'</div>';
+			}
+			else if ($answers) {
+				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->id.'" />';
+			}
+				
+			foreach ($fields as $key => $field)
+			{
+				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
+				$html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline">';
+
+				$values = $this->getFormValues($field->id);
+
+				if ($field->fieldtype == 'info' && count($values))
+				{
+					$html .= '<div class="infofield">' . $values[0]->value . '</div>';
+					$html .= '</div>';
+					continue;
+				}
+					
+				$html .= '<div id="field_'.$field->cssfield.'">'.$field->field;
+				if ($field->validate) {
+					$html .= '<sup>'.JText::_('REQUIRED_FIELD_MARKER').'</sup>';
+					$footnote = true;
+				}
+				if (strlen($field->tooltip) > 0) {
+					$img = JHTML::image(JURI::root().'/includes/js/ThemeOffice/tooltip.png', JText::_('ToolTip'));
+					$html .= ' <span class="editlinktip hasTipField" title="'.$field->field.'::'.$field->tooltip.'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+				}
+				$html .='</div>';
+
+			$cleanfield = 'field_'. $field->id;
+			$element = '';
+			
+			switch ($field->fieldtype)
+			{
+				case 'radio':
+					foreach ($values as $id => $value)
+					{
+						$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+						if ($field->validate) $element .= "validate";
+						$element .= "\"";
+						if ($answers && stristr($answers[($signup-1)]->$cleanfield, $value->value)) {
+							$element .= ' checked="checked"';
+						}
+						else if ($user->get($field->redmember_field))
+						{
+							$fvalues = explode(',', $user->get($field->redmember_field));
+							if (in_array($value->value, $fvalues)) {
+								$element .= ' checked="checked"';
+							}
+						}
+						$element .= " type=\"radio\" name=\"field".$field->id.'.'.$signup."[radio][]\" value=\"".$value->id."\"/>".$value->value."</div>\n";
+					}
+					break;
+
+				case 'textarea':
+					$element .= "<div class=\"field".$field->fieldtype."\"><textarea class=\"".$form->classname." ";
+					if ($field->validate) $element .= "validate";
+					$element .= "\" name=\"field".$field->id.'.'.$signup."[textarea]\">";
+					if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+						$element .= $answers[($signup-1)]->$cleanfield;
+					}
+					else if ($user->get($field->redmember_field)) {
+						$element .= $user->get($field->redmember_field);
+					}
+					$element .= "</textarea></div>\n";
+					break;
+
+				case 'wysiwyg':
+					$content = '';
+					if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+						$content = $answers[($signup-1)]->$cleanfield;
+					}
+					else if ($user->get($field->redmember_field)) {
+						$content = $user->get($field->redmember_field);
+					}
+					$editor = & JFactory::getEditor();
+
+					$element .= "<div class=\"field".$field->fieldtype."\">";
+					// Cannot have buttons, it triggers an error with tinymce for unregistered users
+					$element .= $editor->display( "field".$field->id.'.'.$signup."[wysiwyg]", $content, '100%;', '200', '75', '20', false ) ;
+					$element .= "</div>\n";
+					break;
+
+				case 'email':
+					$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+					if ($field->validate) $element .= "validate";
+					$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\" value=\"";
+					if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+						$element .= $answers[($signup-1)]->$cleanfield;
+					}
+					else if ($user->get($field->redmember_field)) {
+						$element .= $user->get($field->redmember_field);
+					}
+					else if ($signup == 1 && $user->email) {
+						$element .= $user->email;
+					}
+					$element .= "\" /></div>\n";
+						
+					/* E-mail field let's see */
+					// TODO: transfer to field !
+					foreach ($values as $id => $value)
+					{
+						if (strlen($value->listnames) > 0)
+						{
+							$listnames = explode(";", $value->listnames);
+							if (count($listnames) > 0)
+							{
+								$element .= '<div id="signuptitle">'.JText::_('SIGN_UP_MAILINGLIST').'</div>';
+								$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
+								foreach ($listnames AS $listkey => $listname)
+								{
+									$element .= "<div class=\"field_".$listkey."\"><input class=\"".$form->classname." ";
+									$element .= "\" type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
+								}
+								$element .= "</div>\n";
+							}
+						}
+					}
+					break;
+
+				case 'fullname':
+					$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+					if ($field->validate) {
+						$element .= "validate";
+					}
+					$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\" value=\"";
+					if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+						$element .= $answers[($signup-1)]->$cleanfield;
+					}
+					else if ($user->get($field->redmember_field)) {
+						$element .= $user->get($field->redmember_field);
+					}
+					else if ($signup == 1 && $user->name) {
+						$element .= $user->name;
+					}
+					$element .= "\" /></div>\n";
+					break;
+
+				case 'username':
+					$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+					if ($field->validate) $element .= "validate";
+					$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\" value=\"";
+					if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+						$element .= $answers[($signup-1)]->$cleanfield;
+					}
+					else if ($user->get($field->redmember_field)) {
+						$element .= $user->get($field->redmember_field);
+					}
+					else if ($signup == 1 && $user->username) {
+						$element .= $user->username;
+					}
+					$element .= "\" /></div>\n";
+					break;
+
+				case 'textfield':
+					$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+					if ($field->validate) $element .= "validate";
+					$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\" value=\"";
+					if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+						$element .= $answers[($signup-1)]->$cleanfield;
+					}
+					else if ($user->get($field->redmember_field)) {
+						$element .= $user->get($field->redmember_field);
+					}
+					$element .= "\" /></div>\n";
+					break;
+
+				case 'checkbox':
+					foreach ($values as $id => $value)
+					{
+						$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+						if ($field->validate) $element .= "validate";
+						$element .= "\"";
+						if ($answers && stristr($answers[($signup-1)]->$cleanfield, $value->value)) {
+							$element .= ' checked="checked"';
+						}
+						else if ($user->get($field->redmember_field))
+						{
+							$fvalues = explode(',', $user->get($field->redmember_field));
+							if (in_array($value->value, $fvalues)) {
+								$element .= ' checked="checked"';
+							}
+						}
+						$element .= " type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[checkbox][]\" value=\"".$value->value."\" />".$value->value."</div>\n";
+					}
+					break;
+
+				case 'select':
+					$element .= "<select name=\"field".$field->id.'.'.$signup."[select][]\">";
+					foreach ($values as $id => $value)
+					{
+						$element .= "<option value=\"".$value->value."\"";
+						if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+							$element .= ' selected="selected"';
+						}
+						else if ($user->get($field->redmember_field) == $value->value) {
+							$element .= ' selected="selected"';
+						}
+						$element .= " >".$value->value."</option>";
+					}
+					$element .= '</select>';
+					break;
+
+				case 'multiselect':
+					$element .= "<select name=\"field".$field->id.'.'.$signup."[multiselect][]\" multiple>";
+					foreach ($values as $id => $value)
+					{
+						$element .= "<option value=\"".$value->value."\"";
+						if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+							$element .= ' selected="selected"';
+						}
+						else if ($user->get($field->redmember_field))
+						{
+							$fvalues = explode(',', $user->get($field->redmember_field));
+							if (in_array($value->value, $fvalues)) {
+								$element .= ' selected="selected"';
+							}
+						}
+						$element .= " >".$value->value."</option>";
+					}
+					$element .= '</select>';
+					break;
+
+				case 'recipients':
+					$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\" multiple>";
+					foreach ($values as $id => $value)
+					{
+						$element .= "<option value=\"".$value->value."\"";
+						if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+							$element .= ' selected="selected"';
+						}
+						else if ($user->get($field->redmember_field))
+						{
+							$fvalues = explode(',', $user->get($field->redmember_field));
+							if (in_array($value->value, $fvalues)) {
+								$element .= ' selected="selected"';
+							}
+						}
+						$element .= " >".$value->value."</option>";
+					}
+					$element .= '</select>';
+					break;
+
+				case 'fileupload':
+					if ($submitter_id == 0) {
+						$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" size=\"40\" class=\"fileupload\" id=\"fileupload_".$field->cssfield."\"/>";
+					}
+					break;
+			}
+			$html .= $element;
+
+			$html .= '</div>';
+		}
+		}
+		/* Close collapsable box */
+		$html .= '</div>';
+
+		/* Add any redEVENT values */
+		$redevent = JRequest::getVar('redevent', false);
+			
+		if ($redevent) {
+			$html .= '<input type="hidden" name="event_task" value="'.$redevent->task.'" />';
+			$html .= '<input type="hidden" name="event_id" value="'.$redevent->eventid.'" />';
+			$html .= '<input type="hidden" name="xref" value="'.JRequest::getInt('xref').'" />';
+		}
+		else if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) {
+			$html .= '<input type="hidden" name="xref" value="'.JRequest::getInt('xref').'" />';
+		}
+			
+		/* Add any redCOMPETITION values */
+		$redcompetition = JRequest::getVar('redcompetition', false);
+			
+		if ($redcompetition) {
+			$html .= '<input type="hidden" name="competition_task" value="'.$redcompetition->task.'" />';
+			$html .= '<input type="hidden" name="competition_id" value="'.$redcompetition->competitionid.'" />';
+		}
+			
+		/* Add the captcha */
+		if ($form->captchaactive && $submitter_id == 0) {
+			$html .= '<div id="redformcaptcha"><img src="index.php?option=com_redform&task=displaycaptcha&controller=redform">';
+			$html .= ' '.JHTML::tooltip(JText::_('CAPTCHA_TOOLTIP'), JText::_('CAPTCHA'), 'tooltip.png', '', '', false).'</div>';
+			$html .= '<div id="redformcaptchaword"><input type="text" name="captchaword"></div>';
+		}
+			
+		/* Get the user details form */
+		if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
+			$html .= '<div id="submit_button" style="display: '.$display.';"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('Submit').'" />';
+			if ( JRequest::getInt('xref', false)
+			&& isset($this->_rwfparams['show_submission_type_webform_formal_offer'])
+			&& $this->_rwfparams['show_submission_type_webform_formal_offer'] ) {
+				$html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
+			}
+			$html .= '</div>';
+		}
+		else if (!JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) {
+			$html .= '<div id="confirmbutton">';
+			$html .= '<input type="submit" id="confirmreg" value="'.JText::_('EVENT_SUBMIT').'" name="submit[confirmreg]" />';
+			$html .= '<input type="submit" id="cancelreg" value="'.JText::_('EVENT_CANCEL').'" name="submit[cancelreg]" />';
+			$html .= '</div>';
+			$html .= '<input type="hidden" name="submit_key" value="'.JRequest::getVar('submit_key').'" />';
+		}
+		$html .= '<input type="hidden" name="option" value="com_redform" />';
+		$html .= '<input type="hidden" name="productid" value="'.JRequest::getInt('productid', 0).'" />';
+		$html .= '<input type="hidden" name="Itemid" value="'.JRequest::getInt('Itemid', 1).'" />';
+		$html .= '<input type="hidden" name="task" value="save" />';
+		if ($submitter_id > 0) {
+			$html .= '<input type="hidden" name="submitter_id" value="'.$submitter_id.'" />';
+			if ($redevent->task == 'manageredit' || $redevent->task == 'edit') {
+				$html .= '<input type="hidden" name="controller" value="redform" />';
+			}
+		}
+		else $html .= '<input type="hidden" name="controller" value="redform" />';
+			
+		if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) {
+			$html .= '<input type="hidden" name="controller" value="submitters" />';
+		}
+			
+		if (JRequest::getVar('redform_edit')) {
+			$html .= '<input type="hidden" name="event_task" value="review" />';
+		}
+			
+		$html .= '<input type="hidden" name="curform" value="';
+		if ($answers) $html .= count($answers)+1;
+		else $html .= '1';
+		$html .= '" />';
+		$html .= '<input type="hidden" name="form_id" value="'.$form->id.'" />';
+		$html .= '<input type="hidden" name="multi" value="'.$multi.'" />';
+		if (JRequest::getVar('close_form', true)) $html .= '</form>';
+		$html .= '</div>';
+		if ($footnote) $html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline"><div id="validate_footnote">'.JText::_('VALIDATE_FOOTNOTE').'</div></div>';
+
+		return $html;
+	}
+	
+	function getPDFForm($form, $fields, $multi = 1)
+	{
+		$pdfform = JRequest::getVar('pdfform');
+		$footnote = false;
+		$multi = max($multi, 1); // make sure we display at least one form
+		 		 
+		/* display forms */
+		for ($signup = 1; $signup <= $multi; $signup++)
+		{
+			if ($signup > 1) $pdfform->Addpage('P');
+			$pdfform->Cell(0, 10, JText::_('ATTENDEE').' '.$signup, 0, 1, 'L');
+			$footnote = false;
+	
+			foreach ($fields as $key => $field)
+			{
+				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
+	
+				$values = $this->getFormValues($field->id);
+	
+				if ($field->fieldtype == 'info' && count($values))
+				{
+					$pdfform->Cell(0, 10, $values[0]->value, 0, 1, 'L');
+					continue;
+				}
+					
+				$pdfform->Cell(0, 10, $field->field, 0, 1, 'L');
+	
+				$cleanfield = 'field_'. $field->id;
+				$element = '';
+				switch ($field->fieldtype)
+				{
+					case 'radio':
+						foreach ($values as $id => $value)
+						{
+							$pdfform->setX($pdfform->getX()+2);
+							$pdfform->Circle($pdfform->getX(), $pdfform->getY(), 2);
+							$pdfform->setXY($pdfform->getX()+3, $pdfform->getY()-5);
+							$pdfform->Write(10, $value->value);
+							$pdfform->Ln();
+						}
+						break;
+	
+					case 'textarea':
+						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 100, 15);
+						$pdfform->Ln();
+						break;
+	
+					case 'wysiwyg':
+						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 100, 15);
+						$pdfform->Ln();
+						break;
+	
+					case 'email':
+						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
+						$pdfform->Ln();
+						break;
+	
+					case 'fullname':
+						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
+						$pdfform->Ln();
+						break;
+	
+					case 'username':
+						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
+						$pdfform->Ln();
+						break;
+	
+					case 'textfield':
+						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
+						$pdfform->Ln();
+						break;
+	
+					case 'checkbox':
+						foreach ($values as $id => $value)
+						{
+							$pdfform->Rect($pdfform->getX(), $pdfform->getY()+2, 5, 5);
+							$pdfform->setX($pdfform->getX()+5);
+							$pdfform->Write(10, $value->value);
+							$pdfform->Ln();
+						}
+						break;
+	
+					case 'select':
+						foreach ($values as $id => $value)
+						{
+							$pdfform->Rect($pdfform->getX(), $pdfform->getY()+2, 5, 5);
+							$pdfform->setX($pdfform->getX()+5);
+							$pdfform->Write(10, $value->value);
+							$pdfform->Ln();
+						}
+						break;
+	
+					case 'multiselect':
+						foreach ($values as $id => $value)
+						{
+							$pdfform->Rect($pdfform->getX(), $pdfform->getY()+2, 5, 5);
+							$pdfform->setX($pdfform->getX()+5);
+							$pdfform->Write(10, $value->value);
+							$pdfform->Ln();
+						}
+						break;
+	
+				}
+	
+			}
+		}
+		/* Close collapsable box */
+		if ($footnote) $pdfform->Write(10, JText::_('VALIDATE_FOOTNOTE'));
+
+		return $pdfform;
+	}
+	
+	
 }
 ?>

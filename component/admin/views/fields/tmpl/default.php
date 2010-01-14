@@ -45,7 +45,10 @@ else { ?>
 			<?php echo JText::_('Field'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Validate'); ?>
+			<?php echo JText::_('Type'); ?>
+			</th>
+			<th class="title">
+			<?php echo JText::_('Required'); ?>
 			</th>
 			<th class="title">
 			<?php echo JText::_('Unique'); ?>
@@ -101,6 +104,9 @@ else { ?>
 				?>
 				</td>
 				<td>
+					<?php echo $row->fieldtype;	?>
+				</td>
+				<td>
 					<?php 
 					if ($row->validate) echo JText::_('Yes');
 					else echo JText::_('No');
@@ -134,7 +140,7 @@ else { ?>
 		}
 		?>
 		<tr>
-            <td colspan="8"><?php echo $this->pagination->getListFooter(); ?></td>
+            <td colspan="9"><?php echo $this->pagination->getListFooter(); ?></td>
          </tr>
 		</table>
 	<input type="hidden" name="option" value="com_redform" />

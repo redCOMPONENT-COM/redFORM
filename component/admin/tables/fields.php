@@ -25,21 +25,23 @@ defined('_JEXEC') or die('Restricted access');
 class TableFields extends JTable {
 	/** @var int Primary key */
 	var $id = null;
-	/** @var string The field for the competition */
+	/** @var string field name */
 	var $field = null;
-	/** @var string The field for the competition */
+	/** @var string field type */
+	var $fieldtype = null;
+	/** @var int published state */
 	var $published = null;
-	/** @var string The field for the competition */
+	/** @var int id of user having checked out the item */
 	var $checked_out = null;
-	/** @var string The field for the competition */
+	/** @var string */
 	var $checked_out_time = null;
-	/** @var string The field for the competition */
+	/** @var int */
 	var $form_id = null;
-	/** @var integer The order of the field for the competition */
+	/** @var int */
 	var $ordering = 0;
-	/** @var boolean Check if the field should be validated */
+	/** @var int */
 	var $validate = null;
-	/** @var boolean Check if the field should be unique */
+	/** @var int */
 	var $unique = null;
 	/** @var string The tooltip for a field */
 	var $tooltip = null;
@@ -53,7 +55,23 @@ class TableFields extends JTable {
 		parent::__construct('#__rwf_fields', 'id', $db );
 	}
 	
-
+	function check()
+	{
+		if (empty($this->fieldtype)) {
+			$this->setError(JText::_('Field type is required'));
+			return false;
+		}
+		if (empty($this->form_id)) {
+			$this->setError(JText::_('Form is required'));
+			return false;
+		}
+		if (empty($this->field)) {
+			$this->setError(JText::_('Field name is required'));
+			return false;
+		}
+		return true;
+	}
+	
   /**
    * returns values records ids associated to this field
    *
