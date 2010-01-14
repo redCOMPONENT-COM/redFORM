@@ -929,6 +929,10 @@ class plgContentRedform extends JPlugin {
 		$footnote = false;
 		$multi = max($multi, 1); // make sure we display at least one form
 		 		 
+		/* Stuff to find and replace */
+		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', ',');
+		$replace = '';
+		
 		/* display forms */
 		for ($signup = 1; $signup <= $multi; $signup++)
 		{
