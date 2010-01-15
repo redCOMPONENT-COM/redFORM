@@ -68,6 +68,12 @@ class TableRedform extends JTable {
 	/** @var integer Sets the access level for a form */
 	var $access = 0;
 	
+	/** @var boolean Set if form should process payment (needs gateway plugin) */
+	var $activatepayment = 0;
+	
+	/** @var string iso code for payment currency */
+	var $currency = null;
+	
 	
 	/**
 	* @param database A database connector object

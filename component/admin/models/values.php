@@ -65,7 +65,7 @@ class RedformModelValues extends JModel
   function _buildQuery()
   {
     /* Get all the orders based on the limits */
-    $q = "SELECT a.*, q.field, CONCAT(c.formname, ' :: ', q.field) AS fieldname
+    $q = "SELECT a.*, q.field, q.fieldtype, CONCAT(c.formname, ' :: ', q.field) AS fieldname
         FROM #__rwf_values a, #__rwf_fields q, #__rwf_forms c
         WHERE a.field_id = q.id
         AND q.form_id = c.id ";

@@ -50,6 +50,9 @@ else { ?>
 			<?php echo JText::_('Field type'); ?>
 			</th>
 			<th class="title">
+			<?php echo JText::_('Price'); ?>
+			</th>
+			<th class="title">
 			<?php echo JText::_('Ordering'); ?>
 			<?php echo JHTML::_('grid.order',  $this->values ); ?>
 			</th>
@@ -111,6 +114,9 @@ else { ?>
 				</td>
 				<td>
 					<?php echo JText::_($row->fieldtype); ?>
+				</td>
+				<td>
+					<?php echo $row->price; ?>
 				</td>
 				<td>
 					<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="text_area" style="text-align: center" />

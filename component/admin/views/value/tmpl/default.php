@@ -43,6 +43,15 @@ JHTML::_('behavior.tooltip');
 			<?php echo $this->lists['fields']; ?>
 			</td>
 		</tr>
+		<tr>
+			<td valign="top" align="right">
+			<?php echo JText::_('Price'); ?>
+			</td>
+			<td>
+			<input type="text" name="price" value="<?php echo $this->row->price; ?>"/>
+			<?php echo JHTML::tooltip(JText::_('VALUE_PRICE_TIP'), JText::_('Price'), 'tooltip.png', '', '', false); ?>
+			</td>
+		</tr>
 		<?php
 		if (isset($this->mailinglists) && !empty($this->uselists)) {
 			$listnames = explode(';', $this->mailinglists->listnames);

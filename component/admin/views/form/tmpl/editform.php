@@ -214,6 +214,28 @@ $editor =& JFactory::getEditor();
 	</table>
 	<?php
 	echo $pane->endPanel();
+	echo $pane->startPanel( JText::_('PAYMENT'), 'payment_tab' );
+	?>
+	<table class="adminform">
+		<tr class="row<?php echo $row; ?>">
+			<td width="25%" valign="top" align="right">
+				<span class="hasTip" title="<?php echo JText::_('PAYMENTACTIVE_TIP');?>"><?php echo JText::_('PAYMENTACTIVE'); ?></span>
+			</td>
+			<td>
+				<?php echo $this->lists['paymentactive']; ?>
+			</td>
+		</tr>
+		<tr class="row<?php echo $row = 1 - $row; ?>">
+			<td>
+				<span class="hasTip" title="<?php echo JText::_('PAYMENTCURRENCY_TIP');?>"><?php echo JText::_('PAYMENTCURRENCY'); ?></span>
+			</td>
+			<td>
+				<input name="currency" type="text" value="<?php echo $this->row->currency; ?>" />
+			</td>
+		</tr>
+	</table>
+	<?php
+	echo $pane->endPanel();
 	echo $pane->endPane();
 	?>
   <?php echo JHTML::_( 'form.token' ); ?>

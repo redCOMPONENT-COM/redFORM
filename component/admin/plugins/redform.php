@@ -756,6 +756,31 @@ class plgContentRedform extends JPlugin {
 					$element .= "\" /></div>\n";
 					break;
 
+				case 'price':
+					$element .= '<div class="field'.$field->fieldtype.'">';
+					// if has not null value, it is a fixed price, if not this is a user input price
+					if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
+					{
+						$element .= $form->currency .' '.$values[0]->value;
+						$element .= '<input type="hidden" name="field'.$field->id.'.'.$signup.'[price][]" value="'.$values[0]->value.'"/>';
+					}
+					else // like a text input
+					{
+						$element .= '<input class="'. $form->classname .($field->validate ? " validate" : '') .'"';
+						$element .= ' type="text" name="field'.$field->id.'.'.$signup.'[price][]"';
+						$element .= ' value="';
+						if ($answers && isset($answers[($signup-1)]->$cleanfield)) {
+							$element .= $answers[($signup-1)]->$cleanfield;
+						}
+						else if ($user->get($field->redmember_field)) {
+							$element .= $user->get($field->redmember_field);
+						}
+						$element .= '"';
+						$element .= '/>';
+					}
+					$element .= "</div>\n";
+					break;
+					
 				case 'checkbox':
 					foreach ($values as $id => $value)
 					{
@@ -979,6 +1004,20 @@ class plgContentRedform extends JPlugin {
 						$pdfform->Ln();
 						break;
 	
+					case 'price':
+						// if has not null value, it is a fixed price, if not this is a user input price
+						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
+						{
+							$pdfform->Write(10, $form->currency .' '.$values[0]->value);
+							$pdfform->Ln();
+						}
+						else // like a text input
+						{
+							$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
+							$pdfform->Ln();
+						}
+						break;
+						
 					case 'email':
 						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
 						$pdfform->Ln();

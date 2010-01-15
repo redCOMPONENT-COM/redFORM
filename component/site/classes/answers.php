@@ -149,6 +149,11 @@ class rfanswers
                 WHERE id = ".$postedvalue['radio'][0];
       	$db->setQuery($q);
       	$answer = $db->loadResult();
+      	break;
+      	
+      case 'price':
+        $answer = $postedvalue['price'][0];
+        break;
     }
     $this->_fields[] = $field;
     $this->_values[] = $answer;

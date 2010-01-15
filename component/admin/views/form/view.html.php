@@ -85,6 +85,9 @@ class RedformViewForm extends JView {
 		}
 		else $lists['vmproductid'] = '';
 
+		/* Get the VirtueMart option */
+		$lists['paymentactive']= JHTML::_('select.booleanlist',  'activatepayment', 'class="inputbox"', $row->activatepayment);
+		
 		/* Set variabels */
 		$this->assignRef('row', $row);
 		$this->assignRef('lists', $lists);
