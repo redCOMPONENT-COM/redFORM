@@ -65,13 +65,14 @@ class RedformModelValues extends JModel
   function _buildQuery()
   {
     /* Get all the orders based on the limits */
-    $q = "SELECT a.*, q.field, q.fieldtype, CONCAT(c.formname, ' :: ', q.field) AS fieldname
-        FROM #__rwf_values a, #__rwf_fields q, #__rwf_forms c
-        WHERE a.field_id = q.id
-        AND q.form_id = c.id ";
+    $q = ' SELECT v.*, fd.field, fd.fieldtype, CONCAT(f.formname, " :: ", fd.field) AS fieldname '
+       . ' FROM #__rwf_values AS v '
+       . ' INNER JOIN #__rwf_fields AS fd ON fd.id = v.field_id '
+       . ' INNER JOIN #__rwf_forms AS f ON f.id = fd.form_id '
+       ;
     $form_id = JRequest::getInt('form_id', false);
-    if ($form_id) $q .= "AND c.id = ".$form_id." ";
-    $q .= "ORDER BY c.formname, ordering";
+    if ($form_id) $q .= ' WHERE f.id = '. $this->_db->Quote($form_id);
+    $q .= ' ORDER BY f.formname, fd.field, v.ordering ';
     return $q;
   }
 	

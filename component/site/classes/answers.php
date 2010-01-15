@@ -39,6 +39,8 @@ class rfanswers
 	
   public $_recipients = array();
   
+  private $_price = 0;
+  
 	public function __construct()
 	{
 		
@@ -79,6 +81,11 @@ class rfanswers
   {
     return $this->_fullname;
   }
+  
+  public function getPrice()
+  {
+  	return $this->_price;
+  }
 	
   public function addPostAnswer($field, $postedvalue)
   {
@@ -114,11 +121,23 @@ class rfanswers
         break;
       case 'select':
         $answer = $postedvalue['select'][0];
+      	foreach ($field->values as $v)
+      	{
+      		if ($v->value == $answer) {
+        		$this->_price += $v->price;
+      		}
+      	}
         break;
       case 'checkbox':
         $submittervalues = '';
         foreach ($postedvalue['checkbox'] as $key => $submitteranswer) {
           $submittervalues .= $submitteranswer."~~~";
+	      	foreach ($field->values as $v)
+	      	{
+	      		if ($v->value == $submitteranswer) {
+	        		$this->_price += $v->price;
+	      		}
+	      	}
         }
         $answer = substr($submittervalues, 0, -3);
         break;
@@ -126,6 +145,12 @@ class rfanswers
         $submittervalues = '';
         foreach ($postedvalue['multiselect'] as $key => $submitteranswer) {
           $submittervalues .= $submitteranswer."~~~";
+	      	foreach ($field->values as $v)
+	      	{
+	      		if ($v->value == $submitteranswer) {
+	        		$this->_price += $v->price;
+	      		}
+	      	}
         }
         $answer = substr($submittervalues, 0, -3);
         break;
@@ -149,10 +174,23 @@ class rfanswers
                 WHERE id = ".$postedvalue['radio'][0];
       	$db->setQuery($q);
       	$answer = $db->loadResult();
+      	
+      	foreach ($field->values as $v)
+      	{
+      		if ($v->id == $postedvalue['radio'][0]) {
+        		$this->_price += $v->price;
+      		}
+      	}
       	break;
       	
       case 'price':
-        $answer = $postedvalue['price'][0];
+        if (count($field->values)) {
+	        $answer = $field->values[0]->value;         	
+        }
+        else {
+        	$answer = $postedvalue['price'][0];
+        }
+        $this->_price += $answer;
         break;
     }
     $this->_fields[] = $field;
@@ -224,14 +262,14 @@ class rfanswers
   }
   
   /**
-   * sve the answer
+   * save the answer
    *
    * @param array $params: submit_key, xref, etc...
    * @return true on success
    */
   public function save($params = array())
   {
-  	  $mainframe = Jfactory::getApplication();
+  	$mainframe = Jfactory::getApplication();
   	$db = & JFactory::getDBO();
   	
   	if (empty($this->_form_id)) {
@@ -265,6 +303,7 @@ class rfanswers
     		JError::raiseError(0, JText::_('UPDATE ANSWERS FAILED'));
         RedformHelperLog::simpleLog(JText::_('Cannot update answers').' '.$db->getErrorMsg());
     	}
+    	$this->setPrice();
     }
     else
     {
@@ -286,7 +325,9 @@ class rfanswers
     		return false;
     	}
     	$this->_answer_id = $db->insertid();
-    	return $this->updateSubmitter($params);
+    	$res = $this->updateSubmitter($params);
+    	$this->setPrice();
+    	return $res;
     }
     return true;
   }
@@ -365,6 +406,27 @@ class rfanswers
   		return false;
   	}
   	return true;
+  }
+  
+  // set price corresponding to answers in submitters table
+  function setPrice()
+  {
+  	if (!$this->_price || !$this->_answer_id || !$this->_form_id) {
+  		return false;
+  	}
+  	
+    $db = &JFactory::getDBO();
+  	$query = ' UPDATE #__rwf_submitters SET price = '. $db->Quote($this->_price)
+  	       . ' WHERE form_id = '.$db->Quote($this->_form_id)
+  	       . '   AND answer_id = '.$db->Quote($this->_answer_id)
+  	       ;
+  	$db->setQuery($query);
+  	$res = $db->query();
+  	if (!$res) {
+  		echo '<pre>';print_r($db->getErrorMsg()); echo '</pre>';exit;
+  	}
+//  	exit($db->getQuery());
+  	return $res;
   }
   
   function getAnswers()

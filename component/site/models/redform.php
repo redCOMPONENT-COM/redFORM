@@ -33,9 +33,11 @@ class RedformModelRedform extends JModel {
 	var $_form_id = 0;
 	
   var $_event = null;
-	
-  var $_form  = null;
-	
+  
+  var $_form = null;
+  
+  var $_fields = null;
+		
   var $mailer = null;
   
 	function __construct() 
@@ -54,8 +56,9 @@ class RedformModelRedform extends JModel {
   function setFormId($id)
   {
     // Set event id and wipe data
-    $this->_form_id      = $id;
-    $this->_data  = null;
+    $this->_form_id = $id;
+    $this->_form    = null;
+    $this->_fields  = null;
   }
 
   /**
@@ -66,9 +69,13 @@ class RedformModelRedform extends JModel {
    */
   function &getForm($id)
   {
+  	if (!$id) {
+  		$id = JRequest::getInt('form_id', $this->_form_id);
+  	}
     /* Get the form details */
-    $form = $this->getTable('Redform');
-    $form->load(JRequest::getInt('form_id'));
+  	$query = 'SELECT * FROM #__rwf_forms WHERE id = '. $this->_db->Quote($id);
+  	$this->_db->setQuery($query, 0, 1);
+  	$form = $this->_db->loadObject();
     
     if ($form) {
     	$this->_form = $form;
@@ -91,13 +98,21 @@ class RedformModelRedform extends JModel {
   	$db = & $this->_db;
   	
   	/* Load the fields */
-  	$q = "SELECT id, LOWER(REPLACE(".$db->nameQuote('field').", ' ','')) AS ".$db->nameQuote('field').", field AS userfield, ordering
+  	$q = "SELECT id, field, fieldtype, ordering
         FROM ".$db->nameQuote('#__rwf_fields')."
         WHERE form_id = ".$form_id."
         AND published = 1
         ORDER BY ordering";
   	$db->setQuery($q);
-  	return $db->loadObjectList('id');
+  	$fields = $db->loadObjectList('id');
+  	
+  	foreach ($fields as $k =>$field)
+  	{
+  		$query = ' SELECT id, value, price FROM #__rwf_values WHERE field_id = '. $this->_db->Quote($field->id);
+  		$this->_db->setQuery($query);
+  		$fields[$k]->values = $this->_db->loadObjectList();
+  	}
+  	return $fields;
   }
       
 	/**
@@ -327,8 +342,8 @@ class RedformModelRedform extends JModel {
 			  }
 			  else if ($allanswers[0]->getSubmitterEmail())
 			  {
-			    if ($allanswers[0]->getFullname) {
-			      $sender = array($allanswers[0]->getSubmitterEmail(), $allanswers[0]->getFullname);
+			    if ($allanswers[0]->getFullname()) {
+			      $sender = array($allanswers[0]->getSubmitterEmail(), $allanswers[0]->getFullname());
 			    }
 			    else {
 			      $sender = $allanswers[0]->getSubmitterEmail();
