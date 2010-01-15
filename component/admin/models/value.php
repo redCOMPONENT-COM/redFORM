@@ -129,6 +129,7 @@ class RedformModelValue extends JModel
   {
     $this->_data = & JTable::getInstance('Values', 'Table');
     $this->_data->published = 1;
+    $this->_data->fieldtype = '';
     return $this->_data;
   }
    
@@ -194,7 +195,7 @@ class RedformModelValue extends JModel
   {
     if ($this->_id)
     {
-      $row = & $this->getTable('Fields', 'Table');
+      $row = & $this->getTable('Values', 'Table');
       return $row->checkin($this->_id);
     }
     return false;
@@ -234,31 +235,37 @@ class RedformModelValue extends JModel
 	  
       $row->reorder();
 	  
-	  /* Store the mailinglists */
-	  if ($post['fieldtype'] == 'email') {
-		 
-		  /* Load the table */
-		  $mailinglistrow = $this->getTable('Mailinglists');
-		 
-		 /* Fix up the mailinglist */
-		 if (isset($post['listname'])) $post['listnames'] = implode(';', $post['listname']);
-		 else $post['listnames'] = '';
-		 
-		 if (!$mailinglistrow->bind($post)) {
-			 $mainframe->enqueueMessage(JText::_('There was a problem binding the mailinglist data').' '.$row->getError(), 'error');
-			 return false;
+      // TODO: move to fields ??
+      // special treatment if value belongs to an 'email' field
+		  /* Store the mailinglists */
+      $query = ' SELECT fieldtype FROM #__rwf_fields WHERE id = '. $row->field_id;
+      $this->_db->setQuery($query);
+      $type = $this->_db->loadResult();      
+		  if ($type == 'email') 
+		  {
+			 
+			  /* Load the table */
+			  $mailinglistrow = $this->getTable('Mailinglists');
+			 
+			 /* Fix up the mailinglist */
+			 if (isset($post['listname'])) $post['listnames'] = implode(';', $post['listname']);
+			 else $post['listnames'] = '';
+			 
+			 if (!$mailinglistrow->bind($post)) {
+				 $mainframe->enqueueMessage(JText::_('There was a problem binding the mailinglist data').' '.$row->getError(), 'error');
+				 return false;
+			  }
+			  
+			  /* Pass on the ID */
+			 $mailinglistrow->id = $row->id;
+			  
+			  /* save the changes */
+			  if (!$mailinglistrow->store()) {
+				 $mainframe->enqueueMessage(JText::_('There was a problem storing the mailinglist data').' '.$row->getError(), 'error');
+				 return false;
+			  }
+			 
 		  }
-		  
-		  /* Pass on the ID */
-		 $mailinglistrow->id = $row->id;
-		  
-		  /* save the changes */
-		  if (!$mailinglistrow->store()) {
-			 $mainframe->enqueueMessage(JText::_('There was a problem storing the mailinglist data').' '.$row->getError(), 'error');
-			 return false;
-		  }
-		 
-	  }
       $mainframe->enqueueMessage(JText::_('The value has been saved'));
       return $row;
    }
@@ -323,16 +330,13 @@ class RedformModelValue extends JModel
 	/**
 	 * Check if a field type is already existing
 	 */
-	function getCheckFieldType() {
+	function getCheckFieldType() 
+	{
 		$db = JFactory::getDBO();
-		$qid = JRequest::getVar('field_id');
+		$qid = JRequest::getInt('field_id');
 		
-		$q = "SELECT fieldtype
-			FROM #__rwf_values
-			WHERE field_id = ".$qid."
-			GROUP BY fieldtype
-			LIMIT 1";
-		$db->setQuery($q);
+		$q = ' SELECT fieldtype	FROM #__rwf_fields WHERE id = '.$db->Quote($qid);
+		$db->setQuery($q, 0, 1);
 		
 		return $db->loadResult();
 	}

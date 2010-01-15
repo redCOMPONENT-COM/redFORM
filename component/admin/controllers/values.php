@@ -84,9 +84,6 @@ class RedformControllerValues extends JController
 
     // Sanitize
     $post = JRequest::get('post', JREQUEST_ALLOWHTML);
-    if ($post['fieldtype'] == 'info') {
-      $post['value'] = JRequest::getVar('value', '', 'post', 'string', JREQUEST_ALLOWHTML);
-    }
 
     $model = $this->getModel('value');
 

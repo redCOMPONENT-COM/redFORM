@@ -137,7 +137,7 @@ class RedformModelSubmitters extends JModel {
 		$query = ' SELECT f.id, f.field '
 		       . ' FROM #__rwf_fields AS f '
 		       . ' INNER JOIN #__rwf_values AS v ON v.field_id = f.id '
-		       . ' WHERE v.fieldtype <> "info" '
+		       . ' WHERE f.fieldtype <> "info" '
 		       ;		
 		if ($form_id) $query .= ' AND form_id = ' . $db->Quote($form_id);
 		$query .= "GROUP BY f.id

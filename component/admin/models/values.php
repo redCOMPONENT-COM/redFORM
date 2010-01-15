@@ -201,20 +201,17 @@ class RedformModelValues extends JModel
 			}
 		}
 	}
-	
+
 	/**
 	 * Check if a field type is already existing
 	 */
-	function getCheckFieldType() {
+	function getCheckFieldType() 
+	{
 		$db = JFactory::getDBO();
-		$qid = JRequest::getVar('field_id');
+		$qid = JRequest::getInt('field_id');
 		
-		$q = "SELECT fieldtype
-			FROM #__rwf_values
-			WHERE field_id = ".$qid."
-			GROUP BY fieldtype
-			LIMIT 1";
-		$db->setQuery($q);
+		$q = ' SELECT fieldtype	FROM #__rwf_fields WHERE id = '.$db->Quote($qid);
+		$db->setQuery($q, 0, 1);
 		
 		return $db->loadResult();
 	}

@@ -72,8 +72,12 @@ class TableValues extends JTable {
 	
 	public function check()
 	{
- 
-	  if ($this->fieldtype == 'recipients') 
+		// get fieldtype
+		$q = ' SELECT fieldtype	FROM #__rwf_fields WHERE id = '.$this->_db->Quote($this->field_id);
+		$this->_db->setQuery($q, 0, 1);
+		
+		$fieldtype = $this->_db->loadResult(); 
+	  if ($fieldtype == 'recipients') 
 	  {
   	  jimport( 'joomla.mail.helper' );
 	    if (! JMailHelper::isEmailAddress($this->value) ) 
