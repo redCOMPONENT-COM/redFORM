@@ -28,14 +28,21 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport('joomla.event.plugin');
 
 // load language file for frontend
-JPlugin::loadLanguage( 'plg_redform-payment_paypal', JPATH_ADMINISTRATOR );
+JPlugin::loadLanguage( 'plg_redform_payment_paypal', JPATH_ADMINISTRATOR );
 
-class plgRedformPaymentPaypal extends JPlugin {
+class plgRedform_PaymentPaypal extends JPlugin {
  
-	public function plgRedformPaymentPaypal(&$subject, $config = array()) 
+//	var $_name = 'Paypal';
+	
+	public function plgRedform_PaymentPaypal(&$subject, $config = array()) 
 	{
 		parent::__construct($subject, $config);
 	}
 
+	function onGetGateway($gateways)
+	{
+		$gateways[] = array('name' => 'Paypal');
+		return true;
+	}
 }
 ?>

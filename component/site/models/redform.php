@@ -493,6 +493,12 @@ class RedformModelRedform extends JModel {
 				$mainframe->redirect(JRoute::_($redirect, false));
 			}
 		}
+		
+		if ($form->activatepayment)
+		{
+			$redirect = 'index.php?option=com_redform&controller=payment&task=select&key='.$submit_key;
+			$mainframe->redirect(JRoute::_($redirect, false));			
+		}
 			
 		/* All is good, check if we have an competition in that case redirect to redCOMPETITION */
 		if ($redcompetition)

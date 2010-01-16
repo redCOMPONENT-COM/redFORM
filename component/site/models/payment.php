@@ -26,56 +26,38 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.model');
 
 /**
- * redform Component log Model
+ * redform Component payment Model
  *
  * @package Joomla
  * @subpackage redform
  * @since		0.9
  */
-class RedFormModelLog extends JModel
+class RedFormModelPayment extends JModel
 {
-	/**
-	 * Constructor
-	 *
-	 * @since 0.9
-	 */
-	function __construct()
+	var $_gateways = null;
+	
+	function getGateways()
 	{
-		parent::__construct();
+		if (empty($this->_gateways))
+		{
+			JPluginHelper::importPlugin( 'redform_payment' );
+	  	$dispatcher = &JDispatcher::getInstance();
+	  	$gateways = array();
+	  	$results = $dispatcher->trigger('onGetGateway', array(&$gateways));
+	  	$this->_gateways = $gateways;
+		}
+  	return $this->_gateways;
 	}
-
-	/**
-	 * Method to get categories item data
-	 *
-	 * @access public
-	 * @return array
-	 */
-	function getData()
+	
+	function getGatewayOptions()
 	{
-		$app = & JFactory::getApplication();
-
-		$contents = '';
-		$file = $app->getCfg('log_path').DS.'com_redform.log';
-		if (file_exists($file)) {
-			$handle = fopen($file, "r");
-			if (!$handle) {
-	      JError::raiseWarning('0','error opening: '. $file);
-	    }
-			$contents = '';
-			while (!feof($handle)) {
-			  $contents .= fread($handle, 8192);
-			}
-			fclose($handle);
-		}
+		$gw = $this->getGateways();
 		
-		if (empty($contents)) {
-			$contents = array(JText::_('No log'));
+		$options = array();
+		foreach ($gw as $g)
+		{
+			$options[] = JHTML::_('select.option', $g['name'], $g['name']);
 		}
-		else {
-			$contents = explode("\n", $contents);
-			array_shift($contents);
-		}
-		return $contents;
+		return $options;
 	}
 }
-?>
