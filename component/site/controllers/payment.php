@@ -33,4 +33,53 @@ class RedformControllerPayment extends JController {
 		JRequest::setVar('layout', 'select');
 		$this->display();
 	}
+
+	function process()
+	{
+		$gw = JRequest::getVar('gw', '');
+		if (empty($gw)) {
+			JError::raise(0, 'MISSING GATEWAY');
+			return false;
+		} 
+		
+    $model = &$this->getModel('payment');    
+    $helper = $model->getGatewayHelper($gw);
+    
+    $res = $helper->process(JRequest::getVar('key'));
+    
+    echo '<pre>';print_r($res); echo '</pre>';exit;
+    // get payment helper from selected gateway    
+	}
+	
+
+	function processing()
+  {
+  	global $mainframe;
+  	
+  	$msg = JText::_('PROCESSING PAYMENT');
+  	$mainframe->redirect('index.php', $msg);
+  }
+  
+  function paymentcancelled()
+  {
+    global $mainframe;
+    
+    $msg = JText::_('PAYMENT CANCELLED');
+    $mainframe->redirect('index.php', $msg);
+  }
+  
+
+  function notify()
+  {
+		$gw = JRequest::getVar('gw', '');
+		if (empty($gw)) {
+			RedformHelperLog::simpleLog('NOTIFICATION MISSING GATEWAY'.': '.$gw);
+			return false;
+		} 
+		
+    $model = &$this->getModel('payment');    
+    $helper = $model->getGatewayHelper($gw);
+    
+    $helper->notify();
+  }
 }

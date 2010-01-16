@@ -128,4 +128,21 @@ class RedFormModelPayment extends JModel
 
 		return $res;
 	}
+	
+	/**
+	 * return gateway helper
+	 * @param string name
+	 * @return object or false if no corresponding gateway
+	 */
+	function getGatewayHelper($name)
+	{
+		$gw = $this->getGateways();
+		foreach ($gw as $g)
+		{
+			if ($g['name'] == $name) {
+				return $g['helper'];
+			}
+		}
+		return false;
+	}
 }
