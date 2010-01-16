@@ -20,4 +20,28 @@
 defined('_JEXEC') or die('Restricted access');
 
 ?>
-<?php echo $this->lists['gwselect']; ?>
+<form action="<?php echo $this->action?>" method="post">
+<fieldset>
+	<legend><?php echo JText::_('Payment')?></legend>
+	<table class="rwf_payment">
+		<tbody>
+			<tr>
+				<td><?php echo JText::_('Total'); ?></td>
+				<td><?php echo $this->currency . ' ' . $this->price; ?></td>
+			</tr>
+			<tr>
+				<td><label for="gw"><?php echo JText::_('Select payment method'); ?></label></td>
+				<td><?php echo $this->lists['gwselect']; ?></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="<?php echo JText::_('Continue'); ?>"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</fieldset>
+
+<input type="hidden" name="task" value="process"/>
+<input type="hidden" name="key" value="<?php echo $this->key; ?>"/>
+</form>

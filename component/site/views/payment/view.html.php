@@ -36,13 +36,34 @@ class RedformViewPayment extends JView {
 	}
 	
 	function _displaySelect($tpl = null) 
-	{				
+	{
+		$uri 		    = &JFactory::getURI();
+		$document   = &JFactory::getDocument();
+		
+		$submit_key = JRequest::getVar('key', '');
+		if (empty($submit_key)) {
+			echo Jtext::_('PAYMENT ERROR MISSING KEY');
+			return;
+		}
+		
+		$document->setTitle($document->getTitle().' - '.JText::_('redFORM'));
 		
 		$gwoptions = $this->get('GatewayOptions');
-		$lists['gwselect'] = JHTML::_('select.radiolist', $gwoptions, 'gw');
+		if (!count($gwoptions)) {
+			echo Jtext::_('PAYMENT ERROR MISSING GATEWAY');
+			return;
+		}
+		$lists['gwselect'] = JHTML::_('select.genericlist', $gwoptions, 'gw');
 		
-		$this->assignRef('lists',     $lists);
+		$price    = $this->get('Price');
+		$currency = $this->get('Currency');
 		
+		$this->assignRef('lists',  $lists);		
+    $this->assign('action',    $uri->toString());
+    $this->assign('key',       $submit_key);
+    $this->assign('price',     $price);
+    $this->assign('currency',  $currency);
+    
 		parent::display($tpl);
 	}
 }
