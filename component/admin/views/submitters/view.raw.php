@@ -36,6 +36,8 @@ class RedformViewSubmitters extends JView {
 		$event = $this->get('CourseTitle');
 		$fields = $this->get('Fields');
 		$export_data = $this->get('SubmittersExport');
+  	$form = $this->get('Form');
+  	$this->assignRef('form', $form);
 				
 		$this->assignRef('export_data', $export_data);
 		$this->assignRef('fields', $fields);

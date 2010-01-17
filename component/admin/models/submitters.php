@@ -132,7 +132,7 @@ class RedformModelSubmitters extends JModel {
 		if (count($where)) {
 			$query .= ' WHERE '. implode(' AND ', $where);
 		}
-		$query .= "ORDER BY s.submission_date DESC";
+		$query .= " ORDER BY s.submission_date ASC ";
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}

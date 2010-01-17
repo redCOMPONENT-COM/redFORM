@@ -111,7 +111,13 @@ class PaymentPaypal {
     $header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
     $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
     $header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-		$fp = fsockopen ('www.paypal.com', 80, $errno, $errstr, 30); 
+		if ($this->params->get('paypal_sandbox', 1) == 1) {
+			$paypalurl = "www.sandbox.paypal.com";
+		}
+		else {
+		  $paypalurl = "www.paypal.com";	
+		}
+		$fp = fsockopen ($paypalurl, 80, $errno, $errstr, 30); 
 
     // assign posted variables to local variables
     $item_name = $post['item_name'];
