@@ -242,6 +242,16 @@ function com_install() {
 		$db->query();
 	}
 	
+	/* Check if we have the activatepayment column */
+	if (array_key_exists('activatepayment', $cols)) {
+		$q = "ALTER IGNORE TABLE `#__rwf_forms` ADD COLUMN ".$db->nameQuote('activatepayment')." TINYINT(2) NO NULL DEFAULT '0'";
+		$db->setQuery($q);
+		$db->query();
+		$q = "ALTER IGNORE TABLE `#__rwf_forms` ADD COLUMN ".$db->nameQuote('currency')." VARCHAR(3) DEFAULT NULL";
+		$db->setQuery($q);
+		$db->query();
+	}
+	
 	/* Get the current columns */
 	$q = "SHOW COLUMNS FROM #__rwf_submitters";
 	$db->setQuery($q);
@@ -299,6 +309,13 @@ function com_install() {
 	/* Check if we have the confirmdate column */
 	if (!array_key_exists('confirmdate', $cols)) {
 		$q = "ALTER IGNORE TABLE #__rwf_submitters ADD COLUMN `confirmdate` datetime default NULL";
+		$db->setQuery($q);
+		$db->query();
+	}
+
+	/* Check if we have the price column */
+	if (!array_key_exists('price', $cols)) {
+		$q = "ALTER IGNORE TABLE #__rwf_submitters ADD COLUMN `price` double NULL DEFAULT NULL";
 		$db->setQuery($q);
 		$db->query();
 	}

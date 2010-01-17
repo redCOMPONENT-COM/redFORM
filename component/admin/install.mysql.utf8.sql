@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_configuration` (
 CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `id` int(11) NOT NULL auto_increment,
   `field` varchar(255) NOT NULL default '0',
+  `fieldtype` varchar(30) NOT NULL default 'textfield',
   `published` int(11) NOT NULL default '0',
   `checked_out` int(11) NOT NULL default '0',
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -46,6 +47,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `vmitemid` int(4) NOT NULL default '1',
   `captchaactive` tinyint(1) NOT NULL default '0',
   `access` tinyint(3) NOT NULL default '0',
+  `activatepayment` tinyint(2) NOT NULL DEFAULT '0',
+  `currency` varchar(3) DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) COMMENT='Forms for redFORM';
 
@@ -61,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `waitinglist` tinyint(1) NOT NULL default '0',
   `confirmed` tinyint(1) NOT NULL default '0',
   `confirmdate` datetime default NULL,
+  `price` double NULL DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) COMMENT='Submitters for redFORM';
 
@@ -71,7 +75,6 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   `checked_out` int(11) NOT NULL default '0',
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
   `field_id` int(11) default NULL,
-  `fieldtype` varchar(25) NOT NULL default 'radio',
   `ordering` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) COMMENT='Answers for redFORM';
@@ -83,6 +86,16 @@ CREATE TABLE IF NOT EXISTS `#__rwf_mailinglists` (
   PRIMARY KEY  (`id`)
 ) COMMENT='Mailinglists for redFORM';
 
+CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `submit_key` varchar(255) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `gateway` varchar(100) NOT NULL,
+  `status` varchar(100) NOT NULL,
+  `data` text NOT NULL,
+  `paid` tinyint(2) NOT NULL,
+  PRIMARY KEY (`id`)
+) COMMENT='logging gateway notifications';
 
 INSERT IGNORE INTO `#__rwf_configuration` (`id`, `name`, `value`) VALUES
 (1, 'phplist_path', 'lists')
