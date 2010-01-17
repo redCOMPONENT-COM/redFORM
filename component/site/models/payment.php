@@ -100,7 +100,6 @@ class RedFormModelPayment extends JModel
 		            ;
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadResultArray();
-		dump($res);
 		$total = 0.0;
 		foreach ($res as $p) {
 			$total += $p;
@@ -139,10 +138,12 @@ class RedFormModelPayment extends JModel
 		$gw = $this->getGateways();
 		foreach ($gw as $g)
 		{
-			if ($g['name'] == $name) {
+			if (strcasecmp($g['name'], $name) == 0) {
 				return $g['helper'];
 			}
 		}
+		RedformHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND'.': '.$name);
+		
 		return false;
 	}
 }

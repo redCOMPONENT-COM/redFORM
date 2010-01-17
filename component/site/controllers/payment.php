@@ -72,8 +72,9 @@ class RedformControllerPayment extends JController {
   function notify()
   {
 		$gw = JRequest::getVar('gw', '');
+    RedformHelperLog::simpleLog('PAYMENT NOTIFICATION RECEIVED'. ': ' . $gw);
 		if (empty($gw)) {
-			RedformHelperLog::simpleLog('NOTIFICATION MISSING GATEWAY'.': '.$gw);
+			RedformHelperLog::simpleLog('PAYMENT NOTIFICATION MISSING GATEWAY'.': '.$gw);
 			return false;
 		} 
 		

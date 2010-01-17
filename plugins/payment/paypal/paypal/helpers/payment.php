@@ -95,10 +95,12 @@ class PaymentPaypal {
     global $mainframe;
     $db = & JFactory::getDBO();
     
-    RedformHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ': ' . $this->submit_key);
     				
     $post = JRequest::get( 'post' );
-    
+    $submit_key = JREQuest::getvar('key');
+    $paid = 0;
+
+    RedformHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
     // read the post from PayPal system and add 'cmd'
     $req = 'cmd=_notify-validate';
 
@@ -152,11 +154,15 @@ class PaymentPaypal {
 					$res = $db->loadObject();
 		       	
     			if ($payment_amount != $res->price) {
-    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY'. ': ' . $this->submit_key);
+    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY'. ' - ' . $submit_key);
     			}      
     			if ($payment_currency != $res->currency) {
-    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY'. ': ' . $this->submit_key);
-    			}      
+    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY'. ' - ' . $submit_key);
+    			}
+    			
+    			if (strcasecmp($payment_status, 'completed') == 0) {
+    				$paid = 1;
+    			}
         }
         else if (strcmp ($res, "INVALID") == 0) {
           // log for manual investigation
@@ -166,13 +172,15 @@ class PaymentPaypal {
       fclose ($fp);
     }
     // log ipn
-    $query =  ' INSERT INTO #__rwf_payment (date, data, key, status, gateway) '
+    $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
 				    . ' VALUES (NOW(), ' . $db->Quote(implode("\n", $data))
-				    . ', '. $db->Quote($this->submit_key)
+				    . ', '. $db->Quote($submit_key)
 				    . ', '. $db->Quote($payment_status)
 				    . ', '. $db->Quote('Paypal')
+				    . ', '. $db->Quote($paid)
 				    . ') ';
     $db->setQuery($query);
+    RedformHelperLog::simpleLog($db->getQuery());
     $db->query();
     exit;
   }
