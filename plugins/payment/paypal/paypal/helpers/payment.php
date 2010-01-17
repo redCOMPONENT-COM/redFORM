@@ -4,11 +4,19 @@ class PaymentPaypal {
 	
 	var $params = null;
 	
+	/**
+	 * contructor
+	 * @param object plgin params
+	 */
 	function PaymentPaypal($params)
 	{
 		$this->params = $params;
 	}
 	
+	/**
+	 * sends the payment request associated to sumbit_key to the payment service
+	 * @param string $submit_key
+	 */
 	function process($submit_key)
 	{
 		$app = &JFactory::getApplication();
@@ -73,23 +81,10 @@ class PaymentPaypal {
 		$app->redirect( $paypalurl . $query_string );
 	}
 	
-	function processing()
-  {
-  	global $mainframe;
-  	
-  	$msg = JText::_('PROCESSING PAYMENT');
-  	$mainframe->redirect('index.php', $msg);
-  }
-  
-  function paymentcancelled()
-  {
-    global $mainframe;
-    
-    $msg = JText::_('PAYMENT CANCELLED');
-    $mainframe->redirect('index.php', $msg);
-  }
-  
-
+	/**
+	 * handle the recpetion of notification
+	 * @return bool paid status
+	 */
   function notify()
   {
     global $mainframe;
@@ -100,7 +95,7 @@ class PaymentPaypal {
     $submit_key = JREQuest::getvar('key');
     $paid = 0;
 
-    RedformHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
+    // RedformHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
     // read the post from PayPal system and add 'cmd'
     $req = 'cmd=_notify-validate';
 
@@ -113,10 +108,10 @@ class PaymentPaypal {
 
 
     // post back to PayPal system to validate
-    $header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
+    $header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
     $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
     $header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-    $fp = fsockopen ('ssl://sandbox.paypal.com', 443, $errno, $errstr, 30);
+		$fp = fsockopen ('www.paypal.com', 80, $errno, $errstr, 30); 
 
     // assign posted variables to local variables
     $item_name = $post['item_name'];
@@ -166,7 +161,7 @@ class PaymentPaypal {
         }
         else if (strcmp ($res, "INVALID") == 0) {
           // log for manual investigation
-          echo "invalid !!";
+    			RedformHelperLog::simpleLog('PAYPAL NOTIFICATION INVALID IPN'. ' - ' . $submit_key);
         }
       }
       fclose ($fp);
@@ -180,8 +175,8 @@ class PaymentPaypal {
 				    . ', '. $db->Quote($paid)
 				    . ') ';
     $db->setQuery($query);
-    RedformHelperLog::simpleLog($db->getQuery());
+//    RedformHelperLog::simpleLog($db->getQuery());
     $db->query();
-    exit;
+    return $paid;
   }
 }

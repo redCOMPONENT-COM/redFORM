@@ -52,6 +52,10 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 	<?php foreach ($this->fields as $key => $value) { ?>
 		<th><?php echo $value->field; ?></th>
 	<?php } ?> 
+	<?php if ($this->form->activatepayment): ?>
+		<th width="20"><?php echo JText::_('Price'); ?></th>
+		<th width="20"><?php echo JText::_('Payment'); ?></th>
+	<?php endif;?>
 	</tr></thead>
 	<tbody>
 	<?php
@@ -64,27 +68,33 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 		{
 			?>
 			<tr class="row<?php echo $k = $k - 1; ?>">
-			<td align="center">
-				<?php echo $this->pagination->getRowOffset($id); ?>
-			</td>
-			<td>
-				<input type="checkbox" onclick="isChecked(this.checked);" value="<?php echo $value->id; ?>" name="cid[]" id="cb<?php echo $id; ?>"/>
-			</td>
-			<td><?php echo $value->submission_date; ?></td>
-			<td><?php echo $value->formname; ?></td>
-			<?php
-			foreach ($this->fields as $key => $field) 
-			{
-				$fieldname = 'field_'. $field->id;
-				if (isset($value->$fieldname)) 
+				<td align="center">
+					<?php echo $this->pagination->getRowOffset($id); ?>
+				</td>
+				<td>
+					<input type="checkbox" onclick="isChecked(this.checked);" value="<?php echo $value->id; ?>" name="cid[]" id="cb<?php echo $id; ?>"/>
+				</td>
+				<td><?php echo $value->submission_date; ?></td>
+				<td><?php echo $value->formname; ?></td>
+				<?php
+				foreach ($this->fields as $key => $field) 
 				{
-					$data = str_replace('~~~', '<br />', $value->$fieldname);
-					if (stristr($data, JPATH_ROOT)) $data = '<a href="'.str_replace(DS, '/', str_replace(JPATH_ROOT, JURI::root(true), $data)).'" target="_blank">'.$data.'</a>';
-					echo '<td>'.$data.'</td>';
+					$fieldname = 'field_'. $field->id;
+					if (isset($value->$fieldname)) 
+					{
+						$data = str_replace('~~~', '<br />', $value->$fieldname);
+						if (stristr($data, JPATH_ROOT)) $data = '<a href="'.str_replace(DS, '/', str_replace(JPATH_ROOT, JURI::root(true), $data)).'" target="_blank">'.$data.'</a>';
+						echo '<td>'.$data.'</td>';
+					}
+					else echo '<td></td>';
 				}
-				else echo '<td></td>';
-			}
-			echo '</tr>';
+				?>			
+				<?php if ($this->form->activatepayment): ?>
+				<td><?php echo $value->price; ?></td>
+				<td><?php echo $value->status; ?></td>
+				<?php endif;?>
+			</tr>
+			<?php 
 			$k++;
 		}
 	}
@@ -93,7 +103,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 	</tbody>
 	<tfoot>
 	<tr>
-		<th colspan="<?php echo $nbfields+4;?>"><?php echo $this->pagination->getListFooter(); ?></th>
+		<th colspan="<?php echo $nbfields + 4 + ($this->form->activatepayment ? 2 : 0 );?>"><?php echo $this->pagination->getListFooter(); ?></th>
 	 </tr>
 	 </tfoot>
 </table>

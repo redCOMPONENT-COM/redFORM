@@ -81,6 +81,10 @@ class RedformControllerPayment extends JController {
     $model = &$this->getModel('payment');    
     $helper = $model->getGatewayHelper($gw);
     
-    $helper->notify();
+    $res = $helper->notify();
+    
+    if ($res) { // the payment was received !
+    	//TODO: send a mail ?
+    }
   }
 }

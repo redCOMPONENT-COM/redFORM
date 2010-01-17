@@ -51,10 +51,11 @@ class RedformModelSubmitters extends JModel {
       {
 				$db = JFactory::getDBO();
 				
-				$query =  ' SELECT s.submission_date, f.formname, u.* '
+				$query =  ' SELECT s.submission_date, f.formname, u.*, s.price, p.status, p.paid '
 								. ' FROM '.$db->nameQuote('#__rwf_submitters').' AS s '
 								. ' INNER JOIN ' . $db->nameQuote('#__rwf_forms').' AS f ON s.form_id = f.id '
 								. ' INNER JOIN ' . $db->nameQuote('#__rwf_forms_'.$form_id) . ' AS u ON s.answer_id = u.id '
+		            . ' LEFT JOIN #__rwf_payment AS p ON p.submit_key = s.submit_key'
 								;
 								
 				$where = array();
@@ -63,7 +64,7 @@ class RedformModelSubmitters extends JModel {
 					$where[] = "s.xref = ".$xref;
 				}
 				if (count($where)) {
-					$query .= 'WHERE ' . implode(' AND ', $where);
+					$query .= ' WHERE ' . implode(' AND ', $where);
 				}
 				
 				$query .= " ORDER BY s.submission_date DESC ";
@@ -97,7 +98,7 @@ class RedformModelSubmitters extends JModel {
   		$id = JRequest::getInt('form_id', 0);
   	}
   	if ($id) {
-	    $query = ' SELECT id, formname FROM #__rwf_forms WHERE id = ' . $this->_db->Quote($id);
+	    $query = ' SELECT id, formname, activatepayment, currency FROM #__rwf_forms WHERE id = ' . $this->_db->Quote($id);
 	    $this->_db->setQuery($query);
 	    return $this->_db->loadObject();  		
   	}
@@ -115,17 +116,23 @@ class RedformModelSubmitters extends JModel {
 		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
 		
 		$db = JFactory::getDBO();
-		$query = "SELECT s.submission_date, f.formname, u.*
-			FROM ".$db->nameQuote('#__rwf_submitters')." s, ".$db->nameQuote('#__rwf_forms')." f, ".$db->nameQuote('#__rwf_forms_'.$form_id)." u
-				WHERE s.form_id = f.id 
-				AND s.answer_id = u.id ";
-			if ($form_id && $form_id > 0) {
-				$query .= "AND s.form_id = ".$form_id." ";
-			}
-			if ($xref && $xref > 0) {
-				$query .= "AND s.xref = ".$xref." ";
-			}
-			$query .= "ORDER BY s.submission_date DESC";
+		$query = ' SELECT s.submission_date, s.price, f.formname, u.*, s.price, p.status, p.paid '
+		       . ' FROM #__rwf_submitters AS s '
+		       . ' INNER JOIN #__rwf_forms AS f ON s.form_id = f.id '
+		       . ' INNER JOIN #__rwf_forms_'.$form_id.' AS u ON s.answer_id = u.id '
+		       . ' LEFT JOIN #__rwf_payment AS p ON p.submit_key = s.submit_key'
+		       ;
+		$where = array();
+		if ($form_id && $form_id > 0) {
+			$where[] = "s.form_id = ".$form_id;
+		}
+		if ($xref && $xref > 0) {
+			$where[] = "s.xref = ".$xref;
+		}
+		if (count($where)) {
+			$query .= ' WHERE '. implode(' AND ', $where);
+		}
+		$query .= "ORDER BY s.submission_date DESC";
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}
