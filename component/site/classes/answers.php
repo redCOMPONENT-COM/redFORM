@@ -82,6 +82,11 @@ class rfanswers
     return $this->_fullname;
   }
   
+  public function initPrice($initial)
+  {
+  	$this->_price = $initial;
+  }
+  
   public function getPrice()
   {
   	return $this->_price;

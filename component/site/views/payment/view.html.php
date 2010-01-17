@@ -40,7 +40,8 @@ class RedformViewPayment extends JView {
 		$uri 		    = &JFactory::getURI();
 		$document   = &JFactory::getDocument();
 		
-		$submit_key = JRequest::getVar('key', '');
+		$submit_key = JRequest::getVar('key',    '');
+		$source     = JRequest::getVar('source', '');
 		if (empty($submit_key)) {
 			echo Jtext::_('PAYMENT ERROR MISSING KEY');
 			return;
@@ -61,6 +62,7 @@ class RedformViewPayment extends JView {
 		$this->assignRef('lists',  $lists);		
     $this->assign('action',    $uri->toString());
     $this->assign('key',       $submit_key);
+    $this->assign('source',    $submit_key);
     $this->assign('price',     $price);
     $this->assign('currency',  $currency);
     

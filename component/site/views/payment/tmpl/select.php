@@ -20,7 +20,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 ?>
-<form action="<?php echo $this->action?>" method="post">
+<form action="<?php echo $this->action; ?>" method="post">
 <fieldset>
 	<legend><?php echo JText::_('Payment')?></legend>
 	<table class="rwf_payment">
@@ -44,4 +44,5 @@ defined('_JEXEC') or die('Restricted access');
 
 <input type="hidden" name="task" value="process"/>
 <input type="hidden" name="key" value="<?php echo $this->key; ?>"/>
+<input type="hidden" name="source" value="<?php echo $this->source; ?>"/>
 </form>
