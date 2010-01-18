@@ -12,7 +12,7 @@
 	<description>redFORM Plugin</description>
 	<files>
 		<filename plugin="redform">redform.php</filename>
-		<filename>license.txt</filename>
+		<folder>redform</folder>
 	</files>
 	<languages folder="language">
     <language tag="en-GB">en-GB.plg_content_redform.ini</language>

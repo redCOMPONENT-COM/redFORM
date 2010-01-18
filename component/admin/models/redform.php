@@ -126,37 +126,38 @@ class RedformModelRedform extends JModel {
    /**
     * Save a competition
     */
-   function getSaveForm() {
-      global $mainframe;
-      $row = $this->getTable();
+	function getSaveForm() 
+  {
+		global $mainframe;
+    $row = $this->getTable();
 	  $post = JRequest::get('post', 4);
 	  
 	  /* Get the posted data */
-      if (!$row->bind($post)) {
-         $mainframe->enqueueMessage(JText::_('There was a problem binding the form data'), 'error');
-         return false;
-      }
+		if (!$row->bind($post)) {
+			$mainframe->enqueueMessage(JText::_('There was a problem binding the form data'), 'error');
+			return false;
+		}
 	  
-	  /* Convert the dates to MySQL dates */
-	  $row->startdate = $this->ConvertCalendarDate($row->startdate);
-	  $row->enddate = $this->ConvertCalendarDate($row->enddate);
-	  
-	  
-      /* pre-save checks */
-      if (!$row->check()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem checking the form data'), 'error');
-         return false;
-      }
+		/* Convert the dates to MySQL dates */
+		$row->startdate = $this->ConvertCalendarDate($row->startdate);
+		$row->enddate = $this->ConvertCalendarDate($row->enddate);
+		 
+		 
+		/* pre-save checks */
+		if (!$row->check()) {
+			$mainframe->enqueueMessage(JText::_('There was a problem checking the form data'), 'error');
+			return false;
+		}
 
-      /* save the changes */
-      if (!$row->store()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem storing the form data'), 'error');
-         return false;
-      }
-	  
-      $row->checkin();
-      $mainframe->enqueueMessage(JText::_('The form has been saved'));
-	 
+		/* save the changes */
+		if (!$row->store()) {
+			$mainframe->enqueueMessage(JText::_('There was a problem storing the form data'), 'error');
+			return false;
+		}
+		 
+		$row->checkin();
+		$mainframe->enqueueMessage(JText::_('The form has been saved'));
+
 	 /* Add form table */
 	 $this->AddFormTable($row->id);
 	 

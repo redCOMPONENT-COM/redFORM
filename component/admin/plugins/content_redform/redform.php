@@ -456,7 +456,7 @@ class plgContentRedform extends JPlugin {
 			}
 			
 			function ShowAllUsers(showhide) {
-				var curform = parseInt(jQuery("input[name='curform']").val()) - 1;
+				var curform = parseInt(jQuery("input[name='curform']").val());
 				jQuery("[id^='formfield']").each(function(i) {
 					if (i < curform) {
 						if (showhide) jQuery(this).show();
@@ -479,6 +479,7 @@ class plgContentRedform extends JPlugin {
 		
 	  // css
     $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
+    $document->addStyleSheet(JURI::base().'plugins/content/redform/plgredform.css');
   	
   	// custom tooltip
   	$toolTipArray = array('className'=>'redformtip'.$form->classname);
@@ -505,7 +506,6 @@ class plgContentRedform extends JPlugin {
 		else {
 			$submitter_id = $this->_rwfparams['submitter_id'];
 		}
-			dump($answers);
 		
 		/* Stuff to find and replace */
 		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', ',');
@@ -558,7 +558,7 @@ class plgContentRedform extends JPlugin {
 			$html .= '<a href="#" onclick="ShowSingleForm(\'div#formfield1\'); return false;"># 1</a><br />';
 			if ($answers)
 			{
-				for ($k = 2; $k <= count($answers)-1; $k++) {
+				for ($k = 2; $k < count($answers)+1; $k++) {
 					$html .= '<a href="#" onclick="ShowSingleForm(\'div#formfield'.$k.'\'); return false;"># '.$k.'</a><br />';
 				}
 			}

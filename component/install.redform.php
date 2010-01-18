@@ -386,7 +386,7 @@ if ($upgrade) {
 	/* Install plugin */
 	jimport('joomla.filesystem.file');
 	jimport('joomla.filesystem.folder');	
-	JFolder::copy(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_redform'.DS.'plugins', JPATH_SITE.DS.'tmp'.DS.'redform_plugin', '', true);
+	JFolder::copy(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_redform'.DS.'plugins'.DS.'content_redform', JPATH_SITE.DS.'tmp'.DS.'redform_plugin', '', true);
 	JFile::move(JPATH_SITE.DS.'tmp'.DS.'redform_plugin'.DS.'redform.xm', JPATH_SITE.DS.'tmp'.DS.'redform_plugin'.DS.'redform.xml');
 	$installer = new JInstaller();
 	$installer->setAdapter('plugin');
