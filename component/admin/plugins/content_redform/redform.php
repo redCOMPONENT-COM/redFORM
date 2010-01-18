@@ -203,7 +203,7 @@ class plgContentRedform extends JPlugin {
 	{
 		$db = JFactory::getDBO();
 		
-		$q = "SELECT q.id, value, field_id, listnames
+		$q = "SELECT q.id, value, field_id, listnames, price 
 			FROM #__rwf_values q
 			LEFT JOIN #__rwf_mailinglists m
 			ON q.id = m.id
@@ -272,9 +272,51 @@ class plgContentRedform extends JPlugin {
 		/* Create some dynamic JS */
 		?>
 		<script type="text/javascript">
+
+		jQuery(function () {
+		   jQuery(document.redform).find(":input").change(updatePrice);
+
+		   updatePrice();
+		});
+
+		function updatePrice()
+		{
+			var price = 0.0;
+			var active = parseInt(jQuery("input[name='curform']").val());
+
+			var countforms = 0;
+
+			for (var i = 1; i < active+1; i++)
+			{
+				var signup = jQuery("#formfield"+i);
+				signup.find("input[name*=price]").each(function() {
+					price += parseFloat(this.value);
+				});
+				
+				signup.find("[selected]").each(function() {
+					var p = jQuery(this).attr('price');
+					if (p) {
+						price += parseFloat(p);
+					}
+				});
+
+				signup.find("[checked]").each(function() {
+					var p = jQuery(this).attr('price');
+					if (p) {
+						price += parseFloat(p);
+					}
+				});
+			}
+			// set the price
+			if (price > 0 && !jQuery("#totalprice").length) {
+				jQuery('#submit_button').before('<div id="totalprice"><?php echo JText::_('Total Price'); ?>: <span></span></div>');
+			}
+			jQuery("#totalprice span").text(price);
+		}
+		
 			function CheckSubmit() 
 			{
-				if (document.adminForm.task.value == 'cancel') return true;
+				if (document.redform.task.value == 'cancel') return true;
 				var msg = '';
 				var result = true;
 				var newclass = 'emptyfield';
@@ -446,6 +488,7 @@ class plgContentRedform extends JPlugin {
 					jQuery("div#signedusers").append(userlink);
 					jQuery("input[name='curform']").val(curform+1);
 				}
+				updatePrice();
 			}
 			
 			function ShowSingleForm(showform) {
@@ -533,7 +576,7 @@ class plgContentRedform extends JPlugin {
 			$html .= '<div id="productname">'.$productinfo->product_name.'</div>';
 		}
 			
-		$html .= '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="adminForm" enctype="multipart/form-data" onSubmit="return CheckSubmit();">';
+		$html .= '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" enctype="multipart/form-data" onSubmit="return CheckSubmit();">';
 
 		$footnote = false;
 
@@ -638,7 +681,7 @@ class plgContentRedform extends JPlugin {
 									$element .= ' checked="checked"';
 								}
 							}
-							$element .= " type=\"radio\" name=\"field".$field->id.'.'.$signup."[radio][]\" value=\"".$value->id."\"/>".$value->value."</div>\n";
+							$element .= ' type="radio" name="field'.$field->id.'.'.$signup.'[radio][]" value="'.$value->id.'" price="'.$value->price.'" />'.$value->value."</div>\n";
 						}
 						break;
 	
@@ -820,7 +863,7 @@ class plgContentRedform extends JPlugin {
 									$element .= ' checked="checked"';
 								}
 							}
-							$element .= " type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[checkbox][]\" value=\"".$value->value."\" />".$value->value."</div>\n";
+							$element .= ' type="checkbox" name="field'.$field->id.'.'.$signup.'[checkbox][]" value="'.$value->value.'" price="'.$value->price.'" />'.$value->value."</div>\n";
 						}
 						break;
 	
@@ -838,7 +881,7 @@ class plgContentRedform extends JPlugin {
 							else if ($user->get($field->redmember_field) == $value->value) {
 								$element .= ' selected="selected"';
 							}
-							$element .= " >".$value->value."</option>";
+							$element .= ' price="'.$value->price.'" >'.$value->value."</option>";
 						}
 						$element .= '</select>';
 						break;
@@ -861,7 +904,7 @@ class plgContentRedform extends JPlugin {
 									$element .= ' selected="selected"';
 								}
 							}
-							$element .= " >".$value->value."</option>";
+							$element .= '" price="'.$value->price.'" />'.$value->value."</option>";
 						}
 						$element .= '</select>';
 						break;
