@@ -205,7 +205,7 @@ class RedformModelRedform extends JModel {
 		$totalforms = JRequest::getInt('curform');
 		if ($event_task == 'userregister') $totalforms--;
 		/* Sign up minimal 1 */
-		if ($totalforms == 0) $totalforms++;
+		if ($totalforms == 0) $totalforms = 1;
 		
 		$allanswers = array();
 		for ($signup = 1; $signup <= $totalforms; $signup++) 
