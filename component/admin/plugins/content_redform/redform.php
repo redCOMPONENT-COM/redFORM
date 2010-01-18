@@ -68,9 +68,8 @@ class plgContentRedform extends JPlugin {
 				JHTML::_('behavior.tooltip');
 				jimport('joomla.html.html');
 				$document = JFactory::getDocument();
-				//$document->addCustomTag( '<script type="text/javascript" src="'.JURI::root().'administrator/components/com_redform/js/jquery.js"></script>' );
-				//$document->addCustomTag( '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>' );
-				$document->addCustomTag( '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>' );
+				$document->addCustomTag( '<script type="text/javascript" src="'.JURI::root().'components/com_redform/assets/js/jquery-1.4.min.js"></script>' );
+				//$document->addCustomTag( '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>' ); // for debugging...
 				$document->addCustomTag( '<script type="text/javascript">jQuery.noConflict();</script>' );
 			}
 			
