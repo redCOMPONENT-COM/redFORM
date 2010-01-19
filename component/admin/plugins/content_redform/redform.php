@@ -317,7 +317,7 @@ class plgContentRedform extends JPlugin {
 			if (price > 0 && !jQuery("#totalprice").length) {
 				jQuery('#submit_button').before('<div id="totalprice"><?php echo JText::_('Total Price'); ?>: <span></span></div>');
 			}
-			jQuery("#totalprice span").text(price);
+			jQuery("#totalprice span").text(Math.round(price*100)/100);
 		}
 		
 			function CheckSubmit() 
