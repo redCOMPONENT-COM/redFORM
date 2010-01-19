@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install PUBLIC 
+  "-//Joomla! 1.5//DTD plugin 1.0//EN" "http://dev.joomla.org/xml/1.5/plugin-install.dtd">
+<install version="1.5" type="plugin" group="redform_payment" method="upgrade">
+  <name>Redform epay gateway plugin</name>
+  <creationDate>January 2010</creationDate>
+	<author>Redweb.dk</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redweb.dk</authorUrl>
+	<copyright>(c) 2008 - 2010 Redweb.dk</copyright>
+	<license>GNU/GPL</license>
+  <version>1.0</version>
+  <description>PLUGIN DESC</description>
+  
+  <files>
+    <filename plugin="epay">epay.php</filename>
+    <folder>epay</folder>
+  </files>
+    
+  <languages>    
+  	<language tag="en-GB">languages/en-GB.plg_redform_payment_epay.ini</language>
+  </languages>
+
+  <params>    
+    <param name="EPAY_MERCHANTNUMBER" type="text" default="" label="EPAY_CFG_PAYMENT_MERCHANTNUMBER" description="EPAY_CFG_PAYMENT_MERCHANTNUMBER_EXPLAIN" />
+    
+    <param name="EPAY_VERIFIED_STATUS" type="list" default="0" label="EPAY_CFG_PAYMENT_STATUS_SUCCESS" description="EPAY_CFG_PAYMENT_STATUS_SUCCESS_EXPLAIN">
+      <option value="0">epay_verified_status_success</option>
+    </param>
+    
+    <param name="EPAY_INVALID_STATUS" type="list" default="0" label="EPAY_CFG_PAYMENT_STATUS_FAILED" description="EPAY_CFG_PAYMENT_STATUS_FAILED_EXPLAIN">
+      <option value="0">epay_invalid_status_fail</option>
+    </param>
+    
+    <param type="spacer" name="test" label="testlbl" default="EPAY_CFG_EPAY_CARDTYPES" />
+    
+    <param name="EPAY_CARDTYPES_0" type="radio" default="0" label="EPAY_ALL" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_1" type="radio" default="0" label="DANKORT" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_2" type="radio" default="0" label="VISA DANKORT" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_3" type="radio" default="0" label="VISA ELECTRON" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_4" type="radio" default="0" label="MASTERCARD (DK)" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_5" type="radio" default="0" label="MASTERCARD" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_6" type="radio" default="0" label="VISA ELECTRON (DK)" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_7" type="radio" default="0" label="JCB" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_8" type="radio" default="0" label="DINERS (DK)" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_9" type="radio" default="0" label="MAESTRO (DK)" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_10" type="radio" default="0" label="AMERICAN EXPRESS (DK)" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_12" type="radio" default="0" label="DINERS" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_13" type="radio" default="0" label="JCB Secure (3D-Secure)" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_14" type="radio" default="0" label="AMERICAN EXPRESS" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_15" type="radio" default="0" label="MAESTRO" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_16" type="radio" default="0" label="FORBRUGSFORENINGEN" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_17" type="radio" default="0" label="EWIRE" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_18" type="radio" default="0" label="VISA" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_19" type="radio" default="0" label="IKANO" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_21" type="radio" default="0" label="NORDEA" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    <param name="EPAY_CARDTYPES_22" type="radio" default="0" label="DANSKE BANK" description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
+    
+    <param type="spacer" />
+    
+    <param name="EPAY_LANGUAGE" type="list" default="2" label="EPAY_CFG_EPAY_LANGUAGE" description="EPAY_CFG_EPAY_LANGUAGE_EXPLAIN">
+      <option value="1">Danish</option>
+ 			<option value="2">English</option>
+ 			<option value="3">Swedish</option>
+ 			<option value="4">Norwegian</option>
+ 			<option value="5">Greenland</option>
+ 			<option value="6">Icelandic</option>
+ 			<option value="7">German</option>
+    </param>
+    
+    <param name="EPAY_INSTANT_CAPTURE" type="list" default="0" label="EPAY_CFG_EPAY_INSTANT_CAPTURE" description="EPAY_CFG_EPAY_INSTANT_CAPTURE_EXPLAIN">
+      <option value="0">Disabled</option>
+      <option value="1">Enabled</option>
+    </param>
+    
+    <param name="EPAY_GROUP" type="text" default="" label="EPAY_CFG_EPAY_GROUP" description="EPAY_CFG_EPAY_GROUP_EXPLAIN" />
+    
+    <param name="MD5" type="list" default="0" label="MD5" description="EPAY_CFG_EPAY_MD5_TYPE_EXPLAIN">
+      <option value="0">Disabled</option>
+      <option value="1">EPAY_CFG_EPAY_MD5_TYPE_1</option>
+      <option value="1">EPAY_CFG_EPAY_MD5_TYPE_2</option>
+    </param>
+    <param name="EPAY_MD5_KEY" type="text" default="" label="EPAY_CFG_EPAY_MD5_KEY" description="EPAY_CFG_EPAY_MD5_KEY_EXPLAIN" />
+    
+    <param name="EPAY_AUTH_SMS" type="text" default="" label="EPAY_CFG_EPAY_AUTHSMS" description="EPAY_CFG_EPAY_AUTHSMS_EXPLAIN" />
+    <param name="EPAY_AUTH_MAIL" type="text" default="" label="EPAY_CFG_EPAY_AUTHEMAIL" description="EPAY_CFG_EPAY_AUTHEMAIL_EXPLAIN" />
+
+    <param name="EPAY_WINDOW_STATE" type="list" default="1" label="EPAY_CFG_EPAY_WINDOWSTATE" description="">
+      <option value="1">EPAY_CFG_EPAY_WINDOWSTATE_1</option>
+      <option value="2">EPAY_CFG_EPAY_WINDOWSTATE_2</option>
+    </param>
+
+    <param name="EPAY_3DSECURE" type="list" default="0" label="EPAY_CFG_EPAY_3DSECURE" description="EPAY_CFG_EPAY_3DSECURE">
+      <option value="1">EPAY_CFG_EPAY_3DSECURE_1</option>
+      <option value="2">EPAY_CFG_EPAY_3DSECURE_2</option>
+      <option value="3">EPAY_CFG_EPAY_3DSECURE_3</option>
+    </param>
+    
+    <param name="EPAY_CALLBACK" type="list" default="0" label="EPAY_CFG_EPAY_CALLBACK" description="EPAY_CFG_EPAY_CALLBACK_EXPLAIN">
+      <option value="0">EPAY_CFG_EPAY_CALLBACK_0</option>
+      <option value="1">EPAY_CFG_EPAY_CALLBACK_1</option>
+    </param>
+        
+    <param name="EPAY_ADDFEE" type="list" default="0" label="EPAY_CFG_EPAY_ADDFEE" description="EPAY_CFG_EPAY_ADDFEE_EXPLAIN">
+      <option value="0">EPAY_CFG_EPAY_ADDFEE_0</option>
+      <option value="1">EPAY_CFG_EPAY_ADDFEE_1</option>
+    </param>
+    
+    <param name="EPAY_AUTHEMAILCUSTOMER" type="list" default="0" label="EPAY_CFG_EPAY_AUTHEMAIL" description="EPAY_CFG_EPAY_AUTHEMAIL_EXPLAIN">
+      <option value="1">EPAY_CFG_EPAY_AUTHEMAIL_1</option>
+      <option value="0">EPAY_CFG_EPAY_AUTHEMAIL_0</option>
+    </param>
+    
+  </params>
+  
+</install>
