@@ -305,6 +305,13 @@ class plgContentRedform extends JPlugin {
 						price += parseFloat(p);
 					}
 				});
+
+				signup.find(".eventprice").each(function() {
+					var p = jQuery(this).attr('price');
+					if (p) {
+						price += parseFloat(p);
+					}
+				});
 			}
 			// set the price
 			if (price > 0 && !jQuery("#totalprice").length) {
@@ -621,7 +628,9 @@ class plgContentRedform extends JPlugin {
 		{
 			/* Make a collapsable box */
 			$html .= '<div id="formfield'.$signup.'" class="formbox" style="display: '.($signup == 1 ? 'block' : 'none').';">';
-			$html .= '<fieldset><legend>'.JText::sprintf('REDFORM_FIELDSET_SIGNUP_NB', $signup).'</legend>';
+			if ($multi > 1) {
+				$html .= '<fieldset><legend>'.JText::sprintf('REDFORM_FIELDSET_SIGNUP_NB', $signup).'</legend>';
+			}
 			$footnote = false;
 				
 			if ($answers && $multi > 1) {
@@ -630,7 +639,11 @@ class plgContentRedform extends JPlugin {
 			else if ($answers) {
 				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->id.'" />';
 			}
-				
+		
+			if (isset($this->_rwfparams['eventdetails']) && $this->_rwfparams['eventdetails']->course_price) {
+				$html .= '<div class="eventprice" price="'.$this->_rwfparams['eventdetails']->course_price.'">'.JText::_('Registration price').': '.$this->_rwfparams['eventdetails']->course_price.'</div>';
+			}
+							
 			foreach ($fields as $key => $field)
 			{
 				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
@@ -941,13 +954,15 @@ class plgContentRedform extends JPlugin {
 	
 				$html .= '</div>'; // fieldline_ div
 			}
-			$html .= '</fieldset>';
+			if ($multi > 1) {
+				$html .= '</fieldset>';
+			}
 			$html .= '</div>'; // formfield div
 		}
 
 		/* Add any redEVENT values */
 		$redevent = JRequest::getVar('redevent', false);
-			
+		
 		if ($redevent) {
 			$html .= '<input type="hidden" name="event_task" value="'.$redevent->task.'" />';
 			$html .= '<input type="hidden" name="event_id" value="'.$redevent->eventid.'" />';
