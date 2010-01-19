@@ -85,6 +85,10 @@ class RedformControllerPayment extends JController {
     
     if ($res) { // the payment was received !
     	//TODO: send a mail ?
+    	echo JText::_('Payment accepted');
+    }
+    else {
+    	echo JText::_('Payment failed');    	
     }
   }
 }

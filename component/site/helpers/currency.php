@@ -133,6 +133,27 @@ class RedformHelperLogCurrency
 		return $a;
 	}
 	
+	/**
+	 * return number corresponging to iso code
+	 * @param string 3 letters code (e.g USD, EUR,...)
+	 * @return string
+	 */
+	function getIsoNumber($code)
+	{
+		$cur = self::get_iso_4217_currency_codes();
+		if (in_array($code, array_keys($cur)))
+		{
+			return $cur[$code][1];
+		}
+		else {
+			return false;
+		}		
+	}
+	
+	/**
+	 * get currencies as options, with ode as value
+	 * @return array
+	 */
 	function getCurrencyOptions()
 	{
 		$cur = self::get_iso_4217_currency_codes();

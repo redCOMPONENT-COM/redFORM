@@ -141,7 +141,7 @@
     <param name="MD5" type="list" default="0" label="MD5" description="EPAY_CFG_EPAY_MD5_TYPE_EXPLAIN">
       <option value="0">Disabled</option>
       <option value="1">EPAY_CFG_EPAY_MD5_TYPE_1</option>
-      <option value="1">EPAY_CFG_EPAY_MD5_TYPE_2</option>
+      <option value="2">EPAY_CFG_EPAY_MD5_TYPE_2</option>
     </param>
     <param name="EPAY_MD5_KEY" type="text" default="" label="EPAY_CFG_EPAY_MD5_KEY" description="EPAY_CFG_EPAY_MD5_KEY_EXPLAIN" />
     
