@@ -31,7 +31,8 @@ class PaymentEpay {
 		<input type="hidden" name="merchantnumber" value="<?php echo $this->params->get('EPAY_MERCHANTNUMBER'); ?>">
 		<input type="hidden" name="amount" value="<?php echo round($details->price*100, 2 ); ?>">
 		<input type="hidden" name="currency" value="<?php echo $currency?>">
-		<input type="hidden" name="orderid" value="<?php echo $submit_key; ?>">
+		<input type="hidden" name="orderid" value="sub<?php echo $details->sid; ?>">
+		<input type="hidden" name="user_attr_1" value="<?php echo $submit_key; ?>">
 		<input type="hidden" name="ordretext" value="">
 		<?php 
 		if ($this->params->get('EPAY_CALLBACK') == "1")
@@ -132,14 +133,11 @@ class PaymentEpay {
     				
     $submit_key = JRequest::getvar('key');
     RedformHelperLog::simpleLog('EPAY NOTIFICATION RECEIVED'. ' for ' . $submit_key);
-    if ($submit_key != JRequest::getvar('orderid')) {    	
-    	RedformHelperLog::simpleLog('EPAY NOTIFICATION ORDERID MISMATCH'. ' for ' . $submit_key);
-    	return 0;
-    }
     
     if (JRequest::getVar('accept', 0) == 0)
     {
     	// payment was refused
+    	RedformHelperLog::simpleLog('EPAY NOTIFICATION PAYMENT REFUSED'. ' for ' . $submit_key);
     	$this->writeTransaction($submit_key, JRequest::getVar('error').': '.JRequest::getVar('errortext'), $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
 	    return 0;
     }
@@ -154,7 +152,7 @@ class PaymentEpay {
     	return false;
     }
     else {
-    	$paid = $details->price;
+    	$paid = 1;
     }
     
     if ($currency != JRequest::getVar('cur')) {    	
@@ -175,7 +173,7 @@ class PaymentEpay {
     	}
     }
     
-	  $this->writeTransaction($submit_key, '', $this->params->get('EPAY_VERIFIED_STATUS', 'SUCCESS'), 0);
+	  $this->writeTransaction($submit_key, '', 'SUCCESS', 1);
     
     return $paid;
   }
@@ -185,7 +183,7 @@ class PaymentEpay {
 		// get price and currency
 		$db  = &JFactory::getDBO();
 		
-		$query = ' SELECT f.currency, SUM(s.price) AS price '
+		$query = ' SELECT f.currency, SUM(s.price) AS price, s.id AS sid '
 		       . ' FROM #__rwf_submitters AS s '
 		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
 		       . ' WHERE s.submit_key = '. $db->Quote($submit_key)

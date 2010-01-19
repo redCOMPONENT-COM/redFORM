@@ -47,7 +47,7 @@ class RedformControllerPayment extends JController {
     
     $res = $helper->process(JRequest::getVar('key'));
     
-    echo '<pre>';print_r($res); echo '</pre>';exit;
+    //echo '<pre>';print_r($res); echo '</pre>';exit;
     // get payment helper from selected gateway    
 	}
 	
