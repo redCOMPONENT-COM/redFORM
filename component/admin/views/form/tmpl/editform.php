@@ -230,7 +230,7 @@ $editor =& JFactory::getEditor();
 				<span class="hasTip" title="<?php echo JText::_('PAYMENTCURRENCY_TIP');?>"><?php echo JText::_('PAYMENTCURRENCY'); ?></span>
 			</td>
 			<td>
-				<input name="currency" type="text" value="<?php echo $this->row->currency; ?>" />
+				<?php echo $this->lists['currency']; ?>
 			</td>
 		</tr>
 	</table>

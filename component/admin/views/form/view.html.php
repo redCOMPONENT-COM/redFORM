@@ -88,6 +88,12 @@ class RedformViewForm extends JView {
 		/* Get the VirtueMart option */
 		$lists['paymentactive']= JHTML::_('select.booleanlist',  'activatepayment', 'class="inputbox"', $row->activatepayment);
 		
+		// currencies
+		require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'currency.php');
+		$options = array(JHTML::_('select.option', '', JText::_('Select currency')));
+		$options = array_merge($options, RedformHelperLogCurrency::getCurrencyOptions());
+		$lists['currency'] = JHTML::_('select.genericlist', $options, 'currency', 'class="inputbox"', 'value', 'text', $row->currency);
+		
 		/* Set variabels */
 		$this->assignRef('row', $row);
 		$this->assignRef('lists', $lists);
