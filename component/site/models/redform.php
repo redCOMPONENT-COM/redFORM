@@ -427,14 +427,36 @@ class RedformModelRedform extends JModel {
 
             foreach ($rows as $key => $answer)
             {
-              if ($answer['type'] != 'recipients') // those are used for the mail recipients
-              {
-                $userinput = preg_replace($patterns, $replacements, $answer['value']);
-                $htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
-                $htmlmsg .= str_replace('~~~', '<br />', $userinput);
-                $htmlmsg .= '&nbsp;';
-                $htmlmsg .= '</td></tr>'."\n";
-              }
+            	switch ($answer['type'])
+            	{
+            		case 'recipients':
+            			break;
+            		case 'email':
+	                $htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+	                $htmlmsg .= '<a href="mailto:'.$answer['value'].'">'.$answer['value'].'</a>';
+	                $htmlmsg .= '&nbsp;';
+	                $htmlmsg .= '</td></tr>'."\n";
+	                break;
+            		case 'text':
+	                $userinput = preg_replace($patterns, $replacements, $answer['value']);
+	                $htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+	                if (strpos($answer['value'], 'http://') === 0) {
+	                	$htmlmsg .= '<a href="'.$answer['value'].'">'.$answer['value'].'</a>';
+	                }
+	                else {
+	                	$htmlmsg .= $answer['value'];
+	                }
+	                $htmlmsg .= '&nbsp;';
+	                $htmlmsg .= '</td></tr>'."\n";
+	                break;
+            		default :
+	                $userinput = preg_replace($patterns, $replacements, $answer['value']);
+	                $htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+	                $htmlmsg .= str_replace('~~~', '<br />', $userinput);
+	                $htmlmsg .= '&nbsp;';
+	                $htmlmsg .= '</td></tr>'."\n";
+	                break;
+            	}
             }
             $htmlmsg .= "</table><br />";
 					}
