@@ -90,8 +90,15 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				}
 				?>			
 				<?php if ($this->form->activatepayment): ?>
-				<td><?php echo $value->price; ?></td>
-				<td><?php echo $value->status; ?></td>
+					<td><?php echo $value->price; ?></td>
+					<td class="price <?php echo ($value->paid ? 'paid' : 'unpaid'); ?>">
+						<?php if (!$value->paid): ?>
+						<span class="hasTip" title="<?php echo JText::_('REGISTRATION_NOT_PAID').'::'.$value->status; ?>"><?php echo JHTML::_('image.administrator', 'publish_x.png'); ?></span>
+						<?php echo ' '.JHTML::link(JURI::root().'/index.php?option=com_redform&controller=payment&task=select&key='.$value->submit_key, JText::_('link')); ?>
+						<?php else: ?>
+						<span class="hasTip" title="<?php echo JText::_('REGISTRATION_PAID').'::'.$value->status; ?>"><?php echo JHTML::_('image.administrator', 'tick.png'); ?></span>
+						<?php endif; ?>						
+					</td>
 				<?php endif;?>
 			</tr>
 			<?php 

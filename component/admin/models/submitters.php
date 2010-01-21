@@ -51,7 +51,7 @@ class RedformModelSubmitters extends JModel {
       {
 				$db = JFactory::getDBO();
 				
-				$query =  ' SELECT s.submission_date, f.formname, u.*, s.price, p.status, p.paid '
+				$query =  ' SELECT s.submission_date, f.formname, u.*, s.price, s.submit_key, p.status, p.paid '
 								. ' FROM '.$db->nameQuote('#__rwf_submitters').' AS s '
 								. ' INNER JOIN ' . $db->nameQuote('#__rwf_forms').' AS f ON s.form_id = f.id '
 								. ' INNER JOIN ' . $db->nameQuote('#__rwf_forms_'.$form_id) . ' AS u ON s.answer_id = u.id '
