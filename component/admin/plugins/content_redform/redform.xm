@@ -2,13 +2,13 @@
 <!DOCTYPE install SYSTEM "http://www.joomla.org/xml/dtd/1.5/plugin-install.dtd">
 <install version="1.5" type="plugin" group="content" method="upgrade">
 	<name>Content - redFORM</name>
-	<creationDate>07/12/2009</creationDate>
+	<creationDate>Jan 21, 2010</creationDate>
 	<author>Redweb.dk</author>
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redweb.dk</authorUrl>
 	<copyright>(c) 2008 - 2009 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
-	<version>2.0b7.5</version>
+	<version>2.0b 8.0</version>
 	<description>redFORM Plugin</description>
 	<files>
 		<filename plugin="redform">redform.php</filename>
