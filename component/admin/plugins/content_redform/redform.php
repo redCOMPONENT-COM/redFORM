@@ -318,7 +318,7 @@ class plgContentRedform extends JPlugin {
 			}
 			// set the price
 			if (price > 0 && !jQuery("#totalprice").length) {
-				jQuery('#submit_button').before('<div id="totalprice"><?php echo JText::_('Total Price'); ?>: <span></span></div>');
+				jQuery('#submit_button').before('<div id="totalprice"><?php echo JText::_('Total Price'); ?>: '+currency+' <span></span></div>');
 			}
 			jQuery("#totalprice span").text(Math.round(price*100)/100);
 		}
@@ -536,7 +536,11 @@ class plgContentRedform extends JPlugin {
   	// custom tooltip
   	$toolTipArray = array('className'=>'redformtip'.$form->classname);
     JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
-      
+
+    // currency for javascript
+    $js = "var currency = \"".$form->currency."\";\n";
+    $document->addScriptDeclaration($js);
+    
   	$this->JsCheck();
 		
 		// redmember integration: pull extra fields
@@ -644,7 +648,7 @@ class plgContentRedform extends JPlugin {
 			}
 		
 			if (isset($this->_rwfparams['eventdetails']) && $this->_rwfparams['eventdetails']->course_price) {
-				$html .= '<div class="eventprice" price="'.$this->_rwfparams['eventdetails']->course_price.'">'.JText::_('Registration price').': '.$this->_rwfparams['eventdetails']->course_price.'</div>';
+				$html .= '<div class="eventprice" price="'.$this->_rwfparams['eventdetails']->course_price.'">'.JText::_('Registration price').': '.$form->currency.' '.$this->_rwfparams['eventdetails']->course_price.'</div>';
 			}
 							
 			foreach ($fields as $key => $field)
