@@ -35,7 +35,8 @@ class RedformControllerSubmitters extends JController
 		parent::__construct();
 		
 		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('save','apply');
+		$this->registerTask('save', 'apply');
+		$this->registerTask('add',  'edit');
 	}
 	
 	function remove()
@@ -120,10 +121,19 @@ class RedformControllerSubmitters extends JController
 	function save()
 	{		
     $model = $this->getModel('submitter');
-    $model->store();
+    $res = $model->store();
     $form_id = JRequest::getVar('form_id', 0);
+    $xref = JRequest::getVar('xref', 0);
     
-    $this->setRedirect( 'index.php?option=com_redform&view=submitters' . ($form_id ? '&form_id='.$form_id : ''), $msg );    
+    if ($res) {
+    	$msg = JText::_('Submission updated');
+    	$type = 'message';
+    }    
+    else {
+    	$msg = JText::_('Submission update failed');   
+    	$type = 'error'; 	
+    }
+    $this->setRedirect( 'index.php?option=com_redform&controller=submitters&task=submitters'. ($form_id ? '&form_id='.$form_id : ''). ($xref ? '&xref='.$xref : ''), $msg, $type );    
 	}
 }
 ?>
