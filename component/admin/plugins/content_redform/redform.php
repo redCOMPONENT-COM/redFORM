@@ -589,7 +589,7 @@ class plgContentRedform extends JPlugin {
 			$html .= '<div id="productname">'.$productinfo->product_name.'</div>';
 		}
 			
-		$html .= '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" enctype="multipart/form-data" onSubmit="return CheckSubmit();">';
+		$html .= '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
 
 		$footnote = false;
 
@@ -871,7 +871,7 @@ class plgContentRedform extends JPlugin {
 									$element .= ' checked="checked"';
 								}
 							}
-							$element .= ' type="checkbox" name="field'.$field->id.'.'.$signup.'[checkbox][]" value="'.$value->value.'" price="'.$value->price.'" />'.$value->value."\n";
+							$element .= ' type="checkbox" name="field'.$field->id.'.'.$signup.'[checkbox][]" value="'.$value->value.'" price="'.$value->price.'" /> '.$value->value."\n";
 						}
 						break;
 	
@@ -1043,7 +1043,7 @@ class plgContentRedform extends JPlugin {
 		$html .= '<input type="hidden" name="multi" value="'.$multi.'" />';
 		if (JRequest::getVar('close_form', true)) $html .= '</form>';
 		$html .= '</div>';
-		if ($footnote) $html .= '<div id="fieldline_'.$field->cssfield.'" class="fieldline"><div id="validate_footnote">'.JText::_('VALIDATE_FOOTNOTE').'</div></div>';
+		if ($footnote) $html .= '<div id="footnote"><div id="validate_footnote">'.JText::_('VALIDATE_FOOTNOTE').'</div></div>';
 
 		return $html;
 	}

@@ -1,9 +1,13 @@
-@CHARSET "UTF-8";
+@charset "UTF-8";
 
 #signedusers {
  padding: 0 4px;
 }
 
+.formbox {
+	clear:both;
+}	
+	
 .fieldline {
 	padding: 3px 0;
 	clear:both;
@@ -11,8 +15,13 @@
 
 .fieldline div {
 	float:left;
+	text-align:left;
 }
 
 .fieldline div.label {
 	width:150px;
+}
+
+div#totalprice {
+	clear:both;
 }
