@@ -584,7 +584,7 @@ class RedformModelSubmitter extends JModel {
 		else if ($event_task == 'manageredit')
 		{
 			if (JRequest::getInt('xref', false)) {
-				$redirect = 'index.php?option=com_redevent&view=details&tpl=manage_attendees&xref='.JRequest::getInt('xref');
+				$redirect = 'index.php?option=com_redevent&view=details&layout=manageattendees&xref='.JRequest::getInt('xref');
 				$mainframe->redirect($redirect, JText::_('Registration updated'));
 			}
 			else return true;

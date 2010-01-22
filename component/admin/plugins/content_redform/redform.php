@@ -1023,8 +1023,8 @@ class plgContentRedform extends JPlugin {
 		$html .= '<input type="hidden" name="Itemid" value="'.JRequest::getInt('Itemid', 1).'" />';
 		$html .= '<input type="hidden" name="task" value="save" />';
 		if ($submitter_id > 0) {
-			$html .= '<input type="hidden" name="submitter_id" value="'.$submitter_id.'" />';
-			if ($redevent->task == 'manageredit' || $redevent->task == 'edit') {
+			$html .= '<input type="hidden" name="submitter_id" value="'.$submitter_id.'" />';			
+			if ($redevent && ($redevent->task == 'manageredit' || $redevent->task == 'edit')) {
 				$html .= '<input type="hidden" name="controller" value="redform" />';
 			}
 		}

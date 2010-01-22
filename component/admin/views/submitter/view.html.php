@@ -29,6 +29,22 @@ class RedformViewSubmitter extends JView {
 	
   function display($tpl = null) 
   {
+  	$document = &JFactory::getDocument();
+  	
+  	$js = <<<EOF
+			function submitform(pressbutton){
+				if (pressbutton) {
+					document.redform.task.value=pressbutton;
+				}
+				if (typeof document.redform.onsubmit == "function") {
+					document.redform.onsubmit();
+				}
+				document.redform.submit();
+			}
+EOF;
+
+  	$document->addScriptDeclaration($js);
+  	
   	$submitter = & $this->get('Data');
   	JRequest::setVar('answers', array($submitter));
   	JRequest::setVar('submit_key', $submitter->submit_key);

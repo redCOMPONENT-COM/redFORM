@@ -71,7 +71,9 @@ class RedformViewSubmitters extends JView {
   	JToolBarHelper::title(JText::_( 'Submitters' ), 'redform_submitters');
   	if (JRequest::getVar('xref', false)) JToolBarHelper::back();
   	JToolBarHelper::deleteList(JText::_('Are you sure to delete the submitter?'));
-  	JToolBarHelper::editListX();
+  	
+  	//TODO: fix the add/modify submitters from backend
+  	//JToolBarHelper::editListX();
   	if (JRequest::getVar('xref', false)) JToolBarHelper::addNewX();
 
   	// set the menu
