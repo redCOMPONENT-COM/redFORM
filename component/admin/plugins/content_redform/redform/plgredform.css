@@ -3,3 +3,16 @@
 #signedusers {
  padding: 0 4px;
 }
+
+.fieldline {
+	padding: 3px 0;
+	clear:both;
+}
+
+.fieldline div {
+	float:left;
+}
+
+.fieldline div.label {
+	width:150px;
+}

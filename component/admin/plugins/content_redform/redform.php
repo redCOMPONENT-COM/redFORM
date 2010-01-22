@@ -665,26 +665,17 @@ class plgContentRedform extends JPlugin {
 					continue;
 				}
 					
-				$html .= '<div id="field_'.$field->cssfield.'">'.$field->field;
-				if ($field->validate) {
-					$html .= '<sup>'.JText::_('REQUIRED_FIELD_MARKER').'</sup>';
-					$footnote = true;
-				}
-				if (strlen($field->tooltip) > 0) {
-					$img = JHTML::image(JURI::root().'/includes/js/ThemeOffice/tooltip.png', JText::_('ToolTip'));
-					$html .= ' <span class="editlinktip hasTipField" title="'.$field->field.'::'.$field->tooltip.'" style="text-decoration: none; color: #333;">'. $img .'</span>';
-				}
-				$html .= '</div>';
+				$html .= '<div id="field_'.$field->cssfield.'" class="label">'.$field->field.'</div>';
 
 				$cleanfield = 'field_'. $field->id;
-				$element = '';
+				$element = "<div class=\"field".$field->fieldtype."\">";
 				
 				switch ($field->fieldtype)
 				{
 					case 'radio':
 						foreach ($values as $id => $value)
 						{
-							$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+							$element .= "<input class=\"".$form->classname." ";
 							if ($field->validate) $element .= "validate";
 							$element .= "\"";
 							if ($answers)
@@ -700,12 +691,12 @@ class plgContentRedform extends JPlugin {
 									$element .= ' checked="checked"';
 								}
 							}
-							$element .= ' type="radio" name="field'.$field->id.'.'.$signup.'[radio][]" value="'.$value->id.'" price="'.$value->price.'" />'.$value->value."</div>\n";
+							$element .= ' type="radio" name="field'.$field->id.'.'.$signup.'[radio][]" value="'.$value->id.'" price="'.$value->price.'" />'.$value->value."\n";
 						}
 						break;
 	
 					case 'textarea':
-						$element .= "<div class=\"field".$field->fieldtype."\"><textarea class=\"".$form->classname." ";
+						$element .= "<textarea class=\"".$form->classname." ";
 						if ($field->validate) $element .= "validate";
 						$element .= "\" name=\"field".$field->id.'.'.$signup."[textarea]\">";
 						if ($answers)
@@ -717,7 +708,7 @@ class plgContentRedform extends JPlugin {
 						else if ($user->get($field->redmember_field)) {
 							$element .= $user->get($field->redmember_field);
 						}
-						$element .= "</textarea></div>\n";
+						$element .= "</textarea>\n";
 						break;
 	
 					case 'wysiwyg':
@@ -733,14 +724,13 @@ class plgContentRedform extends JPlugin {
 						}
 						$editor = & JFactory::getEditor();
 	
-						$element .= "<div class=\"field".$field->fieldtype."\">";
 						// Cannot have buttons, it triggers an error with tinymce for unregistered users
 						$element .= $editor->display( "field".$field->id.'.'.$signup."[wysiwyg]", $content, '100%;', '200', '75', '20', false ) ;
-						$element .= "</div>\n";
+						$element .= "\n";
 						break;
 	
 					case 'email':
-						$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+						$element .= "<input class=\"".$form->classname." ";
 						if ($field->validate) $element .= "validate";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\" value=\"";
 						if ($answers)
@@ -755,7 +745,7 @@ class plgContentRedform extends JPlugin {
 						else if ($signup == 1 && $user->email) {
 							$element .= $user->email;
 						}
-						$element .= "\" /></div>\n";
+						$element .= "\" />\n";
 							
 						/* E-mail field let's see */
 						// TODO: transfer to field !
@@ -780,7 +770,7 @@ class plgContentRedform extends JPlugin {
 						break;
 	
 					case 'fullname':
-						$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+						$element .= "<input class=\"".$form->classname." ";
 						if ($field->validate) {
 							$element .= "validate";
 						}
@@ -797,11 +787,11 @@ class plgContentRedform extends JPlugin {
 						else if ($signup == 1 && $user->name) {
 							$element .= $user->name;
 						}
-						$element .= "\" /></div>\n";
+						$element .= "\" />\n";
 						break;
 	
 					case 'username':
-						$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+						$element .= "<input class=\"".$form->classname." ";
 						if ($field->validate) $element .= "validate";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\" value=\"";
 						if ($answers)
@@ -816,11 +806,11 @@ class plgContentRedform extends JPlugin {
 						else if ($signup == 1 && $user->username) {
 							$element .= $user->username;
 						}
-						$element .= "\" /></div>\n";
+						$element .= "\" />\n";
 						break;
 	
 					case 'textfield':
-						$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+						$element .= "<input class=\"".$form->classname." ";
 						if ($field->validate) $element .= "validate";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\" value=\"";
 						if ($answers)
@@ -832,11 +822,10 @@ class plgContentRedform extends JPlugin {
 						else if ($user->get($field->redmember_field)) {
 							$element .= $user->get($field->redmember_field);
 						}
-						$element .= "\" /></div>\n";
+						$element .= "\" />\n";
 						break;
 	
 					case 'price':
-						$element .= '<div class="field'.$field->fieldtype.'">';
 						// if has not null value, it is a fixed price, if not this is a user input price
 						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
 						{
@@ -860,13 +849,13 @@ class plgContentRedform extends JPlugin {
 							$element .= '"';
 							$element .= '/>';
 						}
-						$element .= "</div>\n";
+						$element .= "\n";
 						break;
 						
 					case 'checkbox':
 						foreach ($values as $id => $value)
 						{
-							$element .= "<div class=\"field".$field->fieldtype."\"><input class=\"".$form->classname." ";
+							$element .= "<input class=\"".$form->classname." ";
 							if ($field->validate) $element .= "validate";
 							$element .= "\"";
 							if ($answers)
@@ -882,7 +871,7 @@ class plgContentRedform extends JPlugin {
 									$element .= ' checked="checked"';
 								}
 							}
-							$element .= ' type="checkbox" name="field'.$field->id.'.'.$signup.'[checkbox][]" value="'.$value->value.'" price="'.$value->price.'" />'.$value->value."</div>\n";
+							$element .= ' type="checkbox" name="field'.$field->id.'.'.$signup.'[checkbox][]" value="'.$value->value.'" price="'.$value->price.'" />'.$value->value."\n";
 						}
 						break;
 	
@@ -903,6 +892,7 @@ class plgContentRedform extends JPlugin {
 							$element .= ' price="'.$value->price.'" >'.$value->value."</option>";
 						}
 						$element .= '</select>';
+						$element .= "\n";
 						break;
 	
 					case 'multiselect':
@@ -926,6 +916,7 @@ class plgContentRedform extends JPlugin {
 							$element .= '" price="'.$value->price.'" />'.$value->value."</option>";
 						}
 						$element .= '</select>';
+						$element .= "\n";
 						break;
 	
 					case 'recipients':
@@ -949,15 +940,27 @@ class plgContentRedform extends JPlugin {
 							$element .= " >".$value->value."</option>";
 						}
 						$element .= '</select>';
+						$element .= "\n";
 						break;
 	
 					case 'fileupload':
 						if ($submitter_id == 0) {
 							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" size=\"40\" class=\"fileupload\" id=\"fileupload_".$field->cssfield."\"/>";
 						}
+						$element .= "\n";
 						break;
 				}
 				$html .= $element;
+				
+				if ($field->validate) {
+					$html .= '<sup>'.JText::_('REQUIRED_FIELD_MARKER').'</sup>';
+					$footnote = true;
+				}
+				if (strlen($field->tooltip) > 0) {
+					$img = JHTML::image(JURI::root().'/includes/js/ThemeOffice/tooltip.png', JText::_('ToolTip'));
+					$html .= ' <span class="editlinktip hasTipField" title="'.$field->field.'::'.$field->tooltip.'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+				}
+				$html .= '</div>'; // fieldtype div
 	
 				$html .= '</div>'; // fieldline_ div
 			}
