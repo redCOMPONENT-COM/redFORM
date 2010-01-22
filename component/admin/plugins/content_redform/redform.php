@@ -288,8 +288,11 @@ class plgContentRedform extends JPlugin {
 			for (var i = 1; i < active+1; i++)
 			{
 				var signup = jQuery("#formfield"+i);
-				signup.find("input[name*=price]").each(function() {
-					price += parseFloat(this.value);
+				signup.find("input[name*=price]").each(function(k) {
+					var p = jQuery(this).val();
+					if (p) {
+						price += parseFloat(p);
+					}
 				});
 				
 				signup.find("[selected]").each(function() {
