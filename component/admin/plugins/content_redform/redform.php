@@ -971,14 +971,19 @@ class plgContentRedform extends JPlugin {
 		}
 
 		/* Add any redEVENT values */
-		$redevent = JRequest::getVar('redevent', false) || JRequest::getVar('integration') == 'redevent';
-		
-		if ($redevent) {
+		$redevent = JRequest::getVar('redevent', false);
+		if ($redevent) 
+		{
 			$html .= '<input type="hidden" name="integration" value="redevent" />';
 			$html .= '<input type="hidden" name="event_task" value="'.$redevent->task.'" />';
 			$html .= '<input type="hidden" name="event_id" value="'.$redevent->eventid.'" />';
 			$html .= '<input type="hidden" name="xref" value="'.JRequest::getInt('xref').'" />';
 		}
+		else if (JRequest::getVar('integration') == 'redevent')
+		{
+			$html .= '<input type="hidden" name="integration" value="redevent" />';
+			$html .= '<input type="hidden" name="xref" value="'.JRequest::getInt('xref').'" />';
+		}			
 		else if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) {
 			$html .= '<input type="hidden" name="xref" value="'.JRequest::getInt('xref').'" />';
 		}

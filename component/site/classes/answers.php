@@ -349,7 +349,6 @@ class rfanswers
   	}
   	$submitterdata = array_merge($submitterdata, $params);
     $submitterdata['form_id'] = $this->_form_id;
-		dump($params);
 
   	/* Store the submitter details */
   	$row = & JTable::getInstance('Submitters', 'Table');
