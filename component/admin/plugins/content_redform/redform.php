@@ -971,9 +971,10 @@ class plgContentRedform extends JPlugin {
 		}
 
 		/* Add any redEVENT values */
-		$redevent = JRequest::getVar('redevent', false);
+		$redevent = JRequest::getVar('redevent', false) || JRequest::getVar('integration') == 'redevent';
 		
 		if ($redevent) {
+			$html .= '<input type="hidden" name="integration" value="redevent" />';
 			$html .= '<input type="hidden" name="event_task" value="'.$redevent->task.'" />';
 			$html .= '<input type="hidden" name="event_id" value="'.$redevent->eventid.'" />';
 			$html .= '<input type="hidden" name="xref" value="'.JRequest::getInt('xref').'" />';
@@ -1022,14 +1023,17 @@ class plgContentRedform extends JPlugin {
 		$html .= '<input type="hidden" name="productid" value="'.JRequest::getInt('productid', 0).'" />';
 		$html .= '<input type="hidden" name="Itemid" value="'.JRequest::getInt('Itemid', 1).'" />';
 		$html .= '<input type="hidden" name="task" value="save" />';
-		if ($submitter_id > 0) {
+		if ($submitter_id > 0) 
+		{
 			$html .= '<input type="hidden" name="submitter_id" value="'.$submitter_id.'" />';			
 			if ($redevent && ($redevent->task == 'manageredit' || $redevent->task == 'edit')) {
 				$html .= '<input type="hidden" name="controller" value="redform" />';
 			}
 		}
-		else $html .= '<input type="hidden" name="controller" value="redform" />';
-			
+		else {
+			$html .= '<input type="hidden" name="controller" value="redform" />';
+		}
+		
 		if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) {
 			$html .= '<input type="hidden" name="controller" value="submitters" />';
 		}

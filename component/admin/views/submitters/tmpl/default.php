@@ -119,5 +119,6 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
   <input type="hidden" name="view" value="submitters" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<?php if (JRequest::getInt('xref', false)) { ?><input type="hidden" name="xref" value="<?php echo JRequest::getInt('xref'); ?>" /><?php } ?>
+	<?php if (!empty($this->integration)) { ?><input type="hidden" name="integration" value="<?php echo $this->integration; ?>" /><?php } ?>
 	<input type="hidden" name="controller" value="submitters" />
 </form>

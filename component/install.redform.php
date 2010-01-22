@@ -319,6 +319,13 @@ function com_install() {
 		$db->setQuery($q);
 		$db->query();
 	}
+
+	/* Check if we have the price column */
+	if (!array_key_exists('integration', $cols)) {
+		$q = "ALTER IGNORE TABLE #__rwf_submitters ADD COLUMN `integration` VARCHAR(30) NULL DEFAULT NULL";
+		$db->setQuery($q);
+		$db->query();
+	}
 	
 	 /* Get the current columns */
   $q = "SHOW COLUMNS FROM #__rwf_values";

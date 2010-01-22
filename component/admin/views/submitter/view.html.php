@@ -46,12 +46,18 @@ EOF;
   	$document->addScriptDeclaration($js);
   	
   	$submitter = & $this->get('Data');
-  	JRequest::setVar('answers', array($submitter));
-  	JRequest::setVar('submit_key', $submitter->submit_key);
-  	JRequest::setVar('xref', $submitter->xref);
+  	if ($submitter) 
+  	{
+	  	JRequest::setVar('answers', array($submitter));
+	  	JRequest::setVar('submit_key', $submitter->submit_key);
+	  	JRequest::setVar('xref', $submitter->xref);
+	  	JRequest::setVar('submitter_id', $submitter->id);
+  	}
   	JRequest::setVar('redform_edit', true);
-  	JRequest::setVar('submitter_id', $submitter->id);
+  	
   	$this->assignRef('submitter', $submitter);
+  	$this->assignRef('form_id',   JRequest::getVar('form_id'));
+  	
   	JToolBarHelper::title(JText::_( 'EDIT_SUBMITTER' ), 'redform_submitters');
   	JToolBarHelper::save();
   	JToolBarHelper::cancel();

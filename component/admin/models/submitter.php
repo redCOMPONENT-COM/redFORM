@@ -270,16 +270,20 @@ class RedformModelSubmitter extends JModel {
 			$redevent = true;
 			$posted['xref'] = JRequest::getInt('event_xref', 0);
 		}
+		else if ($post['integration'] == 'redevent') {
+			$redevent = true;
+			$posted['xref'] = JRequest::getInt('xref', 0);			
+		}
 		else if (JRequest::getInt('competition_id', 0)) {
 			$redcompetition = true;
-			$post['xref'] = JRequest::getInt('competition_id', 0);
+			$posted['xref'] = JRequest::getInt('competition_id', 0);
 		}
 		else {
-			$post['xref'] = 0;
+			$posted['xref'] = 0;
 		}
 		
-		if ($post['xref'] && $redevent) {
-			$event = $this->getEvent($post['xref']);
+		if ($posted['xref'] && $redevent) {
+			$event = $this->getEvent($posted['xref']);
 		}
 		else {
 			$event = null;
@@ -309,6 +313,9 @@ class RedformModelSubmitter extends JModel {
 		$postvalues['form_id'] = $post['form_id'];
 		$postvalues['submitternewsletter'] = JRequest::getVar('submitternewsletter', '');
 		$postvalues['submit_key'] = $submit_key;
+		if (isset($post['integration'])) {
+			$postvalues['integration'] = $post['integration'];			
+		}
 				
 		/* Get the raw form data */
 		$postvalues['rawformdata'] = serialize($posted);
@@ -329,9 +336,26 @@ class RedformModelSubmitter extends JModel {
 			$answers->setAnswerId($submitter->answer_id);
 		}
 		
-		// save answers
+		// save answers		
 		if (!$answers->save($postvalues)) {
 			return false;		
+		}
+		
+		// add an attendee in redevent ?
+		if (!$submitter && isset($postvalues['integration']) && $postvalues['integration'] == 'redevent')  
+		{
+			$query = ' INSERT INTO #__redevent_register (xref, submit_key, uid, uregdate) '
+			       . ' VALUES ('.$this->_db->Quote($postvalues['xref']).', '
+			       . $this->_db->Quote($postvalues['submit_key']).', '
+			       . $this->_db->Quote(0).', '
+			       . ' NOW() '
+			       .')'
+			       ;
+			$this->_db->setQuery($query);
+			$res = $this->_db->query();
+			if (!$res) {
+				JError::raiseWarning(0, JText::_('Creating redevent attendee failed'));
+			}
 		}
 
 		/* Clean up any signups that need to be removed */
@@ -342,6 +366,7 @@ class RedformModelSubmitter extends JModel {
 		return true;
 	}
 	
+	//TODO: delete when done with new version
 	/**
 	 * Saves an edited submitter
 	 */
@@ -995,5 +1020,24 @@ class RedformModelSubmitter extends JModel {
 	 		}
 	 	}
 	}
+	
+
+	 /**
+	  * returns event associated to xref
+	  *
+	  * @param int $xref
+	  * @return object
+	  */
+	 function getEvent($xref)
+	 {
+     $db = JFactory::getDBO();
+	 	 $query = ' SELECT e.*, x.* '
+	 	        . ' FROM #__redevent_event_venue_xref AS x '
+	 	        . ' INNER JOIN #__redevent_events AS e ON e.id = x.eventid '
+	 	        . ' WHERE x.id = '. $db->Quote((int) $xref)
+	 	        ;
+	 	 $db->setQuery($query);
+	 	 return $db->loadObject();
+	 }
 }
 ?>

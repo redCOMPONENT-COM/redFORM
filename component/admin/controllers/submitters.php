@@ -124,6 +124,7 @@ class RedformControllerSubmitters extends JController
     $res = $model->store();
     $form_id = JRequest::getVar('form_id', 0);
     $xref = JRequest::getVar('xref', 0);
+    $integration = JRequest::getVar('integration', '');
     
     if ($res) {
     	$msg = JText::_('Submission updated');
@@ -133,7 +134,17 @@ class RedformControllerSubmitters extends JController
     	$msg = JText::_('Submission update failed');   
     	$type = 'error'; 	
     }
-    $this->setRedirect( 'index.php?option=com_redform&controller=submitters&task=submitters'. ($form_id ? '&form_id='.$form_id : ''). ($xref ? '&xref='.$xref : ''), $msg, $type );    
+    $url = 'index.php?option=com_redform&controller=submitters&task=submitters';
+    if ($form_id) {
+    	$url .= '&form_id='.$form_id;
+    }
+    if ($integration) {
+    	$url .= '&integration='.$integration;
+    }
+    if ($xref) {
+    	$url .= '&xref='.$xref;
+    }
+    $this->setRedirect( $url, $msg, $type );    
 	}
 }
 ?>

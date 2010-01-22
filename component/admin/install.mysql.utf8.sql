@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `id` int(11) NOT NULL auto_increment,
   `form_id` int(11) NOT NULL default '0',
   `submission_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `integration` VARCHAR(30) NULL DEFAULT NULL,
   `xref` int(11) NOT NULL default '0',
   `answer_id` int(11) NOT NULL default '0',
   `submitternewsletter` int(11) NOT NULL default '0',

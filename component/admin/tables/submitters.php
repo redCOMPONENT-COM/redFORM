@@ -47,6 +47,8 @@ class TableSubmitters extends JTable {
 	var $confirmed	= null;
 	/** @var datetime */
 	var $confirmdate 	= null;
+	/** @var string integration key */
+	var $integration 	= null;
 	
 	/**
 	* @param database A database connector object

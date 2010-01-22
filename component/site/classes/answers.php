@@ -347,9 +347,9 @@ class rfanswers
   	if (empty($params['submit_key'])) {
   		JError::raiseError(0, JText::_('ERROR SUBMIT KEY MISSING'));
   	}
-  	$submitterdata['submit_key']  = $params['submit_key'];
-  	$submitterdata['rawformdata'] = $params['rawformdata'];
+  	$submitterdata = array_merge($submitterdata, $params);
     $submitterdata['form_id'] = $this->_form_id;
+		dump($params);
 
   	/* Store the submitter details */
   	$row = & JTable::getInstance('Submitters', 'Table');

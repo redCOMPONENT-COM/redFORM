@@ -55,7 +55,7 @@ class RedformViewSubmitters extends JView {
   	$fields = $this->get('Fields');
 
   	/* Get the event details if there is an xref value */
-  	if (JRequest::getInt('xref', false)) {
+  	if (JRequest::getInt('xref', false)) { // check integration too !
   		$coursetitle = $this->get('CourseTitle');
   	}
   	else $coursetitle = null;
@@ -67,6 +67,7 @@ class RedformViewSubmitters extends JView {
   	$this->assignRef('fields', $fields);
   	$this->assignRef('coursetitle', $coursetitle);
     $this->assignRef('xref', JRequest::getInt('xref', 0));
+    $this->assignRef('integration', JRequest::getVar('integration', ''));
 
   	JToolBarHelper::title(JText::_( 'Submitters' ), 'redform_submitters');
   	if (JRequest::getVar('xref', false)) JToolBarHelper::back();
