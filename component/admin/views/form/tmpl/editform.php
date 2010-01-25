@@ -233,6 +233,22 @@ $editor =& JFactory::getEditor();
 				<?php echo $this->lists['currency']; ?>
 			</td>
 		</tr>
+		<tr class="row<?php echo $row = 1 - $row; ?>">
+			<td>
+				<span class="hasTip" title="<?php echo JText::_('PAYMENTPROCESSING_TIP');?>"><?php echo JText::_('PAYMENTPROCESSING'); ?></span>
+			</td>
+			<td>
+				<?php echo $editor->display( "paymentprocessing", $this->row->paymentprocessing, 800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
+			</td>
+		</tr>
+		<tr class="row<?php echo $row = 1 - $row; ?>">
+			<td>
+				<span class="hasTip" title="<?php echo JText::_('PAYMENTACCEPTED_TIP');?>"><?php echo JText::_('PAYMENTACCEPTED'); ?></span>
+			</td>
+			<td>
+				<?php echo $editor->display( "paymentaccepted", $this->row->paymentaccepted, 800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
+			</td>
+		</tr>
 	</table>
 	<?php
 	echo $pane->endPanel();

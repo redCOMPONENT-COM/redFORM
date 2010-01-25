@@ -55,9 +55,26 @@ class RedformControllerPayment extends JController {
 	function processing()
   {
   	global $mainframe;
-  	
-  	$msg = JText::_('PROCESSING PAYMENT');
-  	$mainframe->redirect('index.php', $msg);
+  
+    $submit_key = JRequest::getVar('key');
+    
+    $model = &$this->getModel('payment');    
+    $submitters = $model->getSubmitters();
+    if (count($submitters))
+    {
+    	$first = current($submitters);
+    	switch ($first->integration)
+    	{
+    		case 'redevent':
+    			$mainframe->redirect('index.php?option=com_redevent&view=payment&submit_key='.$submit_key.'&state=processing');
+    			break;
+    	}
+    }
+    
+		JRequest::setVar('view',   'payment');
+		JRequest::setVar('layout', 'final');
+		JRequest::setVar('state', 'processing');
+		$this->display();
   }
   
   function paymentcancelled()
@@ -71,6 +88,9 @@ class RedformControllerPayment extends JController {
 
   function notify()
   {
+    global $mainframe;
+    
+    $submit_key = JRequest::getVar('key');
 		$gw = JRequest::getVar('gw', '');
     RedformHelperLog::simpleLog('PAYMENT NOTIFICATION RECEIVED'. ': ' . $gw);
 		if (empty($gw)) {
@@ -83,12 +103,29 @@ class RedformControllerPayment extends JController {
     
     $res = $helper->notify();
     
+    $submitters = $model->getSubmitters();
+    if (count($submitters))
+    {
+    	$first = current($submitter);
+    	switch ($first->integration)
+    	{
+    		case 'redevent':
+    			$mainframe->redirect('index.php?option=com_redevent&view=paymentl&submit_key='.$submit_key.'&state='.($res ? 'accepted' : 'refused'));
+    			break;
+    	}
+    }
+    
+		JRequest::setVar('view',   'payment');
+		JRequest::setVar('layout', 'final');
+		
     if ($res) { // the payment was received !
     	//TODO: send a mail ?
-    	echo JText::_('Payment accepted');
+			JRequest::setVar('state', 'accepted');
     }
     else {
-    	echo JText::_('Payment failed');    	
+			JRequest::setVar('state', 'failed');
     }
+    
+		$this->display();
   }
 }

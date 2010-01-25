@@ -73,6 +73,14 @@ class TableRedform extends JTable {
 	
 	/** @var string iso code for payment currency */
 	var $currency = null;
+	/**
+	 * @var string text to be displayed when payment is being processed
+	 */
+	var $paymentprocessing = null;
+	/**
+	 * @var string text to be displayed when payment was accepted
+	 */
+	var $paymentaccepted = null;
 	
 	
 	/**

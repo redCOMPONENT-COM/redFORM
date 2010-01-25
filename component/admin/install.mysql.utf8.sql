@@ -49,6 +49,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `access` tinyint(3) NOT NULL default '0',
   `activatepayment` tinyint(2) NOT NULL DEFAULT '0',
   `currency` varchar(3) DEFAULT NULL,
+  `paymentprocessing` text DEFAULT NULL,
+  `paymentaccepted` text DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) COMMENT='Forms for redFORM';
 

@@ -234,6 +234,10 @@ class RedformModelRedform extends JModel {
 			$postvalues['form_id'] = $post['form_id'];
 			$postvalues['submitternewsletter'] = JRequest::getVar('submitternewsletter', '');
 			$postvalues['submit_key'] = $submit_key;
+			if ($redevent)
+			{
+				$postvalues['integration'] = 'redevent';
+			}
 				
 			/* Get the raw form data */
 			$postvalues['rawformdata'] = serialize($posted);

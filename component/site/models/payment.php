@@ -38,6 +38,10 @@ class RedFormModelPayment extends JModel
 	
 	var $_submit_key = null;
 	
+	var $_form = null;
+	
+	var $_submitters = null;
+	
 	function __construct($config)
 	{
 		parent::__construct();
@@ -113,19 +117,9 @@ class RedFormModelPayment extends JModel
 	 */
 	function getCurrency()
 	{
-		if (empty($this->_submit_key)) {
-			JError::raiseError(0, JText::_('Missing key'));
-			return false;
-		}
-		
-		$query = ' SELECT f.currency FROM #__rwf_submitters AS s '
-		       . ' INNER JOIN #__rwf_forms AS f on s.form_id = f.id '
-		       . ' WHERE s.submit_key = '. $this->_db->Quote($this->_submit_key)
-		            ;
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadResult();	
+		$form = $this->getForm();
 
-		return $res;
+		return $form->currency;
 	}
 	
 	/**
@@ -145,5 +139,48 @@ class RedFormModelPayment extends JModel
 		RedformHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND'.': '.$name);
 		
 		return false;
+	}
+	
+	/**
+	 * returns form associated to submit_key
+	 * @return object
+	 */
+	function getForm()
+	{
+		if (empty($this->_submit_key)) {
+			JError::raiseError(0, JText::_('Missing key'));
+			return false;
+		}
+		
+		if (empty($this->_form))
+		{
+			$query = ' SELECT f.* '
+			       . ' FROM #__rwf_submitters AS s '
+			       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
+			       . ' WHERE s.submit_key = '. $this->_db->Quote($this->_submit_key)
+			            ;
+			$this->_db->setQuery($query, 0, 1);
+			$this->_form = $this->_db->loadObject();
+		}
+		return $this->_form;
+	}
+	
+	function getSubmitters()
+	{
+		if (empty($this->_submit_key)) {
+			JError::raiseError(0, JText::_('Missing key'));
+			return false;
+		}
+		
+		if (empty($this->_submitters))
+		{
+			$query = ' SELECT s.* '
+			       . ' FROM #__rwf_submitters AS s '
+			       . ' WHERE s.submit_key = '. $this->_db->Quote($this->_submit_key)
+			            ;
+			$this->_db->setQuery($query);
+			$this->_submitters = $this->_db->loadObjectList();
+		}
+		return $this->_submitters;		
 	}
 }

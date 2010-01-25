@@ -32,6 +32,9 @@ class RedformViewPayment extends JView {
 		if ($this->getLayout() == 'select') {
 			return $this->_displaySelect($tpl);
 		}
+		if ($this->getLayout() == 'final') {
+			return $this->_displayFinal($tpl);
+		}
 		parent::display($tpl);
 	}
 	
@@ -66,6 +69,29 @@ class RedformViewPayment extends JView {
     $this->assign('price',     $price);
     $this->assign('currency',  $currency);
     
+		parent::display($tpl);
+	}
+	
+	function _displayFinal($tpl = null)
+	{
+		$document   = &JFactory::getDocument();
+		$document->setTitle($document->getTitle().' - '.JText::_('redFORM'));
+				
+		echo '<pre>';print_r($form); echo '</pre>';exit;
+		$form = $this->get('form');
+		$text = '';
+		switch (JRequest::getVar('state'))
+		{
+			case 'accepted':
+				$text = $form->paymentaccepted;
+				break;
+			case 'processing':
+				$text = $form->paymentprocessing;
+				break;
+		}
+		
+		$this->assign('text',  $text);
+		
 		parent::display($tpl);
 	}
 }
