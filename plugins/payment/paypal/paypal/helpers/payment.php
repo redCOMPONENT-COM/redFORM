@@ -99,7 +99,7 @@ class PaymentPaypal {
     
     				
     $post = JRequest::get( 'post' );
-    $submit_key = JREQuest::getvar('key');
+    $submit_key = JRequest::getvar('submit_key');
     $paid = 0;
 
     // RedformHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
@@ -188,8 +188,10 @@ class PaymentPaypal {
 				    . ', '. $db->Quote($paid)
 				    . ') ';
     $db->setQuery($query);
-//    RedformHelperLog::simpleLog($db->getQuery());
     $db->query();
+    
+    // for routing 
+    JRequest::setVar('submit_key', $submit_key);
     return $paid;
   }
 }

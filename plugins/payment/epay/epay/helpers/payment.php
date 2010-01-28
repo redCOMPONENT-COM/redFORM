@@ -26,7 +26,7 @@ class PaymentEpay {
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);		
 		?>		
-		
+		<h3><?php echo JText::_('Epay Payment Gateway'); ?></h3>
 		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
 		<input type="hidden" name="merchantnumber" value="<?php echo $this->params->get('EPAY_MERCHANTNUMBER'); ?>">
 		<input type="hidden" name="amount" value="<?php echo round($details->price*100, 2 ); ?>">
@@ -132,6 +132,7 @@ class PaymentEpay {
     $paid = 0;
     				
     $submit_key = JRequest::getvar('key');
+    JRequest::setVar('submit_key', $submit_key);
     RedformHelperLog::simpleLog('EPAY NOTIFICATION RECEIVED'. ' for ' . $submit_key);
     
     if (JRequest::getVar('accept', 0) == 0)
