@@ -53,8 +53,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<?php echo JHTML::tooltip(JText::_('Set to yes to check if the field is filled in'), JText::_('Validate'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Validate'); ?>
+			<?php echo JHTML::tooltip(JText::_('Set to yes to check if the field is filled in'), JText::_('Required'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Required'); ?>
 			</td>
 			<td>
 			<?php echo $this->lists['validate']; ?>
