@@ -68,9 +68,9 @@ class plgContentRedform extends JPlugin {
 				JHTML::_('behavior.tooltip');
 				jimport('joomla.html.html');
 				$document = JFactory::getDocument();
-				$document->addCustomTag( '<script type="text/javascript" src="'.JURI::root().'components/com_redform/assets/js/jquery-1.4.min.js"></script>' );
+				$document->addScript(JURI::root().'components/com_redform/assets/js/jquery-1.4.min.js' );
 				//$document->addCustomTag( '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>' ); // for debugging...
-				$document->addCustomTag( '<script type="text/javascript">jQuery.noConflict();</script>' );
+				$document->addScriptDeclaration( 'jQuery.noConflict();' );
 			}
 			
 			/* Execute the code */
@@ -267,11 +267,9 @@ class plgContentRedform extends JPlugin {
 		return $user;
 	}
 	
-	function JsCheck() {
-		/* Create some dynamic JS */
-		?>
-		<script type="text/javascript">
-
+	function jsPrice()
+	{
+		$script = <<< EOF
 		jQuery(function () {
 		   jQuery(document.redform).find(":input").change(updatePrice);
 
@@ -318,11 +316,22 @@ class plgContentRedform extends JPlugin {
 			}
 			// set the price
 			if (price > 0 && !jQuery("#totalprice").length) {
-				jQuery('#submit_button').before('<div id="totalprice"><?php echo JText::_('Total Price'); ?>: '+currency+' <span></span></div>');
+				jQuery('#submit_button').before('<div id="totalprice">'+totalpricestr+': '+currency+' <span></span></div>');
 			}
 			jQuery("#totalprice span").text(Math.round(price*100)/100);
 		}
+EOF;
 		
+		$doc = &JFactory::getDocument();
+		$doc->addScriptDeclaration($script);
+		$doc->addScriptDeclaration('var totalpricestr = "'.JText::_('Total Price')."\";\n");
+	}
+	
+	function JsCheck() 
+	{
+		/* Create some dynamic JS */
+		?>
+		<script type="text/javascript">
 			function CheckSubmit() 
 			{
 				if (document.redform.task.value == 'cancel') return true;
@@ -542,6 +551,7 @@ class plgContentRedform extends JPlugin {
     $document->addScriptDeclaration($js);
     
   	$this->JsCheck();
+  	$this->jsPrice();
 		
 		// redmember integration: pull extra fields
 		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
@@ -647,7 +657,7 @@ class plgContentRedform extends JPlugin {
 				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->id.'" />';
 			}
 		
-			if (isset($this->_rwfparams['eventdetails']) && $this->_rwfparams['eventdetails']->course_price) {
+			if ($form->activatepayment && isset($this->_rwfparams['eventdetails']) && $this->_rwfparams['eventdetails']->course_price) {
 				$html .= '<div class="eventprice" price="'.$this->_rwfparams['eventdetails']->course_price.'">'.JText::_('Registration price').': '.$form->currency.' '.$this->_rwfparams['eventdetails']->course_price.'</div>';
 			}
 							
