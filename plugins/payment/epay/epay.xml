@@ -3,13 +3,13 @@
   "-//Joomla! 1.5//DTD plugin 1.0//EN" "http://dev.joomla.org/xml/1.5/plugin-install.dtd">
 <install version="1.5" type="plugin" group="redform_payment" method="upgrade">
   <name>Redform epay gateway plugin</name>
-  <creationDate>Jan 21, 2010</creationDate>
+	<creationDate>Fev 3, 2010</creationDate>
 	<author>Redweb.dk</author>
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redweb.dk</authorUrl>
-	<copyright>(c) 2008 - 2010 Redweb.dk</copyright>
+	<copyright>(c) 2008 - 2009 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
-  <version>2.0b 8.0</version>
+	<version>2.0 beta 8.2</version>
   <description>PLUGIN DESC</description>
   
   <files>
