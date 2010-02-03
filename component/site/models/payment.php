@@ -183,4 +183,55 @@ class RedFormModelPayment extends JModel
 		}
 		return $this->_submitters;		
 	}
+	
+	/**
+	 * provides information for process function of helpers (object id, title, etc...)
+	 * @param $key
+	 * @return unknown_type
+	 */
+	function getPaymentDetails($key)
+	{
+		$submitters = $this->getSubmitters();
+		if (!count($submitters)) {
+			return false;
+		}
+		$asub = current($submitters);
+		$form = $this->getForm();
+		
+		$obj = new stdclass;
+		$obj->integration = $asub->integration;
+		$obj->form        = $form->formname ;
+		$obj->form_id     = $form->id;
+		$obj->key         = $key;
+		switch ($asub->integration)
+		{
+			case 'redevent':
+				$event = $this->getEventAttendee($key);
+				$obj->title = JText::_('Event registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
+				$obj->uniqueid = $event->uniqueid;
+				break;
+			default:
+				$obj->title = JText::_('Form submission').': '.$form->title;
+				$obj->uniqueid = $key;
+				break;
+		}
+		return $obj;
+	}
+	
+	function getEventAttendee($key)
+	{
+		$query = ' SELECT r.id as attendee_id, e.title, e.course_code, r.xref, v.venue, x.* '
+		              . ' FROM #__redevent_register AS r '
+		              . ' INNER JOIN #__redevent_event_venue_xref AS x on x.id = r.xref '
+		              . ' INNER JOIN #__redevent_events AS e on e.id = x.eventid '
+		              . ' INNER JOIN #__redevent_venues AS v on v.id = x.venueid '
+		              . ' WHERE r.submit_key = '. $this->_db->Quote($key)
+		              ;
+		$this->_db->setQuery($query, 0, 1);
+		$res = $this->_db->loadObject();
+		if ($res) {
+			$res->uniqueid = $res->course_code.'-'.$res->xref.'-'.$res->attendee_id;
+		}
+		return $res;
+	}
 }

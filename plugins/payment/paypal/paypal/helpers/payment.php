@@ -17,7 +17,7 @@ class PaymentPaypal {
 	 * sends the payment request associated to sumbit_key to the payment service
 	 * @param string $submit_key
 	 */
-	function process($submit_key, $return_url = null, $cancel_url = null)
+	function process($request, $return_url = null, $cancel_url = null)
 	{
 		$app = &JFactory::getApplication();
 		if (empty($return_url)) {
@@ -33,7 +33,7 @@ class PaymentPaypal {
 		$query = ' SELECT f.currency, SUM(s.price) AS price '
 		       . ' FROM #__rwf_submitters AS s '
 		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-		       . ' WHERE s.submit_key = '. $db->Quote($submit_key)
+		       . ' WHERE s.submit_key = '. $db->Quote($request->key)
 		       . ' GROUP BY s.submit_key'
 		            ;
 		$db->setQuery($query);
@@ -52,13 +52,11 @@ class PaymentPaypal {
 	
 		"business" => $this->params->get('paypal_account'),
 	
-		"item_name" =>  'Form submit',
+		"item_name" =>  $request->title,
 		
 		"no_shipping" =>  '1',
-		
-		"order_id" => $submit_key,
-	
-		"invoice" =>  $submit_key,
+			
+		"invoice" =>  $request->uniqueid,
 	
 		"amount" =>  $res->price,
 	 

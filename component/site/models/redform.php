@@ -135,7 +135,7 @@ class RedformModelRedform extends JModel {
 		
 		/* Check for the submit key */
 		$submit_key = JRequest::getVar('submit_key', false);
-		if (!$submit_key) $submit_key = md5(uniqid());
+		if (!$submit_key) $submit_key = uniqid();
 		
 		/* Get the form details */
 		$form = $this->getForm(JRequest::getInt('form_id'));

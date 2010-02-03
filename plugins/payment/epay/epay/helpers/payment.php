@@ -17,21 +17,22 @@ class PaymentEpay {
 	 * sends the payment request associated to sumbit_key to the payment service
 	 * @param string $submit_key
 	 */
-	function process($submit_key, $return_url = null, $cancel_url = null)
+	function process($request, $return_url = null, $cancel_url = null)
 	{
 		$document = JFactory::getDocument();
 		$document->addScript("http://www.epay.dk/js/standardwindow.js");		
 		
-		$details = $this->_getSubmission($submit_key);
+		$details = $this->_getSubmission($request->key);
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);		
 		?>		
 		<h3><?php echo JText::_('Epay Payment Gateway'); ?></h3>
 		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
+		<p><?php echo $request->title; ?></p>
 		<input type="hidden" name="merchantnumber" value="<?php echo $this->params->get('EPAY_MERCHANTNUMBER'); ?>">
 		<input type="hidden" name="amount" value="<?php echo round($details->price*100, 2 ); ?>">
 		<input type="hidden" name="currency" value="<?php echo $currency?>">
-		<input type="hidden" name="orderid" value="sub<?php echo $details->sid; ?>">
+		<input type="hidden" name="orderid" value="<?php echo $request->uniqueid; ?>">
 		<input type="hidden" name="user_attr_1" value="<?php echo $submit_key; ?>">
 		<input type="hidden" name="ordretext" value="">
 		<?php 
