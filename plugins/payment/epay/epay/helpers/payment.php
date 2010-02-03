@@ -23,6 +23,7 @@ class PaymentEpay {
 		$document->addScript("http://www.epay.dk/js/standardwindow.js");		
 		
 		$details = $this->_getSubmission($request->key);
+		$submit_key = $request->key;
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);		
 		?>		
