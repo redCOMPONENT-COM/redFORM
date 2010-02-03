@@ -109,7 +109,7 @@ class RedformControllerPayment extends JController {
     $submitters = $model->getSubmitters();
     if (count($submitters))
     {
-    	$first = current($submitter);
+    	$first = current($submitters);
     	switch ($first->integration)
     	{
     		case 'redevent':
