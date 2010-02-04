@@ -30,18 +30,34 @@ class RedformViewSubmitters extends JView {
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) {
+	function display($tpl = null) 
+	{
 		/* Get the submitters list */
 		$submitters = $this->get('Submitters');
-		$event = $this->get('CourseTitle');
+		$integration = JRequest::getVar('integration', '');
+  	/* Get the event details if there is an xref value */
+  	if (JRequest::getInt('xref', false) && $integration == 'redevent')
+  	{ // check integration too !
+  		$course = $this->get('Course');
+  		$coursetitle = $course->course_title;
+  	}
+  	else 
+  	{
+  		$course      = null;
+  		$coursetitle = null;
+  	}
 		$fields = $this->get('Fields');
 		$export_data = $this->get('SubmittersExport');
   	$form = $this->get('Form');
-  	$this->assignRef('form', $form);
+  	
+  	$this->assignRef('form', $form);  	
+  	$this->assignRef('course', $course);
+    $this->assignRef('xref', JRequest::getInt('xref', 0));
+    $this->assignRef('integration', $integration);
 				
 		$this->assignRef('export_data', $export_data);
-		$this->assignRef('fields', $fields);
-		$this->assignRef('event', $event);
+		$this->assignRef('fields',     $fields);
+		$this->assignRef('event',      $coursetitle);
 		$this->assignRef('submitters', $submitters);
 		
 		parent::display($tpl);

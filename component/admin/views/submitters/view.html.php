@@ -59,7 +59,10 @@ class RedformViewSubmitters extends JView {
   		$course = $this->get('Course');
   		$coursetitle = $course->course_title;
   	}
-  	else $coursetitle = null;
+  	else {
+  		$course      = null;
+  		$coursetitle = null;
+  	}
 
   	/* Set variabels */
   	$this->assignRef('pagination', $pagination);

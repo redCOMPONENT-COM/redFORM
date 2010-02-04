@@ -21,7 +21,13 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 <form action="index.php" method="post" name="adminForm">
 	<div class="button2-left">
 		<div class="blank">
-			<a title="<?php echo JText::_('CSV EXPORT'); ?>" onclick="window.open('index.php?option=com_redform&controller=submitters&task=export&form_id=<?php echo (empty($this->form) ? 0 : $this->form->id) ;?>&format=raw')"><?php echo JText::_('CSV EXPORT'); ?></a>
+			<?php $csvlink = 'index.php?option=com_redform&controller=submitters&task=export'
+			               . '&form_id=' . (empty($this->form) ? 0 : $this->form->id)
+			               . (!empty($this->integration) ? '&integration='.$this->integration : '')
+			               . ($this->xref ? '&xref='.$this->xref : '')
+			               . '&format=raw'; 
+			               ?>
+			<a title="<?php echo JText::_('CSV EXPORT'); ?>" onclick="window.open('<?php echo JRoute::_($csvlink, true); ?>');"><?php echo JText::_('CSV EXPORT'); ?></a>
 		</div>
 	</div>
 	<br clear="all" />
