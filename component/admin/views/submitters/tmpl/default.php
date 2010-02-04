@@ -49,6 +49,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 	<th width="20"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->submitters ); ?>);" /></th>
 	<th><?php echo JText::_('Submission date'); ?></th>
 	<th><?php echo JText::_('Form name');?></th>
+	<th><?php echo JText::_('Unique id');?></th>
 	<?php foreach ($this->fields as $key => $value) { ?>
 		<th><?php echo $value->field; ?></th>
 	<?php } ?> 
@@ -76,6 +77,11 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				</td>
 				<td><?php echo $value->submission_date; ?></td>
 				<td><?php echo $value->formname; ?></td>
+				<?php if ($this->integration == 'redevent'): ?>
+				<td><?php echo $this->course->uniqueid_prefix.$value->attendee_id;?></td>
+				<?php else: ?>
+				<td><?php echo $value->submit_key;?></td>
+				<?php endif; ?>
 				<?php
 				foreach ($this->fields as $key => $field) 
 				{

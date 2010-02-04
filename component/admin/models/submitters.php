@@ -46,16 +46,19 @@ class RedformModelSubmitters extends JModel {
 		{
 			$form_id = JRequest::getVar('form_id', 0);
 			$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
+			$integration = JRequest::getVar('integration', 0);
 			
       if ($form_id && $form_id > 0) 
       {
 				$db = JFactory::getDBO();
 				
 				$query =  ' SELECT s.submission_date, f.formname, u.*, s.price, s.submit_key, p.status, p.paid '
+				        . ($integration == 'redevent' ? ', r.id as attendee_id ': '')				
 								. ' FROM '.$db->nameQuote('#__rwf_submitters').' AS s '
 								. ' INNER JOIN ' . $db->nameQuote('#__rwf_forms').' AS f ON s.form_id = f.id '
 								. ' INNER JOIN ' . $db->nameQuote('#__rwf_forms_'.$form_id) . ' AS u ON s.answer_id = u.id '
 		            . ' LEFT JOIN #__rwf_payment AS p ON p.submit_key = s.submit_key'
+				        . ($integration == 'redevent' ? ' INNER JOIN #__redevent_register AS r ON r.submit_key = s.submit_key ': '')				
 								;
 								
 				$where = array();
@@ -282,17 +285,17 @@ class RedformModelSubmitters extends JModel {
 	}
 		
 	/**
-	 * Get the course title
+	 * Get the course
 	 */
-	public function getCourseTitle() 
+	public function getCourse() 
 	{
 		$db = JFactory::getDBO();
-		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
+		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false), 'int');
 		
 		if (!$xref) {
 			return false;
 		}
-		$q =  ' SELECT e.title, v.venue, dates, enddates, times, endtimes '
+		$q =  ' SELECT e.title, v.venue, dates, enddates, times, endtimes, e.course_code '
 		    . ' FROM #__redevent_event_venue_xref x '
 		    . '	LEFT JOIN #__redevent_events e ON e.id = x.eventid '
 		    . ' LEFT JOIN #__redevent_venues v ON v.id = x.venueid '
@@ -313,7 +316,9 @@ class RedformModelSubmitters extends JModel {
     if ($course->endtimes) {
       $course_title .= ' ' . $course->endtimes;
     }
-		return $course_title;
+		$course->course_title = $course_title;
+		$course->uniqueid_prefix = $course->course_code.'-'.$xref.'-';
+		return $course;
 	}
 }
 ?>

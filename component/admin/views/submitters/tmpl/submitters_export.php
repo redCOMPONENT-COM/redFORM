@@ -27,6 +27,7 @@
 	$fields = array();
 	$fields[] = JText::_('Submission date');
 	$fields[] = JText::_('Form name');
+	$fields[] = JText::_('Unique id');
 	if ($xref) {
 		$fields[] = JText::_('EVENT');
 	}	
@@ -47,6 +48,12 @@
 			$fields = array();
 			$fields[] = $value->submission_date;
 			$fields[] = $value->formname;
+			if ($this->integration == 'redevent') {
+				$fields[] = $this->course->uniqueid_prefix.$value->attendee_id;
+			}
+			else { 
+				$fields[] = $value->submit_key;
+			}
 			if ($xref) $fields[] = $this->event;
 			
 			$find = array("\r\n", "\n", "\r");

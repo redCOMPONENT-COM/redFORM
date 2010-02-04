@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `submitternewsletter` int(11) NOT NULL default '0',
   `rawformdata` text NOT NULL,
   `submit_key` varchar(45) NOT NULL,
+  `uniqueid` varchar(50) default NULL,
   `waitinglist` tinyint(1) NOT NULL default '0',
   `confirmed` tinyint(1) NOT NULL default '0',
   `confirmdate` datetime default NULL,
