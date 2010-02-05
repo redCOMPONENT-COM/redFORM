@@ -969,7 +969,7 @@ EOF;
 	
 					case 'fileupload':
 						if ($submitter_id == 0) {
-							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" size=\"30\" class=\"fileupload\" id=\"fileupload_".$field->cssfield."\"/>";
+							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" class=\"fileupload\" id=\"fileupload_".$field->cssfield."\"/>";
 						}
 						$element .= "\n";
 						break;
