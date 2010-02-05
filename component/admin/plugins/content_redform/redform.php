@@ -578,7 +578,7 @@ EOF;
 		$replace = '';
 		
 		$form->classname = strtolower($this->replace_accents(str_replace($find, $replace,$form->classname)));
-		$html = '<div id="redform_'.$form->classname.'">';
+		$html = '<div id="redform'.$form->classname.'">';
 		
 		if ($form->showname) {
 			$html .= '<div id="formname">'.$form->formname.'</div>';
