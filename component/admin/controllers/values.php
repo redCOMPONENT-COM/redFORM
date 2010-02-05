@@ -252,5 +252,18 @@ class RedformControllerValues extends JController
 		/* Display it all */
 		$view->display();
 	}
+	
+  function saveorder()
+  {
+    $model = $this->getModel('values');
+    
+    if ($model->saveorder()) {
+      $this->setRedirect( 'index.php?option=com_redform&view=values');
+    }
+    else {
+      $this->setRedirect( 'index.php?option=com_redform&view=values', JText::_('ERROR REORDERING'));      
+    }
+  	
+  }
 }
 ?>

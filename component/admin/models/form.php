@@ -400,7 +400,7 @@ class RedformModelForm extends JModel
       
 	    /* Add form table */
 	    $this->AddFormTable($form->id);
-	    
+                      
 	    // now copy the fields
 	    foreach ($fields as $field_id)
 	    {
@@ -417,7 +417,7 @@ class RedformModelForm extends JModel
         
         $fieldmodel = & JModel::getInstance('field', 'RedformModel');
         $newfield = $fieldmodel->store($field->getProperties());
-        
+                
         // copy associated values
         foreach ($values as $v)
         {
@@ -430,6 +430,7 @@ class RedformModelForm extends JModel
 	        $valuemodel = & JModel::getInstance('value', 'RedformModel');
 	        $data = $value->getProperties();
 	        $data['form_id'] = $form->id;
+	        unset($data['ordering']);
 	        $newvalue = $valuemodel->store($data);        	
         }
 	    }

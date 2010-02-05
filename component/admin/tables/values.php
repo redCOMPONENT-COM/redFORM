@@ -50,24 +50,33 @@ class TableValues extends JTable {
 	/**
 	 * Get the next row order
 	 */
-	public function getNextOrder($form_id = 0) {
+	public function getNextOrder($form_id = 0) 
+	{
 		$db = JFactory::getDBO();
-				
-		if (!$form_id || $form_id == 0) {
-			/* Find the form ID */
-			$q = "SELECT form_id
-				FROM #__rwf_fields
-				WHERE id = ".JRequest::getInt('field_id');
-			$db->setQuery($q);
-			$form_id = $db->loadResult();
+		
+		if (!$form_id) 
+		{
+			$field_id = JRequest::getInt('field_id', $this->field_id);
+			
+			if ($field_id)
+			{
+				/* Find the form ID */
+				$q = "SELECT form_id
+					FROM #__rwf_fields
+					WHERE id = ".$db->Quote($field_id);
+				$db->setQuery($q);
+				$form_id = $db->loadResult();
+			}
 		}
 		
-		$q = "SELECT MAX(v.ordering) 
-			FROM #__rwf_values v, #__rwf_fields f
-			WHERE v.field_id = f.id
-			AND form_id = ".$form_id;
+		$q = ' SELECT MAX(v.ordering) '
+		   . ' FROM #__rwf_values AS v '
+		   . ' INNER JOIN #__rwf_fields AS f ON v.field_id = f.id '
+		   . ($form_id ? ' WHERE form_id = '.$form_id : '')
+		   ;
 		$db->setQuery($q);
-		return $db->loadResult()+1;
+		$max = $db->loadResult();
+		return $max+1;
 	}
 	
 	public function check()
@@ -87,6 +96,50 @@ class TableValues extends JTable {
 	    }
 	  }
 	  return true;
+	}
+	
+	/**
+	 * Compacts the ordering sequence of the selected records
+	 *
+	 * @access public
+	 * @param string Additional where query to limit ordering to a particular subset of records
+	 */
+	function reorder( $where='' )
+	{
+		$k = $this->_tbl_key;
+
+		$query = 'SELECT v.id, v.ordering '
+		. ' FROM #__rwf_values AS v '
+		. ' INNER JOIN #__rwf_fields AS f ON f.id = v.field_id '
+		. ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
+		. ' WHERE v.ordering >= 0' . ( $where ? ' AND '. $where : '' )
+		. ' ORDER BY fo.id, f.ordering, v.ordering '
+		;
+		$this->_db->setQuery( $query );
+		if (!($orders = $this->_db->loadObjectList()))
+		{
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+		// compact the ordering numbers
+		for ($i=0, $n=count( $orders ); $i < $n; $i++)
+		{
+			if ($orders[$i]->ordering >= 0)
+			{
+				if ($orders[$i]->ordering != $i+1)
+				{
+					$orders[$i]->ordering = $i+1;
+					$query = 'UPDATE '.$this->_tbl
+					. ' SET ordering = '. (int) $orders[$i]->ordering
+					. ' WHERE '. $k .' = '. $this->_db->Quote($orders[$i]->$k)
+					;
+					$this->_db->setQuery( $query);
+					$this->_db->query();
+				}
+			}
+		}
+
+		return true;
 	}
 }
 ?>

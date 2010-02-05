@@ -72,7 +72,7 @@ class RedformModelValues extends JModel
        ;
     $form_id = JRequest::getInt('form_id', false);
     if ($form_id) $q .= ' WHERE f.id = '. $this->_db->Quote($form_id);
-    $q .= ' ORDER BY f.formname, fd.field, v.ordering ';
+    $q .= ' ORDER BY f.id, fd.ordering, v.ordering ';
     return $q;
   }
 	
@@ -244,6 +244,33 @@ class RedformModelValues extends JModel
 			AND value = 1";
 		$db->setQuery($q);
 		return $db->loadResultArray();
+	}
+
+   
+   /**
+    * Reorder values
+	*/
+	function saveorder() 
+	{
+		$db =& JFactory::getDBO();
+		$cid = JRequest::getVar('cid');
+		$order = JRequest::getVar('order');
+		$total = count($cid);
+		$row =& $this->getTable();
+		
+		if (empty( $cid )) {
+			return JError::raiseWarning( 500, JText::_( 'No items selected' ) );
+		}
+		// update ordering values
+		for ($i = 0; $i < $total; $i++) {
+			$row->load( (int) $cid[$i] );
+			if ($row->ordering != $order[$i]) {
+				$row->ordering = $order[$i];
+				if (!$row->store()) {
+					return JError::raiseError( 500, $db->getErrorMsg() );
+				}
+			}
+		}
 	}
 }
 ?>

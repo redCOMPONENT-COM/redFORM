@@ -85,7 +85,10 @@ class TableFields extends JTable {
     
     $db =& $this->getDBO();
     
-    $query = ' SELECT * FROM #__rwf_values WHERE field_id ='. $db->Quote($this->id);
+    $query = ' SELECT * FROM #__rwf_values '
+           . ' WHERE field_id ='. $db->Quote($this->id)
+           . ' ORDER BY ordering '
+           ;
     $db->setQuery($query);
     return $db->loadResultArray();
   }

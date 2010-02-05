@@ -213,13 +213,16 @@ class RedformModelValue extends JModel
 	  $post = $data;
 	  
 	  $row->load($post['id']);
-	  if (empty($row->ordering)) $post['ordering'] = $row->getNextOrder((int)$post['form_id']);
 	  
 	  /* Get the posted data */
       if (!$row->bind($post)) {
          $mainframe->enqueueMessage(JText::_('There was a problem binding the value data').' '.$row->getError(), 'error');
          return false;
       }
+      
+		  if (empty($row->ordering)) {
+		  	$row->ordering = $row->getNextOrder();
+		  }
 	  
       /* pre-save checks */
       if (!$row->check()) {
@@ -301,31 +304,6 @@ class RedformModelValue extends JModel
          }
       }
    }
-   
-   /**
-    * Reorder values
-	*/
-	function getSaveOrder() {
-		$db =& JFactory::getDBO();
-		$cid = JRequest::getVar('cid');
-		$order = JRequest::getVar('order');
-		$total = count($cid);
-		$row =& $this->getTable();
-		
-		if (empty( $cid )) {
-			return JError::raiseWarning( 500, JText::_( 'No items selected' ) );
-		}
-		// update ordering values
-		for ($i = 0; $i < $total; $i++) {
-			$row->load( (int) $cid[$i] );
-			if ($row->ordering != $order[$i]) {
-				$row->ordering = $order[$i];
-				if (!$row->store()) {
-					return JError::raiseError( 500, $db->getErrorMsg() );
-				}
-			}
-		}
-	}
 	
 	/**
 	 * Check if a field type is already existing
