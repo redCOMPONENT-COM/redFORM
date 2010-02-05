@@ -108,7 +108,8 @@ class RedformModelSubmitter extends JModel {
 	    $cid = JRequest::getVar('cid');
 	    $cid = (int) $cid[0];
 	    $db = JFactory::getDBO();
-	    if ($form_id && $form_id > 0) {
+	    if ($form_id && $form_id > 0) 
+	    {
 	      $query = "SELECT f.*, s.*
 	        FROM ".$db->nameQuote('#__rwf_forms_'.$form_id)." f
 	        LEFT JOIN #__rwf_submitters s
@@ -116,6 +117,16 @@ class RedformModelSubmitter extends JModel {
 	        WHERE f.id = ".$cid; 
 	      $db->setQuery($query);
 	      $this->_data = $this->_db->loadObject();
+	      
+	      if ($this->_data->integration == 'redevent')
+	      {
+		      $query = ' SELECT r.uid '
+		             . ' FROM #__redevent_register AS r '
+		             . ' WHERE r.submit_key = '. $db->Quote($this->_data->submit_key)
+		             ;
+		      $db->setQuery($query);
+		      $this->_data->uid = $this->_db->loadResult();	      	
+	      }
 	      return (boolean) $this->_data;
 	    }
     }
@@ -245,14 +256,12 @@ class RedformModelSubmitter extends JModel {
 		$submitter_id = Jrequest::getInt('submitter_id', 0);
 		if ($submitter_id) {
 			$submitter = $this->getSubmitter($submitter_id);
+			$submit_key = $submitter->submit_key;
 		}
 		else {
 			$submitter = false;
+			$submit_key = uniqid();
 		}
-		
-		/* Check for the submit key */
-		$submit_key = JRequest::getVar('submit_key', false);
-		if (!$submit_key) $submit_key = uniqid();
 		
 		/* Get the form details */
 		$form = $this->getForm(JRequest::getInt('form_id'));
@@ -342,12 +351,13 @@ class RedformModelSubmitter extends JModel {
 		}
 		
 		// add an attendee in redevent ?
+		$uid = JRequest::getInt('uid');
 		if (!$submitter && isset($postvalues['integration']) && $postvalues['integration'] == 'redevent')  
 		{
 			$query = ' INSERT INTO #__redevent_register (xref, submit_key, uid, uregdate) '
 			       . ' VALUES ('.$this->_db->Quote($postvalues['xref']).', '
-			       . $this->_db->Quote($postvalues['submit_key']).', '
-			       . $this->_db->Quote(0).', '
+			       . $this->_db->Quote($submit_key).', '
+			       . $this->_db->Quote($uid).', '
 			       . ' NOW() '
 			       .')'
 			       ;
@@ -356,6 +366,18 @@ class RedformModelSubmitter extends JModel {
 			if (!$res) {
 				JError::raiseWarning(0, JText::_('Creating redevent attendee failed'));
 			}
+		}
+		else if (isset($postvalues['integration']) && $postvalues['integration'] == 'redevent')
+		{
+			$query = ' UPDATE #__redevent_register SET uid = '. $this->_db->Quote($uid)
+			       . ' WHERE submit_key = '.  $this->_db->Quote($submit_key)
+			       ;
+			$this->_db->setQuery($query);
+			$res = $this->_db->query();
+			
+			if (!$res) {
+				JError::raiseWarning(0, JText::_('Updating redevent attendee failed'));
+			}			
 		}
 
 		/* Clean up any signups that need to be removed */

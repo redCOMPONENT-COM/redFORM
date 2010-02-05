@@ -24,15 +24,16 @@ JPluginHelper::importPlugin( 'content' );
 $dispatcher = JDispatcher::getInstance();
 $form = new stdClass();
 $form->text = '{redform}'.$this->form_id.',1{/redform}';
-$results = $dispatcher->trigger('onPrepareEvent', array($form));
+$params = array();
+if (isset($this->submitter->uid)) {
+	$params['uid'] = $this->submitter->uid;
+}
+dump($params);
+$results = $dispatcher->trigger('onPrepareEvent', array($form, $params));
 if (!isset($results[0])) {
 	$redform = JText::_('REGISTRATION_NOT_POSSIBLE');
 }
 else $redform = $results[0];
 echo $redform;
-echo '<br />';
-echo JTEXT::_('JOOMLA_USER');
-echo JHTML::_('list.users', 'user_id', '', 1, NULL, 'name', 0 );
-echo '</form>';
 JHTML::_('behavior.keepalive'); 
 ?>

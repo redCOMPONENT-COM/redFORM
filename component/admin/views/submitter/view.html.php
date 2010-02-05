@@ -30,6 +30,7 @@ class RedformViewSubmitter extends JView {
   function display($tpl = null) 
   {
   	$document = &JFactory::getDocument();
+  	JHTML::_('behavior.mootools');
   	
   	$js = <<<EOF
 			function submitform(pressbutton){

@@ -683,8 +683,10 @@ EOF;
 				switch ($field->fieldtype)
 				{
 					case 'radio':
+						$element .= '<div class="fieldoptions">';		
 						foreach ($values as $id => $value)
 						{
+							$element .= '<div class="fieldoption">';
 							$element .= "<input class=\"".$form->classname." ";
 							if ($field->validate) $element .= "validate";
 							$element .= "\"";
@@ -702,7 +704,9 @@ EOF;
 								}
 							}
 							$element .= ' type="radio" name="field'.$field->id.'.'.$signup.'[radio][]" value="'.$value->id.'" price="'.$value->price.'" />'.$value->value."\n";
+							$element .= "</div>\n";
 						}
+						$element .= "</div>\n";
 						break;
 	
 					case 'textarea':
@@ -863,8 +867,10 @@ EOF;
 						break;
 						
 					case 'checkbox':
+						$element .= '<div class="fieldoptions">';						
 						foreach ($values as $id => $value)
 						{
+							$element .= '<div class="fieldoption">';
 							$element .= "<input class=\"".$form->classname." ";
 							if ($field->validate) $element .= "validate";
 							$element .= "\"";
@@ -882,7 +888,9 @@ EOF;
 								}
 							}
 							$element .= ' type="checkbox" name="field'.$field->id.'.'.$signup.'[checkbox][]" value="'.$value->value.'" price="'.$value->price.'" /> '.$value->value."\n";
+							$element .= "</div>\n";
 						}
+						$element .= "</div>\n";
 						break;
 	
 					case 'select':
@@ -976,6 +984,10 @@ EOF;
 			}
 			if ($multi > 1) {
 				$html .= '</fieldset>';
+			}
+			if (isset($this->_rwfparams['uid']))
+			{
+				$html .= '<div>'.JText::_('JOOMLA_USER').': '. JHTML::_('list.users', 'uid', $this->_rwfparams['uid'], 1, NULL, 'name', 0 ).'</div>';
 			}
 			$html .= '</div>'; // formfield div
 		}

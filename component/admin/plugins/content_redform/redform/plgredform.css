@@ -18,10 +18,19 @@
 	text-align:left;
 }
 
+.fieldline div.fieldoption {
+	float:none;
+	text-align:left;
+}
+
 .fieldline div.label {
 	width:150px;
 }
 
 div#totalprice {
 	clear:both;
+}
+
+div#submit_button, div#confirmbutton {
+ clear:both;
 }
