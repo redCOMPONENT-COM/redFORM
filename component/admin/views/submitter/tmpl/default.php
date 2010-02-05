@@ -28,7 +28,6 @@ $params = array();
 if (isset($this->submitter->uid)) {
 	$params['uid'] = $this->submitter->uid;
 }
-dump($params);
 $results = $dispatcher->trigger('onPrepareEvent', array($form, $params));
 if (!isset($results[0])) {
 	$redform = JText::_('REGISTRATION_NOT_POSSIBLE');
