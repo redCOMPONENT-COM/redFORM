@@ -8,29 +8,37 @@
 	clear:both;
 }	
 	
-.fieldline {
+ .fieldline {
 	padding: 3px 0;
 	clear:both;
 }
 
-.fieldline div {
+ .fieldline div {
 	float:left;
 	text-align:left;
 }
 
-.fieldline div.fieldoption {
+ .fieldline div.fieldoption {
 	float:none;
 	text-align:left;
 }
 
-.fieldline div.label {
+ .fieldline div.label {
 	width:150px;
 }
 
-div#totalprice {
+ div#totalprice {
 	clear:both;
 }
 
-div#submit_button, div#confirmbutton {
+ div#submit_button, div#confirmbutton {
  clear:both;
+}
+
+ .fieldline div.fieldemail div {
+ float: none;
+}
+
+ div.fieldinfo {
+  padding-left: 4px;
 }

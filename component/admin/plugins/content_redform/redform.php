@@ -744,6 +744,8 @@ EOF;
 						break;
 	
 					case 'email':
+						$element .= "<div class=\"emailfields\">";
+						$element .= "<div class=\"emailfield\">";
 						$element .= "<input class=\"".$form->classname." ";
 						if ($field->validate) $element .= "validate";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\" value=\"";
@@ -760,7 +762,9 @@ EOF;
 							$element .= $user->email;
 						}
 						$element .= "\" />\n";
+						$element .= "</div>\n";
 							
+						$element .= "<div class=\"newsletterfields\">";
 						/* E-mail field let's see */
 						// TODO: transfer to field !
 						foreach ($values as $id => $value)
@@ -781,6 +785,8 @@ EOF;
 								}
 							}
 						}
+						$element .= "</div>\n";
+						$element .= "</div>\n";
 						break;
 	
 					case 'fullname':
@@ -963,22 +969,27 @@ EOF;
 	
 					case 'fileupload':
 						if ($submitter_id == 0) {
-							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" size=\"40\" class=\"fileupload\" id=\"fileupload_".$field->cssfield."\"/>";
+							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" size=\"30\" class=\"fileupload\" id=\"fileupload_".$field->cssfield."\"/>";
 						}
 						$element .= "\n";
 						break;
 				}
 				$html .= $element;
-				
-				if ($field->validate) {
-					$html .= '<sup>'.JText::_('REQUIRED_FIELD_MARKER').'</sup>';
-					$footnote = true;
-				}
-				if (strlen($field->tooltip) > 0) {
-					$img = JHTML::image(JURI::root().'/includes/js/ThemeOffice/tooltip.png', JText::_('ToolTip'));
-					$html .= ' <span class="editlinktip hasTipField" title="'.$field->field.'::'.$field->tooltip.'" style="text-decoration: none; color: #333;">'. $img .'</span>';
-				}
 				$html .= '</div>'; // fieldtype div
+				
+				if ($field->validate || strlen($field->tooltip))
+				{
+					$html .= '<div class="fieldinfo">';
+					if ($field->validate) {
+						$img = JHTML::image(JURI::root().'components/com_redform/assets/images/warning.png', JText::_('Required'));
+						$html .= ' <span class="editlinktip hasTipField" title="'.JText::_('Required').'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+					}
+					if (strlen($field->tooltip) > 0) {
+						$img = JHTML::image(JURI::root().'components/com_redform/assets/images/info.png', JText::_('ToolTip'));
+						$html .= ' <span class="editlinktip hasTipField" title="'.$field->field.'::'.$field->tooltip.'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+					}
+					$html .= '</div>';
+				}
 	
 				$html .= '</div>'; // fieldline_ div
 			}
