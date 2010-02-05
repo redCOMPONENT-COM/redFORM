@@ -293,12 +293,26 @@ class rfanswers
   	foreach ($this->_values as $v) {
   		$values[] = $db->Quote($v);
   	}
+  	
+  	// we need to make sure all table fields are updated: typically, if a field is of type checkbox, if not checked it won't be posted, hence we have to set the value to empty
+  	$q = " SHOW COLUMNS FROM " . $db->nameQuote('#__rwf_forms_'. $this->_form_id);
+  	$db->setQuery($q);
+  	$columns = $db->loadResultArray();
+  	foreach ($columns as $col)
+  	{
+  		if (strstr($col, 'field_') && !in_array($db->nameQuote($col), $fields)) 
+  		{
+  			$fields[] = $db->nameQuote($col);
+  			$values[] = $db->Quote('');  			
+  		}
+  	}
+  	
     if ($this->_answer_id) // answers were already recorder, update them
     {
     	$q = "UPDATE ".$db->nameQuote('#__rwf_forms_'. $this->_form_id);
     	$set = array();
-    	foreach ($this->_fields as $ukey => $col) {
-    		$set[] = $db->nameQuote('field_'. $col->id) ." = ". $db->Quote($this->_values[$ukey]);
+    	foreach ($fields as $ukey => $col) {
+    		$set[] = $col ." = ". $values[$ukey];
     	}
     	$q .= ' SET '. implode(', ', $set);
     	$q .= " WHERE ID = ". $this->_answer_id;

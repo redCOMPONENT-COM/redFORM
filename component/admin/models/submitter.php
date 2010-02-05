@@ -279,7 +279,7 @@ class RedformModelSubmitter extends JModel {
 			$redevent = true;
 			$posted['xref'] = JRequest::getInt('event_xref', 0);
 		}
-		else if ($post['integration'] == 'redevent') {
+		else if (isset($post['integration']) && $post['integration'] == 'redevent') {
 			$redevent = true;
 			$posted['xref'] = JRequest::getInt('xref', 0);			
 		}
