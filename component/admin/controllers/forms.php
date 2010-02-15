@@ -228,7 +228,7 @@ class RedformControllerForms extends JController
   function submitters()
   {
     $cid = JRequest::getVar( 'cid', array(0), 'post', 'array' );
-    $this->setRedirect( 'index.php?option=com_redform&view=submitters&cid[]=' . $cid[0] );
+    $this->setRedirect( 'index.php?option=com_redform&view=submitters&form_id=' . $cid[0] );
   }
   
   /**
