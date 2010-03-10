@@ -537,7 +537,7 @@ EOF;
 		$uri       = JURI::getInstance();
 		$user      = JFactory::getUser();
 		$document  = &JFactory::getDocument();
-		
+				
 	  // css
     $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
     $document->addStyleSheet(JURI::base().'plugins/content/redform/plgredform.css');
@@ -661,6 +661,17 @@ EOF;
 				$html .= '<div class="eventprice" price="'.$this->_rwfparams['eventdetails']->course_price.'">'.JText::_('Registration price').': '.$form->currency.' '.$this->_rwfparams['eventdetails']->course_price.'</div>';
 			}
 							
+			if (isset($this->_rwfparams['extrafields']) && count($this->_rwfparams['extrafields']))
+			{
+				foreach ($this->_rwfparams['extrafields'] as $field)
+				{
+					$html .= '<div class="fieldline">';
+					$html .= '<div class="label">'.$field['label'].'</div>';
+					$html .= '<div class="field">'.$field['field'].'</div>';
+					$html .= '</div>';
+				}
+			}
+
 			foreach ($fields as $key => $field)
 			{
 				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
