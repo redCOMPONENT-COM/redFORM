@@ -238,6 +238,10 @@ class RedformModelRedform extends JModel {
 			{
 				$postvalues['integration'] = 'redevent';
 			}
+			else if ($redcompetition)
+			{
+				$postvalues['integration'] = 'redcompetition';
+			}
 				
 			/* Get the raw form data */
 			$postvalues['rawformdata'] = serialize($posted);
