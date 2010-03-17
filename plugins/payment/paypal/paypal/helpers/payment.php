@@ -15,16 +15,18 @@ class PaymentPaypal {
 	
 	/**
 	 * sends the payment request associated to sumbit_key to the payment service
-	 * @param string $submit_key
+	 * @param object $request
 	 */
 	function process($request, $return_url = null, $cancel_url = null)
 	{
 		$app = &JFactory::getApplication();
+		$submit_key = $request->key;
+		
 		if (empty($return_url)) {
-			$return_url = JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=processing&key='. $submit_key);
+			$return_url = JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=processing&key='. $request->key);
 		}
 		if (empty($cancel_url)) {
-			$cancel_url = JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=cancel&key='. $submit_key);
+			$cancel_url = JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=cancel&key='. $request->key);
 		}
 		
 		// get price and currency
@@ -62,7 +64,7 @@ class PaymentPaypal {
 	 
 		"return" => $return_url,
 	
-		"notify_url" => JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=paypal&key='. $submit_key),
+		"notify_url" => JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=paypal&key='. $request->key),
 	
 		"cancel_return" => $cancel_url,
 	
