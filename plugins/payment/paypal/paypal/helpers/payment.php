@@ -99,7 +99,7 @@ class PaymentPaypal {
     
     				
     $post = JRequest::get( 'post' );
-    $submit_key = JRequest::getvar('submit_key');
+    $submit_key = JRequest::getvar('key');
     $paid = 0;
 
     // RedformHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
@@ -162,13 +162,12 @@ class PaymentPaypal {
 					$res = $db->loadObject();
 		       	
     			if ($payment_amount != $res->price) {
-    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY'. ' - ' . $submit_key);
+    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG AMOUNT('. $res->price.') - ' . $submit_key);
     			}      
-    			if ($payment_currency != $res->currency) {
-    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY'. ' - ' . $submit_key);
-    			}
-    			
-    			if (strcasecmp($payment_status, 'completed') == 0) {
+    			else if ($payment_currency != $res->currency) {
+    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY ('. $res->currency.') - ' . $submit_key);
+    			}    			
+    			else if (strcasecmp($payment_status, 'completed') == 0) {
     				$paid = 1;
     			}
         }
