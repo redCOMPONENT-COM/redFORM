@@ -26,6 +26,17 @@ jimport('joomla.application.component.controller');
  * Redform Controller
  */
 class RedformControllerPayment extends JController {
+
+	/**
+    * Method to display the view
+    *
+    * @access   public
+    */
+   function __construct() 
+   {
+      parent::__construct();
+			$this->registerTask('cancel', 'paymentcancelled');
+   }
 		
 	function select()
 	{
