@@ -102,7 +102,7 @@ class PaymentPaypal {
     $submit_key = JRequest::getvar('key');
     $paid = 0;
 
-    // RedformHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
+    //RedformHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
     // read the post from PayPal system and add 'cmd'
     $req = 'cmd=_notify-validate';
 
@@ -140,6 +140,7 @@ class PaymentPaypal {
           
     if (!$fp) {
       // HTTP ERROR
+    	RedformHelperLog::simpleLog('PAYPAL NOTIFICATION HTTP ERROR'. ' for ' . $submit_key);
     } else {
       fputs ($fp, $header . $req);
       while (!feof($fp)) {
