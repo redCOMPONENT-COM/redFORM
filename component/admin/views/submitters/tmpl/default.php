@@ -17,7 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?>
+defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
+
+$nbfields = count($this->fields);
+?>
 <form action="index.php" method="post" name="adminForm">
 	<div class="button2-left">
 		<div class="blank">
@@ -64,10 +67,16 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 		<th width="20"><?php echo JText::_('Payment'); ?></th>
 	<?php endif;?>
 	</tr></thead>
+	
+	<tfoot>
+	<tr>
+		<th colspan="<?php echo $nbfields + 5 + ($this->form->activatepayment ? 2 : 0 );?>"><?php echo $this->pagination->getListFooter(); ?></th>
+	 </tr>
+	</tfoot>
+	
 	<tbody>
 	<?php
 	/* Data */
-	$nbfields = count($this->fields);
 	$k = 1;
 	if (count($this->submitters) > 0) 
 	{
@@ -120,11 +129,6 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 	
 	?>
 	</tbody>
-	<tfoot>
-	<tr>
-		<th colspan="<?php echo $nbfields + 4 + ($this->form->activatepayment ? 2 : 0 );?>"><?php echo $this->pagination->getListFooter(); ?></th>
-	 </tr>
-	 </tfoot>
 </table>
 	<input type="hidden" name="option" value="com_redform" />
 	<input type="hidden" name="task" value="" />
