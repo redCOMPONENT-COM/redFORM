@@ -633,9 +633,6 @@ EOF;
 
 		if ($answers)
 		{
-			if (count($answers)) {
-				$html .= '<div id="event_notify"><input type="checkbox" name="notify_attendants" id="notify_attendants" value="1">'.JText::_('EVENT_NOTIFY').'</input></div>';
-			}
 			// set multi to number of answers...
 			$multi = count($answers);
 		}
