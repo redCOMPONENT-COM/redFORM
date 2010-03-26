@@ -176,6 +176,7 @@ class RedformViewRedform extends JView {
 				JToolBarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields, values and submitter data?'));
 				JToolBarHelper::editListX();
 				JToolBarHelper::addNew();
+				JToolBarHelper::preferences('com_redform');
 				break;
 		}
 	}

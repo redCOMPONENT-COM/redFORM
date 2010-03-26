@@ -37,6 +37,7 @@ class RedformControllerSubmitters extends JController
 		/* Redirect templates to templates as this is the standard call */
 		$this->registerTask('save', 'apply');
 		$this->registerTask('add',  'edit');
+		$this->registerTask('forcedelete',  'remove');
 	}
 	
 	function remove()
@@ -49,7 +50,12 @@ class RedformControllerSubmitters extends JController
 
     $model = $this->getModel('submitters');
 
-    $msg = $model->delete($cid);
+    if (JRequest::getVar('task') == 'forcedelete') {
+    	$msg = $model->delete($cid, true);
+    }
+    else {
+    	$msg = $model->delete($cid);    	
+    }
 
     $cache = &JFactory::getCache('com_redform');
     $cache->clean();

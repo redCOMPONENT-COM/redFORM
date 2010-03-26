@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<params>
+  	<param name="showintegration" type="radio" default="0" label="REDFORM_SHOWINTEGRATION" description="REDFORM_SHOWINTEGRATION_DESC">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+	</params>
+</config>

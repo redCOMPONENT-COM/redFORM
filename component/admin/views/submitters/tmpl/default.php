@@ -20,7 +20,23 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
 $nbfields = count($this->fields);
+$colspan  = $nbfields + 5 + ($this->form->activatepayment ? 2 : 0 );
+if (empty($this->integration) && $this->params->get('showintegration', false)) {
+	$colspan++;
+}
 ?>
+<script type="text/javascript">
+function submitbutton(pressbutton) {
+	if (pressbutton == 'forcedelete') {
+		if (confirm('<?php echo JText::_('REDFORM_FORCEDELETE_ALERT'); ?>')) {
+			submitform(pressbutton);
+		}
+	}
+	else {
+		submitform(pressbutton);
+	}
+} 
+</script>
 <form action="index.php" method="post" name="adminForm">
 	<div class="button2-left">
 		<div class="blank">
@@ -59,6 +75,9 @@ $nbfields = count($this->fields);
 	<th><?php echo JText::_('Submission date'); ?></th>
 	<th><?php echo JText::_('Form name');?></th>
 	<th><?php echo JText::_('Unique id');?></th>
+	<?php if (!$this->integration && $this->params->get('showintegration', false)): ?>
+	<th><?php echo JText::_('Integration');?></th>
+	<?php endif; ?>
 	<?php foreach ($this->fields as $key => $value) { ?>
 		<th><?php echo $value->field; ?></th>
 	<?php } ?> 
@@ -70,7 +89,7 @@ $nbfields = count($this->fields);
 	
 	<tfoot>
 	<tr>
-		<th colspan="<?php echo $nbfields + 5 + ($this->form->activatepayment ? 2 : 0 );?>"><?php echo $this->pagination->getListFooter(); ?></th>
+		<th colspan="<?php echo $colspan; ?>"><?php echo $this->pagination->getListFooter(); ?></th>
 	 </tr>
 	</tfoot>
 	
@@ -97,6 +116,14 @@ $nbfields = count($this->fields);
 				<?php else: ?>
 				<td><?php echo $value->submit_key;?></td>
 				<?php endif; ?>
+				<?php if (!$this->integration && $this->params->get('showintegration', false)): ?>
+				<td>
+					<?php if ($value->xref): ?>
+						<?php echo (!empty($value->integration) ? $value->integration : 'unspecified' );?>
+					<?php else: ?>
+					<?php endif; ?>
+				<?php endif; ?>
+				</td>
 				<?php
 				foreach ($this->fields as $key => $field) 
 				{

@@ -52,7 +52,7 @@ class RedformModelSubmitters extends JModel {
       {
 				$db = JFactory::getDBO();
 				
-				$query =  ' SELECT s.submission_date, f.formname, u.*, s.price, s.submit_key, p.status, p.paid '
+				$query =  ' SELECT s.submission_date, f.formname, u.*, s.price, s.submit_key, p.status, p.paid, s.integration, s.xref '
 				        . ($integration == 'redevent' ? ', r.id as attendee_id ': '')				
 								. ' FROM '.$db->nameQuote('#__rwf_submitters').' AS s '
 								. ' INNER JOIN ' . $db->nameQuote('#__rwf_forms').' AS f ON s.form_id = f.id '
@@ -213,9 +213,12 @@ class RedformModelSubmitters extends JModel {
 	}
 	
 	/**
-    * Deletes one or more submitters
-    */
-   function delete($cid) 
+	 * Deletes one or more submitters
+	 * 
+	 * @param array id of submitters records to delete
+	 * @param boolean force deletion of integration rows
+	 */
+   function delete($cid, $force = false) 
    {
       global $mainframe;
       $database = JFactory::getDBO();
@@ -228,16 +231,20 @@ class RedformModelSubmitters extends JModel {
       if (count($cid)) {
       	$cids = ' answer_id IN (' . implode( ',', $cid ) .') ';
 
-      	// first, check that there is no eventlist registrations among these 'submitter'
-      	$query = ' SELECT COUNT(*) FROM #__rwf_submitters WHERE ' . $cids . ' AND xref > 0 ';
-        $database->setQuery( $query );
-        $res = $database->loadResult();        
-        if ($res) {
-        	$msg = JText::_('CANNOT DELETE REDEVENT REGISTRATION');
-        	$this->setError($msg);
-        	JError::raiseWarning(0, $msg);
-        	return false;
-        }
+      	// first, check that there is no integration (xref is then > 0) among these 'submitter'
+      	if (!$force)
+      	{
+	      	$query = ' SELECT COUNT(*) FROM #__rwf_submitters WHERE ' . $cids . ' AND xref > 0 ';
+	        $database->setQuery( $query );
+	        $res = $database->loadResult();        
+	        if ($res) 
+	        {
+	        	$msg = JText::_('CANNOT DELETE REDEVENT REGISTRATION');
+	        	$this->setError($msg);
+	        	JError::raiseWarning(0, $msg);
+	        	return false;
+	        }
+      	}
       	
       	/* Delete the submitters */
       	$query = ' DELETE FROM #__rwf_submitters '
