@@ -78,26 +78,33 @@ class RedformModelConfiguration extends JModel {
 	/**
 	* Save the configuration
 	*/
-	function store() {
+	function store($configuration) 
+	{
 		global $mainframe;
 		$db = JFactory::getDBO();
 		
-		$configuration = JRequest::getVar('configuration', false);
 		$error = false;
-		if (is_array($configuration)) {
-			foreach ($configuration as $name => $value) {
+		if (is_array($configuration)) 
+		{
+			foreach ($configuration as $name => $value) 
+			{
 				$query = "INSERT INTO #__rwf_configuration (name, value)
 						VALUES ('".$name."', '".$db->getEscaped($value)."')
 						ON DUPLICATE KEY UPDATE value = '".$db->getEscaped($value)."'";
 				$db->setQuery($query);
-				if (!$db->query()) {
-					$mainframe->enqueueMessage(JText::_('There was a problem storing value').' '.$name, 'error');
-					$error = true;
+				if (!$db->query()) 
+				{
+					$this->setError(JText::_('There was a problem storing value').' '.$name);
+					return false;
 				}
 			}
-			if (!$error) $mainframe->enqueueMessage(JText::_('Configuration has been saved'));
 		}
-		else $mainframe->enqueueMessage(JText::_('Configuration could not be saved'));
+		else {
+			$this->setError(JText::_('empty configuration').' '.$name);
+			return false;
+		}
+		
+		return true;
 	}
 }
 ?>

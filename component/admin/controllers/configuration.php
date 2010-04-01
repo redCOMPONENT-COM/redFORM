@@ -51,7 +51,18 @@ class RedformControllerConfiguration extends JController
 	function save()
 	{
 		$model = $this->getModel('configuration');
-		$model->store();
+    $post = JRequest::get('post');
+		
+		if (!$model->store($post['configuration']))
+		{
+			$msg = implode('<br/>',  $model->getErrors());
+			$msgtype = 'error';
+		}
+		else
+		{
+			$msg = implode('<br/>',  $model->getErrors());
+			$msgtype = 'message';			
+		}
 	
     $task   = JRequest::getVar('task');
     
@@ -66,7 +77,7 @@ class RedformControllerConfiguration extends JController
     		break;
     }
     
-    $this->setRedirect( $link );		
+    $this->setRedirect( $link, $msg, $msgtype );		
 	}
   
   function cancel()
