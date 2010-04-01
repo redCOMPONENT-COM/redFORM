@@ -200,7 +200,7 @@ class rfanswers
     }
     $this->_fields[] = $field;
     $this->_values[] = $answer;
-    $this->_types[] = $keys[0];
+    $this->_types[] = ($keys[0] == 'name' ? 'file' : $keys[0]);
     return $answer;
   }
   
@@ -229,7 +229,7 @@ class rfanswers
     $fullpath = $filepath.DS.'redform_'.$this->_form_id;
     if (!JFolder::exists($fullpath)) {
       if (!JFolder::create($fullpath)) {
-        JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDER').' '.$fullpath);
+        JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDERRR').': '.$fullpath);
         $status = false;
         return false;
       }

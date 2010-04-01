@@ -786,7 +786,12 @@ class RedformModelRedform extends JModel {
 				foreach ($answers->getAnswers() as $answer) {
 					$info .= "<tr>";
 					$info .= "<th>". $answer['field'] ."</th>";
-          $info .= "<td>". $answer['value'] ."</td>";
+					if ($answer['type'] == 'file') {
+          	$info .= "<td>". basename($answer['value']) ."</td>";
+					}
+					else {
+          	$info .= "<td>". $answer['value'] ."</td>";
+					}
           $info .= "</tr>";
 				}
 				$info .= "</table>";
