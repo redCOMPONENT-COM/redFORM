@@ -618,14 +618,14 @@ EOF;
 
 			// signups display controls
 			$html .= '<div id="signedusers" style="float: right">';
-			$html .= '<a href="#" onclick="ShowAllUsers(true)">'.JText::_('SHOW_ALL_USERS').'</a><br />'
-			       . '<a href="#" onclick="ShowAllUsers(false)">'.JText::_('HIDE_ALL_USERS').'</a><br />'
+			$html .= '<a href="javascript: ShowAllUsers(true);" >'.JText::_('SHOW_ALL_USERS').'</a><br />'
+			       . '<a href="javascript: ShowAllUsers(false);" >'.JText::_('HIDE_ALL_USERS').'</a><br />'
 			       .JText::_('Signed up:').'<br />';
-			$html .= '<a href="#" onclick="ShowSingleForm(\'div#formfield1\'); return false;"># 1</a><br />';
+			$html .= '<a href="javascript: ShowSingleForm(\'div#formfield1\');"># 1</a><br />';
 			if ($answers)
 			{
 				for ($k = 2; $k < count($answers)+1; $k++) {
-					$html .= '<a href="#" onclick="ShowSingleForm(\'div#formfield'.$k.'\'); return false;"># '.$k.'</a><br />';
+					$html .= '<a href="javascript: ShowSingleForm(\'div#formfield'.$k.'\');"># '.$k.'</a><br />';
 				}
 			}
 			$html .= '</div>';
