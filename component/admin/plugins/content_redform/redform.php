@@ -613,7 +613,7 @@ EOF;
 		{
 			if (!$answers) {
 				// link to add signups
-				$html .= '<div id="signupuser"><a href="#" onclick="AddUser()">'.JText::_('SIGN_UP_USER').'</a></div>';
+				$html .= '<div id="signupuser"><a href="javascript: AddUser();">'.JText::_('SIGN_UP_USER').'</a></div>';
 			}
 
 			// signups display controls
