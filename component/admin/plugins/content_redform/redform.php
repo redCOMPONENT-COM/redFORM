@@ -189,13 +189,24 @@ class plgContentRedform extends JPlugin {
 	{
 		$db = JFactory::getDBO();
 		
-		$q = "SELECT id, field, validate, tooltip, redmember_field, fieldtype
-			FROM #__rwf_fields q
-			WHERE published = 1
-			AND q.form_id = ".$form_id."
-			ORDER BY ordering";
+		$q = ' SELECT id, field, validate, tooltip, redmember_field, fieldtype, params '
+		   . ' FROM #__rwf_fields AS q '
+		   . ' WHERE published = 1 '
+		   . ' AND q.form_id = '.$form_id
+		   . ' ORDER BY ordering'
+		   ;
 		$db->setQuery($q);
-		return $db->loadObjectList();
+		$fields = $db->loadObjectList();
+		
+		foreach ($fields as $k => $field)
+		{
+			$paramsdefs = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' . DS . 'field_'.$field->fieldtype.'.xml';
+			if (!empty($field->params) && file_exists($paramsdefs))
+			{
+				$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );
+			}
+		}
+		return $fields;
 	}
 	
 	function getFormValues($field_id) 
@@ -838,9 +849,12 @@ EOF;
 						break;
 	
 					case 'textfield':
-						$element .= "<input class=\"".$form->classname." ";
-						if ($field->validate) $element .= "validate";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\" value=\"";
+						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
+						if ($field->validate) $element .= " validate";
+						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\"";
+						$element .= ' size="'.$field->parameters->get('size', 50).'"';
+						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
+						$element .= ' value="';
 						if ($answers)
 						{
 							if (isset($answers[($signup-1)]->$cleanfield)) {
