@@ -381,12 +381,12 @@ EOF;
   					if (check_element.name.match("email") && check_element.className.match("validate")) {
   						if (CheckFill(check_element)) {
   							if (!CheckEmail(check_element.value)) {
-  								msg = msg + '<?php echo JText::_('No valid e-mail address'); ?>\n';
+  								msg = msg + "<?php echo JText::_('No valid e-mail address'); ?>\n";
   								if (result) result = false;
   							}
   						}
   						else {
-  							msg = msg + '<?php echo JText::_('E-mail address is empty'); ?>\n';
+  							msg = msg + "<?php echo JText::_('E-mail address is empty'); ?>\n";
   							if (result) result = false;
   						}
   					}
@@ -1052,7 +1052,7 @@ EOF;
 			     && isset($this->_rwfparams['show_submission_type_webform_formal_offer'])
 			     && $this->_rwfparams['show_submission_type_webform_formal_offer'] ) 
 			{
-				$html .= '<input type="submit" name="submit" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
+				$html .= '<input type="submit" name="submit[print]" id="printsubmit" value="'.JText::_('SUBMIT_AND_PRINT').'" />';
 			}
 			$html .= '</div>';
 		}

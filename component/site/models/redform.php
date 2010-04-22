@@ -510,6 +510,7 @@ class RedformModelRedform extends JModel {
 				{
 					$redirect .= '&page=final';
 					$submit = JRequest::getVar('submit');
+					dump($submit);
 					if (!is_array($submit)) settype($submit, 'array');
 					$arkeys = array_keys($submit);
 					$redirect .= '&action='.$arkeys[0];
@@ -521,6 +522,7 @@ class RedformModelRedform extends JModel {
 				if ($form->virtuemartactive) {
 					$redirect .= '&redformback=1';
 				}
+				dump($redirect);
 				$mainframe->redirect(JRoute::_($redirect, false));
 			}
 		}
