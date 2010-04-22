@@ -21,6 +21,16 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 JHTML::_('behavior.tooltip');
 ?>
 
+<script type="text/javascript">
+	window.addEvent('domready', function(){
+		$('fieldtype').addEvent('change', function(){
+			if (confirm("<?php echo JText::_('REDFORM_FIELD_JS_CONFIRM_CHANGE_TYPE'); ?>")) {
+				submitform('apply');
+			}
+		});
+	});
+</script>
+
 <form action="index.php" method="post" name="adminForm">
 		<table class="adminform">
 		<tr>
