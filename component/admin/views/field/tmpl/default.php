@@ -99,6 +99,29 @@ JHTML::_('behavior.tooltip');
 			</td>
 		</tr>
 		</table>
+				
+		<?php if ($this->parameters && $this->parameters->getGroups()): ?>		
+		<?php
+			foreach ( $this->parameters->getGroups() as $key => $groups )
+			{
+				$gname = ( strtolower($key) == '_default' ) ? JText::_( 'Extra' ) : $key;
+				?>
+				<fieldset class="adminform">
+					<legend>
+						<?php
+						echo JText::_( $gname );
+						?>
+					</legend>
+					<?php
+					// render is defined in joomla\libraries\joomla\html\parameter.php
+					echo $this->parameters->render( 'params', $key );
+					?>
+				</fieldset>
+				<?php
+			}
+		?>
+		<?php endif; ?>
+		
   <?php echo JHTML::_( 'form.token' ); ?>
 	<input type="hidden" name="id" value="<?php echo $this->row->id; ?>" />
 	<?php if ($this->state == 'disabled') { ?><input type="hidden" name="form_id" value="<?php echo $this->form_id; ?>" /><?php } ?>

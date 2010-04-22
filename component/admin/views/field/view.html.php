@@ -88,7 +88,21 @@ class RedformViewField extends JView {
 	    array('fieldtype' => 'recipients', 'fieldname' => JText::_('recipients'))
 		);
 		$lists['fieldtypes']= JHTML::_('select.genericlist',  $fieldtypes, 'fieldtype', '', 'fieldtype', 'fieldname', $row->fieldtype) ;
-
+		
+		/*
+		 * extended data
+		 */
+		$paramsdata = $row->params;
+		if ($row->fieldtype && file_exists(JPATH_COMPONENT . DS . 'models' . DS . 'field_'.$row->fieldtype.'.xml')) 
+		{
+			$paramsdefs = JPATH_COMPONENT . DS . 'models' . DS . 'field_'.$row->fieldtype.'.xml';
+			$parameters = new JParameter( $paramsdata, $paramsdefs );
+		}
+		else
+		{
+			$parameters = false;
+		}
+		
 		/* Get the toolbar */
 		switch (JRequest::getCmd('task')) {
 			case 'add':
@@ -107,6 +121,7 @@ class RedformViewField extends JView {
 		$this->assignRef('row', $row);
 		$this->assignRef('lists', $lists);
 		$this->assignRef('state', $state);
+		$this->assignRef('parameters', $parameters);
 
 		/* Display the page */
 		parent::display($tpl);

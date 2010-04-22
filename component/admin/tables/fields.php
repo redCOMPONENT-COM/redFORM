@@ -46,13 +46,26 @@ class TableFields extends JTable {
 	/** @var string The tooltip for a field */
 	var $tooltip = null;
 	/** @var string linked redmember field db name */
-	var $redmember_field = null;
+	var $redmember_field = null;	
+	/** @var string custom params */
+	var $params = null;
 	
 	/**
 	* @param database A database connector object
 	*/
 	function __construct( &$db ) {
 		parent::__construct('#__rwf_fields', 'id', $db );
+	}
+
+	function bind($array, $ignore = '')
+	{
+		if (key_exists( 'params', $array ) && is_array( $array['params'] ))
+		{
+			$registry = new JRegistry();
+			$registry->loadArray($array['params']);
+			$array['params'] = $registry->toString();
+		}
+		return parent::bind($array, $ignore);
 	}
 	
 	function check()
