@@ -732,9 +732,11 @@ EOF;
 						break;
 	
 					case 'textarea':
-						$element .= "<textarea class=\"".$form->classname." ";
-						if ($field->validate) $element .= "validate";
-						$element .= "\" name=\"field".$field->id.'.'.$signup."[textarea]\">";
+						$element .= '<textarea class="'.$form->classname.$field->parameters->get('class','');
+						if ($field->validate) $element .= ' validate';
+						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
+						$element .= ' cols="'.$field->parameters->get('cols',25).'" rows="'.$field->parameters->get('rows',6).'"';
+						$element .= ">";
 						if ($answers)
 						{
 							if (isset($answers[($signup-1)]->$cleanfield)) {
