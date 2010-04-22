@@ -956,7 +956,11 @@ EOF;
 						break;
 	
 					case 'multiselect':
-						$element .= "<select name=\"field".$field->id.'.'.$signup."[multiselect][]\" multiple>";
+						$element .= '<select name="field'.$field->id.'.'.$signup.'[multiselect][]"'
+						          . ' multiple="multiple" size="'.$field->parameters->get('size',5).'"'
+						          . ' class="'.$form->classname.$field->parameters->get('class','').'"'
+						          .'>'
+						          ;
 						foreach ($values as $id => $value)
 						{
 							$element .= "<option value=\"".$value->value."\"";
