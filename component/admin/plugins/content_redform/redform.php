@@ -205,6 +205,9 @@ class plgContentRedform extends JPlugin {
 			{
 				$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );
 			}
+			else {
+				$fields[$k]->parameters = new JRegistry();
+			}
 		}
 		return $fields;
 	}
@@ -765,9 +768,12 @@ EOF;
 					case 'email':
 						$element .= "<div class=\"emailfields\">";
 						$element .= "<div class=\"emailfield\">";
-						$element .= "<input class=\"".$form->classname." ";
+						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
 						if ($field->validate) $element .= "validate";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\" value=\"";
+						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\"";
+						$element .= ' size="'.$field->parameters->get('size', 25).'"';
+						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
+						$element .= ' value="';
 						if ($answers)
 						{
 							if (isset($answers[($signup-1)]->$cleanfield)) {
@@ -809,11 +815,12 @@ EOF;
 						break;
 	
 					case 'fullname':
-						$element .= "<input class=\"".$form->classname." ";
-						if ($field->validate) {
-							$element .= "validate";
-						}
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\" value=\"";
+						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
+						if ($field->validate) $element .= " validate";
+						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\"";
+						$element .= ' size="'.$field->parameters->get('size', 25).'"';
+						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
+						$element .= ' value="';
 						if ($answers)
 						{
 							if (isset($answers[($signup-1)]->$cleanfield)) {
@@ -830,9 +837,12 @@ EOF;
 						break;
 	
 					case 'username':
-						$element .= "<input class=\"".$form->classname." ";
-						if ($field->validate) $element .= "validate";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\" value=\"";
+						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
+						if ($field->validate) $element .= " validate";
+						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\"";
+						$element .= ' size="'.$field->parameters->get('size', 25).'"';
+						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
+						$element .= ' value="';
 						if ($answers)
 						{
 							if (isset($answers[($signup-1)]->$cleanfield)) {
@@ -852,7 +862,7 @@ EOF;
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
 						if ($field->validate) $element .= " validate";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\"";
-						$element .= ' size="'.$field->parameters->get('size', 50).'"';
+						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
 						$element .= ' value="';
 						if ($answers)
@@ -876,8 +886,10 @@ EOF;
 						}
 						else // like a text input
 						{
-							$element .= '<input class="'. $form->classname .($field->validate ? " validate" : '') .'"';
+							$element .= '<input class="'. $form->classname.$field->parameters->get('class','') .($field->validate ? " validate" : '') .'"';
 							$element .= ' type="text" name="field'.$field->id.'.'.$signup.'[price][]"';
+							$element .= ' size="'.$field->parameters->get('size', 25).'"';
+							$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
 							$element .= ' value="';
 							if ($answers)
 							{
