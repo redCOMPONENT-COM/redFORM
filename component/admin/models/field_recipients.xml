@@ -3,5 +3,9 @@
 	<params>
     <param name="class" type="text" default="" label="REDFORM_FIELD_TEXT_PARAMS_CLASS" description="REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
     <param name="size" type="text" default="5" label="REDFORM_FIELD_MULTISELECT_PARAMS_SIZE" description="REDFORM_FIELD_MULTISELECT_PARAMS_SIZE_DESC"/>
+    <param name="multiple" type="radio" default="1" label="REDFORM_FIELD_RECIPIENTS_PARAMS_MULTIPLE" description="REDFORM_FIELD_RECIPIENTS_PARAMS_MULTIPLE_DESC">
+    	<option value="0">No</option>
+    	<option value="1">Yes</option>
+    </param>
 	</params>
 </model>

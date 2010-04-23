@@ -984,7 +984,11 @@ EOF;
 						break;
 	
 					case 'recipients':
-						$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\" multiple class=\"".$form->classname.$field->parameters->get('class','')."\">";
+						$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\""
+						         . ($field->parameters->get('multiple', 1) ? ' multiple="multiple"' : '')
+						         . ' size="'.$field->parameters->get('size', 5).'"'
+						         . ' class="'.$form->classname.$field->parameters->get('class','').'"'
+						         . '>';
 						foreach ($values as $id => $value)
 						{
 							$element .= "<option value=\"".$value->value."\"";
