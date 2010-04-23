@@ -371,7 +371,7 @@ class RedformModelRedform extends JModel {
 				$eventname = '';
 				if ($redevent) 
 				{
-					$q = "SELECT x.id, title, v.venue, x.dates, x.times
+					$q = "SELECT x.id, title, v.venue, x.dates, x.times, x.details
 							FROM #__redevent_events e
 							INNER JOIN #__redevent_event_venue_xref x ON x.eventid = e.id
 							INNER JOIN #__redevent_venues as v ON x.venueid = v.id
@@ -396,8 +396,8 @@ class RedformModelRedform extends JModel {
 						$starttime = '';
 					}
 					
-					$tags = array('[formname]', '[eventname]', '[startdate]', '[starttime]', '[venuename]');
-					$values = array($form->formname, $eventname, $startdate, $starttime, $venue);
+					$tags = array('[formname]', '[eventname]', '[startdate]', '[starttime]', '[venuename]', '[info]');
+					$values = array($form->formname, $eventname, $startdate, $starttime, $venue, $res->details);
 					$mailer->setSubject(str_replace($tags, $values, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT_WITH_EVENT')));
 				}
 				else {
@@ -407,7 +407,12 @@ class RedformModelRedform extends JModel {
 				// Mail body
 				$htmlmsg = '<html><head><title></title></title></head><body>';
 				$htmlmsg .= JText::_('A new submission has been received.');
-				$htmlmsg .= $form->notificationtext;
+				if ($redevent) {					
+					$htmlmsg .= str_replace($tags, $values, $form->notificationtext);
+				}
+				else {
+					$htmlmsg .= $form->notificationtext;
+				}
 				
 				/* Add user submitted data if set */
 				if ($form->contactpersonfullpost) 
@@ -512,7 +517,6 @@ class RedformModelRedform extends JModel {
 				{
 					$redirect .= '&page=final';
 					$submit = JRequest::getVar('submit');
-					dump($submit);
 					if (!is_array($submit)) settype($submit, 'array');
 					$arkeys = array_keys($submit);
 					$redirect .= '&action='.$arkeys[0];
@@ -524,7 +528,6 @@ class RedformModelRedform extends JModel {
 				if ($form->virtuemartactive) {
 					$redirect .= '&redformback=1';
 				}
-				dump($redirect);
 				$mainframe->redirect(JRoute::_($redirect, false));
 			}
 		}
@@ -784,7 +787,7 @@ class RedformModelRedform extends JModel {
 	
 			/* Mail submitter */
 			$submission_body = $form->submissionbody;
-			if (strstr($submission_body, '[info]')) 
+			if (strstr($submission_body, '[answers]')) 
 			{
 				$info = "<table>";
 				foreach ($answers->getAnswers() as $answer) {
@@ -799,7 +802,7 @@ class RedformModelRedform extends JModel {
           $info .= "</tr>";
 				}
 				$info .= "</table>";
-				$submission_body = str_replace('[info]', $info, $submission_body);
+				$submission_body = str_replace('[answers]', $info, $submission_body);
 			}
 			$htmlmsg = '<html><head><title>Welcome</title></title></head><body>'. $submission_body .'</body></html>';
 			$mailer->setBody($htmlmsg);
