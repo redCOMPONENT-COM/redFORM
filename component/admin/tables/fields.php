@@ -38,7 +38,7 @@ class TableFields extends JTable {
 	/** @var int */
 	var $form_id = null;
 	/** @var int */
-	var $ordering = 0;
+	var $ordering = null;
 	/** @var int */
 	var $validate = null;
 	/** @var int */
@@ -105,5 +105,6 @@ class TableFields extends JTable {
     $db->setQuery($query);
     return $db->loadResultArray();
   }
+  
 }
 ?>

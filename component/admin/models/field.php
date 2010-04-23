@@ -212,7 +212,7 @@ class RedformModelField extends JModel
   		return false;
   	}
   	
-  	if (empty($row->ordering)) $post['ordering'] = $row->getNextOrder($row->form_id);
+  	if (empty($row->ordering)) $row->ordering = $row->getNextOrder('form_id = '.$row->form_id);
 
   	/* pre-save checks */
   	if (!$row->check()) {

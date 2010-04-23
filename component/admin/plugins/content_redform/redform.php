@@ -709,7 +709,7 @@ EOF;
 						foreach ($values as $id => $value)
 						{
 							$element .= '<div class="fieldoption">';
-							$element .= "<input class=\"".$form->classname." ";
+							$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
 							if ($field->validate) $element .= "validate";
 							$element .= "\"";
 							if ($answers)
@@ -913,7 +913,7 @@ EOF;
 						foreach ($values as $id => $value)
 						{
 							$element .= '<div class="fieldoption">';
-							$element .= "<input class=\"".$form->classname." ";
+							$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
 							if ($field->validate) $element .= "validate";
 							$element .= "\"";
 							if ($answers)
@@ -936,7 +936,7 @@ EOF;
 						break;
 	
 					case 'select':
-						$element .= "<select name=\"field".$field->id.'.'.$signup."[select][]\">";
+						$element .= "<select name=\"field".$field->id.'.'.$signup."[select][]\" class=\"".$form->classname.$field->parameters->get('class','')."\">";
 						foreach ($values as $id => $value)
 						{
 							$element .= "<option value=\"".$value->value."\"";
@@ -984,7 +984,7 @@ EOF;
 						break;
 	
 					case 'recipients':
-						$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\" multiple>";
+						$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\" multiple class=\"".$form->classname.$field->parameters->get('class','')."\">";
 						foreach ($values as $id => $value)
 						{
 							$element .= "<option value=\"".$value->value."\"";
@@ -1009,7 +1009,7 @@ EOF;
 	
 					case 'fileupload':
 						if ($submitter_id == 0) {
-							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" class=\"fileupload\" id=\"fileupload_".$field->cssfield."\"/>";
+							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" class=\"fileupload".$field->parameters->get('class','')."\" id=\"fileupload_".$field->cssfield."\"/>";
 						}
 						$element .= "\n";
 						break;

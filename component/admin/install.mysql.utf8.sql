@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `validate` tinyint(1) NOT NULL DEFAULT '0',
   `unique` tinyint(1) NOT NULL DEFAULT '0',
   `tooltip` varchar(255) default NULL,
+  `params` text default NULL,
   PRIMARY KEY  (`id`)
 ) COMMENT='Fields for redFORM';
 

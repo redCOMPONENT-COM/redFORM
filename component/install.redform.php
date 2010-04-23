@@ -178,7 +178,13 @@ function com_install() {
 		}
 			
 	}
-		
+
+	/* Check if we have the params column */
+	if (!array_key_exists('params', $cols)) {
+		$q = "ALTER IGNORE TABLE `#__rwf_fields` ADD `params` text NULL DEFAULT NULL ";
+		$db->setQuery($q);
+		$db->query();
+	}
 	/***************************************************************************************************************/
 	
 	/* Get the current columns */
