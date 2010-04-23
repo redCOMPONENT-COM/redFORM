@@ -213,7 +213,9 @@ class RedformModelRedform extends JModel {
 			// new answers object
 			$answers = new rfanswers();
 			$answers->setFormId($form->id);
-			$answers->initPrice($event->course_price);
+			if ($event) {
+				$answers->initPrice($event->course_price);
+			}
 			
 			/* Create an array of values to store */
 			$postvalues = array();
