@@ -343,9 +343,10 @@ EOF;
 	
 	function JsCheck() 
 	{
+		JHTML::_('behavior.formvalidation');
 		/* Create some dynamic JS */
 		?>
-		<script type="text/javascript">
+		<script type="text/javascript">		
 			function CheckSubmit() 
 			{
 				if (document.redform.task.value == 'cancel') return true;
@@ -364,30 +365,43 @@ EOF;
 					// get the input data of the form
 					var formelements = jQuery(forms[j]).find(':input');
 
-  				for(i=0; i < formelements.length; i++) {
+  				for(i=0; i < formelements.length; i++) 
+  	  		{
   					var check_element = formelements[i];
   					/* Check field type */
   					/* Fullname */
   					if (check_element.name.match("fullname") && check_element.className.match("validate")) {
   						var fullresult = CheckFill(check_element);
+  						if (!fullresult) {
+								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter a name'); ?>\n";
+		  				}
   						if (result) result = fullresult;
   					}
   					
   					/* Text field */
   					if (check_element.name.match("text") && check_element.className.match("validate")) {
   						var textresult = CheckFill(check_element);
+  						if (!textresult) {
+								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
+		  				}
   						if (result) result = textresult;
   					}
   					
   					/* Textarea field */
   					if (check_element.name.match("textarea") && check_element.className.match("validate")) {
   						var textarearesult = CheckFill(check_element);
+  						if (!textarearesult) {
+								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
+		  				}
   						if (result) result = textarearesult;
   					}
   					
   					/* Username field */
   					if (check_element.name.match("username") && check_element.className.match("validate")) {
   						var usernameresult = CheckFill(check_element);
+  						if (!usernameresult) {
+								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter an username'); ?>\n";
+		  				}
   						if (result) result = usernameresult;
   					}
   					
@@ -403,6 +417,15 @@ EOF;
   							msg = msg + "<?php echo JText::_('E-mail address is empty'); ?>\n";
   							if (result) result = false;
   						}
+  					}
+
+  					/* multiselect field */
+  					if (check_element.name.match("multiselect") && check_element.className.match("validate")) {
+  						var multires = CheckFill(check_element);
+  						if (!multires) {
+								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('select a value'); ?>\n";
+  	  				}
+  						if (result) result = multires;
   					}
   					
 		        /* Radio buttons */
@@ -442,10 +465,6 @@ EOF;
   				}
 				}
 				if (result == false) {
-					if (textresult == false || fullresult == false || textarearesult == false) msg = msg + '<?php echo JText::_('Text field is empty'); ?>\n';
-					if (usernameresult == false) msg = msg + '<?php echo JText::_('Username field is empty'); ?>\n';
-					if (radiomsg) msg = msg + '<?php echo JText::_('No radiobox has been chosen'); ?>\n';
-					if (checkboxmsg) msg = msg + '<?php echo JText::_('No checkbox has been chosen'); ?>\n';
 					alert(msg);
 					<?php if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) { ?>
 						exit(0);
@@ -475,10 +494,27 @@ EOF;
 			{
 				Trim(element);
 				if (element.value.length == 0) {
-					addClass(element, 'emptyfield');
+					addEmpty(element);
 					return false;
 				}
-				else return true;
+				else {
+					removeEmpty(element);
+					return true;
+				}
+			}
+
+			function addEmpty(element) {
+				jQuery(element).addClass('emptyfield');
+				getLabel(element).addClass('emptyfield');
+			}
+
+			function removeEmpty(element) {
+				jQuery(element).removeClass('emptyfield');
+				getLabel(element).removeClass('emptyfield');
+			}
+
+			function getLabel(element) {
+				return jQuery('label[for="'+element.name+'"]');
 			}
 			
 			function Trim(text) 
@@ -697,14 +733,13 @@ EOF;
 					continue;
 				}
 					
-				$html .= '<div id="field_'.$field->cssfield.'" class="label">'.$field->field.'</div>';
-
 				$cleanfield = 'field_'. $field->id;
 				$element = "<div class=\"field".$field->fieldtype."\">";
 				
 				switch ($field->fieldtype)
 				{
 					case 'radio':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[radio][]">'.$field->field.'</div>';
 						$element .= '<div class="fieldoptions">';		
 						foreach ($values as $id => $value)
 						{
@@ -732,6 +767,7 @@ EOF;
 						break;
 	
 					case 'textarea':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[textarea]">'.$field->field.'</div>';
 						$element .= '<textarea class="'.$form->classname.$field->parameters->get('class','');
 						if ($field->validate) $element .= ' validate';
 						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
@@ -750,6 +786,7 @@ EOF;
 						break;
 	
 					case 'wysiwyg':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[wysiwyg]">'.$field->field.'</div>';
 						$content = '';
 						if ($answers)
 						{
@@ -768,6 +805,7 @@ EOF;
 						break;
 	
 					case 'email':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[email][]">'.$field->field.'</div>';
 						$element .= "<div class=\"emailfields\">";
 						$element .= "<div class=\"emailfield\">";
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
@@ -817,6 +855,7 @@ EOF;
 						break;
 	
 					case 'fullname':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fullname][]">'.$field->field.'</div>';
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
 						if ($field->validate) $element .= " validate";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\"";
@@ -839,6 +878,7 @@ EOF;
 						break;
 	
 					case 'username':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[username][]">'.$field->field.'</div>';
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
 						if ($field->validate) $element .= " validate";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\"";
@@ -861,6 +901,7 @@ EOF;
 						break;
 	
 					case 'textfield':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[text][]">'.$field->field.'</div>';
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
 						if ($field->validate) $element .= " validate";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\"";
@@ -880,6 +921,7 @@ EOF;
 						break;
 	
 					case 'price':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[price][]">'.$field->field.'</div>';
 						// if has not null value, it is a fixed price, if not this is a user input price
 						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
 						{
@@ -909,6 +951,7 @@ EOF;
 						break;
 						
 					case 'checkbox':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[checkbox][]">'.$field->field.'</div>';
 						$element .= '<div class="fieldoptions">';						
 						foreach ($values as $id => $value)
 						{
@@ -936,6 +979,7 @@ EOF;
 						break;
 	
 					case 'select':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[select][]">'.$field->field.'</div>';
 						$element .= "<select name=\"field".$field->id.'.'.$signup."[select][]\" class=\"".$form->classname.$field->parameters->get('class','')."\">";
 						foreach ($values as $id => $value)
 						{
@@ -956,9 +1000,10 @@ EOF;
 						break;
 	
 					case 'multiselect':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[multiselect][]">'.$field->field.'</div>';
 						$element .= '<select name="field'.$field->id.'.'.$signup.'[multiselect][]"'
 						          . ' multiple="multiple" size="'.$field->parameters->get('size',5).'"'
-						          . ' class="'.$form->classname.$field->parameters->get('class','').'"'
+						          . ' class="'.trim($form->classname.$field->parameters->get('class','').($field->validate ?" validate" : '')).'"'
 						          .'>'
 						          ;
 						foreach ($values as $id => $value)
@@ -984,10 +1029,11 @@ EOF;
 						break;
 	
 					case 'recipients':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[recipients][]">'.$field->field.'</div>';
 						$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\""
 						         . ($field->parameters->get('multiple', 1) ? ' multiple="multiple"' : '')
 						         . ' size="'.$field->parameters->get('size', 5).'"'
-						         . ' class="'.$form->classname.$field->parameters->get('class','').'"'
+						         . ' class="'.$form->classname.$field->parameters->get('class','').($field->validate ?" validate" : '').'"'
 						         . '>';
 						foreach ($values as $id => $value)
 						{
@@ -1012,13 +1058,15 @@ EOF;
 						break;
 	
 					case 'fileupload':
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fileupload][]">'.$field->field.'</div>';
 						if ($submitter_id == 0) {
 							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" class=\"fileupload".$field->parameters->get('class','')."\" id=\"fileupload_".$field->cssfield."\"/>";
 						}
 						$element .= "\n";
 						break;
 				}
-				$html .= $element;
+				
+				$html .= $label.$element;
 				$html .= '</div>'; // fieldtype div
 				
 				if ($field->validate || strlen($field->tooltip))

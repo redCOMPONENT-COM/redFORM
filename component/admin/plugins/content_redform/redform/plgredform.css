@@ -42,3 +42,23 @@
  div.fieldinfo {
   padding-left: 4px;
 }
+
+label.emptyfield {
+	color:red;
+	font-weight:bold;
+}
+
+input.emptyfield {
+	border:1px solid red;
+	background-color:pink;
+}
+
+select.emptyfield {
+	border:1px solid red;
+	background-color:pink;
+}
+
+textarea.emptyfield {
+	border:1px solid red;
+	background-color:pink;
+}
