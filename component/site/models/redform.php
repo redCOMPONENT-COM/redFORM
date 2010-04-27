@@ -258,7 +258,7 @@ class RedformModelRedform extends JModel {
 				}
 			}
 			
-			if ($event_task == 'review' || $event_task == 'edit' || $event_task == 'manageredit')
+			if ($event_task == 'finalize' || $event_task == 'edit' || $event_task == 'manageredit')
 			{
 				if (isset($posted['confirm'][($signup-1)])) 
 				{
@@ -277,7 +277,7 @@ class RedformModelRedform extends JModel {
 			$this->getConfirmAttendees();
 
 
-			if ( empty($event) || JRequest::getVar('event_task') == 'review' || empty($event->review_message))
+			if ( empty($event) || JRequest::getVar('event_task') == 'finalize' || empty($event->review_message))
 			{
 				$this->updateMailingList($answers);
 			}
@@ -286,7 +286,7 @@ class RedformModelRedform extends JModel {
 		} /* End multi-user signup */
 		
 		// send the notifications mails if not a redevent registration, or if this is the review, or if there is no review
-		if ((empty($event) || $event_task == 'review' || empty($event->review_message))
+		if ((empty($event) || $event_task == 'finalize' || empty($event->review_message))
 		    && $event_task != 'edit' && $event_task != 'manageredit')
 		{
 			/* Load the mailer in case we need to inform someone */
@@ -507,22 +507,29 @@ class RedformModelRedform extends JModel {
 			}
 			else
 			{
-				$redirect = 'index.php?option=com_redevent&view=confirmation&task='
-						.JRequest::getVar('event_task')
-						.'&xref='.JRequest::getInt('xref')
-						.'&submit_key='.$submit_key
-						.'&form_id='.JRequest::getInt('form_id');
+				$redirect = 'index.php?option=com_redevent&controller=registration'
+				          . '&task='.JRequest::getVar('event_task')
+				          . '&submit_key='.$submit_key
+				          . '&xref='.JRequest::getInt('xref')
+				          . '&form_id='.JRequest::getInt('form_id')
+				          ;
+//				$redirect = 'index.php?option=com_redevent&view=confirmation&task='
+//						.JRequest::getVar('event_task')
+//						.'&xref='.JRequest::getInt('xref')
+//						.'&submit_key='.$submit_key
+//						.'&form_id='.JRequest::getInt('form_id');
 				// go to final if this was the review screen, or if there is no review screen
-				if (JRequest::getVar('event_task') == 'review' || empty($event->review_message)) 
+				if (JRequest::getVar('event_task') == 'finalize' || empty($event->review_message)) 
 				{
-					$redirect .= '&page=final';
+					$redirect .= '&step=final';
 					$submit = JRequest::getVar('submit');
 					if (!is_array($submit)) settype($submit, 'array');
 					$arkeys = array_keys($submit);
 					$redirect .= '&action='.$arkeys[0];
 				}
 				else {
-					$redirect .= '&page=confirmation&event_task=review';
+					$redirect .= '&step=review';
+//					$redirect .= '&page=confirmation&event_task=review';
 					if (strtolower(JRequest::getVar('submit')) == strtolower(JText::_('SUBMIT_AND_PRINT'))) $redirect .= '&action=print';
 				}
 				if ($form->virtuemartactive) {

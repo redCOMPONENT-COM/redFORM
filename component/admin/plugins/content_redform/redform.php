@@ -343,7 +343,6 @@ EOF;
 	
 	function JsCheck() 
 	{
-		JHTML::_('behavior.formvalidation');
 		/* Create some dynamic JS */
 		?>
 		<script type="text/javascript">		
@@ -492,8 +491,7 @@ EOF;
 			
 			function CheckFill(element) 
 			{
-				Trim(element);
-				if (element.value.length == 0) {
+				if (!(jQuery(element).val())) {
 					addEmpty(element);
 					return false;
 				}
