@@ -103,6 +103,9 @@ class rfanswers
       case 'textarea':
         $answer = $postedvalue['textarea'];
         break;
+      case 'date':
+        $answer = $postedvalue['date'];
+        break;
       case 'wysiwyg':
         $answer = $postedvalue['wysiwyg'];
         break;

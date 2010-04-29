@@ -85,7 +85,8 @@ class RedformViewField extends JView {
 			array('fieldtype' => 'wysiwyg', 'fieldname' => JText::_('wysiwyg')),
 			array('fieldtype' => 'price', 'fieldname' => JText::_('price')),
 			array('fieldtype' => 'info', 'fieldname' => JText::_('info')),
-	    array('fieldtype' => 'recipients', 'fieldname' => JText::_('recipients'))
+	    array('fieldtype' => 'recipients', 'fieldname' => JText::_('recipients')),
+	    array('fieldtype' => 'date', 'fieldname' => JText::_('date')),
 		);
 		$lists['fieldtypes']= JHTML::_('select.genericlist',  $fieldtypes, 'fieldtype', '', 'fieldtype', 'fieldname', $row->fieldtype) ;
 		

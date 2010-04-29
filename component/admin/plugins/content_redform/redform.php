@@ -369,7 +369,7 @@ EOF;
   					var check_element = formelements[i];
   					/* Check field type */
   					/* Fullname */
-  					if (check_element.name.match("fullname") && check_element.className.match("validate")) {
+  					if (check_element.name.match("fullname") && check_element.className.match("required")) {
   						var fullresult = CheckFill(check_element);
   						if (!fullresult) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter a name'); ?>\n";
@@ -378,7 +378,7 @@ EOF;
   					}
   					
   					/* Text field */
-  					if (check_element.name.match("text") && check_element.className.match("validate")) {
+  					if (check_element.name.match("text") && check_element.className.match("required")) {
   						var textresult = CheckFill(check_element);
   						if (!textresult) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
@@ -387,7 +387,7 @@ EOF;
   					}
   					
   					/* Textarea field */
-  					if (check_element.name.match("textarea") && check_element.className.match("validate")) {
+  					if (check_element.name.match("textarea") && check_element.className.match("required")) {
   						var textarearesult = CheckFill(check_element);
   						if (!textarearesult) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
@@ -396,7 +396,7 @@ EOF;
   					}
   					
   					/* Username field */
-  					if (check_element.name.match("username") && check_element.className.match("validate")) {
+  					if (check_element.name.match("username") && check_element.className.match("required")) {
   						var usernameresult = CheckFill(check_element);
   						if (!usernameresult) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter an username'); ?>\n";
@@ -405,7 +405,7 @@ EOF;
   					}
   					
   					/* E-mail */
-  					if (check_element.name.match("email") && check_element.className.match("validate")) {
+  					if (check_element.name.match("email") && check_element.className.match("required")) {
   						if (CheckFill(check_element)) {
   							if (!CheckEmail(check_element.value)) {
   								msg = msg + "<?php echo JText::_('No valid e-mail address'); ?>\n";
@@ -419,7 +419,7 @@ EOF;
   					}
 
   					/* multiselect field */
-  					if (check_element.name.match("multiselect") && check_element.className.match("validate")) {
+  					if (check_element.name.match("multiselect") && check_element.className.match("required")) {
   						var multires = CheckFill(check_element);
   						if (!multires) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('select a value'); ?>\n";
@@ -428,7 +428,7 @@ EOF;
   					}
   					
 		        /* Radio buttons */
-	          if (check_element.name.match("radio") && check_element.className.match("validate")) {
+	          if (check_element.name.match("radio") && check_element.className.match("required")) {
 	            radios = document.getElementsByName(check_element.name);
 	            var radiocheck = false;
 	            for (var rct=radios.length-1; rct > -1; rct--) {
@@ -445,7 +445,7 @@ EOF;
 	          }
 	          
 	          /* Check boxes */
-	          if (check_element.name.match("checkbox") && check_element.className.match("validate")) {
+	          if (check_element.name.match("checkbox") && check_element.className.match("required")) {
 	            checkboxes = document.getElementsByName(check_element.name);
 	            var checkboxcheck = false;
 	            for (var rct=checkboxes.length-1; rct > -1; rct--) {
@@ -743,7 +743,7 @@ EOF;
 						{
 							$element .= '<div class="fieldoption">';
 							$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
-							if ($field->validate) $element .= "validate";
+							if ($field->validate) $element .= "required";
 							$element .= "\"";
 							if ($answers)
 							{
@@ -807,7 +807,7 @@ EOF;
 						$element .= "<div class=\"emailfields\">";
 						$element .= "<div class=\"emailfield\">";
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
-						if ($field->validate) $element .= "validate";
+						if ($field->validate) $element .= "required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\"";
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
@@ -855,7 +855,7 @@ EOF;
 					case 'fullname':
 						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fullname][]">'.$field->field.'</div>';
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
-						if ($field->validate) $element .= " validate";
+						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\"";
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
@@ -878,7 +878,7 @@ EOF;
 					case 'username':
 						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[username][]">'.$field->field.'</div>';
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
-						if ($field->validate) $element .= " validate";
+						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\"";
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
@@ -901,7 +901,7 @@ EOF;
 					case 'textfield':
 						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[text][]">'.$field->field.'</div>';
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
-						if ($field->validate) $element .= " validate";
+						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\"";
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
@@ -918,6 +918,29 @@ EOF;
 						$element .= "\" />\n";
 						break;
 	
+					case 'date':
+						JHTML::_('behavior.calendar');
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[date]">'.$field->field.'</div>';
+						if ($answers)
+						{
+							if (isset($answers[($signup-1)]->$cleanfield)) {
+								$val = $answers[($signup-1)]->$cleanfield;
+							}
+						}
+						else if ($user->get($field->redmember_field)) {
+							$val = $user->get($field->redmember_field);
+						}
+						else {
+							$val = null;
+						}
+						$class = $form->classname.$field->parameters->get('class','');
+						if ($field->validate) $class .= " required";
+						
+						$element .= JHTML::_('calendar', $val, 'field'.$field->id.'.'.$signup.'[date]', 'field'.$field->id.'.'.$signup.'[date]', 
+						               $field->parameters->get('dateformat','%Y-%m-%d'), 
+						               'class="'.$class.'"');
+						break;
+	
 					case 'price':
 						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[price][]">'.$field->field.'</div>';
 						// if has not null value, it is a fixed price, if not this is a user input price
@@ -928,7 +951,7 @@ EOF;
 						}
 						else // like a text input
 						{
-							$element .= '<input class="'. $form->classname.$field->parameters->get('class','') .($field->validate ? " validate" : '') .'"';
+							$element .= '<input class="'. $form->classname.$field->parameters->get('class','') .($field->validate ? " required" : '') .'"';
 							$element .= ' type="text" name="field'.$field->id.'.'.$signup.'[price][]"';
 							$element .= ' size="'.$field->parameters->get('size', 25).'"';
 							$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
@@ -955,7 +978,7 @@ EOF;
 						{
 							$element .= '<div class="fieldoption">';
 							$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
-							if ($field->validate) $element .= "validate";
+							if ($field->validate) $element .= "required";
 							$element .= "\"";
 							if ($answers)
 							{
@@ -1001,7 +1024,7 @@ EOF;
 						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[multiselect][]">'.$field->field.'</div>';
 						$element .= '<select name="field'.$field->id.'.'.$signup.'[multiselect][]"'
 						          . ' multiple="multiple" size="'.$field->parameters->get('size',5).'"'
-						          . ' class="'.trim($form->classname.$field->parameters->get('class','').($field->validate ?" validate" : '')).'"'
+						          . ' class="'.trim($form->classname.$field->parameters->get('class','').($field->validate ?" required" : '')).'"'
 						          .'>'
 						          ;
 						foreach ($values as $id => $value)
@@ -1031,7 +1054,7 @@ EOF;
 						$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\""
 						         . ($field->parameters->get('multiple', 1) ? ' multiple="multiple"' : '')
 						         . ' size="'.$field->parameters->get('size', 5).'"'
-						         . ' class="'.$form->classname.$field->parameters->get('class','').($field->validate ?" validate" : '').'"'
+						         . ' class="'.$form->classname.$field->parameters->get('class','').($field->validate ?" required" : '').'"'
 						         . '>';
 						foreach ($values as $id => $value)
 						{
@@ -1266,6 +1289,7 @@ EOF;
 						break;
 	
 					case 'textfield':
+					case 'birthday':
 						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
 						$pdfform->Ln();
 						break;
