@@ -52,23 +52,7 @@ class RedformModelSubmitters extends JModel {
       {
 				$db = JFactory::getDBO();
 				
-				$query =  ' SELECT s.submission_date, f.formname, u.*, s.price, s.submit_key, p.status, p.paid, s.integration, s.xref '
-				        . ($integration == 'redevent' ? ', r.id as attendee_id ': '')				
-								. ' FROM '.$db->nameQuote('#__rwf_submitters').' AS s '
-								. ' INNER JOIN ' . $db->nameQuote('#__rwf_forms').' AS f ON s.form_id = f.id '
-								. ' INNER JOIN ' . $db->nameQuote('#__rwf_forms_'.$form_id) . ' AS u ON s.answer_id = u.id '
-		            . ' LEFT JOIN #__rwf_payment AS p ON p.submit_key = s.submit_key'
-				        . ($integration == 'redevent' ? ' INNER JOIN #__redevent_register AS r ON r.submit_key = s.submit_key ': '')				
-								;
-								
-				$where = array();
-				$where[] = "s.form_id = ".$form_id;
-				if ($xref && $xref > 0) {
-					$where[] = "s.xref = ".$xref;
-				}
-				if (count($where)) {
-					$query .= ' WHERE ' . implode(' AND ', $where);
-				}
+				$query = $this->_buildSubmittersQuery();
 				
 				$query .= " ORDER BY s.submission_date DESC ";
 					
@@ -85,6 +69,32 @@ class RedformModelSubmitters extends JModel {
       }
 		}
 		return $this->_data;
+	}
+	
+	function _buildSubmittersQuery()
+	{
+		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
+		$form_id = JRequest::getVar('form_id', 0);
+		$integration = JRequest::getVar('integration', 0);
+		
+		$query =  ' SELECT s.submission_date, f.formname, u.*, s.price, s.submit_key, p.status, p.paid, s.integration, s.xref '
+		        . ($integration === 'redevent' ? ', r.id as attendee_id ': '')				
+						. ' FROM '.$this->_db->nameQuote('#__rwf_submitters').' AS s '
+						. ' INNER JOIN ' . $this->_db->nameQuote('#__rwf_forms').' AS f ON s.form_id = f.id '
+						. ' INNER JOIN ' . $this->_db->nameQuote('#__rwf_forms_'.$form_id) . ' AS u ON s.answer_id = u.id '
+            . ' LEFT JOIN #__rwf_payment AS p ON p.submit_key = s.submit_key'
+		        . ($integration === 'redevent' ? ' INNER JOIN #__redevent_register AS r ON r.submit_key = s.submit_key ': '')				
+						;
+						
+		$where = array();
+		$where[] = "s.form_id = ".$form_id;
+		if ($xref && $xref > 0) {
+			$where[] = "s.xref = ".$xref;
+		}
+		if (count($where)) {
+			$query .= ' WHERE ' . implode(' AND ', $where);
+		}
+		return $query;
 	}
 
   function getFormsOptions()
@@ -114,7 +124,8 @@ class RedformModelSubmitters extends JModel {
 	 * Show all orders for which an invitation to fill in
 	 * a testimonal has been sent
 	 */
-	function getSubmittersExport() {
+	function getSubmittersExport() 
+	{
 		$form_id = JRequest::getVar('form_id', false);
 		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
 		
@@ -156,7 +167,8 @@ class RedformModelSubmitters extends JModel {
 		return $db->loadObjectList();
 	}
 	
-	function getPagination() {
+	function getPagination() 
+	{
 		global $mainframe, $option;
 		
 		/* Lets load the pagination if it doesn't already exist */
@@ -166,36 +178,23 @@ class RedformModelSubmitters extends JModel {
 		$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
 		return $this->_pagination;
 	}
-	
-	/**
-	 * Method to get the total number of testimonial items for the category
-	 *
-	 * @access public
-	 * @return integer
-	 */
-	function getTotal() {
-		$form_id = JRequest::getVar('form_id', false);
-		$xref = JRequest::getVar('xref', false);
-		$filter = JRequest::getVar('filter', false);
-		$db = JFactory::getDBO();
-		
-		if ($form_id && $form_id > 0) {
-			$query = "SELECT s.submission_date, f.formname, u.*
-			FROM ".$db->nameQuote('#__rwf_submitters')." s, ".$db->nameQuote('#__rwf_forms')." f, ".$db->nameQuote('#__rwf_forms_'.$form_id)." u
-				WHERE s.form_id = f.id 
-				AND s.answer_id = u.id ";
-			if ($form_id) {
-				$query .= "AND s.form_id = ".$form_id." ";
-			}
-			if ($xref) {
-				$query .= "AND s.xref = ".$xref." ";
-			}
-			$db->setQuery($query);
-			$db->query();
-			if ($db->getErrorNum() > 0) return 0;
-			else return $db->getAffectedRows();
-		}
-	}
+
+  /**
+   * Method to get the total number of items return by the query
+   *
+   * @access public
+   * @return integer
+   */
+  function getTotal() 
+  {
+    // Lets load the content if it doesn't already exist
+    if (empty($this->_total))
+    {
+      $this->_total = $this->_getListCount($this->_buildSubmittersQuery());
+    }
+
+    return $this->_total;
+  }
 	
 	/**
 	 * Get the number of people signed up for the newsletter
