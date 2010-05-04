@@ -41,6 +41,8 @@ class rfanswers
   
   private $_price = 0;
   
+  private $_answers = null;
+  
 	public function __construct()
 	{
 		
@@ -458,6 +460,62 @@ class rfanswers
   		$answers[] = array( 'field' => $field->field, 'value' => $this->_values[$k], 'type' => $this->_types[$k] );
   	}
   	return $answers;
+  }
+  
+  /**
+   * loads answers of specified submitter
+   * 
+   * @param int $submitter_id
+   * @return true on success
+   */
+  function getSubmitterAnswers($submitter_id)
+  {
+    $db = &JFactory::getDBO();
+  	$sid = (int) $submitter_id;
+  	
+  	// get submission details first, to get the fieds
+  	$query = ' SELECT s.* FROM #__rwf_submitters AS s WHERE s.id = '.$db->quote($sid);
+  	$db->setQuery($query);
+  	$submitter = $db->loadObject();
+  	
+  	if (!$submitter) {
+  		Jerror::raisewarning(0, Jtext::_('unknown submitter'));
+  		return false;
+  	}
+  	
+  	// get fields
+  	$query = ' SELECT f.* FROM #__rwf_fields AS f '
+  	       . ' WHERE f.form_id = '.$db->quote($submitter->form_id)
+  	       . ' AND f.published = 1 ';
+  	$db->setQuery($query);
+  	$fields = $db->loadObjectList('id');
+  	
+  	$fnames = array();
+  	foreach ($fields as $f) {
+  		$fnames[] = $db->namequote('f.field_'.$f->id);
+  	}
+  	
+  	// get values
+  	$query = ' SELECT '.implode(',' , $fnames)
+  	       . ' FROM #__rwf_forms_'.$submitter->form_id.' AS f '
+  	       . ' WHERE f.id = '.$db->quote($submitter->answer_id)
+  	       ;
+  	$db->setQuery($query);
+  	$answers = $db->loadObject();
+  
+  	if (!$answers) {
+  		Jerror::raisewarning(0, Jtext::_('error getting submitter answers'));
+  		return false;
+  	}
+  	
+  	foreach ($fields as $id => $f)
+  	{
+  		$property = 'field_'.$f->id;
+  		if (isset($answers->$property)) {
+  			$fields[$id]->answer = $answers->$property;
+  		}
+  	}
+  	return $fields;
   }
 }
 ?>
