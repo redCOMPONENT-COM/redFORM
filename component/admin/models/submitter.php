@@ -706,7 +706,8 @@ class RedformModelSubmitter extends JModel {
 			}
 			
 			/* Inform contact person if need */
-			if ($form->contactpersoninform) {
+			if ($form->contactpersoninform) 
+			{
 				$this->mailer->AddAddress($form->contactpersonemail, $fullname);
 				/* Get the event name */
 				$eventname = '';

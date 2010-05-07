@@ -330,9 +330,23 @@ class RedformModelRedform extends JModel {
 			  // init mailer
 			  $mailer = &JFactory::getMailer();
 			  $mailer->isHTML(true);
-			  if ($form->contactpersoninform) {
-  			  $mailer->addRecipient($form->contactpersonemail);
+			  if ($form->contactpersoninform) 
+			  {
+		  		if (strstr($form->contactpersonemail, ';')) {
+		  			$addresses = explode(";", $form->contactpersonemail);
+		  		}
+		  		else {
+		  			$addresses = explode(",", $form->contactpersonemail);
+		  		}
+		  		foreach ($addresses as $a) 
+		  		{
+		  			$a = trim($a);
+			  		if (JMailHelper::isEmailAddress($a)) {
+			  			$mailer->addRecipient($a);
+			  		}  			
+		  		}
 			  }
+			  
 			  if (!empty($recipients)) 
 			  {
 			    foreach ($recipients AS $r) {
@@ -559,6 +573,7 @@ class RedformModelRedform extends JModel {
 	 */
 	 private function Mailer() 
 	 {
+  		jimport('joomla.mail.helper');
 	 	 if (empty($this->mailer))
 	 	 {
 			 $mainframe = & JFactory::getApplication();
