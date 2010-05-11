@@ -157,7 +157,6 @@ class RedformModelSubmitters extends JModel {
 		$form_id = JRequest::getInt('form_id', false);
 		$query = ' SELECT f.id, f.field '
 		       . ' FROM #__rwf_fields AS f '
-		       . ' INNER JOIN #__rwf_values AS v ON v.field_id = f.id '
 		       . ' WHERE f.fieldtype <> "info" '
 		       ;		
 		if ($form_id) $query .= ' AND form_id = ' . $db->Quote($form_id);
