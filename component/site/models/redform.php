@@ -674,6 +674,8 @@ class RedformModelRedform extends JModel {
    */
   function updateMailingList($rfanswers)
 	{
+		global $mainframe;
+		
     $db = JFactory::getDBO();
      
 	 	// mailing lists management
