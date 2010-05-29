@@ -733,6 +733,7 @@ EOF;
 					
 				$cleanfield = 'field_'. $field->id;
 				$element = "<div class=\"field".$field->fieldtype."\">";
+				$label = '';
 				
 				switch ($field->fieldtype)
 				{
