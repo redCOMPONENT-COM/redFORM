@@ -28,7 +28,7 @@ require_once('redform.defines.php');
 require_once(RDF_PATH_SITE.DS.'classes'.DS.'field.php');
 require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
 
-class RedFormCore {
+class RedFormCore extends JObject {
 	
 	/**
 	 * returns the html code for form elements (only the elements ! not the form itself, or the submit buttons...)
@@ -41,7 +41,7 @@ class RedFormCore {
 	function displayForm($form_id, $submitter_id = 0, $multiple = 1)
 	{
 		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
-		$html .= self::getFormFields($form_id, $submit_key, $multiple);
+		$html .= $this->getFormFields($form_id, $submit_key, $multiple);
 								
 		/* Get the user details form */
 		if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) 
@@ -107,7 +107,7 @@ class RedFormCore {
 		
 		// redmember integration: pull extra fields
 		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
-			self::getRedmemberfields($user);
+			$this->getRedmemberfields($user);
 		}
 	
 		/* Check if there are any answers to be filled in (already submitted)*/
@@ -184,6 +184,9 @@ class RedFormCore {
 			if ($answers) {
 				$submitter_id = $answers[($signup-1)]->sid;
 				$html .= '<input type="hidden" name="submitter_id'.$signup.'" value="'.$submitter_id.'" />';	
+			}
+			else {
+				$submitter_id = 0;
 			}
 			
 			/* Make a collapsable box */
@@ -633,18 +636,7 @@ class RedFormCore {
 		
 		return $html;
 	}
-	
-	/**
-	 * returns posted answers
-	 * 
-	 * @param int submission_id the id of submission to retrieve
-	 * @return array answers
-	 */
-	function displayAnswers($submission_id)
-	{
 		
-	}
-	
 	/**
 	 * saves submitted form data
 	 * 
@@ -659,6 +651,7 @@ class RedFormCore {
 		
 		if (!$result = $model->apisaveform($key, $options, $data))
 		{
+			$this->setError($result->getError());
 			return false;
 		}				
 		return $result;
@@ -1030,7 +1023,7 @@ EOF;
 		$results = array();
 		foreach ($submitters as $s)
 		{
-			$results[] = self::getAnswers($s->id);
+			$results[] = $this->getAnswers($s->id);
 		}
 		return $results;		
 	}
