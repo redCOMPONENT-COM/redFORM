@@ -24,7 +24,7 @@ defined('_JEXEC') or die( 'Restricted access' );
 
 jimport('joomla.application.component.model');
 
-require_once JPATH_COMPONENT.DS.'classes'.DS.'answers.php';
+require_once RDF_PATH_SITE.DS.'classes'.DS.'answers.php';
 
 /**
  */
@@ -67,8 +67,11 @@ class RedformModelRedform extends JModel {
    * @param int form id
    * @return object form
    */
-  function &getForm($id)
+  function &getForm($id=0)
   {
+  	if (!$id) {
+  		$id = $this->_form_id;
+  	}
   	if (!$id) {
   		$id = JRequest::getInt('form_id', $this->_form_id);
   	}
@@ -114,7 +117,45 @@ class RedformModelRedform extends JModel {
   	}
   	return $fields;
   }
-      
+
+	function getFormFields() 
+	{		
+		$q = ' SELECT id, field, validate, tooltip, redmember_field, fieldtype, params '
+		   . ' FROM #__rwf_fields AS q '
+		   . ' WHERE published = 1 '
+		   . ' AND q.form_id = '.$this->_form_id
+		   . ' ORDER BY ordering'
+		   ;
+		$this->_db->setQuery($q);
+		$fields = $this->_db->loadObjectList();
+		
+		foreach ($fields as $k => $field)
+		{
+			$paramsdefs = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' . DS . 'field_'.$field->fieldtype.'.xml';
+			if (!empty($field->params) && file_exists($paramsdefs))
+			{
+				$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );
+			}
+			else {
+				$fields[$k]->parameters = new JRegistry();
+			}
+		}
+		return $fields;
+	}
+	
+	function getFormValues($field_id) 
+	{		
+		$q = "SELECT q.id, value, field_id, listnames, price 
+			FROM #__rwf_values q
+			LEFT JOIN #__rwf_mailinglists m
+			ON q.id = m.id
+			WHERE published = 1
+			AND q.field_id = ".$field_id."
+			ORDER BY ordering";
+		$this->_db->setQuery($q);
+		return $this->_db->loadObjectList();
+	}
+	
 	/**
 	 * Save a form
 	 *
@@ -755,7 +796,7 @@ class RedformModelRedform extends JModel {
 
 	 							/* Collect subscriber details */
 	 							$queue = new stdClass;
-	 							$queue->id = 0;
+	 							$queue->id = 0;	
 	 							$queue->subscriber_id = $acajoomsubscriber->id;
 	 							$queue->list_id = $list->id;
 	 							$queue->type = 1;
@@ -840,6 +881,309 @@ class RedformModelRedform extends JModel {
 			/* Clear the mail details */
 			$mailer->ClearAddresses();
 		}	
+	}
+	 			
+	function getFieldsValues()
+	{
+		$query = ' SELECT v.id, v.value, v.field_id, v.fieldtype '
+		       . '      , m.listnames '
+		       . '      , f.field, f.validate, f.unique, f.tooltip '
+		       . ' FROM #__rwf_values AS v '
+		       . ' INNER JOIN #__rwf_fields AS f ON v.field_id = f.id '
+		       . ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
+		       . ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = m.id '
+		       . ' WHERE v.published = 1 AND f.published = 1 AND fo.published = 1 '
+		       . '   AND fo.id = '.$this->_db->Quote($this->_form_id)
+		       . ' ORDER BY f.ordering, v.ordering '
+		       ;
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadObjectList();
+		
+		return $res;
+	}
+
+	function getFieldsInfo($fields_ids)
+	{
+		$quoted = array();
+		foreach ($fields_ids as $id) {
+			$quoted[] = $this->_db->Quote($id);
+		}
+		$query = ' SELECT f.id, f.field, f.validate, f.unique, f.tooltip, f.form_id '
+		       . ' FROM #__rwf_fields AS f '
+		       . ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
+		       . ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = m.id '
+		       . ' WHERE f.published = 1 AND fo.published = 1 '
+		       . '   AND f.id IN ('.implode(',', $quoted) .')'
+		       . ' ORDER BY f.ordering '
+		       ;
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadObjectList();
+		
+		return $res;
+	}
+	
+
+	/**
+	 * Save a form
+	 *
+	 * @todo take field names from fields table
+	 */
+	function apisaveform($integration_key = '', $options = array(), $data = null) 
+	{
+		$mainframe = & JFactory::getApplication();
+		$db = & $this->_db;
+		
+		$result = new stdclass(); // create a new class for this ?
+		$result->posts = array();
+		
+		/* Default values */
+		$answer  = '';
+		$return  = false;
+		$redcompetition = false;
+		$redevent = false;
+				
+		/* Check for the submit key */
+		$submit_key = JRequest::getVar('submit_key', false);
+		if (!$submit_key) $submit_key = uniqid();
+		
+		/* Get the form details */
+		$form = $this->getForm(JRequest::getInt('form_id'));
+		
+		if ($form->captchaactive) 
+		{
+			/* Check if Captcha is correct */
+			$word = JRequest::getVar('captchaword', false, '', 'CMD');
+			$return = $mainframe->triggerEvent('onCaptcha_confirm', array($word, $return));
+			
+			if (!$return[0]) {
+				$this->setError(JText::_('CAPTCHA_WRONG'));
+	      return false;				
+			}
+		}
+			
+		/* Load the fields */
+		$fieldlist = $this->getfields($form->id);
+			
+		/* Load the posted variables */
+		$post = $data ? $data : JRequest::get('post');
+		$files = JRequest::get('files');
+		$posted = array_merge($post, $files);
+				
+		// number of submitted active forms (min is 1)
+		$totalforms = JRequest::getInt('curform') ? JRequest::getInt('curform') : 1;
+		
+		$allanswers = array();
+		/* Loop through the different forms */
+		for ($signup = 1; $signup <= $totalforms; $signup++) 
+		{
+			// new answers object
+			$answers = new rfanswers();
+			$answers->setFormId($form->id);
+			if (isset($options['baseprice'])) {
+				$answers->initPrice($options['baseprice']);
+			}
+			
+			/* Create an array of values to store */
+			$postvalues = array();
+			// remove the _X parts, where X is the form (signup) number
+			foreach ($posted as $key => $value) {
+				if ((strpos($key, 'field') === 0) && (strpos($key, '_'.$signup, 5) > 0)) {
+					$postvalues[str_replace('_'.$signup, '', $key)] = $value;
+				}
+			}
+			if (isset($posted['submitter_id'.$signup])) {
+				$postvalues['sid'] = intval($post['submitter_id'.$signup]);
+			}
+
+			$postvalues['form_id'] = $post['form_id'];
+			$postvalues['submitternewsletter'] = JRequest::getVar('submitternewsletter', '');
+			$postvalues['submit_key'] = $submit_key;
+			
+			$postvalues['integration'] = $integration_key;
+				
+			/* Get the raw form data */
+			$postvalues['rawformdata'] = serialize($posted);
+			
+			/* Build up field list */
+			foreach ($fieldlist as $key => $field)
+			{
+				if (isset($postvalues['field'.$key]))
+				{
+					/* Get the answers */
+					$answers->addPostAnswer($field, $postvalues['field'.$key]);
+				}
+			}
+			
+      $res = $answers->savedata($postvalues);
+      if (!$res) {
+      	$this->setError(JText::_('REDFORM_SAVE_ANSWERS_FAILED'));
+      	return false;
+      }
+      else {
+      	$result->posts[] = array('sid' => $res);
+      }
+			
+			if ($answers->isNew())
+			{
+				$this->updateMailingList($answers);
+			}
+
+			$allanswers[] = $answers;
+		} /* End multi-user signup */
+		
+		// send email to miantainers
+		if ($answers->isNew()) {
+			$this->notifymaintainer($allanswers);
+		}
+	
+		/* Send a submission mail to the submitters if set */
+		if ($answers->isNew() && $form->submitterinform) 
+		{
+			foreach ($allanswers as $answers)
+			{
+				$this->notifysubmitter($answers, $form);
+			}
+		}
+		
+		$result->submit_key = $submit_key;
+		return $result;
+	}
+	
+	/**
+	 * send email to form maintaineers or/and selected recipients
+	 * @param array $allanswers
+	 */
+	function notifymaintainer($allanswers)
+	{
+		global $mainframe;
+		$form = $this->getForm();
+						
+		/* Inform contact person if need */
+		// form recipients
+		$recipients = $allanswers[0]->getRecipients();
+
+		if ($form->contactpersoninform || !empty($recipients))
+		{
+			// init mailer
+			$mailer = &JFactory::getMailer();
+			$mailer->isHTML(true);
+			if ($form->contactpersoninform)
+			{
+				if (strstr($form->contactpersonemail, ';')) {
+					$addresses = explode(";", $form->contactpersonemail);
+				}
+				else {
+					$addresses = explode(",", $form->contactpersonemail);
+				}
+				foreach ($addresses as $a)
+				{
+					$a = trim($a);
+					if (JMailHelper::isEmailAddress($a)) {
+						$mailer->addRecipient($a);
+					}
+				}
+			}
+				
+			if (!empty($recipients))
+			{
+				foreach ($recipients AS $r) {
+					$mailer->addRecipient($r);
+				}
+			}
+			if (!empty($xref_group_recipients))
+			{
+				foreach ($xref_group_recipients AS $r) {
+					$mailer->addRecipient($r);
+				}
+			}
+
+			// we put the submitter as the email 'from' and reply to.
+			$user = & JFactory::getUser();
+			if ($user->get('id')) {
+				$sender = array($user->email, $user->name);
+			}
+			else if ($allanswers[0]->getSubmitterEmail())
+			{
+				if ($allanswers[0]->getFullname()) {
+					$sender = array($allanswers[0]->getSubmitterEmail(), $allanswers[0]->getFullname());
+				}
+				else {
+					$sender = $allanswers[0]->getSubmitterEmail();
+				}
+			}
+			else { // default to site settings
+				$sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
+			}
+			$mailer->setSender($sender);
+			$mailer->addReplyTo($sender);
+
+			// set the email subject
+			$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
+
+			// Mail body
+			$htmlmsg = '<html><head><title></title></title></head><body>';
+			$htmlmsg .= JText::_('A new submission has been received.');
+			$htmlmsg .= $form->notificationtext;
+
+			/* Add user submitted data if set */
+			if ($form->contactpersonfullpost)
+			{
+				foreach ($allanswers as $answers)
+				{
+					$rows = $answers->getAnswers();
+					$patterns[0] = '/\r\n/';
+					$patterns[1] = '/\r/';
+					$patterns[2] = '/\n/';
+					$replacements[2] = '<br />';
+					$replacements[1] = '<br />';
+					$replacements[0] = '<br />';
+
+					$htmlmsg .= '<br /><table border="1">';
+
+					foreach ($rows as $key => $answer)
+					{
+						switch ($answer['type'])
+						{
+							case 'recipients':
+								break;
+							case 'email':
+								$htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+								$htmlmsg .= '<a href="mailto:'.$answer['value'].'">'.$answer['value'].'</a>';
+								$htmlmsg .= '&nbsp;';
+								$htmlmsg .= '</td></tr>'."\n";
+								break;
+							case 'text':
+								$userinput = preg_replace($patterns, $replacements, $answer['value']);
+								$htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+								if (strpos($answer['value'], 'http://') === 0) {
+									$htmlmsg .= '<a href="'.$answer['value'].'">'.$answer['value'].'</a>';
+								}
+								else {
+									$htmlmsg .= $answer['value'];
+								}
+								$htmlmsg .= '&nbsp;';
+								$htmlmsg .= '</td></tr>'."\n";
+								break;
+							default :
+								$userinput = preg_replace($patterns, $replacements, $answer['value']);
+								$htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+								$htmlmsg .= str_replace('~~~', '<br />', $userinput);
+								$htmlmsg .= '&nbsp;';
+								$htmlmsg .= '</td></tr>'."\n";
+								break;
+						}
+					}
+					$htmlmsg .= "</table><br />";
+				}
+			}
+			$htmlmsg .= '</body></html>';
+			$mailer->setBody($htmlmsg);
+
+			// send the mail
+			if (!$mailer->Send()) {
+				RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);;
+			}
+		}
 	}
 }
 ?>

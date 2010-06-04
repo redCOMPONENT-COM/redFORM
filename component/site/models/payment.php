@@ -211,7 +211,12 @@ class RedFormModelPayment extends JModel
 				$obj->uniqueid = $event->uniqueid;
 				break;
 			default:
-				$obj->title = JText::_('Form submission').': '.$form->title;
+				if (JRequest::getVar('paymenttitle')) {
+					$obj->title = JRequest::getVar('paymenttitle');					
+				}
+				else {
+					$obj->title = JText::_('Form submission').': '.$form->title;
+				}
 				$obj->uniqueid = $key;
 				break;
 		}

@@ -24,28 +24,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-// Require the base controller
-require_once (JPATH_COMPONENT.DS.'controller.php');
-require_once (JPATH_COMPONENT_SITE.DS.'redform.core.php');
-require_once (JPATH_COMPONENT_SITE.DS.'helpers'.DS.'log.php');
+define('RDF_PATH_SITE',  JPATH_SITE . DS . 'components' .DS . 'com_redform'); 
+define('RDF_PATH_ADMIN', JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_redform');
 
-// Require specific controller if requested
-if($controller = JRequest::getWord('controller')) {
-	$path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
-	if (file_exists($path)) {
-		require_once $path;
-	} else {
-		$controller = '';
-	}
-}
+JTable::addIncludePath(RDF_PATH_ADMIN.DS.'tables');
 
-// Create the controller
-$classname	= 'RedformController'.ucfirst($controller);
-$controller = new $classname( );
-
-// Perform the Request task
-$controller->execute(JRequest::getCmd('task'));
-
-// Redirect if set by the controller
-$controller->redirect();
-?>
+$language = JFactory::getLanguage();
+$language->load('com_redform');

@@ -43,9 +43,13 @@ class rfanswers
   
   private $_answers = null;
   
+  private $_isnew = true;
+  
+  private $_db;
+  
 	public function __construct()
 	{
-		
+		$this->_db = & JFactory::getDBO();
 	}
 	
 	public function setFormId($id)
@@ -92,6 +96,11 @@ class rfanswers
   public function getPrice()
   {
   	return $this->_price;
+  }
+  
+  public function isNew()
+  {
+  	return $this->_isnew;
   }
 	
   public function addPostAnswer($field, $postedvalue)
@@ -356,6 +365,99 @@ class rfanswers
     return true;
   }
   
+  /**
+   * new save function for new lib
+   * @param $params
+   */
+  function savedata($params = array())
+  {
+  	$mainframe = Jfactory::getApplication();
+  	$db = & JFactory::getDBO();
+  	
+  	
+  	if (empty($this->_form_id)) {
+  		JError::raiseError(0, JText::_('ERROR NO FORM ID'));
+  	}
+    
+  	if (!count($this->_fields)) {
+  		return true;
+  	}
+  	
+  	if (!isset($params['sid']) || !$params['sid'])
+  	{
+  		$this->_isnew = true;
+  		$sid = 0;
+  	}
+  	else {
+  		$sid = intval($params['sid']);
+  	}
+
+  	$values = array();
+  	$fields = array();
+  	foreach ($this->_fields as $v) {
+  		$fields[] = $db->nameQuote('field_'. $v->id);
+  	}
+  	foreach ($this->_values as $v) {
+  		$values[] = $db->Quote($v);
+  	}
+  	
+  	// we need to make sure all table fields are updated: typically, if a field is of type checkbox, if not checked it won't be posted, hence we have to set the value to empty
+  	$q = " SHOW COLUMNS FROM " . $db->nameQuote('#__rwf_forms_'. $this->_form_id);
+  	$db->setQuery($q);
+  	$columns = $db->loadResultArray();
+  	foreach ($columns as $col)
+  	{
+  		if (strstr($col, 'field_') && !in_array($db->nameQuote($col), $fields)) 
+  		{
+  			$fields[] = $db->nameQuote($col);
+  			$values[] = $db->Quote('');  			
+  		}
+  	}  	
+  	
+    if ($sid) // answers were already recorded, update them
+    {
+    	$submitter = $this->getSubmitter($sid);
+    	
+    	$q = "UPDATE ".$db->nameQuote('#__rwf_forms_'. $this->_form_id);
+    	$set = array();
+    	foreach ($fields as $ukey => $col) {
+    		$set[] = $col ." = ". $values[$ukey];
+    	}
+    	$q .= ' SET '. implode(', ', $set);
+    	$q .= " WHERE ID = ". $submitter->answer_id;
+    	$db->setQuery($q);
+    	
+    	if (!$db->query()) {
+    		JError::raiseError(0, JText::_('UPDATE ANSWERS FAILED'));
+        RedformHelperLog::simpleLog(JText::_('Cannot update answers').' '.$db->getErrorMsg());
+    	}
+    }
+    else
+    {
+    	/* Construct the query */
+    	$q = "INSERT INTO ".$db->nameQuote('#__rwf_forms_'. $this->_form_id)."
+            (" . implode(', ', $fields) . ")
+            VALUES (" . implode(', ', $values) . ")";
+    	$db->setQuery($q);
+    	
+    	if (!$db->query()) {
+    		/* We cannot save the answers, do not continue */
+			if (stristr($db->getErrorMsg(), 'duplicate entry')) {
+				JRequest::setVar('ALREADY_ENTERED', true);
+				$mainframe->enqueueMessage(JText::_('ALREADY_ENTERED'), 'error');
+			}
+			else $mainframe->enqueueMessage(JText::_('Cannot save form answers').' '.$db->getErrorMsg(),'error');
+    		/* We cannot save the answers, do not continue */
+    		RedformHelperLog::simpleLog(JText::_('Cannot save form answers').' '.$db->getErrorMsg());
+    		return false;
+    	}
+    	$this->_answer_id = $db->insertid();
+    	$sid = $this->updateSubmitter($params);
+    }
+    $this->setPrice();
+    return $sid;
+  }
+  
   function updateSubmitter($params = array())
   {
     $db = &JFactory::getDBO();
@@ -428,7 +530,7 @@ class rfanswers
   		}
   		return false;
   	}
-  	return true;
+  	return $row->id;
   }
   
   // set price corresponding to answers in submitters table
@@ -516,6 +618,16 @@ class rfanswers
   		}
   	}
   	return $fields;
+  }
+  
+  function getSubmitter($id)
+  {  	
+  	$query = ' SELECT s.* ' 
+  	       . ' FROM #__rwf_submitters AS s ' 
+  	       . ' WHERE s.id = ' . $this->_db->Quote($id);
+  	$this->_db->setQuery($query);
+  	$res = $this->_db->loadObject();
+  	return $res;
   }
 }
 ?>

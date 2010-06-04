@@ -100,7 +100,7 @@ class RedformModelRedform extends JModel {
    }
    
    /**
-    * Retrieve a competition to edit
+    * get the form record
     */
    function getForm() {
       $row = $this->getTable();
@@ -122,7 +122,7 @@ class RedformModelRedform extends JModel {
       }
       return $row;
    }
-   
+	
    /**
     * Save a competition
     */
