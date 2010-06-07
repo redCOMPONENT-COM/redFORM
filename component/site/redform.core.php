@@ -741,9 +741,8 @@ EOF;
 		/* Create some dynamic JS */
 		?>
 		<script type="text/javascript">		
-			function CheckSubmit() 
+			function CheckSubmit(form) 
 			{
-				if (document.redform.task.value == 'cancel') return true;
 				var msg = '';
 				var result = true;
 				var newclass = 'emptyfield';
