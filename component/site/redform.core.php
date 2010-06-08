@@ -1085,4 +1085,22 @@ EOF;
 		
 		return $result;		
 	}		
+	
+	function getFields($form_id)
+	{		
+		$model_redform = new RedformModelRedform();
+		$model_redform->setFormId($form_id);
+		
+		$fields = $model_redform->getFormFields();
+		return $fields;
+	}
+	
+	function getSidsAnswers($form_id, $sids)
+	{
+		$model_redform = new RedformModelRedform();
+		$model_redform->setFormId($form_id);
+		
+		$res = $model_redform->getSidsAnswers($sids);
+		return $res;
+	}
 }

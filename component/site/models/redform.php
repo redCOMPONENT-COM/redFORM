@@ -1185,5 +1185,47 @@ class RedformModelRedform extends JModel {
 			}
 		}
 	}
+	
+	/**
+	 * return answers of specified sids
+	 * 
+	 * @param array int $sids
+	 * @return array
+	 */
+	function getSidsAnswers($sids)
+	{
+		$form = $this->getForm();
+		
+		if (!is_array($sids))
+		{
+			if (is_int($sids))
+			{
+				$ids = $sids;
+			}
+			else {
+				JErrorRaiseWarning(0, JText::_('Wrong parameters for redformcore getSidsAnswers'));
+				return false;
+			}
+		}
+		else {
+			$ids = implode(',', $sids);
+		}
+		
+		$query = ' SELECT s.id as sid, f.*, s.price, p.paid, p.status '
+		       . ' FROM #__rwf_forms_'.intval($form->id).' AS f '
+		       . ' INNER JOIN #__rwf_submitters AS s on s.answer_id = f.id '
+		       . ' LEFT JOIN #__rwf_payment AS p on s.submit_key = p.submit_key '
+		       . ' WHERE s.id IN ('.$ids.')';
+		       ;
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadObjectList('sid');
+		
+		$answers = array();
+		foreach ($res as $k =>$r)
+		{
+			$answers[$k] = $r;
+		}
+		return $answers;
+	}
 }
 ?>

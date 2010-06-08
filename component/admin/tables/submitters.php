@@ -41,12 +41,12 @@ class TableSubmitters extends JTable {
 	var $rawformdata = null;
 	/** @var integer */     		
 	var $maxattendees 				= null;
-	/** @var integer */     		
-	var $maxwaitinglist 			= null;
-	/** @var boolean */
-	var $confirmed	= null;
-	/** @var datetime */
-	var $confirmdate 	= null;
+//	/** @var integer */     		
+//	var $maxwaitinglist 			= null;
+//	/** @var boolean */
+//	var $confirmed	= null;
+//	/** @var datetime */
+//	var $confirmdate 	= null;
 	/** @var string integration key */
 	var $integration 	= null;
 	
