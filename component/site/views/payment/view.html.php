@@ -77,7 +77,6 @@ class RedformViewPayment extends JView {
 		$document   = &JFactory::getDocument();
 		$document->setTitle($document->getTitle().' - '.JText::_('redFORM'));
 				
-		echo '<pre>';print_r($form); echo '</pre>';exit;
 		$form = $this->get('form');
 		$text = '';
 		switch (JRequest::getVar('state'))
