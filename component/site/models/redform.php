@@ -944,7 +944,11 @@ class RedformModelRedform extends JModel {
 				
 		/* Check for the submit key */
 		$submit_key = JRequest::getVar('submit_key', false);
-		if (!$submit_key) $submit_key = uniqid();
+		if (!$submit_key) {
+			$submit_key = uniqid();
+		}
+		
+		$result->submit_key = $submit_key;
 		
 		/* Get the form details */
 		$form = $this->getForm(JRequest::getInt('form_id'));
@@ -1014,28 +1018,43 @@ class RedformModelRedform extends JModel {
 				}
 			}
 			
-      $res = $answers->savedata($postvalues);
-      if (!$res) {
-      	$this->setError(JText::_('REDFORM_SAVE_ANSWERS_FAILED'));
-      	return false;
-      }
-      else {
-      	$result->posts[] = array('sid' => $res);
-      }
-			
-			if ($answers->isNew())
+			if (!isset($options['savetosession']))
 			{
-				$this->updateMailingList($answers);
-			}
+      	$res = $answers->savedata($postvalues);
+	      if (!$res) {
+	      	$this->setError(JText::_('REDFORM_SAVE_ANSWERS_FAILED'));
+	      	return false;
+	      }
+	      else {
+	      	$result->posts[] = array('sid' => $res);
+	      }
+	      
+				if ($answers->isNew())
+				{
+					$this->updateMailingList($answers);
+				}
+			}			
 
 			$allanswers[] = $answers;
 		} /* End multi-user signup */
+		
+		// save to session if specified
+		if (isset($options['savetosession'])) 
+		{
+			$sessiondata = array();
+			foreach ($allanswers as $a) 
+			{
+				$sessiondata[] = $a->toSession();	
+			}
+			$mainframe->setUserState($submit_key, $sessiondata);
+			return $result;
+		}
 		
 		// send email to miantainers
 		if ($answers->isNew()) {
 			$this->notifymaintainer($allanswers);
 		}
-	
+		
 		/* Send a submission mail to the submitters if set */
 		if ($answers->isNew() && $form->submitterinform) 
 		{
@@ -1043,9 +1062,7 @@ class RedformModelRedform extends JModel {
 			{
 				$this->notifysubmitter($answers, $form);
 			}
-		}
-		
-		$result->submit_key = $submit_key;
+		}			
 		return $result;
 	}
 	
@@ -1193,9 +1210,7 @@ class RedformModelRedform extends JModel {
 	 * @return array
 	 */
 	function getSidsAnswers($sids)
-	{
-		$form = $this->getForm();
-		
+	{		
 		if (!is_array($sids))
 		{
 			if (is_int($sids))
@@ -1211,8 +1226,21 @@ class RedformModelRedform extends JModel {
 			$ids = implode(',', $sids);
 		}
 		
+		// we need the form_id...
+		$query = ' SELECT s.form_id '
+		       . ' FROM #__rwf_submitters AS s '
+		       . ' WHERE s.id IN ('.$ids.')'
+		       ;
+		$this->_db->setQuery($query, 0, 1);
+		$form_id = $this->_db->loadResult();
+		
+		if (!$form_id) {
+			Jerror::raiseWarning(0, JText::_('No submission for these sids'));
+			return false;
+		}
+		
 		$query = ' SELECT s.id as sid, f.*, s.price, p.paid, p.status '
-		       . ' FROM #__rwf_forms_'.intval($form->id).' AS f '
+		       . ' FROM #__rwf_forms_'.$form_id.' AS f '
 		       . ' INNER JOIN #__rwf_submitters AS s on s.answer_id = f.id '
 		       . ' LEFT JOIN #__rwf_payment AS p on s.submit_key = p.submit_key '
 		       . ' WHERE s.id IN ('.$ids.')';

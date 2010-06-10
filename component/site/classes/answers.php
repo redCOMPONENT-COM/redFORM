@@ -102,6 +102,10 @@ class rfanswers
   {
   	return $this->_isnew;
   }
+  public function setNew($val)
+  {
+  	$this->_isnew = $val ? true : false;
+  }
 	
   public function addPostAnswer($field, $postedvalue)
   {
@@ -628,6 +632,17 @@ class rfanswers
   	$this->_db->setQuery($query);
   	$res = $this->_db->loadObject();
   	return $res;
+  }
+  
+  function toSession()
+  {
+  	$answers = new stdclass();
+  	foreach ($this->_fields as $k => $field)
+  	{
+  		$tablefield = 'field_'.$field->id;
+  		$answers->$tablefield = $this->_values[$k];
+  	}
+  	return $answers;  	
   }
 }
 ?>

@@ -69,11 +69,41 @@ class RedFormCore extends JObject {
 		$html .= '</form>';
 	}
 	
-	function getFormFields($form_id, $submit_key = null, $multi = 1, $options = array())
+	/**
+	 * Returns html code for the specified form fields
+	 * To modify previously posted data, the reference field must contain either:
+	 * - submit_key as a string
+	 * - an array of submitters ids 
+	 * 
+	 * @param int form id
+	 * @param mixed submit_key or array of submitters ids
+	 * @param int number of instance of the form to display
+	 * @param array options
+	 * @return string
+	 */
+	function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
 	{
 		$uri       = JURI::getInstance();
 		$user      = JFactory::getUser();
 		$document  = &JFactory::getDocument();
+		
+		if (is_array($reference)) 
+		{
+			$sids       = $reference;
+			$answers    = $this->_getAnswers($sids);
+			if ($answers)	{
+				$submit_key = $answers[0]->submit_key;
+			}
+		}
+		else if (!empty($reference))
+		{
+			$submit_key = $reference;
+			$answers    = $this->_getAnswers($submit_key);
+		}
+		else {
+			$submit_key = null;
+			$answers = null;
+		}
 		
 		$model_redform = new RedformModelRedform();
 		$model_redform->setFormId($form_id);
@@ -108,15 +138,6 @@ class RedFormCore extends JObject {
 		// redmember integration: pull extra fields
 		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
 			$this->getRedmemberfields($user);
-		}
-	
-		/* Check if there are any answers to be filled in (already submitted)*/
-		/* This is an array starting with 0 */
-		if (isset($options['answers'])) {
-			$answers = $options['answers'];
-		}
-		else {
-			$answers = null;
 		}
 		
 		/* Stuff to find and replace */
@@ -177,7 +198,7 @@ class RedFormCore extends JObject {
 			// set multi to number of answers...
 			$multi = count($answers);
 		}
-
+		
 		/* Loop through here for as many forms there are */
 		for ($signup = 1; $signup <= $multi; $signup++)
 		{
@@ -195,12 +216,12 @@ class RedFormCore extends JObject {
 				$html .= '<fieldset><legend>'.JText::sprintf('REDFORM_FIELDSET_SIGNUP_NB', $signup).'</legend>';
 			}
 				
-			if ($answers && $multi > 1) {
-				$html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->fields->id.'" checked="checked" />'.JText::_('INCLUDE_REGISTRATION').'</div>';
-			}
-			else if ($answers) {
-				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->fields->id.'" />';
-			}
+//			if ($answers && $multi > 1) {
+//				$html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->fields->id.'" checked="checked" />'.JText::_('INCLUDE_REGISTRATION').'</div>';
+//			}
+//			else if ($answers) {
+//				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->sid.'" />';
+//			}
 		
 			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price) {
 				$html .= '<div class="eventprice" price="'.$options['eventdetails']->course_price.'">'.JText::_('Registration price').': '.$form->currency.' '.$options['eventdetails']->course_price.'</div>';
@@ -1008,8 +1029,9 @@ EOF;
 	 * @param string $submit_key
 	 * @return array
 	 */
-	function getSubmitKeyAnswers($submit_key)
+	function _getSubmitKeyAnswers($submit_key)
 	{		
+		$mainframe = &JFactory::getApplication();
 		$db = JFactory::getDBO(); 
 		// get form id and answer id
 		$query = 'SELECT form_id, answer_id, submit_key, id '
@@ -1018,72 +1040,75 @@ EOF;
 		       ;
 		$db->setQuery($query);
 		$submitters = $db->loadObjectList();
-				
-		$results = array();
-		foreach ($submitters as $s)
+		
+		if (empty($submitters))
 		{
-			$results[] = $this->getAnswers($s->id);
+			$answers = $mainframe->getUserState($submit_key);
+			if (!$answers) {
+				return false;
+			}
 		}
-		return $results;		
+		else {
+			$answers = $this->getSidsAnswers($sids);
+		}
+		
+		$results = array();
+		foreach ($answers as $a)
+		{
+			$result = new formanswers();
+			$result->sid        = (isset($a->id) ? $a->id : null);
+			$result->submit_key = $submit_key;
+			$result->fields     = $a;
+			$results[] = $result;
+		}
+		return $results;
 	}
-	
+		
 	/**
-	 * returns an object with properties sid, submit_key, form_id, fields
+	 * returns an array of objects with properties sid, submit_key, form_id, fields
 	 * 
-	 * @param int $sid
+	 * @param mixed submit_key string or array int submitter ids
 	 */
-	function getAnswers($sid)
+	function _getAnswers($reference)
 	{
-		$sid = intval($sid);
-		if (!$sid) {
+		if (is_array($reference)) // sids
+		{				
+			$db = JFactory::getDBO();
+			
+			// get form id and answer id
+			$query = 'SELECT s.form_id, s.answer_id, s.submit_key '
+			       . ' FROM #__rwf_submitters AS s '
+			       . ' WHERE s.id = '.$db->Quote($reference[0])
+			       ;
+			$db->setQuery($query);
+	
+			list($form_id, $answer_id, $submit_key) = $db->loadRow();
+				
+			if (!$form_id || !$answer_id) {
+				Jerror::raiseError(0, JText::_('No data'));
+			}
+				
+			$model_redform = new RedformModelRedform();			
+			$answers = $model_redform->getSidsAnswers($reference);
+		
+			$results = array();
+			foreach ($answers as $a)
+			{
+				$result = new formanswers();
+				$result->sid        = $a->id;
+				$result->submit_key = $submit_key;
+				$result->fields     = $a;
+				$results[] = $result;
+			}
+			return $results;
+		}
+		else if (!empty($reference)) // submit_key
+		{
+			return $this->_getSubmitKeyAnswers($reference);
+		}
+		else {
 			return false;
 		}
-				
-		$db = JFactory::getDBO();
-		
-		// get form id and answer id
-		$query = 'SELECT form_id, answer_id, submit_key '
-		       . ' FROM #__rwf_submitters AS s '
-		       . ' WHERE id = '.$sid
-		       ;
-		$db->setQuery($query);
-
-		list($form_id, $answer_id, $submit_key) = $db->loadRow();
-			
-		if (!$form_id || !$answer_id) {
-			Jerror::raiseError(0, JText::_('No data'));
-		}
-			
-		// get fields
-		$query = 'SELECT id, field FROM #__rwf_fields '
-		. ' WHERE form_id = '. $db->Quote($form_id)
-		;
-		$db->setQuery($query);
-		$fields = $db->loadObjectList();
-			
-		// now get the anwsers
-		$query = 'SELECT * FROM #__rwf_forms_'. $form_id
-		. ' WHERE id = '. $db->Quote($answer_id)
-		;
-		$db->setQuery($query);
-		$answers = $db->loadObject();
-
-//		// add the answers to fields objects
-//		foreach ($fields as $k => $f)
-//		{
-//			$property = 'field_'. $f->id;
-//			if (property_exists($answers, $property)) {
-//				$fields[$k]->value = $answers->$property;
-//			}
-//		}
-		
-		$result = new stdclass();
-		$result->sid        = $sid;
-		$result->form_id    = $form_id;
-		$result->submit_key = $submit_key;
-		$result->fields     = $answers;
-		
-		return $result;		
 	}		
 	
 	function getFields($form_id)
@@ -1095,12 +1120,17 @@ EOF;
 		return $fields;
 	}
 	
-	function getSidsAnswers($form_id, $sids)
+	function getSidsAnswers($sids)
 	{
-		$model_redform = new RedformModelRedform();
-		$model_redform->setFormId($form_id);
-		
+		$model_redform = new RedformModelRedform();		
 		$res = $model_redform->getSidsAnswers($sids);
 		return $res;
 	}
+}
+
+class formanswers
+{
+	var $sid;
+	var $submit_key;
+	var $fields;
 }
