@@ -87,18 +87,15 @@ class RedFormCore extends JObject {
 		$user      = JFactory::getUser();
 		$document  = &JFactory::getDocument();
 		
-		if (is_array($reference)) 
+		if (!empty($reference)) 
 		{
-			$sids       = $reference;
-			$answers    = $this->_getAnswers($sids);
+			$answers    = $this->_getAnswers($reference);
 			if ($answers)	{
 				$submit_key = $answers[0]->submit_key;
 			}
-		}
-		else if (!empty($reference))
-		{
-			$submit_key = $reference;
-			$answers    = $this->_getAnswers($submit_key);
+			else {
+				return false;
+			}
 		}
 		else {
 			$submit_key = null;
@@ -1051,6 +1048,11 @@ EOF;
 			}
 		}
 		else {
+			$sids = array();
+			foreach ($submitters as $s)
+			{
+				$sids[] = $s->id;
+			}
 			$answers = $this->getSidsAnswers($sids);
 		}
 		
