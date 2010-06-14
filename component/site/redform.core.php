@@ -89,7 +89,7 @@ class RedFormCore extends JObject {
 		
 		if (!empty($reference)) 
 		{
-			$answers    = $this->_getAnswers($reference);
+			$answers    = $this->getAnswers($reference);
 			if ($answers)	{
 				$submit_key = $answers[0]->submit_key;
 			}
@@ -1056,16 +1056,7 @@ EOF;
 			$answers = $this->getSidsAnswers($sids);
 		}
 		
-		$results = array();
-		foreach ($answers as $a)
-		{
-			$result = new formanswers();
-			$result->sid        = (isset($a->id) ? $a->id : null);
-			$result->submit_key = $submit_key;
-			$result->fields     = $a;
-			$results[] = $result;
-		}
-		return $results;
+		return $answers;
 	}
 		
 	/**
@@ -1073,7 +1064,7 @@ EOF;
 	 * 
 	 * @param mixed submit_key string or array int submitter ids
 	 */
-	function _getAnswers($reference)
+	function getAnswers($reference)
 	{
 		if (is_array($reference)) // sids
 		{				
@@ -1094,25 +1085,26 @@ EOF;
 				
 			$model_redform = new RedformModelRedform();			
 			$answers = $model_redform->getSidsAnswers($reference);
-		
-			$results = array();
-			foreach ($answers as $a)
-			{
-				$result = new formanswers();
-				$result->sid        = $a->sid;
-				$result->submit_key = $submit_key;
-				$result->fields     = $a;
-				$results[] = $result;
-			}
-			return $results;
 		}
 		else if (!empty($reference)) // submit_key
 		{
-			return $this->_getSubmitKeyAnswers($reference);
+			$submit_key = $reference;
+			$answers = $this->_getSubmitKeyAnswers($submit_key);
 		}
 		else {
 			return false;
 		}
+		
+		$results = array();
+		foreach ($answers as $a)
+		{
+			$result = new formanswers();
+			$result->sid        = (isset($a->sid) ? $a->sid : null);
+			$result->submit_key = $submit_key;
+			$result->fields     = $a;
+			$results[] = $result;
+		}
+		return $results;
 	}		
 	
 	function getFields($form_id)
