@@ -23,6 +23,12 @@ JHTML::_('behavior.tooltip');
 
 <script type="text/javascript">
 	window.addEvent('domready', function(){
+		$('fieldtype').addEvent('click', function(){
+			if ($('form_id').value == 0) {
+				alert("<?php echo JText::_('REDFORM_FIELD_JS_PLEASE_SELECT_FORM_FIRST'); ?>");
+			}
+		});
+		
 		$('fieldtype').addEvent('change', function(){
 			if (confirm("<?php echo JText::_('REDFORM_FIELD_JS_CONFIRM_CHANGE_TYPE'); ?>")) {
 				submitform('apply');
@@ -40,6 +46,15 @@ JHTML::_('behavior.tooltip');
 			</td>
 			<td>
 			<input class="inputbox" type="text" size="80" name="field" value="<?php echo $this->row->field; ?>">
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" align="right">
+			<?php echo JHTML::tooltip(JText::_('Select the form the field belongs to. Changing forms REMOVES the field from the old form including all data.'), JText::_('Form'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Form'); ?>
+			</td>
+			<td>
+			<?php echo $this->lists['forms']; ?>
 			</td>
 		</tr>
 		<tr id="trfieldtypes">
@@ -77,15 +92,6 @@ JHTML::_('behavior.tooltip');
 			</td>
 			<td>
 			<?php echo $this->lists['unique']; ?>
-			</td>
-		</tr>
-		<tr>
-			<td valign="top" align="right">
-			<?php echo JHTML::tooltip(JText::_('Select the form the field belongs to. Changing forms REMOVES the field from the old form including all data.'), JText::_('Form'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Form'); ?>
-			</td>
-			<td>
-			<?php echo $this->lists['forms']; ?>
 			</td>
 		</tr>
 		<?php if (REDMEMBER_INTEGRATION): ?>

@@ -62,6 +62,10 @@ class RedformViewField extends JView {
 				break;
 			}
 		}
+		$forms = array_merge( array(JHTML::_('select.option', 0, JText::_('REDFORM_FIELD_SELECT_FORM'))),
+		                      $forms	 
+		                    );
+		
 		if ($row->form_id > 0) {
 			$selected = $row->form_id;
 		}
