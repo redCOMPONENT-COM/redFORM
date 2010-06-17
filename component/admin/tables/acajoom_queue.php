@@ -52,5 +52,24 @@ class TableAcajoom_queue extends JTable {
 	function __construct( &$db ) {
 		parent::__construct('#__acajoom_queue', 'qid', $db );
 	}
+	
+	function check()
+	{
+		// check unicity of subscriber/list/mailing
+		$query = ' SELECT qid ' 
+		       . ' FROM #__acajoom_queue ' 
+		       . ' WHERE subscriber_id = ' . $this->_db->Quote($this->subscriber_id)
+		       . '   AND list_id = ' . $this->_db->Quote($this->list_id)
+		       . '   AND mailing_id = ' . $this->_db->Quote($this->mailing_id)
+		       ;
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadResult();
+		if ($res) {
+			$this->setError(JText::_('REDFORM_ACAJOOM_EMAIL_ADDRESS_ALREADY_SUBSCRIBED'));
+			return false;
+		}
+		
+		return true;
+	}
 }
 ?>

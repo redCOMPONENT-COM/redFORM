@@ -52,5 +52,28 @@ class TableAcajoom_subscribers extends JTable {
 	function __construct( &$db ) {
 		parent::__construct('#__acajoom_subscribers', 'id', $db );
 	}
+	
+	/**
+	 * returns the subscriber having this email, otherwise returns false
+	 * 
+	 * @param string $mail
+	 * @return object or false if not found
+	 */
+	function find($mail)
+	{
+		$query = ' SELECT id FROM #__acajoom_subscribers WHERE email = '.$this->_db->Quote($mail);
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadResult();
+		
+		if ($res)
+		{
+			$this->load($res);
+			return $this;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 ?>

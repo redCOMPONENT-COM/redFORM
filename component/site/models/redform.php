@@ -746,7 +746,8 @@ class RedformModelRedform extends JModel {
 	 					$q = "SELECT COUNT(id) FROM #__components WHERE link = 'option=com_ccnewsletter'";
 	 					$db->setQuery($q);
 
-	 					if ($db->loadResult() > 0) {
+	 					if ($db->loadResult() > 0) 
+	 					{
 	 						/* ccNewsletter is installed, let's add the user */
 	 						$this->addTablePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_ccnewsletter' . DS . 'tables' );
 	 						$ccsubscriber = $this->getTable('subscriber');
@@ -762,12 +763,14 @@ class RedformModelRedform extends JModel {
 	 				}
 
 	 				/* Add the user to Acajoom */
-	 				if (isset($configuration['use_acajoom']) && $configuration['use_acajoom']->value) {
+	 				if (isset($configuration['use_acajoom']) && $configuration['use_acajoom']->value) 
+	 				{
 	 					/* Check if Acajoom is installed */
 	 					$q = "SELECT COUNT(id) FROM #__components WHERE link = 'option=com_acajoom'";
 	 					$db->setQuery($q);
 
-	 					if ($db->loadResult() > 0) {
+	 					if ($db->loadResult() > 0) 
+	 					{
 	 						/* Acajoom is installed, let's add the user */
 	 						$acajoomsubscriber = $this->getTable('acajoom_subscribers');
 	 						$myid = JFactory::getUser();
@@ -776,21 +779,28 @@ class RedformModelRedform extends JModel {
                               'name' => $fullname,
                               'email' => $submitter_email,
                               'subscribe_date' => date('Y-m-d H:i:s'));
-	 						$acajoomsubscriber->bind($acajoomsettings);
-	 						if (!$acajoomsubscriber->store()) {
-	 							if (stristr($db->getErrorMsg(), 'duplicate entry')) {
-	 								$mainframe->enqueueMessage(JText::_('This e-mail address is already signed up for the newsletter'), 'error');
-	 							}
-	 							else $mainframe->enqueueMessage(JText::_('There was a problem signing up for the newsletter').' '.$db->getErrorMsg(),'error');
+	 						
+	 						if (!$acajoomsubscriber->find($submitter_email)) // email already registered in acajoom ?
+	 						{
+		 						$acajoomsubscriber->bind($acajoomsettings);		 						
+		 						
+		 						if (!$acajoomsubscriber->store()) 
+		 						{
+		 							if (stristr($db->getErrorMsg(), 'duplicate entry')) {
+		 								$mainframe->enqueueMessage(JText::_('This e-mail address is already signed up for the newsletter'), 'error');
+		 							}
+		 							else $mainframe->enqueueMessage(JText::_('There was a problem signing up for the newsletter').' '.$db->getErrorMsg(),'error');
+		 						}
 	 						}
-
+	 						
 	 						/* Check if the mailinglist exists, add the user to it */
 	 						$list = false;
 	 						$q = "SELECT id, acc_id FROM #__acajoom_lists WHERE list_name = ".$db->Quote($mailinglistname)." LIMIT 1";
 	 						$db->setQuery($q);
 	 						$list = $db->loadObject();
 
-	 						if ($db->getAffectedRows() > 0) {
+	 						if ($db->getAffectedRows() > 0) 
+	 						{
 	 							/* Load the queue table */
 	 							$acajoomqueue = $this->getTable('acajoom_queue');
 
@@ -810,7 +820,16 @@ class RedformModelRedform extends JModel {
 	 							$queue->params = '';
 
 	 							$acajoomqueue->bind($queue);
-	 							$acajoomqueue->store();
+	 							
+	 							if (!$acajoomqueue->check()) {
+	 								JError::raiseWarning(0, $acajoomqueue->getError());
+	 							}
+	 							else 
+	 							{
+	 								if (!$acajoomqueue->store()) {
+	 									JError::raiseWarning(0, $acajoomqueue->getError());								
+	 								}
+	 							}
 	 						}
 	 					}
 	 				}
