@@ -229,39 +229,49 @@ class rfanswers
    * @return string answer
    */
   function _fileupload($field)
-  {
-    $db = &JFactory::getDBO();
-    $answer = '';
-    
-    /* Get the file path for file upload */
-    $query = "SELECT value
-          FROM #__rwf_configuration
-          WHERE name = ".$db->Quote('filelist_path');
-    $db->setQuery($query);
-    $filepath = $db->loadResult();
-    
+  {    
     /* Check if the folder exists */
     jimport('joomla.filesystem.folder');
     jimport('joomla.filesystem.file');
     
-    $fullpath = $filepath.DS.'redform_'.$this->_form_id;
-    if (!JFolder::exists($fullpath)) {
-      if (!JFolder::create($fullpath)) {
+    $db = &JFactory::getDBO();
+    $answer = '';
+    
+    /* Get the file path for file upload */
+    $query = ' SELECT c.value, f.formname '
+           . ' FROM #__rwf_configuration AS c, #__rwf_forms AS f '
+           . ' WHERE name = '.$db->Quote('filelist_path')
+           . '   AND f.id = '.$db->Quote($this->_form_id)
+          ;
+    $db->setQuery($query);
+    $res = $db->loadObject();
+    $filepath = $res->value;
+    $folder   = JFile::makeSafe($res->formname);
+    
+    $fullpath = $filepath.DS.$folder;
+    if (!JFolder::exists($fullpath)) 
+    {
+      if (!JFolder::create($fullpath)) 
+      {
         JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDERRR').': '.$fullpath);
         $status = false;
         return false;
       }
     }
     clearstatcache();
-    if (JFolder::exists($fullpath)) {
+    if (JFolder::exists($fullpath)) 
+    {
       if (JFile::exists($fullpath.DS.basename($field['name']['fileupload'][0]))) {
         JError::raiseWarning(0, JText::_('FILENAME_ALREADY_EXISTS').': '.basename($field['name']['fileupload'][0]));
         return false;
       }
-      else {
+      else 
+      {
         /* Start processing uploaded file */
-        if (is_uploaded_file($field['tmp_name']['fileupload'][0])) {
-          if (JFolder::exists($fullpath) && is_writable($fullpath)) {
+        if (is_uploaded_file($field['tmp_name']['fileupload'][0])) 
+        {
+          if (JFolder::exists($fullpath) && is_writable($fullpath)) 
+          {
             if (move_uploaded_file($field['tmp_name']['fileupload'][0], $fullpath.DS.basename($field['name']['fileupload'][0]))) {
               $answer = $fullpath.DS.basename($field['name']['fileupload'][0]);
             }
