@@ -602,7 +602,8 @@ class rfanswers
   	// get fields
   	$query = ' SELECT f.* FROM #__rwf_fields AS f '
   	       . ' WHERE f.form_id = '.$db->quote($submitter->form_id)
-  	       . ' AND f.published = 1 ';
+  	       . ' AND f.published = 1 '
+  	       . ' ORDER BY f.ordering ';
   	$db->setQuery($query);
   	$fields = $db->loadObjectList('id');
   	
