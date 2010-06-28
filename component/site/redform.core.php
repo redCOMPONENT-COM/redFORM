@@ -1122,6 +1122,55 @@ EOF;
 		$res = $model_redform->getSidsAnswers($sids);
 		return $res;
 	}
+	
+	/**
+	 * return form status (EXPIRED, REGISTER_ACCESS, SPECIAL_ACCESS)
+	 * 
+	 * check error for status details
+	 *  
+	 * @param int $form_id
+	 * @return boolean
+	 */
+	function getFormStatus($form_id)
+	{
+		$db   = &JFactory::getDBO();
+		$user = &JFactory::getUser();
+		
+		$query = ' SELECT f.* ' 
+		       . ' FROM #__rwf_forms AS f ' 
+		       . ' WHERE id = ' . (int) $form_id;
+		$db->setQuery($query);
+		$form = $db->loadObject();
+		
+		if (!$form->published)
+		{
+			$this->setError(JText::_('REDFORM_STATUS_NOT_PUBLISHED'));
+			return false;
+		}
+		if (strtotime($form->startdate) > time())
+		{
+			$this->setError(JText::_('REDFORM_STATUS_NOT_STARTED'));
+			return false;
+		}
+		if ($form->formexpires && strtotime($form->enddate) < time())
+		{
+			$this->setError( JText::_('REDFORM_STATUS_EXPIRED'));
+			return false;
+		}
+		if ($form->access > 0 && !$user->get('id'))
+		{
+			$this->setError( JText::_('REDFORM_STATUS_REGISTERED_ONLY'));
+			return false;
+		}
+		if ($form->access > $user->get('aid'))
+		{
+			$this->setError( JText::_('REDFORM_STATUS_SPECIAL_ONLY'));
+			return false;
+		}
+		
+		return true;
+	}
+	
 }
 
 class formanswers
