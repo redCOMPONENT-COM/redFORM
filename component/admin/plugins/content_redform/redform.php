@@ -738,7 +738,7 @@ EOF;
 				switch ($field->fieldtype)
 				{
 					case 'radio':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[radio][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[radio][]">'.$field->field.'</label></div>';
 						$element .= '<div class="fieldoptions">';		
 						foreach ($values as $id => $value)
 						{
@@ -766,7 +766,7 @@ EOF;
 						break;
 	
 					case 'textarea':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[textarea]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[textarea]">'.$field->field.'</label></div>';
 						$element .= '<textarea class="'.$form->classname.$field->parameters->get('class','');
 						if ($field->validate) $element .= ' validate';
 						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
@@ -785,7 +785,7 @@ EOF;
 						break;
 	
 					case 'wysiwyg':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[wysiwyg]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[wysiwyg]">'.$field->field.'</label></div>';
 						$content = '';
 						if ($answers)
 						{
@@ -804,7 +804,7 @@ EOF;
 						break;
 	
 					case 'email':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[email][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[email][]">'.$field->field.'</label></div>';
 						$element .= "<div class=\"emailfields\">";
 						$element .= "<div class=\"emailfield\">";
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
@@ -854,7 +854,7 @@ EOF;
 						break;
 	
 					case 'fullname':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fullname][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fullname][]">'.$field->field.'</label></div>';
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
 						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\"";
@@ -877,7 +877,7 @@ EOF;
 						break;
 	
 					case 'username':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[username][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[username][]">'.$field->field.'</label></div>';
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
 						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\"";
@@ -900,7 +900,7 @@ EOF;
 						break;
 	
 					case 'textfield':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[text][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[text][]">'.$field->field.'</label></div>';
 						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
 						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\"";
@@ -921,7 +921,7 @@ EOF;
 	
 					case 'date':
 						JHTML::_('behavior.calendar');
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[date]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[date]">'.$field->field.'</label></div>';
 						if ($answers)
 						{
 							if (isset($answers[($signup-1)]->$cleanfield)) {
@@ -943,7 +943,7 @@ EOF;
 						break;
 	
 					case 'price':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[price][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[price][]">'.$field->field.'</label></div>';
 						// if has not null value, it is a fixed price, if not this is a user input price
 						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
 						{
@@ -973,7 +973,7 @@ EOF;
 						break;
 						
 					case 'checkbox':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[checkbox][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[checkbox][]">'.$field->field.'</label></div>';
 						$element .= '<div class="fieldoptions">';						
 						foreach ($values as $id => $value)
 						{
@@ -1001,7 +1001,7 @@ EOF;
 						break;
 	
 					case 'select':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[select][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[select][]">'.$field->field.'</label></div>';
 						$element .= "<select name=\"field".$field->id.'.'.$signup."[select][]\" class=\"".$form->classname.$field->parameters->get('class','')."\">";
 						foreach ($values as $id => $value)
 						{
@@ -1022,7 +1022,7 @@ EOF;
 						break;
 	
 					case 'multiselect':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[multiselect][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[multiselect][]">'.$field->field.'</label></div>';
 						$element .= '<select name="field'.$field->id.'.'.$signup.'[multiselect][]"'
 						          . ' multiple="multiple" size="'.$field->parameters->get('size',5).'"'
 						          . ' class="'.trim($form->classname.$field->parameters->get('class','').($field->validate ?" required" : '')).'"'
@@ -1051,7 +1051,7 @@ EOF;
 						break;
 	
 					case 'recipients':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[recipients][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[recipients][]">'.$field->field.'</label>/div>';
 						$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\""
 						         . ($field->parameters->get('multiple', 1) ? ' multiple="multiple"' : '')
 						         . ' size="'.$field->parameters->get('size', 5).'"'
@@ -1080,7 +1080,7 @@ EOF;
 						break;
 	
 					case 'fileupload':
-						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fileupload][]">'.$field->field.'</div>';
+						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fileupload][]">'.$field->field.'</label></div>';
 						if ($submitter_id == 0) {
 							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" class=\"fileupload".$field->parameters->get('class','')."\" id=\"fileupload_".$field->cssfield."\"/>";
 						}
@@ -1197,8 +1197,13 @@ EOF;
 		$html .= '<input type="hidden" name="curform" value="'.($answers && count($answers) ? count($answers) : 1).'" />';
 		$html .= '<input type="hidden" name="form_id" value="'.$form->id.'" />';
 		$html .= '<input type="hidden" name="multi" value="'.$multi.'" />';
-		if (JRequest::getVar('close_form', true)) $html .= '</form>';
-		$html .= '</div>';
+		
+		if (JRequest::getVar('close_form', true)) {
+			$html .= '</form>';
+		}
+		
+		$html .= '</div>'; // div #redform
+		
 		if ($footnote) $html .= '<div id="footnote"><div id="validate_footnote">'.JText::_('VALIDATE_FOOTNOTE').'</div></div>';
 
 		return $html;
