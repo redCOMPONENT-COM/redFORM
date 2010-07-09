@@ -1116,10 +1116,73 @@ EOF;
 		return $fields;
 	}
 	
+	/**
+	 * return raw records from form table indexed by sids
+	 * 
+	 * @param array int sids
+	 * @return array
+	 */
 	function getSidsAnswers($sids)
 	{
 		$model_redform = new RedformModelRedform();		
 		$res = $model_redform->getSidsAnswers($sids);
+		return $res;
+	}
+	
+	/**
+	 * return fields with answers, indexed by sids
+	 * 
+	 * @param array int sids
+	 * @return array
+	 */
+	function getSidsFieldsAnswers($sids)
+	{
+		if (!is_array($sids) || empty($sids)) {
+			return false;
+		}
+		$answers = $this->getSidsAnswers($sids);
+		$form_id = $this->getSidForm($sids[0]);
+		$fields = $this->getFields($form_id);
+		
+		$res = array();
+		foreach ($answers as $sid => $answer)
+		{
+			$f = array();
+			foreach ($fields as $field)
+			{
+				if ($field->fieldtype == 'info')
+				{
+					$val = $this->getFieldValues($field->id);
+					$field->answer = $val[0]->value;
+				}
+				else {
+					$prop = 'field_'.$field->id;
+					$field->answer = $answer->$prop;
+				}
+				$f[] = $field;
+			}
+			$res[$sid] = $f;
+		}
+		return $res;
+	}
+	
+	/**
+	 * return form_id associated to submitter id
+	 * 
+	 * @param int sid
+	 * @return int
+	 */
+	function getSidForm($sid)
+	{
+		$db = &JFactory::getDBO();
+		
+		$query = ' SELECT f.id ' 
+		       . ' FROM #__rwf_forms AS f '
+		       . ' INNER JOIN #__rwf_submitters AS s ON f.id = s.form_id ' 
+		       . ' WHERE s.id = ' . $db->Quote($sid)
+		       ;
+		$db->setQuery($query);
+		$res = $db->loadResult();
 		return $res;
 	}
 	
@@ -1169,6 +1232,26 @@ EOF;
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * return values associated to a field
+	 * 
+	 * @param int $field_id
+	 * @return array
+	 */
+	function getFieldValues($field_id) 
+	{		
+		$db = &JFactory::getDBO();
+		
+		$query = " SELECT q.id, value, field_id, listnames, price "
+		       . " FROM #__rwf_values q "
+		       . " LEFT JOIN #__rwf_mailinglists m ON q.id = m.id "
+		       . " WHERE published = 1 "
+		       . " AND q.field_id = ".$field_id
+		       . " ORDER BY ordering";
+		$db->setQuery($query);
+		return $db->loadObjectList();
 	}
 	
 }
