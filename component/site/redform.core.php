@@ -27,6 +27,7 @@ require_once('redform.defines.php');
 
 require_once(RDF_PATH_SITE.DS.'classes'.DS.'field.php');
 require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
+require_once(RDF_PATH_SITE.DS.'helpers'.DS.'log.php');
 
 class RedFormCore extends JObject {
 	
