@@ -672,7 +672,7 @@ class RedFormCore extends JObject {
 		
 		if (!$result = $model->apisaveform($key, $options, $data))
 		{
-			$this->setError($result->getError());
+			$this->setError($model->getError());
 			return false;
 		}				
 		return $result;
