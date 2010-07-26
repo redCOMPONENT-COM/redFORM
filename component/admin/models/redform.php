@@ -102,7 +102,8 @@ class RedformModelRedform extends JModel {
    /**
     * get the form record
     */
-   function getForm() {
+   function getForm() 
+   {
       $row = $this->getTable();
       $my = JFactory::getUser();
       $id = JRequest::getVar('cid', false);
@@ -319,6 +320,18 @@ class RedformModelRedform extends JModel {
 			ORDER BY product_name";
 		$db->setQuery($q);
 		return $db->loadObjectList();
+	}
+	
+	public function getVmSettings()
+	{
+		$form = &$this->getDetails();
+		if (!$form->virtuemartactive) {
+			return false;
+		}
+		$res = new stdclass();
+		$res->vmproductid = $form->vmproductid;
+		$res->vmitemid    = $form->vmitemid;
+		return $res;
 	}
 }
 ?>

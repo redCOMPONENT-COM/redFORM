@@ -1255,6 +1255,25 @@ EOF;
 		return $db->loadObjectList();
 	}
 	
+	/**
+	 * return virtuemart form redirect
+	 * 
+	 * @param int $form_id
+	 * @return string url
+	 */
+	function getFormRedirect($form_id)
+	{
+		$model_redform = new RedformModelRedform();
+		$model_redform->setFormId($form_id);
+
+		
+		$settings = $model_redform->getVmSettings();
+		if (!$settings) {
+			return false;
+		}
+		return JRoute::_('index.php?page=shop.product_details&product_id='.$settings->vmproductid.'&option=com_virtuemart&Itemid='.$settings->vmitemid);
+	}
+	
 }
 
 class formanswers
