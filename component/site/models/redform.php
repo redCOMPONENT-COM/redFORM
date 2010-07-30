@@ -201,46 +201,15 @@ class RedformModelRedform extends JModel {
 		$post = JRequest::get('post');
 		$files = JRequest::get('files');
 		$posted = array_merge($post, $files);
-		
-		if (isset($posted['submit']['cancelreg'])) 
-		{
-			if ($event_task == 'edit')
-			{			
-				if (JRequest::getInt('xref', false)) {
-					$redirect = 'index.php?option=com_redevent&view=details&xref='.JRequest::getInt('xref');
-					$mainframe->redirect($redirect, JText::_('Operation cancelled'));
-				}
-				else return true;			
-			}
-			else if ($event_task == 'manageredit')
-			{
-				if (JRequest::getInt('xref', false)) {
-					$redirect = 'index.php?option=com_redevent&view=details&layout=manageattendees&xref='.JRequest::getInt('xref');
-					$mainframe->redirect($redirect, JText::_('Operation cancelled'));
-				}
-				else return true;
-			}
-		}
-		
-		/* See if we have an event ID */
-		if (JRequest::getInt('event_id', false)) {
-			$redevent = true;
-			$event_id = JRequest::getInt('event_id', 0);
-			$posted['xref'] = $event_id;
-		}
-		else if (JRequest::getInt('competition_id', false)) {
+				
+		if (JRequest::getInt('competition_id', false)) {
 			$redcompetition = true;
 			$event_id = JRequest::getInt('competition_id', 0);
 			$post['xref'] = $event_id;
 		}
 		else $post['xref'] = 0;
 		
-		if ($post['xref'] && $redevent) {
-			$event = $this->getEvent($post['xref']);
-		}
-		else {
-			$event = null;
-		}
+		$event = null;
 				
 		/* Loop through the different forms */
 		$totalforms = JRequest::getInt('curform');
@@ -277,11 +246,8 @@ class RedformModelRedform extends JModel {
 			$postvalues['form_id'] = $post['form_id'];
 			$postvalues['submitternewsletter'] = JRequest::getVar('submitternewsletter', '');
 			$postvalues['submit_key'] = $submit_key;
-			if ($redevent)
-			{
-				$postvalues['integration'] = 'redevent';
-			}
-			else if ($redcompetition)
+			
+			if ($redcompetition)
 			{
 				$postvalues['integration'] = 'redcompetition';
 			}
@@ -299,301 +265,33 @@ class RedformModelRedform extends JModel {
 				}
 			}
 			
-			if ($event_task == 'finalize' || $event_task == 'edit' || $event_task == 'manageredit')
-			{
-				if (isset($posted['confirm'][($signup-1)])) 
-				{
-					// this 'anwers' were already posted
-					$answers->setAnswerId($posted['confirm'][($signup-1)]);
-					// update answers
-					if (!$answers->save($postvalues)) return false;
-				}
-			}
-			else {
-				// save answers
-				if (!$answers->save($postvalues)) return false;		
-			}
+			// save answers
+			if (!$answers->save($postvalues)) return false;		
 
-			/* Clean up any signups that need to be removed */
-			$this->getConfirmAttendees();
-
-
-			if ( empty($event) || JRequest::getVar('event_task') == 'finalize' || empty($event->review_message))
-			{
-				$this->updateMailingList($answers);
-			}
+			$this->updateMailingList($answers);
 
 			$allanswers[] = $answers;
 		} /* End multi-user signup */
 		
-		// send the notifications mails if not a redevent registration, or if this is the review, or if there is no review
-		if ((empty($event) || $event_task == 'finalize' || empty($event->review_message))
-		    && $event_task != 'edit' && $event_task != 'manageredit')
-		{
-			/* Load the mailer in case we need to inform someone */
-			if ($form->submitterinform || $form->contactpersoninform) {
-				$this->Mailer();
-			}
-
-			/* Send a submission mail to the submitters if set */
-			if ($form->submitterinform) 
-			{
-				foreach ($allanswers as $answers)
-				{
-					$this->notifysubmitter($answers, $form);
-				}
-			}
-				
-			/* Inform contact person if need */
-			// form recipients
-			$recipients = $allanswers[0]->getRecipients();
-			
-			// in case of an event, xref group recipients
-			if ($redevent)
-			{
-				$query = ' SELECT u.email '
-							 . ' FROM #__redevent_event_venue_xref AS x '
-							 . ' INNER JOIN #__redevent_groups AS g ON x.groupid = g.id '
-							 . ' INNER JOIN #__redevent_groupmembers AS gm ON gm.group_id = g.id '
-							 . ' INNER JOIN #__users AS u ON gm.member = u.id '
-							 . ' WHERE x.id = '. $this->_db->Quote(JRequest::getInt('xref'))
-							 . '   AND gm.receive_registrations = 1 '
-							 ;
-				$db->setQuery($query);
-				$xref_group_recipients = $db->loadResultArray();
-			}
-			else {				
-				$xref_group_recipients = array();
-			}
-			
-			if ($form->contactpersoninform || !empty($recipients) || !empty($xref_group_recipients)) 
-			{
-			  // init mailer
-			  $mailer = &JFactory::getMailer();
-			  $mailer->isHTML(true);
-			  if ($form->contactpersoninform) 
-			  {
-		  		if (strstr($form->contactpersonemail, ';')) {
-		  			$addresses = explode(";", $form->contactpersonemail);
-		  		}
-		  		else {
-		  			$addresses = explode(",", $form->contactpersonemail);
-		  		}
-		  		foreach ($addresses as $a) 
-		  		{
-		  			$a = trim($a);
-			  		if (JMailHelper::isEmailAddress($a)) {
-			  			$mailer->addRecipient($a);
-			  		}  			
-		  		}
-			  }
-			  
-			  if (!empty($recipients)) 
-			  {
-			    foreach ($recipients AS $r) {
-			      $mailer->addRecipient($r);
-			    }
-			  }
-			  if (!empty($xref_group_recipients)) 
-			  {
-			    foreach ($xref_group_recipients AS $r) {
-			      $mailer->addRecipient($r);
-			    }
-			  }
-			  			
-			  // we put the submitter as the email 'from' and reply to.
-			  $user = & JFactory::getUser();
-			  if ($user->get('id')) {
-			    $sender = array($user->email, $user->name);
-			  }
-			  else if ($allanswers[0]->getSubmitterEmail())
-			  {
-			    if ($allanswers[0]->getFullname()) {
-			      $sender = array($allanswers[0]->getSubmitterEmail(), $allanswers[0]->getFullname());
-			    }
-			    else {
-			      $sender = $allanswers[0]->getSubmitterEmail();
-			    }
-			  }
-			  else { // default to site settings
-			    $sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
-			  }
-			  $mailer->setSender($sender);
-			  $mailer->addReplyTo($sender);
-
-			  // set the email subject
-				/* Get the event details */
-				$eventname = '';
-				if ($redevent) 
-				{
-					$q = "SELECT x.id, title, v.venue, x.dates, x.times, x.details
-							FROM #__redevent_events e
-							INNER JOIN #__redevent_event_venue_xref x ON x.eventid = e.id
-							INNER JOIN #__redevent_venues as v ON x.venueid = v.id
-							WHERE x.id = ".JRequest::getInt('xref');
-					$db->setQuery($q);
-					$res = $db->loadObject();
-					$eventname = $res->title;
-					
-					$venue = $res->venue;
-					
-					if ($res->dates && $res->dates != '0000-00-00') {
-						$startdate = $res->dates;
-					}
-					else {
-						$startdate = JText::_('Open date');
-					}
-					
-					if ($res->times && $res->times != '00:00:00') {
-						$starttime = substr($res->times, 0, 5);
-					}
-					else {
-						$starttime = '';
-					}
-					
-					$tags = array('[formname]', '[eventname]', '[startdate]', '[starttime]', '[venuename]', '[info]');
-					$values = array($form->formname, $eventname, $startdate, $starttime, $venue, $res->details);
-					$mailer->setSubject(str_replace($tags, $values, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT_WITH_EVENT')));
-				}
-				else {
-					$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
-				}
-				
-				// Mail body
-				$htmlmsg = '<html><head><title></title></title></head><body>';
-				$htmlmsg .= JText::_('A new submission has been received.');
-				if ($redevent) {					
-					$htmlmsg .= str_replace($tags, $values, $form->notificationtext);
-				}
-				else {
-					$htmlmsg .= $form->notificationtext;
-				}
-				
-				/* Add user submitted data if set */
-				if ($form->contactpersonfullpost) 
-				{
-					if (JRequest::getInt('productid', false)) 
-					{
-						$productdetails = $this->getProductDetails();
-						if (!stristr('http', $productdetails->product_full_image)){
-							$productimage = JURI::root().'/components/com_virtuemart/shop_image/product/'.$productdetails->product_full_image;
-						}
-						else $productimage = $productdetails->product_full_image;
-						$htmlmsg .= '<div id="productimage">'.JHTML::_('image', $productimage, $productdetails->product_name).'</div>';
-						$htmlmsg .= '<div id="productname">'.$productdetails->product_name.'</div>';
-					}
-										
-					foreach ($allanswers as $answers)
-					{
-					  $rows = $answers->getAnswers();
-            $patterns[0] = '/\r\n/';
-            $patterns[1] = '/\r/';
-            $patterns[2] = '/\n/';
-            $replacements[2] = '<br />';
-            $replacements[1] = '<br />';
-            $replacements[0] = '<br />';
-            
-            $htmlmsg .= '<br /><table border="1">';
-
-            foreach ($rows as $key => $answer)
-            {
-            	switch ($answer['type'])
-            	{
-            		case 'recipients':
-            			break;
-            		case 'email':
-	                $htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
-	                $htmlmsg .= '<a href="mailto:'.$answer['value'].'">'.$answer['value'].'</a>';
-	                $htmlmsg .= '&nbsp;';
-	                $htmlmsg .= '</td></tr>'."\n";
-	                break;
-            		case 'text':
-	                $userinput = preg_replace($patterns, $replacements, $answer['value']);
-	                $htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
-	                if (strpos($answer['value'], 'http://') === 0) {
-	                	$htmlmsg .= '<a href="'.$answer['value'].'">'.$answer['value'].'</a>';
-	                }
-	                else {
-	                	$htmlmsg .= $answer['value'];
-	                }
-	                $htmlmsg .= '&nbsp;';
-	                $htmlmsg .= '</td></tr>'."\n";
-	                break;
-            		default :
-	                $userinput = preg_replace($patterns, $replacements, $answer['value']);
-	                $htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
-	                $htmlmsg .= str_replace('~~~', '<br />', $userinput);
-	                $htmlmsg .= '&nbsp;';
-	                $htmlmsg .= '</td></tr>'."\n";
-	                break;
-            	}
-            }
-            $htmlmsg .= "</table><br />";
-					}
-				}
-				$htmlmsg .= '</body></html>';
-				$mailer->setBody($htmlmsg);
-				
-				// send the mail
-				if (!$mailer->Send()) {
-					RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);;
-				}
-			}
+		/* Load the mailer in case we need to inform someone */
+		if ($form->submitterinform || $form->contactpersoninform) {
+			$this->Mailer();
 		}
-			
-		/* All is good, check if we have an event in that case redirect to redEVENT */
-		if ($redevent) 
+
+		/* Send a submission mail to the submitters if set */
+		if ($form->submitterinform) 
 		{
-			if ($event_task == 'edit')
-			{			
-				if (JRequest::getInt('xref', false)) {
-					$redirect = 'index.php?option=com_redevent&view=details&xref='.JRequest::getInt('xref');
-					$mainframe->redirect($redirect, JText::_('Registration updated'));
-				}
-				else return true;			
-			}
-			else if ($event_task == 'manageredit')
+			foreach ($allanswers as $answers)
 			{
-				if (JRequest::getInt('xref', false)) {
-					$redirect = 'index.php?option=com_redevent&view=details&layout=manageattendees&xref='.JRequest::getInt('xref');
-					$mainframe->redirect($redirect, JText::_('Registration updated'));
-				}
-				else return true;
+				$this->notifysubmitter($answers, $form);
 			}
-			else
-			{
-				$redirect = 'index.php?option=com_redevent&controller=registration'
-				          . '&task='.JRequest::getVar('event_task')
-				          . '&submit_key='.$submit_key
-				          . '&xref='.JRequest::getInt('xref')
-				          . '&form_id='.JRequest::getInt('form_id')
-				          ;
-//				$redirect = 'index.php?option=com_redevent&view=confirmation&task='
-//						.JRequest::getVar('event_task')
-//						.'&xref='.JRequest::getInt('xref')
-//						.'&submit_key='.$submit_key
-//						.'&form_id='.JRequest::getInt('form_id');
-				// go to final if this was the review screen, or if there is no review screen
-				if (JRequest::getVar('event_task') == 'finalize' || empty($event->review_message)) 
-				{
-					$redirect .= '&step=final';
-					$submit = JRequest::getVar('submit');
-					if (!is_array($submit)) settype($submit, 'array');
-					$arkeys = array_keys($submit);
-					$redirect .= '&action='.$arkeys[0];
-				}
-				else {
-					$redirect .= '&step=review';
-//					$redirect .= '&page=confirmation&event_task=review';
-					if (strtolower(JRequest::getVar('submit')) == strtolower(JText::_('SUBMIT_AND_PRINT'))) $redirect .= '&action=print';
-				}
-				if ($form->virtuemartactive) {
-					$redirect .= '&redformback=1';
-				}
-				$mainframe->redirect(JRoute::_($redirect, false));
-			}
-		}
+		}				
 		
+		// send email to miantainers
+		if ($answers->isNew()) {
+			$this->notifymaintainer($allanswers);
+		}
+					
 		if ($form->activatepayment)
 		{
 			$redirect = 'index.php?option=com_redform&controller=payment&task=select&key='.$submit_key;
@@ -1158,8 +856,7 @@ class RedformModelRedform extends JModel {
 
 			// Mail body
 			$htmlmsg = '<html><head><title></title></title></head><body>';
-			$htmlmsg .= JText::_('A new submission has been received.');
-			$htmlmsg .= $form->notificationtext;
+			$htmlmsg .= JText::sprintf('REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY', $form->formname);
 
 			/* Add user submitted data if set */
 			if ($form->contactpersonfullpost)
