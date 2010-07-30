@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `startdate` datetime NOT NULL default '0000-00-00 00:00:00',
   `enddate` datetime NOT NULL default '0000-00-00 00:00:00',
   `published` int(1) NOT NULL default '0',
-  `formstarted` int(1) NOT NULL default '0',
   `checked_out` int(11) default NULL,
   `checked_out_time` datetime default '0000-00-00 00:00:00',
   `submissionsubject` varchar(255) NOT NULL default '',

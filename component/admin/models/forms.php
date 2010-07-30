@@ -35,22 +35,46 @@ class RedformModelForms extends JModel
 	/** @var integer pagination limit */
 	protected $_limit = null;
 	   
+	protected $_forms = null;
 	/**
 	 * Show all orders for which an invitation to fill in
 	 * a testimonal has been sent
 	 */
-	function getForms() {
-		/* Get all the orders based on the limits */
-		$query = "SELECT * 
-				FROM #__rwf_forms";
-		return $this->_getList($query, $this->_limitstart, $this->_limit);
+	function getForms() 
+	{
+		if (empty($this->_forms))
+		{
+			$pagination = $this->getPagination();
+			/* Get all the orders based on the limits */
+			$query = $this->_buildQuery();
+			$this->_forms = $this->_getList($query, $pagination->limitstart, $pagination->limit);
+			
+			foreach ($this->_forms as $k => $f)
+			{
+				if (strtotime($f->startdate) > time() || ($f->formexpires && strtotime($f->enddate) < time())) {
+					$this->_forms[$k]->formstarted = false;
+				}
+				else {				
+					$this->_forms[$k]->formstarted = true;
+				}			
+			}
+		}
+		return $this->_forms;
 	}
 	
-	function getPagination() {
+	function _buildQuery()
+	{
+		$query = "SELECT * FROM #__rwf_forms";
+		return $query;
+	}
+	
+	function getPagination() 
+	{
 		global $mainframe, $option;
 		
 		/* Lets load the pagination if it doesn't already exist */
-		if (empty($this->_pagination)) {
+		if (empty($this->_pagination)) 
+		{
 			jimport('joomla.html.pagination');
 			$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
 			$this->_limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
@@ -66,12 +90,12 @@ class RedformModelForms extends JModel
 	 * @access public
 	 * @return integer
 	 */
-	function getTotal() {
+	function getTotal() 
+	{
 		// Lets load the content if it doesn't already exist
 		if (empty($this->_total))
 		{
-			$query = "SELECT *"
-			. "\n FROM #__rwf_forms";
+			$query = $this->_buildQuery();
 			$this->_total = $this->_getListCount($query);
 		}
 
@@ -114,7 +138,8 @@ class RedformModelForms extends JModel
   	if (!$database->query()) {
   		$mainframe->enqueueMessage(JText::_('A problem occured when deleting the form'));
   	}
-  	else {
+  	else 
+  	{
   		if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Forms have been deleted'));
   		else $mainframe->enqueueMessage(JText::_('Form has been deleted'));
 
@@ -127,7 +152,8 @@ class RedformModelForms extends JModel
 
   		/* See if there is any data */
 
-  		if (count($fieldids) > 0) {
+  		if (count($fieldids) > 0) 
+  		{
   			/* Now delete the fields */
   			$cids = 'form_id=' . implode( ' OR form_id=', $cid );
   			$q = "DELETE FROM #__rwf_fields
@@ -152,7 +178,9 @@ class RedformModelForms extends JModel
   				}
   			}
   		}
-  		else $mainframe->enqueueMessage(JText::_('No fields found'));
+  		else {
+  			$mainframe->enqueueMessage(JText::_('No fields found'));
+  		}
 
   		/* Delete the submitters */
   		$cids = 'form_id=' . implode( ' OR form_id=', $cid );
@@ -168,7 +196,8 @@ class RedformModelForms extends JModel
 
   		/* Now delete the submitter values */
   		$cids = 'form_id=' . implode( ' OR form_id=', $cid );
-  		foreach ($cid as $key => $fid) {
+  		foreach ($cid as $key => $fid) 
+  		{
   			$q = "DROP TABLE #__rwf_forms_".$fid;
   			$database->setQuery($q);
   			if (!$database->query()) {
@@ -184,7 +213,8 @@ class RedformModelForms extends JModel
    /**
     * Convert a calendar date to MySQL date format
 	*/
-	function ConvertCalendarDate(&$dtstamp) {
+	function ConvertCalendarDate(&$dtstamp) 
+	{
 		/* Conver the date to MySQL format */
 		$datetime = split(" ", $dtstamp);
 		$dates = split("-", $datetime[0]);
@@ -197,7 +227,8 @@ class RedformModelForms extends JModel
 	/**
 	 * Get the number of contestants
 	 */
-	public function getCountSubmitters() {
+	public function getCountSubmitters() 
+	{
 		$db = JFactory::getDBO();
 		$q = "SELECT form_id, COUNT(id) AS total
 			FROM #__rwf_submitters

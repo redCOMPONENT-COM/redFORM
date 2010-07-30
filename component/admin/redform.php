@@ -53,7 +53,7 @@ if( $controller = JRequest::getWord('controller') ) {
 }
 
 // Create the controller
-$classname	= 'RedformController'.$controller;
+$classname	= 'RedformController'.ucfirst($controller);
 $controller = new $classname( );
 
 // Perform the Request task

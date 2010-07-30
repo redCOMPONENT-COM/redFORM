@@ -55,10 +55,7 @@ class plgContentRedform extends JPlugin {
 		$regex = "#{redform}(.*?){/redform}#s";
 		
 		if (preg_match($regex, $row->text, $matches)) 
-		{			
-			/* Check if there are forms to be started or stopped */
-			$this->CheckForms();		
-			
+		{						
 			/* Hook up other red components */
 			if (isset($row->eventid)) JRequest::setVar('redevent', $row);
 			else if (isset($row->competitionid)) JRequest::setVar('redcompetition', $row);
@@ -97,6 +94,10 @@ class plgContentRedform extends JPlugin {
 			
 			/* Get the form details */
 			$form = $this->getForm($matches[0]);
+			$check = $this->_checkFormActive($form);
+			if (!($check === true)) {
+				return $check;
+			}
 	
 			/* Check if the user is allowed to access the form */
 			$user	= JFactory::getUser();
@@ -120,69 +121,41 @@ class plgContentRedform extends JPlugin {
 			}
 		}
 	}
-	
+		
 	/**
-	 * Check if there are any forms to be started or stopped
+	 * returns form object
+	 * 
+	 * @param int $form_id
+	 * @return object
 	 */
-	function CheckForms() 
-	{
-		$db = JFactory::getDBO();
-		
-		/* Check running forms to be stopped */
-		$q = "SELECT id 
-			FROM #__rwf_forms
-			WHERE enddate < NOW()
-			AND published = 1
-			AND formstarted = 1
-			AND formexpires = 1";
-		$db->setQuery($q);
-		$forms = $db->loadObjectList();
-		
-		if (count($forms) > 0) 
-		{
-			foreach ($forms as $id => $form_id) 
-			{
-				$q = "UPDATE #__rwf_forms
-				SET published = 0, formstarted = 0
-				WHERE id = ".$form_id->id;
-				$db->setQuery($q);
-				$db->query();
-			}
-		}
-		
-		/* Check not running forms to be started*/
-		$q = "SELECT id 
-			FROM #__rwf_forms
-			WHERE startdate < NOW()
-			AND published = 1
-			AND formstarted = 0";
-		$db->setQuery($q);
-		$forms = $db->loadObjectList();
-		
-		if (count($forms) > 0) 
-		{
-			foreach ($forms as $id => $form_id) 
-			{
-				$q = "UPDATE #__rwf_forms
-				SET formstarted = 1
-				WHERE id = ".$form_id->id;
-				$db->setQuery($q);
-				$db->query();
-			}
-		}
-	}
-	
 	function getForm($form_id) 
 	{
 		$db = JFactory::getDBO();
 		
-		$q = "SELECT *
-			FROM #__rwf_forms f
-			WHERE f.id = ".$form_id."
-			AND published = 1
-			AND formstarted = 1";
+		$q = ' SELECT f.* '
+		   . ' FROM #__rwf_forms AS f '
+		   . ' WHERE f.id = '.$db->Quote($form_id)
+		   . '   AND published = 1 '
+		   ;
 		$db->setQuery($q);
 		return $db->loadObject();
+	}
+	
+	/**
+	 * checks if the form is active
+	 * 
+	 * @param object $form
+	 * @return true if active, error message if not
+	 */
+	function _checkFormActive($form)
+	{
+		if (strtotime($form->startdate) > time()) {
+			return JText::_('REDFORM_FORM_NOT_STARTED');
+		}
+		else if ($form->formexpires && strtotime($form->enddate) < time()) {
+			return JText::_('REDFORM_FORM_EXPIRED');
+		}
+		return true;
 	}
 	
 	function getFormFields($form_id) 

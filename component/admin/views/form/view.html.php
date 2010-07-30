@@ -35,14 +35,8 @@ class RedformViewForm extends JView {
 	{
 		global $mainframe;
 		
-		if ($this->getLayout() == 'detailsform') {
-		  $this->_displayDetails($tpl);
-		  return;
-		}
-		else {
-			$this->setLayout('editform');
-		}
-
+		$this->setLayout('editform');
+		
 		$row = $this->get('Data');
 
 		/* Get the show name option */
@@ -113,36 +107,6 @@ class RedformViewForm extends JView {
 
 		/* Display the page */
 		parent::display($tpl);
-	}
-
-	function _displayDetails($tpl = null)
-	{
-		/* Get competition details */
-		$form = $this->get('Data');
-
-		/* Get submitters */
-		$cid = JRequest::getVar('cid');
-		JRequest::setVar('form_id', $cid[0]);
-		$submitters = $this->get('Submitters', 'submitters');
-
-		/* Newsletter signup */
-		$newsletter = $this->get('NewsletterSignup', 'submitters');
-
-		/* menu */
-		RedformHelper::setMenu();
-		
-		/* set the toolbar */
-		JToolBarHelper::title(JText::_( 'Details Form' ), 'redform_details');
-		JToolBarHelper::back();
-
-    /* Set variabels */
-		$this->assignRef('form', $form);
-		$this->assignRef('submitters', $submitters);
-		$this->assignRef('newsletter', $newsletter);
-
-		/* Display the page */
-		parent::display($tpl);
-
 	}
 }
 ?>

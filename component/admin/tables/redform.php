@@ -33,8 +33,6 @@ class TableRedform extends JTable {
 	var $enddate = null;
 	/** @var string Whether or not the entry is published */
 	var $published = 0;
-	/** @var string Whether or not the entry is published */
-	var $formstarted = null;
 	/** @var string Subject for the mail sent to new contestants */
 	var $submissionsubject = null;
 	/** @var string Body text for the mail sent to new contestants */

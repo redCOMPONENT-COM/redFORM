@@ -40,7 +40,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 			<?php echo JText::_('Published'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Form started'); ?>
+			<?php echo JText::_('Active'); ?>
 			</th>
 			<th class="title">
 			<?php echo JText::_('Submitters'); ?>
@@ -95,9 +95,10 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				?>
 				</td>
 				<td>
-				<?php 
+				<?php if ($row->formexpires) {
 					$date = JFactory::getDate($row->enddate);
 					echo $date->toFormat('%d-%m-%Y  %H:%M:%S');
+				}
 				?>
 				</td>
 				<td width="10%" align="center">
@@ -132,4 +133,5 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="controller" value="forms" />
+	<input type="hidden" name="view" value="forms" />
 </form>

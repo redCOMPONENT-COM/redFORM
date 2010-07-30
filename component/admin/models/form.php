@@ -101,6 +101,15 @@ class RedformModelForm extends JModel
           ;
       $this->_db->setQuery($query);
       $this->_data = $this->_db->loadObject();
+      
+    
+			if (strtotime($this->_data->startdate) > time() || ($this->_data->formexpires && strtotime($this->_data->enddate) < time())) {
+				$this->_data->formstarted = false;
+			}
+			else {				
+				$this->_data->formstarted = true;
+			}
+      
       return (boolean) $this->_data;
     }
     return true;
@@ -109,6 +118,7 @@ class RedformModelForm extends JModel
   function _initData()
   {
     $this->_data = & JTable::getInstance('redform', 'Table');
+		$this->_data->formstarted = false;
   	return $this->_data;
   }
   

@@ -58,7 +58,6 @@ class RedformViewForms extends JView {
 	function toolbar() 
 	{
 		JToolBarHelper::title(JText::_( 'redFORM' ), 'redform_redform');
-		JToolBarHelper::custom('details', 'redform_details', 'redform_details', JText::_('Details'), true);
 		JToolBarHelper::custom('submitters', 'redform_submitters', 'redform_submitters', JText::_('Submitters'), true);
 		JToolBarHelper::spacer();
 		JToolBarHelper::publishList();
