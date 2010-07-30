@@ -1117,12 +1117,27 @@ EOF;
 		}
 			
 		/* Add the captcha */
-		if ($form->captchaactive && $submitter_id == 0) {
-			$html .= '<div id="redformcaptcha"><img src="index.php?option=com_redform&task=displaycaptcha&controller=redform">';
-			$html .= ' '.JHTML::tooltip(JText::_('CAPTCHA_TOOLTIP'), JText::_('CAPTCHA'), 'tooltip.png', '', '', false).'</div>';
-			$html .= '<div id="redformcaptchaword"><input type="text" name="captchaword"></div>';
-		}
-			
+		if ($form->captchaactive && $submitter_id == 0) 
+		{
+//			$html .= '<div id="redformcaptcha"><img src="index.php?option=com_redform&task=displaycaptcha&controller=redform">';
+//			$html .= ' '.JHTML::tooltip(JText::_('CAPTCHA_TOOLTIP'), JText::_('CAPTCHA'), 'tooltip.png', '', '', false).'</div>';
+//			$html .= '<div id="redformcaptchaword"><input type="text" name="captchaword"></div>';
+
+	
+			if (file_exists(JPATH_PLUGINS.DS.'system'.DS.'Captcha04'.DS."CaptchaImage.php"))
+			{
+				$html .= '<div class="fieldline">';
+				$html .= '<div class="label"><label for="captchaword">'.JText::_('REDFORM_CAPTCHA_LABEL').'</label></div>';
+				$html .= '<div id="redformcaptcha">';
+				$html .= '<img src="index.php?option=com_redform&task=displaycaptcha&controller=redform"><br/>';
+				$html .= '<input type="text" name="captchaword">';
+				$img = JHTML::image(JURI::root().'components/com_redform/assets/images/info.png', JText::_('ToolTip'));
+				$html .= ' <span class="editlinktip hasTipField" title="'.JText::_('REDFORM_CAPTCHA_LABEL').'::'.JText::_('REDFORM_CAPTCHA_TOOLTIP').'">'. $img .'</span>';
+				$html .= '</div>';
+				$html .= '</div>';
+			}
+	}
+		
 		/* Get the user details form */
 		if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) 
 		{
