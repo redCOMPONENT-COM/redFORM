@@ -288,7 +288,7 @@ class RedFormCore extends JObject {
 					case 'textarea':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[textarea]">'.$field->field.'</label></div>';
 						$element .= '<textarea class="'.$form->classname.$field->parameters->get('class','');
-						if ($field->validate) $element .= ' validate';
+						if ($field->validate) $element .= ' required';
 						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
 						$element .= ' cols="'.$field->parameters->get('cols',25).'" rows="'.$field->parameters->get('rows',6).'"';
 						$element .= ">";
@@ -792,9 +792,10 @@ EOF;
   				for(i=0; i < formelements.length; i++) 
   	  		{
   					var check_element = formelements[i];
+
   					/* Check field type */
   					/* Fullname */
-  					if (check_element.name.match("fullname") && check_element.className.match("required")) {
+  					if (check_element.name.indexOf("[fullname]") != -1 && check_element.className.match("required")) {
   						var fullresult = CheckFill(check_element);
   						if (!fullresult) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter a name'); ?>\n";
@@ -803,7 +804,7 @@ EOF;
   					}
   					
   					/* Text field */
-  					if (check_element.name.match("text") && check_element.className.match("required")) {
+  					if (check_element.name.indexOf("[text]") != -1 && check_element.className.match("required")) {
   						var textresult = CheckFill(check_element);
   						if (!textresult) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
@@ -812,7 +813,7 @@ EOF;
   					}
   					
   					/* Textarea field */
-  					if (check_element.name.match("textarea") && check_element.className.match("required")) {
+  					if (check_element.name.indexOf("[textarea]") != -1 && check_element.className.match("required")) {
   						var textarearesult = CheckFill(check_element);
   						if (!textarearesult) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
@@ -821,7 +822,7 @@ EOF;
   					}
   					
   					/* Username field */
-  					if (check_element.name.match("username") && check_element.className.match("required")) {
+  					if (check_element.name.indexOf("[username]") != -1 && check_element.className.match("required")) {
   						var usernameresult = CheckFill(check_element);
   						if (!usernameresult) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter an username'); ?>\n";
@@ -830,7 +831,7 @@ EOF;
   					}
   					
   					/* E-mail */
-  					if (check_element.name.match("email") && check_element.className.match("required")) {
+  					if (check_element.name.indexOf("[email]") != -1 && check_element.className.match("required")) {
   						if (CheckFill(check_element)) {
   							if (!CheckEmail(check_element.value)) {
   								msg = msg + "<?php echo JText::_('No valid e-mail address'); ?>\n";
@@ -844,7 +845,7 @@ EOF;
   					}
 
   					/* multiselect field */
-  					if (check_element.name.match("multiselect") && check_element.className.match("required")) {
+  					if (check_element.name.indexOf("[multiselect]") != -1 && check_element.className.match("required")) {
   						var multires = CheckFill(check_element);
   						if (!multires) {
 								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('select a value'); ?>\n";
@@ -853,7 +854,7 @@ EOF;
   					}
   					
 		        /* Radio buttons */
-	          if (check_element.name.match("radio") && check_element.className.match("required")) {
+	          if (check_element.name.indexOf("[radio]") != -1 && check_element.className.match("required")) {
 	            radios = document.getElementsByName(check_element.name);
 	            var radiocheck = false;
 	            for (var rct=radios.length-1; rct > -1; rct--) {
@@ -870,7 +871,7 @@ EOF;
 	          }
 	          
 	          /* Check boxes */
-	          if (check_element.name.match("checkbox") && check_element.className.match("required")) {
+	          if (check_element.name.indexOf("[checkbox]") != -1 && check_element.className.match("required")) {
 	            checkboxes = document.getElementsByName(check_element.name);
 	            var checkboxcheck = false;
 	            for (var rct=checkboxes.length-1; rct > -1; rct--) {
@@ -888,7 +889,7 @@ EOF;
 	          }
   				}
 				}
-				if (result == false) {
+				if (result == false) {					
 					alert(msg);
 					<?php if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) { ?>
 						exit(0);

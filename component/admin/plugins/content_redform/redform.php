@@ -30,6 +30,8 @@ class plgContentRedform extends JPlugin {
 	 */
 	var $_rwfparams = null;
 	
+	var $_rfcore = null;
+	
 	function plgContentRedform( &$subject, $config = array() )
 	{
 		parent::__construct( $subject, $config );     
@@ -47,6 +49,13 @@ class plgContentRedform extends JPlugin {
 	
 	function _process(&$row, $params = array()) 
 	{
+		if (!file_exists(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'redform.core.php')) {
+			JError::raiseWarning(0, JText::_('REDFORM_COMPONENT_REQUIRED_FOR_REDFORM_PLUGIN'));
+			return false;
+		}
+		include_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'redform.core.php');
+		$this->_rfcore = new RedFormCore();
+		
     JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );
     
 		$this->_rwfparams = $params;
@@ -253,306 +262,7 @@ class plgContentRedform extends JPlugin {
 		}
 		return $user;
 	}
-	
-	function jsPrice()
-	{
-		$script = <<< EOF
-		jQuery(function () {
-		   jQuery(document.redform).find(":input").change(updatePrice);
-
-		   updatePrice();
-		});
-
-		function updatePrice()
-		{
-			var price = 0.0;
-			var active = parseInt(jQuery("input[name='curform']").val());
-
-			var countforms = 0;
-
-			for (var i = 1; i < active+1; i++)
-			{
-				var signup = jQuery("#formfield"+i);
-				signup.find("input[name*=price]").each(function(k) {
-					var p = jQuery(this).val();
-					if (p) {
-						price += parseFloat(p);
-					}
-				});
-				
-				signup.find("[selected]").each(function() {
-					var p = jQuery(this).attr('price');
-					if (p) {
-						price += parseFloat(p);
-					}
-				});
-
-				signup.find("[checked]").each(function() {
-					var p = jQuery(this).attr('price');
-					if (p) {
-						price += parseFloat(p);
-					}
-				});
-
-				signup.find(".eventprice").each(function() {
-					var p = jQuery(this).attr('price');
-					if (p) {
-						price += parseFloat(p);
-					}
-				});
-			}
-			// set the price
-			if (price > 0 && !jQuery("#totalprice").length) {
-				jQuery('#submit_button').before('<div id="totalprice">'+totalpricestr+': '+currency+' <span></span></div>');
-			}
-			jQuery("#totalprice span").text(Math.round(price*100)/100);
-		}
-EOF;
 		
-		$doc = &JFactory::getDocument();
-		$doc->addScriptDeclaration($script);
-		$doc->addScriptDeclaration('var totalpricestr = "'.JText::_('Total Price')."\";\n");
-	}
-	
-	function JsCheck() 
-	{
-		/* Create some dynamic JS */
-		?>
-		<script type="text/javascript">		
-			function CheckSubmit() 
-			{
-				if (document.redform.task.value == 'cancel') return true;
-				var msg = '';
-				var result = true;
-				var newclass = 'emptyfield';
-				var checkboxmsg = false;
-				var radiomsg = false;
-
-				// only check the form that were activated by the user
-				var forms = jQuery('.formbox');
-				var nb_active = parseInt(jQuery("input[name='curform']").val());
-
-				for (var j = 0 ; j < nb_active ; j++)
-				{
-					// get the input data of the form
-					var formelements = jQuery(forms[j]).find(':input');
-
-  				for(i=0; i < formelements.length; i++) 
-  	  		{
-  					var check_element = formelements[i];
-  					/* Check field type */
-  					/* Fullname */
-  					if (check_element.name.match("fullname") && check_element.className.match("required")) {
-  						var fullresult = CheckFill(check_element);
-  						if (!fullresult) {
-								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter a name'); ?>\n";
-		  				}
-  						if (result) result = fullresult;
-  					}
-  					
-  					/* Text field */
-  					if (check_element.name.match("text") && check_element.className.match("required")) {
-  						var textresult = CheckFill(check_element);
-  						if (!textresult) {
-								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
-		  				}
-  						if (result) result = textresult;
-  					}
-  					
-  					/* Textarea field */
-  					if (check_element.name.match("textarea") && check_element.className.match("required")) {
-  						var textarearesult = CheckFill(check_element);
-  						if (!textarearesult) {
-								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
-		  				}
-  						if (result) result = textarearesult;
-  					}
-  					
-  					/* Username field */
-  					if (check_element.name.match("username") && check_element.className.match("required")) {
-  						var usernameresult = CheckFill(check_element);
-  						if (!usernameresult) {
-								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter an username'); ?>\n";
-		  				}
-  						if (result) result = usernameresult;
-  					}
-  					
-  					/* E-mail */
-  					if (check_element.name.match("email") && check_element.className.match("required")) {
-  						if (CheckFill(check_element)) {
-  							if (!CheckEmail(check_element.value)) {
-  								msg = msg + "<?php echo JText::_('No valid e-mail address'); ?>\n";
-  								if (result) result = false;
-  							}
-  						}
-  						else {
-  							msg = msg + "<?php echo JText::_('E-mail address is empty'); ?>\n";
-  							if (result) result = false;
-  						}
-  					}
-
-  					/* multiselect field */
-  					if (check_element.name.match("multiselect") && check_element.className.match("required")) {
-  						var multires = CheckFill(check_element);
-  						if (!multires) {
-								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('select a value'); ?>\n";
-  	  				}
-  						if (result) result = multires;
-  					}
-  					
-		        /* Radio buttons */
-	          if (check_element.name.match("radio") && check_element.className.match("required")) {
-	            radios = document.getElementsByName(check_element.name);
-	            var radiocheck = false;
-	            for (var rct=radios.length-1; rct > -1; rct--) {
-	              if (radios[rct].checked) {
-	                radiocheck = true;
-	                rct = -1;
-	              }
-	            }
-	            if (radiocheck == false) {
-	              addClass(check_element, newclass);
-	              if (radiomsg == false) radiomsg = true;
-	              if (result) result = false;
-	            }
-	          }
-	          
-	          /* Check boxes */
-	          if (check_element.name.match("checkbox") && check_element.className.match("required")) {
-	            checkboxes = document.getElementsByName(check_element.name);
-	            var checkboxcheck = false;
-	            for (var rct=checkboxes.length-1; rct > -1; rct--) {
-	              if (checkboxes[rct].checked) {
-	                checkboxcheck = true;
-	                rct = -1;
-	              }
-	            }
-	            
-	            if (checkboxcheck == false) {
-	              addClass(check_element, newclass);
-	              if (checkboxmsg == false) checkboxmsg = true;
-	              if (result) result = false;
-	            }
-	          }
-  				}
-				}
-				if (result == false) {
-					alert(msg);
-					<?php if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) { ?>
-						exit(0);
-					<?php }
-					else { ?>
-						return false;
-					<?php } ?>
-					
-				}
-
-				return result;
-			}
-			
-			function addClass(element, value) 
-			{
-				if (!element.className) {
-					element.className = value;
-				} else {
-					var newClassName = element.className;
-					newClassName += " ";
-					newClassName += value;
-					element.className = newClassName;
-				}
-			}
-			
-			function CheckFill(element) 
-			{
-				if (!(jQuery(element).val())) {
-					addEmpty(element);
-					return false;
-				}
-				else {
-					removeEmpty(element);
-					return true;
-				}
-			}
-
-			function addEmpty(element) {
-				jQuery(element).addClass('emptyfield');
-				getLabel(element).addClass('emptyfield');
-			}
-
-			function removeEmpty(element) {
-				jQuery(element).removeClass('emptyfield');
-				getLabel(element).removeClass('emptyfield');
-			}
-
-			function getLabel(element) {
-				return jQuery('label[for="'+element.name+'"]');
-			}
-			
-			function Trim(text) 
-			{
-				text.value = jQuery.trim(text.value);
-			}
-			
-			function CheckEmail(str) 
-			{
-				/* Check if regular expressions are supported */
-				var supported = 0;
-				if (window.RegExp) {
-					var tempStr = "a";
-					var tempReg = new RegExp(tempStr);
-					if (tempReg.test(tempStr)) supported = 1;
-				}
-				if (!supported) return (str.indexOf(".") > 2) && (str.indexOf("@") > 0);
-				
-				/* Regular expressions supported */
-				var r1 = new RegExp("(@.*@)|(\\.\\.)|(@\\.)|(^\\.)");
-				var r2 = new RegExp("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,4}|[0-9]{1,4})(\\]?)$");
-				return (!r1.test(str) && r2.test(str));
-			}
-			
-			function AddUser() 
-			{
-				//jQuery("div#submit_button").show();
-				var curform = parseInt(jQuery("input[name='curform']").val());
-				var maxform = parseInt(jQuery("input[name='multi']").val());
-				if (curform >= maxform) {
-					alert('<?php echo JText::_('MAX_SIGNUP_REACHED'); ?>\n');
-				}
-				else {
-					jQuery("[id^='formfield']").each(function(i) {
-						jQuery(this).hide();
-					})
-					jQuery("#formfield"+curform).show();
-					userlink = '<a href="#" onclick="ShowSingleForm(\'div#formfield'+(curform+1)+'\'); return false;"># '+(curform+1)+'</a><br />';
-					jQuery("div#signedusers").append(userlink);
-					jQuery("input[name='curform']").val(curform+1);
-				}
-				updatePrice();
-			}
-			
-			function ShowSingleForm(showform) {
-				jQuery("[id^='formfield']").each(function(i) {
-					jQuery(this).hide();
-				})
-				jQuery(showform).show();
-			}
-			
-			function ShowAllUsers(showhide) {
-				var curform = parseInt(jQuery("input[name='curform']").val());
-				jQuery("[id^='formfield']").each(function(i) {
-					if (i < curform) {
-						if (showhide) jQuery(this).show();
-						else if (!showhide) jQuery(this).hide();
-					}
-					else {
-						jQuery(this).hide();
-					}
-				})
-			}
-		</script>
-		<?php
-	}
-	
 	function getHTMLForm($form, $fields, $multi=1)
 	{
 		$uri       = JURI::getInstance();
@@ -571,8 +281,8 @@ EOF;
     $js = "var currency = \"".$form->currency."\";\n";
     $document->addScriptDeclaration($js);
     
-  	$this->JsCheck();
-  	$this->jsPrice();
+  	$this->_rfcore->JsCheck();
+  	$this->_rfcore->jsPrice();
 		
 		// redmember integration: pull extra fields
 		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
@@ -741,7 +451,7 @@ EOF;
 					case 'textarea':
 						$label = '<div id="field_'.$field->cssfield.'" class="label"><label for="field'.$field->id.'.'.$signup.'[textarea]">'.$field->field.'</label></div>';
 						$element .= '<textarea class="'.$form->classname.$field->parameters->get('class','');
-						if ($field->validate) $element .= ' validate';
+						if ($field->validate) $element .= ' required';
 						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
 						$element .= ' cols="'.$field->parameters->get('cols',25).'" rows="'.$field->parameters->get('rows',6).'"';
 						$element .= ">";
