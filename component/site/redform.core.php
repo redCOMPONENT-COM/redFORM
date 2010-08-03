@@ -1279,7 +1279,7 @@ EOF;
 
 		
 		$settings = $model_redform->getVmSettings();
-		if (!$settings) {
+		if (!$settings->virtuemartactive) {
 			return false;
 		}
 		return JRoute::_('index.php?page=shop.product_details&product_id='.$settings->vmproductid.'&option=com_virtuemart&Itemid='.$settings->vmitemid);
