@@ -102,6 +102,9 @@ class RedformModelForm extends JModel
       $this->_db->setQuery($query);
       $this->_data = $this->_db->loadObject();
       
+      if (!$this->_data) {
+      	return false;
+      }
     
 			if (strtotime($this->_data->startdate) > time() || ($this->_data->formexpires && strtotime($this->_data->enddate) < time())) {
 				$this->_data->formstarted = false;
