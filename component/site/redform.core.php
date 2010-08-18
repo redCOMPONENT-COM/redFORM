@@ -1154,7 +1154,7 @@ EOF;
 		}
 		$answers = $this->getSidsAnswers($sids);
 		$form_id = $this->getSidForm($sids[0]);
-		$fields = $this->getFields($form_id);
+		$fields  = $this->getFields($form_id);
 		
 		$res = array();
 		foreach ($answers as $sid => $answer)
@@ -1171,7 +1171,7 @@ EOF;
 					$prop = 'field_'.$field->id;
 					$field->answer = $answer->$prop;
 				}
-				$f[] = $field;
+				$f[] = clone($field);
 			}
 			$res[$sid] = $f;
 		}
