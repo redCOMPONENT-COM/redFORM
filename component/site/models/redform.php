@@ -927,6 +927,10 @@ class RedformModelRedform extends JModel {
 	 */
 	function getSidsAnswers($sids)
 	{		
+		if (empty($sids)) {
+			return false;
+		}
+		
 		if (!is_array($sids))
 		{
 			if (is_int($sids))
@@ -940,7 +944,7 @@ class RedformModelRedform extends JModel {
 		}
 		else {
 			$ids = implode(',', $sids);
-		}
+		}		
 		
 		// we need the form_id...
 		$query = ' SELECT s.form_id '
