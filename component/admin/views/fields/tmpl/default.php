@@ -41,31 +41,17 @@ else { ?>
 			<th width="20">
 			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->fields ); ?>);" />
 			</th>
+			<th class="title"><?php echo JHTML::_('grid.sort', 'Field', 'field', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+			<th class="title"><?php echo JHTML::_('grid.sort', 'Type', 'fieldtype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+			<th class="title"><?php echo JText::_('Required'); ?></th>
+			<th class="title"><?php echo JText::_('Unique'); ?></th>
+			<th class="title"><?php echo JText::_('Form'); ?></th>
 			<th class="title">
-			<?php echo JText::_('Field'); ?>
+				<?php echo JHTML::_('grid.sort', 'Ordering', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+				<?php echo JHTML::_('grid.order',  $this->fields ); ?>
 			</th>
-			<th class="title">
-			<?php echo JText::_('Type'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('Required'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('Unique'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('Form'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('Ordering'); ?>
-			<?php echo JHTML::_('grid.order',  $this->fields ); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('Published'); ?>
-			</th>
-			<th width="20">
-				<?php echo JText::_('ID'); ?>
-			</th>
+			<th class="title"><?php echo JText::_('Published'); ?></th>
+			<th width="20"><?php echo JHTML::_('grid.sort', 'ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 		</tr>
 		</thead>
 		<?php
@@ -152,5 +138,7 @@ else { ?>
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="controller" value="fields" />
   <input type="hidden" name="view" value="fields" />
+	<input type="hidden" name="filter_order" value="<?php echo $this->lists['order']; ?>" />
+	<input type="hidden" name="filter_order_Dir" value="" />
 </form>
 <?php } ?>

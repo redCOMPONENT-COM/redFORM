@@ -105,17 +105,59 @@ class RedformModelFields extends JModel {
 	function _buildQuery()
 	{
 		$form_id = JRequest::getInt('form_id', false);
+		$order   = $this->_buildContentOrderBy();
       
 		/* Get all the fields based on the limits */
-		$query = ' SELECT q.*, c.formname, CONCAT(c.formname, " :: ", q.field) AS fieldname '
-		       . ' FROM #__rwf_fields q, #__rwf_forms c '
-		       . ' WHERE q.form_id = c.id '
+		$query = ' SELECT fd.*, f.formname, CONCAT(f.formname, " :: ", fd.field) AS fieldname '
+		       . ' FROM #__rwf_fields AS fd '
+		       . ' LEFT JOIN #__rwf_forms AS f ON f.id = fd.form_id '
 		       ;
 		if ($form_id && $form_id > 0) {
-			$query .= ' AND c.id = '.$form_id;
+			$query .= ' WHERE f.id = '.$form_id;
 		}
-		$query .= ' ORDER BY c.id, q.ordering ';
+		$query .= $order;
 		return $query;
+	}
+
+	/**
+	 * Method to build the orderby clause of the query for the categories
+	 *
+	 * @access private
+	 * @return string
+	 * @since 0.9
+	 */
+	function _buildContentOrderBy()
+	{
+		global $mainframe, $option;
+
+		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.values.filter_order',     'filter_order', 	'ordering', 'cmd' );
+		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.values.filter_order_Dir', 'filter_order_Dir',	'', 'word' );
+
+		switch ($filter_order) 
+		{
+			case 'field':
+				$orderby 	= ' ORDER BY f.formname, fd.field '.$filter_order_Dir.', fd.ordering';
+				break;
+				
+			case 'fieldtype':
+				$orderby 	= ' ORDER BY f.formname, fd.fieldtype '.$filter_order_Dir.', fd.ordering';
+				break;
+				
+			case 'ordering':
+				$orderby 	= ' ORDER BY f.formname, fd.fieldtype '.$filter_order_Dir.', fd.ordering';
+				break;
+				
+			case 'id':
+				$orderby 	= ' ORDER BY f.formname, fd.id '.$filter_order_Dir;
+				break;
+				
+			default:				
+			case 'ordering':
+				$orderby 	= ' ORDER BY f.formname, fd.ordering '.$filter_order_Dir;
+				break;
+		}
+
+		return $orderby;
 	}
 	
 	function getFormsOptions()
