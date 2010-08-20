@@ -32,6 +32,13 @@ class RedformViewField extends JView {
 	 **/
 	function display($tpl = null) 
 	{
+		$app = &Jfactory::getApplication();
+		
+    $url    = $app->isAdmin() ? $app->getSiteURL() : JURI::base();
+		$document	= & JFactory::getDocument();
+		JHTML::_('behavior.modal'); 
+    $document->addScript($url.'/administrator/components/com_redform/js/ajaxvalues.js');
+		
 		$row = $this->get('Data');
 		
 		if (REDMEMBER_INTEGRATION) {
@@ -72,7 +79,7 @@ class RedformViewField extends JView {
 		else {
 			$selected = JRequest::getInt('form_id');
 		}
-		$lists['forms']= JHTML::_('select.genericlist',  $forms, 'form_id', $state, 'value', 'text', $selected) ;
+		$lists['forms']= JHTML::_('select.genericlist',  $forms, 'form_id', ($state == 'disabled' ? 'disabled="disabled"' : ''), 'value', 'text', $selected) ;
 		
 		/* Create the value field types */
 		$fieldtypes = array(

@@ -33,7 +33,14 @@ class RedformControllerValues extends JController
   function __construct() 
   {
     parent::__construct();
-    $this->registerTask('apply','save');
+    $this->registerTask('apply',         'save');
+    $this->registerTask('ajaxedit',      'edit');
+    $this->registerTask('ajaxsave',      'save');
+    $this->registerTask('ajaxremove',    'remove');
+    $this->registerTask('ajaxorderup',   'orderup');
+    $this->registerTask('ajaxorderdown', 'orderdown');
+    $this->registerTask('ajaxpublish',   'publish');
+    $this->registerTask('ajaxunpublish', 'unpublish');
   }
     
   /**
@@ -76,7 +83,7 @@ class RedformControllerValues extends JController
   }
   
   function save()
-  {   
+  {
     // Check for request forgeries
     JRequest::checkToken() or die( 'Invalid Token' );
     
@@ -110,6 +117,17 @@ class RedformControllerValues extends JController
     }
 
     $model->checkin();
+    
+    if (JRequest::getCmd('task') == 'ajaxsave') {
+    	$doc = &Jfactory::getDocument();
+    	$doc->addScriptDeclaration('
+    	window.addEvent("domready", function (){
+    		window.parent.newvalue();
+    	});
+    	');
+    	return;
+    }
+    
     $this->setRedirect( $link, $msg );
   }
   
@@ -141,7 +159,7 @@ class RedformControllerValues extends JController
    */
   function publish()
   {
-    $cid  = JRequest::getVar( 'cid', array(0), 'post', 'array' );
+    $cid  = JRequest::getVar( 'cid', array(0), 'request', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
       JError::raiseError(500, JText::_( 'Select an item to publish' ) );
@@ -152,7 +170,11 @@ class RedformControllerValues extends JController
     if(!$model->publish($cid, 1)) {
       echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
     }
-
+  
+    if (JRequest::getCmd('task') == 'ajaxpublish') {
+    	return;
+    }
+    
     $total = count( $cid );
     $msg  = $total.' '.JText::_( 'VALUES PUBLISHED');
 
@@ -168,7 +190,7 @@ class RedformControllerValues extends JController
    */
   function unpublish()
   {
-    $cid  = JRequest::getVar( 'cid', array(0), 'post', 'array' );
+    $cid  = JRequest::getVar( 'cid', array(0), 'request', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
       JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
@@ -179,7 +201,11 @@ class RedformControllerValues extends JController
     if(!$model->publish($cid, 0)) {
       echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
     }
-
+  
+    if (JRequest::getCmd('task') == 'ajaxunpublish') {
+    	return;
+    }
+    
     $total = count( $cid );
     $msg  = $total.' '.JText::_( 'VALUES UNPUBLISHED');
 
@@ -196,7 +222,7 @@ class RedformControllerValues extends JController
    */
   function remove()
   {
-    $cid    = JRequest::getVar( 'cid', array(0), 'post', 'array' );
+    $cid    = JRequest::getVar( 'cid', array(0), 'request', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
       JError::raiseError(500, JText::_( 'Select an item to delete' ) );
@@ -213,6 +239,10 @@ class RedformControllerValues extends JController
 
     $cache = &JFactory::getCache('com_redform');
     $cache->clean();
+    
+    if (JRequest::getCmd('task') == 'ajaxremove') {
+    	return;
+    }
 
     $this->setRedirect( 'index.php?option=com_redform&view=values', $msg );
   }
@@ -264,6 +294,42 @@ class RedformControllerValues extends JController
       $this->setRedirect( 'index.php?option=com_redform&view=values', JText::_('ERROR REORDERING'));      
     }
   	
+  }
+  
+  /**
+   * Logic to orderup
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function orderup()
+  {
+    $model = $this->getModel('value');
+    $model->move(-1);
+    if (JRequest::getCmd('task') == 'ajaxorderup') {
+    	return;
+    }
+
+    $this->setRedirect( 'index.php?option=com_redform&view=values');
+  }
+
+  /**
+   * Logic to orderdown
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function orderdown()
+  {
+    $model = $this->getModel('value');
+    $model->move(1);
+    if (JRequest::getCmd('task') == 'ajaxorderdown') {
+    	return;
+    }
+
+    $this->setRedirect( 'index.php?option=com_redform&view=values');
   }
 }
 ?>

@@ -325,5 +325,19 @@ class RedformModelField extends JModel
 		$res = $this->_db->loadObjectList();
 		return $res;
 	}
+	
+	public function getValues()
+	{
+		$field = $this->getData();
+		
+		$query = ' SELECT v.* ' 
+		       . ' FROM #__rwf_values AS v ' 
+		       . ' WHERE v.field_id = ' . $this->_db->Quote($field->id)
+		       . ' ORDER BY v.ordering '
+		       ;
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadObjectList();
+		return $res;
+	}
 }
 ?>

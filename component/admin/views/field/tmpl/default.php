@@ -22,6 +22,7 @@ JHTML::_('behavior.tooltip');
 ?>
 
 <script type="text/javascript">
+
 	window.addEvent('domready', function(){
 		$('fieldtype').addEvent('click', function(){
 			if ($('form_id').value == 0) {
@@ -35,9 +36,18 @@ JHTML::_('behavior.tooltip');
 			}
 		});
 	});
+	// language strings for ajaxvalues.js
+	var edittext = "<?php echo JText::_('COM_REDEVENT_EDIT'); ?>";
+	var deletetext = "<?php echo JText::_('COM_REDEVENT_DELETE'); ?>";
+	var textyes = "<?php echo JText::_('YES'); ?>";
+	var textno = "<?php echo JText::_('NO'); ?>";
+	var textup = "<?php echo JText::_('UP'); ?>";
+	var textdown = "<?php echo JText::_('DOWN'); ?>";
+	
 </script>
 
 <form action="index.php" method="post" name="adminForm">
+
 		<table class="adminform">
 		<tr>
 			<td>
@@ -45,7 +55,7 @@ JHTML::_('behavior.tooltip');
 			<?php echo JText::_('Field'); ?>
 			</td>
 			<td>
-			<input class="inputbox" type="text" size="80" name="field" value="<?php echo $this->row->field; ?>">
+			<input class="inputbox" type="text" size="80" name="field" value="<?php echo $this->row->field; ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -115,8 +125,45 @@ JHTML::_('behavior.tooltip');
 			</td>
 		</tr>
 		</table>
+		
+		<!-- Values table -->
+		<fieldset class="adminform" id="field-options" style="display:block;">
+		<legend><?php echo JText::_('COM_REDFORM_FIELD_EDIT_OPTIONS')?></legend>
+	
+		<table class="adminlist">
+			<thead>
+				<tr>
+					<th><?php echo JText::_('VALUE'); ?></th>
+					<th><?php echo JText::_('PRICE'); ?></th>
+					<th><?php echo JText::_('PUBLISHED'); ?></th>
+					<th><?php echo JText::_('ORDERING'); ?></th>
+		      <th>&nbsp;</th>
+		      <th>&nbsp;</th>
+				</tr>
+			</thead>
+		
+			<tbody>
+				<tr>
+					<td colspan="6">
+						<a href="<?php echo JRoute::_('index.php?option=com_redform&controller=values&task=ajaxedit&tmpl=component&fieldid=' .$this->row->id); ?>" class="venuemodal">
+							<?php echo JText::_('Add'); ?>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		
+			<tbody id="values-rows">
+				<tr>
+					<td colspan="6">
+					</td>
+				</tr>
+			</tbody>
+		</table>
 				
-		<?php if ($this->parameters && $this->parameters->getGroups()): ?>		
+		</fieldset>
+		<!-- Values table end-->
+				
+		<?php if ($this->parameters && $this->parameters->getGroups() && 0): ?>		
 		<?php
 			foreach ( $this->parameters->getGroups() as $key => $groups )
 			{
@@ -139,7 +186,7 @@ JHTML::_('behavior.tooltip');
 		<?php endif; ?>
 		
   <?php echo JHTML::_( 'form.token' ); ?>
-	<input type="hidden" name="id" value="<?php echo $this->row->id; ?>" />
+	<input type="hidden" name="id" id="fieldid" value="<?php echo $this->row->id; ?>" />
 	<?php if ($this->state == 'disabled') { ?><input type="hidden" name="form_id" value="<?php echo $this->form_id; ?>" /><?php } ?>
 	<input type="hidden" name="ordering" value="<?php echo $this->row->ordering; ?>" />
 	<input type="hidden" name="option" value="com_redform" />

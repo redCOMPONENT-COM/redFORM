@@ -73,6 +73,10 @@ class RedformViewValue extends JView
 			case 'add':
 				JToolBarHelper::title(JText::_( 'Add Value' ), 'redform_plus');
 				break;
+			case 'ajaxedit':
+				$this->setLayout('ajax');
+				$this->assign('field_id', JRequest::getInt('fieldid'));
+				break;
 			default:
 				JToolBarHelper::title(JText::_( 'Edit Value' ), 'redform_plus');
 				break;

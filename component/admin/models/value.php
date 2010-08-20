@@ -129,7 +129,20 @@ class RedformModelValue extends JModel
   {
     $this->_data = & JTable::getInstance('Values', 'Table');
     $this->_data->published = 1;
-    $this->_data->fieldtype = '';
+    
+    if ($field_id = JRequest::getInt('fieldid')) 
+    {
+    	$query = ' SELECT fieldtype ' 
+    	       . ' FROM #__rwf_fields ' 
+    	       . ' WHERE id = ' . $this->_db->Quote($field_id);
+    	$this->_db->setQuery($query);
+    	$res = $this->_db->loadResult();
+    	$this->_data->fieldtype = $res;
+    }
+    else
+    {
+    	$this->_data->fieldtype = '';
+    }
     return $this->_data;
   }
    
@@ -327,10 +340,11 @@ class RedformModelValue extends JModel
 		$mailinglistrow = $this->getTable('Mailinglists');
 		$cid = JRequest::getVar('cid', false);
 		if (!$cid) {
-			$post = JRequest::get('post');
-			$id = $post['id'];
+			$id = JRequest::getInt('id', 0, 'post');
 		}
-		else $id = $cid[0];
+		else {
+			$id = $cid[0];
+		}
 		$mailinglistrow->load($id);
 		return $mailinglistrow;
 	}
@@ -348,5 +362,29 @@ class RedformModelValue extends JModel
 		$db->setQuery($q);
 		return $db->loadResultArray();
 	}
+
+  /**
+   * Method to move
+   *
+   * @access  public
+   * @return  boolean True on success
+   * @since 0.9
+   */
+  function move($direction)
+  {
+    $row =& JTable::getInstance('Values', 'Table');
+
+    if (!$row->load( $this->_id ) ) {
+      $this->setError($this->_db->getErrorMsg());
+      return false;
+    }
+
+    if (!$row->move( $direction )) {
+      $this->setError($this->_db->getErrorMsg());
+      return false;
+    }
+
+    return true;
+  }
 }
 ?>
