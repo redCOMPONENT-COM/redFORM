@@ -143,10 +143,6 @@ class RedformModelFields extends JModel {
 				$orderby 	= ' ORDER BY f.formname, fd.fieldtype '.$filter_order_Dir.', fd.ordering';
 				break;
 				
-			case 'ordering':
-				$orderby 	= ' ORDER BY f.formname, fd.fieldtype '.$filter_order_Dir.', fd.ordering';
-				break;
-				
 			case 'id':
 				$orderby 	= ' ORDER BY f.formname, fd.id '.$filter_order_Dir;
 				break;
