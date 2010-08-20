@@ -36,7 +36,7 @@ else { ?>
 		<thead>
 		<tr>
 			<th width="20">
-			<?php echo JText::_('ID'); ?>
+			<?php echo JText::_('#'); ?>
 			</th>
 			<th width="20">
 			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->fields ); ?>);" />
@@ -62,6 +62,9 @@ else { ?>
 			</th>
 			<th class="title">
 			<?php echo JText::_('Published'); ?>
+			</th>
+			<th width="20">
+				<?php echo JText::_('ID'); ?>
 			</th>
 		</tr>
 		</thead>
@@ -134,13 +137,14 @@ else { ?>
 				<img src="images/<?php echo $img;?>" border="0" alt="<?php echo $alt; ?>" />
 				</a>
 				</td>
+				<td><?php echo $row->id; ?></td>
 			</tr>
 			<?php
 			$k = 1 - $k;
 		}
 		?>
 		<tr>
-            <td colspan="9"><?php echo $this->pagination->getListFooter(); ?></td>
+            <td colspan="10"><?php echo $this->pagination->getListFooter(); ?></td>
          </tr>
 		</table>
 	<input type="hidden" name="option" value="com_redform" />
