@@ -120,11 +120,12 @@ class RedformModelRedform extends JModel {
 
 	function getFormFields() 
 	{		
-		$q = ' SELECT id, field, validate, tooltip, redmember_field, fieldtype, params '
-		   . ' FROM #__rwf_fields AS q '
-		   . ' WHERE published = 1 '
-		   . ' AND q.form_id = '.$this->_form_id
-		   . ' ORDER BY ordering'
+		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, m.listnames '
+		   . ' FROM #__rwf_fields AS f '
+		   . ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id '
+		   . ' WHERE f.published = 1 '
+		   . ' AND f.form_id = '.$this->_form_id
+		   . ' ORDER BY f.ordering'
 		   ;
 		$this->_db->setQuery($q);
 		$fields = $this->_db->loadObjectList();
@@ -145,10 +146,8 @@ class RedformModelRedform extends JModel {
 	
 	function getFormValues($field_id) 
 	{		
-		$q = "SELECT q.id, value, field_id, listnames, price 
+		$q = "SELECT q.id, value, field_id, price 
 			FROM #__rwf_values q
-			LEFT JOIN #__rwf_mailinglists m
-			ON q.id = m.id
 			WHERE published = 1
 			AND q.field_id = ".$field_id."
 			ORDER BY ordering";
@@ -608,7 +607,7 @@ class RedformModelRedform extends JModel {
 		       . ' FROM #__rwf_values AS v '
 		       . ' INNER JOIN #__rwf_fields AS f ON v.field_id = f.id '
 		       . ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
-		       . ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = m.id '
+		       . ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = f.field_id '
 		       . ' WHERE v.published = 1 AND f.published = 1 AND fo.published = 1 '
 		       . '   AND fo.id = '.$this->_db->Quote($this->_form_id)
 		       . ' ORDER BY f.ordering, v.ordering '

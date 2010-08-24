@@ -24,7 +24,7 @@ defined('_JEXEC') or die('Restricted access');
  */
 class TableMailinglists extends JTable {
 	/** @var int Primary key */
-	var $id = null;
+	var $field_id = null;
 	/** @var string The value for the field */
 	var $mailinglist = null;
 	/** @var string Set to true if the value is published */
@@ -34,7 +34,7 @@ class TableMailinglists extends JTable {
 	* @param database A database connector object
 	*/
 	function __construct( &$db ) {
-		parent::__construct('#__rwf_mailinglists', 'id', $db );
+		parent::__construct('#__rwf_mailinglists', 'field_id', $db );
 	}
 	
 	public function store() {
@@ -62,10 +62,11 @@ class TableMailinglists extends JTable {
 	/**
 	 * Check if there is an entry for this email field
 	 */
-	public function check() {
+	public function check() 
+	{
 		$db = JFactory::getDBO();
 		
-		$q = "SELECT COUNT(*) AS total FROM ".$this->_tbl." WHERE id = ".$this->id;
+		$q = "SELECT COUNT(*) AS total FROM ".$this->_tbl." WHERE field_id = ".$this->field_id;
 		$db->setQuery($q);
 		$result = $db->loadResult();
 		if ($result > 0) return true;

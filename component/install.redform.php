@@ -361,6 +361,28 @@ function com_install() {
 		$db->query();
 	}
   
+	 /* Get the current columns */
+  $q = "SHOW COLUMNS FROM #__rwf_mailinglists";
+  $db->setQuery($q);
+  $cols = $db->loadObjectList('Field');
+  
+	/* Check if we have the field_id column */
+	if (!array_key_exists('field_id', $cols)) 
+	{
+		$q = "ALTER IGNORE TABLE #__rwf_mailinglists CHANGE `id` `field_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0'";
+		$db->setQuery($q);
+		$db->query();
+		
+		// id used to track value_id, so we need to replace with corresponding field_id
+		$q = ' UPDATE `jos_rwf_mailinglists` AS m, jos_rwf_values AS v '
+		   . ' SET m.field_id = v.field_id '
+		   . ' WHERE m.field_id = v.id ';
+		$db->setQuery($q);
+		if (!$db->query()) {
+			JError::raiseWarning(0, 'Conversion of mailing list reference from value_id to field_id failed - please manually edit each email field type');
+		}
+	}
+	
   // new structure for rwf_forms_x tables
   upgradeFormColumns();
 	

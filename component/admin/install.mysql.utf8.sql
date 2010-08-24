@@ -84,10 +84,10 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
 ) COMMENT='Answers for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_mailinglists` (
-  `id` int(11) unsigned NOT NULL default '0',
+  `field_id` int(11) unsigned NOT NULL default '0',
   `mailinglist` varchar(100) NOT NULL,
   `listnames` text NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`field_id`)
 ) COMMENT='Mailinglists for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment` (

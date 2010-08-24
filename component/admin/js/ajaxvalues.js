@@ -50,7 +50,7 @@ function update_values()
       || type == 'price'
       || type == 'info'
       || type == 'recipients'
-      || type == 'email'
+      //|| type == 'email'
 	) {
 		$('field-options').setStyle('display', 'block');
 	}

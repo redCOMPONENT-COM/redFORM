@@ -251,37 +251,6 @@ class RedformModelValue extends JModel
 	  
       $row->reorder();
 	  
-      // TODO: move to fields ??
-      // special treatment if value belongs to an 'email' field
-		  /* Store the mailinglists */
-      $query = ' SELECT fieldtype FROM #__rwf_fields WHERE id = '. $row->field_id;
-      $this->_db->setQuery($query);
-      $type = $this->_db->loadResult();      
-		  if ($type == 'email') 
-		  {
-			 
-			  /* Load the table */
-			  $mailinglistrow = $this->getTable('Mailinglists');
-			 
-			 /* Fix up the mailinglist */
-			 if (isset($post['listname'])) $post['listnames'] = implode(';', $post['listname']);
-			 else $post['listnames'] = '';
-			 
-			 if (!$mailinglistrow->bind($post)) {
-				 $mainframe->enqueueMessage(JText::_('There was a problem binding the mailinglist data').' '.$row->getError(), 'error');
-				 return false;
-			  }
-			  
-			  /* Pass on the ID */
-			 $mailinglistrow->id = $row->id;
-			  
-			  /* save the changes */
-			  if (!$mailinglistrow->store()) {
-				 $mainframe->enqueueMessage(JText::_('There was a problem storing the mailinglist data').' '.$row->getError(), 'error');
-				 return false;
-			  }
-			 
-		  }
       $mainframe->enqueueMessage(JText::_('The value has been saved'));
       return $row;
    }
@@ -289,7 +258,8 @@ class RedformModelValue extends JModel
    /**
     * Delete an value
     */
-   function getRemoveValue() {
+   function getRemoveValue() 
+   {
       global $mainframe;
       $database = JFactory::getDBO();
       $cid = JRequest::getVar('cid');
@@ -299,7 +269,8 @@ class RedformModelValue extends JModel
          $mainframe->enqueueMessage(JText::_('No value found to delete'));
          return false;
       }
-      if (count($cid)) {
+      if (count($cid)) 
+      {
          $cids = 'id=' . implode( ' OR id=', $cid );
          $query = "DELETE FROM #__rwf_values"
          . "\n  WHERE ( $cids )";
@@ -308,10 +279,6 @@ class RedformModelValue extends JModel
             $mainframe->enqueueMessage(JText::_('A problem occured when deleting the value'));
          }
          else {
-			 $query = "DELETE FROM #__rwf_mailinglists"
-			 . "\n  WHERE ( $cids )";
-			 $database->setQuery( $query );
-			 $database->query();
             if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Values have been deleted'));
             else $mainframe->enqueueMessage(JText::_('Value has been deleted'));
          }
@@ -332,37 +299,6 @@ class RedformModelValue extends JModel
 		return $db->loadResult();
 	}
 	
-	/**
-	 * Get the mailingslists for the e-mail field
-	 */
-	function getMailinglists() {
-		/* Load the table */
-		$mailinglistrow = $this->getTable('Mailinglists');
-		$cid = JRequest::getVar('cid', false);
-		if (!$cid) {
-			$id = JRequest::getInt('id', 0, 'post');
-		}
-		else {
-			$id = $cid[0];
-		}
-		$mailinglistrow->load($id);
-		return $mailinglistrow;
-	}
-	
-	/**
-	 * Get the mailingslists for the e-mail field
-	 */
-	function getUseMailinglists() 
-	{
-		$db = JFactory::getDBO();
-		$q = "SELECT name
-			FROM #__rwf_configuration
-			WHERE name IN ('use_phplist', 'use_ccnewsletter', 'use_acajoom')
-			AND value = 1";
-		$db->setQuery($q);
-		return $db->loadResultArray();
-	}
-
   /**
    * Method to move
    *

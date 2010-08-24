@@ -41,7 +41,8 @@ class RedformViewField extends JView {
 		
 		$row = $this->get('Data');
 		
-		if (REDMEMBER_INTEGRATION) {
+		if (REDMEMBER_INTEGRATION) 
+		{
 			$options = array();
 			$options[] = JHTML::_('select.option', '', JText::_('Select corresponding redmember field'));
 			$rm_options = $this->get('RedmemberFieldsOptions');
@@ -63,7 +64,8 @@ class RedformViewField extends JView {
 		/* Get the forms */
 		$forms = $this->get('FormsOptions');
 		$state = '';
-		for ($i = 0; $i < count($forms); $i++) {
+		for ($i = 0; $i < count($forms); $i++) 
+		{
 			if ($forms[$i]->value == $row->form_id && $forms[$i]->startdate < date('Y-m-d H:i:s', time())) {
 				$state = 'disabled';
 				break;
@@ -115,6 +117,18 @@ class RedformViewField extends JView {
 			$parameters = false;
 		}
 		
+		/* Get the mailing lists that can be used */
+		$uselists = $this->get('ActiveMailinglists');
+
+		/* Get the mailing lists if we have an e-mail field */
+		if ($row->fieldtype == 'email') 
+		{
+			/* Set the id */
+			JRequest::setVar('id', $row->id);
+			$mailinglists = $this->get('Mailinglist');
+			$this->assignRef('mailinglists', $mailinglists);
+		}		
+		
 		/* Get the toolbar */
 		switch (JRequest::getCmd('task')) {
 			case 'add':
@@ -128,49 +142,16 @@ class RedformViewField extends JView {
 		JToolBarHelper::apply();
 		JToolBarHelper::cancel();
 
-		/* Set variabels */
+		/* Set variables */
 		$this->assignRef('form_id', $row->form_id);
 		$this->assignRef('row', $row);
 		$this->assignRef('lists', $lists);
 		$this->assignRef('state', $state);
 		$this->assignRef('parameters', $parameters);
+		$this->assignRef('uselists', $uselists);
 
 		/* Display the page */
 		parent::display($tpl);
-	}
-		
-	function toolbar() {
-		switch (JRequest::getCmd('task')) {
-			case 'edit':
-			case 'apply':
-			case 'add':
-				switch (JRequest::getCmd('task')) {
-					case 'add':
-						JToolBarHelper::title(JText::_( 'Add Field' ), 'redform_plus');
-						break;
-					default:
-						JToolBarHelper::title(JText::_( 'Edit Field' ), 'redform_plus');
-						break;
-				}
-				JToolBarHelper::save();
-				JToolBarHelper::apply();
-				JToolBarHelper::cancel();
-				break;
-			default:
-				JToolBarHelper::title(JText::_( 'Fields' ), 'redform_fields');
-				/* Only show add if there are forms */
-				if ($this->get('Total', 'redform') > 0) {
-
-					JToolBarHelper::custom('sanitize', 'redform_details', 'redform_details', JText::_('SANITIZE'), false);
-					JToolBarHelper::publishList();
-					JToolBarHelper::unpublishList();
-					JToolBarHelper::spacer();
-					JToolBarHelper::deleteList(JText::_('Are you sure you want to delete the fields and related values?'));
-					JToolBarHelper::editListX();
-					JToolBarHelper::addNew();
-				}
-				break;
-		}
-	}
+	}		
 }
 ?>

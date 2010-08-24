@@ -51,21 +51,9 @@ class RedformViewValue extends JView
 		$fields = $this->get('FieldsOptions');
 		$lists['fields']= JHTML::_('select.genericlist',  $fields, 'field_id', 'onChange="CheckFieldType(); return false;"', 'value', 'text', $row->field_id) ;
 
-		/* Get the mailing lists that can be used */
-		$uselists = $this->get('UseMailinglists');
-
-		/* Get the mailing lists if we have an e-mail field */
-		if ($row->fieldtype == 'email') {
-			/* Set the id */
-			JRequest::setVar('id', $row->id);
-			$mailinglists = $this->get('Mailinglists');
-			$this->assignRef('mailinglists', $mailinglists);
-		}
-
 		/* Set variabels */
 		$this->assignRef('row', $row);
 		$this->assignRef('lists', $lists);
-		$this->assignRef('uselists', $uselists);
 		$this->assignRef('editor', $editor);
 
 		/* Get the toolbar */

@@ -171,11 +171,12 @@ class plgContentRedform extends JPlugin {
 	{
 		$db = JFactory::getDBO();
 		
-		$q = ' SELECT id, field, validate, tooltip, redmember_field, fieldtype, params '
-		   . ' FROM #__rwf_fields AS q '
-		   . ' WHERE published = 1 '
-		   . ' AND q.form_id = '.$form_id
-		   . ' ORDER BY ordering'
+		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, m.listnames '
+		   . ' FROM #__rwf_fields AS f '
+		   . ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id'
+		   . ' WHERE f.published = 1 '
+		   . ' AND f.form_id = '.$form_id
+		   . ' ORDER BY f.ordering'
 		   ;
 		$db->setQuery($q);
 		$fields = $db->loadObjectList();
@@ -198,10 +199,8 @@ class plgContentRedform extends JPlugin {
 	{
 		$db = JFactory::getDBO();
 		
-		$q = "SELECT q.id, value, field_id, listnames, price 
+		$q = "SELECT q.id, value, field_id, price 
 			FROM #__rwf_values q
-			LEFT JOIN #__rwf_mailinglists m
-			ON q.id = m.id
 			WHERE published = 1
 			AND q.field_id = ".$field_id."
 			ORDER BY ordering";
@@ -513,23 +512,19 @@ class plgContentRedform extends JPlugin {
 							
 						$element .= "<div class=\"newsletterfields\">";
 						/* E-mail field let's see */
-						// TODO: transfer to field !
-						foreach ($values as $id => $value)
+						if (strlen($field->listnames) > 0)
 						{
-							if (strlen($value->listnames) > 0)
+							$listnames = explode(";", $field->listnames);
+							if (count($listnames) > 0)
 							{
-								$listnames = explode(";", $value->listnames);
-								if (count($listnames) > 0)
+								$element .= '<div id="signuptitle">'.JText::_('SIGN_UP_MAILINGLIST').'</div>';
+								$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
+								foreach ($listnames AS $listkey => $listname)
 								{
-									$element .= '<div id="signuptitle">'.JText::_('SIGN_UP_MAILINGLIST').'</div>';
-									$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
-									foreach ($listnames AS $listkey => $listname)
-									{
-										$element .= "<div class=\"field_".$listkey."\"><input class=\"".$form->classname." ";
-										$element .= "\" type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
-									}
-									$element .= "</div>\n";
+									$element .= "<div class=\"field_".$listkey."\"><input class=\"".$form->classname." ";
+									$element .= "\" type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
 								}
+								$element .= "</div>\n";
 							}
 						}
 						$element .= "</div>\n";

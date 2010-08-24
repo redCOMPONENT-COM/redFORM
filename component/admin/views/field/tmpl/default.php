@@ -35,6 +35,15 @@ JHTML::_('behavior.tooltip');
 				submitform('apply');
 			}
 		});
+
+		var mailingremove = $$('.listname-delete');
+		if (mailingremove)
+		{
+			mailingremove.each(function(el) {
+				el.addEvent('click', removeMailingListField);
+			});
+		}
+
 	});
 	// language strings for ajaxvalues.js
 	var edittext = "<?php echo JText::_('COM_REDEVENT_EDIT'); ?>";
@@ -43,7 +52,22 @@ JHTML::_('behavior.tooltip');
 	var textno = "<?php echo JText::_('NO'); ?>";
 	var textup = "<?php echo JText::_('UP'); ?>";
 	var textdown = "<?php echo JText::_('DOWN'); ?>";
-	
+
+	function addMailingListField()
+	{
+		var newrow = $$('.listname-row')[0].clone();
+		newrow.getElement('input[name^=listname]').value = '';
+		newrow.getElement('.listname-delete').addEvent('click', removeMailingListField);
+		newrow.injectInside($('mailinglist-table'));
+	}
+
+	function removeMailingListField()
+	{
+		var countfields = $$('.listname-row').length;
+		if (countfields > 1) {
+			this.getParent().getParent().remove();
+		}		
+	}
 </script>
 
 <form action="index.php" method="post" name="adminForm">
@@ -115,6 +139,7 @@ JHTML::_('behavior.tooltip');
 			</td>
 		</tr>
 		<?php endif; ?>
+		
 		<tr>
 			<td valign="top" align="right">
 			<?php echo JHTML::tooltip(JText::_('Set to Yes to make the field show on the form'), JText::_('Published'), 'tooltip.png', '', '', false); ?>
@@ -126,8 +151,63 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		</table>
 		
+		
+		<?php if (isset($this->mailinglists)): 
+			$listnames = explode(';', $this->mailinglists->listnames);
+			?>
+		<fieldset class="adminform">
+		<legend><?php echo JText::_('COM_REDFORM_FIELD_EDIT_MAILINGLIST_FIELDSET')?></legend>
+	
+		<table class="admintable" id="mailinglist-table">
+			<tr id="trmailinglist">
+				<td class="key hasTip" title="<?php echo JText::_('NEWSLETTERS').'::'.JText::_('NEWSLETTERS_TIP'); ?>">
+					<?php echo JText::_('NEWSLETTERS'); ?>
+				</td>
+				<td>
+					<div id="newmailinglist">
+						<select id="mailinglist" name="mailinglist">
+							<?php
+								$newsletters = array('Acajoom', 'ccNewsletter', 'PHPList');
+								foreach ($newsletters as $key => $name) {
+									if (in_array('use_'.strtolower($name), $this->uselists)) { 
+										$option = '<option value="'.strtolower($name).'"';
+										if (strtolower($name) == $this->mailinglists->mailinglist) $option .= 'selected="selected"';
+										$option .= '>'.$name.'</option>';
+										echo $option;
+									}
+								}
+							?>
+						</select>
+					</div>
+				</td>
+			</tr>
+			<tr id="traddlists">
+				<td class="key hasTip" title="<?php echo JText::_('ADD_LISTS').'::'.JText::_('ADD_LISTS_TIP'); ?>">
+					<?php echo JText::_('ADD_LISTS'); ?>
+				</td>
+				<td>
+					<a href="#" onClick="addMailingListField(); return false;"><?php echo JText::_('ADD_LIST'); ?></a>
+				</td>
+			</tr>
+			<?php
+				foreach ($listnames as $key => $name): ?>
+					<tr class="listname-row">
+						<td class="key hasTip" title="<?php echo JText::_('LISTNAME').'::'.JText::_('LISTNAME_TIP'); ?>">
+							<?php echo JText::_('LISTNAME'); ?>
+						</td>
+						<td>
+							<input type="text" name="listname[]" value="<?php echo $name; ?>"/>&nbsp;
+							<a href="#" class="listname-delete"><?php echo JText::_('REMOVE_LIST'); ?></a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+		</table>
+				
+		</fieldset>					
+		<?php endif ;	?>
+		
 		<!-- Values table -->
-		<fieldset class="adminform" id="field-options" style="display:block;">
+		<fieldset class="adminform" id="field-options" style="display:none;">
 		<legend><?php echo JText::_('COM_REDFORM_FIELD_EDIT_OPTIONS')?></legend>
 	
 		<table class="adminlist">

@@ -229,6 +229,36 @@ class RedformModelField extends JModel
   	/* Add form table */
   	$this->AddFieldTable($row, $oldrow);
 
+  	/* mailing list handling in case of email field type */
+  	if ($row->fieldtype == 'email') 
+	  {		 
+		  /* Load the table */
+		  $mailinglistrow = $this->getTable('Mailinglists');
+		  	
+		  /* Fix up the mailinglist */
+		  if (isset($post['listname'])) {
+		  	$post['listnames'] = implode(';', $post['listname']);
+		  }
+		  else {
+		  	$post['listnames'] = '';
+		  }
+		  $post['field_id'] = $row->id;
+		  if (!$mailinglistrow->bind($post)) {
+		  	$mainframe->enqueueMessage(JText::_('There was a problem binding the mailinglist data').' '.$row->getError(), 'error');
+		  	return false;
+		  }
+
+		  /* Pass on the ID */
+		  $mailinglistrow->field_id = $row->id;
+
+		  /* save the changes */
+		  if (!$mailinglistrow->store()) {
+		  	$mainframe->enqueueMessage(JText::_('There was a problem storing the mailinglist data').' '.$row->getError(), 'error');
+		  	return false;
+		  }
+		  	
+	  }
+		  
   	return $row;
   }
       	
@@ -338,6 +368,31 @@ class RedformModelField extends JModel
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadObjectList();
 		return $res;
+	}
+	
+	/**
+	 * Get the mailingslists for the e-mail field
+	 */
+	function getActiveMailinglists() 
+	{
+		$db = JFactory::getDBO();
+		$q = "SELECT name
+			FROM #__rwf_configuration
+			WHERE name IN ('use_phplist', 'use_ccnewsletter', 'use_acajoom')
+			AND value = 1";
+		$db->setQuery($q);
+		return $db->loadResultArray();
+	}
+
+	/**
+	 * Get the current mailingslist settings for this field
+	 */
+	function getMailinglist() 
+	{
+		/* Load the table */
+		$mailinglistrow = $this->getTable('Mailinglists');
+		$mailinglistrow->load($this->_id);
+		return $mailinglistrow;
 	}
 }
 ?>

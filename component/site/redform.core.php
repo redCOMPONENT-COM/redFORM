@@ -351,22 +351,19 @@ class RedFormCore extends JObject {
 						$element .= "<div class=\"newsletterfields\">";
 						/* E-mail field let's see */
 						// TODO: transfer to field !
-						foreach ($values as $id => $value)
+						if (strlen($field->listnames) > 0)
 						{
-							if (strlen($value->listnames) > 0)
+							$listnames = explode(";", $field->listnames);
+							if (count($listnames) > 0)
 							{
-								$listnames = explode(";", $value->listnames);
-								if (count($listnames) > 0)
+								$element .= '<div id="signuptitle">'.JText::_('SIGN_UP_MAILINGLIST').'</div>';
+								$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
+								foreach ($listnames AS $listkey => $listname)
 								{
-									$element .= '<div id="signuptitle">'.JText::_('SIGN_UP_MAILINGLIST').'</div>';
-									$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
-									foreach ($listnames AS $listkey => $listname)
-									{
-										$element .= "<div class=\"field_".$listkey."\"><input class=\"".$form->classname." ";
-										$element .= "\" type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
-									}
-									$element .= "</div>\n";
+									$element .= "<div class=\"field_".$listkey."\"><input class=\"".$form->classname." ";
+									$element .= "\" type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
 								}
+								$element .= "</div>\n";
 							}
 						}
 						$element .= "</div>\n";
@@ -1256,9 +1253,8 @@ EOF;
 	{		
 		$db = &JFactory::getDBO();
 		
-		$query = " SELECT q.id, value, field_id, listnames, price "
+		$query = " SELECT q.id, value, field_id, price "
 		       . " FROM #__rwf_values q "
-		       . " LEFT JOIN #__rwf_mailinglists m ON q.id = m.id "
 		       . " WHERE published = 1 "
 		       . " AND q.field_id = ".$field_id
 		       . " ORDER BY ordering";
