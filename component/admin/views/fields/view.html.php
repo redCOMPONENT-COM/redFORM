@@ -84,40 +84,6 @@ class RedformViewFields extends JView {
 		
 		/* Display the page */
 		parent::display($tpl);
-	}
-		
-	function toolbar() {
-		switch (JRequest::getCmd('task')) {
-			case 'edit':
-			case 'apply':
-			case 'add':
-				switch (JRequest::getCmd('task')) {
-					case 'add':
-						JToolBarHelper::title(JText::_( 'Add Field' ), 'redform_plus');
-						break;
-					default:
-						JToolBarHelper::title(JText::_( 'Edit Field' ), 'redform_plus');
-						break;
-				}
-				JToolBarHelper::save();
-				JToolBarHelper::apply();
-				JToolBarHelper::cancel();
-				break;
-			default:
-				JToolBarHelper::title(JText::_( 'Fields' ), 'redform_fields');
-				/* Only show add if there are forms */
-				if ($this->get('Total', 'redform') > 0) {
-
-					JToolBarHelper::custom('sanitize', 'redform_details', 'redform_details', JText::_('SANITIZE'), false);
-					JToolBarHelper::publishList();
-					JToolBarHelper::unpublishList();
-					JToolBarHelper::spacer();
-					JToolBarHelper::deleteList(JText::_('Are you sure you want to delete the fields and related values?'));
-					JToolBarHelper::editListX();
-					JToolBarHelper::addNew();
-				}
-				break;
-		}
-	}
+	}		
 }
 ?>

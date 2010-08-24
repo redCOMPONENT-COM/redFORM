@@ -84,7 +84,6 @@
 	<submenu>
 		<menu img="../media/com_redform/redform_red_16.png" view="forms">redFORM</menu>
 		<menu img="../media/com_redform/redform_quest_16.png" view="fields">Fields</menu>
-		<menu img="../media/com_redform/redform_answers_16.png" view="values">Values</menu>
 		<menu img="../media/com_redform/redform_contes_16.png" view="submitters">Submitters</menu>
 		<menu img="../media/com_redform/redform_red_16.png" view="configuration">Configuration</menu>
 	</submenu>

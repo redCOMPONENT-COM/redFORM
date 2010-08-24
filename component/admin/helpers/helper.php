@@ -27,7 +27,6 @@ class RedformHelper {
     //Create Submenu
     JSubMenuHelper::addEntry( JText::_( 'FORMS' ), 'index.php?option=com_redform&view=forms', $view == '' || $view == 'forms');
     JSubMenuHelper::addEntry( JText::_( 'FIELDS' ), 'index.php?option=com_redform&view=fields', $view == 'fields');
-    JSubMenuHelper::addEntry( JText::_( 'VALUES' ), 'index.php?option=com_redform&view=values', $view == 'values');
     JSubMenuHelper::addEntry( JText::_( 'SUBMITTERS' ), 'index.php?option=com_redform&view=submitters', $view == 'submitters');
     JSubMenuHelper::addEntry( JText::_( 'LOGS' ), 'index.php?option=com_redform&view=log', $view == 'log');
     if ($user->get('gid') > 24) {
