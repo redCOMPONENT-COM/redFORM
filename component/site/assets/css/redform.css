@@ -1,0 +1,64 @@
+@charset "UTF-8";
+
+#signedusers {
+ padding: 0 4px;
+}
+
+.formbox {
+	clear:both;
+}	
+	
+ .fieldline {
+	padding: 3px 0;
+	clear:both;
+}
+
+ .fieldline div {
+	float:left;
+	text-align:left;
+}
+
+ .fieldline div.fieldoption {
+	float:none;
+	text-align:left;
+}
+
+ .fieldline div.label {
+	width:150px;
+}
+
+ div#totalprice {
+	clear:both;
+}
+
+ div#submit_button, div#confirmbutton {
+ clear:both;
+}
+
+ .fieldline.type-email div div {
+ float: none;
+}
+
+ div.fieldinfo {
+  padding-left: 4px;
+}
+
+label.emptyfield {
+	color:red;
+	font-weight:bold;
+}
+
+input.emptyfield {
+	border:1px solid red;
+	background-color:pink;
+}
+
+select.emptyfield {
+	border:1px solid red;
+	background-color:pink;
+}
+
+textarea.emptyfield {
+	border:1px solid red;
+	background-color:pink;
+}

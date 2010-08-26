@@ -111,7 +111,7 @@ class RedFormCore extends JObject {
 		
 	  // css
     $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
-    $document->addStyleSheet(JURI::base().'plugins/content/redform/plgredform.css');
+    $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/redform.css');
     
 		// load jquery for the form javascript
 		if (JRequest::getVar('format', 'html') == 'html') {
@@ -256,7 +256,7 @@ class RedFormCore extends JObject {
 				}
 					
 				$cleanfield = 'field_'. $field->id;
-				$element = "<div class=\"field".$field->fieldtype."\">";
+				$element = "<div class=\"field\">";
 				
 				switch ($field->fieldtype)
 				{
@@ -266,7 +266,7 @@ class RedFormCore extends JObject {
 						foreach ($values as $id => $value)
 						{
 							$element .= '<div class="fieldoption">';
-							$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
+							$element .= "<input class=\"".$field->parameters->get('class','')." ";
 							if ($field->validate) $element .= "required";
 							$element .= "\"";
 							if ($answers)
@@ -290,7 +290,7 @@ class RedFormCore extends JObject {
 	
 					case 'textarea':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[textarea]">'.$field->field.'</label></div>';
-						$element .= '<textarea class="'.$form->classname.$field->parameters->get('class','');
+						$element .= '<textarea class="'.$field->parameters->get('class','');
 						if ($field->validate) $element .= ' required';
 						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
 						$element .= ' cols="'.$field->parameters->get('cols',25).'" rows="'.$field->parameters->get('rows',6).'"';
@@ -330,7 +330,7 @@ class RedFormCore extends JObject {
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[email][]">'.$field->field.'</label></div>';
 						$element .= "<div class=\"emailfields\">";
 						$element .= "<div class=\"emailfield\">";
-						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
+						$element .= "<input class=\"".$field->parameters->get('class','')." ";
 						if ($field->validate) $element .= "required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\"";
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
@@ -363,8 +363,8 @@ class RedFormCore extends JObject {
 								$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
 								foreach ($listnames AS $listkey => $listname)
 								{
-									$element .= "<div class=\"field_".$listkey."\"><input class=\"".$form->classname." ";
-									$element .= "\" type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
+									$element .= "<div class=\"field_".$listkey."\">";
+									$element .= "<input type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
 								}
 								$element .= "</div>\n";
 							}
@@ -375,7 +375,7 @@ class RedFormCore extends JObject {
 	
 					case 'fullname':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fullname][]">'.$field->field.'</label></div>';
-						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
+						$element .= "<input class=\"".$field->parameters->get('class','');
 						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\"";
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
@@ -398,7 +398,7 @@ class RedFormCore extends JObject {
 	
 					case 'username':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[username][]">'.$field->field.'</label></div>';
-						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
+						$element .= "<input class=\"".$field->parameters->get('class','');
 						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\"";
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
@@ -421,7 +421,7 @@ class RedFormCore extends JObject {
 	
 					case 'textfield':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[text][]">'.$field->field.'</label></div>';
-						$element .= "<input class=\"".$form->classname.$field->parameters->get('class','');
+						$element .= "<input class=\"".$field->parameters->get('class','');
 						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\"";
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
@@ -454,7 +454,7 @@ class RedFormCore extends JObject {
 						else {
 							$val = null;
 						}
-						$class = $form->classname.$field->parameters->get('class','');
+						$class = $field->parameters->get('class','');
 						if ($field->validate) $class .= " required";
 						
 						$element .= JHTML::_('calendar', $val, 'field'.$field->id.'.'.$signup.'[date]', 'field'.$field->id.'.'.$signup.'[date]', 
@@ -472,7 +472,7 @@ class RedFormCore extends JObject {
 						}
 						else // like a text input
 						{
-							$element .= '<input class="'. $form->classname.$field->parameters->get('class','') .($field->validate ? " required" : '') .'"';
+							$element .= '<input class="'. $field->parameters->get('class','') .($field->validate ? " required" : '') .'"';
 							$element .= ' type="text" name="field'.$field->id.'.'.$signup.'[price][]"';
 							$element .= ' size="'.$field->parameters->get('size', 25).'"';
 							$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
@@ -498,7 +498,7 @@ class RedFormCore extends JObject {
 						foreach ($values as $id => $value)
 						{
 							$element .= '<div class="fieldoption">';
-							$element .= "<input class=\"".$form->classname.$field->parameters->get('class','')." ";
+							$element .= "<input class=\"".$field->parameters->get('class','')." ";
 							if ($field->validate) $element .= "required";
 							$element .= "\"";
 							if ($answers)
@@ -522,7 +522,7 @@ class RedFormCore extends JObject {
 	
 					case 'select':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[select][]">'.$field->field.'</label></div>';
-						$element .= "<select name=\"field".$field->id.'.'.$signup."[select][]\" class=\"".$form->classname.$field->parameters->get('class','')."\">";
+						$element .= "<select name=\"field".$field->id.'.'.$signup."[select][]\" class=\"".$field->parameters->get('class','')."\">";
 						foreach ($values as $id => $value)
 						{
 							$element .= "<option value=\"".$value->value."\"";
@@ -545,7 +545,7 @@ class RedFormCore extends JObject {
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[multiselect][]">'.$field->field.'</label></div>';
 						$element .= '<select name="field'.$field->id.'.'.$signup.'[multiselect][]"'
 						          . ' multiple="multiple" size="'.$field->parameters->get('size',5).'"'
-						          . ' class="'.trim($form->classname.$field->parameters->get('class','').($field->validate ?" required" : '')).'"'
+						          . ' class="'.trim($field->parameters->get('class','').($field->validate ?" required" : '')).'"'
 						          .'>'
 						          ;
 						foreach ($values as $id => $value)
@@ -575,7 +575,7 @@ class RedFormCore extends JObject {
 						$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\""
 						         . ($field->parameters->get('multiple', 1) ? ' multiple="multiple"' : '')
 						         . ' size="'.$field->parameters->get('size', 5).'"'
-						         . ' class="'.$form->classname.$field->parameters->get('class','').($field->validate ?" required" : '').'"'
+						         . ' class="'.$field->parameters->get('class','').($field->validate ?" required" : '').'"'
 						         . '>';
 						foreach ($values as $id => $value)
 						{
