@@ -245,9 +245,12 @@ class RedFormCore extends JObject {
 
 				$values = $model_redform->getFormValues($field->id);
 
-				if ($field->fieldtype == 'info' && count($values))
+				if ($field->fieldtype == 'info')
 				{
-					$html .= '<div class="infofield">' . $values[0]->value . '</div>';
+					if ($values && count($values))
+					{
+						$html .= '<div class="infofield">' . $values[0]->value . '</div>';
+					}
 					$html .= '</div>';
 					continue;
 				}
