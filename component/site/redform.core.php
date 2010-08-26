@@ -241,7 +241,7 @@ class RedFormCore extends JObject {
 
 			foreach ($fields as $key => $field)
 			{
-				$html .= '<div id="fieldline_'.$field->id.'" class="fieldline">';
+				$html .= '<div id="fieldline_'.$field->id.'" class="fieldline type-'.$field->fieldtype.'">';
 
 				$values = $model_redform->getFormValues($field->id);
 
