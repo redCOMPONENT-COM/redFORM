@@ -32,7 +32,7 @@ JHTML::_('behavior.tooltip');
 		
 		$('fieldtype').addEvent('change', function(){
 			if (confirm("<?php echo JText::_('REDFORM_FIELD_JS_CONFIRM_CHANGE_TYPE'); ?>")) {
-				submitform('apply');
+				submitbutton('apply');
 			}
 		});
 
@@ -67,6 +67,23 @@ JHTML::_('behavior.tooltip');
 		if (countfields > 1) {
 			this.getParent().getParent().remove();
 		}		
+	}
+	
+	function submitbutton(pressbutton)
+	{
+		var form = document.adminForm;
+		
+		if (pressbutton == 'cancel') {
+			submitform( pressbutton );
+			return;
+		}
+
+		// do field validation
+		if (form.field.value == ""){
+			alert( "<?php echo JText::_( 'COM_REDFORM_FIELD_NAME_REQUIRED' ); ?>" );
+		} else {
+			submitform( pressbutton );
+		}
 	}
 </script>
 
