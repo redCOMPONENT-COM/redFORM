@@ -28,7 +28,6 @@ else { ?>
          <td align="left" width="100%">
             <?php echo JText::_('Filter'); ?>:
 			<?php echo $this->lists['form_id']; ?>
-            <button onclick="this.form.submit();"><?php echo JText::_('Go'); ?></button>
          </td>
       </tr>
     </table>

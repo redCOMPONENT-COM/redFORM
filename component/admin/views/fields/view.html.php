@@ -38,6 +38,7 @@ class RedformViewFields extends JView {
 		
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.values.filter_order_Dir',	'filter_order_Dir',	'', 'word' );
 		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.values.filter_order', 		'filter_order', 	'ordering', 'cmd' );
+    $form_id          = $mainframe->getUserStateFromRequest( $option.'.fields.form_id', 'form_id', 0, 'int');
 
 		/* Get the pagination */
 		$pagination = $this->get('Pagination');
@@ -51,7 +52,7 @@ class RedformViewFields extends JView {
 		$forms = array_merge($forms, $this->get('FormsOptions'));
 
 		/* Create the dropdown list */
-		$lists['form_id'] = JHTML::_('select.genericlist',  $forms, 'form_id', '', 'value', 'text', JRequest::getVar('form_id')) ;
+		$lists['form_id'] = JHTML::_('select.genericlist',  $forms, 'form_id', 'onchange="this.form.submit();"', 'value', 'text', $form_id) ;
 		// table ordering
 		$lists['order_Dir'] = $filter_order_Dir;
 		$lists['order'] = $filter_order;

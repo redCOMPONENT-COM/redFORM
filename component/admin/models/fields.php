@@ -60,11 +60,13 @@ class RedformModelFields extends JModel {
 
     global $mainframe, $option;
 
-    $limit    = $mainframe->getUserStateFromRequest( $option.'.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+    $limit      = $mainframe->getUserStateFromRequest( $option.'.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
     $limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
+    $form_id    = $mainframe->getUserStateFromRequest( $option.'.fields.form_id', 'form_id', 0, 'int');
 
     $this->setState('limit', $limit);
     $this->setState('limitstart', $limitstart);
+    $this->setState('form_id',   $form_id);
 
     $array = JRequest::getVar('cid',  0, '', 'array');
     $this->setId((int)$array[0]);
@@ -104,7 +106,7 @@ class RedformModelFields extends JModel {
 	
 	function _buildQuery()
 	{
-		$form_id = JRequest::getInt('form_id', false);
+    $form_id = $this->getState('form_id');
 		$order   = $this->_buildContentOrderBy();
       
 		/* Get all the fields based on the limits */
