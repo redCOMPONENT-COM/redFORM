@@ -225,6 +225,8 @@ class RedformModelField extends JModel
   		$this->setError(JText::_('There was a problem storing the field data'), 'error');
   		return false;
   	}
+  	
+  	$this->_id = $row->id;
   	 
   	/* Add form table */
   	$this->AddFieldTable($row, $oldrow);
