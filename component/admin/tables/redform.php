@@ -79,6 +79,22 @@ class TableRedform extends JTable {
 	 * @var string text to be displayed when payment was accepted
 	 */
 	var $paymentaccepted = null;
+	/**
+	 * @var string text to be displayed in subject of contact payment notification email
+	 */
+	var $contactpaymentnotificationsubject = null;
+	/**
+	 * @var string text to be displayed in subject of contact payment notification body
+	 */
+	var $contactpaymentnotificationbody = null;
+	/**
+	 * @var string text to be displayed in subject of submitter payment notification email
+	 */
+	var $submitterpaymentnotificationsubject = null;
+	/**
+	 * @var string text to be displayed in subject of submitter payment notification body
+	 */
+	var $submitterpaymentnotificationbody = null;
 	
 	
 	/**

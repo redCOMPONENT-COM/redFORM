@@ -268,6 +268,22 @@ function com_install() {
 		$db->query();
 	}
 	
+	/* Check if we have the notification payment email columns */
+	if (!array_key_exists('contactpaymentnotificationsubject', $cols)) {
+		$q = "ALTER IGNORE TABLE `#__rwf_forms` ADD COLUMN ".$db->nameQuote('contactpaymentnotificationsubject')." TEXT DEFAULT NULL";
+		$db->setQuery($q);
+		$db->query();
+		$q = "ALTER IGNORE TABLE `#__rwf_forms` ADD COLUMN ".$db->nameQuote('contactpaymentnotificationbody')." TEXT DEFAULT NULL";
+		$db->setQuery($q);
+		$db->query();
+		$q = "ALTER IGNORE TABLE `#__rwf_forms` ADD COLUMN ".$db->nameQuote('submitterpaymentnotificationsubject')." TEXT DEFAULT NULL";
+		$db->setQuery($q);
+		$db->query();
+		$q = "ALTER IGNORE TABLE `#__rwf_forms` ADD COLUMN ".$db->nameQuote('submitterpaymentnotificationbody')." TEXT DEFAULT NULL";
+		$db->setQuery($q);
+		$db->query();
+	}
+	
 	/* Get the current columns */
 	$q = "SHOW COLUMNS FROM #__rwf_submitters";
 	$db->setQuery($q);

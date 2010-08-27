@@ -1040,7 +1040,7 @@ EOF;
 	 * @param string $submit_key
 	 * @return array
 	 */
-	function _getSubmitKeyAnswers($submit_key)
+	function getSubmitKeyAnswers($submit_key)
 	{		
 		$mainframe = &JFactory::getApplication();
 		$db = JFactory::getDBO(); 
@@ -1101,7 +1101,7 @@ EOF;
 		else if (!empty($reference)) // submit_key
 		{
 			$submit_key = $reference;
-			$answers = $this->_getSubmitKeyAnswers($submit_key);
+			$answers = $this->getSubmitKeyAnswers($submit_key);
 		}
 		else {
 			return false;
@@ -1165,7 +1165,7 @@ EOF;
 				if ($field->fieldtype == 'info')
 				{
 					$val = $this->getFieldValues($field->id);
-					$field->answer = $val[0]->value;
+					$field->answer = (isset($val[0]) ? $val[0]->value : '');
 				}
 				else {
 					$prop = 'field_'.$field->id;
@@ -1282,6 +1282,50 @@ EOF;
 			return false;
 		}
 		return JRoute::_('index.php?page=shop.product_details&product_id='.$settings->vmproductid.'&option=com_virtuemart&Itemid='.$settings->vmitemid);
+	}
+	
+	function getSubmissionContactEmail($key)
+	{
+		$sids = $this->getSids($key);
+		$answers = $this->getSidsFieldsAnswers($sids);
+		
+		$emails = array();
+		foreach ((array) $answers as $fields)
+		{
+			$email = array();
+			foreach ((array) $fields as $f)
+			{
+				if ($f->fieldtype == 'username')
+				{
+					$email['username'] = $f->answer;
+				}
+				if ($f->fieldtype == 'fullname')
+				{
+					$email['fullname'] = $f->answer;
+				}
+				if ($f->fieldtype == 'email')
+				{
+					$email['email'] = $f->answer;
+				}
+			}
+			if (!isset($email['fullname']) && isset($email['username'])) {
+				$email['fullname'] = $email['username'];
+			}
+			$emails[] = $email;
+		}
+		return $emails;
+	}
+	
+	function getSids($key)
+	{
+		$db = &JFactory::getDBO();
+		
+		$query = " SELECT s.id "
+		       . " FROM #__rwf_submitters as s "
+		       . " WHERE submit_key = ".$db->quote($key)
+		       ;
+		$db->setQuery($query);
+		return $db->loadResultArray();		
 	}
 	
 }

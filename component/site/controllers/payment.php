@@ -123,6 +123,15 @@ class RedformControllerPayment extends JController {
     $helper = $model->getGatewayHelper($gw);
     
     $res = $helper->notify();
+		
+    if ($res) { // the payment was received !
+    	//TODO: send a mail ?
+			JRequest::setVar('state', 'accepted');
+			$model->notifyPaymentReceived();
+    }
+    else {
+			JRequest::setVar('state', 'failed');
+    }
     
     $submitters = $model->getSubmitters();
     if (count($submitters))
@@ -145,15 +154,16 @@ class RedformControllerPayment extends JController {
     
 		JRequest::setVar('view',   'payment');
 		JRequest::setVar('layout', 'final');
-		
-    if ($res) { // the payment was received !
-    	//TODO: send a mail ?
-			JRequest::setVar('state', 'accepted');
-    }
-    else {
-			JRequest::setVar('state', 'failed');
-    }
     
 		$this->display();
+  }
+  
+  /**
+   * this is a test function for payment notification
+   */
+  function notifytest()
+  {
+  	$model = &$this->getModel('payment');   
+  	$model->notifyPaymentReceived(); 
   }
 }
