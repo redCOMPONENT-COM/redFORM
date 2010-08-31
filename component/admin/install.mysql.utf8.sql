@@ -51,6 +51,10 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `currency` varchar(3) DEFAULT NULL,
   `paymentprocessing` text DEFAULT NULL,
   `paymentaccepted` text DEFAULT NULL,
+  `contactpaymentnotificationsubject` text DEFAULT NULL,
+  `contactpaymentnotificationbody` text DEFAULT NULL,
+  `submitterpaymentnotificationsubject` text DEFAULT NULL,
+  `submitterpaymentnotificationbody` text DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) COMMENT='Forms for redFORM';
 
