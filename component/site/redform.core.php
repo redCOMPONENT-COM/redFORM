@@ -1308,6 +1308,10 @@ EOF;
 					$email['email'] = $f->answer;
 				}
 			}
+			if (!isset($email['email'])) {
+				// no email field
+				return false;
+			}
 			if (!isset($email['fullname']) && isset($email['username'])) {
 				$email['fullname'] = $email['username'];
 			}
