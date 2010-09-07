@@ -94,7 +94,13 @@ class RedformControllerRedform extends RedformController {
     	$mainframe->redirect('index.php');
     }
     
-    echo $result[1];
+    if ($url = $model->getRedirect()) {
+    	$this->setRedirect($url);
+    	$this->redirect();
+    }
+    else {
+	    echo $model->getNotificationText();  	
+    }
     return;
   }
 }

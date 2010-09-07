@@ -51,6 +51,8 @@ class TableRedform extends JTable {
 	var $submitterinform = 0;
 	/** @var integer Show notification */
 	var $submitnotification = 0;
+	/** @var string redirect url for notification */
+	var $redirect = null;
 	/** @var integer Text to show on submission */
 	var $notificationtext = null;
 	/** @var boolean Set if a form expires or not */

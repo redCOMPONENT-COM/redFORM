@@ -284,6 +284,14 @@ function com_install() {
 		$db->query();
 	}
 	
+	/* Check if we have the redirect column */
+	if (array_key_exists('redirect', $cols)) {
+		$q = "ALTER TABLE `jos_rwf_forms` ADD `redirect` VARCHAR( 300 ) NULL DEFAULT NULL ";
+		$db->setQuery($q);
+		$db->query();
+	}
+	
+	
 	/* Get the current columns */
 	$q = "SHOW COLUMNS FROM #__rwf_submitters";
 	$db->setQuery($q);

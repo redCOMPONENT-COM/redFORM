@@ -69,20 +69,17 @@ class RedformModelRedform extends JModel {
    */
   function &getForm($id=0)
   {
-  	if (!$id) {
-  		$id = $this->_form_id;
+  	if ($id) {
+  		$this->setFormId($id);
   	}
-  	if (!$id) {
-  		$id = JRequest::getInt('form_id', $this->_form_id);
+  	
+  	if (empty($this->_form))
+  	{
+	    /* Get the form details */
+	  	$query = 'SELECT * FROM #__rwf_forms WHERE id = '. $this->_db->Quote($this->_form_id);
+	  	$this->_db->setQuery($query, 0, 1);
+	  	$this->_form = $this->_db->loadObject();
   	}
-    /* Get the form details */
-  	$query = 'SELECT * FROM #__rwf_forms WHERE id = '. $this->_db->Quote($id);
-  	$this->_db->setQuery($query, 0, 1);
-  	$form = $this->_db->loadObject();
-    
-    if ($form) {
-    	$this->_form = $form;
-    }
     
   	return $this->_form;
   }
@@ -973,6 +970,22 @@ class RedformModelRedform extends JModel {
 			$answers[$k] = $r;
 		}
 		return $answers;
+	}
+	
+	function getRedirect()
+	{
+		$form = $this->getForm();
+		
+		if (!empty($form->redirect)) {
+			return $form->redirect;
+		}
+		return false;
+	}
+	
+	function getNotificationText()
+	{
+		$form = $this->getForm();
+		return $form->notificationtext;		
 	}
 }
 ?>

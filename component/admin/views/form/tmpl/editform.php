@@ -135,6 +135,14 @@ $editor =& JFactory::getEditor();
 		</tr>
 		<tr class="row<?php echo $row = 1 - $row; ?>">
 			<td valign="top" align="right">
+				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REDIRECT_URL').'::'.JText::_('COM_REDFORM_REDIRECT_URL_TIP');?>"><?php echo JText::_('COM_REDFORM_REDIRECT_URL'); ?></span>
+			</td>
+			<td>
+				<input name="redirect" type="text" value="<?php echo $this->row->redirect; ?>" size="80" />
+			</td>
+		</tr>
+		<tr class="row<?php echo $row = 1 - $row; ?>">
+			<td valign="top" align="right">
 				<span class="hasTip" title="<?php echo JText::_('Inform contactperson on new submission');?>"><?php echo JText::_('Inform contactperson'); ?></span>
 			</td>
 			<td>

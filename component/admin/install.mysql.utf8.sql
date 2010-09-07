@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `contactpersonfullpost` int(11) NOT NULL default '0',
   `submitterinform` tinyint(1) NOT NULL default '0',
   `submitnotification` tinyint(1) NOT NULL default '0',
+  `redirect` VARCHAR( 300 ) NULL DEFAULT NULL,
   `notificationtext` text NOT NULL,
   `formexpires` tinyint(1) NOT NULL default '1',
   `virtuemartactive` tinyint(1) NOT NULL default '0',
