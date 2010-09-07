@@ -17,7 +17,7 @@
 window.addEvent('domready', function() {
 	SqueezeBox.initialize({handler: 'iframe', size: {x: 600, y: 500}});
 
-    $$('a.venuemodal').each(function(el) {
+    $$('a.valuemodal').each(function(el) {
       el.addEvent('click', function(e) {
         new Event(e).stop();
         SqueezeBox.fromElement(el);
@@ -119,13 +119,13 @@ function newRow(value)
 	var upurl  = 'index.php?option=com_redform&controller=values&task=ajaxorderup&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
 	var downurl = 'index.php?option=com_redform&controller=values&task=ajaxorderdown&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
 	new Element('img', {'src': 'images/uparrow.png', 'alt': textup})
-	.appendText('up').injectInside(tdlink).addEvent('click', function(e) {
-		ajaxgetandupdate(upurl);
-	});
+		.injectInside(tdlink).addEvent('click', function(e) {
+			ajaxgetandupdate(upurl);
+		});
 	new Element('img', {'src': 'images/downarrow.png', 'alt': textdown})
-	.appendText('down').injectInside(tdlink).addEvent('click', function(e) {
-		ajaxgetandupdate(downurl);
-	});
+		.injectInside(tdlink).addEvent('click', function(e) {
+			ajaxgetandupdate(downurl);
+		});
 	// edit link
 	var tdlink = new Element('td').injectInside(tr);
 	new Element('a', {'href': 'index.php?option=com_redform&controller=values&task=ajaxedit&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid})

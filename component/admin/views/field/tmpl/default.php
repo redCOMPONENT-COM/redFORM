@@ -242,7 +242,7 @@ JHTML::_('behavior.tooltip');
 			<tbody>
 				<tr>
 					<td colspan="6">
-						<a href="<?php echo JRoute::_('index.php?option=com_redform&controller=values&task=ajaxedit&tmpl=component&fieldid=' .$this->row->id); ?>" class="venuemodal">
+						<a href="<?php echo JRoute::_('index.php?option=com_redform&controller=values&task=ajaxedit&tmpl=component&fieldid=' .$this->row->id); ?>" class="valuemodal">
 							<?php echo JText::_('Add'); ?>
 						</a>
 					</td>
