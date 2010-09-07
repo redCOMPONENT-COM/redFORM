@@ -120,7 +120,8 @@ function upgradeFormColumns()
   }
 }
 
-function com_install() {
+function com_install() 
+{
 	$db = JFactory::getDBO();
 	
 	/* Get the current columns */
@@ -285,7 +286,7 @@ function com_install() {
 	}
 	
 	/* Check if we have the redirect column */
-	if (array_key_exists('redirect', $cols)) {
+	if (!array_key_exists('redirect', $cols)) {
 		$q = "ALTER TABLE `jos_rwf_forms` ADD `redirect` VARCHAR( 300 ) NULL DEFAULT NULL ";
 		$db->setQuery($q);
 		$db->query();
