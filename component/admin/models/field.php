@@ -377,13 +377,11 @@ class RedformModelField extends JModel
 	 */
 	function getActiveMailinglists() 
 	{
-		$db = JFactory::getDBO();
-		$q = "SELECT name
-			FROM #__rwf_configuration
-			WHERE name IN ('use_phplist', 'use_ccnewsletter', 'use_acajoom')
-			AND value = 1";
-		$db->setQuery($q);
-		return $db->loadResultArray();
+		$res = array();
+		JPluginHelper::importPlugin( 'redform_mailing' );
+		$dispatcher =& JDispatcher::getInstance();
+		$results = $dispatcher->trigger( 'getIntegrationName', array( &$res ) );
+		return $res;
 	}
 
 	/**

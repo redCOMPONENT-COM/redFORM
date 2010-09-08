@@ -515,132 +515,33 @@ class RedformModelSubmitter extends JModel {
 		}
 		return true;
 	}
-	
-/**
+
+  /**
    * Adds email from answers to mailing list
    *
    * @param rfanswers object
    */
   function updateMailingList($rfanswers)
 	{
-    $db = JFactory::getDBO();
-     
 	 	// mailing lists management
 	 	// get info from answers
-	 	$fullname = $rfanswers->getFullname();
-	 	$submitter_email = $rfanswers->getSubmitterEmail();
+	 	$fullname  = $rfanswers->getFullname() ? $rfanswers->getFullname() : $rfanswers->getUsername();	 	
 	 	$listnames = $rfanswers->getListNames();
+	 	
+	 	JPluginHelper::importPlugin( 'redform_mailing' );
+		$dispatcher =& JDispatcher::getInstance();		
 
-	 	foreach ((array) $listnames as $key => $alllistname)
-	 	{
-	 		foreach ((array) $alllistname as $listkey => $mailinglistname)
+	 	foreach ((array) $listnames as $field_id => $lists)
+	 	{	 		 		
+	 		$subscriber = new stdclass();
+	 		$subscriber->name  = empty($fullname) ? $lists['email'] : $fullname;
+	 		$subscriber->email = $lists['email'];
+	 		
+			$integration = $this->getMailingList($field_id);
+			
+	 		foreach ((array) $lists['lists'] as $listkey => $mailinglistname)
 	 		{
-	 			/* Check if we have a fullname */
-	 			if (!isset($fullname)) $fullname = $submitter_email;
-	 			/* Check if mailinglist integration is enabled */
-	 			if ($submitter_email) {
-	 				/* Check to which  mailinglist user should be added */
-	 				$q = "SELECT name, value
-                  FROM #__rwf_configuration
-                  WHERE name in ('use_phplist', 'use_acajoom', 'use_ccnewsletter', 'phplist_path')";
-	 				$db->setQuery($q);
-	 				$configuration = $db->loadObjectList('name');
-
-	 				/* Add the user to ccNewsletter */
-	 				if (isset($configuration['use_ccnewsletter']) && $configuration['use_ccnewsletter']->value) {
-	 					/* Check if ccNewsletter is installed */
-	 					$q = "SELECT COUNT(id) FROM #__components WHERE link = 'option=com_ccnewsletter'";
-	 					$db->setQuery($q);
-
-	 					if ($db->loadResult() > 0) {
-	 						/* ccNewsletter is installed, let's add the user */
-	 						$this->addTablePath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_ccnewsletter' . DS . 'tables' );
-	 						$ccsubscriber = $this->getTable('subscriber');
-	 						$ccsettings = array('name' => $fullname,
-                              'email' => $submitter_email,
-                              'plainText' => '0',
-                              'enabled' => '1',
-                              'sdate' => date('Y-m-d H:i:s'));
-	 						$ccsubscriber->bind($ccsettings);
-	 						$ccsubscriber->store();
-	 					}
-
-	 				}
-
-	 				/* Add the user to Acajoom */
-	 				if (isset($configuration['use_acajoom']) && $configuration['use_acajoom']->value) {
-	 					/* Check if Acajoom is installed */
-	 					$q = "SELECT COUNT(id) FROM #__components WHERE link = 'option=com_acajoom'";
-	 					$db->setQuery($q);
-
-	 					if ($db->loadResult() > 0) {
-	 						/* Acajoom is installed, let's add the user */
-	 						$acajoomsubscriber = $this->getTable('acajoom_subscribers');
-	 						$myid = JFactory::getUser();
-	 						if (!isset($myid->id)) $myid->id = 0;
-	 						$acajoomsettings = array('user_id' => $myid->id,
-                              'name' => $fullname,
-                              'email' => $submitter_email,
-                              'subscribe_date' => date('Y-m-d H:i:s'));
-	 						$acajoomsubscriber->bind($acajoomsettings);
-	 						if (!$acajoomsubscriber->store()) {
-	 							if (stristr($db->getErrorMsg(), 'duplicate entry')) {
-	 								$mainframe->enqueueMessage(JText::_('This e-mail address is already signed up for the newsletter'), 'error');
-	 							}
-	 							else $mainframe->enqueueMessage(JText::_('There was a problem signing up for the newsletter').' '.$db->getErrorMsg(),'error');
-	 						}
-
-	 						/* Check if the mailinglist exists, add the user to it */
-	 						$list = false;
-	 						$q = "SELECT id, acc_id FROM #__acajoom_lists WHERE list_name = ".$db->Quote($mailinglistname)." LIMIT 1";
-	 						$db->setQuery($q);
-	 						$list = $db->loadObject();
-
-	 						if ($db->getAffectedRows() > 0) {
-	 							/* Load the queue table */
-	 							$acajoomqueue = $this->getTable('acajoom_queue');
-
-	 							/* Collect subscriber details */
-	 							$queue = new stdClass;
-	 							$queue->id = 0;
-	 							$queue->subscriber_id = $acajoomsubscriber->id;
-	 							$queue->list_id = $list->id;
-	 							$queue->type = 1;
-	 							$queue->mailing_id = 0;
-	 							$queue->send_date = '0000-00-00 00:00:00';
-	 							$queue->suspend = 0;
-	 							$queue->delay = 0;
-	 							$queue->acc_level = $list->acc_id;
-	 							$queue->issue_nb = 0;
-	 							$queue->published = 0;
-	 							$queue->params = '';
-
-	 							$acajoomqueue->bind($queue);
-	 							$acajoomqueue->store();
-	 						}
-	 					}
-	 				}
-
-	 				/* Add the user to PHPList */
-	 				if (isset($configuration['use_phplist']) && $configuration['use_phplist']->value && !empty($mailinglistname)) {
-	 					if (JFolder::exists(JPATH_SITE.DS.$configuration['phplist_path']->value)) {
-	 						/* Include the PHPList API */
-	 						require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'phplistuser.php');
-	 						require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'simpleemail.php');
-	 						require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'query.php');
-	 						require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'errorhandler.php');
-
-	 						/* Get the PHPList path configuration */
-	 						PhpListUser::$PHPListPath = JPATH_SITE.DS.$configuration['phplist_path']->value;
-
-	 						$user = new PhpListUser();
-	 						$user->set_email($submitter_email);
-	 						$listid = $user->getListId($mailinglistname);
-	 						$user->addListId($listid);
-	 						$user->save();
-	 					}
-	 				}
-	 			}
+				$results = $dispatcher->trigger( 'subscribe', array( $integration, $subscriber, $mailinglistname ) );		
 	 		}
 	 	}
 	}

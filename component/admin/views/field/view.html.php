@@ -117,16 +117,23 @@ class RedformViewField extends JView {
 			$parameters = false;
 		}
 		
-		/* Get the mailing lists that can be used */
-		$uselists = $this->get('ActiveMailinglists');
 
 		/* Get the mailing lists if we have an e-mail field */
 		if ($row->fieldtype == 'email') 
 		{
+			/* Get the mailing lists that can be used */
+			$activelists = $this->get('ActiveMailinglists');
 			/* Set the id */
 			JRequest::setVar('id', $row->id);
-			$mailinglists = $this->get('Mailinglist');
-			$this->assignRef('mailinglists', $mailinglists);
+			$mailinglist = $this->get('Mailinglist');
+			$options = array();
+			foreach ($activelists as $list)
+			{
+				$options[] = JHTML::_('select.option', $list, $list);
+			}
+			$lists['mailinglists'] = JHTML::_('select.genericlist', $options, 'mailinglist', '', 'value', 'text', $mailinglist->mailinglist);
+			$this->assignRef('mailinglist', $mailinglist);
+			$this->assign('displaymailinglist', count($activelists));
 		}		
 		
 		/* Get the toolbar */

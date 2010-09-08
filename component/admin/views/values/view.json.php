@@ -23,12 +23,7 @@ jimport( 'joomla.application.component.view' );
 class RedformViewValues extends JView {
    
 	function display() {
-		/* Get the mailinglists */
-		$mailinglists = array(array('optionValue' => 'acajoom', 'optionDisplay' => 'Acajoom'), 
-							array('optionValue' => 'ccnewsletter', 'optionDisplay' => 'ccNewsletter'),
-							array('optionValue' => 'phplist', 'optionDisplay' => 'PHPList')
-							);
-		echo json_encode($mailinglists);
+		
 	}
 }
 ?>

@@ -45,28 +45,7 @@ class RedformModelConfiguration extends JModel {
 				FROM #__rwf_configuration";
 		$db->setQuery($query);
 		$configuration = $db->loadObjectList('name');
-		
-		/* Check the configuration options */
-		if (!isset($configuration['phplist_path'])) {
-			$configuration['phplist_path']->name = 'phplist_path';
-			$configuration['phplist_path']->value = JPATH_BASE.DS.'lists';
-		}
-		
-		if (!isset($configuration['use_phplist'])) {
-			$configuration['use_phplist']->name = 'use_phplist';
-			$configuration['use_phplist']->value = 0;
-		}
-		
-		if (!isset($configuration['use_ccnewsletter'])) {
-			$configuration['use_ccnewsletter']->name = 'use_ccnewsletter';
-			$configuration['use_ccnewsletter']->value = 0;
-		}
-		
-		if (!isset($configuration['use_acajoom'])) {
-			$configuration['use_acajoom']->name = 'use_acajoom';
-			$configuration['use_acajoom']->value = 0;
-		}
-		
+				
 		if (!isset($configuration['filelist_path'])) {
 			$configuration['filelist_path']->name = 'filelist_path';
 			$configuration['filelist_path']->value = JPATH_ROOT.DS.'images';

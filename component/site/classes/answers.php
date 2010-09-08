@@ -34,6 +34,8 @@ class rfanswers
 	public $_submitter_email = null;
 	
   public $_fullname = null;
+  
+  public $_username = null;
 	
 	public $_listnames = array();
 	
@@ -88,6 +90,11 @@ class rfanswers
     return $this->_fullname;
   }
   
+  public function getUsername()
+  {
+    return $this->_username;
+  }
+  
   public function initPrice($initial)
   {
   	$this->_price = $initial;
@@ -130,13 +137,14 @@ class rfanswers
         break;
       case 'username':
         $answer = $postedvalue['username'][0];
+        $this->_username = $answer;
         break;
       case 'email':
         // TODO: store submitter email and listnames
         $answer = $postedvalue['email'][0];
         $this->_submitter_email = $answer;
         if (array_key_exists('listnames', $postedvalue['email'])) {
-          $this->_listnames[] = $postedvalue['email']['listnames'];
+          $this->_listnames[$field->id] = array('email' => $answer, 'lists' => $postedvalue['email']['listnames']);
         }
         break;
       case 'text':

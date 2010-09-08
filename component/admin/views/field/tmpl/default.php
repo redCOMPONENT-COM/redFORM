@@ -169,8 +169,8 @@ JHTML::_('behavior.tooltip');
 		</table>
 		
 		
-		<?php if (isset($this->mailinglists)): 
-			$listnames = explode(';', $this->mailinglists->listnames);
+		<?php if (isset($this->displaymailinglist) && $this->displaymailinglist): 
+			$listnames = explode(';', $this->mailinglist->listnames);
 			?>
 		<fieldset class="adminform">
 		<legend><?php echo JText::_('COM_REDFORM_FIELD_EDIT_MAILINGLIST_FIELDSET')?></legend>
@@ -182,19 +182,7 @@ JHTML::_('behavior.tooltip');
 				</td>
 				<td>
 					<div id="newmailinglist">
-						<select id="mailinglist" name="mailinglist">
-							<?php
-								$newsletters = array('Acajoom', 'ccNewsletter', 'PHPList');
-								foreach ($newsletters as $key => $name) {
-									if (in_array('use_'.strtolower($name), $this->uselists)) { 
-										$option = '<option value="'.strtolower($name).'"';
-										if (strtolower($name) == $this->mailinglists->mailinglist) $option .= 'selected="selected"';
-										$option .= '>'.$name.'</option>';
-										echo $option;
-									}
-								}
-							?>
-						</select>
+						<?php echo $this->lists['mailinglists']; ?>
 					</div>
 				</td>
 			</tr>

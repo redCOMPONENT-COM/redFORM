@@ -35,11 +35,6 @@ class RedformViewConfiguration extends JView {
 		/* Get the configuration */
 		$configuration = $this->get('Configuration');
 		
-		/* Create options */
-		$lists['use_phplist']= JHTML::_('select.booleanlist',  'configuration[use_phplist]', 'class="inputbox"', $configuration['use_phplist']->value);
-		$lists['use_ccnewsletter']= JHTML::_('select.booleanlist',  'configuration[use_ccnewsletter]', 'class="inputbox"', $configuration['use_ccnewsletter']->value);
-		$lists['use_acajoom']= JHTML::_('select.booleanlist',  'configuration[use_acajoom]', 'class="inputbox"', $configuration['use_acajoom']->value);
-		
 		/* Set variabels */
 		$this->assignRef('configuration', $configuration);
 		$this->assignRef('lists', $lists);
