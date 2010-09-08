@@ -232,33 +232,41 @@ class RedformModelField extends JModel
   	$this->AddFieldTable($row, $oldrow);
 
   	/* mailing list handling in case of email field type */
-  	if ($row->fieldtype == 'email') 
+  	if ($row->fieldtype == 'email')
 	  {		 
-		  /* Load the table */
-		  $mailinglistrow = $this->getTable('Mailinglists');
-		  	
-		  /* Fix up the mailinglist */
-		  if (isset($post['listname'])) {
-		  	$post['listnames'] = implode(';', $post['listname']);
-		  }
-		  else {
-		  	$post['listnames'] = '';
-		  }
-		  $post['field_id'] = $row->id;
-		  if (!$mailinglistrow->bind($post)) {
-		  	$mainframe->enqueueMessage(JText::_('There was a problem binding the mailinglist data').' '.$row->getError(), 'error');
-		  	return false;
-		  }
-
-		  /* Pass on the ID */
-		  $mailinglistrow->field_id = $row->id;
-
-		  /* save the changes */
-		  if (!$mailinglistrow->store()) {
-		  	$mainframe->enqueueMessage(JText::_('There was a problem storing the mailinglist data').' '.$row->getError(), 'error');
-		  	return false;
-		  }
-		  	
+	  	// first, clear previous records
+	  	$query = ' DELETE FROM #__rwf_mailinglists ' 
+	  	       . ' WHERE field_id = ' . $this->_db->Quote($row->id);
+	  	$this->_db->setQuery($query);
+	  	$res = $this->_db->query();
+	  	
+	  	if ( isset($data['mailinglist']) && !empty($data['mailinglist']) )
+	  	{
+			  /* Load the table */
+			  $mailinglistrow = $this->getTable('Mailinglists');
+			  	
+			  /* Fix up the mailinglist */
+			  if (isset($post['listname'])) {
+			  	$post['listnames'] = implode(';', $post['listname']);
+			  }
+			  else {
+			  	$post['listnames'] = '';
+			  }
+			  $post['field_id'] = $row->id;
+			  if (!$mailinglistrow->bind($post)) {
+			  	$mainframe->enqueueMessage(JText::_('There was a problem binding the mailinglist data').' '.$row->getError(), 'error');
+			  	return false;
+			  }
+	
+			  /* Pass on the ID */
+			  $mailinglistrow->field_id = $row->id;
+	
+			  /* save the changes */
+			  if (!$mailinglistrow->store()) {
+			  	$mainframe->enqueueMessage(JText::_('There was a problem storing the mailinglist data').' '.$row->getError(), 'error');
+			  	return false;
+			  }
+	  	}
 	  }
 		  
   	return $row;

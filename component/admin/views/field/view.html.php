@@ -126,7 +126,7 @@ class RedformViewField extends JView {
 			/* Set the id */
 			JRequest::setVar('id', $row->id);
 			$mailinglist = $this->get('Mailinglist');
-			$options = array();
+			$options = array(JHTML::_('select.option', '', JText::_('COM_REDFORM_FIELD_SELECT_MAILINGLIST_INTEGRATION')));
 			foreach ($activelists as $list)
 			{
 				$options[] = JHTML::_('select.option', $list, $list);
