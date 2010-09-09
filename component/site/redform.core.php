@@ -637,8 +637,8 @@ class RedFormCore extends JObject {
 			$html .= '</div>'; // formfield div
 		}
 			
-		/* Add the captcha */
-		if ($form->captchaactive) 
+		/* Add the captcha, only if initial submit */
+		if ($form->captchaactive && empty($submit_key)) 
 		{
 			if (file_exists(JPATH_PLUGINS.DS.'system'.DS.'Captcha04'.DS."CaptchaImage.php"))
 			{
