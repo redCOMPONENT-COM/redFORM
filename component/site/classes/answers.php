@@ -261,7 +261,7 @@ class rfanswers
     {
       if (!JFolder::create($fullpath)) 
       {
-        JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDERRR').': '.$fullpath);
+        JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDER').': '.$fullpath);
         $status = false;
         return false;
       }

@@ -148,7 +148,7 @@ JHTML::_('behavior.tooltip');
 		<?php if (REDMEMBER_INTEGRATION): ?>
 		<tr>
 			<td valign="top" align="right">
-			<?php echo JHTML::tooltip(JText::_('Select a redmember field to link to this field. This will allow to prefill data using redmember.'), JText::_('Redmember field'), 'tooltip.png', '', '', false); ?>
+			<?php echo JHTML::tooltip(JText::_('COM_REDFORM_SELECT_REDMEMBER_FIELD'), JText::_('COM_REDFORM_REDMEMBER_FIELD'), 'tooltip.png', '', '', false); ?>
 			<?php echo JText::_('Redmember field'); ?>
 			</td>
 			<td>

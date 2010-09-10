@@ -351,37 +351,7 @@ class RedformModelSubmitter extends JModel {
 		}
 		
 		// add an attendee in redevent ?
-		$uid = JRequest::getInt('uid');
-		if (!$submitter && isset($postvalues['integration']) && $postvalues['integration'] == 'redevent')  
-		{
-			$query = ' INSERT INTO #__redevent_register (xref, submit_key, uid, uregdate) '
-			       . ' VALUES ('.$this->_db->Quote($postvalues['xref']).', '
-			       . $this->_db->Quote($submit_key).', '
-			       . $this->_db->Quote($uid).', '
-			       . ' NOW() '
-			       .')'
-			       ;
-			$this->_db->setQuery($query);
-			$res = $this->_db->query();
-			if (!$res) {
-				JError::raiseWarning(0, JText::_('Creating redevent attendee failed'));
-			}
-		}
-		else if (isset($postvalues['integration']) && $postvalues['integration'] == 'redevent')
-		{
-			$query = ' UPDATE #__redevent_register SET uid = '. $this->_db->Quote($uid)
-			       . ' WHERE submit_key = '.  $this->_db->Quote($submit_key)
-			       ;
-			$this->_db->setQuery($query);
-			$res = $this->_db->query();
-			
-			if (!$res) {
-				JError::raiseWarning(0, JText::_('Updating redevent attendee failed'));
-			}			
-		}
-
-		/* Clean up any signups that need to be removed */
-		$this->getConfirmAttendees();
+		$uid = JRequest::getInt('uid');		
 		
 		$this->updateMailingList($answers);
 					
