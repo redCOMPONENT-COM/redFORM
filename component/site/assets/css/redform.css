@@ -53,6 +53,11 @@ input.emptyfield {
 	background-color:pink;
 }
 
+div.fieldoptions.emptyfield {
+	border:1px solid red;
+	background-color:pink;
+}
+
 select.emptyfield {
 	border:1px solid red;
 	background-color:pink;

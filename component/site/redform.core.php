@@ -864,9 +864,14 @@ EOF;
 	              }
 	            }
 	            if (radiocheck == false) {
-	              addClass(check_element, newclass);
-	              if (radiomsg == false) radiomsg = true;
+	            	jQuery(check_element).parents('.fieldoptions').addClass('emptyfield');
+								getLabel(check_element).addClass('emptyfield');
+								radiomsg = getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 	              if (result) result = false;
+	            }
+	            else {
+	            	jQuery(check_element).parents('.fieldoptions').removeClass('emptyfield');
+								getLabel(check_element).removeClass('emptyfield');
 	            }
 	          }
 	          
@@ -882,14 +887,21 @@ EOF;
 	            }
 	            
 	            if (checkboxcheck == false) {
-	              addClass(check_element, newclass);
-	              if (checkboxmsg == false) checkboxmsg = true;
+	            	jQuery(check_element).parents('.fieldoptions').addClass('emptyfield');
+								getLabel(check_element).addClass('emptyfield');
+								checkboxmsg = getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 	              if (result) result = false;
+	            }
+	            else {
+	            	jQuery(check_element).parents('.fieldoptions').removeClass('emptyfield');
+								getLabel(check_element).removeClass('emptyfield');
 	            }
 	          }
   				}
 				}
-				if (result == false) {					
+				if (result == false) {
+					if (radiomsg)	msg+= radiomsg;		
+					if (checkboxmsg)	msg+= checkboxmsg;	
 					alert(msg);
 					<?php if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) { ?>
 						exit(0);
