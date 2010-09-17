@@ -1135,7 +1135,6 @@ EOF;
 	{		
 		$model_redform = new RedformModelRedform();
 		$model_redform->setFormId($form_id);
-		
 		$fields = $model_redform->getFormFields();
 		return $fields;
 	}
@@ -1296,13 +1295,22 @@ EOF;
 		return JRoute::_('index.php?page=shop.product_details&product_id='.$settings->vmproductid.'&option=com_virtuemart&Itemid='.$settings->vmitemid);
 	}
 	
-	function getSubmissionContactEmail($key)
+	/**
+	 * get emails associted to submission key or sids
+	 * @param mixed submit_key or array of sids
+	 */
+	function getSubmissionContactEmail($reference)
 	{
-		$sids = $this->getSids($key);
+		if (!is_array($reference)) {
+			$sids = $this->getSids($reference);
+		}
+		else {
+			$sids = $reference;
+		}
 		$answers = $this->getSidsFieldsAnswers($sids);
 		
 		$emails = array();
-		foreach ((array) $answers as $fields)
+		foreach ((array) $answers as $sid => $fields)
 		{
 			$email = array();
 			foreach ((array) $fields as $f)
@@ -1327,7 +1335,7 @@ EOF;
 			if (!isset($email['fullname']) && isset($email['username'])) {
 				$email['fullname'] = $email['username'];
 			}
-			$emails[] = $email;
+			$emails[$sid] = $email;
 		}
 		return $emails;
 	}
