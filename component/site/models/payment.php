@@ -217,7 +217,7 @@ class RedFormModelPayment extends JModel
 					$obj->title = JRequest::getVar('paymenttitle');					
 				}
 				else {
-					$obj->title = JText::_('Form submission').': '.$form->title;
+					$obj->title = JText::_('Form submission').': '.$form->formname;
 				}
 				$obj->uniqueid = $key;
 				break;
