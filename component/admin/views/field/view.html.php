@@ -85,9 +85,9 @@ class RedformViewField extends JView {
 		
 		/* Create the value field types */
 		$fieldtypes = array(
-			array('fieldtype' => 'radio', 'fieldname' => JText::_('radio')),
-			array('fieldtype' => 'textarea', 'fieldname' => JText::_('textarea')),
 			array('fieldtype' => 'textfield', 'fieldname' => JText::_('textfield')),
+			array('fieldtype' => 'textarea', 'fieldname' => JText::_('textarea')),
+			array('fieldtype' => 'radio', 'fieldname' => JText::_('radio')),
 			array('fieldtype' => 'checkbox', 'fieldname' => JText::_('checkbox')),
 			array('fieldtype' => 'email', 'fieldname' => JText::_('email')),
 			array('fieldtype' => 'username', 'fieldname' => JText::_('username')),
