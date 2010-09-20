@@ -39,8 +39,22 @@ class RedFormCore extends JObject {
 	 * @param int optional number of instance of forms to display (1 is default)
 	 * @return string html
 	 */
-	function displayForm($form_id, $submitter_id = 0, $multiple = 1)
+	function displayForm($form_id, $reference = null, $multiple = 1)
 	{
+		if (!empty($reference)) 
+		{
+			$answers    = $this->getAnswers($reference);
+			if ($answers)	{
+				$submit_key = $answers[0]->submit_key;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			$submit_key = null;
+			$answers = null;
+		}
 		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
 		$html .= $this->getFormFields($form_id, $submit_key, $multiple);
 								
@@ -52,9 +66,9 @@ class RedFormCore extends JObject {
 		}
 		
 		$html .= '<input type="hidden" name="task" value="save" />';
-		if ($submitter_id > 0) 
+		if ($answers && $answers[0]->sid > 0) 
 		{
-			$html .= '<input type="hidden" name="submitter_id" value="'.$submitter_id.'" />';			
+			$html .= '<input type="hidden" name="submitter_id" value="'.$answers[0]->sid.'" />';			
 		}
 		
 		if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) {
@@ -64,10 +78,12 @@ class RedFormCore extends JObject {
 		if (JRequest::getVar('redform_edit')) {
 			$html .= '<input type="hidden" name="event_task" value="review" />';
 		}
+		$html .= '<input type="hidden" name="controller" value="redform" />';
 		
 		$html .= '</div>';
 		
 		$html .= '</form>';
+		return $html;
 	}
 	
 	/**
@@ -680,7 +696,16 @@ class RedFormCore extends JObject {
 			}
 			$html .= '</div>'; // formfield div
 		}
+
+		//TODO: redcompetition should use redform core directly
+		/* Add any redCOMPETITION values */
+		$redcompetition = JRequest::getVar('redcompetition', false);
 			
+		if ($redcompetition) {
+			$html .= '<input type="hidden" name="competition_task" value="'.$redcompetition->task.'" />';
+			$html .= '<input type="hidden" name="competition_id" value="'.$redcompetition->competitionid.'" />';
+		}
+		
 		/* Add the captcha, only if initial submit */
 		if ($form->captchaactive && empty($submit_key)) 
 		{
