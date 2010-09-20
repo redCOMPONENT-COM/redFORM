@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `redmember_field` varchar(20) NULL default NULL,
   `validate` tinyint(1) NOT NULL DEFAULT '0',
   `unique` tinyint(1) NOT NULL DEFAULT '0',
+  `readonly` tinyint(1) NOT NULL DEFAULT '0',
+  `default` varchar(255) default NULL,
   `tooltip` varchar(255) default NULL,
   `params` text default NULL,
   PRIMARY KEY  (`id`)
@@ -80,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
 CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   `id` int(11) NOT NULL auto_increment,
   `value` varchar(255) NOT NULL default '',
+  `label` varchar(255) NOT NULL default '',
   `published` int(11) NOT NULL default '0',
   `checked_out` int(11) NOT NULL default '0',
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',

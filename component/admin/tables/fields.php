@@ -43,6 +43,10 @@ class TableFields extends JTable {
 	var $validate = null;
 	/** @var int */
 	var $unique = null;
+	/** @var int */
+	var $readonly = 0;
+	/** @var string The default value for a field */
+	var $default = null;
 	/** @var string The tooltip for a field */
 	var $tooltip = null;
 	/** @var string linked redmember field db name */

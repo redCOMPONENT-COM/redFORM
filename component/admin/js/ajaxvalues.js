@@ -98,6 +98,8 @@ function newRow(value)
 	var tr = new Element('tr', {'id': 'value-'+value.id, 'class': 'value-details'});
 	// value
 	new Element('td').appendText(value.value).injectInside(tr);
+	// label
+	new Element('td').appendText(value.label).injectInside(tr);
 	// published
 	new Element('td').appendText(value.price).injectInside(tr);
 	if (value.published == 1) {

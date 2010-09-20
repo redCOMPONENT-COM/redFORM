@@ -25,8 +25,10 @@ defined('_JEXEC') or die('Restricted access');
 class TableValues extends JTable {
 	/** @var int Primary key */
 	var $id = null;
-	/** @var string The value for the field */
+	/** @var string The value for the value */
 	var $value = null;
+	/** @var string The label for the value */
+	var $label = null;
 	/** @var string Set to true if the value is published */
 	var $published = null;
 	/** @var string Set to true if the value is checked out */

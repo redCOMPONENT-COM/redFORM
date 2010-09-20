@@ -117,7 +117,7 @@ class RedformModelRedform extends JModel {
 
 	function getFormFields() 
 	{		
-		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, m.listnames '
+		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, m.listnames '
 		   . ' FROM #__rwf_fields AS f '
 		   . ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id '
 		   . ' WHERE f.published = 1 '
@@ -143,10 +143,10 @@ class RedformModelRedform extends JModel {
 	
 	function getFormValues($field_id) 
 	{		
-		$q = "SELECT q.id, value, field_id, price 
-			FROM #__rwf_values q
+		$q = " SELECT id, value, label, field_id, price 
+			FROM #__rwf_values
 			WHERE published = 1
-			AND q.field_id = ".$field_id."
+			AND field_id = ".$field_id."
 			ORDER BY ordering";
 		$this->_db->setQuery($q);
 		return $this->_db->loadObjectList();

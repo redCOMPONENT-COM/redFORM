@@ -21,10 +21,12 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 JHTML::_('behavior.tooltip');
 ?>
 <form action="index.php" method="post" name="adminForm">
+<fieldset>
+<legend><?php echo JText::_('COM_REDFORM_FIELD_OPTION'); ?></legend>
 		<table id="editvalue" class="adminform">
 		<tr>
-			<td>
-			<?php echo JText::_('Value'); ?>
+			<td class="hasTip" title="<?php echo JText::_('COM_REDFORM_FIELD_VALUE_LABEL').'::'.JText::_('COM_REDFORM_FIELD_VALUE_TIP');?>">
+			<label for="value"><?php echo JText::_('COM_REDFORM_FIELD_VALUE_LABEL'); ?></label>
 			</td>
 			<td>
 			<?php if ($this->row->fieldtype == 'info'): ?>
@@ -32,16 +34,22 @@ JHTML::_('behavior.tooltip');
 			<?php else: ?>
 			<input class="inputbox" type="text" size="80" name="value" value="<?php echo $this->escape($this->row->value); ?>">
 	    <?php endif; ?>
-			<?php echo JHTML::tooltip(JText::_('Enter the value here'), JText::_('Value'), 'tooltip.png', '', '', false); ?>
 			</td>
 		</tr>
 		<tr>
-			<td valign="top" align="right">
-			<?php echo JText::_('Price'); ?>
+			<td class="hasTip" title="<?php echo JText::_('COM_REDFORM_FIELD_LABEL_LABEL').'::'.JText::_('COM_REDFORM_FIELD_LABEL_TIP');?>">
+			<label for="label"><?php echo JText::_('COM_REDFORM_FIELD_LABEL_LABEL'); ?></label>
+			</td>
+			<td>
+			<input class="inputbox" type="text" size="80" name="label" value="<?php echo $this->escape($this->row->label); ?>">
+			</td>
+		</tr>
+		<tr>
+			<td class="hasTip" title="<?php echo JText::_('COM_REDFORM_FIELD_PRICE_LABEL').'::'.JText::_('COM_REDFORM_FIELD_PRICE_TIP');?>">
+			<label for="price"><?php echo JText::_('COM_REDFORM_FIELD_PRICE_LABEL'); ?></label>
 			</td>
 			<td>
 			<input type="text" name="price" value="<?php echo $this->row->price; ?>"/>
-			<?php echo JHTML::tooltip(JText::_('VALUE_PRICE_TIP'), JText::_('Price'), 'tooltip.png', '', '', false); ?>
 			</td>
 		</tr>
 		<tr id="trpublished">
@@ -53,6 +61,8 @@ JHTML::_('behavior.tooltip');
 			</td>
 		</tr>
 		</table>
+</fieldset>
+
   <?php echo JHTML::_( 'form.token' ); ?>
 	<input type="hidden" name="id" value="<?php echo $this->row->id; ?>" />
 	<input type="hidden" name="ordering" value="<?php echo $this->row->ordering; ?>" />

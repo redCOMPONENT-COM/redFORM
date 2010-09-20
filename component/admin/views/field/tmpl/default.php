@@ -145,6 +145,24 @@ JHTML::_('behavior.tooltip');
 			<?php echo $this->lists['unique']; ?>
 			</td>
 		</tr>
+		<tr>
+			<td>
+			<?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_READONLY_TIP'), JText::_('COM_REDFORM_FIELD_READONLY'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_FIELD_READONLY'); ?>
+			</td>
+			<td>
+			<?php echo JHTML::_('select.booleanlist', 'readonly', '', $this->row->readonly); ?>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_DEFAULT_VALUE_TIP'), JText::_('COM_REDFORM_FIELD_DEFAULT_VALUE'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_FIELD_DEFAULT_VALUE'); ?>
+			</td>
+			<td>
+			<textarea name="default" cols="80" rows="2"><?php echo $this->row->default; ?></textarea>
+			</td>
+		</tr>
 		<?php if (REDMEMBER_INTEGRATION): ?>
 		<tr>
 			<td valign="top" align="right">
@@ -219,6 +237,7 @@ JHTML::_('behavior.tooltip');
 			<thead>
 				<tr>
 					<th><?php echo JText::_('VALUE'); ?></th>
+					<th><?php echo JText::_('COM_REDFORM_FIELD_LABEL_LABEL'); ?></th>
 					<th><?php echo JText::_('PRICE'); ?></th>
 					<th><?php echo JText::_('PUBLISHED'); ?></th>
 					<th><?php echo JText::_('ORDERING'); ?></th>
@@ -229,7 +248,7 @@ JHTML::_('behavior.tooltip');
 		
 			<tbody>
 				<tr>
-					<td colspan="6">
+					<td colspan="7">
 						<a href="<?php echo JRoute::_('index.php?option=com_redform&controller=values&task=ajaxedit&tmpl=component&fieldid=' .$this->row->id); ?>" class="valuemodal">
 							<?php echo JText::_('Add'); ?>
 						</a>
@@ -239,7 +258,7 @@ JHTML::_('behavior.tooltip');
 		
 			<tbody id="values-rows">
 				<tr>
-					<td colspan="6">
+					<td colspan="7">
 					</td>
 				</tr>
 			</tbody>

@@ -149,6 +149,19 @@ function com_install()
 		$db->setQuery($q);
 		$db->query();
 	}
+	
+	/* Check if we have the tooltip column */
+	if (!array_key_exists('readonly', $cols)) {
+		$q = "ALTER IGNORE TABLE #__rwf_fields ADD COLUMN ".$db->nameQuote('readonly')." TINYINT(1) NOT NULL DEFAULT 0";
+		$db->setQuery($q);
+		$db->query();
+	}
+	
+	if (!array_key_exists('default', $cols)) {
+		$q = "ALTER IGNORE TABLE #__rwf_fields ADD COLUMN `default` varchar(255) DEFAULT NULL";
+		$db->setQuery($q);
+		$db->query();
+	}
 
 	/* Check if we have the redmember_field column */
 	if (!array_key_exists('redmember_field', $cols)) {
@@ -406,6 +419,16 @@ function com_install()
 		if (!$db->query()) {
 			JError::raiseWarning(0, 'Conversion of mailing list reference from value_id to field_id failed - please manually edit each email field type');
 		}
+	}
+    
+	if (!array_key_exists('label', $cols)) {
+		$q = "ALTER IGNORE TABLE #__rwf_values ADD COLUMN `label` varchar(255) NOT NULL default ''";
+		$db->setQuery($q);
+		$db->query();
+		
+		$q = "UPDATE #__rwf_values SET label = value";
+		$db->setQuery($q);
+		$db->query();
 	}
 	
   // new structure for rwf_forms_x tables
