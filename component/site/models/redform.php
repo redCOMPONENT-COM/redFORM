@@ -645,9 +645,7 @@ class RedformModelRedform extends JModel {
 		}
 		
 		// send email to miantainers
-		if ($answers->isNew()) {
-			$this->notifymaintainer($allanswers);
-		}
+		$this->notifymaintainer($allanswers, $answers->isNew());
 		
 		/* Send a submission mail to the submitters if set */
 		if ($answers->isNew() && $form->submitterinform) 
@@ -664,9 +662,9 @@ class RedformModelRedform extends JModel {
 	 * send email to form maintaineers or/and selected recipients
 	 * @param array $allanswers
 	 */
-	function notifymaintainer($allanswers)
+	function notifymaintainer($allanswers, $new = true)
 	{
-		global $mainframe;
+		$mainframe = &JFactory::getApplication();
 		$form = $this->getForm();
 						
 		/* Inform contact person if need */
@@ -729,12 +727,22 @@ class RedformModelRedform extends JModel {
 			$mailer->addReplyTo($sender);
 
 			// set the email subject
-			$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
-
+			if ($new) {
+				$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
+			}
+			else {
+				$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('COM_REDFORM_CONTACT_NOTIFICATION_UPDATE_EMAIL_SUBJECT')));
+			}
+			
 			// Mail body
 			$htmlmsg = '<html><head><title></title></title></head><body>';
-			$htmlmsg .= JText::sprintf('REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY', $form->formname);
-
+			if ($new) {
+				$htmlmsg .= JText::sprintf('REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY', $form->formname);
+			}
+			else {
+				$htmlmsg .= JText::sprintf('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY', $form->formname);
+			}
+			
 			/* Add user submitted data if set */
 			if ($form->contactpersonfullpost)
 			{

@@ -405,13 +405,14 @@ class rfanswers
   		return true;
   	}
   	
-  	if (!isset($params['sid']) || !$params['sid'])
+  	if ( isset($params['sid']) )
   	{
-  		$this->_isnew = true;
-  		$sid = 0;
+  		$this->_isnew = intval($params['sid']) == 0;
+  		$sid = intval($params['sid']);
   	}
   	else {
-  		$sid = intval($params['sid']);
+  		$this->_isnew = false;
+  		$sid = 0;
   	}
 
   	$values = array();
