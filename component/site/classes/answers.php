@@ -411,7 +411,7 @@ class rfanswers
   		$sid = intval($params['sid']);
   	}
   	else {
-  		$this->_isnew = false;
+  		$this->_isnew = true;
   		$sid = 0;
   	}
 
