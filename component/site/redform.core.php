@@ -39,7 +39,7 @@ class RedFormCore extends JObject {
 	 * @param int optional number of instance of forms to display (1 is default)
 	 * @return string html
 	 */
-	function displayForm($form_id, $reference = null, $multiple = 1)
+	function displayForm($form_id, $reference = null, $multiple = 1, $options = array())
 	{
 		if (!empty($reference)) 
 		{
@@ -56,7 +56,7 @@ class RedFormCore extends JObject {
 			$answers = null;
 		}
 		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
-		$html .= $this->getFormFields($form_id, $submit_key, $multiple);
+		$html .= $this->getFormFields($form_id, $submit_key, $multiple, $options);
 								
 		/* Get the user details form */
 		if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) 
@@ -1236,6 +1236,11 @@ EOF;
 		$answers = $this->getSidsAnswers($sids);
 		$form_id = $this->getSidForm($sids[0]);
 		$fields  = $this->getFields($form_id);
+		
+		if (!$form_id) {
+			$this->setError(JText::_('COM_REDFORM_FORM_NOT_FOUND'));
+			return false;
+		}
 		
 		$res = array();
 		foreach ($answers as $sid => $answer)

@@ -117,6 +117,10 @@ class RedformModelRedform extends JModel {
 
 	function getFormFields() 
 	{		
+		if (!$this->_form_id) {
+			$this->setError(JText::_('COM_REDFORM_FORM_ID_MISSING'));
+			return false;
+		}
 		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, m.listnames '
 		   . ' FROM #__rwf_fields AS f '
 		   . ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id '
