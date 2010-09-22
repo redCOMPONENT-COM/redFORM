@@ -68,7 +68,11 @@ function update_values()
 	
 	theAjax.addEvent('onSuccess', function(response) {
 		var rows = $('values-rows');
-		rows.empty();
+		// rows.empty();
+		// for some reason, empty here doesn't work with mootools 1.1, so replace with custom method:
+		rows.getChildren().each(function(el) {
+			el.remove();
+		});
 		var values = eval('(' + response + ')');
 		values.each(function(el){
 			newRow(el).injectInside(rows);
