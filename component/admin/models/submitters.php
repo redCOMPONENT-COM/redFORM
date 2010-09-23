@@ -82,7 +82,8 @@ class RedformModelSubmitters extends JModel {
 						. ' FROM '.$this->_db->nameQuote('#__rwf_submitters').' AS s '
 						. ' INNER JOIN ' . $this->_db->nameQuote('#__rwf_forms').' AS f ON s.form_id = f.id '
 						. ' INNER JOIN ' . $this->_db->nameQuote('#__rwf_forms_'.$form_id) . ' AS u ON s.answer_id = u.id '
-            . ' LEFT JOIN #__rwf_payment AS p ON p.submit_key = s.submit_key'
+            . ' LEFT JOIN (SELECT MAX(id) as id, submit_key FROM #__rwf_payment GROUP BY submit_key) AS latest_payment ON latest_payment.submit_key = s.submit_key'
+            . ' LEFT JOIN #__rwf_payment AS p ON p.id = latest_payment.id '
 		        . ($integration === 'redevent' ? ' INNER JOIN #__redevent_register AS r ON r.submit_key = s.submit_key ': '')				
 						;
 						
