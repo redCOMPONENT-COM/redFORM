@@ -272,7 +272,8 @@ class RedFormModelPayment extends JModel
 		
 		if (count($emails))
 		{
-			$mailer->addRecipient($emails[0]['email']);
+			$first = current($emails);
+			$mailer->addRecipient($first['email']);
 		}
 		// set the email subject
 		$subject = (empty($form->submitterpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationsubject);
