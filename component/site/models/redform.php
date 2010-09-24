@@ -189,7 +189,6 @@ class RedformModelRedform extends JModel {
 			
 			if (!$return[0]) {
 				$this->setError(JText::_('CAPTCHA_WRONG'));
-	      $mainframe->enqueueMessage(JText::_('CAPTCHA_WRONG'));
 	      return false;				
 			}
 		}

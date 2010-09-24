@@ -41,6 +41,7 @@ class RedFormCore extends JObject {
 	 */
 	function displayForm($form_id, $reference = null, $multiple = 1, $options = array())
 	{
+		$uri 		= & JFactory::getURI();
 		if (!empty($reference)) 
 		{
 			$answers    = $this->getAnswers($reference);
@@ -79,6 +80,7 @@ class RedFormCore extends JObject {
 			$html .= '<input type="hidden" name="event_task" value="review" />';
 		}
 		$html .= '<input type="hidden" name="controller" value="redform" />';
+		$html .= '<input type="hidden" name="referer" value="'.$uri->toString().'" />';
 		
 		$html .= '</div>';
 		

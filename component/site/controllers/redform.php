@@ -84,14 +84,19 @@ class RedformControllerRedform extends RedformController {
    */
   function save()
   {
-  	  $mainframe = Jfactory::getApplication();
+  	$mainframe = Jfactory::getApplication();
     $model = $this->getModel('redform');
     
     $result = $model->saveform();
     
+    $referer = JRequest::getVar('referer');
+    
     if (!$result) {
-    	if (!JRequest::getBool('ALREADY_ENTERED')) echo JText::_('Sorry, there was a problem with your submission') .': '. $model->getError();
-    	$mainframe->redirect('index.php');
+    	if (!JRequest::getBool('ALREADY_ENTERED')) {
+    		$msg = JText::_('Sorry, there was a problem with your submission') .': '. $model->getError();
+    	}
+    	$this->setRedirect($referer, $msg, 'error');
+    	$this->redirect();
     }
     
     if ($url = $model->getRedirect()) {
