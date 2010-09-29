@@ -1375,8 +1375,10 @@ EOF;
 	/**
 	 * get emails associted to submission key or sids
 	 * @param mixed submit_key or array of sids
+	 * @param boolean email required, returns false if no email field
+	 * @return array or false
 	 */
-	function getSubmissionContactEmail($reference)
+	function getSubmissionContactEmail($reference, $requires_email = true)
 	{
 		if (!is_array($reference)) {
 			$sids = $this->getSids($reference);
@@ -1405,10 +1407,11 @@ EOF;
 					$email['email'] = $f->answer;
 				}
 			}
-			if (!isset($email['email'])) {
+			if (!isset($email['email']) && $requires_email) {
 				// no email field
 				return false;
 			}
+			
 			if (!isset($email['fullname']) && isset($email['username'])) {
 				$email['fullname'] = $email['username'];
 			}
