@@ -86,7 +86,13 @@ class RedFormModelPayment extends JModel
 		$options = array();
 		foreach ($gw as $g)
 		{
-			$options[] = JHTML::_('select.option', $g['name'], $g['name']);
+			if (isset($g['label'])) {
+				$label = $g['label'];
+			}
+			else {
+				$label = $g['name'];
+			}
+			$options[] = JHTML::_('select.option', $g['name'], $label);
 		}
 		return $options;
 	}
