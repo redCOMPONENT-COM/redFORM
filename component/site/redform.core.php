@@ -277,7 +277,7 @@ class RedFormCore extends JObject {
 				switch ($field->fieldtype)
 				{
 					case 'radio':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[radio][]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						$element .= '<div class="fieldoptions">';	
 						foreach ($values as $id => $value)
 						{
@@ -309,10 +309,11 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'textarea':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[textarea]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						$element .= '<textarea class="'.$field->parameters->get('class','');
 						if ($field->validate) $element .= ' required';
 						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
+						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' cols="'.$field->parameters->get('cols',25).'" rows="'.$field->parameters->get('rows',6).'"';
 						if ($field->readonly) $element .= ' readonly="readonly"';
 						$element .= ">";
@@ -332,7 +333,7 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'wysiwyg':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[wysiwyg]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						$content = '';
 						if ($answers)
 						{
@@ -354,12 +355,13 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'email':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[email][]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						$element .= "<div class=\"emailfields\">";
 						$element .= "<div class=\"emailfield\">";
 						$element .= "<input class=\"".$field->parameters->get('class','')." ";
 						if ($field->validate) $element .= "required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\"";
+						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
 						if ($field->readonly) $element .= ' readonly="readonly"';
@@ -405,10 +407,11 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'fullname':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fullname][]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						$element .= "<input class=\"".$field->parameters->get('class','');
 						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\"";
+						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
 						if ($field->readonly) $element .= ' readonly="readonly"';
@@ -432,10 +435,11 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'username':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[username][]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						$element .= "<input class=\"".$field->parameters->get('class','');
 						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\"";
+						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
 						if ($field->readonly) $element .= ' readonly="readonly"';
@@ -459,10 +463,11 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'textfield':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[text][]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						$element .= "<input class=\"".$field->parameters->get('class','');
 						if ($field->validate) $element .= " required";
 						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\"";
+						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
 						if ($field->readonly) $element .= ' readonly="readonly"';
@@ -484,7 +489,7 @@ class RedFormCore extends JObject {
 	
 					case 'date':
 						JHTML::_('behavior.calendar');
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[date]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						if ($answers)
 						{
 							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
@@ -500,23 +505,24 @@ class RedFormCore extends JObject {
 						$class = $field->parameters->get('class','');
 						if ($field->validate) $class .= " required";
 						
-						$element .= JHTML::_('calendar', $val, 'field'.$field->id.'.'.$signup.'[date]', 'field'.$field->id.'.'.$signup.'[date]', 
+						$element .= JHTML::_('calendar', $val, 'field'.$field->id.'.'.$signup.'[date]', 'field'.$field->id, 
 						               $field->parameters->get('dateformat','%Y-%m-%d'), 
 						               'class="'.$class.'"');
 						break;
 	
 					case 'price':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[price][]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						// if has not null value, it is a fixed price, if not this is a user input price
 						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
 						{
 							$element .= $form->currency .' '.$values[0]->value;
-							$element .= '<input type="hidden" name="field'.$field->id.'.'.$signup.'[price][]" value="'.$values[0]->value.'"/>';
+							$element .= '<input type="hidden" id="field'.$field->id.'" name="field'.$field->id.'.'.$signup.'[price][]" value="'.$values[0]->value.'"/>';
 						}
 						else // like a text input
 						{
 							$element .= '<input class="'. $field->parameters->get('class','') .($field->validate ? " required" : '') .'"';
 							$element .= ' type="text" name="field'.$field->id.'.'.$signup.'[price][]"';
+							$element .= ' id="field'.$field->id.'" ';
 							$element .= ' size="'.$field->parameters->get('size', 25).'"';
 							$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
 							if ($field->readonly) $element .= ' readonly="readonly"';
@@ -540,7 +546,7 @@ class RedFormCore extends JObject {
 						break;
 						
 					case 'checkbox':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[checkbox][]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						$element .= '<div class="fieldoptions">';						
 						foreach ($values as $id => $value)
 						{
@@ -572,8 +578,8 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'select':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[select][]">'.$field->field.'</label></div>';
-						$element .= "<select name=\"field".$field->id.'.'.$signup."[select][]\" class=\"".$field->parameters->get('class','').($field->validate ?" required" : '')."\"";
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
+						$element .= "<select id=\"field".$field->id."\" name=\"field".$field->id.'.'.$signup."[select][]\" class=\"".$field->parameters->get('class','').($field->validate ?" required" : '')."\"";
 						$element .= ">";
 						foreach ($values as $id => $value)
 						{
@@ -597,8 +603,8 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'multiselect':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[multiselect][]">'.$field->field.'</label></div>';
-						$element .= '<select name="field'.$field->id.'.'.$signup.'[multiselect][]"'
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
+						$element .= '<select id=\"field".$field->id."\" name="field'.$field->id.'.'.$signup.'[multiselect][]"'
 						          . ' multiple="multiple" size="'.$field->parameters->get('size',5).'"'
 						          . ' class="'.trim($field->parameters->get('class','').($field->validate ?" required" : '')).'"';
 						$element .= '>';
@@ -628,8 +634,8 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'recipients':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[recipients][]">'.$field->field.'</label></div>';
-						$element .= "<select name=\"field".$field->id.'.'.$signup."[recipients][]\""
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
+						$element .= "<select id=\"field".$field->id."\" name=\"field".$field->id.'.'.$signup."[recipients][]\""
 						         . ($field->parameters->get('multiple', 1) ? ' multiple="multiple"' : '')
 						         . ' size="'.$field->parameters->get('size', 5).'"'
 						         . ' class="'.$field->parameters->get('class','').($field->validate ?" required" : '').'"';
@@ -660,9 +666,9 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'fileupload':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'.'.$signup.'[fileupload][]">'.$field->field.'</label></div>';
+						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						if ($submitter_id == 0) {
-							$element .= "<input type=\"file\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" class=\"fileupload".$field->parameters->get('class','')."\" id=\"fileupload_".$field->id."\"/>";
+							$element .= "<input type=\"file\" id=\"field".$field->id."\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" class=\"fileupload".$field->parameters->get('class','')."\" id=\"fileupload_".$field->id."\"/>";
 						}
 						$element .= "\n";
 						break;
@@ -935,13 +941,13 @@ EOF;
 	            }
 	            if (radiocheck == false) {
 	            	jQuery(check_element).parents('.fieldoptions').addClass('emptyfield');
-								getLabel(check_element).addClass('emptyfield');
-								radiomsg = getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+								getListLabel(check_element).addClass('emptyfield');
+								radiomsg = getListLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 	              if (result) result = false;
 	            }
 	            else {
 	            	jQuery(check_element).parents('.fieldoptions').removeClass('emptyfield');
-								getLabel(check_element).removeClass('emptyfield');
+	            	getListLabel(check_element).removeClass('emptyfield');
 	            }
 	          }
 	          
@@ -958,13 +964,13 @@ EOF;
 	            
 	            if (checkboxcheck == false) {
 	            	jQuery(check_element).parents('.fieldoptions').addClass('emptyfield');
-								getLabel(check_element).addClass('emptyfield');
-								checkboxmsg = getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+	            	getListLabel(check_element).addClass('emptyfield');
+								checkboxmsg = getListLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 	              if (result) result = false;
 	            }
 	            else {
 	            	jQuery(check_element).parents('.fieldoptions').removeClass('emptyfield');
-								getLabel(check_element).removeClass('emptyfield');
+	            	getListLabel(check_element).removeClass('emptyfield');
 	            }
 	          }
   				}
@@ -1020,7 +1026,15 @@ EOF;
 			}
 
 			function getLabel(element) {
-				return jQuery('label[for="'+element.name+'"]');
+				return jQuery('label[for="'+element.id+'"]');
+			}
+
+			/**
+			 * for radio and checkbox, we can't use the id of the element directly
+			 */
+			function getListLabel(element) {
+				var name = element.name.substr(0, element.name.indexOf('.'));
+				return jQuery('label[for="'+name+'"]');
 			}
 			
 			function Trim(text) 
