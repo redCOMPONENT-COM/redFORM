@@ -31,6 +31,44 @@ require_once(RDF_PATH_SITE.DS.'helpers'.DS.'log.php');
 
 class RedFormCore extends JObject {
 	
+	private $_form_id;
+	
+	private $_sids;
+	
+	private $_submit_key;
+	
+	private $_answers;
+	
+	private $_sk_answers;
+	
+	private $_fields;
+	
+	function setFormId($id)
+	{
+		if ($this->_form_id !== $id) {
+			$this->_form_id = intval($id);
+		}
+	}
+	
+	function setSids($ids)
+	{
+		JArrayHelper::toInteger($ids);
+		if ($ids !== $this->_sids) {
+			$this->_sids = $ids;
+			$this->_answers = null;
+			$this->_sids_answers = null;
+		}
+	}
+	
+	function setSubmitKey($submit_key)
+	{
+		if ($this->_submit_key !== $submit_key) {
+			$this->_submit_key = $submit_key;
+			$this->_sk_answers = null;
+			$this->_answers = null;
+		}
+	}
+	
 	/**
 	 * returns the html code for form elements (only the elements ! not the form itself, or the submit buttons...)
 	 *
@@ -1136,35 +1174,46 @@ EOF;
 	 * @param string $submit_key
 	 * @return array
 	 */
-	function getSubmitKeyAnswers($submit_key)
+	function getSubmitKeyAnswers($submit_key = null)
 	{		
-		$mainframe = &JFactory::getApplication();
-		$db = JFactory::getDBO(); 
-		// get form id and answer id
-		$query = 'SELECT form_id, answer_id, submit_key, id '
-		       . ' FROM #__rwf_submitters AS s '
-		       . ' WHERE submit_key = '.$db->Quote($submit_key)
-		       ;
-		$db->setQuery($query);
-		$submitters = $db->loadObjectList();
-		
-		if (empty($submitters))
+		if ($submit_key) {
+			$this->setSubmitKey($submit_key);
+		}
+		else if (!$this->_submit_key) {
+			JError::raiseWarning(0, 'COM_REDFORM_CORE_MISSING_SUBMIT_KEY');
+			return false;
+		}
+		if (empty($this->_sk_answers))
 		{
-			$answers = $mainframe->getUserState($submit_key);
-			if (!$answers) {
-				return false;
-			}
-		}
-		else {
-			$sids = array();
-			foreach ($submitters as $s)
+			$mainframe = &JFactory::getApplication();
+			$db = JFactory::getDBO(); 
+			// get form id and answer id
+			$query = 'SELECT form_id, answer_id, submit_key, id '
+			       . ' FROM #__rwf_submitters AS s '
+			       . ' WHERE submit_key = '.$db->Quote($this->_submit_key)
+			       ;
+			$db->setQuery($query);
+			$submitters = $db->loadObjectList();
+			
+			if (empty($submitters))
 			{
-				$sids[] = $s->id;
+				$answers = $mainframe->getUserState($this->_submit_key);
+				if (!$answers) {
+					return false;
+				}
 			}
-			$answers = $this->getSidsAnswers($sids);
+			else {
+				$sids = array();
+				foreach ($submitters as $s)
+				{
+					$sids[] = $s->id;
+				}
+				$answers = $this->getSidsAnswers($sids);
+			}
+			
+			$this->_sk_answers = $answers;
 		}
-		
-		return $answers;
+		return $this->_sk_answers;
 	}
 		
 	/**
@@ -1175,22 +1224,16 @@ EOF;
 	function getAnswers($reference)
 	{
 		if (is_array($reference)) // sids
-		{				
-			$db = JFactory::getDBO();
-			
-			// get form id and answer id
-			$query = 'SELECT s.form_id, s.answer_id, s.submit_key '
-			       . ' FROM #__rwf_submitters AS s '
-			       . ' WHERE s.id = '.$db->Quote($reference[0])
-			       ;
-			$db->setQuery($query);
-	
-			list($form_id, $answer_id, $submit_key) = $db->loadRow();
-				
-			if (!$form_id || !$answer_id) {
-				Jerror::raiseError(0, JText::_('No data'));
-			}
-				
+		{	
+			$this->setSids($reference);
+		}
+		else
+		{
+			$this->setSubmitKey($reference);
+		}
+		
+		if (is_array($reference)) // sids
+		{								
 			$model_redform = new RedformModelRedform();			
 			$answers = $model_redform->getSidsAnswers($reference);
 		}
@@ -1215,12 +1258,18 @@ EOF;
 		return $results;
 	}		
 	
-	function getFields($form_id)
+	function getFields($form_id= null)
 	{		
-		$model_redform = new RedformModelRedform();
-		$model_redform->setFormId($form_id);
-		$fields = $model_redform->getFormFields();
-		return $fields;
+		if ($form_id) {
+			$this->setFormId($form_id);
+		}
+		if (empty($this->_fields)) 
+		{
+			$model_redform = new RedformModelRedform();
+			$model_redform->setFormId($this->_form_id);
+			$this->_fields = $model_redform->getFormFields();
+		}
+		return $this->_fields;
 	}
 	
 	/**
@@ -1231,9 +1280,15 @@ EOF;
 	 */
 	function getSidsAnswers($sids)
 	{
-		$model_redform = new RedformModelRedform();		
-		$res = $model_redform->getSidsAnswers($sids);
-		return $res;
+		if ($sids) {
+			$this->setSids($sids);
+		}
+		if (empty($this->_sids_answers)) 
+		{
+			$model_redform = new RedformModelRedform();		
+			$this->_sids_answers = $model_redform->getSidsAnswers($this->_sids);
+		}
+		return $this->_sids_answers;
 	}
 	
 	/**
@@ -1244,11 +1299,15 @@ EOF;
 	 */
 	function getSidsFieldsAnswers($sids)
 	{
-		if (!is_array($sids) || empty($sids)) {
+		if ($sids) {
+			$this->setSids($sids);
+		}
+		
+		if (!is_array($this->_sids) || empty($this->_sids)) {
 			return false;
 		}
-		$answers = $this->getSidsAnswers($sids);
-		$form_id = $this->getSidForm($sids[0]);
+		$answers = $this->getSidsAnswers($this->_sids);
+		$form_id = $this->getSidForm($this->_sids[0]);
 		$fields  = $this->getFields($form_id);
 		
 		if (!$form_id) {
@@ -1356,11 +1415,11 @@ EOF;
 	{		
 		$db = &JFactory::getDBO();
 		
-		$query = " SELECT q.id, value, field_id, price "
-		       . " FROM #__rwf_values q "
-		       . " WHERE published = 1 "
-		       . " AND q.field_id = ".$field_id
-		       . " ORDER BY ordering";
+		$query = " SELECT v.id, v.value, v.field_id, v.price "
+		       . " FROM #__rwf_values AS v "
+		       . " WHERE v.published = 1 "
+		       . " AND v.field_id = ".$field_id
+		       . " ORDER BY v.ordering";
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}
