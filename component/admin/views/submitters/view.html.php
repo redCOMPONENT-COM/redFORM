@@ -32,7 +32,15 @@ class RedformViewSubmitters extends JView {
   	$params = JComponentHelper::getParams('com_redform');
   	/* Get the forms */  
   	$forms = $this->get('FormsOptions');
-
+  
+  	// set the menu
+  	RedformHelper::setMenu();
+    	
+  	if (empty($forms)) {
+  		echo '<p>'.JText::_('COM_REDFORM_SUBMITTERS_NO_FORM').'</p>';
+  		return;
+  	}
+  	
   	// we need to chose a form by default, for the database queries (form table names...)
   	$id = JRequest::getVar('form_id', false);
   	if (!$id && isset($forms[0])) {
@@ -86,10 +94,7 @@ class RedformViewSubmitters extends JView {
   	//TODO: fix the add/modify submitters from backend
   	JToolBarHelper::editListX();
   	if (JRequest::getVar('xref', false)) JToolBarHelper::addNewX();
-
-  	// set the menu
-  	RedformHelper::setMenu();
-
+  	
   	/* Display the page */
   	parent::display($tpl);
   }

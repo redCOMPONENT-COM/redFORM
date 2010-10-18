@@ -187,6 +187,9 @@ class RedformModelSubmitters extends JModel {
    */
   function getTotal() 
   {
+  	if (!JRequest::getInt('form_id')) {
+  		return 0;
+  	}
     // Lets load the content if it doesn't already exist
     if (empty($this->_total))
     {
