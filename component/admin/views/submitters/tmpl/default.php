@@ -46,7 +46,7 @@ function submitbutton(pressbutton) {
 			               . ($this->xref ? '&xref='.$this->xref : '')
 			               . '&format=raw'; 
 			               ?>
-			<a title="<?php echo JText::_('CSV EXPORT'); ?>" onclick="window.open('<?php echo JRoute::_($csvlink, true); ?>');"><?php echo JText::_('CSV EXPORT'); ?></a>
+			<?php echo JHTML::link($csvlink, JText::_('CSV EXPORT')); ?>
 		</div>
 	</div>
 	<br clear="all" />

@@ -93,8 +93,6 @@ class RedformControllerSubmitters extends JController
 	function Export() {
 		$view = $this->getView('submitters', 'raw');
 		$view->setModel( $this->getModel( 'submitters', 'RedformModel' ), true );
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' );
-		$view->setModel( $this->getModel( 'redform', 'RedformModel' ));
 		$view->setLayout('submitters_export');
 		$view->display();
 	}
