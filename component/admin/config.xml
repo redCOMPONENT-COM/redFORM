@@ -5,5 +5,9 @@
 			<option value="0">Hide</option>
 			<option value="1">Show</option>
 		</param>
+    <param name="allow_email_aliasing" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING" description="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING_DESC">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param> 	
 	</params>
 </config>

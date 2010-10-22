@@ -668,6 +668,7 @@ class RedformModelRedform extends JModel {
 	function notifymaintainer($allanswers, $new = true)
 	{
 		$mainframe = &JFactory::getApplication();
+		$params = $mainframe->getParams('com_redform');
 		$form = $this->getForm();
 						
 		/* Inform contact person if need */
@@ -711,16 +712,22 @@ class RedformModelRedform extends JModel {
 
 			// we put the submitter as the email 'from' and reply to.
 			$user = & JFactory::getUser();
-			if ($user->get('id')) {
-				$sender = array($user->email, $user->name);
-			}
-			else if ($allanswers[0]->getSubmitterEmail())
+			if ($params->get('allow_email_aliasing', 1))
 			{
-				if ($allanswers[0]->getFullname()) {
-					$sender = array($allanswers[0]->getSubmitterEmail(), $allanswers[0]->getFullname());
+				if ($user->get('id')) {
+					$sender = array($user->email, $user->name);
 				}
-				else {
-					$sender = $allanswers[0]->getSubmitterEmail();
+				else if ($allanswers[0]->getSubmitterEmail())
+				{
+					if ($allanswers[0]->getFullname()) {
+						$sender = array($allanswers[0]->getSubmitterEmail(), $allanswers[0]->getFullname());
+					}
+					else {
+						$sender = $allanswers[0]->getSubmitterEmail();
+					}
+				}
+				else { // default to site settings
+					$sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
 				}
 			}
 			else { // default to site settings
