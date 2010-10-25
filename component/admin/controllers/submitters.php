@@ -124,11 +124,12 @@ class RedformControllerSubmitters extends JController
 	
 	function save()
 	{		
-    $model = $this->getModel('submitter');
-    $res = $model->store();
     $form_id = JRequest::getVar('form_id', 0);
     $xref = JRequest::getVar('xref', 0);
     $integration = JRequest::getVar('integration', '');
+    
+    $rfcore = new RedFormCore();
+    $res = $rfcore->saveAnswers($integration);
     
     if ($res) {
     	$msg = JText::_('Submission updated');

@@ -113,10 +113,7 @@ class RedFormCore extends JObject {
 		if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add')) {
 			$html .= '<input type="hidden" name="controller" value="submitters" />';
 		}
-			
-		if (JRequest::getVar('redform_edit')) {
-			$html .= '<input type="hidden" name="event_task" value="review" />';
-		}
+		
 		$html .= '<input type="hidden" name="controller" value="redform" />';
 		$html .= '<input type="hidden" name="referer" value="'.$uri->toString().'" />';
 				
@@ -788,12 +785,12 @@ class RedFormCore extends JObject {
 	 * @param array data if empty, the $_POST variable is used
 	 * @return int/array submission_id, or array of submission ids in case of success, 0 otherwise
 	 */
-	function saveAnswers($key, $options = array(), $data = null)
+	function saveAnswers($integration_key, $options = array(), $data = null)
 	{		
 		require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
 		$model = new RedformModelRedform();
 		
-		if (!$result = $model->apisaveform($key, $options, $data))
+		if (!$result = $model->apisaveform($integration_key, $options, $data))
 		{
 			$this->setError($model->getError());
 			return false;
@@ -1236,6 +1233,7 @@ EOF;
 		{								
 			$model_redform = new RedformModelRedform();			
 			$answers = $model_redform->getSidsAnswers($reference);
+			$submit_key = $this->getSidSubmitKey(reset($reference));
 		}
 		else if (!empty($reference)) // submit_key
 		{
@@ -1501,6 +1499,18 @@ EOF;
 		       ;
 		$db->setQuery($query);
 		return $db->loadResultArray();		
+	}
+	
+	function getSidSubmitKey($sid)
+	{
+		$db = &JFactory::getDBO();
+		
+		$query = " SELECT s.submit_key "
+		       . " FROM #__rwf_submitters as s "
+		       . " WHERE id = ".$db->quote($sid)
+		       ;
+		$db->setQuery($query);
+		return $db->loadResult();		
 	}
 	
 }

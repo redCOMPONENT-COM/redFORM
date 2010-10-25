@@ -647,7 +647,7 @@ class RedformModelRedform extends JModel {
 			return $result;
 		}
 		
-		// send email to miantainers
+		// send email to maintainers
 		$this->notifymaintainer($allanswers, $answers->isNew());
 		
 		/* Send a submission mail to the submitters if set */
@@ -668,7 +668,7 @@ class RedformModelRedform extends JModel {
 	function notifymaintainer($allanswers, $new = true)
 	{
 		$mainframe = &JFactory::getApplication();
-		$params = $mainframe->getParams('com_redform');
+		$params = JComponentHelper::getParams('com_redform');
 		$form = $this->getForm();
 						
 		/* Inform contact person if need */

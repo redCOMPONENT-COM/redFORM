@@ -17,22 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?>
-<?php
-/* Include redFORM */
-JPluginHelper::importPlugin( 'content' );
-$dispatcher = JDispatcher::getInstance();
-$form = new stdClass();
-$form->text = '{redform}'.$this->form_id.',1{/redform}';
-$params = array();
-if (isset($this->submitter->uid)) {
-	$params['uid'] = $this->submitter->uid;
-}
-$results = $dispatcher->trigger('onPrepareEvent', array($form, $params));
-if (!isset($results[0])) {
-	$redform = JText::_('REGISTRATION_NOT_POSSIBLE');
-}
-else $redform = $results[0];
-echo $redform;
-JHTML::_('behavior.keepalive'); 
+defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
+$rfcore = new redFormCore(); 
 ?>
+<form action="index.php?option=com_redform&controller=submitters" method="post" name="redform" enctype="multipart/form-data" onsubmit="return CheckSubmit(this);">
+<?php echo $rfcore->getFormFields($this->form_id, array($this->submitter->sid), 1); ?>
+<input type="hidden" name="task" id="task" value="save" />
+<input type="hidden" name="integration" id="integration" value="<?php $this->submitter->integration; ?>" />
+</form>
+<?php

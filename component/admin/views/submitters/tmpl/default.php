@@ -118,7 +118,7 @@ function submitbutton(pressbutton) {
 				<?php endif; ?>
 				<?php if (!$this->integration && $this->params->get('showintegration', false)): ?>
 				<td>
-					<?php if ($value->xref): ?>
+					<?php if ($value->xref || $value->integration): ?>
 						<?php echo (!empty($value->integration) ? $value->integration : 'unspecified' );?>
 					<?php else: ?>
 					<?php endif; ?>

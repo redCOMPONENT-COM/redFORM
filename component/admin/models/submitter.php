@@ -110,7 +110,7 @@ class RedformModelSubmitter extends JModel {
 	    $db = JFactory::getDBO();
 	    if ($form_id && $form_id > 0) 
 	    {
-	      $query = "SELECT f.*, s.*
+	      $query = "SELECT f.*, s.*, s.id as sid
 	        FROM ".$db->nameQuote('#__rwf_forms_'.$form_id)." f
 	        LEFT JOIN #__rwf_submitters s
 	        ON f.id = s.answer_id

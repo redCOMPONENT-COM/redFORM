@@ -24,6 +24,8 @@ defined('_JEXEC') or die('Restricted access');
 require_once (JPATH_COMPONENT_SITE.DS.'helpers'.DS.'log.php');
 require_once (JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'helper.php');
 
+require_once (JPATH_COMPONENT_SITE.DS.'redform.core.php');
+
 // redmember integration
 if (file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
 	define('REDMEMBER_INTEGRATION', true);
