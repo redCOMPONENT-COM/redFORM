@@ -74,7 +74,7 @@ class PaymentIdeal {
 		{
     	RedformHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PAYMENT REFUSED'). ' / ' . $submit_key);
 	  	$this->writeTransaction($submit_key, $ideal->getInfo(), 'NOTPAID', 0);
-			return true;
+			return false;
 		}
 		if ($ideal->getAmount() != round($details->price*100, 2 ))
 		{
