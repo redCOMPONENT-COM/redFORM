@@ -155,7 +155,7 @@ class PaymentIdeal {
 		<input type="hidden" name="amount" value="<?php echo round($details->price*100, 2 ); ?>">
 		<input type="hidden" name="description" value="<?php echo $request->title; ?>">
 		<input type="hidden" name="task" value="process">
-		<input type="hidden" name="key" value="<?php echo $request->uniqueid; ?>">
+		<input type="hidden" name="key" value="<?php echo $request->key; ?>">
 		<input type="hidden" name="gw" value="ideal">
 		
 		<input type="submit" name="submit" value="<?php echo JText::_('IDEAL_PAY_VIA_IDEAL'); ?>" />
