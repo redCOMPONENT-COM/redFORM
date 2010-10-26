@@ -62,7 +62,7 @@ class plgRedform_mailingAcajoom extends JPlugin {
  		if ($db->loadResult() > 0) 
  		{
  			/* Acajoom is installed, let's add the user */
- 			$acajoomsubscriber = JTable::getInstance('acajoom_subscribers', 'Table');
+ 			$acajoomsubscriber = JTable::getInstance('acajoom_subscribers', 'RedformTable');
  			
  			$myid = JFactory::getUser();
  			if (!isset($myid->id)) $myid->id = 0;
@@ -93,7 +93,7 @@ class plgRedform_mailingAcajoom extends JPlugin {
  			if ($db->getAffectedRows() > 0) 
  			{
  				/* Load the queue table */
- 				$acajoomqueue = JTable::getInstance('acajoom_queue', 'Table');
+ 				$acajoomqueue = JTable::getInstance('acajoom_queue', 'RedformTable');
 
  				/* Collect subscriber details */
  				$queue = new stdClass;

@@ -495,7 +495,7 @@ class rfanswers
     $submitterdata['form_id'] = $this->_form_id;
 
   	/* Store the submitter details */
-  	$row = & JTable::getInstance('Submitters', 'Table');
+  	$row = & JTable::getInstance('Submitters', 'RedformTable');
 
   	if (isset($params['xref']) && (int) $params['xref'])
   	{

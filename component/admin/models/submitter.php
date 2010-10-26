@@ -136,7 +136,7 @@ class RedformModelSubmitter extends JModel {
   function _initData()
   {
   	// TODO: should query columns from the table
-    //$this->_data = & JTable::getInstance('redform', 'Table');
+    //$this->_data = & JTable::getInstance('redform', 'RedformTable');
     return $this->_data;
   }
   
@@ -183,7 +183,7 @@ class RedformModelSubmitter extends JModel {
         $uid  = $user->get('id');
       }
       // Lets get to it and checkout the thing...
-      $row = & JTable::getInstance('redform', 'Table');
+      $row = & JTable::getInstance('redform', 'RedformTable');
       return $row->checkout($uid, $this->_id);
     }
     return false;
@@ -201,7 +201,7 @@ class RedformModelSubmitter extends JModel {
   {
     if ($this->_id)
     {
-      $row = & JTable::getInstance('redform', 'Table');
+      $row = & JTable::getInstance('redform', 'RedformTable');
       return $row->checkin($this->_id);
     }
     return false;

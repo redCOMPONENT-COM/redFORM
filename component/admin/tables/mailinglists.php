@@ -22,7 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 
 /**
  */
-class TableMailinglists extends JTable {
+class RedformTableMailinglists extends JTable {
 	/** @var int Primary key */
 	var $field_id = null;
 	/** @var string The value for the field */

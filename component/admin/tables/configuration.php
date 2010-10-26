@@ -22,7 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 
 /**
  */
-class TableConfiguration extends JTable {
+class RedformTableConfiguration extends JTable {
 	/** @var int Primary key */
 	var $id = null;
 	/** @var string The name of the configuration option */

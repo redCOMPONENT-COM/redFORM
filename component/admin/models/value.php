@@ -127,7 +127,7 @@ class RedformModelValue extends JModel
    */
   function _initData()
   {
-    $this->_data = & JTable::getInstance('Values', 'Table');
+    $this->_data = & JTable::getInstance('Values', 'RedformTable');
     $this->_data->published = 1;
     
     if ($field_id = JRequest::getInt('fieldid')) 
@@ -190,7 +190,7 @@ class RedformModelValue extends JModel
         $uid  = $user->get('id');
       }
       // Lets get to it and checkout the thing...
-      $row = & $this->getTable('Fields', 'Table');
+      $row = & $this->getTable('Fields', 'RedformTable');
       return $row->checkout($uid, $this->_id);
     }
     return false;
@@ -208,7 +208,7 @@ class RedformModelValue extends JModel
   {
     if ($this->_id)
     {
-      $row = & $this->getTable('Values', 'Table');
+      $row = & $this->getTable('Values', 'RedformTable');
       return $row->checkin($this->_id);
     }
     return false;
@@ -220,7 +220,7 @@ class RedformModelValue extends JModel
    function store($data) 
    {
       global $mainframe;
-      $row = $this->getTable('Values', 'Table');
+      $row = $this->getTable('Values', 'RedformTable');
 	  
 	  /* Get the posted data */
 	  $post = $data;
@@ -308,7 +308,7 @@ class RedformModelValue extends JModel
    */
   function move($direction)
   {
-    $row =& JTable::getInstance('Values', 'Table');
+    $row =& JTable::getInstance('Values', 'RedformTable');
 
     if (!$row->load( $this->_id ) ) {
       $this->setError($this->_db->getErrorMsg());

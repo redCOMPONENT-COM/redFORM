@@ -120,7 +120,7 @@ class RedformModelForm extends JModel
   
   function _initData()
   {
-    $this->_data = & JTable::getInstance('redform', 'Table');
+    $this->_data = & JTable::getInstance('redform', 'RedformTable');
 		$this->_data->formstarted = false;
   	return $this->_data;
   }
@@ -168,7 +168,7 @@ class RedformModelForm extends JModel
         $uid  = $user->get('id');
       }
       // Lets get to it and checkout the thing...
-      $row = & JTable::getInstance('redform', 'Table');
+      $row = & JTable::getInstance('redform', 'RedformTable');
       return $row->checkout($uid, $this->_id);
     }
     return false;
@@ -186,7 +186,7 @@ class RedformModelForm extends JModel
   {
     if ($this->_id)
     {
-      $row = & JTable::getInstance('redform', 'Table');
+      $row = & JTable::getInstance('redform', 'RedformTable');
       return $row->checkin($this->_id);
     }
     return false;
@@ -200,7 +200,7 @@ class RedformModelForm extends JModel
    */
   function store($post)
   {
-  	$row = $this->getTable('redform');
+  	$row = $this->getTable('redform', 'RedformTable');
 
   	/* Get the posted data */
   	if (!$row->bind($post)) {
@@ -401,7 +401,7 @@ class RedformModelForm extends JModel
     foreach ($cids as $cid)
     {
       // get the form
-    	$form = & $this->getTable('redform');
+    	$form = & $this->getTable('redform', 'RedformTable');
       $form->load($cid);
       // get associated fields
 	    $fields = $form->getFields();
@@ -418,7 +418,7 @@ class RedformModelForm extends JModel
 	    foreach ($fields as $field_id)
 	    {
 	    	// get field
-	    	$field = & $this->getTable('fields');
+	    	$field = & $this->getTable('fields', 'RedformTable');
 	      $field->load($field_id);
 	      
 	      // get associated values
@@ -435,7 +435,7 @@ class RedformModelForm extends JModel
         foreach ($values as $v)
         {
         	// get value
-        	$value = & $this->getTable('values');
+        	$value = & $this->getTable('values', 'RedformTable');
         	$value->load($v);
         	
         	$value->id = null;

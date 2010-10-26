@@ -142,7 +142,7 @@ class RedformModelValues extends JModel
   {
     $user   =& JFactory::getUser();
 
-    $table = & $this->getTable('Values');
+    $table = & $this->getTable('Values', 'RedformTable');
     if (!$table->publish($cid, $publish)) {
       $this->setError($table->getError());
       return false;

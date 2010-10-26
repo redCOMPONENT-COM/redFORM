@@ -143,7 +143,7 @@ class RedformControllerValues extends JController
     // Check for request forgeries
     JRequest::checkToken() or die( 'Invalid Token' );
     
-    $row = & JTable::getInstance('values', 'Table');
+    $row = & JTable::getInstance('values', 'RedformTable');
     $row->bind(JRequest::get('post'));
     $row->checkin();
 

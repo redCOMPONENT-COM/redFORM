@@ -68,7 +68,7 @@ class plgRedform_mailingCcnewsletter extends JPlugin {
  			}
  			
  			require_once( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_ccnewsletter' . DS . 'tables' .DS .'subscriber.php');
- 			$ccsubscriber = &JTable::getInstance('subscriber', 'Table');
+ 			$ccsubscriber = &JTable::getInstance('subscriber', 'RedformTable');
  			$ccsettings = array('name' => $fullname,
                               'email' => $submitter_email,
                               'plainText' => '0',

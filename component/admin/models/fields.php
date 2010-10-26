@@ -207,7 +207,7 @@ class RedformModelFields extends JModel {
   {
     $user   =& JFactory::getUser();
 
-    $table = & $this->getTable('Fields');
+    $table = & $this->getTable('Fields', 'RedformTable');
     if (!$table->publish($cid, $publish)) {
       $this->setError($table->getError());
       return false;
@@ -345,7 +345,7 @@ class RedformModelFields extends JModel {
    */
   function move($direction)
   {
-    $row =& JTable::getInstance('Fields', 'Table');
+    $row =& JTable::getInstance('Fields', 'RedformTable');
 
     if (!$row->load( $this->_id ) ) {
       $this->setError($this->_db->getErrorMsg());

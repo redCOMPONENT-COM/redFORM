@@ -22,7 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 
 /**
  */
-class TableFields extends JTable {
+class RedformTableFields extends JTable {
 	/** @var int Primary key */
 	var $id = null;
 	/** @var string field name */

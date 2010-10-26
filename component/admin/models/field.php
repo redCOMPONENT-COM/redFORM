@@ -116,7 +116,7 @@ class RedformModelField extends JModel
    */
   function _initData()
   {
-    $this->_data = & JTable::getInstance('Fields', 'Table');
+    $this->_data = & JTable::getInstance('Fields', 'RedformTable');
     $this->_data->published = 1;
     return $this->_data;
   }
@@ -164,7 +164,7 @@ class RedformModelField extends JModel
         $uid  = $user->get('id');
       }
       // Lets get to it and checkout the thing...
-      $row = & $this->getTable('Fields', 'Table');
+      $row = & $this->getTable('Fields', 'RedformTable');
       return $row->checkout($uid, $this->_id);
     }
     return false;
@@ -182,7 +182,7 @@ class RedformModelField extends JModel
   {
     if ($this->_id)
     {
-      $row = & $this->getTable('Fields', 'Table');
+      $row = & $this->getTable('Fields', 'RedformTable');
       return $row->checkin($this->_id);
     }
     return false;
@@ -193,8 +193,8 @@ class RedformModelField extends JModel
    */
   function store($data)
   {
-  	$row = $this->getTable('Fields', 'Table');
-  	$oldrow = $this->getTable('Fields', 'Table');
+  	$row = $this->getTable('Fields', 'RedformTable');
+  	$oldrow = $this->getTable('Fields', 'RedformTable');
   	$field_id = JRequest::getInt('id', false);
   	/* Check if a field moved form */
   	if ($field_id)  {
@@ -243,7 +243,7 @@ class RedformModelField extends JModel
 	  	if ( isset($data['mailinglist']) && !empty($data['mailinglist']) )
 	  	{
 			  /* Load the table */
-			  $mailinglistrow = $this->getTable('Mailinglists');
+			  $mailinglistrow = $this->getTable('Mailinglists', 'RedformTable');
 			  	
 			  /* Fix up the mailinglist */
 			  if (isset($post['listname'])) {
@@ -398,7 +398,7 @@ class RedformModelField extends JModel
 	function getMailinglist() 
 	{
 		/* Load the table */
-		$mailinglistrow = $this->getTable('Mailinglists');
+		$mailinglistrow = $this->getTable('Mailinglists', 'RedformTable');
 		$mailinglistrow->load($this->_id);
 		return $mailinglistrow;
 	}

@@ -22,7 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 
 /**
  */
-class TableRedform extends JTable {
+class RedformTableRedform extends JTable {
 	/** @var int Primary key */
 	var $id = null;
 	/** @var string The IP address or range to block */
