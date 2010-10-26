@@ -327,7 +327,7 @@ class iDEAL_Payment
 
 	public function getBankId ()
 	{
-		return $this->bank_id;
+		return sprintf('%04d', $this->bank_id);
 	}
 
 	public function setAmount ($amount)

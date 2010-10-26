@@ -176,7 +176,7 @@ class PaymentIdeal {
 		$ideal->setTestmode($this->params->get('testmode'));
 		$ideal->setProfileKey($this->params->get('profile_key'));
 		
-		$bank = JRequest::getInt('bank_id');
+		$bank = sprintf('%04d', JRequest::getInt('bank_id'));
 		
 		$res = $ideal->createPayment($bank, 
 		                      round($details->price*100, 2 ), 
