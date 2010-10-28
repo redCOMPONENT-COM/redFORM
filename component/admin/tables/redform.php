@@ -123,5 +123,11 @@ class RedformTableRedform extends JTable {
 		$db->setQuery($query);
 		return $db->loadResultArray();
 	}
+	
+	function store( $updateNulls=false )
+	{
+		$this->classname = trim($this->classname);
+		return parent::store($updateNulls);
+	}
 }
 ?>
