@@ -267,7 +267,7 @@ JHTML::_('behavior.tooltip');
 		</fieldset>
 		<!-- Values table end-->
 				
-		<?php if ($this->parameters && $this->parameters->getGroups() && 0): ?>		
+		<?php if ($this->parameters && $this->parameters->getGroups()): ?>		
 		<?php
 			foreach ( $this->parameters->getGroups() as $key => $groups )
 			{
