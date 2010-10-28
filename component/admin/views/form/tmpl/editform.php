@@ -92,7 +92,7 @@ $editor =& JFactory::getEditor();
 			</td>
 		</tr>
 		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td valign="top" align="right">
+			<td valign="top" align="right" class="hasTip" title="<?php echo JText::_('CAPTCHA_ACTIVE'); ?>::<?php echo JText::_('CAPTCHA_ACTIVE_TIP'); ?>">
 			<?php echo JText::_('CAPTCHA_ACTIVE'); ?>
 			</td>
 			<td>

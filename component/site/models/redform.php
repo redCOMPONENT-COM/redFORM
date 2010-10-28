@@ -183,11 +183,12 @@ class RedformModelRedform extends JModel {
 		
 		if ($form->captchaactive) 
 		{
-			/* Check if Captcha is correct */
-			$word = JRequest::getVar('captchaword', false, '', 'CMD');
-			$return = $mainframe->triggerEvent('onCaptcha_confirm', array($word, $return));
+			JPluginHelper::importPlugin( 'redform_captcha' );
+			$res = true;
+			$dispatcher =& JDispatcher::getInstance();
+			$results = $dispatcher->trigger( 'onCheckCaptcha', array( &$res ) );
 			
-			if (!$return[0]) {
+			if (count($results) && $res == false) {
 				$this->setError(JText::_('CAPTCHA_WRONG'));
 	      return false;				
 			}
@@ -552,11 +553,13 @@ class RedformModelRedform extends JModel {
 		
 		if ($form->captchaactive && $check_captcha) 
 		{
-			/* Check if Captcha is correct */
-			$word = JRequest::getVar('captchaword', false, '', 'CMD');
-			$return = $mainframe->triggerEvent('onCaptcha_confirm', array($word, $return));
+			JPluginHelper::importPlugin( 'redform_captcha' );
+			$res = true;
+			exit('before');
+			$dispatcher =& JDispatcher::getInstance();
+			$results = $dispatcher->trigger( 'onCheckCaptcha', array( &$res ) );
 			
-			if (!$return[0]) {
+			if (count($results) && $res == false) {
 				$this->setError(JText::_('CAPTCHA_WRONG'));
 	      return false;				
 			}

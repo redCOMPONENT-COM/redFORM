@@ -749,16 +749,18 @@ class RedFormCore extends JObject {
 		
 		/* Add the captcha, only if initial submit */
 		if ($form->captchaactive && empty($submit_key)) 
-		{
-			if (file_exists(JPATH_PLUGINS.DS.'system'.DS.'Captcha04'.DS."CaptchaImage.php"))
+		{			
+			JPluginHelper::importPlugin( 'redform_captcha' );
+			$captcha = '';
+			$dispatcher =& JDispatcher::getInstance();
+			$results = $dispatcher->trigger( 'onGetCaptchaField', array( &$captcha ) );
+			
+			if (count($results))
 			{
 				$html .= '<div class="fieldline">';
 				$html .= '<div class="label"><label for="captchaword">'.JText::_('REDFORM_CAPTCHA_LABEL').'</label></div>';
 				$html .= '<div id="redformcaptcha">';
-				$html .= '<img src="index.php?option=com_redform&task=displaycaptcha&controller=redform"><br/>';
-				$html .= '<input type="text" name="captchaword">';
-				$img = JHTML::image(JURI::root().'components/com_redform/assets/images/info.png', JText::_('ToolTip'));
-				$html .= ' <span class="editlinktip hasTipField" title="'.JText::_('REDFORM_CAPTCHA_LABEL').'::'.JText::_('REDFORM_CAPTCHA_TOOLTIP').'">'. $img .'</span>';
+				$html .= $captcha;
 				$html .= '</div>';
 				$html .= '</div>';
 			}
