@@ -555,7 +555,6 @@ class RedformModelRedform extends JModel {
 		{
 			JPluginHelper::importPlugin( 'redform_captcha' );
 			$res = true;
-			exit('before');
 			$dispatcher =& JDispatcher::getInstance();
 			$results = $dispatcher->trigger( 'onCheckCaptcha', array( &$res ) );
 			
