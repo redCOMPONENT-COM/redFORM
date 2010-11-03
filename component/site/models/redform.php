@@ -37,6 +37,8 @@ class RedformModelRedform extends JModel {
   var $_form = null;
   
   var $_fields = null;
+  
+  var $_answers = null;
 		
   var $mailer = null;
   
@@ -272,6 +274,7 @@ class RedformModelRedform extends JModel {
 
 			$allanswers[] = $answers;
 		} /* End multi-user signup */
+		$this->_answers = $allanswers;
 		
 		/* Load the mailer in case we need to inform someone */
 		if ($form->submitterinform || $form->contactpersoninform) {
@@ -449,6 +452,8 @@ class RedformModelRedform extends JModel {
 	
 			/* Mail submitter */
 			$submission_body = $form->submissionbody;
+			$submission_body = $this->_replaceTags($submission_body, $answers->getAnswers());
+			
 			if (strstr($submission_body, '[answers]')) 
 			{
 				$info = "<table>";
@@ -886,7 +891,13 @@ class RedformModelRedform extends JModel {
 	function getNotificationText()
 	{
 		$form = $this->getForm();
-		return $form->notificationtext;		
+		
+		if (empty($this->_answers)) {
+			return $form->notificationtext;
+		}	
+		else {
+			return $this->_replaceTags($form->notificationtext, reset($this->_answers)->getAnswers());
+		}	
 	}
 	
 	/**
@@ -903,6 +914,31 @@ class RedformModelRedform extends JModel {
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadResult();
 		return $res;
+	}
+	
+	function _replaceTags($text, $answers)
+	{
+		$matches = array();
+		if (!preg_match_all('(\[answer_[0-9]+\])', $text, $matches)) {
+			return $text;
+		}
+		
+		foreach ($matches[0] as $tag)
+		{
+			// get field id from tag
+			$id = substr($tag, 8, -1);
+			
+			foreach ($answers as $field)
+			{
+				if ($field['field_id'] == $id)
+				{
+					$text = str_replace($tag, $field['value'], $text);
+					break;
+				}
+			}			
+		}
+		
+		return $text;
 	}
 }
 ?>

@@ -582,7 +582,7 @@ class rfanswers
   	$answers = array();
   	foreach ($this->_fields as $k => $field)
   	{
-  		$answers[] = array( 'field' => $field->field, 'value' => $this->_values[$k], 'type' => $this->_types[$k] );
+  		$answers[] = array( 'field' => $field->field, 'field_id' => $field->id, 'value' => $this->_values[$k], 'type' => $this->_types[$k] );
   	}
   	return $answers;
   }
