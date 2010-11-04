@@ -590,7 +590,7 @@ class RedFormCore extends JObject {
 							if ($field->validate) $element .= "required";
 							$element .= "\"";
 							if ($field->readonly) $element .= ' readonly="readonly"';
-							if ($answers)
+							if ($answers && isset($answers[($signup-1)]->fields->$cleanfield))
 							{
 								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
 									$element .= ' checked="checked"';
