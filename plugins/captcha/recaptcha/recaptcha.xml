@@ -24,5 +24,11 @@
   <params>
   	<param name="public_key" type="text" default="" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_DESC" />
   	<param name="private_key" type="text" default="" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_DESC" />
+    <param name="theme" type="list" default="red" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC">
+      <option value="red">red</option>
+      <option value="white">white</option>
+      <option value="blackglass">blackglass</option>
+      <option value="clean">clean</option>
+    </param>
   </params>
 </install>

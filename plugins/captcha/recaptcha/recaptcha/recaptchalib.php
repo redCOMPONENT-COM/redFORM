@@ -103,23 +103,35 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 
  * @return string - The HTML to be embedded in the user's form.
  */
-function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
+function recaptcha_get_html($pubkey, $error = null, $use_ssl = false, $params = null)
 {
+	$document = &JFactory::getDocument();
+	
 	if ($pubkey == null || $pubkey == '') {
 		die ("To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>");
 	}
 	
-	if ($use_ssl) {
-                $server = RECAPTCHA_API_SECURE_SERVER;
-        } else {
-                $server = RECAPTCHA_API_SERVER;
-        }
+	if ($use_ssl) 
+	{
+		$server = RECAPTCHA_API_SECURE_SERVER;
+	} else {
+		$server = RECAPTCHA_API_SERVER;
+	}
+	$theme = ($params && $params->get('theme', 'red') ? $params->get('theme', 'red') : 'red');
 
-        $errorpart = "";
-        if ($error) {
-           $errorpart = "&amp;error=" . $error;
-        }
-        return '<script type="text/javascript" src="'. $server . '/challenge?k=' . $pubkey . $errorpart . '"></script>
+	$errorpart = "";
+	if ($error) {
+		$errorpart = "&amp;error=" . $error;
+	}
+	
+	if ($params && $params->get('theme')) 
+	{
+		$js = "var RecaptchaOptions = {
+				   theme : '".$theme."'
+				};";
+		$document->addScriptDeclaration($js);
+	}
+	return '<script type="text/javascript" src="'. $server . '/challenge?k=' . $pubkey . $errorpart . '"></script>
 
 	<noscript>
   		<iframe src="'. $server . '/noscript?k=' . $pubkey . $errorpart . '" height="300" width="500" frameborder="0"></iframe><br/>

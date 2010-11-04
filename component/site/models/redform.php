@@ -547,7 +547,7 @@ class RedformModelRedform extends JModel {
 		/* Check for the submit key */
 		$submit_key = JRequest::getVar('submit_key', false);
 		if (!$submit_key) {
-			$check_captcha = true;
+			$captcha_allowed = true;
 			$submit_key = uniqid();
 		}
 		
@@ -556,7 +556,7 @@ class RedformModelRedform extends JModel {
 		/* Get the form details */
 		$form = $this->getForm(JRequest::getInt('form_id'));
 		
-		if ($form->captchaactive && $check_captcha) 
+		if ($form->captchaactive && $captcha_allowed) 
 		{
 			JPluginHelper::importPlugin( 'redform_captcha' );
 			$res = true;
