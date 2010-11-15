@@ -276,7 +276,7 @@ class RedformModelFields extends JModel {
 		$cid = JRequest::getVar('cid');
 		$order = JRequest::getVar('order');
 		$total = count($cid);
-		$row = $this->getTable();
+		$row = $this->getTable('fields', 'redformtable');
 		
 		if (empty( $cid )) {
 			return JError::raiseWarning( 500, JText::_( 'No items selected' ) );
@@ -287,10 +287,12 @@ class RedformModelFields extends JModel {
 			if ($row->ordering != $order[$i]) {
 				$row->ordering = $order[$i];
 				if (!$row->store()) {
-					return JError::raiseError( 500, $db->getErrorMsg() );
+					JError::raiseError( 500, $db->getErrorMsg() );
+					return false;
 				}
 			}
 		}
+		return true;
 	}
 			
 	/**
