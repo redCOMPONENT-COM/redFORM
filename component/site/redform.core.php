@@ -540,9 +540,23 @@ class RedFormCore extends JObject {
 						$class = $field->parameters->get('class','');
 						if ($field->validate) $class .= " required";
 						
-						$element .= JHTML::_('calendar', $val, 'field'.$field->id.'.'.$signup.'[date]', 'field'.$field->id, 
-						               $field->parameters->get('dateformat','%Y-%m-%d'), 
-						               'class="'.$class.'"');
+						if ($field->readonly) 
+						{
+							$element .= strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($val));
+							$element .= '<input class="'.$class.'"';
+							$element .= " type=\"hidden\" name=\"field".$field->id.'.'.$signup."[text][]\"";
+							$element .= ' id="field'.$field->id.'" ';
+							$element .= ' size="'.$field->parameters->get('size', strlen($val)+1).'"';
+							$element .= ' maxlength="'.$field->parameters->get('maxlength', 25).'"';
+							if ($field->readonly) $element .= ' readonly="readonly"';
+							$element .= ' value="'.$val."\" />\n";
+						}
+						else
+						{
+							$element .= JHTML::_('calendar', $val, 'field'.$field->id.'.'.$signup.'[date]', 'field'.$field->id, 
+							               $field->parameters->get('dateformat','%Y-%m-%d'), 
+							               'class="'.$class.'"');
+						}
 						break;
 	
 					case 'price':
