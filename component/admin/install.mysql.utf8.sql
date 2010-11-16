@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `default` varchar(255) default NULL,
   `tooltip` varchar(255) default NULL,
   `params` text default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `form_id` (`form_id`)
 ) COMMENT='Fields for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
@@ -58,7 +59,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `contactpaymentnotificationbody` text DEFAULT NULL,
   `submitterpaymentnotificationsubject` text DEFAULT NULL,
   `submitterpaymentnotificationbody` text DEFAULT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `vmproductid` (`vmproductid`)
 ) COMMENT='Forms for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
@@ -76,7 +78,10 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `confirmed` tinyint(1) NOT NULL default '0',
   `confirmdate` datetime default NULL,
   `price` double NULL DEFAULT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `form_id` (`form_id`),
+  KEY `event_id` (`xref`),
+  KEY `answer_id` (`answer_id`)
 ) COMMENT='Submitters for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_values` (
@@ -88,7 +93,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
   `field_id` int(11) default NULL,
   `ordering` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `field_id` (`field_id`)
 ) COMMENT='Answers for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_mailinglists` (
@@ -106,7 +112,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
   `status` varchar(100) NOT NULL,
   `data` text NOT NULL,
   `paid` tinyint(2) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `submit_key` (`submit_key`)
 ) COMMENT='logging gateway notifications';
 
 INSERT IGNORE INTO `#__rwf_configuration` (`id`, `name`, `value`) VALUES

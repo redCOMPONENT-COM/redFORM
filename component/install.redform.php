@@ -26,7 +26,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 function upgradeFormColumns()
 {
   $db = JFactory::getDBO();
-  
+	
   /** Migration of rwf_form_x tables => the column name must be changed from 'fieldname' to 'field'+'field_id' **/
   //first get all forms
   $query = ' SELECT id FROM #__rwf_forms ';
@@ -75,7 +75,7 @@ function upgradeFormColumns()
 		    }
         echo '#__rwf_forms_'. $form_id .' '. 'NEEDS UPGRADE => '. implode(', ', $need_upgrade) .'<br/>';
         // backup the table
-        $query = ' CREATE TABLE '. $db->nameQuote('#__rwf_forms_'. $form_id .'_bak_b39')
+        $query = ' CREATE TABLE '. $db->nameQuote('#__rwf_forms_'. $form_id .'_bak_b39'.'_'.time())
                . ' SELECT * FROM '. $db->nameQuote('#__rwf_forms_'. $form_id)
                ;
         $db->setQuery($query);
@@ -122,12 +122,23 @@ function upgradeFormColumns()
 
 function com_install() 
 {
-	$db = JFactory::getDBO();
+	$db = JFactory::getDBO();	
+  
+	/**
+	 * get tables details
+	 */
+	$tables = array( '#__rwf_configuration', 
+	                 '#__rwf_fields',
+	                 '#__rwf_forms',
+	                 '#__rwf_submitters',
+	                 '#__rwf_values',
+	                 '#__rwf_mailinglists',
+	                 '#__rwf_payment',
+	               );
+	$tables = $db->getTableFields($tables, false);
 	
 	/* Get the current columns */
-	$q = "SHOW COLUMNS FROM #__rwf_fields";
-	$db->setQuery($q);
-	$cols = $db->loadObjectList('Field');
+	$cols = $tables['#__rwf_fields'];
 	
 	/* Check if we have the validate column */
 	if (!array_key_exists('validate', $cols)) {
@@ -199,12 +210,18 @@ function com_install()
 		$db->setQuery($q);
 		$db->query();
 	}
-	/***************************************************************************************************************/
 	
+  /** add indexes **/
+  if (empty($cols['form_id']->Key)) 
+  {
+    $q = "ALTER TABLE `#__rwf_fields` ADD INDEX (`form_id`)";
+    $db->setQuery($q);
+    $db->query();  	
+  }
+	
+	/***************************************************************************************************************/
 	/* Get the current columns */
-	$q = "SHOW COLUMNS FROM #__rwf_forms";
-	$db->setQuery($q);
-	$cols = $db->loadObjectList('Field');
+	$cols = $tables['#__rwf_forms'];
 	
 	/* Check if we have the validate column */
 	if (!array_key_exists('virtuemartactive', $cols)) {
@@ -300,16 +317,23 @@ function com_install()
 	
 	/* Check if we have the redirect column */
 	if (!array_key_exists('redirect', $cols)) {
-		$q = "ALTER TABLE `jos_rwf_forms` ADD `redirect` VARCHAR( 300 ) NULL DEFAULT NULL ";
+		$q = "ALTER TABLE `#__rwf_forms` ADD `redirect` VARCHAR( 300 ) NULL DEFAULT NULL ";
 		$db->setQuery($q);
 		$db->query();
 	}
 	
-	
+  /** add indexes **/
+  if (empty($cols['vmproductid']->Key)) 
+  {
+    $q = "ALTER TABLE `#__rwf_forms` ADD INDEX (`vmproductid`)";
+    $db->setQuery($q);
+    $db->query();  	
+  }
+		
+	/***************************************************************************************************************/
 	/* Get the current columns */
-	$q = "SHOW COLUMNS FROM #__rwf_submitters";
-	$db->setQuery($q);
-	$cols = $db->loadObjectList('Field');
+	$cols = $tables['#__rwf_submitters'];
+	
 	if (array_key_exists('event_id', $cols)) $upgrade = true;
 	else $upgrade = false;
 	
@@ -381,10 +405,29 @@ function com_install()
 		$db->query();
 	}
 	
-	 /* Get the current columns */
-  $q = "SHOW COLUMNS FROM #__rwf_values";
-  $db->setQuery($q);
-  $cols = $db->loadObjectList('Field');
+  /** add indexes **/
+  if (empty($cols['form_id']->Key)) 
+  {
+    $q = "ALTER TABLE `#__rwf_submitters` ADD INDEX (`form_id`)";
+    $db->setQuery($q);
+    $db->query();  	
+  }
+  if (empty($cols['event_id']->Key)) 
+  {
+    $q = "ALTER TABLE `#__rwf_submitters` ADD INDEX (`event_id`)";
+    $db->setQuery($q);
+    $db->query();  	
+  }
+  if (empty($cols['answer_id']->Key)) 
+  {
+    $q = "ALTER TABLE `#__rwf_submitters` ADD INDEX (`answer_id`)";
+    $db->setQuery($q);
+    $db->query();  	
+  }
+	
+	/***************************************************************************************************************/
+	/* Get the current columns */
+	$cols = $tables['#__rwf_values'];
   
   if (!stristr($cols['value']->Type, 'text')) {
     $q = "ALTER TABLE `#__rwf_values` CHANGE `value` `value` TEXT NULL DEFAULT NULL";
@@ -409,12 +452,17 @@ function com_install()
 		$db->query();
 	}
 	
-	/************************************************************************************************/
-  
-	 /* Get the current columns */
-  $q = "SHOW COLUMNS FROM #__rwf_mailinglists";
-  $db->setQuery($q);
-  $cols = $db->loadObjectList('Field');
+  /** add indexes **/
+  if (empty($cols['field_id']->Key)) 
+  {
+    $q = "ALTER TABLE `#__rwf_values` ADD INDEX (`field_id`)";
+    $db->setQuery($q);
+    $db->query();  	
+  }
+	
+	/***************************************************************************************************************/
+	/* Get the current columns */
+	$cols = $tables['#__rwf_mailinglists'];
   
 	/* Check if we have the field_id column */
 	if (!array_key_exists('field_id', $cols)) 
@@ -433,43 +481,16 @@ function com_install()
 		}
 	}
 	
+	/***************************************************************************************************************/
   // new structure for rwf_forms_x tables
   upgradeFormColumns();
 	
 if ($upgrade) {
-	/* The event values need to be updated with the equivalent xref */
-	$q = "SELECT id, event_id FROM #__rwf_submitters";
-	$db->setQuery($q);
-	$events = $db->loadObjectList();
-	if (is_array($events)) {
-		foreach ($events as $key => $event) {
-			/* Get the xref value */
-			$q = "SELECT id FROM #__redevent_event_venue_xref WHERE eventid = ".$event->event_id;
-			$db->setQuery($q);
-			$xref = $db->loadResult();
-			
-			/* Update the submitters table */
-			$q = "UPDATE #__rwf_submitters SET event_id = ".$xref." WHERE id = ".$event->id;
-			$db->setQuery($q);
-			$db->query();
-		}
-		
-		/* The event becomes xref */
+/* The event becomes xref */
 		$q = "ALTER TABLE `#__rwf_submitters` CHANGE `event_id` `xref` INT( 11 ) NULL DEFAULT NULL";
 		$db->setQuery($q);
 		$db->query();
-		
-		/* Fill the new columns with data */
-		$q = "UPDATE `#__rwf_submitters` s 
-			LEFT JOIN #__redevent_register_bak r
-			ON s.answer_id = r.submitter_id
-			SET s.submit_key = r.submitter_id, 
-			s.waiting = r.waiting, 
-			s.confirmed = r.confirmed, 
-			s.confirmdate = r.confirmdate";
-		$db->setQuery($q);
-		$db->query();
-	}
+	
 }
 
   /** remove previous instances of the plugin, if there are more than one **/

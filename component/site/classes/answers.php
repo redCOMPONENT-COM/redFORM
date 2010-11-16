@@ -390,6 +390,7 @@ class rfanswers
   /**
    * new save function for new lib
    * @param $params
+   * @return int submitter_id
    */
   function savedata($params = array())
   {
