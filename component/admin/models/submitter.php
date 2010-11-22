@@ -320,7 +320,6 @@ class RedformModelSubmitter extends JModel {
 		/* Some default values needed */
 		$postvalues['xref'] = $post['xref'];
 		$postvalues['form_id'] = $post['form_id'];
-		$postvalues['submitternewsletter'] = JRequest::getVar('submitternewsletter', '');
 		$postvalues['submit_key'] = $submit_key;
 		if (isset($post['integration'])) {
 			$postvalues['integration'] = $post['integration'];			

@@ -534,6 +534,7 @@ class rfanswers
   	}
   	/* Set the date */
   	$row->submission_date = date('Y-m-d H:i:s' , time());
+  	$row->submitternewsletter = ($this->_listnames && count($this->_listnames)) ? 1 : 0;
 
   	/* pre-save checks */
   	if (!$row->check()) {

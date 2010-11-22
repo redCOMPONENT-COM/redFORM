@@ -246,7 +246,6 @@ class RedformModelRedform extends JModel {
 				$postvalues['xref'] = 0;
 			}
 			$postvalues['form_id'] = $post['form_id'];
-			$postvalues['submitternewsletter'] = JRequest::getVar('submitternewsletter', '');
 			$postvalues['submit_key'] = $submit_key;
 			
 			if ($redcompetition)
@@ -604,7 +603,6 @@ class RedformModelRedform extends JModel {
 			}
 
 			$postvalues['form_id'] = $post['form_id'];
-			$postvalues['submitternewsletter'] = JRequest::getVar('submitternewsletter', '');
 			$postvalues['submit_key'] = $submit_key;
 			
 			$postvalues['integration'] = $integration_key;
