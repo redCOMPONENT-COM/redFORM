@@ -106,6 +106,8 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 function recaptcha_get_html($pubkey, $error = null, $use_ssl = false, $params = null)
 {
 	$document = &JFactory::getDocument();
+	$lang =& JFactory::getLanguage();
+	$l = explode("-", $lang->getTag());
 	
 	if ($pubkey == null || $pubkey == '') {
 		die ("To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>");
@@ -127,6 +129,7 @@ function recaptcha_get_html($pubkey, $error = null, $use_ssl = false, $params = 
 	if ($params && $params->get('theme')) 
 	{
 		$js = "var RecaptchaOptions = {
+				   lang : '".$l[0]."',
 				   theme : '".$theme."'
 				};";
 		$document->addScriptDeclaration($js);
