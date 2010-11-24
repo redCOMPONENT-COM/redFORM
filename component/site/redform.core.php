@@ -283,7 +283,7 @@ class RedFormCore extends JObject {
 			{
 				foreach ($options['extrafields'] as $field)
 				{
-					$html .= '<div class="fieldline">';
+					$html .= '<div class="fieldline'.(isset($field['class']) && !empty($field['class']) ? ' '.$field['class'] : '' ).'">';
 					$html .= '<div class="label">'.$field['label'].'</div>';
 					$html .= '<div class="field">'.$field['field'].'</div>';
 					$html .= '</div>';
