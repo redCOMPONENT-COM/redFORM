@@ -334,8 +334,11 @@ function com_install()
 	/* Get the current columns */
 	$cols = $tables['#__rwf_submitters'];
 	
-	if (array_key_exists('event_id', $cols)) $upgrade = true;
-	else $upgrade = false;
+	if (array_key_exists('event_id', $cols)) {
+		$q = "ALTER TABLE `#__rwf_submitters` CHANGE `event_id` `xref` INT( 11 ) NULL DEFAULT NULL";
+		$db->setQuery($q);
+		$db->query();
+	}
 	
   	/* Check if we have the answer_id column */
 	if (!array_key_exists('answer_id', $cols)) {
@@ -359,8 +362,13 @@ function com_install()
 	}
 	
 	/* Check if we have the submit_key column */
-	if (!array_key_exists('submit_key', $cols)) {
+	if (!array_key_exists('submit_key', $cols)) 
+	{
 		$q = "ALTER IGNORE TABLE #__rwf_submitters ADD COLUMN `submit_key` varchar(45) NOT NULL";
+		$db->setQuery($q);
+		$db->query();
+				
+		$q = "UPDATE #__rwf_submitters set `submit_key` = MD5(id)";
 		$db->setQuery($q);
 		$db->query();
 	}
@@ -409,12 +417,6 @@ function com_install()
   if (empty($cols['form_id']->Key)) 
   {
     $q = "ALTER TABLE `#__rwf_submitters` ADD INDEX (`form_id`)";
-    $db->setQuery($q);
-    $db->query();  	
-  }
-  if (empty($cols['event_id']->Key)) 
-  {
-    $q = "ALTER TABLE `#__rwf_submitters` ADD INDEX (`event_id`)";
     $db->setQuery($q);
     $db->query();  	
   }
@@ -485,14 +487,6 @@ function com_install()
   // new structure for rwf_forms_x tables
   upgradeFormColumns();
 	
-if ($upgrade) {
-/* The event becomes xref */
-		$q = "ALTER TABLE `#__rwf_submitters` CHANGE `event_id` `xref` INT( 11 ) NULL DEFAULT NULL";
-		$db->setQuery($q);
-		$db->query();
-	
-}
-
   /** remove previous instances of the plugin, if there are more than one **/
   $query = ' SELECT COUNT(*) FROM #__plugins WHERE name = '. $db->Quote('Content - redFORM');
   $db->setQuery($query);
