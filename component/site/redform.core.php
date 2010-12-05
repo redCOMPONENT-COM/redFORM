@@ -532,7 +532,7 @@ class RedFormCore extends JObject {
 							}
 						}
 						else if ($user->get($field->redmember_field)) {
-							$val = $user->get($field->redmember_field);
+							$val = strftime('%c', $user->get($field->redmember_field));
 						}
 						else {
 							$val = $field->default;
