@@ -525,24 +525,27 @@ class RedFormCore extends JObject {
 					case 'date':
 						JHTML::_('behavior.calendar');
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
+						
 						if ($answers)
 						{
 							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
 								$val = $answers[($signup-1)]->fields->$cleanfield;
 							}
 						}
-						else if ($user->get($field->redmember_field)) {
+						else if ($user->get($field->redmember_field)) { // redmember uses unix timestamp
 							$val = strftime('%c', $user->get($field->redmember_field));
 						}
 						else {
 							$val = $field->default;
 						}
+						$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($val));
+
 						$class = $field->parameters->get('class','');
 						if ($field->validate) $class .= " required";
 						
 						if ($field->readonly) 
 						{
-							$element .= strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($val));
+							$element .= $val;
 							$element .= '<input class="'.$class.'"';
 							$element .= " type=\"hidden\" name=\"field".$field->id.'.'.$signup."[text][]\"";
 							$element .= ' id="field'.$field->id.'" ';

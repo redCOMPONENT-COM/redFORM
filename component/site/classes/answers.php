@@ -47,6 +47,8 @@ class rfanswers
   
   private $_isnew = true;
   
+  private $_sid = 0;
+  
   private $_db;
   
 	public function __construct()
@@ -466,12 +468,14 @@ class rfanswers
     	
     	if (!$db->query()) {
     		/* We cannot save the answers, do not continue */
-			if (stristr($db->getErrorMsg(), 'duplicate entry')) {
-				JRequest::setVar('ALREADY_ENTERED', true);
-				$mainframe->enqueueMessage(JText::_('ALREADY_ENTERED'), 'error');
-			}
-			else $mainframe->enqueueMessage(JText::_('Cannot save form answers').' '.$db->getErrorMsg(),'error');
-    		/* We cannot save the answers, do not continue */
+				if (stristr($db->getErrorMsg(), 'duplicate entry')) {
+					JRequest::setVar('ALREADY_ENTERED', true);
+					$mainframe->enqueueMessage(JText::_('ALREADY_ENTERED'), 'error');
+				}
+				else {
+					$mainframe->enqueueMessage(JText::_('Cannot save form answers').' '.$db->getErrorMsg(),'error');
+				}
+	    	/* We cannot save the answers, do not continue */
     		RedformHelperLog::simpleLog(JText::_('Cannot save form answers').' '.$db->getErrorMsg());
     		return false;
     	}
@@ -479,6 +483,7 @@ class rfanswers
     	$sid = $this->updateSubmitter($params);
     }
     $this->setPrice();
+    $this->_sid = $sid;
     return $sid;
   }
   
@@ -654,6 +659,11 @@ class rfanswers
   	$this->_db->setQuery($query);
   	$res = $this->_db->loadObject();
   	return $res;
+  }
+  
+  function getSid()
+  {
+  	return $this->_sid;
   }
   
   function toSession()
