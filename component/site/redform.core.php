@@ -656,7 +656,7 @@ class RedFormCore extends JObject {
 	
 					case 'multiselect':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= '<select id=\"field".$field->id."\" name="field'.$field->id.'.'.$signup.'[multiselect][]"'
+						$element .= '<select id="field'.$field->id.'" name="field'.$field->id.'.'.$signup.'[multiselect][]"'
 						          . ' multiple="multiple" size="'.$field->parameters->get('size',5).'"'
 						          . ' class="'.trim($field->parameters->get('class','').($field->validate ?" required" : '')).'"';
 						$element .= '>';
