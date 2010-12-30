@@ -94,8 +94,8 @@ class RedformControllerPayments extends JController
 
     $model = $this->getModel('payment');
     
-    if ($row = $model->store($post)) {
-
+    if ($row = $model->store($post)) 
+    {
       switch ($task)
       {
         case 'apply':
@@ -117,6 +117,7 @@ class RedformControllerPayments extends JController
     }
 
     $this->setRedirect( $link, $msg );
+    $this->redirect();
   }
   
   /**
