@@ -272,10 +272,10 @@ class RedFormCore extends JObject {
 //				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->sid.'" />';
 //			}
 		
-			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price) {
+			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price > 0) {
 				$html .= '<div class="eventprice" price="'.$options['eventdetails']->course_price.'">'.JText::_('Registration price').': '.$form->currency.' '.$options['eventdetails']->course_price.'</div>';
 			}
-			if ($form->activatepayment && isset($options['booking']) && $options['booking']->course_price) {
+			if ($form->activatepayment && isset($options['booking']) && $options['booking']->course_price > 0) {
 				$html .= '<div class="bookingprice" price="'.$options['booking']->course_price.'">'.JText::_('Registration price').': '.$form->currency.' '.$options['booking']->course_price.'</div>';
 			}
 							
@@ -568,11 +568,11 @@ class RedFormCore extends JObject {
 						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
 						{
 							$element .= $form->currency .' '.$values[0]->value;
-							$element .= '<input type="hidden" id="field'.$field->id.'" name="field'.$field->id.'.'.$signup.'[price][]" value="'.$values[0]->value.'"/>';
+							$element .= '<input type="hidden" class="rfprice" id="field'.$field->id.'" name="field'.$field->id.'.'.$signup.'[price][]" value="'.$values[0]->value.'" />';
 						}
 						else // like a text input
 						{
-							$element .= '<input class="'. $field->parameters->get('class','') .($field->validate ? " required" : '') .'"';
+							$element .= '<input class="rfprice '. $field->parameters->get('class','') .($field->validate ? " required" : '') .'"';
 							$element .= ' type="text" name="field'.$field->id.'.'.$signup.'[price][]"';
 							$element .= ' id="field'.$field->id.'" ';
 							$element .= ' size="'.$field->parameters->get('size', 25).'"';
@@ -848,7 +848,7 @@ class RedFormCore extends JObject {
 			for (var i = 1; i < active+1; i++)
 			{
 				var signup = jQuery("#formfield"+i);
-				signup.find("input[name*=price]").each(function(k) {
+				signup.find("input.rfprice").each(function(k) {
 					var p = jQuery(this).val();
 					if (p) {
 						price += parseFloat(p);
@@ -870,6 +870,13 @@ class RedFormCore extends JObject {
 				});
 
 				signup.find(".eventprice").each(function() {
+					var p = jQuery(this).attr('price');
+					if (p) {
+						price += parseFloat(p);
+					}
+				});
+
+				signup.find(".fixedprice").each(function() {
 					var p = jQuery(this).attr('price');
 					if (p) {
 						price += parseFloat(p);

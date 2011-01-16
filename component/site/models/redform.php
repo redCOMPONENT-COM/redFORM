@@ -586,8 +586,14 @@ class RedformModelRedform extends JModel {
 			// new answers object
 			$answers = new rfanswers();
 			$answers->setFormId($form->id);
-			if (isset($options['baseprice'])) {
-				$answers->initPrice($options['baseprice']);
+			if (isset($options['baseprice'])) 
+			{
+				if (is_array($options['baseprice'])) {
+					$answers->initPrice($options['baseprice'][$signup-1]);
+				}
+				else {
+					$answers->initPrice($options['baseprice']);
+				}
 			}
 			
 			/* Create an array of values to store */
