@@ -466,7 +466,8 @@ class rfanswers
             VALUES (" . implode(', ', $values) . ")";
     	$db->setQuery($q);
     	
-    	if (!$db->query()) {
+    	if (!$db->query()) 
+    	{
     		/* We cannot save the answers, do not continue */
 				if (stristr($db->getErrorMsg(), 'duplicate entry')) {
 					JRequest::setVar('ALREADY_ENTERED', true);
@@ -481,9 +482,9 @@ class rfanswers
     	}
     	$this->_answer_id = $db->insertid();
     	$sid = $this->updateSubmitter($params);
-    }
-    $this->setPrice();
+    }    
     $this->_sid = $sid;
+    $this->setPrice();
     return $sid;
   }
   
@@ -566,14 +567,12 @@ class rfanswers
   // set price corresponding to answers in submitters table
   function setPrice()
   {
-  	if (!$this->_price || !$this->_answer_id || !$this->_form_id) {
+  	if (!$this->_sid) {
   		return false;
   	}
-  	
     $db = &JFactory::getDBO();
   	$query = ' UPDATE #__rwf_submitters SET price = '. $db->Quote($this->_price)
-  	       . ' WHERE form_id = '.$db->Quote($this->_form_id)
-  	       . '   AND answer_id = '.$db->Quote($this->_answer_id)
+  	       . ' WHERE id = '.$db->Quote($this->_sid)
   	       ;
   	$db->setQuery($query);
   	$res = $db->query();
