@@ -193,7 +193,7 @@ class RedFormCore extends JObject {
 		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', ',');
 		$replace = '';
 		
-		$html = '<div id="redform'.$form->classname.'">';
+		$html = '<div id="redform'.$form->classname.'" class="redform-form">';
 		
 		if ($form->showname) {
 			$html .= '<div id="formname">'.$form->formname.'</div>';
@@ -833,7 +833,7 @@ class RedFormCore extends JObject {
 	{
 		$script = <<< EOF
 		jQuery(function () {
-		   jQuery("#redform").find(":input").change(updatePrice);
+		   jQuery("form div.redform-form").find(":input").change(updatePrice);
 
 		   updatePrice();
 		});
