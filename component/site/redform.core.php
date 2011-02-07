@@ -538,7 +538,12 @@ class RedFormCore extends JObject {
 						else {
 							$val = $field->default;
 						}
-						$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($val));
+						if (strtotime($val)) {
+							$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($val));
+						}
+						else {
+							$val = null;
+						}
 
 						$class = $field->parameters->get('class','');
 						if ($field->validate) $class .= " required";
