@@ -948,7 +948,7 @@ EOF;
   					if (check_element.name.indexOf("[text]") != -1 && check_element.className.match("required")) {
   						var textresult = CheckFill(check_element);
   						if (!textresult) {
-								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
+								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 		  				}
   						if (result) result = textresult;
   					}
@@ -957,7 +957,7 @@ EOF;
   					if (check_element.name.indexOf("[textarea]") != -1 && check_element.className.match("required")) {
   						var textarearesult = CheckFill(check_element);
   						if (!textarearesult) {
-								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('this field is required'); ?>\n";
+								msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 		  				}
   						if (result) result = textarearesult;
   					}
