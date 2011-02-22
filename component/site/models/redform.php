@@ -944,5 +944,23 @@ class RedformModelRedform extends JModel {
 		
 		return $text;
 	}
+	
+	function hasActivePayment($key)
+	{
+		$query = ' SELECT s.price ' 
+		       . ' FROM #__rwf_submitters AS s '
+		       . ' LEFT JOIN #__rwf_payment AS p ON s.submit_key = p.submit_key AND p.paid = 1 ' 
+		       . ' WHERE s.submit_key = ' . $this->_db->Quote($key)
+		       . '   AND p.id IS NULL '
+		       ;
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadResult();
+		if (!$res) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 }
 ?>

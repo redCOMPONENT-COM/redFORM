@@ -87,7 +87,7 @@ class RedformControllerRedform extends RedformController {
   	$mainframe = Jfactory::getApplication();
     $model = $this->getModel('redform');
     
-    $result = $model->saveform();
+    $result = $model->apisaveform();
     
     $referer = JRequest::getVar('referer');
     
@@ -99,6 +99,12 @@ class RedformControllerRedform extends RedformController {
     	$this->redirect();
     }
     
+    if ($url = $model->hasActivePayment($result->submit_key)) {
+    	$url = 'index.php?option=com_redform&controller=payment&task=select&key='.$result->submit_key;
+    	$this->setRedirect($url);
+    	$this->redirect();  	
+    }
+        
     if ($url = $model->getRedirect()) {
     	$this->setRedirect($url);
     	$this->redirect();
