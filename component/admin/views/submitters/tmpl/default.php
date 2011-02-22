@@ -99,27 +99,28 @@ function submitbutton(pressbutton) {
 	$k = 1;
 	if (count($this->submitters) > 0) 
 	{
-		foreach ($this->submitters as $id => $value) 
+		foreach ($this->submitters as $id => $row) 
 		{
+			$link 	= 'index.php?option=com_redform&task=edit&controller=submitters&hidemainmenu=1&form_id='.$row->form_id.'&cid[]='. $row->sid;
 			?>
 			<tr class="row<?php echo $k = $k - 1; ?>">
 				<td align="center">
 					<?php echo $this->pagination->getRowOffset($id); ?>
 				</td>
 				<td>
-					<input type="checkbox" onclick="isChecked(this.checked);" value="<?php echo $value->id; ?>" name="cid[]" id="cb<?php echo $id; ?>"/>
+					<input type="checkbox" onclick="isChecked(this.checked);" value="<?php echo $row->sid; ?>" name="cid[]" id="cb<?php echo $id; ?>"/>
 				</td>
-				<td><?php echo $value->submission_date; ?></td>
-				<td><?php echo $value->formname; ?></td>
+				<td><?php echo JHTML::link($link, $row->submission_date); ?></td>
+				<td><?php echo $row->formname; ?></td>
 				<?php if ($this->integration == 'redevent'): ?>
-				<td><?php echo $this->course->uniqueid_prefix.$value->attendee_id;?></td>
+				<td><?php echo $this->course->uniqueid_prefix.$row->attendee_id;?></td>
 				<?php else: ?>
-				<td><?php echo $value->submit_key;?></td>
+				<td><?php echo $row->submit_key;?></td>
 				<?php endif; ?>
 				<?php if (!$this->integration && $this->params->get('showintegration', false)): ?>
 				<td>
-					<?php if ($value->xref || $value->integration): ?>
-						<?php echo (!empty($value->integration) ? $value->integration : 'unspecified' );?>
+					<?php if ($row->xref || $row->integration): ?>
+						<?php echo (!empty($row->integration) ? $row->integration : 'unspecified' );?>
 					<?php else: ?>
 					<?php endif; ?>
 				<?php endif; ?>
@@ -128,9 +129,9 @@ function submitbutton(pressbutton) {
 				foreach ($this->fields as $key => $field) 
 				{
 					$fieldname = 'field_'. $field->id;
-					if (isset($value->$fieldname)) 
+					if (isset($row->$fieldname)) 
 					{
-						$data = str_replace('~~~', '<br />', $value->$fieldname);
+						$data = str_replace('~~~', '<br />', $row->$fieldname);
 						if (stristr($data, JPATH_ROOT)) $data = '<a href="'.str_replace(DS, '/', str_replace(JPATH_ROOT, JURI::root(true), $data)).'" target="_blank">'.$data.'</a>';
 						echo '<td>'.$data.'</td>';
 					}
@@ -138,14 +139,14 @@ function submitbutton(pressbutton) {
 				}
 				?>			
 				<?php if ($this->form->activatepayment): ?>
-					<td><?php echo $value->price; ?></td>
-					<td class="price <?php echo ($value->paid ? 'paid' : 'unpaid'); ?>">
-						<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit_key='.$value->submit_key), JText::_('history')); ?>
-						<?php if (!$value->paid): ?>
-						<span class="hasTip" title="<?php echo JText::_('REGISTRATION_NOT_PAID').'::'.$value->status; ?>"><?php echo JHTML::_('image.administrator', 'publish_x.png'); ?><?php echo $link; ?></span>
-						<?php echo ' '.JHTML::link(JURI::root().'/index.php?option=com_redform&controller=payment&task=select&key='.$value->submit_key, JText::_('link')); ?>
+					<td><?php echo $row->price; ?></td>
+					<td class="price <?php echo ($row->paid ? 'paid' : 'unpaid'); ?>">
+						<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit_key='.$row->submit_key), JText::_('history')); ?>
+						<?php if (!$row->paid): ?>
+						<span class="hasTip" title="<?php echo JText::_('REGISTRATION_NOT_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'publish_x.png'); ?><?php echo $link; ?></span>
+						<?php echo ' '.JHTML::link(JURI::root().'/index.php?option=com_redform&controller=payment&task=select&key='.$row->submit_key, JText::_('link')); ?>
 						<?php else: ?>
-						<span class="hasTip" title="<?php echo JText::_('REGISTRATION_PAID').'::'.$value->status; ?>"><?php echo JHTML::_('image.administrator', 'tick.png'); ?><?php echo $link; ?></span>
+						<span class="hasTip" title="<?php echo JText::_('REGISTRATION_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'tick.png'); ?><?php echo $link; ?></span>
 						<?php endif; ?>						
 					</td>
 				<?php endif;?>

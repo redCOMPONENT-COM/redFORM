@@ -77,7 +77,7 @@ class RedformModelSubmitters extends JModel {
 		$form_id = JRequest::getVar('form_id', 0);
 		$integration = JRequest::getVar('integration', 0);
 		
-		$query =  ' SELECT s.submission_date, f.formname, u.*, s.price, s.submit_key, p.status, p.paid, s.integration, s.xref '
+		$query =  ' SELECT s.submission_date, s.form_id, s.id AS sid, f.formname, u.*, s.price, s.submit_key, p.status, p.paid, s.integration, s.xref '
 		        . ($integration === 'redevent' ? ', r.id as attendee_id ': '')				
 						. ' FROM '.$this->_db->nameQuote('#__rwf_submitters').' AS s '
 						. ' INNER JOIN ' . $this->_db->nameQuote('#__rwf_forms').' AS f ON s.form_id = f.id '
@@ -230,13 +230,15 @@ class RedformModelSubmitters extends JModel {
          $mainframe->enqueueMessage(JText::_('No submitter found to delete'));
          return false;
       }
-      if (count($cid)) {
-      	$cids = ' answer_id IN (' . implode( ',', $cid ) .') ';
+      
+      if (count($cid)) 
+      {
+      	$cids = ' s.id IN (' . implode( ',', $cid ) .') ';
 
       	// first, check that there is no integration (xref is then > 0) among these 'submitter'
       	if (!$force)
       	{
-	      	$query = ' SELECT COUNT(*) FROM #__rwf_submitters WHERE ' . $cids . ' AND xref > 0 ';
+	      	$query = ' SELECT COUNT(*) FROM #__rwf_submitters AS s WHERE ' . $cids . ' AND s.xref > 0 ';
 	        $database->setQuery( $query );
 	        $res = $database->loadResult();        
 	        if ($res) 
@@ -248,34 +250,39 @@ class RedformModelSubmitters extends JModel {
 	        }
       	}
       	
-      	/* Delete the submitters */
-      	$query = ' DELETE FROM #__rwf_submitters '
+      	// first delete the answers
+      	$query = ' DELETE a.* ' 
+      	       . ' FROM #__rwf_submitters AS s '
+      	       . ' INNER JOIN #__rwf_forms_'.JRequest::getInt('form_id').' AS a ON s.answer_id = a.id '
+      	       . ' WHERE ' . $cids;
+      	$this->_db->setQuery($query);
+      	$res = $this->_db->loadObjectList();
+      	
+      	if (!$database->query()) 
+      	{
+      		$mainframe->enqueueMessage(JText::_('A problem occured when deleting the answers'));
+          RedformHelperLog::simpleLog(JText::_('A problem occured when deleting the answers') . ': ' . $database->getErrorMsg());
+          return false;
+      	}
+      	
+      	/* then delete the submitters */
+      	$query = ' DELETE s.* FROM #__rwf_submitters AS s '
       	      . ' WHERE ' . $cids
-      	      . '	AND form_id = '.JRequest::getInt('form_id');
+      	      . '	AND s.form_id = '.JRequest::getInt('form_id');
       	$database->setQuery( $query );
       	
-      	if (!$database->query()) {
+      	if (!$database->query()) 
+      	{
       		$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitter'));
           RedformHelperLog::simpleLog(JText::_('A problem occured when deleting the submitter') . ': ' . $database->getErrorMsg());
+          return false;
+      	}
+      	
+      	if (count($cid) > 1) {
+      		$mainframe->enqueueMessage(JText::_('Submitters have been deleted'));
       	}
       	else {
-      		/* Delete the submitters values */
-      		$cids = 'id=' . implode( ' OR id=', $cid );
-      		$query = "DELETE from #__rwf_forms_".JRequest::getInt('form_id')."
-					WHERE (".$cids.")";
-      		$database->setQuery($query);
-      		if (!$database->query()) {
-      			$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitter values'));
-            RedformHelperLog::simpleLog(JText::_('A problem occured when deleting the submitter values') . ': ' . $database->getErrorMsg());
-      		}
-      		else {
-      			if (count($cid) > 1) {
-      				$mainframe->enqueueMessage(JText::_('Submitters have been deleted'));
-      			}
-      			else {
-      				$mainframe->enqueueMessage(JText::_('Submitter has been deleted'));
-      			}
-      		}
+      		$mainframe->enqueueMessage(JText::_('Submitter has been deleted'));
       	}
       }
       return JText::_('Removal succesfull');

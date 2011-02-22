@@ -114,7 +114,7 @@ class RedformModelSubmitter extends JModel {
 	        FROM ".$db->nameQuote('#__rwf_forms_'.$form_id)." f
 	        LEFT JOIN #__rwf_submitters s
 	        ON f.id = s.answer_id
-	        WHERE f.id = ".$cid; 
+	        WHERE s.id = ".$cid; 
 	      $db->setQuery($query);
 	      $this->_data = $this->_db->loadObject();
 	      
