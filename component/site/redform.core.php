@@ -531,6 +531,9 @@ class RedFormCore extends JObject {
 							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
 								$val = $answers[($signup-1)]->fields->$cleanfield;
 							}
+							else {
+								$val = null;
+							}
 						}
 						else if ($user->get($field->redmember_field)) { // redmember uses unix timestamp
 							$val = strftime('%c', $user->get($field->redmember_field));
