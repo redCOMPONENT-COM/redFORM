@@ -812,6 +812,12 @@ class RedformModelRedform extends JModel {
 								break;
 						}
 					}
+					if ($form->activatepayment) 
+					{
+						$htmlmsg .= '<tr><td>'.JText::_('COM_REDFORM_TOTAL_PRICE').'</td><td>';
+						$htmlmsg .= $answers->getPrice();
+						$htmlmsg .= '</td></tr>'."\n";
+					}
 					$htmlmsg .= "</table><br />";
 				}
 			}
