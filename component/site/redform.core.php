@@ -841,21 +841,23 @@ class RedFormCore extends JObject {
 	{
 		$script = <<< EOF
 		jQuery(function () {
-		   jQuery("form div.redform-form").find(":input").change(updatePrice);
+		   jQuery("form div.redform-form").find(":input").change(updatePrice).first().trigger("change");
 
-		   updatePrice();
 		});
 
 		function updatePrice()
 		{
+			var instance = jQuery(this).parents("div.redform-form");
+			instance = jQuery(instance[0]); // for some reason, it doesn't work just with .parent()
+			
 			var price = 0.0;
-			var active = parseInt(jQuery("input[name='curform']").val());
-
+			var active = parseInt(instance.find("input[name='curform']").first().val());
+			
 			var countforms = 0;
 			
 			for (var i = 1; i < active+1; i++)
 			{
-				var signup = jQuery("#formfield"+i);
+				var signup = instance.find("#formfield"+i).first();
 				signup.find("input.rfprice").each(function(k) {
 					var p = jQuery(this).val();
 					if (p) {
@@ -899,10 +901,10 @@ class RedFormCore extends JObject {
 				});
 			}
 			// set the price
-			if (price > 0 && !jQuery("#totalprice").length) {
-				jQuery('form[name=redform]').append('<div id="totalprice">'+totalpricestr+': '+currency+' <span></span></div>');
+			if (price > 0 && !instance.find("#totalprice").length) {
+				instance.append('<div id="totalprice" class="fieldline"><div class="label">'+totalpricestr+'</div><div class="field">'+currency+' <span></span></div></div>');
 			}
-			jQuery("#totalprice span").text(Math.round(price*100)/100);
+			instance.find("#totalprice span").first().text(Math.round(price*100)/100);
 		}
 EOF;
 		
