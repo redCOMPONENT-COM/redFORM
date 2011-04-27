@@ -104,5 +104,25 @@ class RedformController extends JController
       $answers->save();
     }
   }
+	
+  /**
+   * loads the js file for redform price, making it possible to use JText
+   */
+	function jsprice()
+	{
+		header('Content-type: text/javascript');
+  	require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'assets'.DS.'js'.DS.'formprice.js');
+  	die();
+	}
+	
+  /**
+   * loads the js file for redform form validation, making it possible to use JText 
+   */
+	function jscheck()
+	{
+		header('Content-type: text/javascript');
+  	require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'assets'.DS.'js'.DS.'formcheck.js');
+  	die();
+	}
 }
 ?>

@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (C) 2008, 2009, 2010 redCOMPONENT.com. All rights reserved. 
+ * @copyright Copyright (C) 2008, 2009, 2010, 2011 redCOMPONENT.com. All rights reserved. 
 * @license	GNU/GPL, see LICENSE.php
 * Joomla! is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
