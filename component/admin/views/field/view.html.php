@@ -107,6 +107,7 @@ class RedformViewField extends JView {
 		 * extended data
 		 */
 		$paramsdata = $row->params;
+		
 		if ($row->fieldtype && file_exists(JPATH_COMPONENT . DS . 'models' . DS . 'field_'.$row->fieldtype.'.xml')) 
 		{
 			$paramsdefs = JPATH_COMPONENT . DS . 'models' . DS . 'field_'.$row->fieldtype.'.xml';

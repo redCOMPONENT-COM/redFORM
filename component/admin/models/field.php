@@ -118,6 +118,7 @@ class RedformModelField extends JModel
   {
     $this->_data = & JTable::getInstance('Fields', 'RedformTable');
     $this->_data->published = 1;
+    $this->_data->fieldtype = 'textfield';
     return $this->_data;
   }
 
