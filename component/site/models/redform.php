@@ -734,7 +734,7 @@ class RedformModelRedform extends JModel {
 						$sender = array($allanswers[0]->getSubmitterEmail(), $allanswers[0]->getFullname());
 					}
 					else {
-						$sender = $allanswers[0]->getSubmitterEmail();
+						$sender = array($allanswers[0]->getSubmitterEmail(), null);
 					}
 				}
 				else { // default to site settings
@@ -826,7 +826,7 @@ class RedformModelRedform extends JModel {
 
 			// send the mail
 			if (!$mailer->Send()) {
-				RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);;
+				RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);
 			}
 		}
 	}
