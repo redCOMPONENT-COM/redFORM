@@ -181,8 +181,11 @@ class RedFormCore extends JObject {
     $js = "var currency = \"".$form->currency."\";\n";
     $document->addScriptDeclaration($js);
     
-  	self::JsCheck();
-  	self::jsPrice();
+ 		self::JsCheck();
+    if ($form->activatepayment)
+    {
+  		self::jsPrice();
+    }
 		
 		// redmember integration: pull extra fields
 		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
