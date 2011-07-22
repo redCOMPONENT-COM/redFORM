@@ -337,8 +337,16 @@ class RedFormCore extends JObject {
 									$element .= ' checked="checked"';
 								}
 							}
-							else if (in_array($value->value, explode("\n", $field->default))) {
-								$element .= ' checked="checked"';
+							else if ($field->default) 
+							{
+								$def_vals = explode("\n", $field->default);
+								foreach ($def_vals as $val) 
+								{
+									if ($value->value == trim($val)) {
+										$element .= ' checked="checked"';
+										break;										
+									}
+								}
 							}
 							$element .= ' type="radio" name="field'.$field->id.'.'.$signup.'[radio][]" value="'.$value->id.'" price="'.$value->price.'" />'.$value->label."\n";
 							$element .= "</div>\n";
@@ -631,8 +639,16 @@ class RedFormCore extends JObject {
 									$element .= ' checked="checked"';
 								}
 							}
-							else if (in_array($value->value, explode("\n", $field->default))) {
-								$element .= ' checked="checked"';
+							else if ($field->default) 
+							{
+								$def_vals = explode("\n", $field->default);
+								foreach ($def_vals as $val) 
+								{
+									if ($value->value == trim($val)) {
+										$element .= ' checked="checked"';
+										break;										
+									}
+								}
 							}
 							$element .= ' type="checkbox" name="field'.$field->id.'.'.$signup.'[checkbox][]" value="'.$value->value.'" price="'.$value->price.'" /> '.$value->label."\n";
 							$element .= "</div>\n";
@@ -656,8 +672,16 @@ class RedFormCore extends JObject {
 							else if ($user->get($field->redmember_field) == $value->value) {
 								$element .= ' selected="selected"';
 							}
-							else if (in_array($value->value, explode("\n", $field->default))) {
-								$element .= ' checked="checked"';
+							else if ($field->default) 
+							{
+								$def_vals = explode("\n", $field->default);
+								foreach ($def_vals as $val) 
+								{
+									if ($value->value == trim($val)) {
+										$element .= ' selected="selected"';
+										break;										
+									}
+								}
 							}
 							$element .= ' price="'.$value->price.'" >'.$value->label."</option>";
 						}
@@ -687,8 +711,16 @@ class RedFormCore extends JObject {
 									$element .= ' selected="selected"';
 								}
 							}
-							else if (in_array($value->value, explode("\n", $field->default))) {
-								$element .= ' checked="checked"';
+							else if ($field->default) 
+							{
+								$def_vals = explode("\n", $field->default);
+								foreach ($def_vals as $val) 
+								{
+									if ($value->value == trim($val)) {
+										$element .= ' selected="selected"';
+										break;										
+									}
+								}
 							}
 							$element .= '" price="'.$value->price.'" />'.$value->label."</option>";
 						}
@@ -719,8 +751,16 @@ class RedFormCore extends JObject {
 									$element .= ' selected="selected"';
 								}
 							}
-							else if (in_array($value->value, explode("\n", $field->default))) {
-								$element .= ' checked="checked"';
+							else if ($field->default) 
+							{
+								$def_vals = explode("\n", $field->default);
+								foreach ($def_vals as $val) 
+								{
+									if ($value->value == trim($val)) {
+										$element .= ' selected="selected"';
+										break;										
+									}
+								}
 							}
 							$element .= " >".$value->label."</option>";
 						}
