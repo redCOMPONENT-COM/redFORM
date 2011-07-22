@@ -35,9 +35,9 @@
 /**
  * The reCAPTCHA server URL's
  */
-if (!defined(RECAPTCHA_API_SERVER)) define("RECAPTCHA_API_SERVER", "http://www.google.com/recaptcha/api");
-if (!defined(RECAPTCHA_API_SECURE_SERVER)) define("RECAPTCHA_API_SECURE_SERVER", "https://www.google.com/recaptcha/api");
-if (!defined(RECAPTCHA_VERIFY_SERVER)) define("RECAPTCHA_VERIFY_SERVER", "www.google.com");
+if (!defined('RECAPTCHA_API_SERVER')) define("RECAPTCHA_API_SERVER", "http://www.google.com/recaptcha/api");
+if (!defined('RECAPTCHA_API_SECURE_SERVER')) define("RECAPTCHA_API_SECURE_SERVER", "https://www.google.com/recaptcha/api");
+if (!defined('RECAPTCHA_VERIFY_SERVER')) define("RECAPTCHA_VERIFY_SERVER", "www.google.com");
 
 class plgRedformRecaptchaHelper {	
 
