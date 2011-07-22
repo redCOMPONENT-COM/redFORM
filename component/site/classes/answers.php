@@ -238,7 +238,7 @@ class rfanswers
    * @param array $field
    * @return string answer
    */
-  function _fileupload($field)
+  protected function _fileupload($field)
   {    
     /* Check if the folder exists */
     jimport('joomla.filesystem.folder');
@@ -256,7 +256,7 @@ class rfanswers
     $db->setQuery($query);
     $res = $db->loadObject();
     $filepath = $res->value;
-    $folder   = JFile::makeSafe($res->formname);
+    $folder   = JFile::makeSafe(str_replace( ' ', '', $res->formname));
     
     $fullpath = $filepath.DS.$folder;
     if (!JFolder::exists($fullpath)) 
@@ -267,23 +267,22 @@ class rfanswers
         $status = false;
         return false;
       }
-    }
-    clearstatcache();
+    }    
+    clearstatcache();    
+    
+    $src_file =$field['tmp_name']['fileupload'][0];
+    // make sure we have a unique name for file
+    $dest_filename = uniqid().'_'.basename($field['name']['fileupload'][0]);
+    
     if (JFolder::exists($fullpath)) 
     {
-      if (JFile::exists($fullpath.DS.basename($field['name']['fileupload'][0]))) {
-        JError::raiseWarning(0, JText::_('FILENAME_ALREADY_EXISTS').': '.basename($field['name']['fileupload'][0]));
-        return false;
-      }
-      else 
-      {
         /* Start processing uploaded file */
-        if (is_uploaded_file($field['tmp_name']['fileupload'][0])) 
+        if (is_uploaded_file($src_file))
         {
           if (JFolder::exists($fullpath) && is_writable($fullpath)) 
           {
-            if (move_uploaded_file($field['tmp_name']['fileupload'][0], $fullpath.DS.basename($field['name']['fileupload'][0]))) {
-              $answer = $fullpath.DS.basename($field['name']['fileupload'][0]);
+            if (move_uploaded_file($src_file, $fullpath.DS.$dest_filename)) {
+              $answer = $fullpath.DS.$dest_filename;
             }
             else {
               JError::raiseWarning(0, JText::_('CANNOT_UPLOAD_FILE'));
@@ -295,7 +294,6 @@ class rfanswers
             return false;
           }
         }
-      }
     }
     else {
       JError::raiseWarning(0, JText::_('FOLDER_DOES_NOT_EXIST'));
