@@ -778,7 +778,7 @@ class RedformModelRedform extends JModel {
 					$replacements[0] = '<br />';
 
 					$htmlmsg .= '<br /><table border="1">';
-
+					
 					foreach ($rows as $key => $answer)
 					{
 						switch ($answer['type'])
@@ -802,6 +802,16 @@ class RedformModelRedform extends JModel {
 								}
 								$htmlmsg .= '&nbsp;';
 								$htmlmsg .= '</td></tr>'."\n";
+								break;
+							case 'file':
+								$userinput = preg_replace($patterns, $replacements, $answer['value']);
+								$htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+								$htmlmsg .= ($answer['value'] && file_exists($answer['value'])) ? basename($answer['value']) : '';
+								$htmlmsg .= '</td></tr>'."\n";
+								// attach to mail
+								if ($answer['value'] && file_exists($answer['value'])) {
+									$mailer->addAttachment($answer['value']);
+								}
 								break;
 							default :
 								$userinput = preg_replace($patterns, $replacements, $answer['value']);

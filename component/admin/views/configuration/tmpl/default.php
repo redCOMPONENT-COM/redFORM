@@ -29,15 +29,6 @@ JHTML::_('behavior.tooltip');
 	echo $pane->startPanel( JText::_('FILES'), 'files_tab' );
 	?>
 	<table class="adminform">
-		<tr class="row<?php echo $row; ?>">
-			<td width="15%">
-			<?php echo JHTML::tooltip(JText::_('REDFORM_FILES_TIP'), JText::_('REDFORM_FILES'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('REDFORM_FILES'); ?>
-			</td>
-			<td>
-			<input type="text" id="filelist_path" name="configuration[filelist_path]" size="120" value="<?php echo $this->configuration['filelist_path']->value;?>"></input>
-			</td>
-		</tr>
 	</table>
 	<?php
 	echo $pane->endPanel();

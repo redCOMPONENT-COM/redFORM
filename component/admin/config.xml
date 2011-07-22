@@ -9,5 +9,6 @@
       <option value="0">No</option>
       <option value="1">Yes</option>
     </param> 	
+    <param name="upload_path" type="text" default="images/redform" label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL" description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
 	</params>
 </config>

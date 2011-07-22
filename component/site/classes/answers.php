@@ -244,19 +244,21 @@ class rfanswers
     jimport('joomla.filesystem.folder');
     jimport('joomla.filesystem.file');
     
+    $params = JComponentHelper::getParams('com_redform');
+    
     $db = &JFactory::getDBO();
     $answer = '';
     
     /* Get the file path for file upload */
-    $query = ' SELECT c.value, f.formname '
-           . ' FROM #__rwf_configuration AS c, #__rwf_forms AS f '
-           . ' WHERE name = '.$db->Quote('filelist_path')
-           . '   AND f.id = '.$db->Quote($this->_form_id)
+    $query = ' SELECT f.formname '
+           . ' FROM #__rwf_forms AS f '
+           . ' WHERE f.id = '.$db->Quote($this->_form_id)
           ;
     $db->setQuery($query);
-    $res = $db->loadObject();
-    $filepath = $res->value;
-    $folder   = JFile::makeSafe(str_replace( ' ', '', $res->formname));
+    $formname = $db->loadResult();
+    
+    $filepath = JPATH_SITE.DS.$params->get('upload_path', 'images/redform');
+    $folder   = JFile::makeSafe(str_replace( ' ', '', $formname));
     
     $fullpath = $filepath.DS.$folder;
     if (!JFolder::exists($fullpath)) 
