@@ -293,7 +293,7 @@ class RedformModelRedform extends JModel {
 		if ($answers->isNew()) {
 			$this->notifymaintainer($allanswers);
 		}
-					
+
 		if ($form->activatepayment)
 		{
 			$redirect = 'index.php?option=com_redform&controller=payment&task=select&key='.$submit_key;
@@ -955,9 +955,11 @@ class RedformModelRedform extends JModel {
 	{
 		$query = ' SELECT s.price ' 
 		       . ' FROM #__rwf_submitters AS s '
+		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
 		       . ' LEFT JOIN #__rwf_payment AS p ON s.submit_key = p.submit_key AND p.paid = 1 ' 
 		       . ' WHERE s.submit_key = ' . $this->_db->Quote($key)
 		       . '   AND p.id IS NULL '
+		       . '   AND f.activatepayment = 1 '
 		       ;
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadResult();
