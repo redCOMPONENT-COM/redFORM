@@ -31,7 +31,7 @@ class plgRedform_captchaRecaptcha extends JPlugin {
 	{
 		require_once('recaptcha'.DS.'recaptchalib.php');
 		$publickey = $this->params->get('public_key');
-	  $text = recaptcha_get_html($publickey, null, false, $this->params);
+	  $text = plgRedformRecaptchaHelper::recaptcha_get_html($publickey, null, false, $this->params);
 	  return true;
 	}
 	
@@ -39,7 +39,7 @@ class plgRedform_captchaRecaptcha extends JPlugin {
 	{
 		require_once('recaptcha'.DS.'recaptchalib.php');
 		$privatekey = $this->params->get('private_key');
-	  $resp = recaptcha_check_answer ($privatekey,
+	  $resp = plgRedformRecaptchaHelper::recaptcha_check_answer ($privatekey,
 	                                $_SERVER["REMOTE_ADDR"],
 	                                $_POST["recaptcha_challenge_field"],
 	                                $_POST["recaptcha_response_field"]);
