@@ -23,17 +23,14 @@ jimport('joomla.html.pane');
 JHTML::_('behavior.tooltip');
 ?>
 <form action="index.php" method="post" name="adminForm">
-	<?php $pane = JPane::getInstance('tabs');
-	$row = 0;
-	echo $pane->startPane("settings");
-	echo $pane->startPanel( JText::_('FILES'), 'files_tab' );
-	?>
-	<table class="adminform">
-	</table>
-	<?php
-	echo $pane->endPanel();
-	echo $pane->endPane();
-	?>
+	
+	<?php foreach ($this->params->getGroups() as $key => $groups): ?>
+		<?php $fielset = (strcmp($key, '_default') == 0) ? JText::_('COM_REDFORM_SETTINGS_FIELDSET_GENERAL') : JText::_( strtoupper($key) ); ?>
+  		<fieldset class="adminform"><legend><?php echo $fielset; ?></legend>
+    <?php echo $this->params->render('params', $key); ?>
+    </fieldset>
+  <?php endforeach; ?>
+    
 	<input type="hidden" name="option" value="com_redform" />
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="controller" value="configuration" />

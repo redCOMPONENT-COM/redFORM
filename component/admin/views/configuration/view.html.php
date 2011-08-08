@@ -41,6 +41,15 @@ class RedformViewConfiguration extends JView {
 		
 		/* Get the toolbar */
 		$this->toolbar();
+				
+		//Get global parameters
+		$table =& JTable::getInstance('component');
+		$table->loadByOption( 'com_redform' );
+		$globalparams = new JParameter( $table->params, JPATH_ADMINISTRATOR.DS.'components'.DS.'com_redform'.DS.'config.xml' );
+		
+		$params = JComponentHelper::getParams('com_redform');
+		
+		$this->assignref('params' ,$globalparams);
 		
 		/* Display the page */
 		parent::display($tpl);

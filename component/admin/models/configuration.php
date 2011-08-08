@@ -25,61 +25,22 @@ jimport( 'joomla.application.component.model' );
  * Order Model
  */
 class RedformModelConfiguration extends JModel {
-	/** @var integer Total entries */
-	protected $_total = null;
-	
-	/** @var integer pagination limit starter */
-	protected $_limitstart = null;
-	
-	/** @var integer pagination limit */
-	protected $_limit = null;
-	   
-	/**
-	 * Show all orders for which an invitation to fill in
-	 * a testimonal has been sent
-	 */
-	function getConfiguration() {
-		$db = JFactory::getDBO();
-		/* Get all the orders based on the limits */
-		$query = "SELECT name, value
-				FROM #__rwf_configuration";
-		$db->setQuery($query);
-		$configuration = $db->loadObjectList('name');
-				
-		if (!isset($configuration['filelist_path'])) {
-			$configuration['filelist_path']->name = 'filelist_path';
-			$configuration['filelist_path']->value = JPATH_ROOT.DS.'images';
-		}
-		
-		return $configuration;
-	}
 	
 	/**
 	* Save the configuration
 	*/
-	function store($configuration) 
+	function store() 
 	{
-		global $mainframe;
-		$db = JFactory::getDBO();
-		
-		$error = false;
-		if (is_array($configuration)) 
-		{
-			foreach ($configuration as $name => $value) 
-			{
-				$query = "INSERT INTO #__rwf_configuration (name, value)
-						VALUES ('".$name."', '".$db->getEscaped($value)."')
-						ON DUPLICATE KEY UPDATE value = '".$db->getEscaped($value)."'";
-				$db->setQuery($query);
-				if (!$db->query()) 
-				{
-					$this->setError(JText::_('There was a problem storing value').' '.$name);
-					return false;
-				}
-			}
-		}
-		else {
-			$this->setError(JText::_('empty configuration').' '.$name);
+		$table =& JTable::getInstance('component');
+
+		$parampost['params'] = JRequest::getVar('params');
+		$parampost['option'] = 'com_redform';
+		$table->loadByOption( 'com_redform' );
+		$table->bind( $parampost );
+
+		// save the changes
+		if (!$table->store()) {
+			RedeventError::raiseWarning( 500, $table->getError() );
 			return false;
 		}
 		

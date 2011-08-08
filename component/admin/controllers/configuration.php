@@ -51,9 +51,8 @@ class RedformControllerConfiguration extends JController
 	function save()
 	{
 		$model = $this->getModel('configuration');
-    $post = JRequest::get('post');
 		
-		if (!$model->store($post['configuration']))
+		if (!$model->store())
 		{
 			$msg = implode('<br/>',  $model->getErrors());
 			$msgtype = 'error';
