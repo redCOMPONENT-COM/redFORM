@@ -138,6 +138,7 @@ class RedFormCore extends JObject {
 		$uri       = JURI::getInstance();
 		$user      = JFactory::getUser();
 		$document  = &JFactory::getDocument();
+		$app       = &Jfactory::getApplication();
 		
 		if (!empty($reference)) 
 		{
@@ -323,7 +324,7 @@ class RedFormCore extends JObject {
 							$element .= "<input class=\"".$field->parameters->get('class','')." ";
 							if ($field->validate) $element .= "required";
 							$element .= "\"";
-							if ($field->readonly) $element .= ' readonly="readonly"';
+							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 							if ($answers)
 							{
 								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
@@ -361,7 +362,7 @@ class RedFormCore extends JObject {
 						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' cols="'.$field->parameters->get('cols',25).'" rows="'.$field->parameters->get('rows',6).'"';
-						if ($field->readonly) $element .= ' readonly="readonly"';
+						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 						$element .= ">";
 						if ($answers)
 						{
@@ -410,7 +411,7 @@ class RedFormCore extends JObject {
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly) $element .= ' readonly="readonly"';
+						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 						$element .= ' value="';
 						if ($answers)
 						{
@@ -460,7 +461,7 @@ class RedFormCore extends JObject {
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly) $element .= ' readonly="readonly"';
+						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 						$element .= ' value="';
 						if ($answers)
 						{
@@ -488,7 +489,7 @@ class RedFormCore extends JObject {
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly) $element .= ' readonly="readonly"';
+						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 						$element .= ' value="';
 						if ($answers)
 						{
@@ -516,7 +517,7 @@ class RedFormCore extends JObject {
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly) $element .= ' readonly="readonly"';
+						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 						$element .= ' value="';
 						if ($answers)
 						{
@@ -562,7 +563,7 @@ class RedFormCore extends JObject {
 						$class = $field->parameters->get('class','');
 						if ($field->validate) $class .= " required";
 						
-						if ($field->readonly) 
+						if ($field->readonly && !$app->isAdmin()) 
 						{
 							$element .= $val;
 							$element .= '<input class="'.$class.'"';
@@ -570,7 +571,7 @@ class RedFormCore extends JObject {
 							$element .= ' id="field'.$field->id.'" ';
 							$element .= ' size="'.$field->parameters->get('size', strlen($val)+1).'"';
 							$element .= ' maxlength="'.$field->parameters->get('maxlength', 25).'"';
-							if ($field->readonly) $element .= ' readonly="readonly"';
+							$element .= ' readonly="readonly"';
 							$element .= ' value="'.$val."\" />\n";
 						}
 						else
@@ -596,7 +597,7 @@ class RedFormCore extends JObject {
 							$element .= ' id="field'.$field->id.'" ';
 							$element .= ' size="'.$field->parameters->get('size', 25).'"';
 							$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-							if ($field->readonly) $element .= ' readonly="readonly"';
+							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 							$element .= ' value="';
 							if ($answers)
 							{
@@ -625,7 +626,7 @@ class RedFormCore extends JObject {
 							$element .= "<input class=\"".$field->parameters->get('class','')." ";
 							if ($field->validate) $element .= "required";
 							$element .= "\"";
-							if ($field->readonly) $element .= ' readonly="readonly"';
+							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 							if ($answers && isset($answers[($signup-1)]->fields->$cleanfield))
 							{
 								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
