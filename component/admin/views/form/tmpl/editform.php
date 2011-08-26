@@ -233,6 +233,14 @@ $editor =& JFactory::getEditor();
 				<?php echo $this->lists['paymentactive']; ?>
 			</td>
 		</tr>
+		<tr class="row<?php echo $row; ?>">
+			<td width="25%" valign="top" align="right">
+				<label for="show_js_price" class="hasTip" title="<?php echo JText::_('COM_REDFORM_FORM_SHOW_JS_PRICE_TIP');?>"><?php echo JText::_('COM_REDFORM_FORM_SHOW_JS_PRICE_LABEL'); ?></label>
+			</td>
+			<td>
+				<?php echo $this->lists['show_js_price']; ?>
+			</td>
+		</tr>
 		<tr class="row<?php echo $row = 1 - $row; ?>">
 			<td>
 				<span class="hasTip" title="<?php echo JText::_('PAYMENTCURRENCY_TIP');?>"><?php echo JText::_('PAYMENTCURRENCY'); ?></span>

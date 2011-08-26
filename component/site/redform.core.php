@@ -182,7 +182,7 @@ class RedFormCore extends JObject {
     $document->addScriptDeclaration($js);
     
  		self::JsCheck();
-    if ($form->activatepayment)
+    if ($form->show_js_price)
     {
   		self::jsPrice();
     }

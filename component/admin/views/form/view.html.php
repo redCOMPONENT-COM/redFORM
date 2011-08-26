@@ -79,8 +79,10 @@ class RedformViewForm extends JView {
 		}
 		else $lists['vmproductid'] = '';
 
-		/* Get the VirtueMart option */
+		/* Get the payment active option */
 		$lists['paymentactive']= JHTML::_('select.booleanlist',  'activatepayment', 'class="inputbox"', $row->activatepayment);
+		/* Get the show js price option */
+		$lists['show_js_price']= JHTML::_('select.booleanlist',  'show_js_price', 'class="inputbox"', $row->show_js_price);
 		
 		// currencies
 		require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'currency.php');

@@ -70,6 +70,8 @@ class RedformTableRedform extends JTable {
 	
 	/** @var boolean Set if form should process payment (needs gateway plugin) */
 	var $activatepayment = 0;
+	/** @var boolean Set if form should display the price script */
+	var $show_js_price = 1;
 	
 	/** @var string iso code for payment currency */
 	var $currency = null;
