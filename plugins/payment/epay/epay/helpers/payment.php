@@ -144,6 +144,15 @@ class PaymentEpay {
     	$this->writeTransaction($submit_key, JRequest::getVar('error').': '.JRequest::getVar('errortext'), $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
 	    return 0;
     }
+    // it was successull, get the details
+    $resp = array();
+    $resp[] = 'tid:'.JRequest::getVar('tid');
+    $resp[] = 'orderid:'.JRequest::getVar('orderid');
+    $resp[] = 'amount:'.JRequest::getVar('amount');
+    $resp[] = 'cur:'.JRequest::getVar('cur');
+    $resp[] = 'date:'.JRequest::getVar('date');
+    $resp[] = 'time:'.JRequest::getVar('time');
+    $resp = implode("\n", $resp);
     
     $details = $this->_getSubmission($submit_key);
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
@@ -151,7 +160,7 @@ class PaymentEpay {
     
     if (round($details->price*100, 2 ) != JRequest::getVar('amount')) {    	
     	RedformHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH'. ' for ' . $submit_key);
-    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION PRICE MISMATCH', $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION PRICE MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
     	return false;
     }
     else {
@@ -160,7 +169,7 @@ class PaymentEpay {
     
     if ($currency != JRequest::getVar('cur')) {    	
     	RedformHelperLog::simpleLog('EPAY NOTIFICATION CURRENCY MISMATCH'. ' for ' . $submit_key);
-    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION CURRENCY MISMATCH', $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION CURRENCY MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
     	return false;
     }
     
@@ -171,12 +180,12 @@ class PaymentEpay {
     	if (!strcmp($receivedkey, $calc)) 
     	{
 	    	RedformHelperLog::simpleLog('EPAY NOTIFICATION MD5 KEY MISMATCH'. ' for ' . $submit_key);
-	    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION MD5 KEY MISMATCH', $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+	    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION MD5 KEY MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
 	    	return false;    		
     	}
     }
     
-	  $this->writeTransaction($submit_key, '', 'SUCCESS', 1);
+	  $this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
     
     return $paid;
   }
