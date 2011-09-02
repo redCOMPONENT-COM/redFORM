@@ -337,4 +337,21 @@ class RedFormModelPayment extends JModel
 		}
 		return true;		
 	}
+		
+	/**
+	* check if this has already be paid
+	*
+	* @return int id of payment
+	*/
+	function hasAlreadyPaid()
+	{
+		$query = ' SELECT id'
+		       . ' FROM #__rwf_payment '
+		       . ' WHERE submit_key = ' . $this->_db->Quote($this->_submit_key)
+		       . '   AND paid = 1 '
+		       ;
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadResult();
+		return $res;
+	}
 }

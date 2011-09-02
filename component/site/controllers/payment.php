@@ -126,7 +126,8 @@ class RedformControllerPayment extends JController {
 			return false;
 		} 
 		
-    $model = &$this->getModel('payment');    
+    $model = &$this->getModel('payment');
+    $alreadypaid = $model->hasAlreadyPaid(); 
     $helper = $model->getGatewayHelper($gw);
     
     $res = $helper->notify();
@@ -134,7 +135,9 @@ class RedformControllerPayment extends JController {
     if ($res) { // the payment was received !
     	//TODO: send a mail ?
 			JRequest::setVar('state', 'accepted');
-			$model->notifyPaymentReceived();
+			if (!$alreadypaid) {
+				$model->notifyPaymentReceived();
+			}
     }
     else {
 			JRequest::setVar('state', 'failed');
