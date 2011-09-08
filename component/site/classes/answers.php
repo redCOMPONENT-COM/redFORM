@@ -570,16 +570,24 @@ class rfanswers
   	if (!$this->_sid) {
   		return false;
   	}
+  	$params = &JComponentHelper::getParams('com_redform');
+  	if ($params->get('allow_negative_total', 1)) {
+  		$price = $this->_price;
+  	}
+  	else {
+  		$price = max(array(0, $this->_price));
+  	}
     $db = &JFactory::getDBO();
-  	$query = ' UPDATE #__rwf_submitters SET price = '. $db->Quote($this->_price)
+  	$query = ' UPDATE #__rwf_submitters SET price = '. $db->Quote($price)
   	       . ' WHERE id = '.$db->Quote($this->_sid)
   	       ;
   	$db->setQuery($query);
   	$res = $db->query();
   	if (!$res) {
-  		echo '<pre>';print_r($db->getErrorMsg()); echo '</pre>';exit;
+  		RedformHelperLog::simpleLog($db->getErrorMsg());
+  		return false;
   	}
-//  	exit($db->getQuery());
+  	
   	return $res;
   }
   

@@ -71,8 +71,11 @@ function updatePrice()
 			}
 		});
 	}
+	if (round_negative_price) {
+		price = Math.max(price, 0);
+	}
 	// set the price
-	if (price > 0 && !instance.find("#totalprice").length) {
+	if (price && !instance.find("#totalprice").length) {
 		instance.append('<div id="totalprice" class="fieldline"><div class="label">'+totalpricestr+'</div><div class="field">'+currency+' <span></span></div></div>');
 	}
 	instance.find("#totalprice span").slice(0,1).text(Math.round(price*100)/100);

@@ -10,5 +10,9 @@
       <option value="1">Yes</option>
     </param> 	
     <param name="upload_path" type="text" default="images/redform" label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL" description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
+    <param name="allow_negative_total" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL" description="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL_DESC">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param> 	
 	</params>
 </config>
