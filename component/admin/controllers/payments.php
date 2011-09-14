@@ -96,6 +96,7 @@ class RedformControllerPayments extends JController
     
     if ($row = $model->store($post)) 
     {
+    	$model->notifyPaymentReceived();
       switch ($task)
       {
         case 'apply':

@@ -47,6 +47,8 @@ class RedformModelPayment extends JModel
    * @var array
    */
   var $_data = null;
+	
+	var $_submit_key = null;
 
   /**
    * Constructor
@@ -59,7 +61,15 @@ class RedformModelPayment extends JModel
 
     $array = JRequest::getVar('cid', array(0), '', 'array');
     $this->setId((int)$array[0]);
-  }
+		$this->setSubmitKey(JRequest::getVar('submit_key', ''));
+	}
+		
+	function setSubmitKey($key)
+	{
+		if (!empty($key)) {
+			$this->_submit_key = $key;
+		}
+	}
 
   /**
    * Method to set the item identifier
@@ -196,6 +206,120 @@ class RedformModelPayment extends JModel
     }
     
     return $row;
+  }
+  
+  /**
+  * send notification on payment received
+  *
+  */
+  function notifyPaymentReceived()
+  {
+  	$res = $this->_notifyFormContact();
+  	$res = ($this->_notifySubmitter() ? $res : false);
+  	return $res;
+  }
+  
+  /**
+   * send email to submitter on payment received
+   */
+  function _notifySubmitter()
+  {
+  	$mainframe = &JFactory::getApplication();
+  	$mailer = &JFactory::getMailer();
+  	$mailer->From = $mainframe->getCfg('mailfrom');
+  	$mailer->FromName = $mainframe->getCfg('sitename');
+  	$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
+  	$mailer->IsHTML(true);
+  
+  	$form = $this->getForm();
+  
+  	$core = new RedFormCore();
+  	$emails = $core->getSubmissionContactEmail($this->_submit_key);
+  
+  	if (count($emails))
+  	{
+  		$first = current($emails);
+  		$mailer->addRecipient($first['email']);
+  			
+  		// set the email subject
+  		$subject = (empty($form->submitterpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationsubject);
+  		$body    = (empty($form->submitterpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationbody);
+  		$mailer->setSubject(JText::sprintf($subject, $form->formname));
+  		$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
+  		$mailer->setBody(JText::sprintf($body, $form->formname, $link));
+  			
+  		if ($mailer->send()) {
+  			return true;
+  		}
+  	}
+  	return true;
+  }
+  
+  /**
+   * send email to form contact on payment received
+   */
+  function _notifyFormContact()
+  {
+  	$mainframe = &JFactory::getApplication();
+  	$mailer = &JFactory::getMailer();
+  	$mailer->From = $mainframe->getCfg('mailfrom');
+  	$mailer->FromName = $mainframe->getCfg('sitename');
+  	$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
+  	$mailer->IsHTML(true);
+  
+  	$form = $this->getForm();
+  	if ($form->contactpersoninform)
+  	{
+  		if (strstr($form->contactpersonemail, ';')) {
+  			$addresses = explode(";", $form->contactpersonemail);
+  		}
+  		else {
+  			$addresses = explode(",", $form->contactpersonemail);
+  		}
+  		foreach ($addresses as $a)
+  		{
+  			$a = trim($a);
+  			if (JMailHelper::isEmailAddress($a)) {
+  				$mailer->addRecipient($a);
+  			}
+  		}
+  		// set the email subject and body
+  		$subject = (empty($form->contactpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->contactpaymentnotificationsubject);
+  		$body    = (empty($form->contactpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_DEFAULT') : $form->contactpaymentnotificationbody);
+  			
+  		$mailer->setSubject(JText::sprintf($subject, $form->formname));
+  		$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
+  		$mailer->setBody(JText::sprintf($body, $form->formname, $link));
+  			
+  		if ($mailer->send()) {
+  			return true;
+  		}
+  	}
+  	return true;
+  }
+  
+  /**
+  * returns form associated to submit_key
+  * @return object
+  */
+  function getForm()
+  {
+  	if (empty($this->_submit_key)) {
+  	JError::raiseError(0, JText::_('Missing key'));
+  			return false;
+  	}
+  
+  	if (empty($this->_form))
+  	{
+  	$query = ' SELECT f.* '
+  			       . ' FROM #__rwf_submitters AS s '
+  			       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
+  			       . ' WHERE s.submit_key = '. $this->_db->Quote($this->_submit_key)
+  	;
+  	$this->_db->setQuery($query, 0, 1);
+  	$this->_form = $this->_db->loadObject();
+  	}
+  	return $this->_form;
   }
 }
 ?>
