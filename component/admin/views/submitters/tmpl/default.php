@@ -79,7 +79,7 @@ function submitbutton(pressbutton) {
 	<th><?php echo JText::_('Integration');?></th>
 	<?php endif; ?>
 	<?php foreach ($this->fields as $key => $value) { ?>
-		<th><?php echo $value->field; ?></th>
+		<th><?php echo $value->field_header; ?></th>
 	<?php } ?> 
 	<?php if ($this->form->activatepayment): ?>
 		<th width="20"><?php echo JText::_('Price'); ?></th>

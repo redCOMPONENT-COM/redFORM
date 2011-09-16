@@ -32,7 +32,7 @@
 		$fields[] = JText::_('EVENT');
 	}	
 	foreach ($this->fields as $key => $value) {		
-		$fields[] = $value->field;
+		$fields[] = $value->field_header;
 	}
 	if ($this->form->activatepayment) {
 		$fields[] = JText::_('Total price');

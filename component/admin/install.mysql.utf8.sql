@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_configuration` (
 
 CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `id` int(11) NOT NULL auto_increment,
-  `field` varchar(255) NOT NULL default '0',
+  `field` varchar(255) NOT NULL default '',
+  `field_header` varchar(255) NOT NULL default '',
   `fieldtype` varchar(30) NOT NULL default 'textfield',
   `published` int(11) NOT NULL default '0',
   `checked_out` int(11) NOT NULL default '0',

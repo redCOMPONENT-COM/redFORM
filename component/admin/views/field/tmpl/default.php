@@ -92,17 +92,26 @@ JHTML::_('behavior.tooltip');
 		<table class="adminform">
 		<tr>
 			<td>
-			<?php echo JHTML::tooltip(JText::_('Enter the field here'), JText::_('Field'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Field'); ?>
+			<label for="field"><?php echo JHTML::tooltip(JText::_('Enter the field here'), JText::_('Field'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Field'); ?></label>
 			</td>
 			<td>
 			<input class="inputbox" type="text" size="80" name="field" value="<?php echo $this->row->field; ?>"/>
 			</td>
 		</tr>
 		<tr>
+			<td>
+			<label for="field_header"><?php echo JHTML::tooltip(JText::_('COM_REDEVENT_FIELD_FORM_FIELD_HEADER_DESC'), JText::_('COM_REDEVENT_FIELD_FORM_FIELD_HEADER_LABEL'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDEVENT_FIELD_FORM_FIELD_HEADER_LABEL'); ?></label>
+			</td>
+			<td>
+			<input class="inputbox" type="text" size="80" name="field_header" value="<?php echo $this->row->field_header; ?>"/>
+			</td>
+		</tr>
+		<tr>
 			<td valign="top" align="right">
-			<?php echo JHTML::tooltip(JText::_('Select the form the field belongs to. Changing forms REMOVES the field from the old form including all data.'), JText::_('Form'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Form'); ?>
+			<label for="form"><?php echo JHTML::tooltip(JText::_('Select the form the field belongs to. Changing forms REMOVES the field from the old form including all data.'), JText::_('Form'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Form'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['forms']; ?>
@@ -110,7 +119,7 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr id="trfieldtypes">
 			<td valign="top" align="right">
-			<?php echo JText::_('Field type'); ?>
+			<label for="fieldtype"><?php echo JText::_('Field type'); ?></label>
 			</td>
 			<td>
 			<div id="newfieldtype">
@@ -120,8 +129,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<?php echo JHTML::tooltip(JText::_('ENTER_TOOLTIP_INFO'), JText::_('ENTER_TOOLTIP'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('ENTER_TOOLTIP'); ?>
+			<label for="tooltip"><?php echo JHTML::tooltip(JText::_('ENTER_TOOLTIP_INFO'), JText::_('ENTER_TOOLTIP'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('ENTER_TOOLTIP'); ?></label>
 			</td>
 			<td>
 				<textarea name="tooltip" cols="80" rows="5"><?php echo $this->row->tooltip; ?></textarea>
@@ -129,8 +138,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<?php echo JHTML::tooltip(JText::_('Set to yes to check if the field is filled in'), JText::_('Required'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Required'); ?>
+			<label for="required"><?php echo JHTML::tooltip(JText::_('Set to yes to check if the field is filled in'), JText::_('Required'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Required'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['validate']; ?>
@@ -138,8 +147,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<?php echo JHTML::tooltip(JText::_('Set to yes to make the field unique, it can only appear once in the database. For example, only allow 1 registration per e-mail address.'), JText::_('Unique'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Unique'); ?>
+			<label for="unique"><?php echo JHTML::tooltip(JText::_('Set to yes to make the field unique, it can only appear once in the database. For example, only allow 1 registration per e-mail address.'), JText::_('Unique'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Unique'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['unique']; ?>
@@ -147,8 +156,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_READONLY_TIP'), JText::_('COM_REDFORM_FIELD_READONLY'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('COM_REDFORM_FIELD_READONLY'); ?>
+			<label for="readonly"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_READONLY_TIP'), JText::_('COM_REDFORM_FIELD_READONLY'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_FIELD_READONLY'); ?></label>
 			</td>
 			<td>
 			<?php echo JHTML::_('select.booleanlist', 'readonly', '', $this->row->readonly); ?>
@@ -156,8 +165,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_DEFAULT_VALUE_TIP'), JText::_('COM_REDFORM_FIELD_DEFAULT_VALUE'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('COM_REDFORM_FIELD_DEFAULT_VALUE'); ?>
+			<label for="default"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_DEFAULT_VALUE_TIP'), JText::_('COM_REDFORM_FIELD_DEFAULT_VALUE'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_FIELD_DEFAULT_VALUE'); ?></label>
 			</td>
 			<td>
 			<textarea name="default" cols="80" rows="2"><?php echo $this->row->default; ?></textarea>
@@ -166,8 +175,8 @@ JHTML::_('behavior.tooltip');
 		<?php if (REDMEMBER_INTEGRATION): ?>
 		<tr>
 			<td valign="top" align="right">
-			<?php echo JHTML::tooltip(JText::_('COM_REDFORM_SELECT_REDMEMBER_FIELD'), JText::_('COM_REDFORM_REDMEMBER_FIELD'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Redmember field'); ?>
+			<label for="redmember_field"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_SELECT_REDMEMBER_FIELD'), JText::_('COM_REDFORM_REDMEMBER_FIELD'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Redmember field'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['rmfields']; ?>
@@ -177,8 +186,8 @@ JHTML::_('behavior.tooltip');
 		
 		<tr>
 			<td valign="top" align="right">
-			<?php echo JHTML::tooltip(JText::_('Set to Yes to make the field show on the form'), JText::_('Published'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Published'); ?>
+			<label for="published"><?php echo JHTML::tooltip(JText::_('Set to Yes to make the field show on the form'), JText::_('Published'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Published'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['published']; ?>

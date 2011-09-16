@@ -27,6 +27,8 @@ class RedformTableFields extends JTable {
 	var $id = null;
 	/** @var string field name */
 	var $field = null;
+	/** @var string field header for tables */
+	var $field_header = null;
 	/** @var string field type */
 	var $fieldtype = null;
 	/** @var int published state */

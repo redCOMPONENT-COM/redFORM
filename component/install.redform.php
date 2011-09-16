@@ -181,6 +181,13 @@ function com_install()
 		$db->query();
 	}
 
+	/* Check if we have the redmember_field column */
+	if (!array_key_exists('field_header', $cols)) {
+		$q = "ALTER IGNORE TABLE `#__rwf_fields` ADD `field_header` varchar(255) NOT NULL AFTER `field` ";
+		$db->setQuery($q);
+		$db->query();
+	}
+
 	/* Check if we have the fieldtype column */
 	if (!array_key_exists('fieldtype', $cols)) 
 	{

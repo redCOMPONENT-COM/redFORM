@@ -124,6 +124,7 @@ class RedformModelRedform extends JModel {
 			return false;
 		}
 		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, m.listnames '
+		   . '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
 		   . ' FROM #__rwf_fields AS f '
 		   . ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id '
 		   . ' WHERE f.published = 1 '

@@ -41,6 +41,7 @@ else { ?>
 			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->fields ); ?>);" />
 			</th>
 			<th class="title"><?php echo JHTML::_('grid.sort', 'Field', 'field', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+			<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDEVENT_FIELD_HEADER', 'field_header', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 			<th class="title"><?php echo JHTML::_('grid.sort', 'Type', 'fieldtype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 			<th class="title"><?php echo JText::_('Required'); ?></th>
 			<th class="title"><?php echo JText::_('Unique'); ?></th>
@@ -53,6 +54,7 @@ else { ?>
 			<th width="20"><?php echo JHTML::_('grid.sort', 'ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 		</tr>
 		</thead>
+		<tbody>
 		<?php
 		$k = 0;
 		for ($i=0, $n=count( $this->fields ); $i < $n; $i++) {
@@ -92,6 +94,9 @@ else { ?>
 				?>
 				</td>
 				<td>
+					<?php echo $row->field_header;	?>
+				</td>
+				<td>
 					<?php echo $row->fieldtype;	?>
 				</td>
 				<td>
@@ -127,10 +132,13 @@ else { ?>
 			<?php
 			$k = 1 - $k;
 		}
-		?>
+		?>		
+		</tbody>
+		<tfoot>
 		<tr>
-            <td colspan="10"><?php echo $this->pagination->getListFooter(); ?></td>
+            <td colspan="11"><?php echo $this->pagination->getListFooter(); ?></td>
          </tr>
+		</tfoot>
 		</table>
 	<input type="hidden" name="option" value="com_redform" />
 	<input type="hidden" name="task" value="" />

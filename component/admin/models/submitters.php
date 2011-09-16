@@ -157,6 +157,7 @@ class RedformModelSubmitters extends JModel {
 		$db = JFactory::getDBO();
 		$form_id = JRequest::getInt('form_id', false);
 		$query = ' SELECT f.id, f.field '
+		       . '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
 		       . ' FROM #__rwf_fields AS f '
 		       . ' WHERE f.fieldtype <> "info" '
 		       ;		
