@@ -169,11 +169,6 @@
       <option value="1">EPAY_CFG_EPAY_ADDFEE_1</option>
     </param>
     
-    <param name="EPAY_AUTHEMAILCUSTOMER" type="list" default="0" label="EPAY_CFG_EPAY_AUTHEMAIL" description="EPAY_CFG_EPAY_AUTHEMAIL_EXPLAIN">
-      <option value="1">EPAY_CFG_EPAY_AUTHEMAIL_1</option>
-      <option value="0">EPAY_CFG_EPAY_AUTHEMAIL_0</option>
-    </param>
-    
   </params>
   
 </install>

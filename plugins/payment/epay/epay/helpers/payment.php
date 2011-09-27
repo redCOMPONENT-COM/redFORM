@@ -48,7 +48,7 @@ class PaymentEpay {
 		<input type="hidden" name="instant" value="<?php echo $this->params->get('EPAY_INSTANT_CAPTURE'); ?>">
 		<input type="hidden" name="language" value="<?php echo $this->params->get('EPAY_LANGUAGE') ?>">
 		<input type="hidden" name="authsms" value="<?php echo $this->params->get('EPAY_AUTH_SMS') ?>">
-		<input type="hidden" name="authmail" value="<?php echo $this->params->get('EPAY_AUTH_MAIL') . (strlen($this->params->get('EPAY_AUTH_MAIL') > 0 && $this->params->get('EPAY_AUTHEMAILCUSTOMER') == 1 ? ";" : "") . ($this->params->get('EPAY_AUTHEMAILCUSTOMER') == 1 ? $user->user_email : "")); ?>">
+		<input type="hidden" name="authmail" value="<?php echo $this->params->get('EPAY_AUTH_MAIL'); ?>">
 		<input type="hidden" name="windowstate" value="<?php echo $this->params->get('EPAY_WINDOW_STATE') ?>">
 		<input type="hidden" name="use3D" value="<?php echo $this->params->get('EPAY_3DSECURE') ?>">
 		<input type="hidden" name="addfee" value="<?php echo $this->params->get('EPAY_ADDFEE') ?>">
