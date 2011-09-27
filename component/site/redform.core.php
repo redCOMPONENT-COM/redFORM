@@ -431,25 +431,35 @@ class RedFormCore extends JObject {
 						$element .= "\" />\n";
 						$element .= "</div>\n";
 							
-						$element .= "<div class=\"newsletterfields\">";
-						/* E-mail field let's see */
-						// TODO: transfer to field !
+						/* check if there is a mailing list integration */
 						if (strlen($field->listnames) > 0)
 						{
 							$listnames = explode(";", $field->listnames);
-							if (count($listnames) > 0)
+							if (count($listnames))
 							{
-								$element .= '<div id="signuptitle">'.JText::_('SIGN_UP_MAILINGLIST').'</div>';
-								$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
-								foreach ($listnames AS $listkey => $listname)
-								{
-									$element .= "<div class=\"field_".$listkey."\">";
-									$element .= "<input type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
+								if ($field->parameters->get('force_mailing_list', 0)) 
+								{ 
+									// auto subscribe => use hidden field
+									foreach ($listnames AS $listkey => $listname)
+									{
+										$element .= '<input type="hidden" name="field'.$field->id.'.'.$signup.'[email][listnames][]" value="'.$listname.'" />';
+									}									
 								}
-								$element .= "</div>\n";
+								else
+								{
+									$element .= "<div class=\"newsletterfields\">";
+									$element .= '<div id="signuptitle">'.JText::_('SIGN_UP_MAILINGLIST').'</div>';
+									$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
+									foreach ($listnames AS $listkey => $listname)
+									{
+										$element .= "<div class=\"field_".$listkey."\">";
+										$element .= "<input type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
+									}
+									$element .= "</div>\n";
+									$element .= "</div>\n";
+								}
 							}
 						}
-						$element .= "</div>\n";
 						$element .= "</div>\n";
 						break;
 	
