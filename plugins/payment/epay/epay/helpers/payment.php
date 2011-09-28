@@ -1,6 +1,6 @@
 <?php
 
-class PaymentEpay {
+class PaymentEpay extends JObject {
 	
 	var $params = null;
 	
@@ -41,6 +41,7 @@ class PaymentEpay {
 		{
 			echo '<input type="hidden" name="callbackurl" value="' . JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=epay&accept=1&key='. $submit_key.'">';			
 		}
+		$premd5 = $currency . round($details->price*100, 2 ) . $request->uniqueid  . $this->params->get('EPAY_MD5_KEY');
 		?>
 		<input type="hidden" name="accepturl" value="<?php echo JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=epay&accept=1&key='. $submit_key; ?>">
 		<input type="hidden" name="declineurl" value="<?php echo JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=epay&accept=0&key='. $submit_key; ?>">
@@ -53,7 +54,7 @@ class PaymentEpay {
 		<input type="hidden" name="use3D" value="<?php echo $this->params->get('EPAY_3DSECURE') ?>">
 		<input type="hidden" name="addfee" value="<?php echo $this->params->get('EPAY_ADDFEE') ?>">
 		<input type="hidden" name="subscription" value="<?php echo $this->params->get('EPAY_SUBSCRIPTION') ?>">
-		<input type="hidden" name="md5Key" value="<?php if ($this->params->get('EPAY_MD5_TYPE') == 2) echo md5( $currency . round($details->price*100, 2 ) . $submit_key  . $this->params->get('EPAY_MD5_KEY')); ?>">
+		<input type="hidden" name="md5Key" value="<?php if ($this->params->get('MD5') == 2) echo md5($premd5); ?>">
 		<?php if ($this->params->get('EPAY_CARDTYPES_0') == "0"): ?>
 			<?php if ($this->params->get('EPAY_CARDTYPES_1') == "1"): ?>
 			<input type="hidden" name="cardtype[]" value="1"/>
@@ -173,11 +174,11 @@ class PaymentEpay {
     	return false;
     }
     
-    if ($this->params->get('EPAY_MD5_TYPE', 0) > 0)
+    if ($this->params->get('MD5', 0) > 0)
     {
-    	$receivedkey = JRequest::getVar('key');
+    	$receivedkey = JRequest::getVar('eKey');
     	$calc = md5(JRequest::getVar('amount').JRequest::getVar('orderid').JRequest::getVar('tid').$this->params->get('EPAY_MD5_KEY'));
-    	if (!strcmp($receivedkey, $calc)) 
+    	if (strcmp($receivedkey, $calc)) 
     	{
 	    	RedformHelperLog::simpleLog('EPAY NOTIFICATION MD5 KEY MISMATCH'. ' for ' . $submit_key);
 	    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION MD5 KEY MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
