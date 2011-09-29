@@ -233,7 +233,8 @@ class RedFormModelPayment extends JModel
 	
 	function getEventAttendee($key)
 	{
-		$query = ' SELECT r.id as attendee_id, e.title, e.course_code, r.xref, v.venue, x.* '
+		$query = ' SELECT r.id as attendee_id, e.course_code, r.xref, v.venue, x.*, '
+		              . ' CASE WHEN CHAR_LENGTH(x.title) THEN CONCAT_WS(\' - \', e.title, x.title) ELSE e.title END as title '
 		              . ' FROM #__redevent_register AS r '
 		              . ' INNER JOIN #__redevent_event_venue_xref AS x on x.id = r.xref '
 		              . ' INNER JOIN #__redevent_events AS e on e.id = x.eventid '
