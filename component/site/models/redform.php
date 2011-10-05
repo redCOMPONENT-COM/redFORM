@@ -100,10 +100,9 @@ class RedformModelRedform extends JModel {
   	$db = & $this->_db;
   	
   	/* Load the fields */
-  	$q = "SELECT id, field, fieldtype, ordering
+  	$q = "SELECT id, field, fieldtype, ordering, published 
         FROM ".$db->nameQuote('#__rwf_fields')."
         WHERE form_id = ".$form_id."
-        AND published = 1
         ORDER BY ordering";
   	$db->setQuery($q);
   	$fields = $db->loadObjectList('id');
@@ -123,12 +122,11 @@ class RedformModelRedform extends JModel {
 			$this->setError(JText::_('COM_REDFORM_FORM_ID_MISSING'));
 			return false;
 		}
-		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, m.listnames '
+		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, f.published, m.listnames '
 		   . '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
 		   . ' FROM #__rwf_fields AS f '
 		   . ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id '
-		   . ' WHERE f.published = 1 '
-		   . ' AND f.form_id = '.$this->_form_id
+		   . ' WHERE f.form_id = '.$this->_form_id
 		   . ' ORDER BY f.ordering'
 		   ;
 		$this->_db->setQuery($q);

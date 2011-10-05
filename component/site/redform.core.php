@@ -296,6 +296,9 @@ class RedFormCore extends JObject {
 
 			foreach ($fields as $key => $field)
 			{
+				if (!($app->isAdmin() || $field->published)) { // only display unpublished fields in backend form
+					continue;
+				}
 				$html .= '<div id="fieldline_'.$field->id.'" class="fieldline type-'.$field->fieldtype.'">';
 
 				$values = $model_redform->getFormValues($field->id);
