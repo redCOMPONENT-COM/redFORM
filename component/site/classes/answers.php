@@ -128,6 +128,8 @@ class rfanswers
         $answer = $postedvalue['textarea'];
         break;
       case 'date':
+      	// convert date to mysql format
+      	
         $answer = $postedvalue['date'];
         break;
       case 'wysiwyg':

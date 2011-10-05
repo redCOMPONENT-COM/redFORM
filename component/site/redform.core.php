@@ -561,16 +561,10 @@ class RedFormCore extends JObject {
 							}
 						}
 						else if ($user->get($field->redmember_field)) { // redmember uses unix timestamp
-							$val = strftime('%c', $user->get($field->redmember_field));
+							$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), $user->get($field->redmember_field));
 						}
 						else {
 							$val = $field->default;
-						}
-						if (strtotime($val)) {
-							$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($val));
-						}
-						else {
-							$val = null;
 						}
 
 						$class = $field->parameters->get('class','');

@@ -242,6 +242,7 @@ class RedformModelSubmitter extends JModel {
 		
 	function store()
 	{
+		echo '<pre>';print_r('deprecated ?'); echo '</pre>';exit;
 		$mainframe = & JFactory::getApplication();
 		$db = & $this->_db;
 		
@@ -426,10 +427,9 @@ class RedformModelSubmitter extends JModel {
   	$db = & $this->_db;
   	
   	/* Load the fields */
-  	$q = "SELECT id, field, fieldtype, ordering
+  	$q = "SELECT id, field, fieldtype, ordering, params
         FROM ".$db->nameQuote('#__rwf_fields')."
         WHERE form_id = ".$form_id."
-        AND published = 1
         ORDER BY ordering";
   	$db->setQuery($q);
   	$fields = $db->loadObjectList('id');

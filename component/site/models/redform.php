@@ -100,7 +100,7 @@ class RedformModelRedform extends JModel {
   	$db = & $this->_db;
   	
   	/* Load the fields */
-  	$q = "SELECT id, field, fieldtype, ordering, published 
+  	$q = "SELECT id, field, fieldtype, ordering, published, params
         FROM ".$db->nameQuote('#__rwf_fields')."
         WHERE form_id = ".$form_id."
         ORDER BY ordering";
@@ -113,6 +113,19 @@ class RedformModelRedform extends JModel {
   		$this->_db->setQuery($query);
   		$fields[$k]->values = $this->_db->loadObjectList();
   	}
+  	
+  	foreach ($fields as $k => $field)
+  	{
+			$paramsdefs = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' . DS . 'field_'.$field->fieldtype.'.xml';
+			if (!empty($field->params) && file_exists($paramsdefs))
+	  	{
+	  		$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );
+	  	}
+	  	else {
+	  		$fields[$k]->parameters = new JRegistry();
+	  	}
+  	}
+  	
   	return $fields;
   }
 
