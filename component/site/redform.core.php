@@ -94,13 +94,19 @@ class RedFormCore extends JObject {
 			$submit_key = null;
 			$answers = null;
 		}
+		
+		$model_redform = new RedformModelRedform();
+		$model_redform->setFormId($form_id);
+		
+		$form   = $model_redform->getForm();
+		
 		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
 		$html .= $this->getFormFields($form_id, $submit_key, $multiple, $options);
 								
 		/* Get the user details form */
 		if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add')) 
 		{
-			$html .= '<div id="submit_button" style="display: block;"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('Submit').'" />';
+			$html .= '<div id="submit_button" style="display: block;" class="submitform'.$form->classname.'"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('Submit').'" />';
 			$html .= '</div>';
 		}
 		
@@ -1287,6 +1293,24 @@ class RedFormCore extends JObject {
 		return $db->loadResult();		
 	}
 	
+	/**
+	 * get form object
+	 * 
+	 * @param int $form_id
+	 * @return object or false if not found
+	 */
+	public function getForm($form_id)
+	{
+		if (!isset($this->_form) || $this->_form->id <> $form_id)
+		{
+			
+			$model_redform = new RedformModelRedform();
+			$model_redform->setFormId($form_id);
+			
+			$this->_form = $model_redform->getForm();
+		}
+		return $this->_form;
+	}
 }
 
 class formanswers
