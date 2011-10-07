@@ -564,7 +564,12 @@ class RedFormCore extends JObject {
 							$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), $user->get($field->redmember_field));
 						}
 						else {
-							$val = $field->default;
+							if ($field->default && strtotime($field->default)) {
+								$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($field->default));
+							}
+							else {
+								$val = null;
+							}
 						}
 
 						$class = $field->parameters->get('class','');
