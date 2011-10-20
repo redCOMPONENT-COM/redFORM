@@ -329,8 +329,8 @@ function com_install()
 		$db->query();
 	}
 	
-	/* Check if we have the show_js_rpice column */
-	if (!array_key_exists('show_js_rpice', $cols)) {
+	/* Check if we have the show_js_price column */
+	if (!array_key_exists('show_js_price', $cols)) {
 		$q = "ALTER TABLE `#__rwf_forms` ADD `show_js_price` tinyint(2) NOT NULL DEFAULT '1' ";
 		$db->setQuery($q);
 		$db->query();
