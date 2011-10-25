@@ -239,7 +239,7 @@ class RedformModelFields extends JModel {
 			$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$field->form_id)." DROP ".$db->nameQuote($tablefield);
 			$db->setQuery($q);
 			if (!$db->query()) {
-				JError::raiseWarning('error', JText::_('Cannot remove field from old form').' '.$db->getErrorMsg());
+				JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_remove_field_from_old_form').' '.$db->getErrorMsg());
 			}
 		}
 			
@@ -248,7 +248,7 @@ class RedformModelFields extends JModel {
 		       . "\n  WHERE ( $cids )";
 		$db->setQuery( $query );
 		if (!$db->query()) {
-			$this->setError(JText::_('A problem occured when deleting the field'));
+			$this->setError(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_field'));
 			return false;
 		}
 		else {
@@ -258,10 +258,10 @@ class RedformModelFields extends JModel {
 			WHERE ( $cids )";
 			$db->setQuery($q);
 			if (!$db->query()) {
-				$this->setError(JText::_('A problem occured when deleting the field values'));
+				$this->setError(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_field_values'));
 			}
 			else {
-				$mainframe->enqueueMessage(JText::_('Field values have been deleted'));
+				$mainframe->enqueueMessage(JText::_('COM_REDFORM_Field_values_have_been_deleted'));
 			}
 		}
 		return true;
@@ -279,7 +279,7 @@ class RedformModelFields extends JModel {
 		$row = $this->getTable('fields', 'redformtable');
 		
 		if (empty( $cid )) {
-			return JError::raiseWarning( 500, JText::_( 'No items selected' ) );
+			return JError::raiseWarning( 500, JText::_('COM_REDFORM_No_items_selected' ) );
 		}
 		// update ordering values
 		for ($i = 0; $i < $total; $i++) {

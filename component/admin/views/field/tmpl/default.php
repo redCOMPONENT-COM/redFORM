@@ -26,12 +26,12 @@ JHTML::_('behavior.tooltip');
 	window.addEvent('domready', function(){
 		$('fieldtype').addEvent('click', function(){
 			if ($('form_id').value == 0) {
-				alert("<?php echo JText::_('REDFORM_FIELD_JS_PLEASE_SELECT_FORM_FIRST'); ?>");
+				alert("<?php echo JText::_('COM_REDFORM_FIELD_JS_PLEASE_SELECT_FORM_FIRST'); ?>");
 			}
 		});
 		
 		$('fieldtype').addEvent('change', function(){
-			if (confirm("<?php echo JText::_('REDFORM_FIELD_JS_CONFIRM_CHANGE_TYPE'); ?>")) {
+			if (confirm("<?php echo JText::_('COM_REDFORM_FIELD_JS_CONFIRM_CHANGE_TYPE'); ?>")) {
 				submitbutton('apply');
 			}
 		});
@@ -46,12 +46,12 @@ JHTML::_('behavior.tooltip');
 
 	});
 	// language strings for ajaxvalues.js
-	var edittext = "<?php echo JText::_('COM_REDEVENT_EDIT'); ?>";
-	var deletetext = "<?php echo JText::_('COM_REDEVENT_DELETE'); ?>";
-	var textyes = "<?php echo JText::_('YES'); ?>";
-	var textno = "<?php echo JText::_('NO'); ?>";
-	var textup = "<?php echo JText::_('UP'); ?>";
-	var textdown = "<?php echo JText::_('DOWN'); ?>";
+	var edittext = "<?php echo JText::_('COM_REDFORM_COM_REDEVENT_EDIT'); ?>";
+	var deletetext = "<?php echo JText::_('COM_REDFORM_COM_REDEVENT_DELETE'); ?>";
+	var textyes = "<?php echo JText::_('COM_REDFORM_YES'); ?>";
+	var textno = "<?php echo JText::_('COM_REDFORM_NO'); ?>";
+	var textup = "<?php echo JText::_('COM_REDFORM_UP'); ?>";
+	var textdown = "<?php echo JText::_('COM_REDFORM_DOWN'); ?>";
 
 	function addMailingListField()
 	{
@@ -92,8 +92,8 @@ JHTML::_('behavior.tooltip');
 		<table class="adminform">
 		<tr>
 			<td>
-			<label for="field"><?php echo JHTML::tooltip(JText::_('Enter the field here'), JText::_('Field'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Field'); ?></label>
+			<label for="field"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_NAME_TIP'), JText::_('COM_REDFORM_FIELD_NAME_TIP'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_Field'); ?></label>
 			</td>
 			<td>
 			<input class="inputbox" type="text" size="80" name="field" value="<?php echo $this->row->field; ?>"/>
@@ -101,8 +101,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<label for="field_header"><?php echo JHTML::tooltip(JText::_('COM_REDEVENT_FIELD_FORM_FIELD_HEADER_DESC'), JText::_('COM_REDEVENT_FIELD_FORM_FIELD_HEADER_LABEL'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('COM_REDEVENT_FIELD_FORM_FIELD_HEADER_LABEL'); ?></label>
+			<label for="field_header"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_COM_REDEVENT_FIELD_FORM_FIELD_HEADER_DESC'), JText::_('COM_REDFORM_COM_REDEVENT_FIELD_FORM_FIELD_HEADER_LABEL'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_COM_REDEVENT_FIELD_FORM_FIELD_HEADER_LABEL'); ?></label>
 			</td>
 			<td>
 			<input class="inputbox" type="text" size="80" name="field_header" value="<?php echo $this->row->field_header; ?>"/>
@@ -110,8 +110,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td valign="top" align="right">
-			<label for="form"><?php echo JHTML::tooltip(JText::_('Select the form the field belongs to. Changing forms REMOVES the field from the old form including all data.'), JText::_('Form'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Form'); ?></label>
+			<label for="form"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_COM_REDEVENT_FIELD_SELECT_FORM_DESC'), JText::_('COM_REDFORM_Form'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_Form'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['forms']; ?>
@@ -119,7 +119,7 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr id="trfieldtypes">
 			<td valign="top" align="right">
-			<label for="fieldtype"><?php echo JText::_('Field type'); ?></label>
+			<label for="fieldtype"><?php echo JText::_('COM_REDFORM_FIELD_TYPE'); ?></label>
 			</td>
 			<td>
 			<div id="newfieldtype">
@@ -129,8 +129,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<label for="tooltip"><?php echo JHTML::tooltip(JText::_('ENTER_TOOLTIP_INFO'), JText::_('ENTER_TOOLTIP'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('ENTER_TOOLTIP'); ?></label>
+			<label for="tooltip"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_ENTER_TOOLTIP_INFO'), JText::_('COM_REDFORM_ENTER_TOOLTIP'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_ENTER_TOOLTIP'); ?></label>
 			</td>
 			<td>
 				<textarea name="tooltip" cols="80" rows="5"><?php echo $this->row->tooltip; ?></textarea>
@@ -138,8 +138,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<label for="required"><?php echo JHTML::tooltip(JText::_('Set to yes to check if the field is filled in'), JText::_('Required'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Required'); ?></label>
+			<label for="required"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_REQUIRED_TIP'), JText::_('COM_REDFORM_Required'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_Required'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['validate']; ?>
@@ -147,8 +147,8 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
-			<label for="unique"><?php echo JHTML::tooltip(JText::_('Set to yes to make the field unique, it can only appear once in the database. For example, only allow 1 registration per e-mail address.'), JText::_('Unique'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Unique'); ?></label>
+			<label for="unique"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_UNIQUE_TIP'), JText::_('COM_REDFORM_Unique'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_Unique'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['unique']; ?>
@@ -176,7 +176,7 @@ JHTML::_('behavior.tooltip');
 		<tr>
 			<td valign="top" align="right">
 			<label for="redmember_field"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_SELECT_REDMEMBER_FIELD'), JText::_('COM_REDFORM_REDMEMBER_FIELD'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Redmember field'); ?></label>
+			<?php echo JText::_('COM_REDFORM_Redmember_field'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['rmfields']; ?>
@@ -186,8 +186,8 @@ JHTML::_('behavior.tooltip');
 		
 		<tr>
 			<td valign="top" align="right">
-			<label for="published"><?php echo JHTML::tooltip(JText::_('Set to Yes to make the field show on the form'), JText::_('Published'), 'tooltip.png', '', '', false); ?>
-			<?php echo JText::_('Published'); ?></label>
+			<label for="published"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_PUBLISHED_TIP'), JText::_('COM_REDFORM_Published'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('COM_REDFORM_Published'); ?></label>
 			</td>
 			<td>
 			<?php echo $this->lists['published']; ?>
@@ -204,8 +204,8 @@ JHTML::_('behavior.tooltip');
 	
 		<table class="admintable" id="mailinglist-table">
 			<tr id="trmailinglist">
-				<td class="key hasTip" title="<?php echo JText::_('NEWSLETTERS').'::'.JText::_('NEWSLETTERS_TIP'); ?>">
-					<?php echo JText::_('NEWSLETTERS'); ?>
+				<td class="key hasTip" title="<?php echo JText::_('COM_REDFORM_NEWSLETTERS').'::'.JText::_('COM_REDFORM_NEWSLETTERS_TIP'); ?>">
+					<?php echo JText::_('COM_REDFORM_NEWSLETTERS'); ?>
 				</td>
 				<td>
 					<div id="newmailinglist">
@@ -214,22 +214,22 @@ JHTML::_('behavior.tooltip');
 				</td>
 			</tr>
 			<tr id="traddlists">
-				<td class="key hasTip" title="<?php echo JText::_('ADD_LISTS').'::'.JText::_('ADD_LISTS_TIP'); ?>">
-					<?php echo JText::_('ADD_LISTS'); ?>
+				<td class="key hasTip" title="<?php echo JText::_('COM_REDFORM_ADD_LISTS').'::'.JText::_('COM_REDFORM_ADD_LISTS_TIP'); ?>">
+					<?php echo JText::_('COM_REDFORM_ADD_LISTS'); ?>
 				</td>
 				<td>
-					<a href="#" onClick="addMailingListField(); return false;"><?php echo JText::_('ADD_LIST'); ?></a>
+					<a href="#" onClick="addMailingListField(); return false;"><?php echo JText::_('COM_REDFORM_ADD_LIST'); ?></a>
 				</td>
 			</tr>
 			<?php
 				foreach ($listnames as $key => $name): ?>
 					<tr class="listname-row">
-						<td class="key hasTip" title="<?php echo JText::_('LISTNAME').'::'.JText::_('LISTNAME_TIP'); ?>">
-							<?php echo JText::_('LISTNAME'); ?>
+						<td class="key hasTip" title="<?php echo JText::_('COM_REDFORM_LISTNAME').'::'.JText::_('COM_REDFORM_LISTNAME_TIP'); ?>">
+							<?php echo JText::_('COM_REDFORM_LISTNAME'); ?>
 						</td>
 						<td>
 							<input type="text" name="listname[]" value="<?php echo $name; ?>"/>&nbsp;
-							<a href="#" class="listname-delete"><?php echo JText::_('REMOVE_LIST'); ?></a>
+							<a href="#" class="listname-delete"><?php echo JText::_('COM_REDFORM_REMOVE_LIST'); ?></a>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -245,11 +245,11 @@ JHTML::_('behavior.tooltip');
 		<table class="adminlist">
 			<thead>
 				<tr>
-					<th><?php echo JText::_('VALUE'); ?></th>
+					<th><?php echo JText::_('COM_REDFORM_VALUE'); ?></th>
 					<th><?php echo JText::_('COM_REDFORM_FIELD_LABEL_LABEL'); ?></th>
-					<th><?php echo JText::_('PRICE'); ?></th>
-					<th><?php echo JText::_('PUBLISHED'); ?></th>
-					<th><?php echo JText::_('ORDERING'); ?></th>
+					<th><?php echo JText::_('COM_REDFORM_PRICE'); ?></th>
+					<th><?php echo JText::_('COM_REDFORM_PUBLISHED'); ?></th>
+					<th><?php echo JText::_('COM_REDFORM_ORDERING'); ?></th>
 		      <th>&nbsp;</th>
 		      <th>&nbsp;</th>
 				</tr>
@@ -259,7 +259,7 @@ JHTML::_('behavior.tooltip');
 				<tr>
 					<td colspan="7">
 						<a href="<?php echo JRoute::_('index.php?option=com_redform&controller=values&task=ajaxedit&tmpl=component&fieldid=' .$this->row->id); ?>" class="valuemodal">
-							<?php echo JText::_('Add'); ?>
+							<?php echo JText::_('COM_REDFORM_Add'); ?>
 						</a>
 					</td>
 				</tr>
@@ -280,7 +280,7 @@ JHTML::_('behavior.tooltip');
 		<?php
 			foreach ( $this->parameters->getGroups() as $key => $groups )
 			{
-				$gname = ( strtolower($key) == '_default' ) ? JText::_( 'Extra' ) : $key;
+				$gname = ( strtolower($key) == '_default' ) ? JText::_('COM_REDFORM_Extra' ) : $key;
 				?>
 				<fieldset class="adminform">
 					<legend>

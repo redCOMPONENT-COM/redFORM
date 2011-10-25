@@ -46,15 +46,15 @@ class RedformViewPayment extends JView {
 		$submit_key = JRequest::getVar('key',    '');
 		$source     = JRequest::getVar('source', '');
 		if (empty($submit_key)) {
-			echo Jtext::_('PAYMENT ERROR MISSING KEY');
+			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_KEY');
 			return;
 		}
 		
-		$document->setTitle($document->getTitle().' - '.JText::_('redFORM'));
+		$document->setTitle($document->getTitle().' - '.JText::_('COM_REDFORM'));
 		
 		$gwoptions = $this->get('GatewayOptions');
 		if (!count($gwoptions)) {
-			echo Jtext::_('PAYMENT ERROR MISSING GATEWAY');
+			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_GATEWAY');
 			return;
 		}
 		$lists['gwselect'] = JHTML::_('select.genericlist', $gwoptions, 'gw');
@@ -75,7 +75,7 @@ class RedformViewPayment extends JView {
 	function _displayFinal($tpl = null)
 	{
 		$document   = &JFactory::getDocument();
-		$document->setTitle($document->getTitle().' - '.JText::_('redFORM'));
+		$document->setTitle($document->getTitle().' - '.JText::_('COM_REDFORM'));
 				
 		$form = $this->get('form');
 		$text = '';

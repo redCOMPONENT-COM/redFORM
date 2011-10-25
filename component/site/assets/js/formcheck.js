@@ -41,7 +41,7 @@ function CheckSubmit(form)
 		if (check_element.name.indexOf("[fullname]") != -1 && check_element.className.match("required")) {
 			var fullresult = CheckFill(check_element);
 			if (!fullresult) {
-					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter a name'); ?>\n";
+					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_please_enter_a_name'); ?>\n";
 			}
 			if (result) result = fullresult;
 		}
@@ -68,7 +68,7 @@ function CheckSubmit(form)
 		if (check_element.name.indexOf("[username]") != -1 && check_element.className.match("required")) {
 			var usernameresult = CheckFill(check_element);
 			if (!usernameresult) {
-					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('please enter an username'); ?>\n";
+					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_please_enter_an_username'); ?>\n";
 			}
 			if (result) result = usernameresult;
 		}
@@ -77,12 +77,12 @@ function CheckSubmit(form)
 		if (check_element.name.indexOf("[email]") != -1 && check_element.className.match("required")) {
 			if (CheckFill(check_element)) {
 				if (!CheckEmail(check_element.value)) {
-					msg = msg + "<?php echo JText::_('No valid e-mail address'); ?>\n";
+					msg = msg + "<?php echo JText::_('COM_REDFORM_No_valid_e-mail_address'); ?>\n";
 					if (result) result = false;
 				}
 			}
 			else {
-				msg = msg + "<?php echo JText::_('E-mail address is empty'); ?>\n";
+				msg = msg + "<?php echo JText::_('COM_REDFORM_E-mail_address_is_empty'); ?>\n";
 				if (result) result = false;
 			}
 		}
@@ -92,7 +92,7 @@ function CheckSubmit(form)
 				&& check_element.className.match("required")) {
 			var multires = CheckFill(check_element);
 			if (!multires) {
-					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('select a value'); ?>\n";
+					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_select_a_value'); ?>\n";
 		}
 			if (result) result = multires;
 		}
@@ -227,7 +227,7 @@ function AddUser()
 	var curform = parseInt(jQuery("input[name='curform']").val());
 	var maxform = parseInt(jQuery("input[name='multi']").val());
 	if (curform >= maxform) {
-		alert("<?php echo JText::_('MAX_SIGNUP_REACHED'); ?>\n");
+		alert("<?php echo JText::_('COM_REDFORM_MAX_SIGNUP_REACHED'); ?>\n");
 	}
 	else {
 		jQuery("[id^='formfield']").each(function(i) {

@@ -77,15 +77,15 @@ class RedformTableFields extends JTable {
 	function check()
 	{
 		if (empty($this->fieldtype)) {
-			$this->setError(JText::_('Field type is required'));
+			$this->setError(JText::_('COM_REDFORM_Field_type_is_required'));
 			return false;
 		}
 		if (empty($this->form_id)) {
-			$this->setError(JText::_('Form is required'));
+			$this->setError(JText::_('COM_REDFORM_Form_is_required'));
 			return false;
 		}
 		if (empty($this->field)) {
-			$this->setError(JText::_('Field name is required'));
+			$this->setError(JText::_('COM_REDFORM_Field_name_is_required'));
 			return false;
 		}
 		return true;

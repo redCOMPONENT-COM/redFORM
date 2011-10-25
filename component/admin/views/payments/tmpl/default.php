@@ -25,13 +25,13 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 	<!-- Headers -->
 	<thead>
 	<tr>
-		<th width="20"><?php echo JText::_('ID'); ?></th>
+		<th width="20"><?php echo JText::_('COM_REDFORM_ID'); ?></th>
 		<th width="20"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->rows ); ?>);" /></th>
-		<th><?php echo JText::_('Date'); ?></th>
-		<th width="20"><?php echo JText::_('Gateway'); ?></th>
-		<th width="20"><?php echo JText::_('Status'); ?></th>
-		<th><?php echo JText::_('Info'); ?></th>
-		<th width="20"><?php echo JText::_('Paid'); ?></th>
+		<th><?php echo JText::_('COM_REDFORM_Date'); ?></th>
+		<th width="20"><?php echo JText::_('COM_REDFORM_Gateway'); ?></th>
+		<th width="20"><?php echo JText::_('COM_REDFORM_Status'); ?></th>
+		<th><?php echo JText::_('COM_REDFORM_Info'); ?></th>
+		<th width="20"><?php echo JText::_('COM_REDFORM_Paid'); ?></th>
 	</tr>
 	</thead>
 	

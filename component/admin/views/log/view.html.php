@@ -38,7 +38,7 @@ class RedFormViewLog extends JView {
 		$user 		= & JFactory::getUser();
 
 		//build toolbar
-		JToolBarHelper::title( JText::_( 'REDForm LOG' ), 'home' );
+		JToolBarHelper::title( JText::_('COM_REDFORM_LOG' ), 'home' );
     JToolBarHelper::custom('clearlog', 'delete', 'delete', 'Clear Log', false);
     //create the toolbar
 

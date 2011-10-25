@@ -229,7 +229,7 @@ class RedformModelValue extends JModel
 	  
 	  /* Get the posted data */
       if (!$row->bind($post)) {
-         $mainframe->enqueueMessage(JText::_('There was a problem binding the value data').' '.$row->getError(), 'error');
+         $mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_binding_the_value_data').' '.$row->getError(), 'error');
          return false;
       }
       
@@ -239,19 +239,19 @@ class RedformModelValue extends JModel
 	  
       /* pre-save checks */
       if (!$row->check()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem checking the value data').' '.$row->getError(), 'error');
+         $mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_checking_the_value_data').' '.$row->getError(), 'error');
          return false;
       }
 
       /* save the changes */
       if (!$row->store()) {
-         $mainframe->enqueueMessage(JText::_('There was a problem storing the value data').' '.$row->getError(), 'error');
+         $mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_value_data').' '.$row->getError(), 'error');
          return false;
       }
 	  
       $row->reorder();
 	  
-      $mainframe->enqueueMessage(JText::_('The value has been saved'));
+      $mainframe->enqueueMessage(JText::_('COM_REDFORM_The_value_has_been_saved'));
       return $row;
    }
    
@@ -266,7 +266,7 @@ class RedformModelValue extends JModel
       JArrayHelper::toInteger( $cid );
 	  
       if (!is_array( $cid ) || count( $cid ) < 1) {
-         $mainframe->enqueueMessage(JText::_('No value found to delete'));
+         $mainframe->enqueueMessage(JText::_('COM_REDFORM_No_value_found_to_delete'));
          return false;
       }
       if (count($cid)) 
@@ -276,11 +276,11 @@ class RedformModelValue extends JModel
          . "\n  WHERE ( $cids )";
          $database->setQuery( $query );
          if (!$database->query()) {
-            $mainframe->enqueueMessage(JText::_('A problem occured when deleting the value'));
+            $mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_value'));
          }
          else {
-            if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Values have been deleted'));
-            else $mainframe->enqueueMessage(JText::_('Value has been deleted'));
+            if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('COM_REDFORM_Values_have_been_deleted'));
+            else $mainframe->enqueueMessage(JText::_('COM_REDFORM_Value_has_been_deleted'));
          }
       }
    }

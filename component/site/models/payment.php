@@ -104,7 +104,7 @@ class RedFormModelPayment extends JModel
 	function getPrice()
 	{
 		if (empty($this->_submit_key)) {
-			JError::raiseError(0, JText::_('Missing key'));
+			JError::raiseError(0, JText::_('COM_REDFORM_Missing_key'));
 			return false;
 		}
 		
@@ -156,7 +156,7 @@ class RedFormModelPayment extends JModel
 	function getForm()
 	{
 		if (empty($this->_submit_key)) {
-			JError::raiseError(0, JText::_('Missing key'));
+			JError::raiseError(0, JText::_('COM_REDFORM_Missing_key'));
 			return false;
 		}
 		
@@ -176,7 +176,7 @@ class RedFormModelPayment extends JModel
 	function getSubmitters()
 	{
 		if (empty($this->_submit_key)) {
-			JError::raiseError(0, JText::_('Missing key'));
+			JError::raiseError(0, JText::_('COM_REDFORM_Missing_key'));
 			return false;
 		}
 		
@@ -215,7 +215,7 @@ class RedFormModelPayment extends JModel
 		{
 			case 'redevent':
 				$event = $this->getEventAttendee($key);
-				$obj->title = JText::_('Event registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
+				$obj->title = JText::_('COM_REDFORM_Event_registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
 				$obj->uniqueid = $event->uniqueid;
 				break;
 			default:
@@ -223,7 +223,7 @@ class RedFormModelPayment extends JModel
 					$obj->title = JRequest::getVar('paymenttitle');					
 				}
 				else {
-					$obj->title = JText::_('Form submission').': '.$form->formname;
+					$obj->title = JText::_('COM_REDFORM_Form_submission').': '.$form->formname;
 				}
 				$obj->uniqueid = $key;
 				break;

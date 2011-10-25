@@ -204,7 +204,7 @@ class RedformModelForm extends JModel
 
   	/* Get the posted data */
   	if (!$row->bind($post)) {
-  		$this->setError(JText::_('There was a problem binding the form data'), 'error');
+  		$this->setError(JText::_('COM_REDFORM_There_was_a_problem_binding_the_form_data'), 'error');
   		return false;
   	}
 
@@ -215,13 +215,13 @@ class RedformModelForm extends JModel
 
   	/* pre-save checks */
   	if (!$row->check()) {
-  		$this->setError(JText::_('There was a problem checking the form data'), 'error');
+  		$this->setError(JText::_('COM_REDFORM_There_was_a_problem_checking_the_form_data'), 'error');
   		return false;
   	}
 
   	/* save the changes */
   	if (!$row->store()) {
-  		$this->setError(JText::_('There was a problem storing the form data'), 'error');
+  		$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_form_data'), 'error');
   		return false;
   	}
 
@@ -243,7 +243,7 @@ class RedformModelForm extends JModel
       JArrayHelper::toInteger( $cid );
 	  
       if (!is_array( $cid ) || count( $cid ) < 1) {
-         $mainframe->enqueueMessage(JText::_('No form found to delete'));
+         $mainframe->enqueueMessage(JText::_('COM_REDFORM_No_form_found_to_delete'));
          return false;
       }
       if (count($cid)) {
@@ -252,11 +252,11 @@ class RedformModelForm extends JModel
          . "\n  WHERE ( $cids )";
          $database->setQuery( $query );
          if (!$database->query()) {
-            $mainframe->enqueueMessage(JText::_('A problem occured when deleting the form'));
+            $mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_form'));
          }
          else {
-            if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Forms have been deleted'));
-            else $mainframe->enqueueMessage(JText::_('Form has been deleted'));
+            if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('COM_REDFORM_Forms_have_been_deleted'));
+            else $mainframe->enqueueMessage(JText::_('COM_REDFORM_Form_has_been_deleted'));
 			
 			/* Get the field ids */
 			$cids = 'form_id=' . implode( ' OR form_id=', $cid );
@@ -274,10 +274,10 @@ class RedformModelForm extends JModel
 					WHERE ( $cids )";
 				$database->setQuery($q);
 				if (!$database->query()) {
-					$mainframe->enqueueMessage(JText::_('A problem occured when deleting the form fields'));
+					$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_form_fields'));
 				}
 				else {
-					$mainframe->enqueueMessage(JText::_('Form fields have been deleted'));
+					$mainframe->enqueueMessage(JText::_('COM_REDFORM_Form_fields_have_been_deleted'));
 					
 					/* Delete the values */
 					$cids = 'field_id=' . implode( ' OR field_id=', $fieldids );
@@ -285,14 +285,14 @@ class RedformModelForm extends JModel
 						WHERE ( $cids )";
 					$database->setQuery($q);
 					if (!$database->query()) {
-						$mainframe->enqueueMessage(JText::_('A problem occured when deleting the field values'));
+						$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_field_values'));
 					}
 					else {
-						$mainframe->enqueueMessage(JText::_('Field values have been deleted'));
+						$mainframe->enqueueMessage(JText::_('COM_REDFORM_Field_values_have_been_deleted'));
 					}
 				}
 			}
-			else $mainframe->enqueueMessage(JText::_('No fields found'));
+			else $mainframe->enqueueMessage(JText::_('COM_REDFORM_No_fields_found'));
 			
 			/* Delete the submitters */
 			$cids = 'form_id=' . implode( ' OR form_id=', $cid );
@@ -300,10 +300,10 @@ class RedformModelForm extends JModel
 				WHERE ( $cids )";
 			$database->setQuery($q);
 			if (!$database->query()) {
-				$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitters'));
+				$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_submitters'));
 			}
 			else {
-				$mainframe->enqueueMessage(JText::_('Submitters fields have been deleted'));
+				$mainframe->enqueueMessage(JText::_('COM_REDFORM_Submitters_fields_have_been_deleted'));
 			}
 			
 			/* Now delete the submitter values */
@@ -312,10 +312,10 @@ class RedformModelForm extends JModel
 				$q = "DROP TABLE #__rwf_forms_".$fid;
 				$database->setQuery($q);
 				if (!$database->query()) {
-					$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitters answers'));
+					$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_submitters_answers'));
 				}
 				else {
-					$mainframe->enqueueMessage(JText::_('Submitters answers have been deleted'));
+					$mainframe->enqueueMessage(JText::_('COM_REDFORM_Submitters_answers_have_been_deleted'));
 				}
 			}
          }
@@ -408,7 +408,7 @@ class RedformModelForm extends JModel
       
       // copy the form
 	    $form->id = null;
-      $form->formname =  JText::_('Copy of') .' '. $form->formname;
+      $form->formname =  JText::_('COM_REDFORM_Copy_of') .' '. $form->formname;
       $form->store();      
       
 	    /* Add form table */

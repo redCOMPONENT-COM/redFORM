@@ -107,13 +107,13 @@ class RedformControllerPayments extends JController
           $link = 'index.php?option=com_redform&view=payments&submit_key='.$row->submit_key;
         	break;
       }
-      $msg  = JText::_( 'PAYMENT SAVED');
+      $msg  = JText::_('COM_REDFORM_PAYMENT_SAVED');
 
       $cache = &JFactory::getCache('com_redform');
       $cache->clean();
 
     } else {
-      $msg  = JText::_('Error').': '.$model->getError();
+      $msg  = JText::_('COM_REDFORM_Error').': '.$model->getError();
 			$link = 'index.php?option=com_redform&view=payments&submit_key='.$row->submit_key;
     }
 
@@ -136,7 +136,7 @@ class RedformControllerPayments extends JController
     $key = JRequest::getVar('submit_key');
 
 		$link = 'index.php?option=com_redform&view=payments&submit_key='.$key;
-		$msg = JText::_('Action cancelled');
+		$msg = JText::_('COM_REDFORM_Action_cancelled');
     $this->setRedirect( $link, $msg );
 	}
   
@@ -173,16 +173,16 @@ class RedformControllerPayments extends JController
     $cid    = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_( 'Select an item to delete' ) );
+      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_delete' ) );
     }
 
     $model = $this->getModel('payment');
 
     if ($model->delete($cid)) {
-    	$msg = JText::_('PAYMENT DELETED');
+    	$msg = JText::_('COM_REDFORM_PAYMENT_DELETED');
     }
     else {    	
-      $msg = JText::_('PAYMENT DELETION ERROR' . ': ' . $model->getError());
+      $msg = JText::_('COM_REDFORM_PAYMENT_DELETION_ERROR' . ': ' . $model->getError());
     }
 
     $cache = &JFactory::getCache('com_redform');

@@ -267,7 +267,7 @@ class rfanswers
     {
       if (!JFolder::create($fullpath)) 
       {
-        JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDER').': '.$fullpath);
+        JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_CREATE_FOLDER').': '.$fullpath);
         $status = false;
         return false;
       }
@@ -289,18 +289,18 @@ class rfanswers
               $answer = $fullpath.DS.$dest_filename;
             }
             else {
-              JError::raiseWarning(0, JText::_('CANNOT_UPLOAD_FILE'));
+              JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_UPLOAD_FILE'));
               return false;
             }
           }
           else {
-            JError::raiseWarning(0, JText::_('FOLDER_DOES_NOT_EXIST'));
+            JError::raiseWarning(0, JText::_('COM_REDFORM_FOLDER_DOES_NOT_EXIST'));
             return false;
           }
         }
     }
     else {
-      JError::raiseWarning(0, JText::_('FOLDER_DOES_NOT_EXIST'));
+      JError::raiseWarning(0, JText::_('COM_REDFORM_FOLDER_DOES_NOT_EXIST'));
       return false;
     }
     return $answer;
@@ -318,7 +318,7 @@ class rfanswers
   	$db = & JFactory::getDBO();
   	
   	if (empty($this->_form_id)) {
-  		JError::raiseError(0, JText::_('ERROR NO FORM ID'));
+  		JError::raiseError(0, JText::_('COM_REDFORM_ERROR_NO_FORM_ID'));
   	}
     
   	if (!count($this->_fields)) {
@@ -359,8 +359,8 @@ class rfanswers
     	$db->setQuery($q);
     	
     	if (!$db->query()) {
-    		JError::raiseError(0, JText::_('UPDATE ANSWERS FAILED'));
-        RedformHelperLog::simpleLog(JText::_('Cannot update answers').' '.$db->getErrorMsg());
+    		JError::raiseError(0, JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'));
+        RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_update_answers').' '.$db->getErrorMsg());
     	}
     	$this->setPrice();
     }
@@ -376,11 +376,11 @@ class rfanswers
     		/* We cannot save the answers, do not continue */
 			if (stristr($db->getErrorMsg(), 'duplicate entry')) {
 				JRequest::setVar('ALREADY_ENTERED', true);
-				$mainframe->enqueueMessage(JText::_('ALREADY_ENTERED'), 'error');
+				$mainframe->enqueueMessage(JText::_('COM_REDFORM_ALREADY_ENTERED'), 'error');
 			}
-			else $mainframe->enqueueMessage(JText::_('Cannot save form answers').' '.$db->getErrorMsg(),'error');
+			else $mainframe->enqueueMessage(JText::_('COM_REDFORM_Cannot_save_form_answers').' '.$db->getErrorMsg(),'error');
     		/* We cannot save the answers, do not continue */
-    		RedformHelperLog::simpleLog(JText::_('Cannot save form answers').' '.$db->getErrorMsg());
+    		RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_save_form_answers').' '.$db->getErrorMsg());
     		return false;
     	}
     	$this->_answer_id = $db->insertid();
@@ -403,7 +403,7 @@ class rfanswers
   	
   	
   	if (empty($this->_form_id)) {
-  		JError::raiseError(0, JText::_('ERROR NO FORM ID'));
+  		JError::raiseError(0, JText::_('COM_REDFORM_ERROR_NO_FORM_ID'));
   	}
     
   	if (!count($this->_fields)) {
@@ -456,8 +456,8 @@ class rfanswers
     	$db->setQuery($q);
     	
     	if (!$db->query()) {
-    		JError::raiseError(0, JText::_('UPDATE ANSWERS FAILED'));
-        RedformHelperLog::simpleLog(JText::_('Cannot update answers').' '.$db->getErrorMsg());
+    		JError::raiseError(0, JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'));
+        RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_update_answers').' '.$db->getErrorMsg());
     	}
     }
     else
@@ -473,13 +473,13 @@ class rfanswers
     		/* We cannot save the answers, do not continue */
 				if (stristr($db->getErrorMsg(), 'duplicate entry')) {
 					JRequest::setVar('ALREADY_ENTERED', true);
-					$mainframe->enqueueMessage(JText::_('ALREADY_ENTERED'), 'error');
+					$mainframe->enqueueMessage(JText::_('COM_REDFORM_ALREADY_ENTERED'), 'error');
 				}
 				else {
-					$mainframe->enqueueMessage(JText::_('Cannot save form answers').' '.$db->getErrorMsg(),'error');
+					$mainframe->enqueueMessage(JText::_('COM_REDFORM_Cannot_save_form_answers').' '.$db->getErrorMsg(),'error');
 				}
 	    	/* We cannot save the answers, do not continue */
-    		RedformHelperLog::simpleLog(JText::_('Cannot save form answers').' '.$db->getErrorMsg());
+    		RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_save_form_answers').' '.$db->getErrorMsg());
     		return false;
     	}
     	$this->_answer_id = $db->insertid();
@@ -498,7 +498,7 @@ class rfanswers
   	// prepare data for submitter record
   	$submitterdata['answer_id'] = $this->_answer_id;
   	if (empty($params['submit_key'])) {
-  		JError::raiseError(0, JText::_('ERROR SUBMIT KEY MISSING'));
+  		JError::raiseError(0, JText::_('COM_REDFORM_ERROR_SUBMIT_KEY_MISSING'));
   	}
   	$submitterdata = array_merge($submitterdata, $params);
     $submitterdata['form_id'] = $this->_form_id;
@@ -536,8 +536,8 @@ class rfanswers
   	}
 
   	if (!$row->bind($submitterdata)) {
-  		$mainframe->enqueueMessage(JText::_('There was a problem binding the submitter data'), 'error');
-  		RedformHelperLog::simpleLog(JText::_('There was a problem binding the submitter data').': '.$row->getError());
+  		$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_binding_the_submitter_data'), 'error');
+  		RedformHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_binding_the_submitter_data').': '.$row->getError());
   		return false;
   	}
   	/* Set the date */
@@ -546,20 +546,20 @@ class rfanswers
 
   	/* pre-save checks */
   	if (!$row->check()) {
-  		$mainframe->enqueueMessage(JText::_('There was a problem checking the submitter data'), 'error');
-  		RedformHelperLog::simpleLog(JText::_('There was a problem checking the submitter data').': '.$row->getError());
+  		$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data'), 'error');
+  		RedformHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data').': '.$row->getError());
   		return false;
   	}
 
   	/* save the changes */
   	if (!$row->store()) {
   		if (stristr($db->getErrorMsg(), 'Duplicate entry')) {
-  			$mainframe->enqueueMessage(JText::_('You have already entered this form'), 'error');
-  			RedformHelperLog::simpleLog(JText::_('You have already entered this form'));
+  			$mainframe->enqueueMessage(JText::_('COM_REDFORM_You_have_already_entered_this_form'), 'error');
+  			RedformHelperLog::simpleLog(JText::_('COM_REDFORM_You_have_already_entered_this_form'));
   		}
   		else {
-  			$mainframe->enqueueMessage(JText::_('There was a problem storing the submitter data'), 'error');
-  			RedformHelperLog::simpleLog(JText::_('There was a problem storing the submitter data').': '.$row->getError());
+  			$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data'), 'error');
+  			RedformHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data').': '.$row->getError());
   		}
   		return false;
   	}
@@ -620,7 +620,7 @@ class rfanswers
   	$submitter = $db->loadObject();
   	
   	if (!$submitter) {
-  		Jerror::raisewarning(0, Jtext::_('unknown submitter'));
+  		Jerror::raisewarning(0, JText::_('COM_REDFORM_unknown_submitter'));
   		return false;
   	}
   	
@@ -646,7 +646,7 @@ class rfanswers
   	$answers = $db->loadObject();
   
   	if (!$answers) {
-  		Jerror::raisewarning(0, Jtext::_('error getting submitter answers'));
+  		Jerror::raisewarning(0, JText::_('COM_REDFORM_error_getting_submitter_answers'));
   		return false;
   	}
   	

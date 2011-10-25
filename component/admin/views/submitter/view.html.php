@@ -59,7 +59,7 @@ EOF;
   	$this->assignRef('submitter', $submitter);
   	$this->assignRef('form_id',   JRequest::getVar('form_id'));
   	
-  	JToolBarHelper::title(JText::_( 'EDIT_SUBMITTER' ), 'redform_submitters');
+  	JToolBarHelper::title(JText::_('COM_REDFORM_EDIT_SUBMITTER' ), 'redform_submitters');
   	JToolBarHelper::save();
   	JToolBarHelper::cancel();
         

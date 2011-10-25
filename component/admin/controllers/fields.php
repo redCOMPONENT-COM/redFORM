@@ -68,7 +68,7 @@ class RedformControllerFields extends JController
     $user =& JFactory::getUser();
     // Error if checkedout by another administrator
     if ($model->isCheckedOut( $user->get('id') )) {
-      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_( 'EDITED BY ANOTHER ADMIN' ) );
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_EDITED_BY_ANOTHER_ADMIN' ) );
     }
     $model->checkout();
 
@@ -99,7 +99,7 @@ class RedformControllerFields extends JController
           $link = 'index.php?option=com_redform&view=fields';
           break;
       }
-      $msg  = JText::_( 'FIELD SAVED');
+      $msg  = JText::_('COM_REDFORM_FIELD_SAVED');
 
       $cache = &JFactory::getCache('com_redform');
       $cache->clean();
@@ -144,7 +144,7 @@ class RedformControllerFields extends JController
     $cid  = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_publish' ) );
     }
 
     $model = $this->getModel('fields');
@@ -154,7 +154,7 @@ class RedformControllerFields extends JController
     }
 
     $total = count( $cid );
-    $msg  = $total.' '.JText::_( 'FIELDS PUBLISHED');
+    $msg  = $total.' '.JText::_('COM_REDFORM_FIELDS_PUBLISHED');
 
     $this->setRedirect( 'index.php?option=com_redform&view=fields', $msg );
   }
@@ -171,7 +171,7 @@ class RedformControllerFields extends JController
     $cid  = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_unpublish' ) );
     }
 
     $model = $this->getModel('fields');
@@ -181,7 +181,7 @@ class RedformControllerFields extends JController
     }
 
     $total = count( $cid );
-    $msg  = $total.' '.JText::_( 'FIELDS UNPUBLISHED');
+    $msg  = $total.' '.JText::_('COM_REDFORM_FIELDS_UNPUBLISHED');
 
     $this->setRedirect( 'index.php?option=com_redform&view=fields', $msg );
   }
@@ -201,16 +201,16 @@ class RedformControllerFields extends JController
     $cid    = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_( 'Select an item to delete' ) );
+      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_delete' ) );
     }
 
     $model = $this->getModel('fields');
 
     if ($model->delete($cid)) {
-    	$msg = JText::_('FIELDS DELETED');
+    	$msg = JText::_('COM_REDFORM_FIELDS_DELETED');
     }
     else {    	
-      $msg = JText::_('FIELDS DELETION ERROR' . ': ' . $model->getError());
+      $msg = JText::_('COM_REDFORM_FIELDS_DELETION_ERROR' . ': ' . $model->getError());
     }
 
     $cache = &JFactory::getCache('com_redform');
@@ -224,10 +224,10 @@ class RedformControllerFields extends JController
     $model = $this->getModel('fields');
     
     if ($model->sanitize()) {
-      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('SANITIZE_COMPLETE'));
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_SANITIZE_COMPLETE'));
     }
     else {
-      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('SANITIZE_ERROR'));    	
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_SANITIZE_ERROR'));    	
     }
   }
   
@@ -239,7 +239,7 @@ class RedformControllerFields extends JController
       $this->setRedirect( 'index.php?option=com_redform&view=fields');
     }
     else {
-      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('ERROR REORDERING'));      
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_ERROR_REORDERING'));      
     }
   	
   }

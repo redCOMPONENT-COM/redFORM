@@ -22,31 +22,31 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 	<table class="adminlist">
 		<tr>
 			<th width="20">
-			<?php echo JText::_('ID'); ?>
+			<?php echo JText::_('COM_REDFORM_ID'); ?>
 			</th>
 			<th width="20">
 			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->forms ); ?>);" />
 			</th>
 			<th class="title">
-			<?php echo JText::_('Form name'); ?>
+			<?php echo JText::_('COM_REDFORM_Form_name'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Start date'); ?>
+			<?php echo JText::_('COM_REDFORM_FORM_START_DATE'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('End date'); ?>
+			<?php echo JText::_('COM_REDFORM_FORM_END_DATE'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Published'); ?>
+			<?php echo JText::_('COM_REDFORM_Published'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Active'); ?>
+			<?php echo JText::_('COM_REDFORM_Active'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Submitters'); ?>
+			<?php echo JText::_('COM_REDFORM_Submitters'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Tag'); ?>
+			<?php echo JText::_('COM_REDFORM_Tag'); ?>
 			</th>
 		</tr>
 		<?php
@@ -59,7 +59,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 
 			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
 			$task 	= $row->published ? 'unpublish' : 'publish';
-			$alt 	= $row->published ? JText::_('Published') : JText::_('Unpublished');
+			$alt 	= $row->published ? JText::_('COM_REDFORM_Published') : JText::_('COM_REDFORM_Unpublished');
 			$form 	= $row->formstarted ? 'tick.png' : 'publish_x.png';
 			
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
@@ -77,11 +77,11 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				if ( $row->checked_out && ( $row->checked_out != $my->id ) ) {
 					?>
 					<?php echo $row->formname; ?>
-					&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
+					&nbsp;[ <i><?php echo JText::_('COM_REDFORM_Checked_Out'); ?></i> ]
 					<?php
 				} else {
 					?>
-					<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit form'); ?>">
+					<a href="<?php echo $link; ?>" title="<?php echo JText::_('COM_REDFORM_Edit_form'); ?>">
 					<?php echo $row->formname; ?>
 					</a>
 					<?php
@@ -107,7 +107,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				</a>
 				</td>
 				<td width="10%" align="center">
-				<img src="images/<?php echo $form;?>" border="0" alt="<?php echo JText::_('Form started'); ?>" />
+				<img src="images/<?php echo $form;?>" border="0" alt="<?php echo JText::_('COM_REDFORM_Form_started'); ?>" />
 				</td>
 				<td>
 				<?php

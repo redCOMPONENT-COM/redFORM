@@ -44,7 +44,7 @@ class RedformViewValues extends JView
 
 		/* Get the forms */
 		$forms = (array) $this->get('FormsOptions');
-		array_unshift($forms, JHTML::_('select.option', 0, JText::_('All')));
+		array_unshift($forms, JHTML::_('select.option', 0, JText::_('COM_REDFORM_All')));
 		/* Create the dropdown list */
 		$lists['form_id'] = JHTML::_('select.genericlist',  $forms, 'form_id', '', 'value', 'text', JRequest::getVar('form_id', 0)) ;
 
@@ -58,7 +58,7 @@ class RedformViewValues extends JView
     RedformHelper::setMenu();
 				
 		/* Get the toolbar */
-		JToolBarHelper::title(JText::_( 'Values' ), 'redform_values');
+		JToolBarHelper::title(JText::_('COM_REDFORM_Values' ), 'redform_values');
 		if ($fields > 0) {
 			JToolBarHelper::publishList();
 			JToolBarHelper::unpublishList();
@@ -79,10 +79,10 @@ class RedformViewValues extends JView
 			case 'add':
 				switch (JRequest::getCmd('task')) {
 					case 'add':
-						JToolBarHelper::title(JText::_( 'Add Value' ), 'redform_plus');
+						JToolBarHelper::title(JText::_('COM_REDFORM_Add_Value' ), 'redform_plus');
 						break;
 					default:
-						JToolBarHelper::title(JText::_( 'Edit Value' ), 'redform_plus');
+						JToolBarHelper::title(JText::_('COM_REDFORM_Edit_Value' ), 'redform_plus');
 						break;
 				}
 				JToolBarHelper::save();
@@ -90,7 +90,7 @@ class RedformViewValues extends JView
 				JToolBarHelper::cancel();
 				break;
 			default:
-				JToolBarHelper::title(JText::_( 'Values' ), 'redform_values');
+				JToolBarHelper::title(JText::_('COM_REDFORM_Values' ), 'redform_values');
 				if ($this->get('Total', 'fields') > 0) {
 					JToolBarHelper::publishList();
 					JToolBarHelper::unpublishList();

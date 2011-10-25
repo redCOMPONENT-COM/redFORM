@@ -84,11 +84,11 @@ class RedformViewSubmitters extends JView {
     $this->assignRef('integration', JRequest::getVar('integration', ''));
     $this->assignRef('params',      $params);
 
-  	JToolBarHelper::title(JText::_( 'Submitters' ), 'redform_submitters');
+  	JToolBarHelper::title(JText::_('COM_REDFORM_Submitters' ), 'redform_submitters');
   	if (JRequest::getVar('xref', false)) JToolBarHelper::back();
-  	JToolBarHelper::deleteList(JText::_('Are you sure to delete the submitter?'));
+  	JToolBarHelper::deleteList(JText::_('COM_REDFORM_SUBMITTERS_DELETE_WARNING'));
   	if ($this->params->get('showintegration', false)) {
-  		JToolBarHelper::custom('forcedelete', 'delete', 'delete',JText::_('Force delete'), true);
+  		JToolBarHelper::custom('forcedelete', 'delete', 'delete',JText::_('COM_REDFORM_Force_delete'), true);
   	}
   	
   	//TODO: fix the add/modify submitters from backend

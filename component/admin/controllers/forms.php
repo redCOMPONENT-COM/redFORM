@@ -69,7 +69,7 @@ class RedformControllerForms extends JController
     $user =& JFactory::getUser();
     // Error if checkedout by another administrator
     if ($model->isCheckedOut( $user->get('id') )) {
-    	$this->setRedirect( 'index.php?option=com_redform&view=forms', JText::_( 'EDITED BY ANOTHER ADMIN' ) );
+    	$this->setRedirect( 'index.php?option=com_redform&view=forms', JText::_('COM_REDFORM_EDITED_BY_ANOTHER_ADMIN' ) );
     }
     $model->checkout();
 
@@ -100,7 +100,7 @@ class RedformControllerForms extends JController
           $link = 'index.php?option=com_redform&view=forms';
           break;
       }
-      $msg  = JText::_( 'FORM SAVED');
+      $msg  = JText::_('COM_REDFORM_FORM_SAVED');
 
       $cache = &JFactory::getCache('com_redform');
       $cache->clean();
@@ -155,7 +155,7 @@ class RedformControllerForms extends JController
     $cid  = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_( 'Select an item to publish' ) );
+      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_publish' ) );
     }
 
     $model = $this->getModel('forms');
@@ -165,7 +165,7 @@ class RedformControllerForms extends JController
     }
 
     $total = count( $cid );
-    $msg  = $total.' '.JText::_( 'FORMS PUBLISHED');
+    $msg  = $total.' '.JText::_('COM_REDFORM_FORMS_PUBLISHED');
 
     $this->setRedirect( 'index.php?option=com_redform&view=forms', $msg );
   }
@@ -182,7 +182,7 @@ class RedformControllerForms extends JController
     $cid  = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_( 'Select an item to unpublish' ) );
+      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_unpublish' ) );
     }
 
     $model = $this->getModel('forms');
@@ -192,7 +192,7 @@ class RedformControllerForms extends JController
     }
 
     $total = count( $cid );
-    $msg  = $total.' '.JText::_( 'FORMS UNPUBLISHED');
+    $msg  = $total.' '.JText::_('COM_REDFORM_FORMS_UNPUBLISHED');
 
     $this->setRedirect( 'index.php?option=com_redform&view=forms', $msg );
   }
@@ -212,7 +212,7 @@ class RedformControllerForms extends JController
     $cid    = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_( 'Select an item to delete' ) );
+      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_delete' ) );
     }
 
     $model = $this->getModel('forms');
@@ -244,7 +244,7 @@ class RedformControllerForms extends JController
     
     if ($model->copy($cids)) {
 	    $total = count( $cids );
-	    $msg  = $total.' '.JText::_( 'FORMS COPIED');
+	    $msg  = $total.' '.JText::_('COM_REDFORM_FORMS_COPIED');
     }
     
     $this->setRedirect( 'index.php?option=com_redform&view=forms', $msg );

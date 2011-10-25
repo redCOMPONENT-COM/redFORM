@@ -86,7 +86,7 @@ class RedformViewForm extends JView {
 		
 		// currencies
 		require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'currency.php');
-		$options = array(JHTML::_('select.option', '', JText::_('Select currency')));
+		$options = array(JHTML::_('select.option', '', JText::_('COM_REDFORM_Select_currency')));
 		$options = array_merge($options, RedformHelperLogCurrency::getCurrencyOptions());
 		$lists['currency'] = JHTML::_('select.genericlist', $options, 'currency', 'class="inputbox"', 'value', 'text', $row->currency);
 		
@@ -97,10 +97,10 @@ class RedformViewForm extends JView {
 		/* Get the toolbar */
 		switch (JRequest::getCmd('task')) {
 			case 'add':
-				JToolBarHelper::title(JText::_( 'Add Form' ), 'redform_plus');
+				JToolBarHelper::title(JText::_('COM_REDFORM_Add_Form' ), 'redform_plus');
 				break;
 			default:
-				JToolBarHelper::title(JText::_( 'Edit Form' ), 'redform_plus');
+				JToolBarHelper::title(JText::_('COM_REDFORM_Edit_Form' ), 'redform_plus');
 				break;
 		}
 		JToolBarHelper::save();

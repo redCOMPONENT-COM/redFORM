@@ -19,8 +19,8 @@ defined('_JEXEC') or die('Restricted access'); ?>
 <?php
 // Set toolbar items for the page
 $edit		= JRequest::getVar('edit',true);
-$text = !$edit ? JText::_( 'New' ) : JText::_( 'Edit' );
-JToolBarHelper::title( JText::_( 'Payment history' ) );
+$text = !$edit ? JText::_('COM_REDFORM_New' ) : JText::_('COM_REDFORM_Edit' );
+JToolBarHelper::title( JText::_('COM_REDFORM_Payment_history' ) );
 JToolBarHelper::save();
 JToolBarHelper::apply();
 if (!$edit)  {
@@ -42,7 +42,7 @@ if (!$edit)  {
     // do field validation
     var validator = document.formvalidator;
 //    if ( validator.validate(form.name) === false ){
-//      alert( "<?php echo JText::_( 'NAME IS REQUIRED', true ); ?>" );
+//      alert( "<?php echo JText::_('COM_REDFORM_NAME_IS_REQUIRED', true ); ?>" );
 //    } else {
 		submitform( pressbutton );
 //    }
@@ -51,12 +51,12 @@ if (!$edit)  {
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col50">
-<fieldset class="adminform"><legend><?php echo JText::_( 'Payment' ); ?></legend>
+<fieldset class="adminform"><legend><?php echo JText::_('COM_REDFORM_Payment' ); ?></legend>
 
 <table class="admintable">
 	<tr>
 		<td width="100" align="right" class="key">
-			<label for="date"><?php echo JText::_( 'Date' ); ?>:</label>
+			<label for="date"><?php echo JText::_('COM_REDFORM_Date' ); ?>:</label>
 		</td>
 		<td>
 			<?php echo JHTML::calendar($this->object->date, 'date', 'date', '%Y-%m-%d %H:%M:%S'); ?>
@@ -64,7 +64,7 @@ if (!$edit)  {
 	</tr>
 	<tr>
 		<td width="100" align="right" class="key">
-			<label for="status"><?php echo JText::_( 'Status' ); ?>:</label>
+			<label for="status"><?php echo JText::_('COM_REDFORM_Status' ); ?>:</label>
 		</td>
 		<td>
 			<input name="status" type="text" value="<?php echo $this->object->status; ?>" />
@@ -72,7 +72,7 @@ if (!$edit)  {
 	</tr>
 	<tr>
 		<td width="100" align="right" class="key">
-			<label for="data"><?php echo JText::_( 'Data' ); ?>:</label>
+			<label for="data"><?php echo JText::_('COM_REDFORM_Data' ); ?>:</label>
 		</td>
 		<td>
 			<textarea name="data" cols="80" rows="6"><?php echo $this->object->data; ?></textarea>			
@@ -80,7 +80,7 @@ if (!$edit)  {
 	</tr>
 	<tr>
 		<td width="100" align="right" class="key">
-			<label><?php echo JText::_( 'Paid' ); ?>:</label>
+			<label><?php echo JText::_('COM_REDFORM_Paid' ); ?>:</label>
 		</td>
 		<td>
 			<?php echo JHTML::_('select.booleanlist', 'paid', '', $this->object->paid); ?>

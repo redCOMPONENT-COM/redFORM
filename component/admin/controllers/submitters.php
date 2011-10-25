@@ -45,7 +45,7 @@ class RedformControllerSubmitters extends JController
     $cid = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_( 'Select an item to delete' ) );
+      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_delete' ) );
     }
 
     $model = $this->getModel('submitters');
@@ -132,11 +132,11 @@ class RedformControllerSubmitters extends JController
     $res = $rfcore->saveAnswers($integration);
     
     if ($res) {
-    	$msg = JText::_('Submission updated');
+    	$msg = JText::_('COM_REDFORM_Submission_updated');
     	$type = 'message';
     }    
     else {
-    	$msg = JText::_('Submission update failed');   
+    	$msg = JText::_('COM_REDFORM_Submission_update_failed');   
     	$type = 'error'; 	
     }
     $url = 'index.php?option=com_redform&controller=submitters&task=submitters';

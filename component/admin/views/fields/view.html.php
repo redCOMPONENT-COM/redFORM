@@ -48,7 +48,7 @@ class RedformViewFields extends JView {
 
 		/* Get the forms */
 		$forms = array();
-		$forms[] = JHTML::_('select.option', 0, JText::_('All'));
+		$forms[] = JHTML::_('select.option', 0, JText::_('COM_REDFORM_All'));
 		$forms = array_merge($forms, $this->get('FormsOptions'));
 
 		/* Create the dropdown list */
@@ -71,14 +71,14 @@ class RedformViewFields extends JView {
 		RedformHelper::setMenu();
 		
     /* Get the toolbar */
-		JToolBarHelper::title(JText::_( 'Fields' ), 'redform_fields');
+		JToolBarHelper::title(JText::_('COM_REDFORM_Fields' ), 'redform_fields');
 		/* Only show add if there are forms */
 		if ($countforms) {
-			JToolBarHelper::custom('sanitize', 'redform_details', 'redform_details', JText::_('SANITIZE'), false);
+			JToolBarHelper::custom('sanitize', 'redform_details', 'redform_details', JText::_('COM_REDFORM_SANITIZE'), false);
 			JToolBarHelper::publishList();
 			JToolBarHelper::unpublishList();
 			JToolBarHelper::spacer();
-			JToolBarHelper::deleteList(JText::_('Are you sure you want to delete the fields and related values?'));
+			JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FIELDS_DELETE_WARNING'));
 			JToolBarHelper::editListX();
 			JToolBarHelper::addNew();
 		}

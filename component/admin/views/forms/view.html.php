@@ -57,16 +57,16 @@ class RedformViewForms extends JView {
 	
 	function toolbar() 
 	{
-		JToolBarHelper::title(JText::_( 'redFORM' ), 'redform_redform');
-		JToolBarHelper::custom('submitters', 'redform_submitters', 'redform_submitters', JText::_('Submitters'), true);
+		JToolBarHelper::title(JText::_('COM_REDFORM' ), 'redform_redform');
+		JToolBarHelper::custom('submitters', 'redform_submitters', 'redform_submitters', JText::_('COM_REDFORM_Submitters'), true);
 		JToolBarHelper::spacer();
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
 		JToolBarHelper::spacer();
-		JToolBarHelper::deleteList(JText::_('Are you sure you want to delete the form and all related fields, values and submitter data?'));
+		JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FORMS_DELETE_WARNING'));
 		JToolBarHelper::editListX();
 		JToolBarHelper::addNew();
-    JToolBarHelper::custom('copy', 'copy', 'copy', JText::_('Clone'), true);
+    JToolBarHelper::custom('copy', 'copy', 'copy', JText::_('COM_REDFORM_Clone'), true);
 	}
 }
 ?>

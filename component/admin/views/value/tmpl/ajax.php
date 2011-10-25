@@ -54,7 +54,7 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr id="trpublished">
 			<td valign="top" align="right">
-			<?php echo JText::_('Published'); ?>
+			<?php echo JText::_('COM_REDFORM_Published'); ?>
 			</td>
 			<td>
 			<?php echo $this->lists['published']; ?>

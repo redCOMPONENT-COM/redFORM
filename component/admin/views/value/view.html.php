@@ -59,14 +59,14 @@ class RedformViewValue extends JView
 		/* Get the toolbar */
 		switch (JRequest::getCmd('task')) {
 			case 'add':
-				JToolBarHelper::title(JText::_( 'Add Value' ), 'redform_plus');
+				JToolBarHelper::title(JText::_('COM_REDFORM_Add_Value' ), 'redform_plus');
 				break;
 			case 'ajaxedit':
 				$this->setLayout('ajax');
 				$this->assign('field_id', JRequest::getInt('fieldid'));
 				break;
 			default:
-				JToolBarHelper::title(JText::_( 'Edit Value' ), 'redform_plus');
+				JToolBarHelper::title(JText::_('COM_REDFORM_Edit_Value' ), 'redform_plus');
 				break;
 		}
 		JToolBarHelper::save();

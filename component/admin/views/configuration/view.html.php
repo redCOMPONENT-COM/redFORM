@@ -56,7 +56,7 @@ class RedformViewConfiguration extends JView {
 	}
 	
 	function toolbar() {
-		JToolBarHelper::title(JText::_('Configuration'), 'redform_config');
+		JToolBarHelper::title(JText::_('COM_REDFORM_Configuration'), 'redform_config');
     JToolBarHelper::save();
 		JToolBarHelper::apply();
     JToolBarHelper::cancel();

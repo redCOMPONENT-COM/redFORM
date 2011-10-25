@@ -109,7 +109,7 @@ class RedformControllerPayment extends JController {
   {
     global $mainframe;
     
-    $msg = JText::_('PAYMENT CANCELLED');
+    $msg = JText::_('COM_REDFORM_PAYMENT_CANCELLED');
     $mainframe->redirect('index.php', $msg);
   }
   

@@ -19,14 +19,14 @@
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 if ($this->countforms == 0) {
-	echo JText::_('No forms found');
+	echo JText::_('COM_REDFORM_No_forms_found');
 }
 else { ?>
 <form action="index.php" method="post" name="adminForm">
 	<table>
       <tr>
          <td align="left" width="100%">
-            <?php echo JText::_('Filter'); ?>:
+            <?php echo JText::_('COM_REDFORM_Filter'); ?>:
 			<?php echo $this->lists['form_id']; ?>
          </td>
       </tr>
@@ -35,23 +35,23 @@ else { ?>
 		<thead>
 		<tr>
 			<th width="20">
-			<?php echo JText::_('#'); ?>
+			<?php echo JText::_('COM_REDFORM_#'); ?>
 			</th>
 			<th width="20">
 			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->fields ); ?>);" />
 			</th>
-			<th class="title"><?php echo JHTML::_('grid.sort', 'Field', 'field', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+			<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDEVENT_Field', 'field', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 			<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDEVENT_FIELD_HEADER', 'field_header', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-			<th class="title"><?php echo JHTML::_('grid.sort', 'Type', 'fieldtype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-			<th class="title"><?php echo JText::_('Required'); ?></th>
-			<th class="title"><?php echo JText::_('Unique'); ?></th>
-			<th class="title"><?php echo JText::_('Form'); ?></th>
+			<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDEVENT_Type', 'fieldtype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+			<th class="title"><?php echo JText::_('COM_REDFORM_Required'); ?></th>
+			<th class="title"><?php echo JText::_('COM_REDFORM_Unique'); ?></th>
+			<th class="title"><?php echo JText::_('COM_REDFORM_Form'); ?></th>
 			<th class="title">
-				<?php echo JHTML::_('grid.sort', 'Ordering', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+				<?php echo JHTML::_('grid.sort', 'COM_REDFORM_Ordering', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php echo JHTML::_('grid.order',  $this->fields ); ?>
 			</th>
-			<th class="title"><?php echo JText::_('Published'); ?></th>
-			<th width="20"><?php echo JHTML::_('grid.sort', 'ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+			<th class="title"><?php echo JText::_('COM_REDFORM_Published'); ?></th>
+			<th width="20"><?php echo JHTML::_('grid.sort', 'COM_REDFORM_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -65,7 +65,7 @@ else { ?>
 
 			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
 			$task 	= $row->published ? 'unpublish' : 'publish';
-			$alt 	= $row->published ? JText::_('Published') : JText::_('Unpublished');
+			$alt 	= $row->published ? JText::_('COM_REDFORM_Published') : JText::_('COM_REDFORM_Unpublished');
 			
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
 			$my  = JFactory::getUser();
@@ -82,11 +82,11 @@ else { ?>
 				if ( $row->checked_out && ( $row->checked_out != $my->id ) ) {
 					?>
 					<?php echo $row->field; ?>
-					&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
+					&nbsp;[ <i><?php echo JText::_('COM_REDFORM_Checked_Out'); ?></i> ]
 					<?php
 				} else {
 					?>
-					<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit field'); ?>">
+					<a href="<?php echo $link; ?>" title="<?php echo JText::_('COM_REDFORM_Edit_field'); ?>">
 					<?php echo $row->field; ?>
 					</a>
 					<?php
@@ -101,14 +101,14 @@ else { ?>
 				</td>
 				<td>
 					<?php 
-					if ($row->validate) echo JText::_('Yes');
-					else echo JText::_('No');
+					if ($row->validate) echo JText::_('COM_REDFORM_Yes');
+					else echo JText::_('COM_REDFORM_No');
 					?>
 				</td>
 				<td>
 					<?php 
-					if ($row->unique) echo JText::_('Yes');
-					else echo JText::_('No');
+					if ($row->unique) echo JText::_('COM_REDFORM_Yes');
+					else echo JText::_('COM_REDFORM_No');
 					?>
 				</td>
 				<td>

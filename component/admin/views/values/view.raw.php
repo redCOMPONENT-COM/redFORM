@@ -27,21 +27,21 @@ class RedformViewValues extends JView {
 		
 		if (empty($fieldtype)) {
 			$fieldtypes = array(
-				array('fieldtype' => 'radio', 'fieldname' => JText::_('radio')), 
-				array('fieldtype' => 'textarea', 'fieldname' => JText::_('textarea')),
-				array('fieldtype' => 'textfield', 'fieldname' => JText::_('textfield')),
-				array('fieldtype' => 'checkbox', 'fieldname' => JText::_('checkbox')),
-				array('fieldtype' => 'email', 'fieldname' => JText::_('email')),
-				array('fieldtype' => 'username', 'fieldname' => JText::_('username')),
-				array('fieldtype' => 'fullname', 'fieldname' => JText::_('fullname')),
-				array('fieldtype' => 'select', 'fieldname' => JText::_('select')),
-				array('fieldtype' => 'multiselect', 'fieldname' => JText::_('multiselect')),
-				array('fieldtype' => 'fileupload', 'fieldname' => JText::_('fileupload')),
-        array('fieldtype' => 'wysiwyg', 'fieldname' => JText::_('wysiwyg')),
-				array('fieldtype' => 'price', 'fieldname' => JText::_('price')),
-        array('fieldtype' => 'info', 'fieldname' => JText::_('info')),
-        array('fieldtype' => 'recipients', 'fieldname' => JText::_('recipients')),
-	      array('fieldtype' => 'date', 'fieldname' => JText::_('date')),
+				array('fieldtype' => 'radio', 'fieldname' => JText::_('COM_REDFORM_radio')), 
+				array('fieldtype' => 'textarea', 'fieldname' => JText::_('COM_REDFORM_textarea')),
+				array('fieldtype' => 'textfield', 'fieldname' => JText::_('COM_REDFORM_textfield')),
+				array('fieldtype' => 'checkbox', 'fieldname' => JText::_('COM_REDFORM_checkbox')),
+				array('fieldtype' => 'email', 'fieldname' => JText::_('COM_REDFORM_email')),
+				array('fieldtype' => 'username', 'fieldname' => JText::_('COM_REDFORM_username')),
+				array('fieldtype' => 'fullname', 'fieldname' => JText::_('COM_REDFORM_fullname')),
+				array('fieldtype' => 'select', 'fieldname' => JText::_('COM_REDFORM_select')),
+				array('fieldtype' => 'multiselect', 'fieldname' => JText::_('COM_REDFORM_multiselect')),
+				array('fieldtype' => 'fileupload', 'fieldname' => JText::_('COM_REDFORM_fileupload')),
+        array('fieldtype' => 'wysiwyg', 'fieldname' => JText::_('COM_REDFORM_wysiwyg')),
+				array('fieldtype' => 'price', 'fieldname' => JText::_('COM_REDFORM_price')),
+        array('fieldtype' => 'info', 'fieldname' => JText::_('COM_REDFORM_info')),
+        array('fieldtype' => 'recipients', 'fieldname' => JText::_('COM_REDFORM_recipients')),
+	      array('fieldtype' => 'date', 'fieldname' => JText::_('COM_REDFORM_date')),
 				);
 			echo JHTML::_('select.genericlist',  $fieldtypes, 'fieldtype', '', 'fieldtype', 'fieldname') ;
 		}

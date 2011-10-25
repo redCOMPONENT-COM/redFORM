@@ -15,12 +15,12 @@ defined('_JEXEC') or die('Restricted access'); ?>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 <div class="col50">
-<fieldset class="adminform"><legend><?php echo JText::_( 'Payment' ); ?></legend>
+<fieldset class="adminform"><legend><?php echo JText::_('COM_REDFORM_Payment' ); ?></legend>
 
 <table class="admintable">
 	<tr>
 		<td width="100" align="right" class="key">
-			<label><?php echo JText::_( 'Date' ); ?>:</label>
+			<label><?php echo JText::_('COM_REDFORM_Date' ); ?>:</label>
 		</td>
 		<td>
 			<?php echo $this->object->date; ?>
@@ -28,7 +28,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	</tr>
 	<tr>
 		<td width="100" align="right" class="key">
-			<label><?php echo JText::_( 'Gateway' ); ?>:</label>
+			<label><?php echo JText::_('COM_REDFORM_Gateway' ); ?>:</label>
 		</td>
 		<td>
 			<?php echo $this->object->gateway; ?>
@@ -36,7 +36,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	</tr>
 	<tr>
 		<td width="100" align="right" class="key">
-			<label><?php echo JText::_( 'Status' ); ?>:</label>
+			<label><?php echo JText::_('COM_REDFORM_Status' ); ?>:</label>
 		</td>
 		<td>
 			<?php echo $this->object->status; ?>
@@ -44,7 +44,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	</tr>
 	<tr>
 		<td width="100" align="right" class="key">
-			<label><?php echo JText::_( 'Data' ); ?>:</label>
+			<label><?php echo JText::_('COM_REDFORM_Data' ); ?>:</label>
 		</td>
 		<td>
 			<?php echo str_replace("\n", "<br/>",$this->object->data); ?>
@@ -52,7 +52,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	</tr>
 	<tr>
 		<td width="100" align="right" class="key">
-			<label><?php echo JText::_( 'Paid' ); ?>:</label>
+			<label><?php echo JText::_('COM_REDFORM_Paid' ); ?>:</label>
 		</td>
 		<td>
 			<?php echo $this->object->paid; ?>

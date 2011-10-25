@@ -113,7 +113,7 @@ function upgradeFormColumns()
         }
         
         if (count($replaced) != count($need_upgrade)) {
-            echo JText::_('ERROR NOT ALL COLUMNS COULD BE MATCHED AND REPLACED') . ': '. implode(', ', array_diff($need_upgrade, $replaced)) . '<br/>';        	
+            echo JText::_('COM_REDFORM_ERROR_NOT_ALL_COLUMNS_COULD_BE_MATCHED_AND_REPLACED') . ': '. implode(', ', array_diff($need_upgrade, $replaced)) . '<br/>';        	
         }        
       }
     }
@@ -510,7 +510,7 @@ function com_install()
     $query = ' DELETE FROM #__plugins WHERE name = '. $db->Quote('Content - redFORM');
     $db->setQuery($query);
     if ($db->query()) {
-      echo JText::_('Removed ghost instances of redFORM content plugin').'<br />';
+      echo JText::_('COM_REDFORM_Removed_ghost_instances_of_redFORM_content_plugin').'<br />';
     }
   }
   
@@ -522,17 +522,17 @@ function com_install()
 	$installer = new JInstaller();
 	$installer->setAdapter('plugin');
 	if (!$installer->install(JPATH_SITE.DS.'tmp'.DS.'redform_plugin')) {
-	  echo JText::_('Plugin install failed: ') . $installer->getError().'<br />';
+	  echo JText::_('COM_REDFORM_Plugin_install_failed:_') . $installer->getError().'<br />';
 	}
 	else {
 	  // autopublish the plugin
 	  $query = ' UPDATE #__plugins SET published = 1 WHERE name = '. $db->Quote('Content - redFORM');
     $db->setQuery($query);
     if ($db->query()) {
-	    echo JText::_('Succesfully installed redform content plugin').'<br />';
+	    echo JText::_('COM_REDFORM_Succesfully_installed_redform_content_plugin').'<br />';
     }
     else {
-      echo JText::_('Error publishing redform content plugin').'<br />';      
+      echo JText::_('COM_REDFORM_Error_publishing_redform_content_plugin').'<br />';      
     }
 	  
 	}

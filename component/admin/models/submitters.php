@@ -228,7 +228,7 @@ class RedformModelSubmitters extends JModel {
       JArrayHelper::toInteger( $cid );
 	  
       if (!is_array( $cid ) || count( $cid ) < 1) {
-         $mainframe->enqueueMessage(JText::_('No submitter found to delete'));
+         $mainframe->enqueueMessage(JText::_('COM_REDFORM_No_submitter_found_to_delete'));
          return false;
       }
       
@@ -244,7 +244,7 @@ class RedformModelSubmitters extends JModel {
 	        $res = $database->loadResult();        
 	        if ($res) 
 	        {
-	        	$msg = JText::_('CANNOT DELETE REDEVENT REGISTRATION');
+	        	$msg = JText::_('COM_REDFORM_CANNOT_DELETE_REDEVENT_REGISTRATION');
 	        	$this->setError($msg);
 	        	JError::raiseWarning(0, $msg);
 	        	return false;
@@ -261,8 +261,8 @@ class RedformModelSubmitters extends JModel {
       	
       	if (!$database->query()) 
       	{
-      		$mainframe->enqueueMessage(JText::_('A problem occured when deleting the answers'));
-          RedformHelperLog::simpleLog(JText::_('A problem occured when deleting the answers') . ': ' . $database->getErrorMsg());
+      		$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_answers'));
+          RedformHelperLog::simpleLog(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_answers') . ': ' . $database->getErrorMsg());
           return false;
       	}
       	
@@ -274,19 +274,19 @@ class RedformModelSubmitters extends JModel {
       	
       	if (!$database->query()) 
       	{
-      		$mainframe->enqueueMessage(JText::_('A problem occured when deleting the submitter'));
-          RedformHelperLog::simpleLog(JText::_('A problem occured when deleting the submitter') . ': ' . $database->getErrorMsg());
+      		$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_submitter'));
+          RedformHelperLog::simpleLog(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_submitter') . ': ' . $database->getErrorMsg());
           return false;
       	}
       	
       	if (count($cid) > 1) {
-      		$mainframe->enqueueMessage(JText::_('Submitters have been deleted'));
+      		$mainframe->enqueueMessage(JText::_('COM_REDFORM_Submitters_have_been_deleted'));
       	}
       	else {
-      		$mainframe->enqueueMessage(JText::_('Submitter has been deleted'));
+      		$mainframe->enqueueMessage(JText::_('COM_REDFORM_Submitter_has_been_deleted'));
       	}
       }
-      return JText::_('Removal succesfull');
+      return JText::_('COM_REDFORM_Removal_succesfull');
    	}
 	
 	/**

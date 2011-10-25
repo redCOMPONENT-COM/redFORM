@@ -305,7 +305,7 @@ class RedformModelPayment extends JModel
   function getForm()
   {
   	if (empty($this->_submit_key)) {
-  	JError::raiseError(0, JText::_('Missing key'));
+  	JError::raiseError(0, JText::_('COM_REDFORM_Missing_key'));
   			return false;
   	}
   

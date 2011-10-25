@@ -25,12 +25,12 @@ class RedformHelper {
     $view = JRequest::getVar('view', '');
     $controller = JRequest::getVar('controller', '');
     //Create Submenu
-    JSubMenuHelper::addEntry( JText::_( 'FORMS' ), 'index.php?option=com_redform&view=forms', $view == '' || $view == 'forms');
-    JSubMenuHelper::addEntry( JText::_( 'FIELDS' ), 'index.php?option=com_redform&view=fields', $view == 'fields');
-    JSubMenuHelper::addEntry( JText::_( 'SUBMITTERS' ), 'index.php?option=com_redform&view=submitters', $view == 'submitters');
-    JSubMenuHelper::addEntry( JText::_( 'LOGS' ), 'index.php?option=com_redform&view=log', $view == 'log');
+    JSubMenuHelper::addEntry( JText::_('COM_REDFORM_FORMS' ), 'index.php?option=com_redform&view=forms', $view == '' || $view == 'forms');
+    JSubMenuHelper::addEntry( JText::_('COM_REDFORM_FIELDS' ), 'index.php?option=com_redform&view=fields', $view == 'fields');
+    JSubMenuHelper::addEntry( JText::_('COM_REDFORM_SUBMITTERS' ), 'index.php?option=com_redform&view=submitters', $view == 'submitters');
+    JSubMenuHelper::addEntry( JText::_('COM_REDFORM_LOGS' ), 'index.php?option=com_redform&view=log', $view == 'log');
     if ($user->get('gid') > 24) {
-      JSubMenuHelper::addEntry( JText::_( 'SETTINGS' ), 'index.php?option=com_redform&controller=configuration&task=edit', $controller == 'configuration');
+      JSubMenuHelper::addEntry( JText::_('COM_REDFORM_SETTINGS' ), 'index.php?option=com_redform&controller=configuration&task=edit', $controller == 'configuration');
     }
   }
 }

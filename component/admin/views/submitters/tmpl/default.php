@@ -28,7 +28,7 @@ if (empty($this->integration) && $this->params->get('showintegration', false)) {
 <script type="text/javascript">
 function submitbutton(pressbutton) {
 	if (pressbutton == 'forcedelete') {
-		if (confirm('<?php echo JText::_('REDFORM_FORCEDELETE_ALERT'); ?>')) {
+		if (confirm('<?php echo JText::_('COM_REDFORM_FORCEDELETE_ALERT'); ?>')) {
 			submitform(pressbutton);
 		}
 	}
@@ -46,20 +46,20 @@ function submitbutton(pressbutton) {
 			               . ($this->xref ? '&xref='.$this->xref : '')
 			               . '&format=raw'; 
 			               ?>
-			<?php echo JHTML::link($csvlink, JText::_('CSV EXPORT')); ?>
+			<?php echo JHTML::link($csvlink, JText::_('COM_REDFORM_CSV_EXPORT')); ?>
 		</div>
 	</div>
 	<br clear="all" />
-	<div id="formname"><?php echo (empty($this->form) ? JText::_('All') : $this->form->formname); ?>
+	<div id="formname"><?php echo (empty($this->form) ? JText::_('COM_REDFORM_All') : $this->form->formname); ?>
 	<?php if ($this->coursetitle): ?><br /><?php echo $this->coursetitle; ?><?php endif; ?>
 	</div>
   <?php if (!$this->xref): // if xref is set, prevent selecting another form ?>
 	<table>
       <tr>
          <td align="left" width="100%">
-            <?php echo JText::_('Filter'); ?>:
+            <?php echo JText::_('COM_REDFORM_Filter'); ?>:
 			<?php echo $this->lists['form_id']; ?>
-            <button onclick="this.form.submit();"><?php echo JText::_('Go'); ?></button>
+            <button onclick="this.form.submit();"><?php echo JText::_('COM_REDFORM_Go'); ?></button>
          </td>
       </tr>
     </table>
@@ -70,20 +70,20 @@ function submitbutton(pressbutton) {
 <table class="adminlist">
 	<!-- Headers -->
 	<thead><tr>
-	<th width="20"><?php echo JText::_('ID'); ?></th>
+	<th width="20"><?php echo JText::_('COM_REDFORM_ID'); ?></th>
 	<th width="20"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->submitters ); ?>);" /></th>
-	<th><?php echo JText::_('Submission date'); ?></th>
-	<th><?php echo JText::_('Form name');?></th>
-	<th><?php echo JText::_('Unique id');?></th>
+	<th><?php echo JText::_('COM_REDFORM_Submission_date'); ?></th>
+	<th><?php echo JText::_('COM_REDFORM_Form_name');?></th>
+	<th><?php echo JText::_('COM_REDFORM_Unique_id');?></th>
 	<?php if (!$this->integration && $this->params->get('showintegration', false)): ?>
-	<th><?php echo JText::_('Integration');?></th>
+	<th><?php echo JText::_('COM_REDFORM_Integration');?></th>
 	<?php endif; ?>
 	<?php foreach ($this->fields as $key => $value) { ?>
 		<th><?php echo $value->field_header; ?></th>
 	<?php } ?> 
 	<?php if ($this->form->activatepayment): ?>
-		<th width="20"><?php echo JText::_('Price'); ?></th>
-		<th width="20"><?php echo JText::_('Payment'); ?></th>
+		<th width="20"><?php echo JText::_('COM_REDFORM_Price'); ?></th>
+		<th width="20"><?php echo JText::_('COM_REDFORM_Payment'); ?></th>
 	<?php endif;?>
 	</tr></thead>
 	
@@ -141,12 +141,12 @@ function submitbutton(pressbutton) {
 				<?php if ($this->form->activatepayment): ?>
 					<td><?php echo $row->price; ?></td>
 					<td class="price <?php echo ($row->paid ? 'paid' : 'unpaid'); ?>">
-						<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit_key='.$row->submit_key), JText::_('history')); ?>
+						<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit_key='.$row->submit_key), JText::_('COM_REDFORM_history')); ?>
 						<?php if (!$row->paid): ?>
-						<span class="hasTip" title="<?php echo JText::_('REGISTRATION_NOT_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'publish_x.png'); ?><?php echo $link; ?></span>
-						<?php echo ' '.JHTML::link(JURI::root().'/index.php?option=com_redform&controller=payment&task=select&key='.$row->submit_key, JText::_('link')); ?>
+						<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'publish_x.png'); ?><?php echo $link; ?></span>
+						<?php echo ' '.JHTML::link(JURI::root().'/index.php?option=com_redform&controller=payment&task=select&key='.$row->submit_key, JText::_('COM_REDFORM_link')); ?>
 						<?php else: ?>
-						<span class="hasTip" title="<?php echo JText::_('REGISTRATION_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'tick.png'); ?><?php echo $link; ?></span>
+						<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'tick.png'); ?><?php echo $link; ?></span>
 						<?php endif; ?>						
 					</td>
 				<?php endif;?>

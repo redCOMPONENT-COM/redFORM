@@ -42,7 +42,7 @@ class RedformViewPayment extends JView
 			return;
 		}
 
-		JToolBarHelper::title( JText::_( 'Payment history' ) );
+		JToolBarHelper::title( JText::_('COM_REDFORM_Payment_history' ) );
 		JToolBarHelper::back();
 
 		//get the object

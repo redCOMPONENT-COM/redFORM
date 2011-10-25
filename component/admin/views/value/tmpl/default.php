@@ -24,7 +24,7 @@ JHTML::_('behavior.tooltip');
 		<table id="editvalue" class="adminform">
 		<tr>
 			<td>
-			<?php echo JText::_('Value'); ?>
+			<?php echo JText::_('COM_REDFORM_Value'); ?>
 			</td>
 			<td>
 			<?php if ($this->row->fieldtype == 'info'): ?>
@@ -32,12 +32,12 @@ JHTML::_('behavior.tooltip');
 			<?php else: ?>
 			<input class="inputbox" type="text" size="80" name="value" value="<?php echo $this->escape($this->row->value); ?>">
 	    <?php endif; ?>
-			<?php echo JHTML::tooltip(JText::_('Enter the value here'), JText::_('Value'), 'tooltip.png', '', '', false); ?>
+			<?php echo JHTML::tooltip(JText::_('COM_REDFORM_Enter_the_value_here'), JText::_('COM_REDFORM_Value'), 'tooltip.png', '', '', false); ?>
 			</td>
 		</tr>
 		<tr>
 			<td valign="top" align="right">
-			<?php echo JText::_('Field'); ?>
+			<?php echo JText::_('COM_REDFORM_Field'); ?>
 			</td>
 			<td>
 			<?php echo $this->lists['fields']; ?>
@@ -45,16 +45,16 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td valign="top" align="right">
-			<?php echo JText::_('Price'); ?>
+			<?php echo JText::_('COM_REDFORM_Price'); ?>
 			</td>
 			<td>
 			<input type="text" name="price" value="<?php echo $this->row->price; ?>"/>
-			<?php echo JHTML::tooltip(JText::_('VALUE_PRICE_TIP'), JText::_('Price'), 'tooltip.png', '', '', false); ?>
+			<?php echo JHTML::tooltip(JText::_('COM_REDFORM_VALUE_PRICE_TIP'), JText::_('COM_REDFORM_Price'), 'tooltip.png', '', '', false); ?>
 			</td>
 		</tr>
 		<tr id="trpublished">
 			<td valign="top" align="right">
-			<?php echo JText::_('Published'); ?>
+			<?php echo JText::_('COM_REDFORM_Published'); ?>
 			</td>
 			<td>
 			<?php echo $this->lists['published']; ?>

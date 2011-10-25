@@ -36,7 +36,7 @@ class RedformViewRedform extends JView {
 		
 		/* Set the page title */
 		$document = JFactory::getDocument();
-		$document->setTitle($document->getTitle().' - '.JText::_('redFORM'));
+		$document->setTitle($document->getTitle().' - '.JText::_('COM_REDFORM'));
 		
 		/* Get the product image and description */
 		$productdetails = $this->get('ProductDetails');

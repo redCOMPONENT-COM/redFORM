@@ -166,12 +166,12 @@ class RedformModelValues extends JModel
   	. "\n  WHERE ( $cids )";
   	$database->setQuery( $query );
   	if (!$database->query()) {
-  		$mainframe->enqueueMessage(JText::_('A problem occured when deleting the value'));
+  		$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_value'));
   		return false;
   	}
   	
-  	if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('Values have been deleted'));
-  	else $mainframe->enqueueMessage(JText::_('Value has been deleted'));
+  	if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('COM_REDFORM_Values_have_been_deleted'));
+  	else $mainframe->enqueueMessage(JText::_('COM_REDFORM_Value_has_been_deleted'));
   		
   	return true;
   }
@@ -187,7 +187,7 @@ class RedformModelValues extends JModel
 		$row =& $this->getTable();
 		
 		if (empty( $cid )) {
-			return JError::raiseWarning( 500, JText::_( 'No items selected' ) );
+			return JError::raiseWarning( 500, JText::_('COM_REDFORM_No_items_selected' ) );
 		}
 		// update ordering values
 		for ($i = 0; $i < $total; $i++) {
@@ -227,7 +227,7 @@ class RedformModelValues extends JModel
 		$row =& $this->getTable();
 		
 		if (empty( $cid )) {
-			return JError::raiseWarning( 500, JText::_( 'No items selected' ) );
+			return JError::raiseWarning( 500, JText::_('COM_REDFORM_No_items_selected' ) );
 		}
 		// update ordering values
 		for ($i = 0; $i < $total; $i++) {

@@ -50,7 +50,7 @@ class plgContentRedform extends JPlugin {
 	function _process(&$row, $params = array()) 
 	{
 		if (!file_exists(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'redform.core.php')) {
-			JError::raiseWarning(0, JText::_('REDFORM_COMPONENT_REQUIRED_FOR_REDFORM_PLUGIN'));
+			JError::raiseWarning(0, JText::_('COM_REDFORM_COMPONENT_REQUIRED_FOR_REDFORM_PLUGIN'));
 			return false;
 		}
 		include_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'redform.core.php');
@@ -107,14 +107,14 @@ class plgContentRedform extends JPlugin {
 			/* Check if the user is allowed to access the form */
 			$user	= JFactory::getUser();
 			if ($user->aid < $form->access) {
-				return JText::_('LOGIN_REQUIRED');
+				return JText::_('COM_REDFORM_LOGIN_REQUIRED');
 			}		
 	
 			/* Check if the number of sign ups is set, otherwise default to 1 */
 			if (!isset($matches[1])) $matches[1] = 1;
 			
 			if (!isset($form->id)) {
-				return JText::_('No active form found');
+				return JText::_('COM_REDFORM_No_active_form_found');
 			}
 			else {				
 				/* Draw the form form */
@@ -152,10 +152,10 @@ class plgContentRedform extends JPlugin {
 	function _checkFormActive($form)
 	{
 		if (strtotime($form->startdate) > time()) {
-			return JText::_('REDFORM_FORM_NOT_STARTED');
+			return JText::_('COM_REDFORM_FORM_NOT_STARTED');
 		}
 		else if ($form->formexpires && strtotime($form->enddate) < time()) {
-			return JText::_('REDFORM_FORM_EXPIRED');
+			return JText::_('COM_REDFORM_FORM_EXPIRED');
 		}
 		return true;
 	}
@@ -272,7 +272,7 @@ class plgContentRedform extends JPlugin {
 		for ($signup = 1; $signup <= $multi; $signup++)
 		{
 			if ($signup > 1) $pdfform->Addpage('P');
-			$pdfform->Cell(0, 10, JText::_('ATTENDEE').' '.$signup, 0, 1, 'L');
+			$pdfform->Cell(0, 10, JText::_('COM_REDFORM_ATTENDEE').' '.$signup, 0, 1, 'L');
 			$footnote = false;
 	
 			foreach ($fields as $key => $field)

@@ -93,7 +93,7 @@ class RedformControllerRedform extends RedformController {
     
     if (!$result) {
     	if (!JRequest::getBool('ALREADY_ENTERED')) {
-    		$msg = JText::_('Sorry, there was a problem with your submission') .': '. $model->getError();
+    		$msg = JText::_('COM_REDFORM_Sorry_there_was_a_problem_with_your_submission') .': '. $model->getError();
     	}
     	$this->setRedirect($referer, $msg, 'error');
     	$this->redirect();

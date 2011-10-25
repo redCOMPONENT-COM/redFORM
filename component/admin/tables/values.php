@@ -93,7 +93,7 @@ class RedformTableValues extends JTable {
   	  jimport( 'joomla.mail.helper' );
 	    if (! JMailHelper::isEmailAddress($this->value) ) 
 	    {
-	      $this->setError(JText::_('INVALID EMAIL FORMAT'));
+	      $this->setError(JText::_('COM_REDFORM_INVALID_EMAIL_FORMAT'));
 	      return false;
 	    }
 	  }

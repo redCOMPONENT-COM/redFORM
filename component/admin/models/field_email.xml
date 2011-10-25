@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
 	<params>
-    <param name="class" type="text" default="" label="REDFORM_FIELD_TEXT_PARAMS_CLASS" description="REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
-    <param name="size" type="text" default="25" label="REDFORM_FIELD_TEXT_PARAMS_SIZE" description="REDFORM_FIELD_TEXT_PARAMS_SIZE_DESC"/>
-    <param name="maxlength" type="text" default="250" label="REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH" description="REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH_DESC"/>
+    <param name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS" description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
+    <param name="size" type="text" default="25" label="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE" description="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE_DESC"/>
+    <param name="maxlength" type="text" default="250" label="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH" description="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH_DESC"/>
     <param name="force_mailing_list" type="radio" default="0" label="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST" description="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST_DESC">
       <option value="0">No</option>
       <option value="1">Yes</option>

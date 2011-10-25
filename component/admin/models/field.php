@@ -209,7 +209,7 @@ class RedformModelField extends JModel
   	$row->load($field_id);
 
   	if (!$row->bind($post)) {
-  		$this->setError(JText::_('There was a problem binding the field data'), 'error');
+  		$this->setError(JText::_('COM_REDFORM_There_was_a_problem_binding_the_field_data'), 'error');
   		return false;
   	}
   	
@@ -217,13 +217,13 @@ class RedformModelField extends JModel
 
   	/* pre-save checks */
   	if (!$row->check()) {
-  		$this->setError(JText::_('There was a problem checking the field data'), 'error');
+  		$this->setError(JText::_('COM_REDFORM_There_was_a_problem_checking_the_field_data'), 'error');
   		return false;
   	}
 
   	/* save the changes */
   	if (!$row->store()) {
-  		$this->setError(JText::_('There was a problem storing the field data'), 'error');
+  		$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_field_data'), 'error');
   		return false;
   	}
   	
@@ -255,7 +255,7 @@ class RedformModelField extends JModel
 			  }
 			  $post['field_id'] = $row->id;
 			  if (!$mailinglistrow->bind($post)) {
-			  	$mainframe->enqueueMessage(JText::_('There was a problem binding the mailinglist data').' '.$row->getError(), 'error');
+			  	$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_binding_the_mailinglist_data').' '.$row->getError(), 'error');
 			  	return false;
 			  }
 	
@@ -264,7 +264,7 @@ class RedformModelField extends JModel
 	
 			  /* save the changes */
 			  if (!$mailinglistrow->store()) {
-			  	$mainframe->enqueueMessage(JText::_('There was a problem storing the mailinglist data').' '.$row->getError(), 'error');
+			  	$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_mailinglist_data').' '.$row->getError(), 'error');
 			  	return false;
 			  }
 	  	}
@@ -315,7 +315,7 @@ class RedformModelField extends JModel
 				/* Drop the old column */
 				$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$oldrow->form_id)." DROP ".$db->nameQuote($field);
 				$db->setQuery($q);
-				if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot remove field from old form').' '.$db->getErrorMsg());
+				if (!$db->query()) JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_remove_field_from_old_form').' '.$db->getErrorMsg());
 			}
 		}
 		
@@ -334,7 +334,7 @@ class RedformModelField extends JModel
 			$db->setQuery($q);
 			if (!$db->query()) 
 			{
-				JError::raiseWarning('error', JText::_('Cannot make the field unique').' '.$db->getErrorMsg());
+				JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_make_the_field_unique').' '.$db->getErrorMsg());
 				/* Remove unique status */
 				$q = "UPDATE ".$db->nameQuote('#__rwf_fields')."
 					SET ".$db->nameQuote('unique')." = 0
@@ -347,7 +347,7 @@ class RedformModelField extends JModel
 		{
 			$q .= ' DROP INDEX' . $db->nameQuote($field);
 			$db->setQuery($q);
-			if (!$db->query()) JError::raiseWarning('error', JText::_('Cannot remove the field unique status').' '.$db->getErrorMsg());
+			if (!$db->query()) JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_remove_the_field_unique_status').' '.$db->getErrorMsg());
 		}
 	}
 	

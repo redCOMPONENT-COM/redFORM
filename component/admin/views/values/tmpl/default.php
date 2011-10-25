@@ -19,45 +19,45 @@
  
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 if ($this->fields == 0) {
-	echo JText::_('No fields found');
+	echo JText::_('COM_REDFORM_No_fields_found');
 }
 else { ?>
 <form action="index.php" method="post" name="adminForm">
 	<table>
       <tr>
          <td align="left" width="100%">
-            <?php echo JText::_('Filter'); ?>:
+            <?php echo JText::_('COM_REDFORM_Filter'); ?>:
 			<?php echo $this->lists['form_id']; ?>
-            <button onclick="this.form.submit();"><?php echo JText::_('Go'); ?></button>
+            <button onclick="this.form.submit();"><?php echo JText::_('COM_REDFORM_Go'); ?></button>
          </td>
       </tr>
     </table>
 	<table class="adminlist">
 		<tr>
 			<th width="20">
-			<?php echo JText::_('ID'); ?>
+			<?php echo JText::_('COM_REDFORM_ID'); ?>
 			</th>
 			<th width="20">
 			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->values ); ?>);" />
 			</th>
 			<th class="title">
-			<?php echo JText::_('Value'); ?>
+			<?php echo JText::_('COM_REDFORM_Value'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Field'); ?>
+			<?php echo JText::_('COM_REDFORM_Field'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Field type'); ?>
+			<?php echo JText::_('COM_REDFORM_FIELD_TYPE'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Price'); ?>
+			<?php echo JText::_('COM_REDFORM_Price'); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Ordering'); ?>
+			<?php echo JText::_('COM_REDFORM_Ordering'); ?>
 			<?php echo JHTML::_('grid.order',  $this->values ); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('Published'); ?>
+			<?php echo JText::_('COM_REDFORM_Published'); ?>
 			</th>
 		</tr>
 		<?php
@@ -70,7 +70,7 @@ else { ?>
 
 			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
 			$task 	= $row->published ? 'unpublish' : 'publish';
-			$alt 	= $row->published ? JText::_('Published') : JText::_('Unpublished');
+			$alt 	= $row->published ? JText::_('COM_REDFORM_Published') : JText::_('COM_REDFORM_Unpublished');
 			
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
 			$my  = &JFactory::getUser();
@@ -87,11 +87,11 @@ else { ?>
 				if ( $row->checked_out && ( $row->checked_out != $my->id ) ) {
 					?>
 					<?php echo $row->value; ?>
-					&nbsp;[ <i><?php echo JText::_('Checked Out'); ?></i> ]
+					&nbsp;[ <i><?php echo JText::_('COM_REDFORM_Checked_Out'); ?></i> ]
 					<?php
 				} else {
 					?>
-					<a href="<?php echo $link; ?>" title="<?php echo JText::_('Edit field'); ?>">
+					<a href="<?php echo $link; ?>" title="<?php echo JText::_('COM_REDFORM_Edit_field'); ?>">
 					<?php 
 					 if ($row->fieldtype == 'info') {
 					   $val = JFilterInput::clean($row->value, 'string');

@@ -25,18 +25,18 @@
 	
 	// echo first line with field names
 	$fields = array();
-	$fields[] = JText::_('Submission date');
-	$fields[] = JText::_('Form name');
-	$fields[] = JText::_('Unique id');
+	$fields[] = JText::_('COM_REDFORM_Submission_date');
+	$fields[] = JText::_('COM_REDFORM_Form_name');
+	$fields[] = JText::_('COM_REDFORM_Unique_id');
 	if ($xref) {
-		$fields[] = JText::_('EVENT');
+		$fields[] = JText::_('COM_REDFORM_EVENT');
 	}	
 	foreach ($this->fields as $key => $value) {		
 		$fields[] = $value->field_header;
 	}
 	if ($this->form->activatepayment) {
-		$fields[] = JText::_('Total price');
-		$fields[] = JText::_('Payment status');				
+		$fields[] = JText::_('COM_REDFORM_Total_price');
+		$fields[] = JText::_('COM_REDFORM_Payment_status');				
 	}
 	echo $this->writecsvrow($fields);
 	

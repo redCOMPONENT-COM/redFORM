@@ -203,7 +203,7 @@ class RedformModelRedform extends JModel {
 			$results = $dispatcher->trigger( 'onCheckCaptcha', array( &$res ) );
 			
 			if (count($results) && $res == false) {
-				$this->setError(JText::_('CAPTCHA_WRONG'));
+				$this->setError(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
 	      return false;				
 			}
 		}
@@ -488,8 +488,8 @@ class RedformModelRedform extends JModel {
 	
 			/* Send the mail */
 			if (!$mailer->Send()) {
-				JError::raiseWarning(0, JText::_('NO_MAIL_SEND').' (to submitter)');
-				RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (to submitter):'.$mailer->error);
+				JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter)');
+				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter):'.$mailer->error);
 			}
 			/* Clear the mail details */
 			$mailer->ClearAddresses();
@@ -575,7 +575,7 @@ class RedformModelRedform extends JModel {
 			$results = $dispatcher->trigger( 'onCheckCaptcha', array( &$res ) );
 			
 			if (count($results) && $res == false) {
-				$this->setError(JText::_('CAPTCHA_WRONG'));
+				$this->setError(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
 	      return false;				
 			}
 		}
@@ -642,7 +642,7 @@ class RedformModelRedform extends JModel {
 			{
       	$res = $answers->savedata($postvalues);
 	      if (!$res) {
-	      	$this->setError(JText::_('REDFORM_SAVE_ANSWERS_FAILED'));
+	      	$this->setError(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED'));
 	      	return false;
 	      }
 	      else {
@@ -761,7 +761,7 @@ class RedformModelRedform extends JModel {
 
 			// set the email subject
 			if ($new) {
-				$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
+				$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('COM_REDFORM_CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
 			}
 			else {
 				$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('COM_REDFORM_CONTACT_NOTIFICATION_UPDATE_EMAIL_SUBJECT')));
@@ -770,7 +770,7 @@ class RedformModelRedform extends JModel {
 			// Mail body
 			$htmlmsg = '<html><head><title></title></title></head><body>';
 			if ($new) {
-				$htmlmsg .= JText::sprintf('REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY', $form->formname);
+				$htmlmsg .= JText::sprintf('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY', $form->formname);
 			}
 			else {
 				$htmlmsg .= JText::sprintf('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY', $form->formname);
@@ -848,7 +848,7 @@ class RedformModelRedform extends JModel {
 
 			// send the mail
 			if (!$mailer->Send()) {
-				RedformHelperLog::simpleLog(JText::_('NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);
+				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);
 			}
 		}
 	}
@@ -872,7 +872,7 @@ class RedformModelRedform extends JModel {
 				$ids = $sids;
 			}
 			else {
-				JErrorRaiseWarning(0, JText::_('Wrong parameters for redformcore getSidsAnswers'));
+				JErrorRaiseWarning(0, JText::_('COM_REDFORM_Wrong_parameters_for_redformcore_getSidsAnswers'));
 				return false;
 			}
 		}
@@ -889,7 +889,7 @@ class RedformModelRedform extends JModel {
 		$form_id = $this->_db->loadResult();
 		
 		if (!$form_id) {
-			Jerror::raiseWarning(0, JText::_('No submission for these sids'));
+			Jerror::raiseWarning(0, JText::_('COM_REDFORM_No_submission_for_these_sids'));
 			return false;
 		}
 		
