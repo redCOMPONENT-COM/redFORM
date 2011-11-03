@@ -20,7 +20,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 	if ($this->vmsettings->virtuemartactive) {
-		global $mainframe;
+		$mainframe = &JFactory::getApplication();
 		$mainframe->redirect(JRoute::_('index.php?page=shop.product_details&product_id='.$this->vmsettings->vmproductid.'&option=com_virtuemart&Itemid='.$this->vmsettings->vmitemid));
 	}
 	else {

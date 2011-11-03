@@ -33,7 +33,7 @@ class RedformViewForm extends JView {
 	 **/
 	function display($tpl = null) 
 	{
-		global $mainframe;
+		$mainframe = &JFactory::getApplication();
 		
 		$this->setLayout('editform');
 		

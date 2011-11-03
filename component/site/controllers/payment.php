@@ -75,7 +75,7 @@ class RedformControllerPayment extends JController {
 
 	function processing()
   {
-  	global $mainframe;
+  	$mainframe = &JFactory::getApplication();
   
     $submit_key = JRequest::getVar('key');
     
@@ -107,7 +107,7 @@ class RedformControllerPayment extends JController {
   
   function paymentcancelled()
   {
-    global $mainframe;
+    $mainframe = &JFactory::getApplication();
     
     $msg = JText::_('COM_REDFORM_PAYMENT_CANCELLED');
     $mainframe->redirect('index.php', $msg);
@@ -116,7 +116,7 @@ class RedformControllerPayment extends JController {
 
   function notify()
   {
-    global $mainframe;
+    $mainframe = &JFactory::getApplication();
     
     $submit_key = JRequest::getVar('key');
 		$gw = JRequest::getVar('gw', '');

@@ -76,8 +76,10 @@ class RedformModelValues extends JModel
     return $q;
   }
 	
-	function getPagination() {
-		global $mainframe, $option;
+	function getPagination() 
+	{
+    $mainframe = &JFactory::getApplication();
+    $option = JRequest::getCmd('option');
 		
 		/* Lets load the pagination if it doesn't already exist */
 		if (empty($this->_pagination)) {
@@ -157,7 +159,7 @@ class RedformModelValues extends JModel
    */
   function delete($cid)
   {
-  	global $mainframe;
+  	$mainframe = &JFactory::getApplication();
   	$database = & JFactory::getDBO();
   	JArrayHelper::toInteger( $cid );
   	 

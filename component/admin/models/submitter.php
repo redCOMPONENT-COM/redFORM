@@ -380,7 +380,7 @@ class RedformModelSubmitter extends JModel {
 	 */
 	 private function Mailer() 
 	 {
-		 global $mainframe;
+		 $mainframe = &JFactory::getApplication();
 		jimport('joomla.mail.helper');
 		/* Start the mailer object */
 		$this->mailer = &JFactory::getMailer();

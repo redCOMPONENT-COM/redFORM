@@ -52,7 +52,7 @@ class RedformControllerValues extends JController
    */
   function add( )
   {
-    global $option;
+    $option = JRequest::getCmd('option');
 
     $this->setRedirect( 'index.php?option=com_redform&view=value' );
   }

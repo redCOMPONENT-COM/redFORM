@@ -45,7 +45,7 @@ class RedformControllerFields extends JController
    */
   function add( )
   {
-    global $option;
+    $option = JRequest::getCmd('option');
 
     $this->setRedirect( 'index.php?option=com_redform&view=field' );
   }
@@ -196,7 +196,7 @@ class RedformControllerFields extends JController
    */
   function remove()
   {
-    global $option;
+    $option = JRequest::getCmd('option');
 
     $cid    = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 

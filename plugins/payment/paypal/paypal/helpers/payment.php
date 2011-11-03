@@ -94,7 +94,7 @@ class PaymentPaypal {
 	 */
   function notify()
   {
-    global $mainframe;
+    $mainframe = &JFactory::getApplication();
     $db = & JFactory::getDBO();
     
     				

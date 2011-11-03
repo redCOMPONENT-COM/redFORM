@@ -29,7 +29,7 @@ class RedformViewRedform extends JView {
 	
 	function display($tpl = null) 
 	{
-		global $mainframe;
+		$mainframe = &JFactory::getApplication();
 				
 		/* Get the VirtueMart settings */
 		$vmsettings = $this->get('VmSettings');

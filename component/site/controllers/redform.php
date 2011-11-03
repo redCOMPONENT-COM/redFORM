@@ -69,7 +69,7 @@ class RedformControllerRedform extends RedformController {
 	 * Shows a captcha
 	 */
 	public function displaycaptcha() {
-		global $mainframe;
+		$mainframe = &JFactory::getApplication();
 		// By default, just display an image
 		$document = JFactory::getDocument();
 		$doc = JDocument::getInstance('raw');

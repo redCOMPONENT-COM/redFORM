@@ -237,7 +237,7 @@ class RedformModelForm extends JModel
     * Delete a competition
     */
    function getRemoveForm() {
-      global $mainframe;
+      $mainframe = &JFactory::getApplication();
       $database = JFactory::getDBO();
       $cid = JRequest::getVar('cid');
       JArrayHelper::toInteger( $cid );

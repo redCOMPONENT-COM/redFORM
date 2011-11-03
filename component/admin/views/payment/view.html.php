@@ -33,7 +33,7 @@ class RedformViewPayment extends JView
 {
 	function display($tpl = null)
 	{
-		global $mainframe;
+		$mainframe = &JFactory::getApplication();
 
 		$object	=& $this->get('data');
 
@@ -55,7 +55,8 @@ class RedformViewPayment extends JView
 
 	function _displayForm($tpl)
 	{
-		global $mainframe, $option;
+    $mainframe = &JFactory::getApplication();
+    $option = JRequest::getCmd('option');
 		
 		$db		=& JFactory::getDBO();
 		$uri 	=& JFactory::getURI();

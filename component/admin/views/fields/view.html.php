@@ -32,7 +32,7 @@ class RedformViewFields extends JView {
 	 **/
 	function display($tpl = null) 
 	{
-		global $option;
+		$option = JRequest::getCmd('option');
 		
 		$mainframe = &JFactory::getApplication();
 		
