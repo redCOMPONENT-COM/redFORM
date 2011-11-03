@@ -29,7 +29,8 @@ class RedformViewPayments extends JView {
 	
   function display($tpl = null) 
   {
-		global $mainframe, $option;
+		$mainframe = JFactory::getApplication();
+		$option = JReuqest::getVar('option');
 		
 		$user 		= & JFactory::getUser();
 		$document	= & JFactory::getDocument();		

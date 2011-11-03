@@ -219,7 +219,7 @@ class RedformModelValue extends JModel
     */
    function store($data) 
    {
-      global $mainframe;
+      $mainframe = JFactory::getApplication();
       $row = $this->getTable('Values', 'RedformTable');
 	  
 	  /* Get the posted data */
@@ -260,7 +260,7 @@ class RedformModelValue extends JModel
     */
    function getRemoveValue() 
    {
-      global $mainframe;
+      $mainframe = JFactory::getApplication();
       $database = JFactory::getDBO();
       $cid = JRequest::getVar('cid');
       JArrayHelper::toInteger( $cid );

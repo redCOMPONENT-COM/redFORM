@@ -58,7 +58,8 @@ class RedformModelFields extends JModel {
   {
     parent::__construct();
 
-    global $mainframe, $option;
+	$mainframe = JFactory::getApplication();
+	$option = JRequest::getVar('option');
 
     $limit      = $mainframe->getUserStateFromRequest( $option.'.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
     $limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
@@ -130,7 +131,8 @@ class RedformModelFields extends JModel {
 	 */
 	function _buildContentOrderBy()
 	{
-		global $mainframe, $option;
+		$mainframe = JFactory::getApplication();
+		$option = JRequest::getVar('option');
 
 		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.values.filter_order',     'filter_order', 	'ordering', 'cmd' );
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.values.filter_order_Dir', 'filter_order_Dir',	'', 'word' );
@@ -166,7 +168,8 @@ class RedformModelFields extends JModel {
 	}
 	
 	function getPagination() {
-		global $mainframe, $option;
+		$mainframe = JFactory::getApplication();
+		$option = JRequest::getVar('option');
 		
 		/* Lets load the pagination if it doesn't already exist */
 		if (empty($this->_pagination)) {

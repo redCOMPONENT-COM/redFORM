@@ -170,7 +170,7 @@ class RedformModelSubmitters extends JModel {
 	
 	function getPagination() 
 	{
-		global $mainframe, $option;
+		$mainframe = JFactory::getApplication();/n$option = JReuqest::getVar('option');
 		
 		/* Lets load the pagination if it doesn't already exist */
 		jimport('joomla.html.pagination');

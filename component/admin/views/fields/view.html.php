@@ -32,13 +32,13 @@ class RedformViewFields extends JView {
 	 **/
 	function display($tpl = null) 
 	{
-		global $option;
+		$option = JRequest::getVar('option');
 		
 		$mainframe = &JFactory::getApplication();
 		
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.values.filter_order_Dir',	'filter_order_Dir',	'', 'word' );
 		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.values.filter_order', 		'filter_order', 	'ordering', 'cmd' );
-    $form_id          = $mainframe->getUserStateFromRequest( $option.'.fields.form_id', 'form_id', 0, 'int');
+    	$form_id          = $mainframe->getUserStateFromRequest( $option.'.fields.form_id', 'form_id', 0, 'int');
 
 		/* Get the pagination */
 		$pagination = $this->get('Pagination');

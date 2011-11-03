@@ -502,12 +502,12 @@ function com_install()
   upgradeFormColumns();
 	
   /** remove previous instances of the plugin, if there are more than one **/
-  $query = ' SELECT COUNT(*) FROM #__plugins WHERE name = '. $db->Quote('Content - redFORM');
+  $query = ' SELECT COUNT(*) FROM #__extensions WHERE name = '. $db->Quote('Content - redFORM');
   $db->setQuery($query);
   $nb_plug = $db->loadResult();  
   
   if ($nb_plug && $nb_plug > 1) {
-    $query = ' DELETE FROM #__plugins WHERE name = '. $db->Quote('Content - redFORM');
+    $query = ' DELETE FROM #__extensions WHERE name = '. $db->Quote('Content - redFORM');
     $db->setQuery($query);
     if ($db->query()) {
       echo JText::_('COM_REDFORM_Removed_ghost_instances_of_redFORM_content_plugin').'<br />';

@@ -118,7 +118,7 @@ class RedformControllerSubmitters extends JController
 	 * Redirect back to redEVENT
 	 */
 	public function RedEvent() {
-		global $mainframe;
+		$mainframe = JFactory::getApplication();
 		$mainframe->redirect('index.php?option=com_redevent&view=attendees&xref='.JRequest::getInt('xref'));
 	}
 	

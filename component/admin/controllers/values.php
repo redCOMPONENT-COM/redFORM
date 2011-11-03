@@ -121,9 +121,8 @@ class RedformControllerValues extends JController
     if (JRequest::getCmd('task') == 'ajaxsave') {
     	$doc = &Jfactory::getDocument();
     	$doc->addScriptDeclaration('
-    	window.addEvent("domready", function (){
-    		window.parent.newvalue();
-    	});
+		window.parent.newvalue();
+    	window.parent.SqueezeBox.close();
     	');
     	return;
     }
