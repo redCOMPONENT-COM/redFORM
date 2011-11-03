@@ -245,7 +245,7 @@ class RedformModelForms extends JModel
 	{
 		$db = JFactory::getDBO();
 		/* construct form name */
-		$q = "SHOW TABLES LIKE ".$db->Quote($db->replacePrefix('#__rwf_forms_'.$formid));
+		$q = "SHOW TABLES LIKE ".$db->Quote($db->getPrefix().'rwf_forms_'.$formid);
 		$db->setQuery($q);
 		$result = $db->loadResultArray();
 		if (count($result) == 0) {

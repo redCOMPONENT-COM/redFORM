@@ -287,7 +287,7 @@ class RedformModelField extends JModel
 		$field = 'field_'. $row->id;
 		
 		/* Get columns from the active form */
-		$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$row->form_id))." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
+		$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->getPrefix().'rwf_forms_'.$row->form_id)." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
 		$db->setQuery($q);
 		$db->query();
 		$result = $db->loadResult();
@@ -305,7 +305,7 @@ class RedformModelField extends JModel
 		{
 			$result = array();
 			/* Check if the column exists on the old table */
-			$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$oldrow->form_id))." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
+			$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->getPrefix().'rwf_forms_'.$oldrow->form_id)." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
 			$db->setQuery($q);
 			$db->query();
 			$result = $db->loadResult();
@@ -321,7 +321,7 @@ class RedformModelField extends JModel
 		
 		/* Get indexes from the active form */
 		$indexresult = null;
-		$q = "SHOW KEYS FROM ".$db->nameQuote($db->replacePrefix('#__rwf_forms_'.$row->form_id))." WHERE key_name = ".$db->Quote($field);
+		$q = "SHOW KEYS FROM ".$db->nameQuote($db->getPrefix().'rwf_forms_'.$row->form_id)." WHERE key_name = ".$db->Quote($field);
 		$db->setQuery($q);
 		$db->query();
 		$indexresult = $db->loadAssocList('Key_name');
