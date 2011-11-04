@@ -36,8 +36,8 @@ class RedformViewValue extends JView
 		$mainframe = & JFactory::getApplication();
 		 
 		$document = JFactory::getDocument();
-		$document->addScript($mainframe->getSiteURL().'administrator/components/com_redform/js/javascript.js');
-		$document->addScript($mainframe->getSiteURL().'components/com_redform/assets/js/jquery-1.4.min.js');
+		$document->addScript('administrator/components/com_redform/js/javascript.js');
+		$document->addScript('components/com_redform/assets/js/jquery-1.4.min.js');
 		$document->addScriptDeclaration('jQuery.noConflict();');
 
 		$row = $this->get('Data');

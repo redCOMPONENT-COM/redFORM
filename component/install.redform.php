@@ -522,11 +522,11 @@ function com_install()
 	$installer = new JInstaller();
 	$installer->setAdapter('plugin');
 	if (!$installer->install(JPATH_SITE.DS.'tmp'.DS.'redform_plugin')) {
-	  echo JText::_('COM_REDFORM_Plugin_install_failed:_') . $installer->getError().'<br />';
+	  echo JText::_('COM_REDFORM_Plugin_install_failed') . $installer->getError().'<br />';
 	}
 	else {
 	  // autopublish the plugin
-	  $query = ' UPDATE #__plugins SET published = 1 WHERE name = '. $db->Quote('Content - redFORM');
+	  $query = ' UPDATE #__exstensions SET enabled = 1 WHERE name = '. $db->Quote('Content - redFORM');
     $db->setQuery($query);
     if ($db->query()) {
 	    echo JText::_('COM_REDFORM_Succesfully_installed_redform_content_plugin').'<br />';

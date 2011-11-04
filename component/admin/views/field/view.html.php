@@ -32,9 +32,9 @@ class RedformViewField extends JView {
 	 **/
 	function display($tpl = null) 
 	{
-		$app = &Jfactory::getApplication();
-		
-    $url    = $app->isAdmin() ? $app->getSiteURL() : JURI::base();
+		$app = &Jfactory::getApplication();		
+   		$uri = JFactory::getURI();
+   		
 		$document	= & JFactory::getDocument();
 		JHTML::_('behavior.modal'); 
     $document->addScript($url.'/administrator/components/com_redform/js/ajaxvalues.js');
