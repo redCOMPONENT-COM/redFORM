@@ -21,6 +21,7 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
 jimport( 'joomla.plugin.plugin' );
+jimport( 'joomla.html.parameter' );
 
 class plgContentRedform extends JPlugin {
 	/**
@@ -37,12 +38,12 @@ class plgContentRedform extends JPlugin {
 		parent::__construct( $subject, $config );     
 	}	
 	
-	function onPrepareEvent(&$row, $params = array()) 
+	function onEventPrepare($context,&$row, $params = array()) 
 	{
 		return $this->_process($row, $params);
 	}
 	
-	function onPrepareContent(&$row, $params = array()) 
+	function onContentPrepare($context,&$row, $params = array()) 
 	{
     return $this->_process($row, array());		
 	}
