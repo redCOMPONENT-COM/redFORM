@@ -66,7 +66,7 @@ class RedformModelPayments extends JModel
   {
     parent::__construct();
     $mainframe = JFactory::getApplication();
-    $option = JReuqest::getVar('option');
+    $option = JRequest::getVar('option');
 
     // Get the pagination request variables
     $limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
@@ -134,7 +134,7 @@ class RedformModelPayments extends JModel
 	function _buildContentOrderBy()
 	{
 		$mainframe = JFactory::getApplication();
-		$option = JReuqest::getVar('option');
+		$option = JRequest::getVar('option');
 
 		$filter_order		= $mainframe->getUserStateFromRequest( $option.'.payments.filter_order',		'filter_order',		'obj.date',	'cmd' );
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.payments.filter_order_Dir',	'filter_order_Dir',	'',				'word' );
@@ -151,7 +151,7 @@ class RedformModelPayments extends JModel
 	function _buildContentWhere()
 	{
 		$mainframe = JFactory::getApplication();
-		$option = JReuqest::getVar('option');
+		$option = JRequest::getVar('option');
 
 		$where = array();
 		if ($this->_key) {
