@@ -23,6 +23,7 @@
 defined('_JEXEC') or die( 'Restricted access' );
 
 jimport('joomla.application.component.model');
+jimport( 'joomla.html.parameter' );
 
 require_once RDF_PATH_SITE.DS.'classes'.DS.'answers.php';
 
