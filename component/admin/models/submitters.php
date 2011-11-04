@@ -170,7 +170,8 @@ class RedformModelSubmitters extends JModel {
 	
 	function getPagination() 
 	{
-		$mainframe = JFactory::getApplication();/n$option = JReuqest::getVar('option');
+		$mainframe = JFactory::getApplication();
+		$option = JReuqest::getVar('option');
 		
 		/* Lets load the pagination if it doesn't already exist */
 		jimport('joomla.html.pagination');
@@ -223,7 +224,7 @@ class RedformModelSubmitters extends JModel {
 	 */
    function delete($cid, $force = false) 
    {
-      global $mainframe;
+      $mainframe = JFactory::getApplication();
       $database = JFactory::getDBO();
       JArrayHelper::toInteger( $cid );
 	  
