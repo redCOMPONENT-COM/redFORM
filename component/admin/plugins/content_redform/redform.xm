@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://www.joomla.org/xml/dtd/1.5/plugin-install.dtd">
-<exstension version="1.5" type="plugin" group="content" method="upgrade">
+<extension version="1.5" type="plugin" group="content" method="upgrade">
 	<name>Content - redFORM</name>
 	<creationDate>Mar 12, 2010</creationDate>
 	<author>Redweb.dk</author>
@@ -22,4 +22,4 @@
 	  <language tag="sv-SE">sv-SE.plg_content_redform.ini</language>
 	  <language tag="nl-NL">nl-NL.plg_content_redform.ini</language>	  
    </languages>
-</exstension>
+</extension>
