@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://www.joomla.org/xml/dtd/1.5/component-install.dtd">
-<exstension type="component" version="1.7" method="upgrade">
+<extension type="component" version="1.7" method="upgrade">
 	<name>redFORM</name>
 	<creationDate>Mar 12, 2010</creationDate>
 	<author>Redweb.dk</author>
@@ -119,4 +119,4 @@
 		<language tag="de-DE">de-DE.com_redform.menu.ini</language>
 	</languages>
 	</administration>
-</exstension>
+</extension>
