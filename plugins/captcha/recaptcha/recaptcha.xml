@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install PUBLIC 
   "-//Joomla! 1.5//DTD plugin 1.0//EN" "http://dev.joomla.org/xml/1.5/plugin-install.dtd">
-<install version="1.5" type="plugin" group="redform_captcha" method="upgrade">
+<extension version="1.5" type="plugin" group="redform_captcha" method="upgrade">
   <name>Redform recaptcha plugin</name>
 	<creationDate>Oct 28, 2010</creationDate>
 	<author>Redweb.dk</author>
@@ -21,14 +21,18 @@
     <language tag="en-GB">languages/en-GB.plg_redform_captcha_recaptcha.ini</language>
   </languages>
 
-  <params>
-  	<param name="public_key" type="text" default="" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_DESC" />
-  	<param name="private_key" type="text" default="" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_DESC" />
-    <param name="theme" type="list" default="red" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC">
-      <option value="red">red</option>
-      <option value="white">white</option>
-      <option value="blackglass">blackglass</option>
-      <option value="clean">clean</option>
-    </param>
-  </params>
-</install>
+  <config>
+	  <fields name="params">
+		  <fieldset name="basic" label="basic">
+			  	<field name="public_key" type="text" default="" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_DESC" />
+			  	<field name="private_key" type="text" default="" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_DESC" />
+			    <field name="theme" type="list" default="red" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC">
+				      <option value="red">red</option>
+				      <option value="white">white</option>
+				      <option value="blackglass">blackglass</option>
+				      <option value="clean">clean</option>
+			    </field>
+		  </fieldset>
+	  </fields>
+  </config>
+</extension>

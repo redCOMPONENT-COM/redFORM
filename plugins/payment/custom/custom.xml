@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install PUBLIC 
   "-//Joomla! 1.5//DTD plugin 1.0//EN" "http://dev.joomla.org/xml/1.5/plugin-install.dtd">
-<install version="1.5" type="plugin" group="redform_payment" method="upgrade">
+<extension version="1.5" type="plugin" group="redform_payment" method="upgrade">
   <name>Redform custom payment plugin</name>
 	<creationDate>Fev 3, 2010</creationDate>
 	<author>Redweb.dk</author>
@@ -21,9 +21,13 @@
   	<language tag="en-GB">languages/en-GB.plg_redform_payment_custom.ini</language>
   </languages>
 
-  <params>    
-    <param name="gatewaylabel" type="text" default="Bank transfer, check..." label="CUSTOM_CFG_GATEWAY_LABEL" description="CUSTOM_CFG_GATEWAY_LABEL_DESC" />  
-    <param name="instructions" type="textarea" rows="10" cols="40" default="" label="CUSTOM_CFG_INSTRUCTIONS" description="CUSTOM_CFG_INSTRUCTIONS_DESC" />  
-  </params>
+  <config>
+	  <fields name="params">
+		  <fieldset name="basic" label="basic">    
+			    <field name="gatewaylabel" type="text" default="Bank transfer, check..." label="CUSTOM_CFG_GATEWAY_LABEL" description="CUSTOM_CFG_GATEWAY_LABEL_DESC" />  
+			    <field name="instructions" type="textarea" rows="10" cols="40" default="" label="CUSTOM_CFG_INSTRUCTIONS" description="CUSTOM_CFG_INSTRUCTIONS_DESC" />  
+		  </fieldset>
+	  </fields>
+  </config>
   
-</install>
+</extension>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install PUBLIC 
   "-//Joomla! 1.5//DTD plugin 1.0//EN" "http://dev.joomla.org/xml/1.5/plugin-install.dtd">
-<install version="1.5" type="plugin" group="redform_payment" method="upgrade">
+<extension version="1.5" type="plugin" group="redform_payment" method="upgrade">
   <name>Redform ideal gateway plugin</name>
 	<creationDate>Fev 3, 2010</creationDate>
 	<author>Redweb.dk</author>
@@ -21,13 +21,17 @@
   	<language tag="en-GB">languages/en-GB.plg_redform_payment_ideal.ini</language>
   </languages>
 
-  <params>    
-    <param name="partner_id" type="text" default="" label="IDEAL_CFG_PAYMENT_PARTNERID" description="IDEAL_CFG_PAYMENT_PARTNERID_DESC" />  
-    <param name="profile_key" type="text" default="" label="IDEAL_CFG_PAYMENT_PROFILEKEY" description="IDEAL_CFG_PAYMENT_PROFILEKEY_DESC" />  
-    <param name="testmode" type="radio" default="1" label="IDEAL_CFG_PAYMENT_TESTMODE" description="IDEAL_CFG_PAYMENT_TESTMODE_DESC">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
-    </param>
-  </params>
+  <config>
+	  <fields name="params">
+		  <fieldset name="basic" label="basic">   
+			    <field name="partner_id" type="text" default="" label="IDEAL_CFG_PAYMENT_PARTNERID" description="IDEAL_CFG_PAYMENT_PARTNERID_DESC" />  
+			    <field name="profile_key" type="text" default="" label="IDEAL_CFG_PAYMENT_PROFILEKEY" description="IDEAL_CFG_PAYMENT_PROFILEKEY_DESC" />  
+			    <field name="testmode" type="radio" default="1" label="IDEAL_CFG_PAYMENT_TESTMODE" description="IDEAL_CFG_PAYMENT_TESTMODE_DESC">
+				      <option value="0">No</option>
+				      <option value="1">Yes</option>
+			    </field>
+		  </fieldset>
+	  </fields>
+  </config>
   
-</install>
+</extension>

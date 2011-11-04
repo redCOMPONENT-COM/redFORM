@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install PUBLIC 
   "-//Joomla! 1.5//DTD plugin 1.0//EN" "http://dev.joomla.org/xml/1.5/plugin-install.dtd">
-<install version="1.5" type="plugin" group="redform_payment" method="upgrade">
+<extension version="1.5" type="plugin" group="redform_payment" method="upgrade">
   <name>Redform paypal gateway plugin</name>
 	<creationDate>Fev 3, 2010</creationDate>
 	<author>Redweb.dk</author>
@@ -21,12 +21,12 @@
   	<language tag="en-GB">languages/en-GB.plg_redform_payment_paypal.ini</language>
   </languages>
 
-  <params>    
-    <param name="paypal_account" type="text" default="" label="PAYPAL_ACCOUNT" description="PAYPAL_ACCOUNT_DESC" />
-    <param name="paypal_sandbox" type="radio" default="1" label="PAYPAL_USE_SANDBOX" description="PAYPAL_USE_SANDBOX_DESC">
+  <config><fields name="params"><fieldset name="basic" label="basic">    
+    <field name="paypal_account" type="text" default="" label="PAYPAL_ACCOUNT" description="PAYPAL_ACCOUNT_DESC" />
+    <field name="paypal_sandbox" type="radio" default="1" label="PAYPAL_USE_SANDBOX" description="PAYPAL_USE_SANDBOX_DESC">
       <option value="0">No</option>
       <option value="1">Yes</option>
-    </param>
-  </params>
+    </field>
+  </fieldset></fields></config>
   
-</install>
+</extension>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install PUBLIC 
   "-//Joomla! 1.5//DTD plugin 1.0//EN" "http://dev.joomla.org/xml/1.5/plugin-install.dtd">
-<install version="1.5" type="plugin" group="redform_mailing" method="upgrade">
+<extension version="1.5" type="plugin" group="redform_mailing" method="upgrade">
   <name>Redform AcyMailing integration plugin</name>
 	<creationDate>Fev 3, 2010</creationDate>
 	<author>Redweb.dk</author>
@@ -20,7 +20,5 @@
   	<language tag="en-GB">languages/en-GB.plg_redform_mailing_acymailing.ini</language>
   </languages>
 
-  <params>
-  </params>
   
-</install>
+</extension>
