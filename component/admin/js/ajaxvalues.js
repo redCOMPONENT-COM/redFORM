@@ -116,22 +116,24 @@ function newRow(value)
 	// published
 	new Element('td').appendText(value.price).injectInside(tr);
 	if (value.published == 1) {
-		new Element('img', {'src': 'http://'+document.location.host+'/administrator/templates/bluestork/images/admin/tick.png', 'alt': textyes, events: {click: function(){ ajaxgetandupdate('index.php?option=com_redform&controller=values&task=ajaxunpublish&tmpl=component&cid[]='+value.id);}}})
+		new Element('img', {'src': 'http://'+document.location.host+'/administrator/templates/bluestork/images/admin/tick.png', 'style': 'cursor:pointer;', 'alt': textyes, events: {click: function(){ ajaxgetandupdate('index.php?option=com_redform&controller=values&task=ajaxunpublish&tmpl=component&cid[]='+value.id);}}})
 			.injectInside(new Element('td').injectInside(tr));
 	}
 	else {
-		new Element('img', {'src': 'http://'+document.location.host+'/administrator/templates/bluestork/images/admin/publish_x.png', 'alt': textno, events: {click: function(){ ajaxgetandupdate('index.php?option=com_redform&controller=values&task=ajaxpublish&tmpl=component&cid[]='+value.id);}}})
+		new Element('img', {'src': 'http://'+document.location.host+'/administrator/templates/bluestork/images/admin/publish_x.png', 'style': 'cursor:pointer;', 'alt': textno, events: {click: function(){ ajaxgetandupdate('index.php?option=com_redform&controller=values&task=ajaxpublish&tmpl=component&cid[]='+value.id);}}})
 		.injectInside(new Element('td').injectInside(tr));
 	}  
 	// up/down links
 	var tdlink = new Element('td').injectInside(tr);
 	var upurl  = 'index.php?option=com_redform&controller=values&task=ajaxorderup&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
 	var downurl = 'index.php?option=com_redform&controller=values&task=ajaxorderdown&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
-	new Element('img', {'src': 'images/uparrow.png', 'alt': textup, events: {click: function(){ajaxgetandupdate(upurl);}}})
+	var classname = "upactive";
+	new Element('div', { 'alt': textup, 'class': classname , events: {click: function(){ajaxgetandupdate(upurl);}}})
 		.injectInside(tdlink).addEvent('click', function(e) {
 			ajaxgetandupdate(upurl);
 		});
-	new Element('img', {'src': 'images/downarrow.png', 'alt': textdown, events: {click: function(){ajaxgetandupdate(downurl);}}})
+	var classname = "downactive";
+	new Element('div', { 'alt': textdown, 'class': classname , events: {click: function(){ajaxgetandupdate(downurl);}}})
 		.injectInside(tdlink).addEvent('click', function(e) {
 			ajaxgetandupdate(downurl);
 		});

@@ -75,3 +75,19 @@ table.adminform tr.row0 label.radiobtn,
 	margin: 3px 0 0 5px;
 	min-width: 45px;
 }
+.upactive{
+	height:13px;
+	width:13px;
+	background-image: url(http://redmembertest.casper.web12.redhost.dk/administrator/templates/bluestork/images/admin/uparrow.png);
+	background-repeat:no;
+	float: left;
+	cursor:pointer;
+}
+.downactive{
+	height:13px;
+	width:13px;
+	background-image: url(http://redmembertest.casper.web12.redhost.dk/administrator/templates/bluestork/images/admin/downarrow.png);
+	background-repeat:no;
+	float: left;
+	cursor:pointer;
+}
