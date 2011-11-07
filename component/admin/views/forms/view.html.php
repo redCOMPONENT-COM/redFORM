@@ -42,11 +42,26 @@ class RedformViewForms extends JView {
 		$pagination = & $this->get('Pagination');
 		/* Get the number of contestantst */
 		$submitters = $this->get('CountSubmitters');
-
+		
+		// filters
+		$lists = array();
+		
+		$state = &$this->get('state');
+		
+		$options = array( JHTML::_('select.option',  0, '- '.JText::_('COM_REDFORM_FORMS_FILTER_STATE_ALL').' -'),
+		                  JHTML::_('select.option',  1, JText::_('COM_REDFORM_FORMS_FILTER_STATE_NOT_ARCHIVED')),
+		                  JHTML::_('select.option', -1, JText::_('COM_REDFORM_FORMS_FILTER_STATE_ARCHIVED')),
+		                );
+		$lists['state'] = JHTML::_('select.genericlist',  $options, 'filter_state', 'onchange="this.form.submit();"', 'value', 'text', $state->get('filter_state')) ;
+		
+		$lists['order_Dir'] = $state->get('filter_order_Dir');
+		$lists['order']     = $state->get('filter_order');
+		
 		/* Set variabels */
 		$this->assignRef('pagination',   $pagination);
 		$this->assignRef('forms',   $forms);
 		$this->assignRef('submitters',   $submitters);
+		$this->assignRef('lists',   $lists);
 				
 		/* Get the toolbar */
 		$this->toolbar();
@@ -62,6 +77,7 @@ class RedformViewForms extends JView {
 		JToolBarHelper::spacer();
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
+		JToolBarHelper::archiveList();
 		JToolBarHelper::spacer();
 		JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FORMS_DELETE_WARNING'));
 		JToolBarHelper::editListX();

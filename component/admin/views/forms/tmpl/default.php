@@ -19,22 +19,31 @@
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?>
 <form action="index.php" method="post" name="adminForm">
+
+	<table>
+      <tr>
+         <td align="left" width="100%">
+            <?php echo JText::_('COM_REDFORM_Filter'); ?>:
+						<?php echo $this->lists['state']; ?>
+         </td>
+      </tr>
+    </table>
+
 	<table class="adminlist">
+		<thead>
 		<tr>
-			<th width="20">
-			<?php echo JText::_('COM_REDFORM_ID'); ?>
-			</th>
+			<th width="20">#</th>
 			<th width="20">
 			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->forms ); ?>);" />
 			</th>
 			<th class="title">
-			<?php echo JText::_('COM_REDFORM_Form_name'); ?>
+				<?php echo JHTML::_('grid.sort', 'COM_REDFORM_Form_name', 'formname', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('COM_REDFORM_FORM_START_DATE'); ?>
+				<?php echo JHTML::_('grid.sort', 'COM_REDFORM_FORM_START_DATE', 'startdate', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th class="title">
-			<?php echo JText::_('COM_REDFORM_FORM_END_DATE'); ?>
+				<?php echo JHTML::_('grid.sort', 'COM_REDFORM_FORM_END_DATE', 'enddate', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 			</th>
 			<th class="title">
 			<?php echo JText::_('COM_REDFORM_Published'); ?>
@@ -48,7 +57,12 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 			<th class="title">
 			<?php echo JText::_('COM_REDFORM_Tag'); ?>
 			</th>
+			<th width="20">
+				<?php echo JHTML::_('grid.sort', 'COM_REDFORM_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+			</th>
 		</tr>
+		</thead>
+		<tbody>
 		<?php
 		$k = 0;
 		for ($i=0, $n=count( $this->forms ); $i < $n; $i++) {
@@ -57,13 +71,23 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 			JFilterOutput::objectHTMLSafe($row);
 			$link 	= 'index.php?option=com_redform&task=edit&controller=forms&cid[]='. $row->id;
 
-			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
-			$task 	= $row->published ? 'unpublish' : 'publish';
-			$alt 	= $row->published ? JText::_('COM_REDFORM_Published') : JText::_('COM_REDFORM_Unpublished');
+			if ($row->published >= 0) {
+				$published 	= JHTML::_('grid.published', $row, $i );
+			}
+			else {
+				$published = JHTML::image('administrator/images/publish_y.png', JText::_('COM_REDFORM_ARCHIVED'));
+			}
 			$form 	= $row->formstarted ? 'tick.png' : 'publish_x.png';
 			
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
 			$my  = JFactory::getUser();
+			
+			if (isset($this->submitters[$row->id])) {
+				$submitters = JHTML::link('index.php?option=com_redform&view=submitters&form_id='.$row->id, $this->submitters[$row->id]->total);
+			}
+			else {
+				$submitters = '0';
+			}
 			?>
 			<tr class="<?php echo 'row'. $k; ?>">
 				<td align="center">
@@ -101,37 +125,35 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				}
 				?>
 				</td>
-				<td width="10%" align="center">
-				<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $task;?>')">
-				<img src="images/<?php echo $img;?>" border="0" alt="<?php echo $alt; ?>" />
-				</a>
-				</td>
+				<td width="10%" align="center"><?php echo $published; ?></td>
 				<td width="10%" align="center">
 				<img src="images/<?php echo $form;?>" border="0" alt="<?php echo JText::_('COM_REDFORM_Form_started'); ?>" />
 				</td>
 				<td>
-				<?php
-					if (isset($this->submitters[$row->id])) echo $this->submitters[$row->id]->total;
-					else echo '0';
-				?>
+				<?php echo $submitters;	?>
 				</td>
 				<td>
 				<?php 
 					echo "{redform}".$row->id."{/redform}";
 				?>
 				</td>
+				<td><?php echo $row->id; ?></td>
 			</tr>
 			<?php
 			$k = 1 - $k;
 		}
 		?>
 		<tr>
-            <td colspan="9"><?php echo $this->pagination->getListFooter(); ?></td>
+            <td colspan="10"><?php echo $this->pagination->getListFooter(); ?></td>
          </tr>
+         
+		</tbody>
 		</table>
 	<input type="hidden" name="option" value="com_redform" />
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="controller" value="forms" />
 	<input type="hidden" name="view" value="forms" />
+	<input type="hidden" name="filter_order" value="<?php echo $this->lists['order']; ?>" />
+	<input type="hidden" name="filter_order_Dir" value="" />
 </form>

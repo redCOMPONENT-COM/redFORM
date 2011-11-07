@@ -36,17 +36,21 @@ class RedformViewFields extends JView {
 		
 		$mainframe = &JFactory::getApplication();
 		
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.values.filter_order_Dir',	'filter_order_Dir',	'', 'word' );
-		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.values.filter_order', 		'filter_order', 	'ordering', 'cmd' );
-    $form_id          = $mainframe->getUserStateFromRequest( $option.'.fields.form_id', 'form_id', 0, 'int');
 
+    
 		/* Get the pagination */
 		$pagination = $this->get('Pagination');
 
 		/* Get the fields list */
 		$fields = $this->get('Fields');
 
-		/* Get the forms */
+    $state = $this->get('state');
+    
+    $filter_order_Dir	= $state->get('filter_order_Dir');
+    $filter_order		  = $state->get('filter_order', 	'ordering', 'cmd' );
+    $form_id          = $state->get('form_id');
+    
+    /* Get the forms */
 		$forms = array();
 		$forms[] = JHTML::_('select.option', 0, JText::_('COM_REDFORM_All'));
 		$forms = array_merge($forms, $this->get('FormsOptions'));
@@ -56,6 +60,13 @@ class RedformViewFields extends JView {
 		// table ordering
 		$lists['order_Dir'] = $filter_order_Dir;
 		$lists['order'] = $filter_order;
+		
+		/* forms status */
+		$options = array( JHTML::_('select.option',  0, '- '.JText::_('COM_REDFORM_FIELDS_FORMS_FILTER_STATE_ALL').' -'),
+		                  JHTML::_('select.option',  1, JText::_('COM_REDFORM_FIELDS_FORMS_FILTER_STATE_NOT_ARCHIVED')),
+		                  JHTML::_('select.option', -1, JText::_('COM_REDFORM_FIELDS_FORMS_FILTER_STATE_ARCHIVED')),
+		                );
+		$lists['form_state'] = JHTML::_('select.genericlist',  $options, 'form_state', 'onchange="this.form.submit();"', 'value', 'text', $state->get('form_state')) ;
 
 		
 		/* Check if there are any forms */

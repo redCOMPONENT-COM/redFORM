@@ -24,13 +24,17 @@ if ($this->countforms == 0) {
 else { ?>
 <form action="index.php" method="post" name="adminForm">
 	<table>
-      <tr>
-         <td align="left" width="100%">
-            <?php echo JText::_('COM_REDFORM_Filter'); ?>:
-			<?php echo $this->lists['form_id']; ?>
-         </td>
-      </tr>
-    </table>
+		<tr>
+			<td align="left" width="100%">
+				<?php echo JText::_('COM_REDFORM_Filter'); ?>:
+				<?php echo $this->lists['form_id']; ?>
+			</td>
+			<td align="right" width="100%">
+				<?php echo JText::_('COM_REDFORM_Filter_form_state'); ?>:
+				<?php echo $this->lists['form_state']; ?>
+			</td>
+		</tr>
+	</table>
 	<table class="adminlist">
 		<thead>
 		<tr>

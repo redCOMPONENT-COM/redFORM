@@ -64,10 +64,17 @@ class RedformModelFields extends JModel {
     $limit      = $mainframe->getUserStateFromRequest( $option.'.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
     $limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
     $form_id    = $mainframe->getUserStateFromRequest( $option.'.fields.form_id', 'form_id', 0, 'int');
-
+    $form_state = $mainframe->getUserStateFromRequest( $option.'.fields.form_state', 'form_state', 1, 'int');
+    
+    $filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.fields.filter_order_Dir',	'filter_order_Dir',	'', 'word' );
+    $filter_order		  = $mainframe->getUserStateFromRequest( $option.'.fields.filter_order', 		'filter_order', 	'ordering', 'cmd' );
+    
     $this->setState('limit', $limit);
     $this->setState('limitstart', $limitstart);
     $this->setState('form_id',   $form_id);
+    $this->setState('form_state',       $form_state);
+    $this->setState('filter_order',     $filter_order);
+    $this->setState('filter_order_Dir', $filter_order_Dir);
 
     $array = JRequest::getVar('cid',  0, '', 'array');
     $this->setId((int)$array[0]);
@@ -115,9 +122,25 @@ class RedformModelFields extends JModel {
 		       . ' FROM #__rwf_fields AS fd '
 		       . ' LEFT JOIN #__rwf_forms AS f ON f.id = fd.form_id '
 		       ;
+		       
+		$where = array();
 		if ($form_id && $form_id > 0) {
-			$query .= ' WHERE f.id = '.$form_id;
+			$where[] = ' f.id = '.$form_id;
 		}
+		switch ($this->getState('form_state'))
+		{
+			case 1:
+				$where[] = ' f.published >= 0 ';
+				break;
+			case -1:
+				$where[] = ' f.published < 0 ';
+				break;
+		}
+		
+		if (count($where)) {
+			$query .= ' WHERE '.implode(' AND ', $where);
+		}
+		
 		$query .= $order;
 		return $query;
 	}
@@ -134,8 +157,8 @@ class RedformModelFields extends JModel {
     $mainframe = &JFactory::getApplication();
     $option = JRequest::getCmd('option');
 
-		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.values.filter_order',     'filter_order', 	'ordering', 'cmd' );
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.values.filter_order_Dir', 'filter_order_Dir',	'', 'word' );
+		$filter_order		  = $this->getState('filter_order');
+		$filter_order_Dir	= $this->getState('filter_order_Dir');
 
 		switch ($filter_order) 
 		{
@@ -163,6 +186,19 @@ class RedformModelFields extends JModel {
 	function getFormsOptions()
 	{
 		$query = "SELECT id AS value, formname AS text FROM #__rwf_forms";
+		$where = array();
+		switch ($this->getState('form_state'))
+		{
+			case 1:
+				$where[] = ' published >= 0 ';
+				break;
+			case -1:
+				$where[] = ' published < 0 ';
+				break;
+		}
+		if (count($where)) {
+			$query .= ' WHERE '.implode(' AND ', $where);
+		}
 		$this->_db->setQuery($query);
 		return $this->_db->loadObjectList();
 	}
@@ -175,8 +211,8 @@ class RedformModelFields extends JModel {
 		/* Lets load the pagination if it doesn't already exist */
 		if (empty($this->_pagination)) {
 			jimport('joomla.html.pagination');
-			$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-			$this->_limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
+			$this->_limit      = $this->getState('limit');
+			$this->_limitstart = $this->getState('limitstart');
 			$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
 		}
 		

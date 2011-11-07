@@ -196,6 +196,33 @@ class RedformControllerForms extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=forms', $msg );
   }
+
+  /**
+   * Logic to archive
+   *
+   * @access public
+   * @return void
+   * @since 0.9
+   */
+  function archive()
+  {
+    $cid  = JRequest::getVar( 'cid', array(0), 'post', 'array' );
+
+    if (!is_array( $cid ) || count( $cid ) < 1) {
+      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_archive' ) );
+    }
+
+    $model = $this->getModel('forms');
+
+    if(!$model->publish($cid, -1)) {
+      echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
+    }
+
+    $total = count( $cid );
+    $msg  = JText::sprintf('COM_REDFORM_FORMS_ARCHIVED_D', $total);
+
+    $this->setRedirect( 'index.php?option=com_redform&view=forms', $msg );
+  }
   
 
   /**

@@ -36,6 +36,33 @@ class RedformModelForms extends JModel
 	protected $_limit = null;
 	   
 	protected $_forms = null;
+		
+	/**
+	* Constructor
+	*
+	* @since 0.9
+	*/
+	function __construct()
+	{
+		parent::__construct();
+	
+		$mainframe = &JFactory::getApplication();
+		$option = JRequest::getCmd('option');
+
+		$limit        = $mainframe->getUserStateFromRequest( $option.'.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+		$limitstart   = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
+		$filter_state = $mainframe->getUserStateFromRequest( $option.'.forms.filter_state', 'filter_state', 1, 'int');
+		
+		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.forms.filter_order',     'filter_order', 	'formname', 'cmd' );
+		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.forms.filter_order_Dir', 'filter_order_Dir',	'', 'word' );
+		
+		$this->setState('limit', $limit);
+		$this->setState('limitstart', $limitstart);
+		$this->setState('filter_state',   $filter_state);
+		$this->setState('filter_order',   $filter_order);
+		$this->setState('filter_order_Dir',   $filter_order_Dir);
+	}
+	
 	/**
 	 * Show all orders for which an invitation to fill in
 	 * a testimonal has been sent
@@ -64,8 +91,27 @@ class RedformModelForms extends JModel
 	
 	function _buildQuery()
 	{
-		$query = "SELECT * FROM #__rwf_forms";
-		return $query;
+		$query = "SELECT f.* FROM #__rwf_forms AS f";
+		
+		switch ($this->getState('filter_state'))
+		{
+			case 1:
+				$query .= ' WHERE f.published >= 0';
+				break;
+				
+			case -1:
+				$query .= ' WHERE f.published < 0';				
+				break;			
+		}
+		
+		if ($this->getState('filter_order') == 'formname') {
+			$order_by = ' ORDER BY f.formname '. $this->getState('filter_order_Dir');
+		}
+		else {
+			$order_by = ' ORDER BY f.'.$this->getState('filter_order').' '. $this->getState('filter_order_Dir');			
+		}
+		
+		return $query.$order_by;
 	}
 	
 	function getPagination() 
