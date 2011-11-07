@@ -75,6 +75,9 @@ class RedformControllerFields extends JController
     parent::display();
   }
   
+  /**
+   * save a field
+   */
   function save()
   {   
     // Check for request forgeries
@@ -272,6 +275,51 @@ class RedformControllerFields extends JController
     $model->move(1);
 
     $this->setRedirect( 'index.php?option=com_redform&view=fields');
+  }
+    
+	/**
+	* copy fields screen
+	*/
+	function copy()
+	{
+		$cids = JRequest::getVar('cid', null, 'request', 'array');
+		JArrayHelper::toInteger($cids);
+		 
+		$model = $this->getModel('copyfields');
+		$model->setCids($cids);
+
+		$view  = $this->getView('copyfields', 'html');
+		$view->setModel($model, true);
+		$view->assign('cids', $cids);
+		 
+		$view->display();
+	}
+  
+  /**
+  * copy fields
+  */
+  function docopy()
+  {
+		$cids = JRequest::getVar('cids', null, 'request', 'string');
+		$cids = explode(',', $cids);
+		JArrayHelper::toInteger($cids);
+		
+		$form_id = JRequest::getInt('form_id');
+  	
+		$msg = '';
+		$msgtype = 'message';
+		
+  	$model = $this->getModel('field');
+  	if ($res = $model->copy($cids, $form_id)) {
+  		$msg = JText::_('COM_REDFORM_FIELDS_COPY_SUCCESS');
+  	}
+  	else {
+  		$msg = $model->getError();
+  		$msgtype = 'error';
+  	}
+  	
+  	$this->setRedirect( 'index.php?option=com_redform&view=fields', $msg, $msgtype);
+  	$this->redirect();
   }
 }
 ?>

@@ -301,7 +301,7 @@ class RedformModelField extends JModel
 		}
 		
 		/* Check if the field moved form */
-		if ($oldrow->form_id && $row->form_id <> $oldrow->form_id) 
+		if ($oldrow && $oldrow->form_id && $row->form_id <> $oldrow->form_id) 
 		{
 			$result = array();
 			/* Check if the column exists on the old table */
@@ -402,6 +402,94 @@ class RedformModelField extends JModel
 		$mailinglistrow = $this->getTable('Mailinglists', 'RedformTable');
 		$mailinglistrow->load($this->_id);
 		return $mailinglistrow;
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $field_ids
+	 * @param unknown_type $form_id
+	 */
+	function copy($field_ids, $form_id)
+	{		
+		foreach($field_ids as $field_id)
+		{				
+			$row = $this->getTable('Fields', 'RedformTable');
+			/* Check field order */
+			$row->load($field_id);
+			$row->id = null;
+			$row->form_id = $form_id;
+	
+			$row->ordering = $row->getNextOrder('form_id = '.$row->form_id);
+	
+			/* pre-save checks */
+			if (!$row->check()) {
+				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_checking_the_field_data'), 'error');
+				return false;
+			}
+	
+			/* save the changes */
+			if (!$row->store()) {
+				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_field_data'), 'error');
+				return false;
+			}
+			  
+			/* Add field to form table */
+			$this->AddFieldTable($row, null);
+			
+			// copy associated values
+			$query = ' SELECT * '
+			       . ' FROM #__rwf_values ' 
+			       . ' WHERE field_id = ' . $field_id
+			       ;
+			$this->_db->setQuery($query);
+			$res = $this->_db->loadObjectList();
+				
+			foreach($res as $r)
+			{
+				/* Load the table */
+				$valuerow = $this->getTable('Values', 'RedformTable');
+				$valuerow->bind($r);
+				$valuerow->id = null;
+				$valuerow->field_id = $row->id;
+
+				/* save the changes */
+				if (!$valuerow->store()) {
+					$this->setError(JText::_('COM_REDFORM_There_was_a_problem_coopying_field_options').' '.$row->getError(), 'error');
+					return false;
+				}
+			}
+	
+			/* mailing list handling in case of email field type */
+			if ($row->fieldtype == 'email')
+			{
+				// copy mailing list settings
+				$query = ' SELECT * ' 
+				       . ' FROM #__rwf_mailinglists ' 
+				       . ' WHERE field_id = ' . $field_id
+				       ;
+				$this->_db->setQuery($query);
+				$res = $this->_db->loadObjectList();
+				
+				foreach($res as $r)
+				{
+					/* Load the table */
+					$mailinglistrow = $this->getTable('Mailinglists', 'RedformTable');
+					$mailinglistrow->bind($r);
+					$mailinglistrow->id = null;
+					$mailinglistrow->field_id = $row->id;
+	
+					/* save the changes */
+					if (!$mailinglistrow->store()) {
+						$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_mailinglist_data').' '.$row->getError(), 'error');
+						return false;
+					}
+				}
+			}
+			
+		}
+
+		return true;
 	}
 }
 ?>

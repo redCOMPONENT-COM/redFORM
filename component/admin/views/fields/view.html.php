@@ -88,6 +88,7 @@ class RedformViewFields extends JView {
 			JToolBarHelper::custom('sanitize', 'redform_details', 'redform_details', JText::_('COM_REDFORM_SANITIZE'), false);
 			JToolBarHelper::publishList();
 			JToolBarHelper::unpublishList();
+			JToolBarHelper::custom('copy', 'copy', 'copy', JText::_('COM_REDFORM_FIELDS_BUTTON_COPY'), true);
 			JToolBarHelper::spacer();
 			JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FIELDS_DELETE_WARNING'));
 			JToolBarHelper::editListX();
