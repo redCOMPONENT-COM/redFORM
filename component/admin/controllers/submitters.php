@@ -151,5 +151,94 @@ class RedformControllerSubmitters extends JController
     }
     $this->setRedirect( $url, $msg, $type );    
 	}
+	
+	function import()
+	{
+		JRequest::setVar('view', 'importsubmitters');
+		parent::display();
+	}
+	
+	function doimport()
+	{
+		$form_id = JRequest::getInt('form_id');
+		$model = $this->getModel('importsubmitters');
+		$model->setFormId($form_id);
+		
+		$base_columns = array( JText::_('COM_REDFORM_Submission_date'),
+		                       JText::_('COM_REDFORM_Form_name'),
+		                       JText::_('COM_REDFORM_Unique_id') );
+		
+		$msg = '';
+		if ( $file = JRequest::getVar( 'importfile', null, 'files', 'array' ) )
+		{
+			$handle = fopen($file['tmp_name'],'r');
+			if(!$handle) 
+			{
+				$msg = JText::_('COM_REDFORM_CANNOT_OPEN_UPLOADED_FILE');
+				$this->setRedirect( 'index.php?option=com_redform&view=submitters&form_id='.$form_id, $msg, 'error' );
+				return;
+			}
+			
+			// get fields, on first row of the file
+			$fields = array();
+			if ( ($data = fgetcsv($handle, 0, ',', '"')) !== FALSE )
+			{
+				$numfields = count($data);
+				for ($c=0; $c < $numfields; $c++)
+				{
+					if (in_array($data[$c], $base_columns)) {
+						$fields[$c] = $data[$c];												
+					}
+					else if ($res = $model->getFieldByName($data[$c])) {
+						$fields[$c] = 'field_'.$res->id;						
+					}
+				}
+			}
+			// If there is no validated fields, there is a problem...
+			if ( !count($fields) ) {
+				$msg = JText::_('COM_REDFORM_SUBMITTERS_IMPORT_ERROR_PARSING_COLUMNS');
+				$this->setRedirect( 'index.php?option=com_redform&view=submitters&form_id='.$form_id, $msg, 'error' );
+				return;
+			}
+			else {
+				$msg = JText::sprintf('COM_REDFORM_SUBMITTERS_PARSING_COLUMNS_D_FIELDS_D_KEPT', $numfields, $fields);
+			}
+			// Now get the records, meaning the rest of the rows.
+			$records = array();
+			$row = 1;
+			while ( ($data = fgetcsv($handle, 0, ',', '"')) !== FALSE )
+			{
+				$num = count($data);
+				if ($numfields != $num) {
+					$msg .= JText::sprintf('COM_REDFORM_SUBMITTERS_WRONG_NUMBER_OF_FIELDS_D_ON_ROW_D', $num, $row);
+				}
+				else {
+					$r = array();
+					// only extract columns with validated header, from previous step.
+					foreach ($fields as $k => $v) {
+						$r[$v] = $data[$k];
+					}
+					$records[] = $r;
+				}
+				$row++;
+			}
+			fclose($handle);
+			$msg .= JText::sprintf('COM_REDFORM_SUBMITTERS_TOTAL_ROWS_FOUND_D', count($records));
+							 
+			// database update
+			if (count($records))
+			{
+				if ($result = $model->import($records)) {
+					$msg .= JText::sprintf('COM_REDFORM_SUBMITTERS_TOTAL_ADDED_D', $result);				
+				}
+			}
+			$this->setRedirect( 'index.php?option=com_redform&view=submitters&form_id='.$form_id, $msg );
+		}
+		else {
+			$msg = JText::_('COM_REDFORM_IMPORT_FILE_NOT_FOUND');
+			$this->setRedirect( 'index.php?option=com_redform&view=submitters&form_id='.$form_id, $msg, 'error' );
+			return;
+		}
+	}
 }
 ?>

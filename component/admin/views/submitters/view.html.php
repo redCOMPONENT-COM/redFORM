@@ -48,7 +48,7 @@ class RedformViewSubmitters extends JView {
   	}
         
   	/* Create the dropdown list */
-  	$lists['form_id'] = JHTML::_('select.genericlist',  $forms, 'form_id', '', 'value', 'text', JRequest::getVar('form_id'));
+  	$lists['form_id'] = JHTML::_('select.genericlist',  $forms, 'form_id', 'onchange="this.form.submit();"', 'value', 'text', $this->get('formid'));
 
   	/* Get the form name, if one is selected */
   	$form = $this->get('Form');
@@ -72,7 +72,16 @@ class RedformViewSubmitters extends JView {
   		$course      = null;
   		$coursetitle = null;
   	}
-
+  	
+  	$state = $this->get('state');
+  	    
+  	$filter_order_Dir	= $state->get('filter_order_Dir');
+  	$filter_order		  = $state->get('filter_order', 	'ordering', 'cmd' );
+  	
+		// table ordering
+		$lists['order_Dir'] = $filter_order_Dir;
+		$lists['order'] = $filter_order;
+  	    
   	/* Set variabels */
   	$this->assignRef('pagination',  $pagination);
   	$this->assignRef('submitters',  $submitters);
@@ -94,6 +103,7 @@ class RedformViewSubmitters extends JView {
   	//TODO: fix the add/modify submitters from backend
   	JToolBarHelper::editListX();
   	if (JRequest::getVar('xref', false)) JToolBarHelper::addNewX();
+  	JToolBarHelper::custom('import', 'upload', 'upload',JText::_('COM_REDFORM_SUBMITTERS_IMPORT_BUTTON'), false);
   	
   	/* Display the page */
   	parent::display($tpl);

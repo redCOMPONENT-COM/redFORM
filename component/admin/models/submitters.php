@@ -25,6 +25,8 @@ jimport( 'joomla.application.component.model' );
  */
 class RedformModelSubmitters extends JModel {
 	
+	protected $_form_id = 0;
+	
 	protected $_data = null;
 	
 	/** @var integer Total entries */
@@ -36,6 +38,69 @@ class RedformModelSubmitters extends JModel {
 	/** @var integer pagination limit */
 	protected $_limit = null;
 	   
+		/**
+	* Constructor
+	*
+	* @since 0.9
+	*/
+	function __construct()
+	{
+		parent::__construct();
+
+		$mainframe = &JFactory::getApplication();
+		$option = JRequest::getCmd('option');
+
+		$limit      = $mainframe->getUserStateFromRequest( $option.'.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
+		$limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
+		$form_id    = $mainframe->getUserStateFromRequest( $option.'.submitters.form_id', 'form_id', 0, 'int');
+	  
+		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.submitters.filter_order_Dir',	'filter_order_Dir',	'', 'word' );
+		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.submitters.filter_order', 		'filter_order', 	'submission_date', 'cmd' );
+	  
+		$this->setState('limit', $limit);
+		$this->setState('limitstart', $limitstart);
+		$this->setState('form_id',   $form_id);
+		$this->setState('filter_order',     $filter_order);
+		$this->setState('filter_order_Dir', $filter_order_Dir);
+
+		$this->setFormId($form_id);
+	}
+		
+	/**
+	* Method to set the category identifier
+	*
+	* @access  public
+	* @param int Category identifier
+	*/
+	function setFormId($id)
+	{
+		// Set id and wipe data
+		if (!$id) {
+			$this->_setDefaultFormId();
+		}
+		else {
+			$this->_form_id   = $id;
+		}
+		$this->_data = null;
+	}
+		
+	/**
+	 * use default form if none specified
+	 */	
+	function _setDefaultFormId()
+	{
+		$query = ' SELECT f.id ' 
+		       . ' FROM #__rwf_forms AS f ' 
+		       . ' ORDER BY f.published DESC, f.id ASC ';
+		$this->_db->setQuery($query);
+		$this->_form_id = $this->_db->loadResult();
+	}
+	
+	function getFormId()
+	{
+		return $this->_form_id;
+	}
+	
 	/**
 	 * Show all orders for which an invitation to fill in
 	 * a testimonal has been sent
@@ -44,7 +109,7 @@ class RedformModelSubmitters extends JModel {
 	{
 		if (empty($this->_data))
 		{
-			$form_id = JRequest::getVar('form_id', 0);
+			$form_id = $this->_form_id;
 			$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
 			$integration = JRequest::getVar('integration', 0);
 			
@@ -52,10 +117,9 @@ class RedformModelSubmitters extends JModel {
       {
 				$db = JFactory::getDBO();
 				
-				$query = $this->_buildSubmittersQuery();
-				
-				$query .= " ORDER BY s.submission_date DESC ";
-					
+				$query = $this->_buildSubmittersQuery();		
+				$query .= $this->_buildSubmittersOrderBy();
+									
 				$db->setQuery($query,  $this->_limitstart, $this->_limit);
 				
 				if ($db->getErrorNum() > 0) {
@@ -74,7 +138,7 @@ class RedformModelSubmitters extends JModel {
 	function _buildSubmittersQuery()
 	{
 		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
-		$form_id = JRequest::getVar('form_id', 0);
+		$form_id = $this->_form_id;
 		$integration = JRequest::getVar('integration', 0);
 		
 		$query =  ' SELECT s.submission_date, s.form_id, s.id AS sid, f.formname, u.*, s.price, s.submit_key, p.status, p.paid, s.integration, s.xref '
@@ -98,6 +162,36 @@ class RedformModelSubmitters extends JModel {
 		return $query;
 	}
 
+	
+	/**
+	* Method to build the orderby clause of the query for the categories
+	*
+	* @access private
+	* @return string
+	* @since 0.9
+	*/
+	function _buildSubmittersOrderBy()
+	{
+		$mainframe = &JFactory::getApplication();
+		$option = JRequest::getCmd('option');
+
+		$filter_order		  = $this->getState('filter_order');
+		$filter_order_Dir	= $this->getState('filter_order_Dir');
+
+		switch ($filter_order)
+		{
+			case 'submission_date':
+				$orderby 	= ' ORDER BY submission_date '.$filter_order_Dir;
+				break;
+					
+			default:
+				$orderby 	= ' ORDER BY '.$filter_order.' '.$filter_order_Dir.', submission_date '.$filter_order_Dir;
+				break;
+		}
+
+		return $orderby;
+	}
+	
   function getFormsOptions()
   {
     $query = "SELECT id AS value, formname AS text FROM #__rwf_forms";
@@ -109,7 +203,7 @@ class RedformModelSubmitters extends JModel {
   function getForm($id = null)
   {
   	if ($id == null) {
-  		$id = JRequest::getInt('form_id', 0);
+  		$id = $this->_form_id;
   	}
   	if ($id) {
 	    $query = ' SELECT id, formname, activatepayment, currency FROM #__rwf_forms WHERE id = ' . $this->_db->Quote($id);
@@ -127,7 +221,7 @@ class RedformModelSubmitters extends JModel {
 	 */
 	function getSubmittersExport() 
 	{
-		$form_id = JRequest::getVar('form_id', false);
+		$form_id = $this->_form_id;
 		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
 		
 		$db = JFactory::getDBO();
@@ -155,7 +249,7 @@ class RedformModelSubmitters extends JModel {
 	function getFields() 
 	{
 		$db = JFactory::getDBO();
-		$form_id = JRequest::getInt('form_id', false);
+		$form_id = $this->_form_id;
 		$query = ' SELECT f.id, f.field '
 		       . '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
 		       . ' FROM #__rwf_fields AS f '
@@ -189,7 +283,7 @@ class RedformModelSubmitters extends JModel {
    */
   function getTotal() 
   {
-  	if (!JRequest::getInt('form_id')) {
+  	if (!$this->_form_id) {
   		return 0;
   	}
     // Lets load the content if it doesn't already exist
@@ -204,7 +298,8 @@ class RedformModelSubmitters extends JModel {
 	/**
 	 * Get the number of people signed up for the newsletter
 	 */
-	public function getNewsletterSignup() {
+	public function getNewsletterSignup() 
+	{
 		$db = JFactory::getDBO();
 		$cid = JRequest::getVar('cid');
 		$query = "SELECT COUNT(id)
@@ -255,7 +350,7 @@ class RedformModelSubmitters extends JModel {
       	// first delete the answers
       	$query = ' DELETE a.* ' 
       	       . ' FROM #__rwf_submitters AS s '
-      	       . ' INNER JOIN #__rwf_forms_'.JRequest::getInt('form_id').' AS a ON s.answer_id = a.id '
+      	       . ' INNER JOIN #__rwf_forms_'.$this->_form_id.' AS a ON s.answer_id = a.id '
       	       . ' WHERE ' . $cids;
       	$this->_db->setQuery($query);
       	$res = $this->_db->loadObjectList();
@@ -270,7 +365,7 @@ class RedformModelSubmitters extends JModel {
       	/* then delete the submitters */
       	$query = ' DELETE s.* FROM #__rwf_submitters AS s '
       	      . ' WHERE ' . $cids
-      	      . '	AND s.form_id = '.JRequest::getInt('form_id');
+      	      . '	AND s.form_id = '.$this->_form_id;
       	$database->setQuery( $query );
       	
       	if (!$database->query()) 

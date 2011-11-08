@@ -20,7 +20,7 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
 $nbfields = count($this->fields);
-$colspan  = $nbfields + 5 + ($this->form->activatepayment ? 2 : 0 );
+$colspan  = $nbfields + 6 + ($this->form->activatepayment ? 2 : 0 );
 if (empty($this->integration) && $this->params->get('showintegration', false)) {
 	$colspan++;
 }
@@ -58,8 +58,7 @@ function submitbutton(pressbutton) {
       <tr>
          <td align="left" width="100%">
             <?php echo JText::_('COM_REDFORM_Filter'); ?>:
-			<?php echo $this->lists['form_id']; ?>
-            <button onclick="this.form.submit();"><?php echo JText::_('COM_REDFORM_Go'); ?></button>
+						<?php echo $this->lists['form_id']; ?>
          </td>
       </tr>
     </table>
@@ -70,9 +69,9 @@ function submitbutton(pressbutton) {
 <table class="adminlist">
 	<!-- Headers -->
 	<thead><tr>
-	<th width="20"><?php echo JText::_('COM_REDFORM_ID'); ?></th>
+	<th width="20">#</th>
 	<th width="20"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->submitters ); ?>);" /></th>
-	<th><?php echo JText::_('COM_REDFORM_Submission_date'); ?></th>
+	<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDFORM_Submission_date', 'submission_date', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 	<th><?php echo JText::_('COM_REDFORM_Form_name');?></th>
 	<th><?php echo JText::_('COM_REDFORM_Unique_id');?></th>
 	<?php if (!$this->integration && $this->params->get('showintegration', false)): ?>
@@ -85,6 +84,7 @@ function submitbutton(pressbutton) {
 		<th width="20"><?php echo JText::_('COM_REDFORM_Price'); ?></th>
 		<th width="20"><?php echo JText::_('COM_REDFORM_Payment'); ?></th>
 	<?php endif;?>
+	<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDFORM_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 	</tr></thead>
 	
 	<tfoot>
@@ -150,6 +150,7 @@ function submitbutton(pressbutton) {
 						<?php endif; ?>						
 					</td>
 				<?php endif;?>
+				<td><?php echo $row->id; ?></td>
 			</tr>
 			<?php 
 			$k++;
@@ -166,4 +167,6 @@ function submitbutton(pressbutton) {
 	<?php if (JRequest::getInt('xref', false)) { ?><input type="hidden" name="xref" value="<?php echo JRequest::getInt('xref'); ?>" /><?php } ?>
 	<?php if (!empty($this->integration)) { ?><input type="hidden" name="integration" value="<?php echo $this->integration; ?>" /><?php } ?>
 	<input type="hidden" name="controller" value="submitters" />
+	<input type="hidden" name="filter_order" value="<?php echo $this->lists['order']; ?>" />
+	<input type="hidden" name="filter_order_Dir" value="" />
 </form>
