@@ -10,7 +10,7 @@
 	<license>GNU/GPL</license>
 	<version>2.0 beta 1.1</version>
 	<description>redFORM allows you to create dynamic forms on your Joomla 1.7 website with integrations to redEVENT, redCOMPETITION and the newsletter components Acajoom, ccNewsletter and the open source mailinglist system PHPlist.</description>
-	<!-- Custom installer -->
+	z<!-- Custom installer -->
 	<installfile>install.redform.php</installfile>
 	
 	<!-- Custom uninstaller -->

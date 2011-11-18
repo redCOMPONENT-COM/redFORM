@@ -22,7 +22,14 @@
 /* ensure this file is being included by a parent file */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+/**
+ * @TODO: fix plugin uninstall
+ * Enter description here ...
+ */
 function com_uninstall(){
+	
+	return;
+	
 	/* Remove the plugin */
 	jimport('joomla.filesystem.file');
 	jimport('joomla.filesystem.folder');

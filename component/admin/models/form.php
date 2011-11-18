@@ -371,10 +371,10 @@ class RedformModelForm extends JModel
 	  */
 	public function getVmInstalled() {
 		 $db = JFactory::getDBO();
-		 $q = "SELECT COUNT(*) FROM #__components WHERE link = ".$db->Quote('option=com_virtuemart');
+		 $q = "SELECT extension_id FROM #__extensions WHERE name = ".$db->Quote('com_virtuemart');
 		 $db->setQuery($q);
 		 $result = $db->loadResult();
-		 if ($result > 0) return true;
+		 if ($result) return true;
 		 else return false;
 	}
 	

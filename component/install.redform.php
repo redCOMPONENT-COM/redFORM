@@ -526,7 +526,7 @@ function com_install()
 	}
 	else {
 	  // autopublish the plugin
-	  $query = ' UPDATE #__exstensions SET enabled = 1 WHERE name = '. $db->Quote('Content - redFORM');
+	  $query = ' UPDATE #__extensions SET enabled = 1 WHERE name = '. $db->Quote('Content - redFORM');
     $db->setQuery($query);
     if ($db->query()) {
 	    echo JText::_('COM_REDFORM_Succesfully_installed_redform_content_plugin').'<br />';
