@@ -903,7 +903,7 @@ class RedFormCore extends JObject {
 	{
 		$app = &JFactory::getApplication();
 		$params = JComponentHelper::getParams('com_redform');
-    $url    = $app->isAdmin() ? $app->getSiteURL() : JURI::base();
+		$uri = JFactory::getURI();
 		$doc = &JFactory::getDocument();
 		$doc->addScriptDeclaration('var totalpricestr = "'.JText::_('COM_REDFORM_Total_Price')."\";\n");
 		$doc->addScriptDeclaration('var round_negative_price = '.($params->get('allow_negative_total', 1) ? 0 : 1).";\n");

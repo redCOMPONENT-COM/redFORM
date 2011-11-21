@@ -68,7 +68,8 @@
 }
 table.adminform tr.row1 label.radiobtn, 
 table.adminform tr.row0 label.radiobtn,
-#trpublished label.radiobtn
+#trpublished label.radiobtn,
+table.admintable label.radiobtn
 {
 	clear: none;
 	float: left;

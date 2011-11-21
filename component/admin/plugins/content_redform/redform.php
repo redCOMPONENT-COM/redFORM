@@ -107,7 +107,7 @@ class plgContentRedform extends JPlugin {
 	
 			/* Check if the user is allowed to access the form */
 			$user	= JFactory::getUser();
-			if ($user->aid < $form->access) {
+			if (max($user->get('_authLevels')) < $form->access) {
 				return JText::_('COM_REDFORM_LOGIN_REQUIRED');
 			}		
 	
