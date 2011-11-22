@@ -33,11 +33,11 @@ class RedformViewField extends JView {
 	function display($tpl = null) 
 	{
 		$app = &Jfactory::getApplication();		
-   		$uri = JFactory::getURI();
+   	$uri = JFactory::getURI();
    		
 		$document	= & JFactory::getDocument();
 		JHTML::_('behavior.modal'); 
-    $document->addScript(JURI::base().'/administrator/components/com_redform/js/ajaxvalues.js');
+    $document->addScript(JURI::root().'/administrator/components/com_redform/js/ajaxvalues.js');
 		
 		$row = $this->get('Data');
 		
