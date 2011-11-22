@@ -33,7 +33,7 @@ class RedformViewSubmitter extends JView {
   	JHTML::_('behavior.mootools');
   	
   	$js = <<<EOF
-			function submitform(pressbutton){
+			Joomla.submitform = function(pressbutton, form){
 				if (pressbutton) {
 					document.redform.task.value=pressbutton;
 				}
