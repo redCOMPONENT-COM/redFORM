@@ -23,7 +23,7 @@
 
   <config>
 	  <fields name="params">
-		  <fieldset name="basic" label="basic">   
+		  <fieldset name="extra" label="extra">   
 			    <field name="partner_id" type="text" default="" label="IDEAL_CFG_PAYMENT_PARTNERID" description="IDEAL_CFG_PAYMENT_PARTNERID_DESC" />  
 			    <field name="profile_key" type="text" default="" label="IDEAL_CFG_PAYMENT_PROFILEKEY" description="IDEAL_CFG_PAYMENT_PROFILEKEY_DESC" />  
 			    <field name="testmode" type="radio" default="1" label="IDEAL_CFG_PAYMENT_TESTMODE" description="IDEAL_CFG_PAYMENT_TESTMODE_DESC">

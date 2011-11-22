@@ -21,7 +21,7 @@
   	<language tag="en-GB">languages/en-GB.plg_redform_payment_paypal.ini</language>
   </languages>
 
-  <config><fields name="params"><fieldset name="basic" label="basic">    
+  <config><fields name="params"><fieldset name="extra" label="extra">    
     <field name="paypal_account" type="text" default="" label="PAYPAL_ACCOUNT" description="PAYPAL_ACCOUNT_DESC" />
     <field name="paypal_sandbox" type="radio" default="1" label="PAYPAL_USE_SANDBOX" description="PAYPAL_USE_SANDBOX_DESC">
       <option value="0">No</option>

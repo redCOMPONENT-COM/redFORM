@@ -2,7 +2,7 @@
 
 <config>
 	<fields name="params">
-		<fieldset name="basic" label="basic">
+		<fieldset name="extra" label="extra">
 			<field name="showintegration" type="radio" default="0" label="COM_REDFORM_SHOWINTEGRATION" description="COM_REDFORM_SHOWINTEGRATION_DESC">
 				<option value="0">Hide</option>
 				<option value="1">Show</option>

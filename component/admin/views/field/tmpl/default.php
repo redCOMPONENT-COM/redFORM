@@ -277,14 +277,14 @@ JHTML::_('behavior.tooltip');
 		<!-- Values table end-->
 				
 		<?php if ($this->row->form): ?>
-		<div class="width-60 fltlft">
+		<div">
     <?php
     // Iterate through the normal form fieldsets and display each one.
     foreach ($this->row->form->getFieldsets('params') as $fieldsets => $fieldset):
     ?>
     <fieldset class="adminform">
         <legend>
-            <?php echo JText::_($fieldset->name.'_jform_fieldset_label'); ?>
+            <?php echo JText::_('COM_REDFORM_FIELDSET_LABEL_'.$fieldset->name); ?>
         </legend><dl>
 				<?php
 				// Iterate through the fields and display them.

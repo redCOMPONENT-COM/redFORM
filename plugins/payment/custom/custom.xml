@@ -23,7 +23,7 @@
 
   <config>
 	  <fields name="params">
-		  <fieldset name="basic" label="basic">    
+		  <fieldset name="extra" label="extra">    
 			    <field name="gatewaylabel" type="text" default="Bank transfer, check..." label="CUSTOM_CFG_GATEWAY_LABEL" description="CUSTOM_CFG_GATEWAY_LABEL_DESC" />  
 			    <field name="instructions" type="textarea" rows="10" cols="40" default="" label="CUSTOM_CFG_INSTRUCTIONS" description="CUSTOM_CFG_INSTRUCTIONS_DESC" />  
 		  </fieldset>

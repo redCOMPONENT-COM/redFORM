@@ -23,7 +23,7 @@
 
 <config>
 	<fields name="params">
-		<fieldset name="basic" label="basic">
+		<fieldset name="extra" label="extra">
 		  	<field name="phplist_path" type="text" default="" label="PLG_REDFORM_MAILING_PHPLIST_PATH" description="PLG_REDFORM_MAILING_PHPLIST_PATH_DESC" />
 		</fieldset>
 	</fields>

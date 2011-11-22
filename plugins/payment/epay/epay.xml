@@ -23,7 +23,7 @@
 
   <config>
   <fields name="params">
-  <fieldset name="basic" label="basic">    
+  <fieldset name="extra" label="extra">    
     <field name="EPAY_MERCHANTNUMBER" type="text" default="" label="EPAY_CFG_PAYMENT_MERCHANTNUMBER" description="EPAY_CFG_PAYMENT_MERCHANTNUMBER_EXPLAIN" />
     
     <field name="EPAY_VERIFIED_STATUS" type="list" default="0" label="EPAY_CFG_PAYMENT_STATUS_SUCCESS" description="EPAY_CFG_PAYMENT_STATUS_SUCCESS_EXPLAIN">
