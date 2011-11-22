@@ -37,7 +37,7 @@ class RedformViewField extends JView {
    		
 		$document	= & JFactory::getDocument();
 		JHTML::_('behavior.modal'); 
-    $document->addScript($url.'/administrator/components/com_redform/js/ajaxvalues.js');
+    $document->addScript(JURI::base().'/administrator/components/com_redform/js/ajaxvalues.js');
 		
 		$row = $this->get('Data');
 		
@@ -108,7 +108,7 @@ class RedformViewField extends JView {
 		 */
 		$paramsdata = $row->params;
 		
-		if ($row->fieldtype && file_exists(JPATH_COMPONENT . DS . 'models' . DS . 'field_'.$row->fieldtype.'.xml')) 
+		if (0 && $row->fieldtype && file_exists(JPATH_COMPONENT . DS . 'models' . DS . 'field_'.$row->fieldtype.'.xml')) 
 		{
 			$paramsdefs = JPATH_COMPONENT . DS . 'models' . DS . 'field_'.$row->fieldtype.'.xml';
 			$parameters = new JParameter( $paramsdata, $paramsdefs );

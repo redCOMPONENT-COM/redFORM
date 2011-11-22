@@ -20,6 +20,7 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
 jimport( 'joomla.application.component.model' );
+jimport( 'joomla.form.form' );
 
 /**
  * Fields Model
@@ -86,7 +87,17 @@ class RedformModelField extends JModel
 
     }
     else  $this->_initData();
-
+    
+    // Get the form.
+    $registry = new JRegistry;
+    $registry->loadString($this->_data->params);
+    $this->_data->params = $registry->toArray();
+    
+    JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
+    $form = JForm::getInstance('extended', 'field_'.$this->_data->fieldtype);
+    $form->bind(array('params' => $this->_data->params));
+    
+    $this->_data->form = $form;
     return $this->_data;
   }
 	   

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model>
-	<config><fields name="params"><fieldset name="basic" label="basic">
+<form>
+	<fields name="params">
+		<fieldset name="basic" label="basic">
     <field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS" description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
     <field name="size" type="text" default="25" label="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE" description="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE_DESC"/>
     <field name="maxlength" type="text" default="250" label="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH" description="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH_DESC"/>
-    <field name="force_mailing_list" type="radio" default="0" label="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST" description="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST_DESC">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
-    </field> 	
-	</fieldset></fields></config>
-</model>
+	</fieldset></fields>
+</form>

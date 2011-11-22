@@ -276,26 +276,40 @@ JHTML::_('behavior.tooltip');
 		</fieldset>
 		<!-- Values table end-->
 				
-		<?php if ($this->parameters && $this->parameters->getGroups()): ?>		
-		<?php
-			foreach ( $this->parameters->getGroups() as $key => $groups )
-			{
-				$gname = ( strtolower($key) == '_default' ) ? JText::_('COM_REDFORM_Extra' ) : $key;
-				?>
-				<fieldset class="adminform">
-					<legend>
-						<?php
-						echo JText::_( $gname );
-						?>
-					</legend>
-					<?php
-					// render is defined in joomla\libraries\joomla\html\parameter.php
-					echo $this->parameters->render( 'params', $key );
-					?>
-				</fieldset>
+		<?php if ($this->row->form): ?>
+		<div class="width-60 fltlft">
+    <?php
+    // Iterate through the normal form fieldsets and display each one.
+    foreach ($this->row->form->getFieldsets('params') as $fieldsets => $fieldset):
+    ?>
+    <fieldset class="adminform">
+        <legend>
+            <?php echo JText::_($fieldset->name.'_jform_fieldset_label'); ?>
+        </legend><dl>
 				<?php
-			}
-		?>
+				// Iterate through the fields and display them.
+				foreach($this->row->form->getFieldset($fieldset->name) as $field):
+				    // If the field is hidden, only use the input.
+				    if ($field->hidden):
+				        echo $field->input;
+				    else:
+				    ?>
+				    <dt>
+				        <?php echo $field->label; ?>
+				    </dt>
+				    <dd<?php echo ($field->type == 'Editor' || $field->type == 'Textarea') ? ' style="clear: both; margin: 0;"' : ''?>>
+				        <?php echo $field->input ?>
+				    </dd>
+				    <?php
+				    endif;
+				endforeach;
+				?>
+				</dl>
+    </fieldset>
+    <?php
+    endforeach;
+    ?>
+</div>
 		<?php endif; ?>
 		
   <?php echo JHTML::_( 'form.token' ); ?>
