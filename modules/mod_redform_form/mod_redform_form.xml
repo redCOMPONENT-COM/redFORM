@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0" method="upgrade">
+  <name>redFORM Form</name>
+	<creationDate>Mar 12, 2010</creationDate>
+	<author>Redweb.dk</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redweb.dk</authorUrl>
+	<copyright>(c) 2008 - 2011 Redweb.dk</copyright>
+	<license>GNU/GPL</license>
+	<version>2.0</version>
+  <description>MOD_REDFORM_FORM_MODULE_DESCRIPTION</description>
+
+  <files>
+    <filename module="mod_redform_form">mod_redform_form.php</filename>
+    <filename>index.html</filename>
+    <filename>mod_redform_form.css</filename>
+    <folder>tmpl</folder>
+  </files>
+
+  <languages>
+    <language tag="en-GB">languages/en-GB.mod_redform_form.ini</language>
+  </languages>
+
+  <params>
+    <param name="form_id" type="text" default="1" label="MOD_REDFORM_FORM_FORM_ID_LABEL" description="MOD_REDFORM_FORM_FORM_ID_DESC" />
+  </params>
+	
+	<params group="advanced">
+		<param name="moduleclass_sfx" type="text" default="" label="MOD_REDFORM_FORM_MODULE_CLASS_SUFFIX" description="MOD_REDFORM_FORM_MODULE_CLASS_SUFFIX_DESC" />
+		<param name="cache" type="list" default="1" label="MOD_REDFORM_FORM_CACHING" description="MOD_REDFORM_FORM_CACHING_DESC">
+			<option value="1">USE GLOBAL</option>
+			<option value="0">NO CACHING</option>
+		</param>
+		<param name="cache_time" type="text" default="900" label="MOD_REDFORM_FORM_CACHE_TIME" description="MOD_REDFORM_FORM_CACHE_TIME_DESC" />
+	</params>
+
+</install>
