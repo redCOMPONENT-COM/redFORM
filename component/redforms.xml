@@ -47,9 +47,6 @@
 	<!-- Language files -->
 	<languages folder="site/languages">
 		<language tag="en-GB">en-GB.com_redform.ini</language>
-		<language tag="da-DK">da-DK.com_redform.ini</language>
-		<language tag="de-DE">de-DE.com_redform.ini</language>
-		<language tag="nl-NL">nl-NL.com_redform.ini</language>
 	</languages>
 	
 	<!-- Image files -->
@@ -111,12 +108,6 @@
 	<languages folder="admin/languages">
 		<language tag="en-GB">en-GB.com_redform.ini</language>
 		<language tag="en-GB">en-GB.com_redform.menu.ini</language>
-		<language tag="da-DK">da-DK.com_redform.ini</language>
-		<language tag="da-DK">da-DK.com_redform.menu.ini</language>
-		<language tag="nl-NL">nl-NL.com_redform.ini</language>
-		<language tag="nl-NL">nl-NL.com_redform.menu.ini</language>
-		<language tag="de-DE">de-DE.com_redform.ini</language>
-		<language tag="de-DE">de-DE.com_redform.menu.ini</language>
 	</languages>
 	</administration>
 </install>

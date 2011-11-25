@@ -15,11 +15,6 @@
 		<folder>redform</folder>
 	</files>
 	<languages folder="language">
-    <language tag="en-GB">en-GB.plg_content_redform.ini</language>
-	  <language tag="de-DE">de-DE.plg_content_redform.ini</language>
-	  <language tag="da-DK">da-DK.plg_content_redform.ini</language>
-	  <language tag="fi-FI">fi-FI.plg_content_redform.ini</language>
-	  <language tag="sv-SE">sv-SE.plg_content_redform.ini</language>
-	  <language tag="nl-NL">nl-NL.plg_content_redform.ini</language>	  
+    <language tag="en-GB">en-GB.plg_content_redform.ini</language> 
    </languages>
 </install>
