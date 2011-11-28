@@ -9,63 +9,62 @@
 * 
 */
 
-/**
- * dynamic form price calculation
- */
-jQuery(function () {
-   jQuery("div.redform-form").find(":input").change(updatePrice).slice(0,1).trigger("change");
+window.addEvent('domready', function(){
+	/**
+	 * dynamic form price calculation
+	 */
+	$ES("div.redform-form select").addEvent('change', updatePrice);
+	$ES("div.redform-form input").addEvent('change', updatePrice).getLast().fireEvent("change");
 });
 
 function updatePrice()
 {
 	// get the instance of redform corresponding to the field that triggered the 'change'
-	var instance = jQuery(this).parents("div.redform-form").slice(0,1);
+	var instance = $(this.form);
 	
 	var price = 0.0;
-	var active = parseInt(instance.find("input[name='curform']").slice(0,1).val());
-	
-	var countforms = 0;
-	
+	var active = parseInt(instance.getElement("input[name='curform']").getProperty('value'));
+		
 	for (var i = 1; i < active+1; i++)
 	{
-		var signup = instance.find("#formfield"+i).slice(0,1);
-		signup.find("input.rfprice").each(function(k) {
-			var p = jQuery(this).val();
+		var signup = instance.getElement("#formfield"+i);
+		signup.getElements("input.rfprice").each(function(element) {
+			var p = $(element).getProperty('value');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 		
-		signup.find("[selected]").each(function() {
-			var p = jQuery(this).attr('price');
+		signup.getElements("[selected]").each(function(element) {
+			var p = $(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 
-		signup.find("[checked]").each(function() {
-			var p = jQuery(this).attr('price');
+		signup.getElements("[checked]").each(function(element) {
+			var p = $(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 
-		signup.find(".eventprice").each(function() {
-			var p = jQuery(this).attr('price');
+		signup.getElements(".eventprice").each(function(element) {
+			var p = $(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 
-		signup.find(".fixedprice").each(function() {
-			var p = jQuery(this).attr('price');
+		signup.getElements(".fixedprice").each(function(element) {
+			var p = $(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 
-		signup.find(".bookingprice").each(function() {
-			var p = jQuery(this).attr('price');
+		signup.getElements(".bookingprice").each(function(element) {
+			var p = $(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
@@ -75,8 +74,14 @@ function updatePrice()
 		price = Math.max(price, 0);
 	}
 	// set the price
-	if (price && !instance.find("#totalprice").length) {
-		instance.append('<div id="totalprice" class="fieldline"><div class="label">'+totalpricestr+'</div><div class="field">'+currency+' <span></span></div></div>');
+	if (price && !instance.getElement("#totalprice")) {
+		// insert total right after last div.redform-form
+		new Element('div', {id : 'totalprice', 'class' : "fieldline"})
+		    .setHTML('<div class="label">'+totalpricestr+'</div><div class="field">'+currency+' <span></span></div>')
+		    .injectAfter(instance.getElements('.redform-form').getLast());
+		instance.getElement("#totalprice span").setText(Math.round(price*100)/100);
 	}
-	instance.find("#totalprice span").slice(0,1).text(Math.round(price*100)/100);
+	else if (instance.getElement("#totalprice")) {
+		instance.getElement("#totalprice span").setText(Math.round(price*100)/100);
+	}
 }

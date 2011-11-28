@@ -19,128 +19,127 @@ function CheckSubmit(form)
 {
 	var msg = '';
 	var result = true;
-	var newclass = 'emptyfield';
 	var checkboxmsg = false;
 	var radiomsg = false;
 
 	// only check the form that were activated by the user
-	var forms = jQuery('.formbox');
-	var nb_active = parseInt(jQuery("input[name='curform']").val());
+	var forms = $$('.formbox');
+	var nb_active = parseInt($E("input[name='curform']").getProperty('value'));
 
 	for (var j = 0 ; j < nb_active ; j++)
 	{
 		// get the input data of the form
-		var formelements = jQuery(forms[j]).find(':input');
+		var formelements = $(forms[j]).getElements('input').concat($(forms[j]).getElements('select'), $(forms[j]).getElements('textarea'));
 
-	for(i=0; i < formelements.length; i++) 
-	{
-		var check_element = formelements[i];
+		for(var i=0; i < formelements.length; i++) 
+		{
+			var check_element = formelements[i];
 
-		/* Check field type */
-		/* Fullname */
-		if (check_element.name.indexOf("[fullname]") != -1 && check_element.className.match("required")) {
-			var fullresult = CheckFill(check_element);
-			if (!fullresult) {
-					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_please_enter_a_name'); ?>\n";
+			/* Check field type */
+			/* Fullname */
+			if (check_element.name.indexOf("[fullname]") != -1 && check_element.className.match("required")) {
+				var fullresult = CheckFill(check_element);
+				if (!fullresult) {
+					msg += getLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_please_enter_a_name'); ?>\n";
+				}
+				if (result) result = fullresult;
 			}
-			if (result) result = fullresult;
-		}
 		
-		/* Text field */
-		if (check_element.name.indexOf("[text]") != -1 && check_element.className.match("required")) {
-			var textresult = CheckFill(check_element);
-			if (!textresult) {
-					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+			/* Text field */
+			if (check_element.name.indexOf("[text]") != -1 && check_element.className.match("required")) {
+				var textresult = CheckFill(check_element);
+				if (!textresult) {
+						msg += getLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+				}
+				if (result) result = textresult;
 			}
-			if (result) result = textresult;
-		}
-		
-		/* Textarea field */
-		if (check_element.name.indexOf("[textarea]") != -1 && check_element.className.match("required")) {
-			var textarearesult = CheckFill(check_element);
-			if (!textarearesult) {
-					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+			
+			/* Textarea field */
+			if (check_element.name.indexOf("[textarea]") != -1 && check_element.className.match("required")) {
+				var textarearesult = CheckFill(check_element);
+				if (!textarearesult) {
+						msg += getLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+				}
+				if (result) result = textarearesult;
 			}
-			if (result) result = textarearesult;
-		}
 		
-		/* Username field */
-		if (check_element.name.indexOf("[username]") != -1 && check_element.className.match("required")) {
-			var usernameresult = CheckFill(check_element);
-			if (!usernameresult) {
-					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_please_enter_an_username'); ?>\n";
+			/* Username field */
+			if (check_element.name.indexOf("[username]") != -1 && check_element.className.match("required")) {
+				var usernameresult = CheckFill(check_element);
+				if (!usernameresult) {
+						msg += getLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_please_enter_an_username'); ?>\n";
+				}
+				if (result) result = usernameresult;
 			}
-			if (result) result = usernameresult;
-		}
-		
-		/* E-mail */
-		if (check_element.name.indexOf("[email]") != -1 && check_element.className.match("required")) {
-			if (CheckFill(check_element)) {
-				if (!CheckEmail(check_element.value)) {
-					msg = msg + "<?php echo JText::_('COM_REDFORM_No_valid_e-mail_address'); ?>\n";
+			
+			/* E-mail */
+			if (check_element.name.indexOf("[email]") != -1 && check_element.className.match("required")) {
+				if (CheckFill(check_element)) {
+					if (!CheckEmail(check_element.value)) {
+						msg = msg + "<?php echo JText::_('COM_REDFORM_No_valid_e-mail_address'); ?>\n";
+						if (result) result = false;
+					}
+				}
+				else {
+					msg = msg + "<?php echo JText::_('COM_REDFORM_E-mail_address_is_empty'); ?>\n";
 					if (result) result = false;
 				}
 			}
-			else {
-				msg = msg + "<?php echo JText::_('COM_REDFORM_E-mail_address_is_empty'); ?>\n";
-				if (result) result = false;
-			}
-		}
 
-		/* multiselect field */
-		if ((check_element.name.indexOf("[multiselect]") != -1 || check_element.name.indexOf("[select]") != -1) 
-				&& check_element.className.match("required")) {
-			var multires = CheckFill(check_element);
-			if (!multires) {
-					msg += getLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_select_a_value'); ?>\n";
-		}
-			if (result) result = multires;
-		}
+			/* multiselect field */
+			if ((check_element.name.indexOf("[multiselect]") != -1 || check_element.name.indexOf("[select]") != -1) 
+					&& check_element.className.match("required")) {
+				var multires = CheckFill(check_element);
+				if (!multires) {
+					msg += getLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_select_a_value'); ?>\n";
+				}
+				if (result) result = multires;
+			}
 		
-    /* Radio buttons */
-  if (check_element.name.indexOf("[radio]") != -1 && check_element.className.match("required")) {
-    radios = document.getElementsByName(check_element.name);
-    var radiocheck = false;
-    for (var rct=radios.length-1; rct > -1; rct--) {
-      if (radios[rct].checked) {
-        radiocheck = true;
-        rct = -1;
-      }
-    }
-    if (radiocheck == false) {
-    	jQuery(check_element).parents('.fieldoptions').addClass('emptyfield');
+			/* Radio buttons */
+			if (check_element.name.indexOf("[radio]") != -1 && check_element.className.match("required")) {
+				radios = document.getElementsByName(check_element.name);
+				var radiocheck = false;
+				for (var rct=radios.length-1; rct > -1; rct--) {
+					if (radios[rct].checked) {
+						radiocheck = true;
+						rct = -1;
+					}
+				}
+				if (radiocheck == false) {
+					$(check_element).parents('.fieldoptions').addClass('emptyfield');
 					getListLabel(check_element).addClass('emptyfield');
-					radiomsg = getListLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
-      if (result) result = false;
-    }
-    else {
-    	jQuery(check_element).parents('.fieldoptions').removeClass('emptyfield');
-    	getListLabel(check_element).removeClass('emptyfield');
-    }
-  }
+					radiomsg = getListLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+					if (result) result = false;
+				}
+				else {
+					$(check_element).parents('.fieldoptions').removeClass('emptyfield');
+					getListLabel(check_element).removeClass('emptyfield');
+				}
+			}
   
-  /* Check boxes */
-  if (check_element.name.indexOf("[checkbox]") != -1 && check_element.className.match("required")) {
-    checkboxes = document.getElementsByName(check_element.name);
-    var checkboxcheck = false;
-    for (var rct=checkboxes.length-1; rct > -1; rct--) {
-      if (checkboxes[rct].checked) {
-        checkboxcheck = true;
-        rct = -1;
-      }
-    }
-    
-    if (checkboxcheck == false) {
-    	jQuery(check_element).parents('.fieldoptions').addClass('emptyfield');
-    	getListLabel(check_element).addClass('emptyfield');
-					checkboxmsg = getListLabel(check_element).text()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
-      if (result) result = false;
-    }
-    else {
-    	jQuery(check_element).parents('.fieldoptions').removeClass('emptyfield');
-    	getListLabel(check_element).removeClass('emptyfield');
-    }
-  }
+			/* Check boxes */
+			if (check_element.name.indexOf("[checkbox]") != -1 && check_element.className.match("required")) {
+				checkboxes = document.getElementsByName(check_element.name);
+				var checkboxcheck = false;
+				for (var rct=checkboxes.length-1; rct > -1; rct--) {
+					if (checkboxes[rct].checked) {
+						checkboxcheck = true;
+						rct = -1;
+					}
+				}
+
+				if (checkboxcheck == false) {
+					$(check_element).parents('.fieldoptions').addClass('emptyfield');
+					getListLabel(check_element).addClass('emptyfield');
+					checkboxmsg = getListLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+					if (result) result = false;
+				}
+				else {
+					jQuery(check_element).parents('.fieldoptions').removeClass('emptyfield');
+					getListLabel(check_element).removeClass('emptyfield');
+				}
+			}
 	}
 	}
 	if (result == false) {
@@ -149,7 +148,7 @@ function CheckSubmit(form)
 		alert(msg);
 		return false;		
 	}
-
+alert(result);return false;
 	return result;
 }
 
@@ -167,7 +166,7 @@ function addClass(element, value)
 
 function CheckFill(element) 
 {
-	if (!(jQuery(element).val())) {
+	if (!($(element).getProperty('value'))) {
 		addEmpty(element);
 		return false;
 	}
@@ -178,17 +177,17 @@ function CheckFill(element)
 }
 
 function addEmpty(element) {
-	jQuery(element).addClass('emptyfield');
-	getLabel(element).addClass('emptyfield');
+	$(element).addClass('emptyfield');
+	$(element).addClass('emptyfield');
 }
 
 function removeEmpty(element) {
-	jQuery(element).removeClass('emptyfield');
+	$(element).removeClass('emptyfield');
 	getLabel(element).removeClass('emptyfield');
 }
 
 function getLabel(element) {
-	return jQuery('label[for="'+element.id+'"]');
+	return $E('label[for="'+element.id+'"]');
 }
 
 /**
@@ -196,12 +195,7 @@ function getLabel(element) {
  */
 function getListLabel(element) {
 	var name = element.name.substr(0, element.name.indexOf('.'));
-	return jQuery('label[for="'+name+'"]');
-}
-
-function Trim(text) 
-{
-	text.value = jQuery.trim(text.value);
+	return $E('label[for="'+name+'"]');
 }
 
 function CheckEmail(str) 
@@ -224,39 +218,41 @@ function CheckEmail(str)
 function AddUser() 
 {
 	//jQuery("div#submit_button").show();
-	var curform = parseInt(jQuery("input[name='curform']").val());
-	var maxform = parseInt(jQuery("input[name='multi']").val());
+	var curform = parseInt($E("input[name='curform']").getProperty('value'));
+	var maxform = parseInt($E("input[name='multi']").getProperty('value'));
 	if (curform >= maxform) {
 		alert("<?php echo JText::_('COM_REDFORM_MAX_SIGNUP_REACHED'); ?>\n");
 	}
 	else {
-		jQuery("[id^='formfield']").each(function(i) {
-			jQuery(this).hide();
+		$ES("[id^='formfield']").each(function(el) {
+			$(el).setStyle('display', 'none');
 		});
-		jQuery("#formfield"+curform).show();
-		userlink = '<a href="#" onclick="ShowSingleForm(\'div#formfield'+(curform+1)+'\'); return false;"># '+(curform+1)+'</a><br />';
-		jQuery("div#signedusers").append(userlink);
-		jQuery("input[name='curform']").val(curform+1);
+		$("formfield"+curform).setStyle('display', 'block');
+		new Element('a', {'href' : '#'}).setText('# '+(curform+1)).addEvent('click', function(ev) {
+			ev.preventDefault();
+			ShowSingleForm('div#formfield'+(curform+1));
+		}).injectInside($("signedusers"));
+		new Element('br').injectInside($("signedusers"));
+		$E("input[name='curform']").setProperty('value', curform+1);
 	}
-	updatePrice();
 }
 
 function ShowSingleForm(showform) {
-	jQuery("[id^='formfield']").each(function(i) {
-		jQuery(this).hide();
+	$ES("[id^='formfield']").each(function(el) {
+		$(el).setStyle('display', 'none');
 	});
-	jQuery(showform).show();
+	$E(showform).setStyle('display', 'block');
 }
 
 function ShowAllUsers(showhide) {
-	var curform = parseInt(jQuery("input[name='curform']").val());
-	jQuery("[id^='formfield']").each(function(i) {
+	var curform = parseInt($E("input[name='curform']").getProperty('value'));
+	$ES("[id^='formfield']").each(function(el, i) {
 		if (i < curform) {
-			if (showhide) jQuery(this).show();
-			else if (!showhide) jQuery(this).hide();
+			if (showhide) $(el).setStyle('display', 'block');
+			else if (!showhide) $(el).setStyle('display', 'none');
 		}
 		else {
-			jQuery(this).hide();
+			$(el).setStyle('display', 'none');
 		}
 	});
 }

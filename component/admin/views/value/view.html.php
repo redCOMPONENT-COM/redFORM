@@ -36,9 +36,6 @@ class RedformViewValue extends JView
 		$mainframe = & JFactory::getApplication();
 		 
 		$document = JFactory::getDocument();
-		$document->addScript($mainframe->getSiteURL().'administrator/components/com_redform/js/javascript.js');
-		$document->addScript($mainframe->getSiteURL().'components/com_redform/assets/js/jquery-1.4.min.js');
-		$document->addScriptDeclaration('jQuery.noConflict();');
 
 		$row = $this->get('Data');
 
@@ -49,7 +46,7 @@ class RedformViewValue extends JView
 
 		/* Get the fields */
 		$fields = $this->get('FieldsOptions');
-		$lists['fields']= JHTML::_('select.genericlist',  $fields, 'field_id', 'onChange="CheckFieldType(); return false;"', 'value', 'text', $row->field_id) ;
+		$lists['fields']= JHTML::_('select.genericlist',  $fields, 'field_id', '', 'value', 'text', $row->field_id) ;
 
 		/* Set variabels */
 		$this->assignRef('row', $row);
