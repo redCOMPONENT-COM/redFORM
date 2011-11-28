@@ -70,7 +70,7 @@ class plgContentRedform extends JPlugin {
 			if (isset($row->eventid)) JRequest::setVar('redevent', $row);
 			else if (isset($row->competitionid)) JRequest::setVar('redcompetition', $row);
 
-			// load jquery for the form javascript
+			// load form javascript
 			if (JRequest::getVar('format', 'html') == 'html') {
 				JHTML::_('behavior.tooltip');
 				jimport('joomla.html.html');

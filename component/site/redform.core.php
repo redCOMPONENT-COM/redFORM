@@ -184,9 +184,6 @@ class RedFormCore extends JObject {
 		if (JRequest::getVar('format', 'html') == 'html') {
 			JHTML::_('behavior.tooltip');
 			jimport('joomla.html.html');
-			$document->addScript(JURI::root().'components/com_redform/assets/js/jquery-1.4.min.js' );
-			//$document->addCustomTag( '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>' ); // for debugging...
-			$document->addScriptDeclaration( 'jQuery.noConflict();' );
 		}
   	
   	// custom tooltip
@@ -750,7 +747,7 @@ class RedFormCore extends JObject {
 									}
 								}
 							}
-							$element .= '" price="'.$value->price.'" />'.$value->label."</option>";
+							$element .= ' price="'.$value->price.'" />'.$value->label."</option>";
 						}
 						$element .= '</select>';
 						$element .= "\n";
@@ -916,7 +913,6 @@ class RedFormCore extends JObject {
 		$doc = &JFactory::getDocument();
 		$doc->addScriptDeclaration('var totalpricestr = "'.JText::_('COM_REDFORM_Total_Price')."\";\n");
 		$doc->addScriptDeclaration('var round_negative_price = '.($params->get('allow_negative_total', 1) ? 0 : 1).";\n");
-//		$doc->addScript($url.'components/com_redform/assets/js/formprice.js');
 		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jsprice'));
 	}
 	
