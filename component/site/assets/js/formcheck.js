@@ -148,7 +148,6 @@ function CheckSubmit(form)
 		alert(msg);
 		return false;		
 	}
-alert(result);return false;
 	return result;
 }
 
