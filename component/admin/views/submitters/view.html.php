@@ -94,6 +94,11 @@ class RedformViewSubmitters extends JView {
   	//TODO: fix the add/modify submitters from backend
   	JToolBarHelper::editListX();
   	if (JRequest::getVar('xref', false)) JToolBarHelper::addNewX();
+		JToolBarHelper::divider();
+		if (JFactory::getUser()->authorise('core.admin', 'com_redform'))
+		{
+			JToolBarHelper::preferences('com_redform');
+		}
   	
   	/* Display the page */
   	parent::display($tpl);

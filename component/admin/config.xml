@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <config>
-	<fields name="params">
-		<fieldset name="extra" label="extra">
-			<field name="showintegration" type="radio" default="0" label="COM_REDFORM_SHOWINTEGRATION" description="COM_REDFORM_SHOWINTEGRATION_DESC">
-				<option value="0">Hide</option>
-				<option value="1">Show</option>
-			</field>
-			<field name="allow_email_aliasing" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING" description="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING_DESC">
-				<option value="0">No</option>
-				<option value="1">Yes</option>
-			</field> 	
-			<field name="upload_path" type="text" default="images/redform" label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL" description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
-			<field name="allow_negative_total" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL" description="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL_DESC">
-				<option value="0">No</option>
-				<option value="1">Yes</option>
-			</field> 	
-		</fieldset>
-	</fields>
+	<fieldset name="general" label="COM_REDFORM_SETTINGS_general">
+		<field name="showintegration" type="radio" default="0" label="COM_REDFORM_SHOWINTEGRATION" description="COM_REDFORM_SHOWINTEGRATION_DESC">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</field>
+		<field name="allow_email_aliasing" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING" description="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING_DESC">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</field> 	
+		<field name="upload_path" type="text" default="images/redform" label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL" description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
+		<field name="allow_negative_total" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL" description="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL_DESC">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</field> 	
+	</fieldset>
+		
+	<fieldset	name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+		description="JCONFIG_PERMISSIONS_DESC">
+		<field
+			name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			class="inputbox"
+			validate="rules"
+			filter="rules"
+			component="com_redform"
+			section="component"
+		/>
+	</fieldset>
 </config>

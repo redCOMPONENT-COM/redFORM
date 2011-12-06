@@ -19,7 +19,7 @@
 
 class RedformHelper {
 	
-  function setMenu()
+  public static function setMenu()
   {
     $user = & JFactory::getUser();
     $view = JRequest::getVar('view', '');
@@ -29,10 +29,5 @@ class RedformHelper {
     JSubMenuHelper::addEntry( JText::_('COM_REDFORM_FIELDS' ), 'index.php?option=com_redform&view=fields', $view == 'fields');
     JSubMenuHelper::addEntry( JText::_('COM_REDFORM_SUBMITTERS' ), 'index.php?option=com_redform&view=submitters', $view == 'submitters');
     JSubMenuHelper::addEntry( JText::_('COM_REDFORM_LOGS' ), 'index.php?option=com_redform&view=log', $view == 'log');
-    if ($user->get('gid') > 24) {
-      JSubMenuHelper::addEntry( JText::_('COM_REDFORM_SETTINGS' ), 'index.php?option=com_redform&controller=configuration&task=edit', $controller == 'configuration');
-    }
   }
 }
-
-?>

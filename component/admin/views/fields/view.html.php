@@ -81,6 +81,11 @@ class RedformViewFields extends JView {
 			JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FIELDS_DELETE_WARNING'));
 			JToolBarHelper::editListX();
 			JToolBarHelper::addNew();
+			JToolBarHelper::divider();
+			if (JFactory::getUser()->authorise('core.admin', 'com_redform'))
+			{
+				JToolBarHelper::preferences('com_redform');
+			}
 		}
 		
 		/* Display the page */

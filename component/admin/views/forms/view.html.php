@@ -58,15 +58,20 @@ class RedformViewForms extends JView {
 	function toolbar() 
 	{
 		JToolBarHelper::title(JText::_('COM_REDFORM' ), 'redform_redform');
-		JToolBarHelper::custom('submitters', 'redform_submitters', 'redform_submitters', JText::_('COM_REDFORM_Submitters'), true);
-		JToolBarHelper::spacer();
+		JToolBarHelper::addNew();
+		JToolBarHelper::editListX();
+    JToolBarHelper::custom('copy', 'copy', 'copy', JText::_('COM_REDFORM_Clone'), true);
+		JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FORMS_DELETE_WARNING'));
+		JToolBarHelper::divider();
 		JToolBarHelper::publishList();
 		JToolBarHelper::unpublishList();
-		JToolBarHelper::spacer();
-		JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FORMS_DELETE_WARNING'));
-		JToolBarHelper::editListX();
-		JToolBarHelper::addNew();
-    JToolBarHelper::custom('copy', 'copy', 'copy', JText::_('COM_REDFORM_Clone'), true);
+		JToolBarHelper::divider();
+		JToolBarHelper::custom('submitters', 'redform_submitters', 'redform_submitters', JText::_('COM_REDFORM_Submitters'), true);
+		JToolBarHelper::divider();
+		if (JFactory::getUser()->authorise('core.admin', 'com_redform'))
+		{
+			JToolBarHelper::preferences('com_redform');
+		}
 	}
 }
 ?>
