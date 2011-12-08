@@ -223,10 +223,7 @@ function AddUser()
 		alert("<?php echo JText::_('COM_REDFORM_MAX_SIGNUP_REACHED'); ?>\n");
 	}
 	else {
-		$ES("[id^='formfield']").each(function(el) {
-			$(el).setStyle('display', 'none');
-		});
-		$("formfield"+curform).setStyle('display', 'block');
+		$("formfield"+(curform+1)).setStyle('display', 'block');
 		new Element('a', {'href' : '#'}).setText('# '+(curform+1)).addEvent('click', function(ev) {
 			ev.preventDefault();
 			ShowSingleForm('div#formfield'+(curform+1));

@@ -904,13 +904,13 @@ class RedFormCore extends JObject {
 		$doc = &JFactory::getDocument();
 		$doc->addScriptDeclaration('var totalpricestr = "'.JText::_('COM_REDFORM_Total_Price')."\";\n");
 		$doc->addScriptDeclaration('var round_negative_price = '.($params->get('allow_negative_total', 1) ? 0 : 1).";\n");
-		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jsprice'));
+		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jsprice&format=raw'));
 	}
 	
 	function JsCheck() 
 	{
 		$doc = &JFactory::getDocument();
-		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jscheck'));
+		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jscheck&format=raw'));
 	}
 	
 	/**
