@@ -159,6 +159,27 @@ class RedformModelRedform extends JModel {
 		return $fields;
 	}
 	
+	function getField($id)
+	{
+		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, f.published, m.listnames '
+		   . '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
+		   . ' FROM #__rwf_fields AS f '
+		   . ' WHERE f.id = '.$id
+		   ;
+		$this->_db->setQuery($q);
+		$field = $this->_db->loadObject();
+		
+		$paramsdefs = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' . DS . 'field_'.$field->fieldtype.'.xml';
+		if (!empty($field->params) && file_exists($paramsdefs))
+		{
+			$field->parameters = new JParameter( $field->params, $paramsdefs );
+		}
+		else {
+			$field->parameters = new JRegistry();
+		}
+		return $field;		
+	}
+	
 	function getFormValues($field_id) 
 	{		
 		$q = " SELECT id, value, label, field_id, price 

@@ -785,9 +785,24 @@ class RedFormCore extends JObject {
 						break;
 	
 					case 'fileupload':
+				    $types = $field->parameters->get('filetypes');
+				    $allowed = array();
+				    if (!empty($types)) 
+				    {
+				    	foreach( explode(',', $types) as $t) 
+				    	{
+				    		$t = trim($t);
+				    		if ($t) {
+				    			$allowed[] = $t;
+				    		}
+				    	}
+				    }
+						$types = count($allowed) ? ' ftypes="'.implode(',', $allowed).'"' : '';
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						if ($submitter_id == 0) {
-							$element .= "<input type=\"file\" id=\"field".$field->id."\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" class=\"fileupload".$field->parameters->get('class','')."\" id=\"fileupload_".$field->id."\"/>";
+							$element .= "<input type=\"file\" id=\"field".$field->id."\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" 
+							                    class=\"fileupload".$field->parameters->get('class','')."\" 
+							                    id=\"fileupload_".$field->id."\" $types/>";
 						}
 						$element .= "\n";
 						break;
@@ -1044,6 +1059,36 @@ class RedFormCore extends JObject {
 			$this->_fields = $model_redform->getFormFields();
 		}
 		return $this->_fields;
+	}
+	
+	/**
+	 * return field object
+	 * 
+	 * @param int $id
+	 * @return boolean|object
+	 */
+	function getField($id)
+	{
+		if (!(int) $id) {
+			return false;
+		}
+		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, f.published, m.listnames '
+		   . '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
+		   . ' FROM #__rwf_fields AS f '
+		   . ' WHERE f.id = '.(int) $id
+		   ;
+		$this->_db->setQuery($q);
+		$field = $this->_db->loadObject();
+
+		$paramsdefs = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' . DS . 'field_'.$field->fieldtype.'.xml';
+		if (!empty($field->params) && file_exists($paramsdefs))
+		{
+			$field->parameters = new JParameter( $field->params, $paramsdefs );
+		}
+		else {
+			$field->parameters = new JRegistry();
+		}
+		return $field;
 	}
 	
 	/**

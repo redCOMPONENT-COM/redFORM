@@ -199,7 +199,7 @@ class rfanswers
         break;
       case 'name':
         if (in_array('fileupload', array_keys($postedvalue['name']))) {
-          $answer = $this->_fileupload($postedvalue);
+          $answer = $this->_fileupload($postedvalue, $field);
         }
         break;        
       case 'radio':
@@ -240,7 +240,7 @@ class rfanswers
    * @param array $field
    * @return string answer
    */
-  protected function _fileupload($field)
+  protected function _fileupload($posted, $field)
   {    
     /* Check if the folder exists */
     jimport('joomla.filesystem.folder');
@@ -250,6 +250,30 @@ class rfanswers
     
     $db = &JFactory::getDBO();
     $answer = '';
+    
+    
+    $types = $field->parameters->get('filetypes');
+    $allowed = array();
+    if (!empty($types)) 
+    {
+    	foreach( explode(',', $types) as $t) 
+    	{
+    		$t = trim($t);
+    		if ($t) {
+    			$allowed[] = $t;
+    		}
+    	}
+    }
+    
+    // check extension ?
+    if (count($allowed)) 
+    {
+    	$ext = pathinfo($posted['name']['fileupload'][0], PATHINFO_EXTENSION);
+    	if (!in_array($ext, $allowed)) {
+    		JError::raiseWarning(0, Jtext::_('COM_REDFORM_ERROR_FILEUPLOAD_NOT_ALLOWED_FILE_TYPE').': '.$ext);
+    		return false;
+    	}
+    }
     
     /* Get the file path for file upload */
     $query = ' SELECT f.formname '
@@ -274,9 +298,9 @@ class rfanswers
     }    
     clearstatcache();    
     
-    $src_file =$field['tmp_name']['fileupload'][0];
+    $src_file = $posted['tmp_name']['fileupload'][0];
     // make sure we have a unique name for file
-    $dest_filename = uniqid().'_'.basename($field['name']['fileupload'][0]);
+    $dest_filename = uniqid().'_'.basename($posted['name']['fileupload'][0]);
     
     if (JFolder::exists($fullpath)) 
     {

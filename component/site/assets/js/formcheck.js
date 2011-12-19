@@ -15,6 +15,13 @@
  * requires language strings to be defined inline
  */
 
+window.addEvent('domready', function(){
+	
+	// check file uploads types
+	$$('input[type=file]').addEvent('change', function(event){
+	});
+});
+
 function CheckSubmit(form) 
 {
 	var msg = '';
@@ -31,7 +38,7 @@ function CheckSubmit(form)
 		// get the input data of the form
 		var formelements = $(forms[j]).getElements('input').concat($(forms[j]).getElements('select'), $(forms[j]).getElements('textarea'));
 
-		for(var i=0; i < formelements.length; i++) 
+		for (var i = 0; i < formelements.length; i++) 
 		{
 			var check_element = formelements[i];
 
@@ -138,6 +145,35 @@ function CheckSubmit(form)
 				else {
 					jQuery(check_element).parents('.fieldoptions').removeClass('emptyfield');
 					getListLabel(check_element).removeClass('emptyfield');
+				}
+			}
+		
+			/* file upload field */
+			if (check_element.name.indexOf("[fileupload]") != -1) {
+				if (check_element.className.match("required")) {
+					var textresult = CheckFill(check_element);
+					if (!textresult) {
+							msg += getLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+					}
+					if (result) result = textresult;
+				}
+				
+				// extension filter
+				if (check_element.getProperty('ftypes')) {
+					var types = check_element.getProperty('ftypes').toLowerCase().split(',');
+					var ext = check_element.value.split('.').pop().toLowerCase();
+					var valid = false;
+					for (var n=0; n < types.length; n++) {
+						if (types[n] == ext) {
+							valid = true;
+							removeEmpty(check_element);
+						}
+					}
+					if (!valid) {
+						addEmpty(check_element);
+						result = false;
+						msg += getLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_ERROR_FILEUPLOAD_NOT_ALLOWED_FILE_TYPE'); ?>\n"+'('+check_element.getProperty('ftypes')+')';
+					}
 				}
 			}
 	}
