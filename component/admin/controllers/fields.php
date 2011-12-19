@@ -99,7 +99,7 @@ class RedformControllerFields extends JController
           break;
 
         default:
-          $link = 'index.php?option=com_redform&view=fields';
+          $link = 'index.php?option=com_redform&view=fields'.'&form_id='.$row->form_id;
           break;
       }
       $msg  = JText::_('COM_REDFORM_FIELD_SAVED');
@@ -131,8 +131,9 @@ class RedformControllerFields extends JController
     $row = & JTable::getInstance('Fields', 'RedformTable');
     $row->bind(JRequest::get('post'));
     $row->checkin();
+    $row->load();
 
-    $this->setRedirect( 'index.php?option=com_redform&view=fields' );
+    $this->setRedirect( 'index.php?option=com_redform&view=fields'.($row->form_id ? '&form_id='.$row->form_id : '') );
   }
    
  /**
