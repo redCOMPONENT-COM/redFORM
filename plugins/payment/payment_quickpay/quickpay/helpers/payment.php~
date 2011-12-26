@@ -1,0 +1,161 @@
+<?php
+
+class PaymentQuickpay extends JObject {
+	
+	var $params = null;
+	
+	/**
+	 * contructor
+	 * @param object plgin params
+	 */
+	function PaymentQuickpay($params)
+	{
+		$this->params = $params;
+	}
+	
+	/**
+	 * sends the payment request associated to sumbit_key to the payment service
+	 * @param string $submit_key
+	 */
+	function process($request, $return_url = null, $cancel_url = null)
+	{
+		$document = JFactory::getDocument();	
+		
+		$details = $this->_getSubmission($request->key);
+		$submit_key = $request->key;
+		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
+		$currency = $details->currency;
+		
+		$req_params = array(
+		  'protocol' => 4,
+		  'msgtype' => "authorize",
+		  'merchant' => $this->params->get('merchantnumber', '89898978'),
+		  'language' => "en",
+		  'ordernumber' => $request->uniqueid,
+		  'amount' => round($details->price*100, 2 ),
+		  'currency' => $currency,
+		  'continueurl' => JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=quickpay&accept=1&key='. $submit_key,
+		  'cancelurl' => JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=quickpay&accept=0&key='. $submit_key,
+		  'callbackurl' => JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=quickpay&accept=1&key='. $submit_key,
+		  'autocapture' => 0,
+		  'cardtypelock' => '',
+		  'description' => 0,
+		  'testmode' => 1,
+		  'splitpayment' => 0,
+		);
+		$md5 = md5(implode("", $req_params).$this->params->get('md5', '29p61DveBZ79c3144LW61lVz1qrwk2gfAFCxPyi5sn49m3Y3IRK5M6SN5d8a68u7'));
+		
+		?>		
+		<h3><?php echo JText::_('Quickpay Payment Gateway'); ?></h3>
+		<form action="https://secure.quickpay.dk/form/" method="post">
+		<p><?php echo $request->title; ?></p>
+		<?php foreach ($req_params as $key => $val): ?>
+		<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $val; ?>" />
+		<?php endforeach; ?>
+		<input type="hidden" name="md5check" value="<?php echo $md5; ?>" />
+		<input type="submit" value="Open Quickpay payment window" />
+		</form>
+		<?php 
+	}
+	
+	/**
+	 * handle the recpetion of notification
+	 * @return bool paid status
+	 */
+  function notify()
+  {
+    $mainframe = &JFactory::getApplication();
+    $db = & JFactory::getDBO();    
+    $paid = 0;
+    				
+    $submit_key = JRequest::getvar('key');
+    JRequest::setVar('submit_key', $submit_key);
+    RedformHelperLog::simpleLog('Quickpay NOTIFICATION RECEIVED'. ' for ' . $submit_key);
+    
+    if (JRequest::getVar('accept', 0) == 0 || 1)
+    {
+    	// payment was refused
+    	RedformHelperLog::simpleLog('Quickpay NOTIFICATION PAYMENT REFUSED'. ' for ' . $submit_key);
+    	$this->writeTransaction($submit_key, JRequest::getVar('error').': '.JRequest::getVar('errortext'), 'FAIL', 0);
+	    return 0;
+    }
+    // it was successull, get the details
+    $resp = array();
+    $resp[] = 'tid:'.JRequest::getVar('transaction');
+    $resp[] = 'orderid:'.JRequest::getVar('ordernumber');
+    $resp[] = 'amount:'.JRequest::getVar('amount');
+    $resp[] = 'cur:'.JRequest::getVar('currency');
+    $resp[] = 'date:'.substr(JRequest::getVar('time'), 0, 6);
+    $resp[] = 'time:'.substr(JRequest::getVar('time'), 6);
+    $resp = implode("\n", $resp);
+    
+    $details = $this->_getSubmission($submit_key);
+		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
+		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);		
+    
+    if (round($details->price*100, 2 ) != JRequest::getVar('amount')) {    	
+    	RedformHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH'. ' for ' . $submit_key);
+    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION PRICE MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+    	return false;
+    }
+    else {
+    	$paid = 1;
+    }
+    
+    if ($currency != JRequest::getVar('currency')) {    	
+    	RedformHelperLog::simpleLog('EPAY NOTIFICATION CURRENCY MISMATCH'. ' for ' . $submit_key);
+    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION CURRENCY MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+    	return false;
+    }
+    
+    if ($this->params->get('MD5', 0) > 0 && 0)
+    {
+    	$receivedkey = JRequest::getVar('eKey');
+    	$calc = md5(JRequest::getVar('amount').JRequest::getVar('orderid').JRequest::getVar('tid').$this->params->get('EPAY_MD5_KEY'));
+    	if (strcmp($receivedkey, $calc)) 
+    	{
+	    	RedformHelperLog::simpleLog('EPAY NOTIFICATION MD5 KEY MISMATCH'. ' for ' . $submit_key);
+	    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION MD5 KEY MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+	    	return false;    		
+    	}
+    }
+    
+	  $this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
+    
+    return $paid;
+  }
+  
+  function _getSubmission($submit_key)
+  {
+		// get price and currency
+		$db  = &JFactory::getDBO();
+		
+		$query = ' SELECT f.currency, SUM(s.price) AS price, s.id AS sid '
+		       . ' FROM #__rwf_submitters AS s '
+		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
+		       . ' WHERE s.submit_key = '. $db->Quote($submit_key)
+		       . ' GROUP BY s.submit_key'
+		            ;
+		$db->setQuery($query);
+		$res = $db->loadObject();
+		return $res;
+  }
+  
+  function writeTransaction($submit_key, $data, $status, $paid)
+  {
+    $db = & JFactory::getDBO();    
+  	
+    // payment was refused
+    $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
+				    . ' VALUES (NOW() '
+				    . ', '. $db->Quote($data)
+				    . ', '. $db->Quote($submit_key)
+				    . ', '. $db->Quote($status)
+				    . ', '. $db->Quote('quickpay')
+				    . ', '. $db->Quote($paid)
+				    . ') ';
+    $db->setQuery($query);
+    $db->query();
+  }
+  	
+}

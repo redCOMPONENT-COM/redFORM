@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="redform_payment" method="upgrade">
+  <name>Redform quickpay gateway plugin</name>
+	<creationDate>Fev 3, 2010</creationDate>
+	<author>Redweb.dk</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redweb.dk</authorUrl>
+	<copyright>(c) 2008 - 2009 Redweb.dk</copyright>
+	<license>GNU/GPL</license>
+	<version>2.0 beta 8.2</version>
+  <description>PLG_REDFORM_QUICKPAY_XML_DESC</description>
+  
+  <files>
+    <filename plugin="quickpay">quickpay.php</filename>
+    <folder>quickpay</folder>
+  </files>
+    
+  <languages>    
+  	<language tag="en-GB">languages/en-GB.plg_redform_payment_quickpay.ini</language>
+  </languages>
+
+  <params>    
+    <param name="quickpayid" type="text" default="" 
+           label="PLG_REDFORM_QUICKPAY_QUICKPAYID_LABEL" 
+           description="PLG_REDFORM_QUICKPAY_QUICKPAYID_DESC" />
+           
+    <param name="md5secret" type="text" default="" 
+           label="PLG_REDFORM_QUICKPAY_MD5SECRET_LABEL" 
+           description="PLG_REDFORM_QUICKPAY_MD5SECRET_DESC" />
+           
+	<param type="radio" name="testmode" default="0"
+	       label="PLG_REDFORM_QUICKPAY_TESTMODE_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_TESTMODE_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+	       
+	<param type="spacer" />
+	<param type="spacer" default="PLG_REDFORM_QUICKPAY_PAYMENT_METHODS" />
+        
+	<param type="radio" name="american-express" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_AMERICAN_EXPRESS_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_AMERICAN_EXPRESS_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="american-express-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_AMERICAN_EXPRESS_DK_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_AMERICAN_EXPRESS_DK_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="dankort" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_dankort_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_dankort_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="danske-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_danske_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_danske_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="diners" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_diners_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_diners_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="diners-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_diners_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_diners_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="edankort" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_edankort_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_edankort_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="fbg1886" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_fbg1886_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_fbg1886_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="mastercard" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_mastercard_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_mastercard_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="mastercard-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_mastercard_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_mastercard_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="mastercard-debet-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_mastercard_debet_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_mastercard_debet_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="nordea-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_nordea_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_nordea_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="visa" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_visa_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_visa_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="visa-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_visa_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_visa_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="visa-electron" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_visa_electron_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_visa_electron_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="visa-electron-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_visa_electron_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_visa_electron_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="paypal" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_paypal_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_paypal_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-jcb" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_jcb_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_jcb_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-maestro" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_maestro_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_maestro_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-maestro-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_maestro_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_maestro_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-mastercard" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_mastercard_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_mastercard_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-mastercard-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_mastercard_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_mastercard_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-mastercard-debet-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_mastercard_debet_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_mastercard_debet_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-visa" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_visa_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_visa_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-visa-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_visa_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_visa_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-visa-electron" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_visa_electron_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_visa_electron_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+        
+	<param type="radio" name="3d-visa-electron-dk" default="1"
+	       label="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_visa_electron_dk_LABEL" 
+	       description="PLG_REDFORM_QUICKPAY_CARDTYPE_3D_visa_electron_dk_DESC" >
+		<option value="0">No</option>
+		<option value="1">Yes</option>
+	</param>
+	
+  </params>
+  
+</install>
