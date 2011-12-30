@@ -50,6 +50,11 @@ file_filter = languages/<lang>/plugins/payment_epay/<lang>.plg_redform_payment_e
 source_file = plugins/payment/payment_epay/languages/en-GB.plg_redform_payment_epay.ini
 source_lang = en-GB
 
+[redFORM.15-admin-en-GB-plg_redform_payment_quickpay-ini]
+file_filter = languages/<lang>/plugins/payment_quickpay/<lang>.plg_redform_payment_quickpay.ini
+source_file = plugins/payment/payment_quickpay/languages/en-GB.plg_redform_payment_quickpay.ini
+source_lang = en-GB
+
 [redFORM.15-admin-en-GB-plg_redform_payment_ideal-ini]
 file_filter = languages/<lang>/plugins/payment_ideal/<lang>.plg_redform_payment_ideal.ini
 source_file = plugins/payment/payment_ideal/languages/en-GB.plg_redform_payment_ideal.ini
