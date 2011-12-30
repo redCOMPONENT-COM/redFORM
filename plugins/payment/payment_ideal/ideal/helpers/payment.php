@@ -180,7 +180,7 @@ class PaymentIdeal {
 		
 		$res = $ideal->createPayment($bank, 
 		                      round($details->price*100, 2 ), 
-		                      $request->title, 
+		                      $request->uniqueid, 
 		                      JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=ideal&key='. $request->key),
 		                      JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=ideal&key='. $request->key));
 		if (!$res) {
