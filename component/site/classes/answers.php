@@ -251,6 +251,10 @@ class rfanswers
     $db = &JFactory::getDBO();
     $answer = '';
     
+    if (!$posted['size']['fileupload'][0]) {
+    	return false;
+    }
+    
     
     $types = $field->parameters->get('filetypes');
     $allowed = array();

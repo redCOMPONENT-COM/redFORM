@@ -159,7 +159,7 @@ function CheckSubmit(form)
 				}
 				
 				// extension filter
-				if (check_element.getProperty('ftypes')) {
+				if (check_element.getProperty('ftypes') && check_element.value) {
 					var types = check_element.getProperty('ftypes').toLowerCase().split(',');
 					var ext = check_element.value.split('.').pop().toLowerCase();
 					var valid = false;
