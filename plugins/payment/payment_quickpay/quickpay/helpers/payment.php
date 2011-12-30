@@ -135,7 +135,6 @@ class PaymentQuickpay extends JObject {
     	$this->writeTransaction($submit_key, JRequest::getVar('qpstat').': '.JRequest::getVar('qpstatmsg'), 'FAIL', 0);
 	    return 0;
     }
-   	RedformHelperLog::simpleLog($resp);
     
     if (JRequest::getVar('state') == 0)
     {
