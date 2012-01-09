@@ -50,6 +50,15 @@ class RedformTableSubmitters extends JTable {
 	/** @var string integration key */
 	var $integration 	= null;
 	
+	var $uniqueid = null;
+	
+	var $price = null;
+	
+	/**
+	 * reference date to start payment delay. Should be updated when people go from Waiting to Attending
+	 */
+	var $paymentstart = null;
+	
 	/**
 	* @param database A database connector object
 	*/
