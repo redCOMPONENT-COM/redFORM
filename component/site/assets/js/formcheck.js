@@ -114,13 +114,13 @@ function CheckSubmit(form)
 					}
 				}
 				if (radiocheck == false) {
-					$(check_element).parents('.fieldoptions').addClass('emptyfield');
+					$(check_element).getParent().getParent().addClass('emptyfield');
 					getListLabel(check_element).addClass('emptyfield');
 					radiomsg = getListLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 					if (result) result = false;
 				}
 				else {
-					$(check_element).parents('.fieldoptions').removeClass('emptyfield');
+					$(check_element).getParent().getParent().removeClass('emptyfield');
 					getListLabel(check_element).removeClass('emptyfield');
 				}
 			}
@@ -137,13 +137,13 @@ function CheckSubmit(form)
 				}
 
 				if (checkboxcheck == false) {
-					$(check_element).parents('.fieldoptions').addClass('emptyfield');
+					$(check_element).getParent().getParent().addClass('emptyfield');
 					getListLabel(check_element).addClass('emptyfield');
 					checkboxmsg = getListLabel(check_element).getText()+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 					if (result) result = false;
 				}
 				else {
-					jQuery(check_element).parents('.fieldoptions').removeClass('emptyfield');
+					$(check_element).getParent().getParent().removeClass('emptyfield');
 					getListLabel(check_element).removeClass('emptyfield');
 				}
 			}
