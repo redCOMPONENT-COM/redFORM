@@ -305,7 +305,7 @@ class RedFormCore extends JObject {
 				if (!($app->isAdmin() || $field->published)) { // only display unpublished fields in backend form
 					continue;
 				}
-				$html .= '<div id="fieldline_'.$field->id.'" class="fieldline type-'.$field->fieldtype.'">';
+				$html .= '<div id="fieldline_'.$field->id.'" class="fieldline type-'.$field->fieldtype.$field->parameters->get('class','').'">';
 
 				$values = $model_redform->getFormValues($field->id);
 
