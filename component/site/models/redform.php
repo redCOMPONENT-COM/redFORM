@@ -147,15 +147,11 @@ class RedformModelRedform extends JModel {
 		$fields = $this->_db->loadObjectList();
 		
 		foreach ($fields as $k => $field)
-		{
-			$paramsdefs = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' . DS . 'field_'.$field->fieldtype.'.xml';
-			if (!empty($field->params) && file_exists($paramsdefs))
-			{
-				$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );
-			}
-			else {
-				$fields[$k]->parameters = new JRegistry();
-			}
+		{			
+			// Get the extra parameters
+			$registry = new JRegistry;
+			$registry->loadString($field->params);
+			$fields[$k]->parameters = $registry;
 		}
 		return $fields;
 	}
