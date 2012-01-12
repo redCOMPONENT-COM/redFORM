@@ -209,8 +209,8 @@ class RedformModelForm extends JModel
   	}
 
   	/* Convert the dates to MySQL dates */
-  	$row->startdate = $this->ConvertCalendarDate($row->startdate);
-  	$row->enddate = $this->ConvertCalendarDate($row->enddate);
+  	$row->startdate = strftime('%Y-%m-%d %H:%M:%S', strtotime($row->startdate));
+  	$row->enddate = strftime('%Y-%m-%d %H:%M:%S', strtotime($row->enddate));
 
 
   	/* pre-save checks */
@@ -321,20 +321,7 @@ class RedformModelForm extends JModel
          }
       }
    }
-   
-   /**
-    * Convert a calendar date to MySQL date format
-	*/
-	function ConvertCalendarDate(&$dtstamp) {
-		/* Conver the date to MySQL format */
-		$datetime = split(" ", $dtstamp);
-		$dates = split("-", $datetime[0]);
-		$times = split(":", $datetime[2]);
-		
-		$date = JFactory::getDate(strtotime($dates[2].'-'.$dates[1].'-'.$dates[0].' '.$times[0].':'.$times[1].':'.$times[2]));
-		return $date->toMySQL();
-	}
-	 
+   	 
 	/**
 	 * Get the number of contestants
 	 */
