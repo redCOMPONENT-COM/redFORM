@@ -35,7 +35,7 @@ else { ?>
 		<thead>
 		<tr>
 			<th width="20">
-			<?php echo JText::_('COM_REDFORM_#'); ?>
+			<?php echo JText::_('#'); ?>
 			</th>
 			<th width="20">
 			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->fields ); ?>);" />

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id$ -->
+<install type="language" version="1.5.4" client="both" method="upgrade">
+	<name>redFORM Danish</name>
+	<creationDate>19-04-2010</creationDate>
+	<author>Redweb.dk</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redweb.dk</authorUrl>
+	<copyright>(c) 2008, 2009, 2010, 2011 Redweb.dk</copyright>
+	<license>GNU/GPL</license>
+	<version>2.0</version>
+	<description>Danish language pack for redFORM&lt;br/&gt;Incomplete ? Please &lt;a href="http://www.redcomponent.com/translations"&gt;help us&lt;/a&gt; with translations !</description>
+	
+	<tag>da-DK</tag>
+	<administration>
+		<files folder="admin">
+  			<filename>da-DK.com_redform.ini</filename>
+  			<filename>da-DK.com_redform.menu.ini</filename>
+		</files>
+	</administration>
+  
+	<site>
+		<files folder="site">
+  			<filename>da-DK.com_redform.ini</filename>
+  		</files>
+	</site>
+</install>
