@@ -43,6 +43,13 @@ class RedFormCore extends JObject {
 	
 	private $_fields;
 	
+	public function __construct()
+	{
+		parent::__construct();
+		$lang =& JFactory::getLanguage();
+		$lang->load('com_redform', JPATH_SITE.DS.'components'.DS.'com_redform');
+	}
+	
 	function setFormId($id)
 	{
 		if ($this->_form_id !== $id) {
@@ -1174,7 +1181,7 @@ class RedFormCore extends JObject {
 			$this->setError( JText::_('COM_REDFORM_STATUS_REGISTERED_ONLY'));
 			return false;
 		}
-		if ($form->access > $user->get('aid'))
+		if ($form->access > max($user->getAuthorisedViewLevels()))
 		{
 			$this->setError( JText::_('COM_REDFORM_STATUS_SPECIAL_ONLY'));
 			return false;
