@@ -1,32 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE install PUBLIC 
-  "-//Joomla! 1.5//DTD plugin 1.0//EN" "http://dev.joomla.org/xml/1.5/plugin-install.dtd">
-<extension version="1.5" type="plugin" group="redform_mailing" method="upgrade">
-  <name>Redform phplist integration plugin</name>
-	<creationDate>Fev 3, 2010</creationDate>
-	<author>Redweb.dk</author>
+<extension version="1.7" type="plugin" group="redform_mailing" method="upgrade">
+  <name>PLG_REDFORM_MAILING_PHPLIST</name>
+	<creationDate>jan, 2012</creationDate>
+	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
-	<authorUrl>www.redweb.dk</authorUrl>
-	<copyright>(c) 2010 Redweb.dk</copyright>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-	<version>2.0 beta 8.2</version>
-  <description>PLUGIN DESC</description>
+	<version>2.5</version>
+  <description>PLG_REDFORM_MAILING_PHPLIST_XML_DESCRIPTION</description>
   
   <files>
     <filename plugin="phplist">phplist.php</filename>
     <folder>phplist</folder>
+    <filename>index.html</filename>
+    <folder>language</folder>
   </files>
-    
-  <languages>    
-  	<language tag="en-GB">languages/en-GB.plg_redform_mailing_phplist.ini</language>
-  </languages>
 
-<config>
-	<fields name="params">
-		<fieldset name="extra" label="extra">
-		  	<field name="phplist_path" type="text" default="" label="PLG_REDFORM_MAILING_PHPLIST_PATH" description="PLG_REDFORM_MAILING_PHPLIST_PATH_DESC" />
-		</fieldset>
-	</fields>
-</config>
+	<config>
+		<fields name="params">
+			<fieldset name="extra" label="extra">
+			  	<field name="phplist_path" type="text" default="" label="PLG_REDFORM_MAILING_PHPLIST_PATH" description="PLG_REDFORM_MAILING_PHPLIST_PATH_DESC" />
+			</fieldset>
+		</fields>
+	</config>
   
 </extension>

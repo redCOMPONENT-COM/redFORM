@@ -25,16 +25,14 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
  
 // Import library dependencies
-jimport('joomla.plugin');
-
-// load language file for frontend
-JPlugin::loadLanguage( 'plg_redform_mailing_acajoom', JPATH_ADMINISTRATOR );
+jimport('joomla.plugin.plugin');
 
 class plgRedform_mailingAcajoom extends JPlugin {
  	
 	public function plgRedform_mailingAcajoom(&$subject, $config = array()) 
 	{
 		parent::__construct($subject, $config);
+		$this->loadLanguage();
 	}
 
 	function getIntegrationName(&$names)

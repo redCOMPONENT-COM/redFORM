@@ -15,16 +15,14 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
  
 // Import library dependencies
-jimport('joomla.event.plugin');
-
-// load language file for frontend
-JPlugin::loadLanguage( 'plg_redform_captcha_recaptcha', JPATH_ADMINISTRATOR );
+jimport('joomla.plugin.plugin');
 
 class plgRedform_captchaRecaptcha extends JPlugin {
  
 	public function plgRedform_captchaRecaptcha(&$subject, $config = array()) 
 	{
 		parent::__construct($subject, $config);
+		$this->loadLanguage();
 	}
 	
 	public function onGetCaptchaField(&$text)

@@ -25,10 +25,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
  
 // Import library dependencies
-jimport('joomla.event.plugin');
-
-// load language file for frontend
-JPlugin::loadLanguage( 'plg_redform_payment_paypal', JPATH_ADMINISTRATOR );
+jimport('joomla.plugin.plugin');
 
 class plgRedform_PaymentPaypal extends JPlugin {
  
@@ -37,6 +34,7 @@ class plgRedform_PaymentPaypal extends JPlugin {
 	public function plgRedform_PaymentPaypal(&$subject, $config = array()) 
 	{
 		parent::__construct($subject, $config);
+		$this->loadLanguage();
 	}
 
 	function onGetGateway($gateways)

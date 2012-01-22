@@ -25,16 +25,14 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
  
 // Import library dependencies
-jimport('joomla.event.plugin');
-
-// load language file for frontend
-JPlugin::loadLanguage( 'plg_redform_payment_epay', JPATH_ADMINISTRATOR );
+jimport('joomla.plugin.plugin');
 
 class plgRedform_PaymentEpay extends JPlugin {
  	
 	public function plgRedform_PaymentEpay(&$subject, $config = array()) 
 	{
 		parent::__construct($subject, $config);
+		$this->loadLanguage();
 	}
 
 	function onGetGateway($gateways)
