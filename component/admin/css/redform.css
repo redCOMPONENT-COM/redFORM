@@ -66,6 +66,7 @@
 	font-size: 1.6em;
 	color: #CFCFCF;
 }
+
 table.adminform tr.row1 label.radiobtn, 
 table.adminform tr.row0 label.radiobtn,
 #trpublished label.radiobtn,
@@ -91,4 +92,19 @@ table.admintable label.radiobtn
 	background-repeat:no;
 	float: left;
 	cursor:pointer;
+}
+
+
+div#cond_recipients_ui {
+	padding: 10px 0;
+}
+
+div#cond_recipients_ui label {
+    margin-right: 5px;
+}
+
+div#cond_recipients_ui input.error,
+div#cond_recipients_ui select.error {
+	border: 1px solid red;
+	background-color: pink;
 }

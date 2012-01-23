@@ -189,6 +189,23 @@ $editor =& JFactory::getEditor();
 			<?php echo $editor->display( "submissionbody", $this->row->submissionbody, 800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
 			</td>
 		</tr>
+		<tr class="row<?php echo $row = 1 - $row; ?>">
+			<td valign="top" align="right">
+				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS_TIP');?>"><?php echo JText::_('COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS'); ?></span><br>
+				<?php echo JText::_('COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS_TIP');?>
+			</td>
+			<td>
+				<div id="cond_recipients_ui">
+					<label for="cr_email"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL');?></label><input type="text" name="cr_email" id="cr_email"/> 
+					<label for="cr_name"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL');?></label><input type="text" name="cr_name" id="cr_name"/> 
+					<label for="cr_field"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_LABEL');?></label><?php echo $this->lists['cr_field']; ?> 
+					<label for="cr_function"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_LABEL');?></label><?php echo $this->lists['cr_function']; ?> 
+					<span id="cr_params"></span> 
+					<button type="button" id="cr_button"><?php echo JText::_('COM_REDFORM_ADD');?></button>
+				</div>
+				<textarea name="cond_recipients" id="cond_recipients" rows="10" cols="80"><?php echo $this->row->cond_recipients; ?></textarea>
+			</td>
+		</tr>
 		</table>
 	<?php
 	echo $pane->endPanel();

@@ -450,5 +450,20 @@ class RedformModelForm extends JModel
     }
     return true;
   }
+  
+  /**
+   * returns form fields as options
+   * @return array
+   */
+  public function getFieldsOptions()
+  {
+  	$query = ' SELECT f.id AS value, f.field AS text ' 
+  	       . ' FROM #__rwf_fields AS f ' 
+  	       . ' WHERE f.form_id = '.$this->_id
+  	       . ' ORDER BY f.field ';
+  	$this->_db->setQuery($query);
+  	$res = $this->_db->loadObjectList();
+  	return $res;
+  }
 }
 ?>
