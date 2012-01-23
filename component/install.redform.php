@@ -336,6 +336,13 @@ function com_install()
 		$db->query();
 	}
 	
+	/* Check if we have the show_js_price column */
+	if (!array_key_exists('cond_recipients', $cols)) {
+		$q = "ALTER TABLE `#__rwf_forms` ADD `cond_recipients` TEXT NULL DEFAULT NULL";
+		$db->setQuery($q);
+		$db->query();
+	}
+	
   /** add indexes **/
   if (empty($cols['vmproductid']->Key)) 
   {

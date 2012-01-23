@@ -477,6 +477,13 @@ class RedformModelRedform extends JModel {
 		
 		$mailer = & $this->Mailer();
 		
+		$cond_recipients = RedFormCore::getConditionalRecipients($form, $answers);
+		if ($cond_recipients) {
+			$mailer->From = current($cond_recipients);
+			$mailer->ClearReplyTos();
+			$mailer->addReplyTo(current($cond_recipients));
+		}
+		
 		if (JMailHelper::isEmailAddress($submitter_email))
 		{
 			/* Add the email address */
@@ -720,6 +727,13 @@ class RedformModelRedform extends JModel {
 		/* Inform contact person if need */
 		// form recipients
 		$recipients = $allanswers[0]->getRecipients();
+		$cond_recipients = RedFormCore::getConditionalRecipients($form, $allanswers[0]);
+		if ($cond_recipients) 
+		{
+			foreach ($cond_recipients as $c) {
+				$recipients[] = $c[0];
+			}
+		}
 
 		if ($form->contactpersoninform || !empty($recipients))
 		{

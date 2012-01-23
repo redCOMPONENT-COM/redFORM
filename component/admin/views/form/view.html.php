@@ -34,6 +34,14 @@ class RedformViewForm extends JView {
 	function display($tpl = null) 
 	{
 		$mainframe = &JFactory::getApplication();
+		$document	= & JFactory::getDocument();
+		JHTML::_('behavior.mootools'); 
+    $document->addScript('components/com_redform/js/conditionalrecipients.js');
+    $document->addScriptDeclaration(
+    	 'var emailrequired = "'.JText::_('COM_REDFORM_MISSING_OR_INVALID_EMAIL')."\";\n"
+    	.'var namerequired = "'.JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_REQUIRED')."\";\n"
+    	.'var missingparameter = "'.JText::_('COM_REDFORM_CONDITIONAL_RECIPIENT_MISSING_PARAMETER')."\";\n"
+    );
 		
 		$this->setLayout('editform');
 		
@@ -90,6 +98,17 @@ class RedformViewForm extends JView {
 		$options = array_merge($options, RedformHelperLogCurrency::getCurrencyOptions());
 		$lists['currency'] = JHTML::_('select.genericlist', $options, 'currency', 'class="inputbox"', 'value', 'text', $row->currency);
 		
+		// for conditional recipients
+		$options = array(
+		  JHTML::_('select.option', 'between', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_BETWEEN')),
+		  JHTML::_('select.option', 'inferior', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_inferior')),
+		  JHTML::_('select.option', 'superior', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_superior')),		  
+		);
+		$lists['cr_function'] = JHTML::_('select.genericlist', $options, 'cr_function', 'class="inputbox"');
+		
+		$options = $this->get('fieldsoptions');
+		$lists['cr_field'] = JHTML::_('select.genericlist', $options, 'cr_field', 'class="inputbox"');
+				
 		/* Set variabels */
 		$this->assignRef('row', $row);
 		$this->assignRef('lists', $lists);

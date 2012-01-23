@@ -23,6 +23,8 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+jimport('joomla.mail.helper');
+
 require_once('redform.defines.php');
 
 require_once(RDF_PATH_SITE.DS.'classes'.DS.'field.php');
@@ -1351,6 +1353,108 @@ class RedFormCore extends JObject {
 			$this->_form = $model_redform->getForm();
 		}
 		return $this->_form;
+	}
+	
+	/**
+	 * return conditional recipients for specified answers
+	 * 
+	 * @param object $form
+	 * @param object $answers
+	 * @return array|boolean false if no answer
+	 */
+	public static function getConditionalRecipients($form, $answers)
+	{
+		if (!$form->cond_recipients) {
+			return false;
+		}
+		$recipients = array();
+		$conds = explode("\n", $form->cond_recipients);
+		foreach ($conds as $c) 
+		{
+			if ($res = self::_parseCondition($c, $answers)) {
+				$recipients[] = $res;
+			}
+		}
+		return $recipients;
+	}
+	
+	/**
+	 * returns email if answers match the condition
+	 * 
+	 * @param string $conditionline
+	 * @param object $answers
+	 * @return string|boolean email or false
+	 */
+	protected static function _parseCondition($conditionline, $answers)
+	{
+		$parts = explode(";", $conditionline);
+		if (!count($parts)) {
+			return false;
+		}
+		// cleanup
+		array_walk($parts, 'trim');
+		
+		if (count($parts) < 5) { // invalid condition...
+			RedformHelperLog::simpleLog('invalid condition formatting'. $conditionline);
+			return $email;
+		}
+		
+		// first should be the email address
+		if (!JMailHelper::isEmailAddress($parts[0])) {
+			RedformHelperLog::simpleLog('invalid email in conditional recipient: '. $parts[0]);
+			return false;
+		}
+		$email = $parts[0];
+		
+		// then the name of the recipient
+		if (!$parts[1]) {
+			RedformHelperLog::simpleLog('invalid name in conditional recipient: '. $parts[0]);
+			return false;
+		}
+		$name = $parts[1];
+		
+		// then, we shoulg get the field
+		$field_id = intval($parts[2]);
+		$answer = $answers->getFieldAnswer($field_id);
+		if ($answer === false) {
+			RedformHelperLog::simpleLog('invalid field id for conditional recipient: '. $parts[1]);
+			return false;			
+		}
+		$value = $answer['value'];
+		
+		$isvalid = false;
+		// then, we should get the function
+		switch ($parts[3]) 
+		{
+			case 'between':
+				$value = floatval($value);
+				$min = floatval($parts[4]);
+				if (!isset($parts[5])) {
+					RedformHelperLog::simpleLog('missing max value in between conditional recipient: '. $conditionline);					
+				}
+				$max = floatval($parts[5]);
+				$isvalid = ($value >= $min && $value <= $max ? $email : false); 
+				break;
+				
+			case 'inferior':
+				$value = floatval($value);
+				$max = floatval($parts[4]);
+				$isvalid =  ($value <= $max ? $email : false); 
+				break;
+				
+			case 'superior':
+				$value = floatval($value);
+				$min = floatval($parts[4]);
+				$isvalid =  ($value >= $min ? $email : false); 
+				break;
+				
+			default:
+				RedformHelperLog::simpleLog('invalid email in conditional recipient: '. $parts[0]);
+				return false;				
+		}
+		if ($isvalid) {
+			return array($email, $name);
+		}
 	}
 }
 

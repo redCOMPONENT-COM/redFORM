@@ -632,6 +632,26 @@ class rfanswers
   }
   
   /**
+   * return answer for specified field
+   * 
+   * @param int $field_id
+   * @return string
+   */
+  public function getFieldAnswer($field_id)
+  {
+  	$answers = $this->getAnswers();
+  	if (!$answers) {
+  		return false;
+  	}
+  	foreach ($answers as $a) {
+  		if ($field_id == $a['field_id']) {
+  			return $a;
+  		}
+  	}
+  	return false;
+  }
+  
+  /**
    * loads answers of specified submitter
    * 
    * @param int $submitter_id

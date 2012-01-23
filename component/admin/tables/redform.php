@@ -100,6 +100,11 @@ class RedformTableRedform extends JTable {
 	 */
 	var $submitterpaymentnotificationbody = null;
 	
+	/** 
+	 * @var string conditional recipients 
+	 * */
+	var $cond_recipients = null;
+	
 	
 	/**
 	* @param database A database connector object
