@@ -212,7 +212,6 @@ class RedformModelForm extends JModel
   	$row->startdate = $this->ConvertCalendarDate($row->startdate);
   	$row->enddate = $this->ConvertCalendarDate($row->enddate);
 
-
   	/* pre-save checks */
   	if (!$row->check()) {
   		$this->setError(JText::_('COM_REDFORM_There_was_a_problem_checking_the_form_data'), 'error');
@@ -325,13 +324,8 @@ class RedformModelForm extends JModel
    /**
     * Convert a calendar date to MySQL date format
 	*/
-	function ConvertCalendarDate(&$dtstamp) {
-		/* Conver the date to MySQL format */
-		$datetime = split(" ", $dtstamp);
-		$dates = split("-", $datetime[0]);
-		$times = split(":", $datetime[2]);
-		
-		$date = JFactory::getDate(strtotime($dates[2].'-'.$dates[1].'-'.$dates[0].' '.$times[0].':'.$times[1].':'.$times[2]));
+	function ConvertCalendarDate(&$dtstamp) {		
+		$date = JFactory::getDate($dtstamp);
 		return $date->toMySQL();
 	}
 	 
@@ -404,7 +398,7 @@ class RedformModelForm extends JModel
     	$form = & $this->getTable('redform', 'RedformTable');
       $form->load($cid);
       // get associated fields
-	    $fields = $form->getFields();
+	    $fields = $form->getFormFields();
       
       // copy the form
 	    $form->id = null;

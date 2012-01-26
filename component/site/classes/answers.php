@@ -31,7 +31,7 @@ class rfanswers
 	
 	public $_form_id = 0;
 	
-	public $_submitter_email = null;
+	public $_submitter_email = array();
 	
   public $_fullname = null;
   
@@ -77,7 +77,7 @@ class rfanswers
   	return $this->_listnames;
   }
   
-  public function getSubmitterEmail()
+  public function getSubmitterEmails()
   {
     return $this->_submitter_email;
   }
@@ -146,7 +146,9 @@ class rfanswers
       case 'email':
         // TODO: store submitter email and listnames
         $answer = $postedvalue['email'][0];
-        $this->_submitter_email = $answer;
+        if ($field->parameters->get('notify', 1)) {
+        	$this->_submitter_email[] = $answer;
+        }
         if (array_key_exists('listnames', $postedvalue['email'])) {
           $this->_listnames[$field->id] = array('email' => $answer, 'lists' => $postedvalue['email']['listnames']);
         }

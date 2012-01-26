@@ -36,7 +36,7 @@ class RedformTableRedform extends JTable {
 	 *
 	 * @return array
 	 */
-	function getFields()
+	function getFormFields()
 	{
 		if (empty($this->id)) {
 			return array();

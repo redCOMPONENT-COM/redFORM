@@ -1362,7 +1362,7 @@ class RedFormCore extends JObject {
 		
 		if (count($parts) < 5) { // invalid condition...
 			RedformHelperLog::simpleLog('invalid condition formatting'. $conditionline);
-			return $email;
+			return false;
 		}
 		
 		// first should be the email address
