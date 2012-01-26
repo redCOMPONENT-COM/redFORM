@@ -1176,7 +1176,7 @@ class RedFormCore extends JObject {
 			$this->setError( JText::_('COM_REDFORM_STATUS_EXPIRED'));
 			return false;
 		}
-		if ($form->access > 0 && !$user->get('id'))
+		if ($form->access > 1 && !$user->get('id'))
 		{
 			$this->setError( JText::_('COM_REDFORM_STATUS_REGISTERED_ONLY'));
 			return false;
