@@ -455,9 +455,10 @@ class RedformModelRedform extends JModel {
 		
 		$cond_recipients = RedFormCore::getConditionalRecipients($form, $answers);
 		if ($cond_recipients) {
-			$mailer->From = current($cond_recipients);
+			$mailer->From = $cond_recipients[0][0];
+			$mailer->FromName =  $cond_recipients[0][1];
 			$mailer->ClearReplyTos();
-			$mailer->addReplyTo(current($cond_recipients));
+			$mailer->addReplyTo($cond_recipients[0]);
 		}
 		
 		if (JMailHelper::isEmailAddress($submitter_email))
