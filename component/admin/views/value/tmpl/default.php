@@ -20,7 +20,7 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 JHTML::_('behavior.tooltip');
 ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<table id="editvalue" class="adminform">
 		<tr>
 			<td>

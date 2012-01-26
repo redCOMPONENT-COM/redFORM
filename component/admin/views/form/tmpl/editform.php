@@ -22,7 +22,7 @@ JHTML::_('behavior.tooltip');
 jimport('joomla.html.pane');
 $editor =& JFactory::getEditor();
 ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
 	<?php $pane   =& JPane::getInstance('tabs'); 
 	echo $pane->startPane("settings");
 	echo $pane->startPanel( JText::_('COM_REDFORM_Form'), 'form_tab' );

@@ -20,7 +20,8 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 $rfcore = new redFormCore(); 
 ?>
-<form action="index.php?option=com_redform&controller=submitters" method="post" name="redform" enctype="multipart/form-data" onsubmit="return CheckSubmit(this);">
+<form action="index.php?option=com_redform&controller=submitters" method="post" name="redform"  
+      id="adminForm" enctype="multipart/form-data" onsubmit="return Joomla.CheckSubmit(this);">
 <?php echo $rfcore->getFormFields($this->form_id, array($this->submitter->sid), 1); ?>
 <input type="hidden" name="task" id="task" value="save" />
 <input type="hidden" name="integration" id="integration" value="<?php $this->submitter->integration; ?>" />

@@ -37,7 +37,7 @@ function submitbutton(pressbutton) {
 	}
 } 
 </script>
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
 	<div class="button2-left">
 		<div class="blank">
 			<?php $csvlink = 'index.php?option=com_redform&controller=submitters&task=export'

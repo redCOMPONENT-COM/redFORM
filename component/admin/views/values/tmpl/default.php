@@ -22,7 +22,7 @@ if ($this->fields == 0) {
 	echo JText::_('COM_REDFORM_No_fields_found');
 }
 else { ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
 	<table>
       <tr>
          <td align="left" width="100%">

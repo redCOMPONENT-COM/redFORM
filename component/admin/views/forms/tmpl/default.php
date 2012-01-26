@@ -18,7 +18,7 @@
  */
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?>
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" id="adminForm" name="adminForm">
 	<table class="adminlist">
 		<tr>
 			<th width="20">
