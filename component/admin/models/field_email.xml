@@ -7,6 +7,10 @@
     <param name="force_mailing_list" type="radio" default="0" label="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST" description="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST_DESC">
       <option value="0">No</option>
       <option value="1">Yes</option>
-    </param> 	
+    </param>
+    <param name="notify" type="radio" default="1" label="COM_REDFORM_FIELD_EMAIL_PARAMS_NOTIFY_LABEL" description="COM_REDFORM_FIELD_EMAIL_PARAMS_NOTIFY_DESC">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </param>
 	</params>
 </model>

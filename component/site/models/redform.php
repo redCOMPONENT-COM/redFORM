@@ -343,24 +343,20 @@ class RedformModelRedform extends JModel {
 	}
 	
 	/**
-	 * Initialise the mailer object to start sending mails
+	 * Initialise a mailer object to start sending mails
 	 */
-	 private function Mailer() 
-	 {
-  		jimport('joomla.mail.helper');
-	 	 if (empty($this->mailer))
-	 	 {
-			 $mainframe = & JFactory::getApplication();
-			 jimport('joomla.mail.helper');
-			 /* Start the mailer object */
-			 $this->mailer = &JFactory::getMailer();
-			 $this->mailer->isHTML(true);
-			 $this->mailer->From = $mainframe->getCfg('mailfrom');
-			 $this->mailer->FromName = $mainframe->getCfg('sitename');
-			 $this->mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
-	 	 }
-	 	 return $this->mailer;
-	 }
+	private function Mailer() 
+	{
+		$mainframe = & JFactory::getApplication();
+		jimport('joomla.mail.helper');
+		/* Start the mailer object */
+		$mailer = &JFactory::getMailer();
+		$mailer->isHTML(true);
+		$mailer->From = $mainframe->getCfg('mailfrom');
+		$mailer->FromName = $mainframe->getCfg('sitename');
+		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
+		return $mailer;
+	}
 	 
 	 /**
 	  * Get the VirtueMart settings
@@ -473,56 +469,58 @@ class RedformModelRedform extends JModel {
 	
 	function notifysubmitter($answers, $form)
 	{
-		$submitter_email = $answers->getSubmitterEmail();
-		
-		$mailer = & $this->Mailer();
-		
+		$emails = $answers->getSubmitterEmails();
 		$cond_recipients = RedFormCore::getConditionalRecipients($form, $answers);
-		if ($cond_recipients) {
-			$mailer->From = $cond_recipients[0][0];
-			$mailer->FromName =  $cond_recipients[0][1];
-			$mailer->ClearReplyTos();
-			$mailer->addReplyTo($cond_recipients[0]);
-		}
 		
-		if (JMailHelper::isEmailAddress($submitter_email))
-		{
-			/* Add the email address */
-			$mailer->AddAddress($submitter_email);
-	
-			/* Mail submitter */
-			$submission_body = $form->submissionbody;
-			$submission_body = $this->_replaceTags($submission_body, $answers->getAnswers());
+		foreach ($emails as $submitter_email)
+		{		
+			$mailer = & $this->Mailer();
 			
-			if (strstr($submission_body, '[answers]')) 
+			if ($cond_recipients) 
 			{
-				$info = "<table>";
-				foreach ($answers->getAnswers() as $answer) {
-					$info .= "<tr>";
-					$info .= "<th>". $answer['field'] ."</th>";
-					if ($answer['type'] == 'file') {
-          	$info .= "<td>". basename($answer['value']) ."</td>";
+				$mailer->From = $cond_recipients[0][0];
+				$mailer->FromName =  $cond_recipients[0][1];
+				$mailer->ClearReplyTos();
+				$mailer->addReplyTo($cond_recipients[0]);
+			}
+			
+			if (JMailHelper::isEmailAddress($submitter_email))
+			{
+				/* Add the email address */
+				$mailer->AddAddress($submitter_email);
+		
+				/* Mail submitter */
+				$submission_body = $form->submissionbody;
+				$submission_body = $this->_replaceTags($submission_body, $answers->getAnswers());
+				
+				if (strstr($submission_body, '[answers]')) 
+				{
+					$info = "<table>";
+					foreach ($answers->getAnswers() as $answer) {
+						$info .= "<tr>";
+						$info .= "<th>". $answer['field'] ."</th>";
+						if ($answer['type'] == 'file') {
+	          	$info .= "<td>". basename($answer['value']) ."</td>";
+						}
+						else {
+	          	$info .= "<td>". $answer['value'] ."</td>";
+						}
+	          $info .= "</tr>";
 					}
-					else {
-          	$info .= "<td>". $answer['value'] ."</td>";
-					}
-          $info .= "</tr>";
+					$info .= "</table>";
+					$submission_body = str_replace('[answers]', $info, $submission_body);
 				}
-				$info .= "</table>";
-				$submission_body = str_replace('[answers]', $info, $submission_body);
-			}
-			$htmlmsg = '<html><head><title>Welcome</title></title></head><body>'. $submission_body .'</body></html>';
-			$mailer->setBody($htmlmsg);
-			$mailer->setSubject($form->submissionsubject);
-	
-			/* Send the mail */
-			if (!$mailer->Send()) {
-				JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter)');
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter):'.$mailer->error);
-			}
-			/* Clear the mail details */
-			$mailer->ClearAddresses();
-		}	
+				$htmlmsg = '<html><head><title>Welcome</title></title></head><body>'. $submission_body .'</body></html>';
+				$mailer->setBody($htmlmsg);
+				$mailer->setSubject($form->submissionsubject);
+		
+				/* Send the mail */
+				if (!$mailer->Send()) {
+					JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter)');
+					RedformHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter):'.$mailer->error);
+				}
+			}	
+		}
 	}
 	 			
 	function getFieldsValues()
