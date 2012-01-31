@@ -110,4 +110,3 @@ class RedformViewSubmitters extends JView {
   }
   
 }
-?>

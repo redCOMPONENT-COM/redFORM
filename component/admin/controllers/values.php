@@ -332,4 +332,3 @@ class RedformControllerValues extends JController
     $this->setRedirect( 'index.php?option=com_redform&view=values');
   }
 }
-?>

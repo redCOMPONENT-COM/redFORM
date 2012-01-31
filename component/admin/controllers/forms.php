@@ -278,4 +278,3 @@ class RedformControllerForms extends JController
   	
   }
 }
-?>

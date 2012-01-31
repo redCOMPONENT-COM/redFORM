@@ -48,4 +48,3 @@ class RedformViewRedform extends JView {
 		parent::display($tpl);
 	}
 }
-?>

@@ -80,4 +80,3 @@ class plgRedform_mailingCcnewsletter extends JPlugin {
  		return true;
 	}
 }
-?>

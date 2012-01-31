@@ -116,4 +116,3 @@ class plgRedform_mailingAcymailing extends JPlugin {
 		return $allLists;
 	}
 }
-?>

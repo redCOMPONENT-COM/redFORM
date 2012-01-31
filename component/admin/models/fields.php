@@ -402,4 +402,3 @@ class RedformModelFields extends JModel {
     return true;
   }
 }
-?>

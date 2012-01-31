@@ -54,4 +54,3 @@ class RedFormViewLog extends JView {
 		parent::display($tpl);
 	}
 }
-?>

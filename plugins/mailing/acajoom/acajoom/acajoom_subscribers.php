@@ -76,4 +76,3 @@ class TableAcajoom_subscribers extends JTable {
 		}
 	}
 }
-?>

@@ -130,4 +130,3 @@ class RedformViewForm extends JView {
 		parent::display($tpl);
 	}
 }
-?>

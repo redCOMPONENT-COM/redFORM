@@ -45,4 +45,3 @@ class plgRedform_PaymentCustom extends JPlugin {
 		return true;
 	}
 }
-?>

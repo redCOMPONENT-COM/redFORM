@@ -434,4 +434,3 @@ class RedformModelSubmitters extends JModel {
 		return $course;
 	}
 }
-?>

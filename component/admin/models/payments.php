@@ -200,4 +200,3 @@ class RedformModelPayments extends JModel
     return $this->_total;
   }
 }
-?>

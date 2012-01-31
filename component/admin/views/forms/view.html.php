@@ -85,4 +85,3 @@ class RedformViewForms extends JView {
     JToolBarHelper::custom('copy', 'copy', 'copy', JText::_('COM_REDFORM_Clone'), true);
 	}
 }
-?>

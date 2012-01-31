@@ -736,4 +736,3 @@ class rfanswers
   	return $answers;  	
   }
 }
-?>

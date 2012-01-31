@@ -76,4 +76,3 @@ class plgRedform_mailingPhplist extends JPlugin {
  		return true;
 	}
 }
-?>

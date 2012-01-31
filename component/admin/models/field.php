@@ -492,4 +492,3 @@ class RedformModelField extends JModel
 		return true;
 	}
 }
-?>

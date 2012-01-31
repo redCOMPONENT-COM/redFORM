@@ -534,4 +534,3 @@ class RedformModelSubmitter extends JModel {
 	 	 return $db->loadObject();
 	 }
 }
-?>

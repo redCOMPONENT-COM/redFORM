@@ -54,4 +54,3 @@ class RedformTablePayments extends JTable {
 		return true;
 	}
 }
-?>

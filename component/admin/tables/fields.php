@@ -113,4 +113,3 @@ class RedformTableFields extends JTable {
   }
   
 }
-?>

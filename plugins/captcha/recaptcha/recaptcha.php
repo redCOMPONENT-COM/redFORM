@@ -47,4 +47,3 @@ class plgRedform_captchaRecaptcha extends JPlugin {
 	  return true;
 	}
 }
-?>

@@ -37,4 +37,3 @@ class RedformTableConfiguration extends JTable {
 		parent::__construct('#__rwf_configuration', 'id', $db );
 	}
 }
-?>

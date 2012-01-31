@@ -322,4 +322,3 @@ class RedformModelPayment extends JModel
   	return $this->_form;
   }
 }
-?>

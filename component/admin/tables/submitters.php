@@ -66,4 +66,3 @@ class RedformTableSubmitters extends JTable {
 		parent::__construct('#__rwf_submitters', 'id', $db );
 	}
 }
-?>

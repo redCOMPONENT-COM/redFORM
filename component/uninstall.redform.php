@@ -38,4 +38,3 @@ function com_uninstall(){
 	$database->setQuery($query);
 	$database->query();
 }
-?>

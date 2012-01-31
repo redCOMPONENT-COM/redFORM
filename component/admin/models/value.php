@@ -323,4 +323,3 @@ class RedformModelValue extends JModel
     return true;
   }
 }
-?>

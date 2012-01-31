@@ -544,4 +544,3 @@ function com_install()
 	  
 	}
 }
-?>

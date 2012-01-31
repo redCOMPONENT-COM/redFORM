@@ -78,4 +78,3 @@ class RedformViewSubmitters extends JView {
     return join($delimiter, $output) . "\n";
 	} 
 }
-?>

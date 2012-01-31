@@ -153,4 +153,3 @@ class RedformControllerRedform extends JController
     parent::display();
   }
 }
-?>

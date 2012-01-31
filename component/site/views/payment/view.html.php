@@ -94,4 +94,3 @@ class RedformViewPayment extends JView {
 		parent::display($tpl);
 	}
 }
-?>

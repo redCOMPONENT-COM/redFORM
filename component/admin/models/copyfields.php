@@ -107,4 +107,3 @@ class RedformModelCopyfields extends JModel {
   	return true;
   }
 }
-?>

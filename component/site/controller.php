@@ -64,4 +64,3 @@ class RedformController extends JController
   	die();
 	}
 }
-?>

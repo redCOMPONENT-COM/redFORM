@@ -62,4 +62,3 @@ class RedformViewPayments extends JView {
   }
   
 }
-?>

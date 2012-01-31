@@ -289,4 +289,3 @@ if (!class_exists('ReCaptchaResponse'))
 	        var $error;
 	}
 }
-?>

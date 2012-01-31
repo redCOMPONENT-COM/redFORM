@@ -589,4 +589,3 @@ class PhpListUser {
 		}
 	}
 }
-?>

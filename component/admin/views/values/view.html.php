@@ -103,4 +103,3 @@ class RedformViewValues extends JView
 		}
 	}
 }
-?>

@@ -453,4 +453,3 @@ class RedformModelForm extends JModel
   	return $res;
   }
 }
-?>

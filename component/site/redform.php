@@ -48,4 +48,3 @@ $controller->execute(JRequest::getCmd('task'));
 
 // Redirect if set by the controller
 $controller->redirect();
-?>

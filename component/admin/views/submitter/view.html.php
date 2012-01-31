@@ -67,4 +67,3 @@ EOF;
   	parent::display($tpl);
   }
 }
-?>

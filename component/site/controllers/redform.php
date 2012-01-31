@@ -115,5 +115,3 @@ class RedformControllerRedform extends RedformController {
     return;
   }
 }
-
-?>

@@ -62,4 +62,3 @@ class RedformViewConfiguration extends JView {
     JToolBarHelper::cancel();
 	}
 }
-?>

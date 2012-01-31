@@ -195,4 +195,3 @@ class RedformControllerPayments extends JController
     $this->setRedirect( $link, $msg );
   }
 }
-?>

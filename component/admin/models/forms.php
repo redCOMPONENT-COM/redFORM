@@ -316,4 +316,3 @@ class RedformModelForms extends JModel
 		return $db->loadObjectList();
 	}
 }
-?>

@@ -137,4 +137,3 @@ class RedformTableRedform extends JTable {
 		return parent::store($updateNulls);
 	}
 }
-?>

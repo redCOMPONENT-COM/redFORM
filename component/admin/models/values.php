@@ -243,4 +243,3 @@ class RedformModelValues extends JModel
 		}
 	}
 }
-?>

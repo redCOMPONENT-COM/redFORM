@@ -126,4 +126,3 @@ class plgRedform_mailingAcajoom extends JPlugin {
  		return true;
 	}
 }
-?>

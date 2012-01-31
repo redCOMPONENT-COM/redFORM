@@ -47,4 +47,3 @@ class plgRedform_PaymentPaypal extends JPlugin {
 		return true;
 	}
 }
-?>

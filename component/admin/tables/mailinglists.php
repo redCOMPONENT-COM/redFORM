@@ -74,4 +74,3 @@ class RedformTableMailinglists extends JTable {
 		
 	}
 }
-?>

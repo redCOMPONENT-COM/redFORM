@@ -56,4 +56,3 @@ class RedformViewCopyFields extends JView {
 		parent::display($tpl);
 	}		
 }
-?>

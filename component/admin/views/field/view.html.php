@@ -162,4 +162,3 @@ class RedformViewField extends JView {
 		parent::display($tpl);
 	}		
 }
-?>

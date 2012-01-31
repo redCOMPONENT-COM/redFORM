@@ -47,4 +47,3 @@ class RedformModelConfiguration extends JModel {
 		return true;
 	}
 }
-?>

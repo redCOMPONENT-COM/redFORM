@@ -46,4 +46,3 @@ class plgRedform_PaymentIdeal extends JPlugin {
 		return true;
 	}
 }
-?>

@@ -55,4 +55,3 @@ class RedformHelperLog
       return true;
     }
 }
-?>

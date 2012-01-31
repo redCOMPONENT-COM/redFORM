@@ -72,4 +72,3 @@ class TableAcajoom_queue extends JTable {
 		return true;
 	}
 }
-?>

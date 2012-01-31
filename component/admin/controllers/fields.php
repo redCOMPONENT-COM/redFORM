@@ -323,4 +323,3 @@ class RedformControllerFields extends JController
   	$this->redirect();
   }
 }
-?>

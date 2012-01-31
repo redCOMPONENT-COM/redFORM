@@ -48,4 +48,3 @@ class RedformViewField extends JView {
 		return;
 	}
 }
-?>

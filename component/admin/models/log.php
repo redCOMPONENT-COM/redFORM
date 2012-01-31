@@ -78,4 +78,3 @@ class RedFormModelLog extends JModel
 		return $contents;
 	}
 }
-?>

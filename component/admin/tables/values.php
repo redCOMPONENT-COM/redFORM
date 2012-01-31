@@ -144,4 +144,3 @@ class RedformTableValues extends JTable {
 		return true;
 	}
 }
-?>

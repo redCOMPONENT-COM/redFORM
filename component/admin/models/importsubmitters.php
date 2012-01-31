@@ -245,4 +245,3 @@ class RedformModelImportsubmitters extends JModel {
   	return $price;
   }
 }
-?>
