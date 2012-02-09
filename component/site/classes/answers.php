@@ -81,6 +81,16 @@ class rfanswers
   {
     return $this->_submitter_email;
   }
+  
+  public function getSubmitterEmail()
+  {
+    if (count($this->_submitter_email)) {
+    	return $this->_submitter_email[0];
+    }
+    else {
+    	return false;
+    }
+  }
 
   public function getRecipients()
   {
