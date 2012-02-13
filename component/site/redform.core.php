@@ -1245,37 +1245,64 @@ class RedFormCore extends JObject {
 			$sids = $reference;
 		}
 		$answers = $this->getSidsFieldsAnswers($sids);
-		
-		$emails = array();
+				
+		$results = array();
 		foreach ((array) $answers as $sid => $fields)
 		{
-			$email = array();
-			foreach ((array) $fields as $f)
+			$emails = array();
+			$fullnames = array();
+			$usernames = array();
+			foreach ((array) $fields as $f) // first look for email fields
 			{
+				if ($f->fieldtype == 'email')
+				{
+					if ($f->parameters->get('notify', 1)) { // set to receive notifications ?
+						$emails[] = $f->answer;
+					}										
+				}
 				if ($f->fieldtype == 'username')
 				{
-					$email['username'] = $f->answer;
+					$usernames[] = $f->answer;
 				}
 				if ($f->fieldtype == 'fullname')
 				{
-					$email['fullname'] = $f->answer;
-				}
-				if ($f->fieldtype == 'email')
-				{
-					$email['email'] = $f->answer;
+					$fullnames[] = $f->answer;
 				}
 			}
-			if (!isset($email['email']) && $requires_email) {
+			
+			if (!count($emails) && $requires_email) {
 				// no email field
 				return false;
 			}
+			$result = array();
+			foreach ($emails as $k => $val)
+			{
+				$result[$k]['email']    = $val;
+				$result[$k]['username'] = isset($usernames[$k]) ? $usernames[$k] : '';
+				$result[$k]['fullname'] = isset($fullnames[$k]) ? $fullnames[$k] : '';
 			
-			if (!isset($email['fullname']) && isset($email['username'])) {
-				$email['fullname'] = $email['username'];
+				if (!isset($result[$k]['fullname']) && isset($result[$k]['username'])) {
+					$result[$k]['fullname'] = $result[$k]['username'];
+				}
 			}
-			$emails[$sid] = $email;
+			$results[$sid] = $result;
 		}
-		return $emails;
+		return $results;
+	}
+	
+	/**
+	* get emails associted to sid
+	* @param int submit_key or array of sids
+	* @param boolean email required, returns false if no email field
+	* @return array or false
+	*/
+	public function getSidContactEmails($sid)
+	{
+		$res = $this->getSubmissionContactEmail(array($sid), $requires_email = true);
+		if ($res) {
+			return $res[$sid];
+		}
+		return false;
 	}
 	
 	function getSids($key)

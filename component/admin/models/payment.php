@@ -232,26 +232,31 @@ class RedformModelPayment extends JModel
   	$mailer->IsHTML(true);
   
   	$form = $this->getForm();
+  	  		
+  	// set the email subject
+  	$subject = (empty($form->submitterpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationsubject);
+  	$body    = (empty($form->submitterpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationbody);
+  	$mailer->setSubject(JText::sprintf($subject, $form->formname));
+  	$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
+  	$mailer->setBody(JText::sprintf($body, $form->formname, $link));
   
   	$core = new RedFormCore();
   	$emails = $core->getSubmissionContactEmail($this->_submit_key);
-  
-  	if (count($emails))
-  	{
-  		$first = current($emails);
-  		$mailer->addRecipient($first['email']);
-  			
-  		// set the email subject
-  		$subject = (empty($form->submitterpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationsubject);
-  		$body    = (empty($form->submitterpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationbody);
-  		$mailer->setSubject(JText::sprintf($subject, $form->formname));
-  		$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
-  		$mailer->setBody(JText::sprintf($body, $form->formname, $link));
-  			
-  		if ($mailer->send()) {
-  			return true;
+  	
+  	if (!$emails) {
+  		return false;
+  	}
+  	
+  	foreach ((array) $emails as $sid)
+  	{  		
+  		foreach ((array) $sid as $email)
+  		{
+	  		$mailer->addRecipient($email['email']);	
   		}
   	}
+		if (!$mailer->send()) {
+			return false;
+		}
   	return true;
   }
   
