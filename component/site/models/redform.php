@@ -750,13 +750,13 @@ class RedformModelRedform extends JModel {
 				if ($user->get('id')) {
 					$sender = array($user->email, $user->name);
 				}
-				else if ($allanswers[0]->getSubmitterEmail())
+				else if ($allanswers[0]->getSubmitterEmails())
 				{
 					if ($allanswers[0]->getFullname()) {
-						$sender = array($allanswers[0]->getSubmitterEmail(), $allanswers[0]->getFullname());
+						$sender = array($allanswers[0]->getSubmitterEmails(), $allanswers[0]->getFullname());
 					}
 					else {
-						$sender = array($allanswers[0]->getSubmitterEmail(), null);
+						$sender = array($allanswers[0]->getSubmitterEmails(), null);
 					}
 				}
 				else { // default to site settings
