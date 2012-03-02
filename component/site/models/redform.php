@@ -753,10 +753,10 @@ class RedformModelRedform extends JModel {
 				else if ($allanswers[0]->getSubmitterEmails())
 				{
 					if ($allanswers[0]->getFullname()) {
-						$sender = array($allanswers[0]->getSubmitterEmails(), $allanswers[0]->getFullname());
+						$sender = array(reset($allanswers[0]->getSubmitterEmails()), $allanswers[0]->getFullname());
 					}
 					else {
-						$sender = array($allanswers[0]->getSubmitterEmails(), null);
+						$sender = array(reset($allanswers[0]->getSubmitterEmails()), null);
 					}
 				}
 				else { // default to site settings
