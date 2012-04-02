@@ -22,35 +22,13 @@ defined('_JEXEC') or die('Restricted access');
 
 /**
  */
-class TableAcajoom_subscribers extends JTable {
-	/** @var int Primary key */
-	var $id = null;
-	/** @var int The user ID */
-	var $user_id = null;
-	/** @var string The name of the subscriber */
-	var $name = null;
-	/** @var string E-mail address of subscriber */
-	var $email = null;
-	/** @var boolean Receive HTML messages */
-	var $receive_html = 1;
-	/** @var boolean Subscriber confirmed or not */
-	var $confirmed = 1;
-	/** @var boolean Subscriber blacklisted or not */
-	var $blacklist = 0;
-	/** @var string Subscriber timezone */
-	var $timezone = '00:00:00';
-	/** @var string Language ISO */
-	var $language_iso = 'eng';
-	/** @var string Subscriber signup date */
-	var $subscribe_date = null;
-	/** @var string Parameters */
-	var $params = '';
-	
+class TableJNews_subscribers extends JTable {
+		
 	/**
 	* @param database A database connector object
 	*/
 	function __construct( &$db ) {
-		parent::__construct('#__acajoom_subscribers', 'id', $db );
+		parent::__construct('#__jnews_subscribers', 'id', $db );
 	}
 	
 	/**
@@ -61,7 +39,7 @@ class TableAcajoom_subscribers extends JTable {
 	 */
 	function find($mail)
 	{
-		$query = ' SELECT id FROM #__acajoom_subscribers WHERE email = '.$this->_db->Quote($mail);
+		$query = ' SELECT id FROM #__jnews_subscribers WHERE email = '.$this->_db->Quote($mail);
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadResult();
 		

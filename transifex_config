@@ -30,14 +30,14 @@ file_filter = languages/<lang>/plugins/recaptcha/<lang>.plg_redform_captcha_reca
 source_file = plugins/captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha_recaptcha.sys.ini
 source_lang = en-GB
 
-[redFORM.redform25-plg_redform_mailing_acajoom-ini]
-file_filter = languages/<lang>/plugins/acajoom/<lang>.plg_redform_mailing_acajoom.ini
-source_file = plugins/mailing/acajoom/language/en-GB/en-GB.plg_redform_mailing_acajoom.ini
+[redFORM.redform25-plg_redform_mailing_jnews-ini]
+file_filter = languages/<lang>/plugins/jnews/<lang>.plg_redform_mailing_jnews.ini
+source_file = plugins/mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.ini
 source_lang = en-GB
 
-[redFORM.redform25-plg_redform_mailing_acajoom-sys-ini]
-file_filter = languages/<lang>/plugins/acajoom/<lang>.plg_redform_mailing_acajoom.sys.ini
-source_file = plugins/mailing/acajoom/language/en-GB/en-GB.plg_redform_mailing_acajoom.sys.ini
+[redFORM.redform25-plg_redform_mailing_jnews-sys-ini]
+file_filter = languages/<lang>/plugins/jnews/<lang>.plg_redform_mailing_jnews.sys.ini
+source_file = plugins/mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_mailing_acymailing-ini]
