@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="file" version="1.7.0" method="upgrade">
+	<name>redFORM finish</name>
+	<creationDate>jan, 2012</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>2.5</version>
+	<description>finish language pack for redFORM&lt;br/&gt;Incomplete ? Please &lt;a href="http://www.redcomponent.com/translations"&gt;help us&lt;/a&gt; with translations !</description>
+	
+	<fileset>
+		<files folder="component/admin" target="administrator/components/com_redform/language/fi-FI">
+			<filename>fi-FI.com_redform.ini</filename>
+			<filename>fi-FI.com_redform.sys.ini</filename>
+		</files>
+		<files folder="component/site" target="components/com_redform/language/fi-FI">
+			<filename>fi-FI.com_redform.ini</filename>
+		</files>
+								
+		<files folder="plugins/acymailing" target="plugins/redform_mailing/acymailing/language/fi-FI">
+			<filename>fi-FI.plg_redform_mailing_acymailing.ini</filename>
+			<filename>fi-FI.plg_redform_mailing_acymailing.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/content_redform" target="plugins/content/redform/language/fi-FI">
+			<filename>fi-FI.plg_content_redform.ini</filename>
+			<filename>fi-FI.plg_content_redform.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_custom" target="plugins/redform_payment/custom/language/fi-FI">
+			<filename>fi-FI.plg_redform_payment_custom.ini</filename>
+			<filename>fi-FI.plg_redform_payment_custom.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_epay" target="plugins/redform_payment/epay/language/fi-FI">
+			<filename>fi-FI.plg_redform_payment_epay.ini</filename>
+			<filename>fi-FI.plg_redform_payment_epay.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_ideal" target="plugins/redform_payment/ideal/language/fi-FI">
+			<filename>fi-FI.plg_redform_payment_ideal.ini</filename>
+			<filename>fi-FI.plg_redform_payment_ideal.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_paypal" target="plugins/redform_payment/paypal/language/fi-FI">
+			<filename>fi-FI.plg_redform_payment_paypal.ini</filename>
+			<filename>fi-FI.plg_redform_payment_paypal.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_quickpay" target="plugins/redform_payment/quickpay/language/fi-FI">
+			<filename>fi-FI.plg_redform_payment_quickpay.ini</filename>
+			<filename>fi-FI.plg_redform_payment_quickpay.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/phplist" target="plugins/redform_mailing/phplist/language/fi-FI">
+			<filename>fi-FI.plg_redform_mailing_phplist.ini</filename>
+			<filename>fi-FI.plg_redform_mailing_phplist.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/recaptcha" target="plugins/redform_captcha/recaptcha/language/fi-FI">
+			<filename>fi-FI.plg_redform_captcha_recaptcha.ini</filename>
+			<filename>fi-FI.plg_redform_captcha_recaptcha.sys.ini</filename>
+		</files>
+		
+	</fileset>
+	
+</extension>
