@@ -9,56 +9,67 @@ lang_map = af_ZA: af-ZA, am_ET: am-ET, ar_AE: ar-AE, ar_BH: ar-BH, ar_DZ: ar-DZ,
 file_filter = languages/<lang>/component/admin/<lang>.com_redform.ini
 source_file = component/admin/language/en-GB/en-GB.com_redform.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-admin-com_redform-sys-ini]
 file_filter = languages/<lang>/component/admin/<lang>.com_redform.sys.ini
 source_file = component/admin/language/en-GB/en-GB.com_redform.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-site-com_redform-ini]
 file_filter = languages/<lang>/component/site/<lang>.com_redform.ini
 source_file = component/site/language/en-GB/en-GB.com_redform.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_captcha_recaptcha-ini]
 file_filter = languages/<lang>/plugins/recaptcha/<lang>.plg_redform_captcha_recaptcha.ini
 source_file = plugins/captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha_recaptcha.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_captcha_recaptcha-sys-ini]
 file_filter = languages/<lang>/plugins/recaptcha/<lang>.plg_redform_captcha_recaptcha.sys.ini
 source_file = plugins/captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha_recaptcha.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_mailing_jnews-ini]
 file_filter = languages/<lang>/plugins/jnews/<lang>.plg_redform_mailing_jnews.ini
 source_file = plugins/mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_mailing_jnews-sys-ini]
 file_filter = languages/<lang>/plugins/jnews/<lang>.plg_redform_mailing_jnews.sys.ini
 source_file = plugins/mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_mailing_acymailing-ini]
 file_filter = languages/<lang>/plugins/acymailing/<lang>.plg_redform_mailing_acymailing.ini
 source_file = plugins/mailing/acymailing/language/en-GB/en-GB.plg_redform_mailing_acymailing.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_mailing_acymailing-sys-ini]
 file_filter = languages/<lang>/plugins/acymailing/<lang>.plg_redform_mailing_acymailing.sys.ini
 source_file = plugins/mailing/acymailing/language/en-GB/en-GB.plg_redform_mailing_acymailing.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_mailing_phplist-ini]
 file_filter = languages/<lang>/plugins/phplist/<lang>.plg_redform_mailing_phplist.ini
 source_file = plugins/mailing/phplist/language/en-GB/en-GB.plg_redform_mailing_phplist.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_mailing_phplist-sys-ini]
 file_filter = languages/<lang>/plugins/phplist/<lang>.plg_redform_mailing_phplist.sys.ini
 source_file = plugins/mailing/phplist/language/en-GB/en-GB.plg_redform_mailing_phplist.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_payment_custom-ini]
 file_filter = languages/<lang>/plugins/payment_custom/<lang>.plg_redform_payment_custom.ini
@@ -69,53 +80,64 @@ source_lang = en-GB
 file_filter = languages/<lang>/plugins/payment_custom/<lang>.plg_redform_payment_custom.sys.ini
 source_file = plugins/payment/custom/language/en-GB/en-GB.plg_redform_payment_custom.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_payment_epay-ini]
 file_filter = languages/<lang>/plugins/payment_epay/<lang>.plg_redform_payment_epay.ini
 source_file = plugins/payment/epay/language/en-GB/en-GB.plg_redform_payment_epay.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_payment_epay-sys-ini]
 file_filter = languages/<lang>/plugins/payment_epay/<lang>.plg_redform_payment_epay.sys.ini
 source_file = plugins/payment/epay/language/en-GB/en-GB.plg_redform_payment_epay.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_payment_quickpay-ini]
 file_filter = languages/<lang>/plugins/payment_quickpay/<lang>.plg_redform_payment_quickpay.ini
 source_file = plugins/payment/quickpay/language/en-GB/en-GB.plg_redform_payment_quickpay.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_payment_quickpay-sys-ini]
 file_filter = languages/<lang>/plugins/payment_quickpay/<lang>.plg_redform_payment_quickpay.sys.ini
 source_file = plugins/payment/quickpay/language/en-GB/en-GB.plg_redform_payment_quickpay.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_payment_ideal-ini]
 file_filter = languages/<lang>/plugins/payment_ideal/<lang>.plg_redform_payment_ideal.ini
 source_file = plugins/payment/ideal/language/en-GB/en-GB.plg_redform_payment_ideal.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_payment_ideal-sys-ini]
 file_filter = languages/<lang>/plugins/payment_ideal/<lang>.plg_redform_payment_ideal.sys.ini
 source_file = plugins/payment/ideal/language/en-GB/en-GB.plg_redform_payment_ideal.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_payment_paypal-ini]
 file_filter = languages/<lang>/plugins/payment_paypal/<lang>.plg_redform_payment_paypal.ini
 source_file = plugins/payment/paypal/language/en-GB/en-GB.plg_redform_payment_paypal.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_redform_payment_paypal-sys-ini]
 file_filter = languages/<lang>/plugins/payment_paypal/<lang>.plg_redform_payment_paypal.sys.ini
 source_file = plugins/payment/paypal/language/en-GB/en-GB.plg_redform_payment_paypal.sys.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_content_redform-ini]
 file_filter = languages/<lang>/plugins/content_redform/<lang>.plg_content_redform.ini
 source_file = component/admin/plugins/content_redform/language/en-GB/en-GB.plg_content_redform.ini
 source_lang = en-GB
+type = INI
 
 [redFORM.redform25-plg_content_redform-sys-ini]
 file_filter = languages/<lang>/plugins/content_redform/<lang>.plg_content_redform.sys.ini
 source_file = component/admin/plugins/content_redform/language/en-GB/en-GB.plg_content_redform.sys.ini
 source_lang = en-GB
+type = INI

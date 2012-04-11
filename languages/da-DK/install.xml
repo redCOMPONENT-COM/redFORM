@@ -18,12 +18,7 @@
 		<files folder="component/site" target="components/com_redform/language/da-DK">
 			<filename>da-DK.com_redform.ini</filename>
 		</files>
-				
-		<files folder="plugins/jnews" target="plugins/redform_mailing/jnews/language/da-DK">
-			<filename>da-DK.plg_redform_mailing_jnews.ini</filename>
-			<filename>da-DK.plg_redform_mailing_jnews.sys.ini</filename>
-		</files>
-				
+								
 		<files folder="plugins/acymailing" target="plugins/redform_mailing/acymailing/language/da-DK">
 			<filename>da-DK.plg_redform_mailing_acymailing.ini</filename>
 			<filename>da-DK.plg_redform_mailing_acymailing.sys.ini</filename>
