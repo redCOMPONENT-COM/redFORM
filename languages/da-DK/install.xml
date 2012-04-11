@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="file" version="1.7.0" method="upgrade">
+	<name>redFORM Danish</name>
+	<creationDate>jan, 2012</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>2.5</version>
+	<description>Danish language pack for redFORM&lt;br/&gt;Incomplete ? Please &lt;a href="http://www.redcomponent.com/translations"&gt;help us&lt;/a&gt; with translations !</description>
+	
+	<fileset>
+		<files folder="component/admin" target="administrator/components/com_redform/language/da-DK">
+			<filename>da-DK.com_redform.ini</filename>
+			<filename>da-DK.com_redform.sys.ini</filename>
+		</files>
+		<files folder="component/site" target="components/com_redform/language/da-DK">
+			<filename>da-DK.com_redform.ini</filename>
+		</files>
+				
+		<files folder="plugins/jnews" target="plugins/redform_mailing/jnews/language/da-DK">
+			<filename>da-DK.plg_redform_mailing_jnews.ini</filename>
+			<filename>da-DK.plg_redform_mailing_jnews.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/acymailing" target="plugins/redform_mailing/acymailing/language/da-DK">
+			<filename>da-DK.plg_redform_mailing_acymailing.ini</filename>
+			<filename>da-DK.plg_redform_mailing_acymailing.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/content_redform" target="plugins/content/redform/language/da-DK">
+			<filename>da-DK.plg_content_redform.ini</filename>
+			<filename>da-DK.plg_content_redform.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_custom" target="plugins/redform_payment/custom/language/da-DK">
+			<filename>da-DK.plg_redform_payment_custom.ini</filename>
+			<filename>da-DK.plg_redform_payment_custom.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_epay" target="plugins/redform_payment/epay/language/da-DK">
+			<filename>da-DK.plg_redform_payment_epay.ini</filename>
+			<filename>da-DK.plg_redform_payment_epay.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_ideal" target="plugins/redform_payment/ideal/language/da-DK">
+			<filename>da-DK.plg_redform_payment_ideal.ini</filename>
+			<filename>da-DK.plg_redform_payment_ideal.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_paypal" target="plugins/redform_payment/paypal/language/da-DK">
+			<filename>da-DK.plg_redform_payment_paypal.ini</filename>
+			<filename>da-DK.plg_redform_payment_paypal.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/payment_quickpay" target="plugins/redform_payment/quickpay/language/da-DK">
+			<filename>da-DK.plg_redform_payment_quickpay.ini</filename>
+			<filename>da-DK.plg_redform_payment_quickpay.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/phplist" target="plugins/redform_mailing/phplist/language/da-DK">
+			<filename>da-DK.plg_redform_mailing_phplist.ini</filename>
+			<filename>da-DK.plg_redform_mailing_phplist.sys.ini</filename>
+		</files>
+				
+		<files folder="plugins/recaptcha" target="plugins/redform_captcha/recaptcha/language/da-DK">
+			<filename>da-DK.plg_redform_captcha_recaptcha.ini</filename>
+			<filename>da-DK.plg_redform_captcha_recaptcha.sys.ini</filename>
+		</files>
+		
+	</fileset>
+	
+</extension>
