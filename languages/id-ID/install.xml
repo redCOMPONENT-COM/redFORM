@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="file" version="1.7.0" method="upgrade">
-	<name>redFORM Danish</name>
+	<name>redFORM id-ID</name>
 	<creationDate>jan, 2012</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
@@ -8,14 +8,14 @@
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
 	<version>2.5</version>
-	<description>Danish language pack for redFORM&lt;br/&gt;Incomplete ? Please &lt;a href="http://www.redcomponent.com/translations"&gt;help us&lt;/a&gt; with translations !</description>
+	<description>id-ID language pack for redFORM&lt;br/&gt;Incomplete ? Please &lt;a href="http://www.redcomponent.com/translations"&gt;help us&lt;/a&gt; with translations !</description>
 	
 	<fileset>
 		<files folder="admin" target="administrator/language">
-			<folder>da-DK</folder>
+			<folder>id-ID</folder>
 		</files>
-		<files folder="site" target="language">
-			<folder>da-DK</folder>
-		</files>
-	</fileset>
+		<!-- <files folder="site" target="language">
+			<folder>id-ID</folder>
+		</files> -->
+	</fileset>		
 </extension>
