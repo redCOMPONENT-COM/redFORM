@@ -46,12 +46,12 @@ else { ?>
 			<th class="title"><?php echo JText::_('COM_REDFORM_Required'); ?></th>
 			<th class="title"><?php echo JText::_('COM_REDFORM_Unique'); ?></th>
 			<th class="title"><?php echo JText::_('COM_REDFORM_Form'); ?></th>
-			<th class="title">
+			<th width="10%">
 				<?php echo JHTML::_('grid.sort', 'COM_REDFORM_Ordering', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 				<?php echo JHTML::_('grid.order',  $this->fields ); ?>
 			</th>
-			<th class="title"><?php echo JText::_('COM_REDFORM_Published'); ?></th>
-			<th width="20"><?php echo JHTML::_('grid.sort', 'COM_REDFORM_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
+			<th width="5%"><?php echo JText::_('COM_REDFORM_Published'); ?></th>
+			<th width="5%"><?php echo JHTML::_('grid.sort', 'COM_REDFORM_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -62,10 +62,6 @@ else { ?>
 			
 			JFilterOutput::objectHTMLSafe($row);
 			$link 	= 'index.php?option=com_redform&task=edit&controller=fields&hidemainmenu=1&cid[]='. $row->id;
-
-			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
-			$task 	= $row->published ? 'unpublish' : 'publish';
-			$alt 	= $row->published ? JText::_('COM_REDFORM_Published') : JText::_('COM_REDFORM_Unpublished');
 			
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
 			$my  = JFactory::getUser();
@@ -101,31 +97,33 @@ else { ?>
 				</td>
 				<td>
 					<?php 
-					if ($row->validate) echo JText::_('COM_REDFORM_Yes');
-					else echo JText::_('COM_REDFORM_No');
+					if ($row->validate) echo JText::_('JYES');
+					else echo JText::_('JNO');
 					?>
 				</td>
 				<td>
 					<?php 
-					if ($row->unique) echo JText::_('COM_REDFORM_Yes');
-					else echo JText::_('COM_REDFORM_No');
+					if ($row->unique) echo JText::_('JYES');
+					else echo JText::_('JNO');
 					?>
 				</td>
 				<td>
 					<?php echo $row->formname; ?>
 				</td>
-				<td>
-          <span><?php echo $this->pagination->orderUpIcon( $i, true, 'orderup', 'Move Up', $row->ordering ); ?></span>
-  
-          <span><?php echo $this->pagination->orderDownIcon( $i, $n, true, 'orderdown', 'Move Down', $row->ordering );?></span>
-  
-          <?php $disabled = $row->ordering ?  '' : '"disabled=disabled"'; ?>
-					<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="text_area" style="text-align: center" />
+				<td class="order">
+					<?php if ($this->lists['order'] == 'ordering'): ?>
+	          <span><?php echo $this->pagination->orderUpIcon( $i, true, 'orderup', 'Move Up', $row->ordering ); ?></span>
+	  
+	          <span><?php echo $this->pagination->orderDownIcon( $i, $n, true, 'orderdown', 'Move Down', $row->ordering );?></span>
+	  
+	          <?php $disabled = $row->ordering ?  '' : '"disabled=disabled"'; ?>
+						<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="text_area" style="text-align: center" />
+					<?php else : ?>
+						<?php echo $row->ordering; ?>
+					<?php endif; ?>
 				</td>
 				<td width="10%" align="center">
-				<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $task;?>')">
-				<img src="images/<?php echo $img;?>" border="0" alt="<?php echo $alt; ?>" />
-				</a>
+					<?php echo JHtml::_('jgrid.published', $row->published, $i); ?>
 				</td>
 				<td><?php echo $row->id; ?></td>
 			</tr>

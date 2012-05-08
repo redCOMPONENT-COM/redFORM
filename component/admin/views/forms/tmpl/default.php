@@ -56,12 +56,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 			
 			JFilterOutput::objectHTMLSafe($row);
 			$link 	= 'index.php?option=com_redform&task=edit&controller=forms&cid[]='. $row->id;
-
-			$img 	= $row->published ? 'tick.png' : 'publish_x.png';
-			$task 	= $row->published ? 'unpublish' : 'publish';
-			$alt 	= $row->published ? JText::_('COM_REDFORM_Published') : JText::_('COM_REDFORM_Unpublished');
-			$form 	= $row->formstarted ? 'tick.png' : 'publish_x.png';
-			
+						
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
 			$my  = JFactory::getUser();
 			?>
@@ -102,12 +97,12 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				?>
 				</td>
 				<td width="10%" align="center">
-				<a href="javascript: void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $task;?>')">
-				<img src="images/<?php echo $img;?>" border="0" alt="<?php echo $alt; ?>" />
-				</a>
+					<?php echo JHtml::_('jgrid.published', $row->published, $i); ?>
 				</td>
 				<td width="10%" align="center">
-				<img src="images/<?php echo $form;?>" border="0" alt="<?php echo JText::_('COM_REDFORM_Form_started'); ?>" />
+					<?php echo $row->formstarted ? 
+					           JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) : 
+					           JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
 				</td>
 				<td>
 				<?php

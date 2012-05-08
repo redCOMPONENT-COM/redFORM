@@ -48,8 +48,8 @@ JHTML::_('behavior.tooltip');
 	// language strings for ajaxvalues.js
 	var edittext = "<?php echo JText::_('COM_REDFORM_COM_REDEVENT_EDIT'); ?>";
 	var deletetext = "<?php echo JText::_('COM_REDFORM_COM_REDEVENT_DELETE'); ?>";
-	var textyes = "<?php echo JText::_('COM_REDFORM_YES'); ?>";
-	var textno = "<?php echo JText::_('COM_REDFORM_NO'); ?>";
+	var textyes = "<?php echo JText::_('JYES'); ?>";
+	var textno = "<?php echo JText::_('JNO'); ?>";
 	var textup = "<?php echo JText::_('COM_REDFORM_UP'); ?>";
 	var textdown = "<?php echo JText::_('COM_REDFORM_DOWN'); ?>";
 
