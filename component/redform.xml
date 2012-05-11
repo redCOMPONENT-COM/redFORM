@@ -8,19 +8,16 @@
 	<authorUrl>www.redweb.dk</authorUrl>
 	<copyright>(c) 2008 - 2011 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
-	<version>2.0 beta 1.1</version>
+	<version>2.5 beta 1.1</version>
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 	
-	<!-- Custom installer -->
-	<installfile>install.redform.php</installfile>
-	
-	<!-- Custom uninstaller -->
-	<uninstallfile>uninstall.redform.php</uninstallfile>
+	<!-- Runs on install/uninstall/update -->
+	<scriptfile>install.redform.php</scriptfile>
 	
 	<!-- SQL queries -->
 	<install>
 		<sql>
-			<file driver="mysql" charset="utf8">install.mysql.utf8.sql</file>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
 		</sql>
 	</install>
 	
@@ -29,6 +26,12 @@
 		<sql>
 		</sql>
 	</uninstall>
+	
+	<update> <!-- Runs on update; New in 1.6 -->
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
 	
 	<!-- Core files site -->
 	<files folder="site">
@@ -85,7 +88,6 @@
 	<files folder="admin">
 		<filename>changelog.txt</filename>
 		<filename>controller.php</filename>
-		<filename>install.mysql.utf8.sql</filename>
 		<filename>LICENSE.php</filename>
 		<filename>redform.php</filename>
 		<filename>config.xml</filename>
@@ -97,6 +99,7 @@
 		<folder>language</folder>
 		<folder>models</folder>
 		<folder>plugins</folder>
+		<folder>sql</folder>
 		<folder>tables</folder>
 		<folder>views</folder>
 	</files>
