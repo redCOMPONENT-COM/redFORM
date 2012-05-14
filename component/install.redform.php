@@ -24,5 +24,30 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class com_redformInstallerScript
 {
-	
+	public function postflight()
+	{				
+		/* Install plugin */
+		jimport('joomla.filesystem.file');
+		jimport('joomla.filesystem.folder');
+		JFolder::copy(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_redform'.DS.'plugins'.DS.'content_redform', JPATH_SITE.DS.'tmp'.DS.'redform_plugin', '', true);
+		JFile::move(JPATH_SITE.DS.'tmp'.DS.'redform_plugin'.DS.'redform.xm', JPATH_SITE.DS.'tmp'.DS.'redform_plugin'.DS.'redform.xml');
+		$installer = new JInstaller();
+		$installer->setAdapter('plugin');
+		if (!$installer->install(JPATH_SITE.DS.'tmp'.DS.'redform_plugin')) {
+			echo JText::_('COM_REDFORM_Plugin_install_failed') . $installer->getError().'<br />';
+		}
+		else {
+			$db = &JFactory::getDbo();
+			// autopublish the plugin
+			$query = ' UPDATE #__extensions SET enabled = 1 WHERE name = '. $db->Quote('Content - redFORM');
+			$db->setQuery($query);
+			if ($db->query()) {
+				echo JText::_('COM_REDFORM_Succesfully_installed_redform_content_plugin').'<br />';
+			}
+			else {
+				echo JText::_('COM_REDFORM_Error_publishing_redform_content_plugin').'<br />';
+			}
+			 
+		}
+	}
 }
