@@ -50,7 +50,7 @@ class RedFormCore extends JObject {
 		parent::__construct();
 		$lang =& JFactory::getLanguage();
 		$lang->load('com_redform', JPATH_SITE.DS.'components'.DS.'com_redform');
-		$lang->load('com_redform', JPATH_SITE.DS.'language', null, true);
+		$lang->load('com_redform', JPATH_SITE, null, true);
 	}
 	
 	function setFormId($id)
