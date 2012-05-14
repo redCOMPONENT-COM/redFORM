@@ -280,14 +280,7 @@ class RedFormCore extends JObject {
 			if ($multi > 1) {
 				$html .= '<fieldset><legend>'.JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $signup).'</legend>';
 			}
-				
-//			if ($answers && $multi > 1) {
-//				$html .= '<div class="confirmbox"><input type="checkbox" name="confirm[]" value="'.$answers[($signup-1)]->fields->id.'" checked="checked" />'.JText::_('COM_REDFORM_INCLUDE_REGISTRATION').'</div>';
-//			}
-//			else if ($answers) {
-//				$html .= '<input type="hidden" name="confirm[]" value="'.$answers[($signup-1)]->sid.'" />';
-//			}
-		
+						
 			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price > 0) {
 				$html .= '<div class="eventprice" price="'.$options['eventdetails']->course_price.'">'.JText::_('COM_REDFORM_Registration_price').': '.$form->currency.' '.$options['eventdetails']->course_price.'</div>';
 			}
