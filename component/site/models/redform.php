@@ -604,7 +604,7 @@ class RedformModelRedform extends JModel {
 			if (isset($options['baseprice'])) 
 			{
 				if (is_array($options['baseprice'])) {
-					$answers->initPrice($options['baseprice'][$signup-1]);
+					$answers->initPrice(isset($options['baseprice'][$signup-1]) ? $options['baseprice'][$signup-1] : 0);
 				}
 				else {
 					$answers->initPrice($options['baseprice']);
