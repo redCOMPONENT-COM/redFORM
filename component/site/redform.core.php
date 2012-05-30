@@ -1404,31 +1404,52 @@ class RedFormCore extends JObject {
 			return false;			
 		}
 		$value = $answer['value'];
-		
+				
 		$isvalid = false;
 		// then, we should get the function
 		switch ($parts[3]) 
 		{
 			case 'between':
-				$value = floatval($value);
-				$min = floatval($parts[4]);
 				if (!isset($parts[5])) {
 					RedformHelperLog::simpleLog('missing max value in between conditional recipient: '. $conditionline);					
 				}
-				$max = floatval($parts[5]);
-				$isvalid = ($value >= $min && $value <= $max ? $email : false); 
+				if (is_numeric($value))
+				{
+					$value = floatval($value);
+					$min = floatval($parts[4]);
+					$max = floatval($parts[5]);
+					$isvalid = ($value >= $min && $value <= $max ? $email : false); 
+				}
+				else 
+				{
+					$isvalid = strcasecmp($value, $parts[4]) >= 0 && strcasecmp($value, $parts[5]) <= 0;
+				}
 				break;
 				
 			case 'inferior':
-				$value = floatval($value);
-				$max = floatval($parts[4]);
-				$isvalid =  ($value <= $max ? $email : false); 
+				if (is_numeric($value))
+				{
+					$value = floatval($value);
+					$max = floatval($parts[4]);
+					$isvalid =  ($value <= $max ? $email : false); 
+				}
+				else 
+				{
+					$isvalid = strcasecmp($value, $parts[4]) <= 0;;
+				}
 				break;
 				
 			case 'superior':
-				$value = floatval($value);
-				$min = floatval($parts[4]);
-				$isvalid =  ($value >= $min ? $email : false); 
+				if (is_numeric($value))
+				{
+					$value = floatval($value);
+					$min = floatval($parts[4]);
+					$isvalid =  ($value >= $min ? $email : false); 
+				}
+				else 
+				{
+					$isvalid = strcasecmp($value, $parts[4]) >= 0;;
+				}
 				break;
 				
 			default:
