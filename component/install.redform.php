@@ -24,6 +24,44 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class com_redformInstallerScript
 {
+	/**
+	 * method to run before an install/update/uninstall method
+	 *
+	 * @return void
+	 */
+	function preflight($type, $parent) 
+	{
+		if ($type == 'update')
+		{
+			// get db version
+			$db = &JFactory::getDbo();
+			$query = $db->getQuery(true);
+			
+			$query->select('s.version_id');
+			$query->from('#__extensions AS e');
+			$query->join('INNER', '#__schemas AS s ON s.extension_id = e.extension_id');
+			$query->where('e.element = '.$db->Quote('com_redform'));
+			$db->setQuery($query);
+			$version = $db->loadResult();
+			
+			if ($version == "2.0.b.4.0") 
+			{
+				$fields = $db->getTableColumns('#__rwf_values');
+				if (!isset($fields['price'])) 
+				{
+					$query = ' ALTER TABLE #__rwf_values ADD '.$db->nameQuote('price') . ' DOUBLE NULL DEFAULT NULL ';
+					$db->setQuery($query);
+					try {
+						$db->query();
+					}	
+					catch (Exception $e) {
+						echo $e->getMessage();
+					}	
+				}
+			}
+		}
+	}
+	
 	public function postflight()
 	{				
 		/* Install plugin */
