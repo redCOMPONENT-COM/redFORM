@@ -661,6 +661,8 @@ class RedformModelRedform extends JModel {
 			$allanswers[] = $answers;
 		} /* End multi-user signup */
 		
+		$this->_answers = $allanswers;
+		
 		// save to session if specified
 		if (isset($options['savetosession'])) 
 		{
