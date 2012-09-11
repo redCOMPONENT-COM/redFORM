@@ -29,7 +29,7 @@ function CheckSubmit(form)
 	for (var j = 0 ; j < nb_active ; j++)
 	{
 		// get the input data of the form
-		var formelements = $(forms[j]).getElements('input').concat($(forms[j]).getElements('select'), $(forms[j]).getElements('textarea'));
+		var formelements = document.id(forms[j]).getElements('input').concat(document.id(forms[j]).getElements('select'), document.id(forms[j]).getElements('textarea'));
 
 		for(var i=0; i < formelements.length; i++) 
 		{
@@ -107,13 +107,13 @@ function CheckSubmit(form)
 					}
 				}
 				if (radiocheck == false) {
-					$(check_element).getParent().getParent().addClass('emptyfield');
+					document.id(check_element).getParent().getParent().addClass('emptyfield');
 					getListLabel(check_element).addClass('emptyfield');
 					radiomsg = getListLabel(check_element).get('text')+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 					if (result) result = false;
 				}
 				else {
-					$(check_element).getParent().getParent().removeClass('emptyfield');
+					document.id(check_element).getParent().getParent().removeClass('emptyfield');
 					getListLabel(check_element).removeClass('emptyfield');
 				}
 			}
@@ -130,13 +130,13 @@ function CheckSubmit(form)
 				}
 
 				if (checkboxcheck == false) {
-					$(check_element).getParent().getParent().addClass('emptyfield');
+					document.id(check_element).getParent().getParent().addClass('emptyfield');
 					getListLabel(check_element).addClass('emptyfield');
 					checkboxmsg = getListLabel(check_element).get('text')+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
 					if (result) result = false;
 				}
 				else {
-					$(check_element).getParent().getParent().removeClass('emptyfield');
+					document.id(check_element).getParent().getParent().removeClass('emptyfield');
 					getListLabel(check_element).removeClass('emptyfield');
 				}
 			}
@@ -166,7 +166,7 @@ function addClass(element, value)
 
 function CheckFill(element) 
 {
-	if (!($(element).getProperty('value'))) {
+	if (!(document.id(element).getProperty('value'))) {
 		addEmpty(element);
 		return false;
 	}
@@ -177,12 +177,12 @@ function CheckFill(element)
 }
 
 function addEmpty(element) {
-	$(element).addClass('emptyfield');
-	$(element).addClass('emptyfield');
+	document.id(element).addClass('emptyfield');
+	document.id(element).addClass('emptyfield');
 }
 
 function removeEmpty(element) {
-	$(element).removeClass('emptyfield');
+	document.id(element).removeClass('emptyfield');
 	getLabel(element).removeClass('emptyfield');
 }
 
@@ -225,21 +225,21 @@ function AddUser()
 	}
 	else {
 		document.getElements("[id^='formfield']").each(function(el) {
-			$(el).setStyle('display', 'none');
+			document.id(el).setStyle('display', 'none');
 		});
-		$("formfield"+curform).setStyle('display', 'block');
+		document.id("formfield"+curform).setStyle('display', 'block');
 		new Element('a', {'href' : '#'}).setText('# '+(curform+1)).addEvent('click', function(ev) {
 			ev.preventDefault();
 			ShowSingleForm('div#formfield'+(curform+1));
-		}).injectInside($("signedusers"));
-		new Element('br').injectInside($("signedusers"));
+		}).injectInside(document.id("signedusers"));
+		new Element('br').injectInside(document.id("signedusers"));
 		document.getElement("input[name='curform']").setProperty('value', curform+1);
 	}
 }
 
 function ShowSingleForm(showform) {
 	document.getElements("[id^='formfield']").each(function(el) {
-		$(el).setStyle('display', 'none');
+		document.id(el).setStyle('display', 'none');
 	});
 	document.getElement(showform).setStyle('display', 'block');
 }
@@ -248,11 +248,11 @@ function ShowAllUsers(showhide) {
 	var curform = parseInt(document.getElement("input[name='curform']").getProperty('value'));
 	document.getElements("[id^='formfield']").each(function(el, i) {
 		if (i < curform) {
-			if (showhide) $(el).setStyle('display', 'block');
-			else if (!showhide) $(el).setStyle('display', 'none');
+			if (showhide) document.id(el).setStyle('display', 'block');
+			else if (!showhide) document.id(el).setStyle('display', 'none');
 		}
 		else {
-			$(el).setStyle('display', 'none');
+			document.id(el).setStyle('display', 'none');
 		}
 	});
 }

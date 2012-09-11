@@ -20,7 +20,7 @@ window.addEvent('domready', function(){
 function updatePrice()
 {
 	// get the instance of redform corresponding to the field that triggered the 'change'
-	var instance = $(this.form);
+	var instance = document.id(this.form);
 	
 	var price = 0.0;
 	var active = parseInt(instance.getElement("input[name='curform']").getProperty('value'));
@@ -29,42 +29,42 @@ function updatePrice()
 	{
 		var signup = instance.getElement("#formfield"+i);
 		signup.getElements("input.rfprice").each(function(element) {
-			var p = $(element).getProperty('value');
+			var p = document.id(element).getProperty('value');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 		
 		signup.getElements("[selected]").each(function(element) {
-			var p = $(element).getProperty('price');
+			var p = document.id(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 
 		signup.getElements("[checked]").each(function(element) {
-			var p = $(element).getProperty('price');
+			var p = document.id(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 
 		signup.getElements(".eventprice").each(function(element) {
-			var p = $(element).getProperty('price');
+			var p = document.id(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 
 		signup.getElements(".fixedprice").each(function(element) {
-			var p = $(element).getProperty('price');
+			var p = document.id(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 
 		signup.getElements(".bookingprice").each(function(element) {
-			var p = $(element).getProperty('price');
+			var p = document.id(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}

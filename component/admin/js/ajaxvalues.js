@@ -35,8 +35,8 @@ function newvalue()
 // update values
 function update_values()
 {
-	var type = $('fieldtype').value;
-	var id   = $('fieldid').value;
+	var type = document.id('fieldtype').value;
+	var id   = document.id('fieldid').value;
 	
 	if (!parseInt(id)) {
 		return false;
@@ -51,10 +51,10 @@ function update_values()
       || type == 'recipients'
       //|| type == 'email'
 	) {
-		$('field-options').setStyle('display', 'block');
+		document.id('field-options').setStyle('display', 'block');
 	}
 	else {
-		$('field-options').setStyle('display', 'none');
+		document.id('field-options').setStyle('display', 'none');
 	}
 	var url = 'index.php?option=com_redform&view=field&format=raw&cid[]='+id+'&layout=values';
 	//alert(url);
@@ -65,12 +65,12 @@ function update_values()
 		onSuccess: function(response)
 			{
 				//alert('yes');
-				var rows = $('values-rows');
+				var rows = document.id('values-rows');
 				
 				var values = eval('(' + response + ')');
 				values.each(function(el){
 					if(document.id('value-'+el.id) != null){
-						$('value-'+el.id).dispose();
+						document.id('value-'+el.id).dispose();
 					}
 					newRow(el).injectInside(rows);
 					
@@ -91,7 +91,7 @@ function ajaxgetandupdate(url)
 	test = getUrlVars(url);
 	if((document.id('value-'+test['cid[]']) != null) && test['task'] == "ajaxremove")
 	{
-		$('value-'+test['cid[]']).dispose();
+		document.id('value-'+test['cid[]']).dispose();
 	};
 	var theAjax = new Request({
 		url:		url,
@@ -106,7 +106,7 @@ function ajaxgetandupdate(url)
 
 function newRow(value) 
 {
-	var fieldid   = $('fieldid').value;
+	var fieldid   = document.id('fieldid').value;
 
 	var tr = new Element('tr', {'id': 'value-'+value.id, 'class': 'value-details'});
 	// value

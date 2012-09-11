@@ -24,13 +24,13 @@ JHTML::_('behavior.tooltip');
 <script type="text/javascript">
 
 	window.addEvent('domready', function(){
-		$('fieldtype').addEvent('click', function(){
-			if ($('form_id').value == 0) {
+		document.id('fieldtype').addEvent('click', function(){
+			if (document.id('form_id').value == 0) {
 				alert("<?php echo JText::_('COM_REDFORM_FIELD_JS_PLEASE_SELECT_FORM_FIRST'); ?>");
 			}
 		});
 		
-		$('fieldtype').addEvent('change', function(){
+		document.id('fieldtype').addEvent('change', function(){
 			if (confirm("<?php echo JText::_('COM_REDFORM_FIELD_JS_CONFIRM_CHANGE_TYPE'); ?>")) {
 				submitbutton('apply');
 			}
@@ -58,7 +58,7 @@ JHTML::_('behavior.tooltip');
 		var newrow = $$('.listname-row')[0].clone();
 		newrow.getElement('input[name^=listname]').value = '';
 		newrow.getElement('.listname-delete').addEvent('click', removeMailingListField);
-		newrow.injectInside($('mailinglist-table'));
+		newrow.injectInside(document.id('mailinglist-table'));
 	}
 
 	function removeMailingListField()
