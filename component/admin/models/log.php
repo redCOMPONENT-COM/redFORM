@@ -55,7 +55,7 @@ class RedFormModelLog extends JModel
 		$app = & JFactory::getApplication();
 
 		$contents = '';
-		$file = $app->getCfg('log_path').DS.'com_redform.log';
+		$file = $app->getCfg('log_path').DS.'com_redform.log.php';
 		if (file_exists($file)) {
 			$handle = fopen($file, "r");
 			if (!$handle) {
@@ -78,4 +78,3 @@ class RedFormModelLog extends JModel
 		return $contents;
 	}
 }
-?>

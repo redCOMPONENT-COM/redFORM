@@ -26,33 +26,30 @@ defined('_JEXEC') or die('Restricted access');
  */
 class RedformHelperLog
 {
-    /**
-     * Simple log
-     * @param string $comment  The comment to log
-     * @param int $userId      An optional user ID
-     */
-    function simpleLog($comment, $userId = 0)
-    {
-        // Include the library dependancies
-        jimport('joomla.error.log');
-        $options = array(
-            'format' => "{DATE}\t{TIME}\t{USER_ID}\t{COMMENT}"
-        );
-        // Create the instance of the log file in case we use it later
-        $log = &JLog::getInstance('com_redform.log', $options);
-        $log->addEntry(array('comment' => $comment, 'user_id' => $userId));
-    }
-    
+	/**
+	 * Simple log
+	 * @param string $comment  The comment to log
+	 * @param int $userId      An optional user ID
+	 */
+	function simpleLog($comment, $userId = 0)
+	{
+		JLog::addLogger(
+			array('text_file' => 'com_redform.log.php'),
+			JLog::DEBUG,
+			'com_redform'		
+		);
+		JLog::add($comment, JLog::DEBUG, 'com_redform');
+	}
 
-    function clear()
-    {
-      $app = & JFactory::getApplication();
-      
-      $file = $app->getCfg('log_path').DS.'com_redform.log';
-      if (file_exists($file)) {
-        unlink($file);
-      }
-      return true;
-    }
+
+	function clear()
+	{
+		$app = & JFactory::getApplication();
+
+		$file = $app->getCfg('log_path').DS.'com_redform.log.php';
+		if (file_exists($file)) {
+			unlink($file);
+		}
+		return true;
+	}
 }
-?>
