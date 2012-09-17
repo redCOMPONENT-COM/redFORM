@@ -28,7 +28,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport('joomla.event.plugin');
 
 // load language file for frontend
-JPlugin::loadLanguage( 'plg_redform_payment_quickpay', JPATH_ADMINISTRATOR );
+//JPlugin::loadLanguage( 'plg_redform_payment_quickpay', JPATH_ADMINISTRATOR );
 
 class plgRedform_PaymentQuickpay extends JPlugin {
  	

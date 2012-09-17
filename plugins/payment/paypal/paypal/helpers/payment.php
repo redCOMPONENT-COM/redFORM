@@ -18,8 +18,8 @@ class PaymentPaypal {
 	 * @param object $request
 	 */
 	function process($request, $return_url = null, $cancel_url = null)
-	{
-		$app = &JFactory::getApplication();
+	{		
+		$app = JFactory::getApplication();
 		$submit_key = $request->key;
 		
 		if (empty($return_url)) {
@@ -95,7 +95,7 @@ class PaymentPaypal {
   function notify()
   {
     $mainframe = JFactory::getApplication();
-    $db = & JFactory::getDBO();
+    $db = JFactory::getDBO();
     
     				
     $post = JRequest::get( 'post' );
@@ -112,20 +112,7 @@ class PaymentPaypal {
       $req .= "&$key=$value";
       $data[] = "$key=$value";
     }
-
-
-    // post back to PayPal system to validate
-    $header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
-    $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-    $header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-		if ($this->params->get('paypal_sandbox', 1) == 1) {
-			$paypalurl = "www.sandbox.paypal.com";
-		}
-		else {
-		  $paypalurl = "www.paypal.com";	
-		}
-		$fp = fsockopen ($paypalurl, 80, $errno, $errstr, 30); 
-
+    
     // assign posted variables to local variables
     $item_name = $post['item_name'];
     $item_number = $post['item_number'];
@@ -135,50 +122,66 @@ class PaymentPaypal {
     $txn_id = $post['txn_id'];
     $receiver_email = $post['receiver_email'];
     $payer_email = $post['payer_email'];
+    
+    // post back to PayPal system to validate
+		if ($this->params->get('paypal_sandbox', 1) == 1) {
+			$paypalurl = "https://www.sandbox.paypal.com";
+		}
+		else {
+		  $paypalurl = "https://www.paypal.com";
+		}    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $paypalurl.'/cgi-bin/webscr');
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Host: www.paypal.com'));
+    // In wamp like environment where the root authority certificate doesn't comes in the bundle, you need
+    // to download 'cacert.pem' from "http://curl.haxx.se/docs/caextract.html" and set the directory path
+    // of the certificate as shown below.
+    // curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
+    $res = curl_exec($ch);
+    curl_close($ch);
+    
+    //RedformHelperLog::simpleLog('PAYPAL curl result: '.$res);
+    
+    if (strcmp ($res, "VERIFIED") == 0) 
+    {
+    	// check the payment_status is Completed
+    	// check that txn_id has not been previously processed
+    	// check that receiver_email is your Primary PayPal email
+    	// check that payment_amount/payment_currency are correct
 
-    $check = '';
-          
-    if (!$fp) {
-      // HTTP ERROR
-    	RedformHelperLog::simpleLog('PAYPAL NOTIFICATION HTTP ERROR'. ' for ' . $submit_key);
-    } else {
-      fputs ($fp, $header . $req);
-      while (!feof($fp)) {
-        $res = fgets ($fp, 1024);
-        //echo "$res";
-        $status = 'ok';
-        if (strcmp ($res, "VERIFIED") == 0) {
-          // check the payment_status is Completed
-          // check that txn_id has not been previously processed
-          // check that receiver_email is your Primary PayPal email
-          // check that payment_amount/payment_currency are correct
-          
-					$query = ' SELECT f.currency, SUM(s.price) AS price '
-					       . ' FROM #__rwf_submitters AS s '
-					       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-					       . ' WHERE s.submit_key = '. $db->Quote($submit_key)
-					       . ' GROUP BY s.submit_key'
-					            ;
-					$db->setQuery($query);
-					$res = $db->loadObject();
-		       	
-    			if ($payment_amount != $res->price) {
-    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG AMOUNT('. $res->price.') - ' . $submit_key);
-    			}      
-    			else if ($payment_currency != $res->currency) {
-    				RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY ('. $res->currency.') - ' . $submit_key);
-    			}    			
-    			else if (strcasecmp($payment_status, 'completed') == 0) {
-    				$paid = 1;
-    			}
-        }
-        else if (strcmp ($res, "INVALID") == 0) {
-          // log for manual investigation
-    			RedformHelperLog::simpleLog('PAYPAL NOTIFICATION INVALID IPN'. ' - ' . $submit_key);
-        }
-      }
-      fclose ($fp);
+    	$query = ' SELECT f.currency, SUM(s.price) AS price '
+    	. ' FROM #__rwf_submitters AS s '
+    	. ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
+    	. ' WHERE s.submit_key = '. $db->Quote($submit_key)
+    	. ' GROUP BY s.submit_key'
+    	;
+    	$db->setQuery($query);
+    	$res = $db->loadObject();
+
+    	if ($payment_amount != $res->price) {
+    		RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG AMOUNT('. $res->price.') - ' . $submit_key);
+    	}
+    	else if ($payment_currency != $res->currency) {
+    		RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY ('. $res->currency.') - ' . $submit_key);
+    	}
+    	else if (strcasecmp($payment_status, 'completed') == 0) {
+    		$paid = 1;
+    	}    	
+    }    
+    else if (strcmp ($res, "INVALID") == 0) 
+    {
+    	// log for manual investigation
+			RedformHelperLog::simpleLog('PAYPAL NOTIFICATION INVALID IPN'. ' - ' . $submit_key);
     }
+    else {
+    	RedformHelperLog::simpleLog('PAYPAL NOTIFICATION HTTP ERROR'. ' for ' . $submit_key);    	
+    }
+        
     // log ipn
     $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
 				    . ' VALUES (NOW(), ' . $db->Quote(implode("\n", $data))
