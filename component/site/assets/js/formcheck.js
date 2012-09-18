@@ -228,7 +228,7 @@ function AddUser()
 			document.id(el).setStyle('display', 'none');
 		});
 		document.id("formfield"+curform).setStyle('display', 'block');
-		new Element('a', {'href' : '#'}).setText('# '+(curform+1)).addEvent('click', function(ev) {
+		new Element('a', {'href' : '#'}).set('text', '# '+(curform+1)).addEvent('click', function(ev) {
 			ev.preventDefault();
 			ShowSingleForm('div#formfield'+(curform+1));
 		}).injectInside(document.id("signedusers"));

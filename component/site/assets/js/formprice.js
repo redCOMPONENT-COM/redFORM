@@ -79,9 +79,9 @@ function updatePrice()
 		new Element('div', {id : 'totalprice', 'class' : "fieldline"})
 		    .setHTML('<div class="label">'+totalpricestr+'</div><div class="field">'+currency+' <span></span></div>')
 		    .injectAfter(instance.getElements('.redform-form').getLast());
-		instance.getElement("#totalprice span").setText(Math.round(price*100)/100);
+		instance.getElement("#totalprice span").set('text', Math.round(price*100)/100);
 	}
 	else if (instance.getElement("#totalprice")) {
-		instance.getElement("#totalprice span").setText(Math.round(price*100)/100);
+		instance.getElement("#totalprice span").set('text', Math.round(price*100)/100);
 	}
 }
