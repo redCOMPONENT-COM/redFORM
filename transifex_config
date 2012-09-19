@@ -35,6 +35,18 @@ source_file = plugins/captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha
 source_lang = en-GB
 type = INI
 
+[redFORM.redform25-plg_redform_captcha_simplemath-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_captcha_simplemath.ini
+source_file = plugins/captcha/simplemath/language/en-GB/en-GB.plg_redform_captcha_simplemath.ini
+source_lang = en-GB
+type = INI
+
+[redFORM.redform25-plg_redform_captcha_simplemath-sys-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_captcha_simplemath.sys.ini
+source_file = plugins/captcha/simplemath/language/en-GB/en-GB.plg_redform_captcha_simplemath.sys.ini
+source_lang = en-GB
+type = INI
+
 [redFORM.redform25-plg_redform_mailing_jnews-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_jnews.ini
 source_file = plugins/mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.ini
