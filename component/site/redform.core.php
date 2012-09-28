@@ -236,6 +236,10 @@ class RedFormCore extends JObject {
 			$html .= '<div id="needlogin">'.JText::_('COM_REDFORM_LOGIN_BEFORE_MULTI_SIGNUP').'</div>';
 			$multi = 1;
 		}
+		// limit to max 30 sumbissions at the same time...
+		if ($multi > 30) {
+			$multi = 30;
+		}
 			
 		if ($multi > 1)
 		{
