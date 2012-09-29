@@ -156,6 +156,9 @@ class rfanswers
       case 'text':
         $answer = $postedvalue['text'][0];
         break;
+      case 'hidden':
+        $answer = $postedvalue['hidden'][0];
+        break;
       case 'select':
         $answer = $postedvalue['select'][0];
       	foreach ($field->values as $v)

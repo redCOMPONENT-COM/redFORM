@@ -38,7 +38,7 @@ class RedformField {
 	
 	var $options = null;
 	
-	function RedformField($field_id, $fieldtype, $name, $tooltip = null, $validate = false, $unique = false)
+	public function __construct($field_id, $fieldtype, $name, $tooltip = null, $validate = false, $unique = false)
 	{
 		$this->field_id  = $field_id;
 		$this->fieldtype = $fieldtype;
@@ -49,7 +49,14 @@ class RedformField {
 		return true;
 	}
 	
-	function addOption($value, $text)
+	/**
+	 * Adds an option to field (checkboxes, lists, etc...)
+	 * 
+	 * @param string $value
+	 * @param string $text
+	 * @return boolean
+	 */
+	public function addOption($value, $text)
 	{
 		$option = new stdclass();
 		$option->value = $value;
@@ -63,8 +70,15 @@ class RedformField {
 		return true;
 	}
 	
-	
-	function getElement($value = null, $multiple_id = 0, $attributes = null)
+	/**
+	 * return the html code for specified field
+	 * 
+	 * @param string $value current value of the field
+	 * @param int $multiple_id the id of the form
+	 * @param mixed $attributes not used... 
+	 * @return string html
+	 */
+	public function getElement($value = null, $multiple_id = 0, $attributes = null)
 	{
 		$element = '';
 		switch (strtolower($this->fieldtype))
@@ -76,6 +90,13 @@ class RedformField {
 				         . ' id="rdf_field'.$this->field_id.'['.$multiple_id.']"'
 				         . ' value="'.$value.'"'
 				         . ($this->validate ? ' class="required"' : '')
+				         .'/>';
+				break;
+			case 'hidden':
+				$element = '<input type="hidden"'
+				         . ' name="rdf_field'.$this->field_id.'['.$multiple_id.']"'
+				         . ' id="rdf_field'.$this->field_id.'['.$multiple_id.']"'
+				         . ' value="'.$value.'"'
 				         .'/>';
 				break;
 			case 'username':

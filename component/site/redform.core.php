@@ -309,7 +309,10 @@ class RedFormCore extends JObject {
 				if (!($app->isAdmin() || $field->published)) { // only display unpublished fields in backend form
 					continue;
 				}
-				$html .= '<div id="fieldline_'.$field->id.'" class="fieldline type-'.$field->fieldtype.$field->parameters->get('class','').'">';
+				
+				if ($field->fieldtype != 'hidden') {
+					$html .= '<div id="fieldline_'.$field->id.'" class="fieldline type-'.$field->fieldtype.$field->parameters->get('class','').'">';
+				}
 
 				$values = $model_redform->getFormValues($field->id);
 
@@ -324,7 +327,12 @@ class RedFormCore extends JObject {
 				}
 					
 				$cleanfield = 'field_'. $field->id;
-				$element = "<div class=\"field\">";
+				if ($field->fieldtype == 'hidden') {
+					$element = "";
+				}
+				else {
+					$element = "<div class=\"field\">";
+				}
 				
 				switch ($field->fieldtype)
 				{
@@ -553,6 +561,49 @@ class RedFormCore extends JObject {
 						}
 						else {
 							$element .= $field->default;
+						}
+						$element .= "\" />\n";
+						break;
+	
+					case 'hidden':
+						$label = '';
+						$element .= "<input class=\"".$field->parameters->get('class','');
+						if ($field->validate) $element .= " required";
+						$element .= "\" type=\"hidden\" name=\"field".$field->id.'.'.$signup."[hidden][]\"";
+						$element .= ' id="field'.$field->id.'" ';
+						$element .= ' value="';
+						if ($answers)
+						{
+							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
+								$element .= $answers[($signup-1)]->fields->$cleanfield;
+							}
+						}
+						else if ($user->get($field->redmember_field)) {
+							$element .= $user->get($field->redmember_field);
+						}
+						else 
+						{
+							switch ($field->parameters->get('valuemethod', 'constant'))
+							{
+								case 'jrequest':
+									$varname= $field->parameters->get('jrequestvar');
+									if (!$varname) {
+										$app->enqueueMessage(JText::_('COM_REDFORM_ERROR_HIDDEN_FIELD_VARNAME_NOT_DEFINED'), 'warning');
+									}
+									else {
+										$element .= JRequest::getVar($varname);
+									}
+									break;
+									
+								case 'phpeval':
+									$code= $field->parameters->get('phpeval');
+									$element .= eval($code);
+									break;
+									
+								case 'constant':
+								default:
+									$element .= $field->default;									
+							}							
 						}
 						$element .= "\" />\n";
 						break;
@@ -800,24 +851,31 @@ class RedFormCore extends JObject {
 						break;
 				}
 				
-				$html .= $label.$element;
-				$html .= '</div>'; // fieldtype div
-				
-				if ($field->validate || strlen($field->tooltip))
+				if ($field->fieldtype == 'hidden') 
 				{
-					$html .= '<div class="fieldinfo">';
-					if ($field->validate) {
-						$img = JHTML::image(JURI::root().'components/com_redform/assets/images/warning.png', JText::_('COM_REDFORM_Required'));
-						$html .= ' <span class="editlinktip hasTipField" title="'.JText::_('COM_REDFORM_Required').'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+					$html .= $element;				
+				}
+				else 
+				{
+					$html .= $label.$element;
+					$html .= '</div>'; // fieldtype div
+				
+					if ($field->validate || strlen($field->tooltip))
+					{
+						$html .= '<div class="fieldinfo">';
+						if ($field->validate) {
+							$img = JHTML::image(JURI::root().'components/com_redform/assets/images/warning.png', JText::_('COM_REDFORM_Required'));
+							$html .= ' <span class="editlinktip hasTipField" title="'.JText::_('COM_REDFORM_Required').'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+						}
+						if (strlen($field->tooltip) > 0) {
+							$img = JHTML::image(JURI::root().'components/com_redform/assets/images/info.png', JText::_('COM_REDFORM_ToolTip'));
+							$html .= ' <span class="editlinktip hasTipField" title="'.htmlspecialchars($field->field).'::'.htmlspecialchars($field->tooltip).'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+						}
+						$html .= '</div>';
 					}
-					if (strlen($field->tooltip) > 0) {
-						$img = JHTML::image(JURI::root().'components/com_redform/assets/images/info.png', JText::_('COM_REDFORM_ToolTip'));
-						$html .= ' <span class="editlinktip hasTipField" title="'.htmlspecialchars($field->field).'::'.htmlspecialchars($field->tooltip).'" style="text-decoration: none; color: #333;">'. $img .'</span>';
-					}
-					$html .= '</div>';
+					$html .= '</div>'; // fieldline_ div
 				}
 	
-				$html .= '</div>'; // fieldline_ div
 			}
 			if ($multi > 1) {
 				$html .= '</fieldset>';
