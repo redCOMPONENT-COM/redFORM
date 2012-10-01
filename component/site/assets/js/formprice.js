@@ -35,14 +35,14 @@ function updatePrice()
 			}
 		});
 		
-		signup.getElements("[selected]").each(function(element) {
+		signup.getElements(":selected").each(function(element) {
 			var p = document.id(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
 			}
 		});
 
-		signup.getElements("[checked]").each(function(element) {
+		signup.getElements(":checked").each(function(element) {
 			var p = document.id(element).getProperty('price');
 			if (p) {
 				price += parseFloat(p);
