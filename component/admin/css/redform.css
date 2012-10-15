@@ -80,7 +80,7 @@ table.admintable label.radiobtn
 .upactive{
 	height:13px;
 	width:13px;
-	background-image: url(http://redmembertest.casper.web12.redhost.dk/administrator/templates/bluestork/images/admin/uparrow.png);
+	background-image: url(../../../templates/bluestork/images/admin/uparrow.png);
 	background-repeat:no;
 	float: left;
 	cursor:pointer;
@@ -88,7 +88,7 @@ table.admintable label.radiobtn
 .downactive{
 	height:13px;
 	width:13px;
-	background-image: url(http://redmembertest.casper.web12.redhost.dk/administrator/templates/bluestork/images/admin/downarrow.png);
+	background-image: url(../../../templates/bluestork/images/admin/downarrow.png);
 	background-repeat:no;
 	float: left;
 	cursor:pointer;

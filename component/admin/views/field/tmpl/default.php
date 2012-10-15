@@ -266,10 +266,6 @@ JHTML::_('behavior.tooltip');
 			</tbody>
 		
 			<tbody id="values-rows">
-				<tr>
-					<td colspan="7">
-					</td>
-				</tr>
 			</tbody>
 		</table>
 				

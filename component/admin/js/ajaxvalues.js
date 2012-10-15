@@ -86,7 +86,6 @@ function update_values()
 
 function ajaxgetandupdate(url)
 {
-	var postStr  = '';
 	var test = '';
 	test = getUrlVars(url);
 	if((document.id('value-'+test['cid[]']) != null) && test['task'] == "ajaxremove")
@@ -100,7 +99,7 @@ function ajaxgetandupdate(url)
 			{
 				update_values();
 			}
-		})
+		});
 	theAjax.send();
 }
 
@@ -127,13 +126,11 @@ function newRow(value)
 	var tdlink = new Element('td').injectInside(tr);
 	var upurl  = 'index.php?option=com_redform&controller=values&task=ajaxorderup&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
 	var downurl = 'index.php?option=com_redform&controller=values&task=ajaxorderdown&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
-	var classname = "upactive";
-	new Element('div', { 'alt': textup, 'class': classname , events: {click: function(){ajaxgetandupdate(upurl);}}})
+	new Element('div', { 'alt': textup, 'class': "upactive" , events: {click: function(){ajaxgetandupdate(upurl);}}})
 		.injectInside(tdlink).addEvent('click', function(e) {
 			ajaxgetandupdate(upurl);
 		});
-	var classname = "downactive";
-	new Element('div', { 'alt': textdown, 'class': classname , events: {click: function(){ajaxgetandupdate(downurl);}}})
+	new Element('div', { 'alt': textdown, 'class': "downactive" , events: {click: function(){ajaxgetandupdate(downurl);}}})
 		.injectInside(tdlink).addEvent('click', function(e) {
 			ajaxgetandupdate(downurl);
 		});
