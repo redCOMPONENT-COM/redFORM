@@ -24,6 +24,7 @@
 	<!-- Uninstall SQL queries -->
 	<uninstall>
 		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
 		</sql>
 	</uninstall>
 	
