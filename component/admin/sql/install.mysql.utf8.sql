@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
   `field_id` int(11) default NULL,
   `ordering` int(11) NOT NULL default '0',
+  `price` double NULL DEFAULT NULL,
   PRIMARY KEY  (`id`),
   KEY `field_id` (`field_id`)
 ) COMMENT='Answers for redFORM';

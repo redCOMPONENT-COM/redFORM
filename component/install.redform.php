@@ -44,7 +44,7 @@ class com_redformInstallerScript
 			$db->setQuery($query);
 			$version = $db->loadResult();
 			
-			if ($version == "2.0.b.4.0") 
+			if (version_compare("2.0.b.5.0", $version)) 
 			{
 				$fields = $db->getTableColumns('#__rwf_values');
 				if (!isset($fields['price'])) 
