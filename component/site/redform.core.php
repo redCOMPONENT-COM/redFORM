@@ -110,7 +110,7 @@ class RedFormCore extends JObject {
 		
 		$form   = $model_redform->getForm();
 		
-		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
+		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" class="'.$form->classname.'" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
 		$html .= $this->getFormFields($form_id, $submit_key, $multiple, $options);
 								
 		/* Get the user details form */
