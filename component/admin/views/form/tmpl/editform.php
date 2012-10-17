@@ -321,6 +321,37 @@ $editor =& JFactory::getEditor();
 	</table>
 	<?php
 	echo $pane->endPanel();
+	echo $pane->startPanel( JText::_('COM_REDFORM_EDIT_FORM_TAB_ADVANCED'), 'advanced_tab' );
+	$k = 0;
+	?>
+	<table class="adminform">
+		<tr class="row<?php echo $k = 1 - $k; ?>">
+			<td width="25%" valign="top" align="right">
+				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_EDIT_FORM_SUBMISSIONCHECK_TIP');?>"><?php echo JText::_('COM_REDFORM_EDIT_FORM_SUBMISSIONCHECK_LABEL'); ?></span>
+			</td>
+			<td>
+				<textarea id="submissioncheck" 
+				          name="submissioncheck" 
+				          cols="80" rows="20"><?php 
+				          echo $this->row->submissioncheck; 
+				          ?></textarea>
+			</td>
+		</tr>
+		<tr class="row<?php echo $k = 1 - $k; ?>">
+			<td width="25%" valign="top" align="right">
+				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_EDIT_FORM_CUSTOMFORMCONTENT_TIP');?>"><?php echo JText::_('COM_REDFORM_EDIT_FORM_CUSTOMFORMCONTENT_LABEL'); ?></span>
+			</td>
+			<td>
+				<textarea id="customformcontent" 
+				          name="customformcontent" 
+				          cols="80" rows="20"><?php 
+				          echo $this->row->customformcontent; 
+				          ?></textarea>
+			</td>
+		</tr>
+	</table>
+	<?php
+	echo $pane->endPanel();
 	echo $pane->endPane();
 	?>
   <?php echo JHTML::_( 'form.token' ); ?>

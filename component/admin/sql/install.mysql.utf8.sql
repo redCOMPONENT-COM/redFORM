@@ -62,6 +62,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `submitterpaymentnotificationsubject` text DEFAULT NULL,
   `submitterpaymentnotificationbody` text DEFAULT NULL,
   `cond_recipients` TEXT NULL DEFAULT NULL,
+  `submissioncheck` TEXT NULL,
+  `customformcontent` TEXT NULL,
   PRIMARY KEY  (`id`),
   KEY `vmproductid` (`vmproductid`)
 ) COMMENT='Forms for redFORM';
