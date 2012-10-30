@@ -62,7 +62,7 @@ class plgRedform_mailingPhplist extends JPlugin {
  			require_once('phplist'.DS.'errorhandler.php');
 
  			/* Get the PHPList path configuration */
- 			PhpListUser::$PHPListPath = JPATH_SITE.DS.$configuration['phplist_path']->value;
+ 			PhpListUser::$PHPListPath = JPATH_SITE.DS.$path;
 
  			$user = new PhpListUser();
  			$user->set_email($submitter_email);
