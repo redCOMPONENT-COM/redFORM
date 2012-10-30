@@ -53,7 +53,7 @@ class RedFormCore extends JObject {
 		$lang->load('com_redform', JPATH_SITE, null, true);
 	}
 	
-	function setFormId($id)
+	public function setFormId($id)
 	{
 		if ($this->_form_id !== $id) {
 			$this->_form_id = intval($id);
@@ -89,22 +89,18 @@ class RedFormCore extends JObject {
 	 */
 	function displayForm($form_id, $reference = null, $multiple = 1, $options = array())
 	{
+		$this->setFormId($form_id);
 		$uri 		= & JFactory::getURI();
-		if (!empty($reference)) 
-		{
-			$answers    = $this->getAnswers($reference);
-			if ($answers)	{
-				$submit_key = $answers[0]->submit_key;
-			}
-			else {
-				return false;
-			}
+		// was this form already submitted before (and there was an error for example, or editing)
+		$answers    = $this->getAnswers($reference);
+		if ($answers && $reference)	{
+			$submit_key = $answers[0]->submit_key;
 		}
 		else {
 			$submit_key = null;
 			$answers = null;
 		}
-		
+				
 		$model_redform = new RedformModelRedform();
 		$model_redform->setFormId($form_id);
 		
@@ -156,21 +152,16 @@ class RedFormCore extends JObject {
 		$document  = &JFactory::getDocument();
 		$app       = &Jfactory::getApplication();
 		
-		if (!empty($reference)) 
-		{
-			$answers    = $this->getAnswers($reference);
-			if ($answers)	{
-				$submit_key = $answers[0]->submit_key;
-			}
-			else {
-				return false;
-			}
+		
+		// was this form already submitted before (and there was an error for example, or editing)
+		$answers    = $this->getAnswers($reference);
+		if ($answers && $reference)	{
+			$submit_key = $answers[0]->submit_key;
 		}
 		else {
 			$submit_key = null;
-			$answers = null;
 		}
-		
+				
 		$model_redform = new RedformModelRedform();
 		$model_redform->setFormId($form_id);
 		
@@ -272,7 +263,7 @@ class RedFormCore extends JObject {
 		/* Loop through here for as many forms there are */
 		for ($signup = 1; $signup <= $multi; $signup++)
 		{
-			if ($answers) {
+			if ($answers && $answers[($signup-1)]->sid) {
 				$submitter_id = $answers[($signup-1)]->sid;
 				$html .= '<input type="hidden" name="submitter_id'.$signup.'" value="'.$submitter_id.'" />';	
 			}
@@ -1061,40 +1052,54 @@ class RedFormCore extends JObject {
 	 */
 	function getAnswers($reference)
 	{
-		if (is_array($reference)) // sids
-		{	
-			$this->setSids($reference);
-		}
-		else
+		if (!$this->_answers)
 		{
-			$this->setSubmitKey($reference);
+			$app = JFactory::getApplication();
+			if (is_array($reference)) // sids
+			{	
+				$this->setSids($reference);
+			}
+			else
+			{
+				$this->setSubmitKey($reference);
+			}
+			
+			if (is_array($reference)) // sids
+			{								
+				$model_redform = new RedformModelRedform();			
+				$answers = $model_redform->getSidsAnswers($reference);
+				$submit_key = $this->getSidSubmitKey(reset($reference));
+			}
+			else if (!empty($reference)) // submit_key
+			{
+				$submit_key = $reference;
+				$answers = $this->getSubmitKeyAnswers($submit_key);
+			}
+			else 
+			{
+				$submit_key = null; 
+				// look for submit data in session
+				$answers = $app->getUserState('formdata'.$this->_form_id);
+				// delete session data
+				$app->setUserState('formdata'.$this->_form_id, null);
+			}
+			
+			if (!$answers) {
+				return false;
+			}
+			
+			$results = array();
+			foreach ($answers as $a)
+			{
+				$result = new formanswers();
+				$result->sid        = (isset($a->sid) ? $a->sid : null);
+				$result->submit_key = $submit_key;
+				$result->fields     = $a;
+				$results[] = $result;
+			}
+			$this->_answers = $results;
 		}
-		
-		if (is_array($reference)) // sids
-		{								
-			$model_redform = new RedformModelRedform();			
-			$answers = $model_redform->getSidsAnswers($reference);
-			$submit_key = $this->getSidSubmitKey(reset($reference));
-		}
-		else if (!empty($reference)) // submit_key
-		{
-			$submit_key = $reference;
-			$answers = $this->getSubmitKeyAnswers($submit_key);
-		}
-		else {
-			return false;
-		}
-		
-		$results = array();
-		foreach ($answers as $a)
-		{
-			$result = new formanswers();
-			$result->sid        = (isset($a->sid) ? $a->sid : null);
-			$result->submit_key = $submit_key;
-			$result->fields     = $a;
-			$results[] = $result;
-		}
-		return $results;
+		return $this->_answers;
 	}		
 	
 	function getFields($form_id= null)

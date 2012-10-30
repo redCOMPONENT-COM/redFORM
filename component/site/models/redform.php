@@ -569,20 +569,7 @@ class RedformModelRedform extends JModel {
 		
 		/* Get the form details */
 		$form = $this->getForm(JRequest::getInt('form_id'));
-		
-		if ($form->captchaactive && $captcha_allowed) 
-		{
-			JPluginHelper::importPlugin( 'redform_captcha' );
-			$res = true;
-			$dispatcher =& JDispatcher::getInstance();
-			$results = $dispatcher->trigger( 'onCheckCaptcha', array( &$res ) );
-			
-			if (count($results) && $res == false) {
-				$this->setError(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
-	      return false;				
-			}
-		}
-			
+					
 		/* Load the fields */
 		$fieldlist = $this->getfields($form->id);
 			
@@ -640,30 +627,35 @@ class RedformModelRedform extends JModel {
 					$answers->addPostAnswer($field, $postvalues['field'.$key]);
 				}
 			}
-			
-			if (!isset($options['savetosession']))
-			{
-      	$res = $answers->savedata($postvalues);
-	      if (!$res) {
-	      	$this->setError(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED'));
-	      	return false;
-	      }
-	      else {
-	      	$result->posts[] = array('sid' => $res);
-	      }
-	      
-				if ($answers->isNew())
-				{
-					$this->updateMailingList($answers);
-				}
-			}			
 
 			$allanswers[] = $answers;
 		} /* End multi-user signup */
 		
 		$this->_answers = $allanswers;
+				
+		// save to session in case we need to display form again
+		$sessiondata = array();
+		foreach ($allanswers as $a)
+		{
+			$sessiondata[] = $a->toSession();
+		}
+		$mainframe->setUserState('formdata'.$post['form_id'], $sessiondata);
 		
-		// save to session if specified
+		// captcha verification
+		if ($form->captchaactive && $captcha_allowed)
+		{
+			JPluginHelper::importPlugin( 'redform_captcha' );
+			$res = true;
+			$dispatcher =& JDispatcher::getInstance();
+			$results = $dispatcher->trigger( 'onCheckCaptcha', array( &$res ) );
+				
+			if (count($results) && $res == false) {
+				$this->setError(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
+				return false;
+			}
+		}
+		
+		// savetosession: data is saved to session using the submit key
 		if (isset($options['savetosession'])) 
 		{
 			$sessiondata = array();
@@ -675,6 +667,24 @@ class RedformModelRedform extends JModel {
 			return $result;
 		}
 		
+		// else save to db ! 
+		foreach ($allanswers as $answers)				
+		{
+			$res = $answers->savedata($postvalues);
+			if (!$res) {
+				$this->setError(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED'));
+				return false;
+			}
+			else {
+				$result->posts[] = array('sid' => $res);
+			}
+			 
+			if ($answers->isNew())
+			{
+				$this->updateMailingList($answers);
+			}
+		}
+			
 		// send email to maintainers
 		$this->notifymaintainer($allanswers, $answers->isNew());
 		
