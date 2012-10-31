@@ -33,22 +33,35 @@ class plgContentRedform extends JPlugin {
 	
 	var $_rfcore = null;
 	
-	function plgContentRedform( &$subject, $config = array() )
+	/**
+	 * Constructor
+	 *
+	 * @access      protected
+	 * @param       object  $subject The object to observe
+	 * @param       array   $config  An array that holds the plugin configuration
+	 * @since       1.5
+	 */
+	public function __construct( &$subject, $config = array() )
 	{
 		parent::__construct( $subject, $config );     
 	}	
 	
-	function onEventPrepare($context,&$row, $params = array()) 
-	{
-		return $this->_process($row, $params);
-	}
 	
-	function onContentPrepare($context,&$row, $params = array()) 
+	/**
+	 * @param	string	The context of the content being passed to the plugin.
+	 * @param	object	The article object.  Note $article->text is also available
+	 * @param	object	The article params
+	 * @param	int		The 'page' number
+	 *
+	 * @return	boolean true on success
+	 * @since	1.6
+	 */
+	public function onContentPrepare($context,&$row, &$params, $page = 0)
 	{
     return $this->_process($row, array());		
 	}
 	
-	function _process(&$row, $params = array()) 
+	protected function _process(&$row, $params = array()) 
 	{
 		if (!file_exists(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'redform.core.php')) {
 			JError::raiseWarning(0, JText::_('COM_REDFORM_COMPONENT_REQUIRED_FOR_REDFORM_PLUGIN'));
@@ -79,7 +92,7 @@ class plgContentRedform extends JPlugin {
 			/* Execute the code */
 			$row->text = preg_replace_callback( $regex, array($this, 'FormPage'), $row->text );
 		}
-		return $row->text;
+		return true;
 	}
 	
 	/**
@@ -88,7 +101,8 @@ class plgContentRedform extends JPlugin {
 	 * $matches[0] = form ID
 	 * $matches[1] = Number of sign ups
 	 */
-	function FormPage ($matches) {
+	protected function FormPage ($matches) 
+	{
 		/* Load the language file as Joomla doesn't do it */
 		$language = JFactory::getLanguage();
 		$language->load('plg_content_redform');
@@ -131,7 +145,7 @@ class plgContentRedform extends JPlugin {
 	 * @param int $form_id
 	 * @return object
 	 */
-	function getForm($form_id) 
+	protected function getForm($form_id) 
 	{
 		$db = JFactory::getDBO();
 		
@@ -150,7 +164,7 @@ class plgContentRedform extends JPlugin {
 	 * @param object $form
 	 * @return true if active, error message if not
 	 */
-	function _checkFormActive($form)
+	protected function _checkFormActive($form)
 	{
 		if (strtotime($form->startdate) > time()) {
 			return JText::_('COM_REDFORM_FORM_NOT_STARTED');
@@ -161,7 +175,7 @@ class plgContentRedform extends JPlugin {
 		return true;
 	}
 	
-	function getFormFields($form_id) 
+	protected function getFormFields($form_id) 
 	{
 		$db = JFactory::getDBO();
 		
@@ -189,7 +203,7 @@ class plgContentRedform extends JPlugin {
 		return $fields;
 	}
 	
-	function getFormValues($field_id) 
+	protected function getFormValues($field_id) 
 	{
 		$db = JFactory::getDBO();
 		
@@ -202,14 +216,14 @@ class plgContentRedform extends JPlugin {
 		return $db->loadObjectList();
 	}
 	
-	function replace_accents($str) 
+	protected function replace_accents($str) 
 	{
 	  $str = htmlentities($str, ENT_COMPAT, "UTF-8");
 	  $str = preg_replace('/&([a-zA-Z])(uml|acute|grave|circ|tilde|elig|slash|ring);/','$1',$str);
 	  return html_entity_decode($str);
 	}
 	
-	function getFormForm($form, $multi=1) 
+	protected function getFormForm($form, $multi=1) 
 	{    
 		if (JRequest::getVar('format', 'html') == 'html') 
 		{
@@ -221,7 +235,8 @@ class plgContentRedform extends JPlugin {
 		}
 	}
 	
-	function getProductinfo() {
+	protected function getProductinfo() 
+	{
 		$db = JFactory::getDBO();
 		$q = "SELECT product_full_image, product_name FROM #__vm_product WHERE product_id = ".JRequest::getInt('productid');
 		$db->setQuery($q);
@@ -233,7 +248,7 @@ class plgContentRedform extends JPlugin {
 	 * @param $user object user
 	 * @return object user
 	 */
-	function getRedmemberfields(&$user)
+	protected function getRedmemberfields(&$user)
 	{
 		$db = JFactory::getDBO();
 		$user_id = $user->get('id');
@@ -256,7 +271,7 @@ class plgContentRedform extends JPlugin {
 		return $user;
 	}
 	
-	function getPDFForm($form, $multi = 1)
+	protected function getPDFForm($form, $multi = 1)
 	{	
 		/* Get the field details */
 		$fields = $this->getFormFields($form->id);
@@ -389,7 +404,5 @@ class plgContentRedform extends JPlugin {
 
 		return $pdfform;
 	}
-	
-	
+		
 }
-?>
