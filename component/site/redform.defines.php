@@ -27,7 +27,7 @@ defined('_JEXEC') or die('Restricted access');
 define('RDF_PATH_SITE',  JPATH_SITE . DS . 'components' .DS . 'com_redform'); 
 define('RDF_PATH_ADMIN', JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_redform');
 
-JTable::addIncludePath(RDF_PATH_ADMIN.DS.'tables');
+JLoader::discover('RedformTable', RDF_PATH_ADMIN.DS.'tables');
 
 $language = JFactory::getLanguage();
 $language->load('com_redform');

@@ -45,7 +45,7 @@ $document = JFactory::getDocument();
 $document->addStyleSheet( JURI::root().'administrator/components/com_redform/css/redform.css' );
 
 // Set the table directory
-JTable::addIncludePath(JPATH_COMPONENT.DS.'tables');
+JLoader::discover('RedformTable', JPATH_COMPONENT.DS.'tables');
 
 // Require the base controller
 require_once (JPATH_COMPONENT.DS.'controller.php');
