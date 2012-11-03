@@ -273,5 +273,31 @@ class RedformControllerFields extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=fields');
   }
+  
+  
+  /**
+   * copy fields
+   */
+  function copy()
+  {
+    $cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
+  	JArrayHelper::toInteger($cids);
+  
+  	$form_id = JRequest::getInt('batch_dest_form_id');
+  	  	
+  	$msg = '';
+  	$msgtype = 'message';
+  
+  	$model = $this->getModel('field');
+  	if ($res = $model->copy($cids, $form_id)) {
+  		$msg = JText::sprintf('COM_REDFORM_FIELDS_COPY_SUCCESS_D', count($cids));
+  	}
+  	else {
+  		$msg = $model->getError();
+  		$msgtype = 'error';
+  	}
+  	 
+  	$this->setRedirect( 'index.php?option=com_redform&view=fields', $msg, $msgtype);
+  	$this->redirect();
+  }
 }
-?>

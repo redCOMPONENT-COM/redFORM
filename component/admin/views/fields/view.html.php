@@ -50,9 +50,12 @@ class RedformViewFields extends JView {
 		$forms = array();
 		$forms[] = JHTML::_('select.option', 0, JText::_('COM_REDFORM_All'));
 		$forms = array_merge($forms, $this->get('FormsOptions'));
-
 		/* Create the dropdown list */
 		$lists['form_id'] = JHTML::_('select.genericlist',  $forms, 'form_id', 'onchange="this.form.submit();"', 'value', 'text', $form_id) ;
+		
+		// again for batch
+		$lists['batch_form_options'] = JHTML::_('select.options', $this->get('FormsOptions'));
+		
 		// table ordering
 		$lists['order_Dir'] = $filter_order_Dir;
 		$lists['order'] = $filter_order;
@@ -92,4 +95,3 @@ class RedformViewFields extends JView {
 		parent::display($tpl);
 	}		
 }
-?>
