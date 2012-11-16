@@ -67,3 +67,9 @@ textarea.emptyfield {
 	border:1px solid red;
 	background-color:pink;
 }
+
+div#signedusers ul {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+}

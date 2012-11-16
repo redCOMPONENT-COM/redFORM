@@ -241,16 +241,17 @@ class RedFormCore extends JObject {
 
 			// signups display controls
 			$html .= '<div id="signedusers" style="float: right">';
-			$html .= '<a href="javascript: ShowAllUsers(true);" >'.JText::_('COM_REDFORM_SHOW_ALL_USERS').'</a><br />'
-			       . '<a href="javascript: ShowAllUsers(false);" >'.JText::_('COM_REDFORM_HIDE_ALL_USERS').'</a><br />'
-			       .JText::_('COM_REDFORM_Signed_up').':<br />';
-			$html .= '<a href="javascript: ShowSingleForm(\'div#formfield1\');"># 1</a><br />';
+			$html .=   '<div><a href="javascript: ShowAllUsers(true);" >'.JText::_('COM_REDFORM_SHOW_ALL_USERS').'</a></div>'
+			         . '<div><a href="javascript: ShowAllUsers(false);" >'.JText::_('COM_REDFORM_HIDE_ALL_USERS').'</a></div>'
+			         . '<ul>'.JText::_('COM_REDFORM_Signed_up').':';
+			$html .= '<li><a href="javascript: ShowSingleForm(\'div#formfield1\');"># 1</a></li>';
 			if ($answers)
 			{
 				for ($k = 2; $k < count($answers)+1; $k++) {
-					$html .= '<a href="javascript: ShowSingleForm(\'div#formfield'.$k.'\');"># '.$k.'</a><br />';
+					$html .= '<li><a href="javascript: ShowSingleForm(\'div#formfield'.$k.'\');"># '.$k.'</a></li>';
 				}
 			}
+			$html   .= '</ul>';
 			$html .= '</div>';
 		}
 
