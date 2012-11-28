@@ -899,7 +899,7 @@ class RedFormCore extends JObject {
 			if (count($results))
 			{
 				$html .= '<div class="fieldline">';
-				$html .= '<div class="label"><label for="captchaword">'.JText::_('COM_REDFORM_CAPTCHA_LABEL').'</label></div>';
+				$html .= '<div class="label"><label>'.JText::_('COM_REDFORM_CAPTCHA_LABEL').'</label></div>';
 				$html .= '<div id="redformcaptcha">';
 				$html .= $captcha;
 				$html .= '</div>';
