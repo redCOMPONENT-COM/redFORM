@@ -36,12 +36,15 @@ class plgRedform_captchaSimplemath extends JPlugin {
 		$a = intval(mt_rand(1,100) / 10);
 		$b = intval(mt_rand(1,100) / 10);
 		
-		$session->set('session.simplemath', $a + $b);
+		$hash = uniqid();
+		
+		$session->set('session.simplemath'.$hash, $a + $b);
 				
 		$text =  JText::_('PLG_REDFORM_CAPTCHA_CAPTCHA_LABEL').' '
 		       . JText::sprintf('PLG_REDFORM_CAPTCHA_CAPTCHA_WHAT_IS_D_PLUS_D', $a, $b)
 		       . '<br/>'		
-		       . '<input type="text" name="sm_answer" />';
+		       . '<input type="text" name="sm_answer" />'
+		       . '<input type="hidden" name="sm_hash" value="'.$hash.'" />';
 	  return true;
 	}
 	
@@ -52,7 +55,9 @@ class plgRedform_captchaSimplemath extends JPlugin {
 	public function onCheckCaptcha(&$result)
 	{
 		$session = JFactory::getSession();
-		$res = $session->get('session.simplemath');
+		$hash = JRequest::getCmd('sm_hash', null, 'post');
+		$res = $session->get('session.simplemath'.$hash);
+		$session->set('session.simplemath'.$hash, null);
 		
 		$posted = JRequest::getInt('sm_answer', -1, 'post');
 		
