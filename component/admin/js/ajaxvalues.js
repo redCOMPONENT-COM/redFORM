@@ -127,13 +127,10 @@ function newRow(value)
 	var upurl  = 'index.php?option=com_redform&controller=values&task=ajaxorderup&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
 	var downurl = 'index.php?option=com_redform&controller=values&task=ajaxorderdown&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
 	new Element('div', { 'alt': textup, 'class': "upactive" , events: {click: function(){ajaxgetandupdate(upurl);}}})
-		.injectInside(tdlink).addEvent('click', function(e) {
-			ajaxgetandupdate(upurl);
-		});
+		.injectInside(tdlink);
 	new Element('div', { 'alt': textdown, 'class': "downactive" , events: {click: function(){ajaxgetandupdate(downurl);}}})
-		.injectInside(tdlink).addEvent('click', function(e) {
-			ajaxgetandupdate(downurl);
-		});
+		.injectInside(tdlink);
+	new Element('span').set('text', value.ordering).injectInside(tdlink);
 	// edit link
 	var tdlink = new Element('td').injectInside(tr);
 	new Element('a', {'href': 'index.php?option=com_redform&controller=values&task=ajaxedit&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid})

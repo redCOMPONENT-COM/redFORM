@@ -234,7 +234,7 @@ class RedformModelValue extends JModel
       }
       
 		  if (empty($row->ordering)) {
-		  	$row->ordering = $row->getNextOrder();
+		  	$row->ordering = $row->getNextOrder('field_id = '.$row->field_id);
 		  }
 	  
       /* pre-save checks */
@@ -249,7 +249,7 @@ class RedformModelValue extends JModel
          return false;
       }
 	  
-      $row->reorder();
+      $row->reorder('field_id = '.$row->field_id);
 	  
       $mainframe->enqueueMessage(JText::_('COM_REDFORM_The_value_has_been_saved'));
       return $row;
@@ -315,7 +315,7 @@ class RedformModelValue extends JModel
       return false;
     }
 
-    if (!$row->move( $direction )) {
+    if (!$row->move( $direction, 'field_id = '.$row->field_id )) {
       $this->setError($this->_db->getErrorMsg());
       return false;
     }
@@ -323,4 +323,3 @@ class RedformModelValue extends JModel
     return true;
   }
 }
-?>
