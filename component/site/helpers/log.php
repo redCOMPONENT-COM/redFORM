@@ -34,7 +34,7 @@ class RedformHelperLog
 	function simpleLog($comment, $userId = 0)
 	{
 		JLog::addLogger(
-			array('text_file' => 'com_redform.log.php'),
+			array('text_file' => 'com_redform.log'),
 			JLog::DEBUG,
 			'com_redform'		
 		);
@@ -46,7 +46,7 @@ class RedformHelperLog
 	{
 		$app = & JFactory::getApplication();
 
-		$file = $app->getCfg('log_path').DS.'com_redform.log.php';
+		$file = $app->getCfg('log_path').DS.'com_redform.log';
 		if (file_exists($file)) {
 			unlink($file);
 		}

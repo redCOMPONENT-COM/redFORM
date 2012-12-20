@@ -55,7 +55,7 @@ class RedFormModelLog extends JModel
 		$app = & JFactory::getApplication();
 
 		$contents = '';
-		$file = $app->getCfg('log_path').DS.'com_redform.log.php';
+		$file = $app->getCfg('log_path').DS.'com_redform.log';
 		if (file_exists($file)) {
 			$handle = fopen($file, "r");
 			if (!$handle) {
