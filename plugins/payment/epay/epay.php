@@ -35,7 +35,7 @@ class plgRedform_PaymentEpay extends JPlugin {
 		$this->loadLanguage();
 	}
 
-	function onGetGateway($gateways)
+	function onGetGateway(&$gateways)
 	{
 		require_once ('epay'.DS.'helpers'.DS.'payment.php');
 		$helper = new PaymentEpay($this->params);
@@ -43,4 +43,3 @@ class plgRedform_PaymentEpay extends JPlugin {
 		return true;
 	}
 }
-?>

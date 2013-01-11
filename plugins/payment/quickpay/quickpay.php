@@ -37,7 +37,7 @@ class plgRedform_PaymentQuickpay extends JPlugin {
 		parent::__construct($subject, $config);
 	}
 
-	function onGetGateway($gateways)
+	function onGetGateway(&$gateways)
 	{
 		require_once ('quickpay'.DS.'helpers'.DS.'payment.php');
 		$helper = new Paymentquickpay($this->params);

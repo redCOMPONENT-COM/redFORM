@@ -37,7 +37,7 @@ class plgRedform_PaymentIdeal extends JPlugin {
 		parent::__construct($subject, $config);
 	}
 
-	function onGetGateway($gateways)
+	function onGetGateway(&$gateways)
 	{
 		require_once ('ideal'.DS.'helpers'.DS.'payment.php');
 		require_once ('ideal'.DS.'helpers'.DS.'ideal.class.php');
@@ -46,4 +46,3 @@ class plgRedform_PaymentIdeal extends JPlugin {
 		return true;
 	}
 }
-?>

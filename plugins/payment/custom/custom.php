@@ -37,7 +37,7 @@ class plgRedform_PaymentCustom extends JPlugin {
 		parent::__construct($subject, $config);
 	}
 
-	function onGetGateway($gateways)
+	function onGetGateway(&$gateways)
 	{
 		require_once ('custom'.DS.'helpers'.DS.'payment.php');
 		$helper = new PaymentCustom($this->params);
@@ -45,4 +45,3 @@ class plgRedform_PaymentCustom extends JPlugin {
 		return true;
 	}
 }
-?>

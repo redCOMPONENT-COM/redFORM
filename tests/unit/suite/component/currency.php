@@ -44,4 +44,30 @@ class currencyTest extends JoomlaTestCase
 			$message
 		);
 	}
+	
+	public function getTestGetIsoCodeData()
+	{
+		return array( 'EUR' => array(978, 'EUR', 'Should return something else'), 
+		              'EUR string' => array('978', 'EUR', 'Should return something else'),
+		              'AAA' => array('AAA', false, 'Should return false'),
+		);		
+	}
+	
+	/**
+	 * test get country iso code from iso number
+	 * 
+	 * @param int $iso_number
+	 * @return void
+	 * @dataProvider getTestGetIsoCodeData
+	 */
+	public function testGetIsoCode($iso_number, $expect, $message)
+	{		
+		$cur = RedformHelperLogCurrency::getIsoCode($iso_number);
+ 
+		$this->assertEquals(
+			$cur,
+			$expect,
+			$message
+		);
+	}
 }

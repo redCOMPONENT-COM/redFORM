@@ -27,7 +27,7 @@ defined('_JEXEC') or die('Restricted access');
 class RedformHelperLogCurrency
 {
 	
-	function get_iso_4217_currency_codes()
+	protected static function get_iso_4217_currency_codes()
 	{
 		$a = array();
 		$a['AFA'] = array('Afghan Afghani', '971');
@@ -134,11 +134,28 @@ class RedformHelperLogCurrency
 	}
 	
 	/**
+	 * return iso code from iso number
+	 * @param string $code
+	 * @return multitype:string |boolean code or false if not found
+	 */
+	public static function getIsoCode($number)
+	{
+		$cur = self::get_iso_4217_currency_codes();
+		foreach ($cur as $code => $currency)
+		{
+			if ($currency[1] == $number) {
+				return $code;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * return number corresponging to iso code
 	 * @param string 3 letters code (e.g USD, EUR,...)
 	 * @return string
 	 */
-	function getIsoNumber($code)
+	public static function getIsoNumber($code)
 	{
 		$cur = self::get_iso_4217_currency_codes();
 		if (in_array($code, array_keys($cur)))
@@ -147,14 +164,14 @@ class RedformHelperLogCurrency
 		}
 		else {
 			return false;
-		}		
+		}			
 	}
 	
 	/**
 	 * get currencies as options, with ode as value
 	 * @return array
 	 */
-	function getCurrencyOptions()
+	public static function getCurrencyOptions()
 	{
 		$cur = self::get_iso_4217_currency_codes();
 		$options = array();

@@ -25,13 +25,11 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
  
 // Import library dependencies
-jimport('joomla.plugin.plugin');
+jimport('joomla.event.plugin');
 
-class plgRedform_PaymentPaypal extends JPlugin {
- 
-//	var $_name = 'Paypal';
-	
-	public function plgRedform_PaymentPaypal(&$subject, $config = array()) 
+class plgRedform_PaymentIridium extends JPlugin {
+ 	
+	public function __construct(&$subject, $config = array()) 
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -39,9 +37,9 @@ class plgRedform_PaymentPaypal extends JPlugin {
 
 	function onGetGateway(&$gateways)
 	{
-		require_once ('paypal'.DS.'helpers'.DS.'payment.php');
-		$helper = new PaymentPaypal($this->params);
-		$gateways[] = array('name' => 'Paypal', 'helper' => $helper);
+		require_once ('helpers'.DS.'payment.php');
+		$helper = new PaymentIridium($this->params);
+		$gateways[] = array('name' => 'iridium', 'helper' => $helper);
 		return true;
 	}
 }
