@@ -106,6 +106,18 @@ source_file = plugins/payment/epay/language/en-GB/en-GB.plg_redform_payment_epay
 source_lang = en-GB
 type = INI
 
+[redFORM.redform25-plg_redform_payment_iridium-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_iridium.ini
+source_file = plugins/payment/iridium/language/en-GB/en-GB.plg_redform_payment_iridium.ini
+source_lang = en-GB
+type = INI
+
+[redFORM.redform25-plg_redform_payment_iridium-sys-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_iridium.sys.ini
+source_file = plugins/payment/iridium/language/en-GB/en-GB.plg_redform_payment_iridium.sys.ini
+source_lang = en-GB
+type = INI
+
 [redFORM.redform25-plg_redform_payment_quickpay-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_quickpay.ini
 source_file = plugins/payment/quickpay/language/en-GB/en-GB.plg_redform_payment_quickpay.ini
