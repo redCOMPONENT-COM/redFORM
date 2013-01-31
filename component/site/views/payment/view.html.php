@@ -63,7 +63,7 @@ class RedformViewPayment extends JView {
 		$currency = $this->get('Currency');
 		
 		$this->assignRef('lists',  $lists);		
-    $this->assign('action',    $uri->toString());
+    $this->assign('action',    htmlspecialchars($uri->toString()));
     $this->assign('key',       $submit_key);
     $this->assign('source',    $submit_key);
     $this->assign('price',     $price);

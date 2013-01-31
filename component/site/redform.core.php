@@ -127,7 +127,7 @@ class RedFormCore extends JObject {
 		}
 		
 		$html .= '<input type="hidden" name="controller" value="redform" />';
-		$html .= '<input type="hidden" name="referer" value="'.$uri->toString().'" />';
+		$html .= '<input type="hidden" name="referer" value="'.htmlspecialchars($uri->toString()).'" />';
 				
 		$html .= '</form>';
 		return $html;
