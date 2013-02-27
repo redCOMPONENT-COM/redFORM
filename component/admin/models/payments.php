@@ -28,7 +28,7 @@ jimport('joomla.application.component.model');
  * @package		redform
  * @since 2.0
  */
-class RedformModelPayments extends JModel 
+class RedformModelPayments extends JModelLegacy 
 {
 	/**
 	 * key for which we want to display payments

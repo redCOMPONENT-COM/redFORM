@@ -24,6 +24,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+if(!defined('DS')){
+	define('DS',DIRECTORY_SEPARATOR);
+}
+
 define('RDF_PATH_SITE',  JPATH_SITE . DS . 'components' .DS . 'com_redform'); 
 define('RDF_PATH_ADMIN', JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_redform');
 

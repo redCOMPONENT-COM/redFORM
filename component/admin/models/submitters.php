@@ -23,7 +23,7 @@ jimport( 'joomla.application.component.model' );
 
 /**
  */
-class RedformModelSubmitters extends JModel {
+class RedformModelSubmitters extends JModelLegacy {
 	
 	protected $_data = null;
 	

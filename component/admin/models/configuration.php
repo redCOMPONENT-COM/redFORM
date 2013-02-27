@@ -24,7 +24,7 @@ jimport( 'joomla.application.component.model' );
 /**
  * Order Model
  */
-class RedformModelConfiguration extends JModel {
+class RedformModelConfiguration extends JModelLegacy {
 	
 	/**
 	* Save the configuration

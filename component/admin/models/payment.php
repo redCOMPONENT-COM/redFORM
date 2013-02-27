@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @package   redform
  * @since 2.0
  */
-class RedformModelPayment extends JModel
+class RedformModelPayment extends JModelLegacy
 {
   /**
    * item id

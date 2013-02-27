@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @subpackage redform
  * @since		0.9
  */
-class RedFormModelPayment extends JModel
+class RedFormModelPayment extends JModelLegacy
 {
 	var $_gateways = null;
 	

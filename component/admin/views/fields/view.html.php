@@ -25,7 +25,7 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewFields extends JView {
+class RedformViewFields extends JViewLegacy {
 	/**
 	 * redFORM view display method
 	 * @return void

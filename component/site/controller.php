@@ -27,7 +27,7 @@ jimport('joomla.application.component.controller');
 /**
  * Front-end Controller
  */
-class RedformController extends JController
+class RedformController extends JControllerLegacy
 {
 	/**
 	 * Method to show a weblinks view

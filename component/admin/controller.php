@@ -22,14 +22,14 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Component Controller
  */
-class RedformController extends JController
+class RedformController extends JControllerLegacy
 {
 	/**
 	 * Method to display the view
 	 *
 	 * @access	public
 	 */
-  function display()
+  public function display($cachable = false, $urlparams = array())
   {
     // set a default view
     if (JRequest::getVar('view', '') == '') {
@@ -70,4 +70,3 @@ class RedformController extends JController
   	die();
 	}
 }
-?>

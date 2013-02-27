@@ -29,7 +29,7 @@ jimport( 'joomla.application.component.view');
  * @subpackage EventList
  * @since 0.9
  */
-class RedFormViewLog extends JView {
+class RedFormViewLog extends JViewLegacy {
 
 	function display($tpl = null)
 	{

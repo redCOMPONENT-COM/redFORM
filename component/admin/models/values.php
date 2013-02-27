@@ -23,7 +23,7 @@ jimport( 'joomla.application.component.model' );
 
 /**
  */
-class RedformModelValues extends JModel 
+class RedformModelValues extends JModelLegacy 
 {
 
 	/**

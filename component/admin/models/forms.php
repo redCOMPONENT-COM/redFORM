@@ -24,7 +24,7 @@ jimport( 'joomla.application.component.model' );
 /**
  * redFORM Model
  */
-class RedformModelForms extends JModel 
+class RedformModelForms extends JModelLegacy 
 {
 	/** @var integer Total entries */
 	protected $_total = null;

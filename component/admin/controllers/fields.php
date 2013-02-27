@@ -24,7 +24,7 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Controller
  */
-class RedformControllerFields extends JController
+class RedformControllerFields extends JControllerLegacy
 {
   /**
    * constructor

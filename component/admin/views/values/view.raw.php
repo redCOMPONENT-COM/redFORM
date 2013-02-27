@@ -20,7 +20,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view' );
-class RedformViewValues extends JView {
+class RedformViewValues extends JViewLegacy {
    
 	function display() {
 		$fieldtype = $this->get('CheckFieldType');
@@ -54,4 +54,3 @@ class RedformViewValues extends JView {
 		}
    }
 }
-?>

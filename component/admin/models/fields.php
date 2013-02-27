@@ -24,7 +24,7 @@ jimport( 'joomla.application.component.model' );
 /**
  * Fields Model
  */
-class RedformModelFields extends JModel {
+class RedformModelFields extends JModelLegacy {
 
 	/**
 	 * the data
