@@ -33,19 +33,20 @@ class RedformViewForm extends JViewLegacy {
 	 **/
 	function display($tpl = null) 
 	{
-		$mainframe = &JFactory::getApplication();
-		$document	= & JFactory::getDocument();
-		JHTML::_('behavior.mootools'); 
-    $document->addScript('components/com_redform/js/conditionalrecipients.js');
-    $document->addScriptDeclaration(
-    	 'var emailrequired = "'.JText::_('COM_REDFORM_MISSING_OR_INVALID_EMAIL')."\";\n"
-    	.'var namerequired = "'.JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_REQUIRED')."\";\n"
-    	.'var missingparameter = "'.JText::_('COM_REDFORM_CONDITIONAL_RECIPIENT_MISSING_PARAMETER')."\";\n"
-    );
+		$mainframe = JFactory::getApplication();
+		$document  = JFactory::getDocument();
+		JHTML::_('behavior.framework'); 
+	    $document->addScript('components/com_redform/js/conditionalrecipients.js');
+	    $document->addScriptDeclaration(
+	    	 'var emailrequired = "'.JText::_('COM_REDFORM_MISSING_OR_INVALID_EMAIL')."\";\n"
+	    	.'var namerequired = "'.JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_REQUIRED')."\";\n"
+	    	.'var missingparameter = "'.JText::_('COM_REDFORM_CONDITIONAL_RECIPIENT_MISSING_PARAMETER')."\";\n"
+	    );
 		
 		$this->setLayout('editform');
 		
 		$row = $this->get('Data');
+		$form = $this->get('Form');
 
 		/* Get the show name option */
 		$lists['showname']= JHTML::_('select.booleanlist',  'showname', 'class="inputbox"', $row->showname);
@@ -54,7 +55,7 @@ class RedformViewForm extends JViewLegacy {
 		$lists['published']= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published);
 
 		/* Get the access level option */
-		$lists['access'] = JHTML::_('list.accesslevel',  $row );
+// 		$lists['access'] = JHTML::_('list.accesslevel',  $row );
 
 		/* Get the contactperson info option */
 		$lists['contactpersoninform']= JHTML::_('select.booleanlist',  'contactpersoninform', 'class="inputbox"', $row->contactpersoninform);
@@ -111,6 +112,7 @@ class RedformViewForm extends JViewLegacy {
 				
 		/* Set variabels */
 		$this->assignRef('row', $row);
+		$this->assignRef('form', $form);
 		$this->assignRef('lists', $lists);
 
 		/* Get the toolbar */
@@ -130,4 +132,3 @@ class RedformViewForm extends JViewLegacy {
 		parent::display($tpl);
 	}
 }
-?>

@@ -39,7 +39,7 @@ class RedformViewForms extends JViewLegacy {
 		$forms = $this->get('Forms');
 
 		/* Get the pagination */
-		$pagination = & $this->get('Pagination');
+		$pagination = $this->get('Pagination');
 		/* Get the number of contestantst */
 		$submitters = $this->get('CountSubmitters');
 
@@ -59,8 +59,8 @@ class RedformViewForms extends JViewLegacy {
 	{
 		JToolBarHelper::title(JText::_('COM_REDFORM' ), 'redform_redform');
 		JToolBarHelper::addNew();
-		JToolBarHelper::editListX();
-    JToolBarHelper::custom('copy', 'copy', 'copy', 'COM_REDFORM_Clone', true);
+		JToolBarHelper::editList();
+		JToolBarHelper::custom('copy', 'copy', 'copy', 'COM_REDFORM_Clone', true);
 		JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FORMS_DELETE_WARNING'));
 		JToolBarHelper::divider();
 		JToolBarHelper::publishList();
@@ -74,4 +74,3 @@ class RedformViewForms extends JViewLegacy {
 		}
 	}
 }
-?>

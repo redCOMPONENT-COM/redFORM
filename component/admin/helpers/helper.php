@@ -21,7 +21,7 @@ class RedformHelper {
 	
   public static function setMenu()
   {
-    $user = & JFactory::getUser();
+    $user = JFactory::getUser();
     $view = JRequest::getVar('view', '');
     $controller = JRequest::getVar('controller', '');
     //Create Submenu

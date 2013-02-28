@@ -19,12 +19,10 @@
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
-jimport( 'joomla.application.component.model' );
-
 /**
  * redFORM Model
  */
-class RedformModelForm extends JModelLegacy 
+class RedformModelForm extends JModelAdmin
 {
   /**
    * Form id
@@ -118,12 +116,12 @@ class RedformModelForm extends JModelLegacy
     return true;
   }
   
-  function _initData()
-  {
-    $this->_data = & JTable::getInstance('redform', 'RedformTable');
+	function _initData()
+	{
+		$this->_data = JTable::getInstance('redform', 'RedformTable');
 		$this->_data->formstarted = false;
-  	return $this->_data;
-  }
+		return $this->_data;
+	}
   
   /**
    * Tests if the form is checked out
@@ -164,11 +162,11 @@ class RedformModelForm extends JModelLegacy
     {
       // Make sure we have a user id to checkout the event with
       if (is_null($uid)) {
-        $user =& JFactory::getUser();
+        $user = JFactory::getUser();
         $uid  = $user->get('id');
       }
       // Lets get to it and checkout the thing...
-      $row = & JTable::getInstance('redform', 'RedformTable');
+      $row =  JTable::getInstance('redform', 'RedformTable');
       return $row->checkout($uid, $this->_id);
     }
     return false;
@@ -182,11 +180,11 @@ class RedformModelForm extends JModelLegacy
    * @return  boolean True on success
    * @since 0.9
    */
-  function checkin()
+  function checkin($pk = NULL)
   {
     if ($this->_id)
     {
-      $row = & JTable::getInstance('redform', 'RedformTable');
+      $row = JTable::getInstance('redform', 'RedformTable');
       return $row->checkin($this->_id);
     }
     return false;
@@ -225,7 +223,7 @@ class RedformModelForm extends JModelLegacy
   	}
 
   	$row->checkin();
-
+  	
   	/* Add form table */
   	$this->AddFormTable($row->id);
 
@@ -235,7 +233,8 @@ class RedformModelForm extends JModelLegacy
    /**
     * Delete a competition
     */
-   function getRemoveForm() {
+   function getRemoveForm() 
+   {
 	$mainframe = JFactory::getApplication();
       $database = JFactory::getDBO();
       $cid = JRequest::getVar('cid');
@@ -326,7 +325,7 @@ class RedformModelForm extends JModelLegacy
 	*/
 	function ConvertCalendarDate(&$dtstamp) {		
 		$date = JFactory::getDate($dtstamp);
-		return $date->toMySQL();
+		return $date->toSql();
 	}
 	 
 	/**
@@ -344,16 +343,18 @@ class RedformModelForm extends JModelLegacy
 	/**
 	 * Adds a table if it doesn't exist yet
 	 */
-	private function AddFormTable($formid) {
+	private function AddFormTable($formid) 
+	{
 		$db = JFactory::getDBO();
 		/* construct form name */
 		$q = "SHOW TABLES LIKE ".$db->Quote($db->getPrefix().'rwf_forms_'.$formid);
 		$db->setQuery($q);
-		$result = $db->loadResultArray();
+		$result = $db->loadColumn();
+		
 		if (count($result) == 0) {
 			/* Table doesn't exist, need to create it */
-			$q = "CREATE TABLE ".$db->nameQuote('#__rwf_forms_'.$formid)." (";
-			$q .= $db->nameQuote('id')." INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ";
+			$q = "CREATE TABLE ".$db->qn('#__rwf_forms_'.$formid)." (";
+			$q .= $db->qn('id')." INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ";
 			$q .= ") COMMENT = ".$db->Quote('redFORMS Form '.$formid);
 			$db->setQuery($q);
 			if (!$db->query()) JError::raiseWarning('error', $db->getErrorMsg());
@@ -395,7 +396,7 @@ class RedformModelForm extends JModelLegacy
     foreach ($cids as $cid)
     {
       // get the form
-    	$form = & $this->getTable('redform', 'RedformTable');
+    	$form =  $this->getTable('redform', 'RedformTable');
       $form->load($cid);
       // get associated fields
 	    $fields = $form->getFormFields();
@@ -412,7 +413,7 @@ class RedformModelForm extends JModelLegacy
 	    foreach ($fields as $field_id)
 	    {
 	    	// get field
-	    	$field = & $this->getTable('fields', 'RedformTable');
+	    	$field =  $this->getTable('fields', 'RedformTable');
 	      $field->load($field_id);
 	      
 	      // get associated values
@@ -422,19 +423,19 @@ class RedformModelForm extends JModelLegacy
 	      $field->id = null;
         $field->form_id = $form->id;
         
-        $fieldmodel = & JModel::getInstance('field', 'RedformModel');
+        $fieldmodel =  JModel::getInstance('field', 'RedformModel');
         $newfield = $fieldmodel->store($field->getProperties());
                 
         // copy associated values
         foreach ($values as $v)
         {
         	// get value
-        	$value = & $this->getTable('values', 'RedformTable');
+        	$value =  $this->getTable('values', 'RedformTable');
         	$value->load($v);
         	
         	$value->id = null;
         	$value->field_id = $newfield->id;
-	        $valuemodel = & JModel::getInstance('value', 'RedformModel');
+	        $valuemodel =  JModel::getInstance('value', 'RedformModel');
 	        $data = $value->getProperties();
 	        $data['form_id'] = $form->id;
 	        unset($data['ordering']);
@@ -459,5 +460,57 @@ class RedformModelForm extends JModelLegacy
   	$res = $this->_db->loadObjectList();
   	return $res;
   }
+  
+
+  /**
+   * Returns a Table object, always creating it
+   *
+   * @param	type	The table type to instantiate
+   * @param	string	A prefix for the table class name. Optional.
+   * @param	array	Configuration array for model. Optional.
+   * @return	JTable	A database object
+   * @since	1.6
+   */
+  public function getTable($type = 'Redform', $prefix = 'RedformTable', $config = array())
+  {
+  	return JTable::getInstance($type, $prefix, $config);
+  }
+  
+  /**
+   * Method to get the record form.
+   *
+   * @param	array	$data		Data for the form.
+   * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
+   * @return	mixed	A JForm object on success, false on failure
+   * @since	1.7
+   */
+  public function getForm($data = array(), $loadData = true)
+  {
+  	// Get the form.
+  	$form = $this->loadForm('com_redform.form', 'form',
+  			array('load_data' => $loadData) );
+  	if (empty($form))
+  	{
+  		return false;
+  	}
+  	return $form;
+  }
+  
+  /**
+   * Method to get the data that should be injected in the form.
+   *
+   * @return	mixed	The data for the form.
+   * @since	1.7
+   */
+  protected function loadFormData()
+  {
+  	// Check the session for previously entered form data.
+  	$data = JFactory::getApplication()->getUserState('com_redevent.form.form.data', array());
+  	if (empty($data))
+  	{
+  		$data = $this->getData();
+  	}
+  	return $data;
+  }
 }
-?>
+

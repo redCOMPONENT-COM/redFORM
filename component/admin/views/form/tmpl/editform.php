@@ -20,14 +20,12 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 JHTML::_('behavior.tooltip');
 jimport('joomla.html.pane');
-$editor =& JFactory::getEditor();
+$editor = JFactory::getEditor();
+$row = 0;
 ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
-	<?php $pane   =& JPane::getInstance('tabs'); 
-	echo $pane->startPane("settings");
-	echo $pane->startPanel( JText::_('COM_REDFORM_Form'), 'form_tab' );
-	$row = 0;
-	?>
+	<fieldset>
+		<legend><?php echo JText::_('COM_REDFORM_Form'); ?></legend>
 		<table class="adminform">
 		<tr class="row<?php echo $row; ?>">
 			<td>
@@ -47,10 +45,10 @@ $editor =& JFactory::getEditor();
 		</tr>
 		<tr class="row<?php echo $row = 1 - $row; ?>">
 			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_SET_ACCESS_LEVEL');?>"><?php echo JText::_('COM_REDFORM_ACCESS'); ?></span>
+				<?php echo $this->form->getLabel('access'); ?>
 			</td>
 			<td>
-			 <?php echo $this->lists['access']; ?>
+				<?php echo $this->form->getInput('access'); ?>
 			</td>
 		</tr>
 		<tr class="row<?php echo $row = 1 - $row; ?>">
@@ -68,7 +66,7 @@ $editor =& JFactory::getEditor();
 			<td>
 			<?php 
 				$date = JFactory::getDate($this->row->startdate);
-				echo JHTML::_('calendar', $date->toFormat('%d-%m-%Y  %H:%M:%S'), 'startdate', 'startdate', '%d-%m-%Y  %H:%M:%S', 'size="40"');
+				echo JHTML::_('calendar', $date->format('d-m-Y  H:i:s'), 'startdate', 'startdate', 'd-m-Y  H:i:s', 'size="40"');
 			?>
 			</td>
 		</tr>
@@ -87,7 +85,7 @@ $editor =& JFactory::getEditor();
 			<td>
 			<?php 
 				$date = JFactory::getDate($this->row->enddate);
-				echo JHTML::_('calendar', $date->toFormat('%d-%m-%Y  %H:%M:%S'), 'enddate', 'enddate', '%d-%m-%Y  %H:%M:%S', 'size="40"');
+				echo JHTML::_('calendar', $date->format('d-m-Y  H:i:s'), 'enddate', 'enddate', 'd-m-Y  H:i:s', 'size="40"');
 			?>
 			</td>
 		</tr>
@@ -108,11 +106,9 @@ $editor =& JFactory::getEditor();
 			</td>
 		</tr>
 		</table>
-	<?php
-	echo $pane->endPanel();
-    echo $pane->startPanel( JText::_('COM_REDFORM_Notification'), 'notification_tab' );
-	$row = 0;
-	?>
+	</fieldset>
+	<fieldset>
+		<legend><?php echo JText::_('COM_REDFORM_Notification'); ?></legend>
 		<table class="adminform">
 		<tr class="row<?php echo $row;?>">
 			<td valign="top" align="right">
@@ -128,7 +124,7 @@ $editor =& JFactory::getEditor();
 			</td>
 			<td>
 				<?php
-				$editor =& JFactory::getEditor();
+				$editor = JFactory::getEditor();
 				echo $editor->display( "notificationtext", $this->row->notificationtext, 800, 300, 100, 30, array('pagebreak', 'readmore') );
 				?>
 			</td>
@@ -207,123 +203,119 @@ $editor =& JFactory::getEditor();
 			</td>
 		</tr>
 		</table>
-	<?php
-	echo $pane->endPanel();
-	echo $pane->startPanel( JText::_('COM_REDFORM_VIRTUEMART'), 'virtuemart_tab' );
-	?>
-	<table class="adminform">
-		<tr class="row<?php echo $row; ?>">
-			<td width="25%" valign="top" align="right">
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_VMACTIVE_TIP');?>"><?php echo JText::_('COM_REDFORM_VMACTIVE'); ?></span>
-			</td>
-			<td>
-				<?php echo $this->lists['virtuemartactive']; ?>
-			</td>
-		</tr>
-		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_VMITEMID_TIP');?>"><?php echo JText::_('COM_REDFORM_VMITEMID'); ?></span>
-			</td>
-			<td>
-				<input name="vmitemid" type="text" value="<?php echo $this->row->vmitemid; ?>" />
-			</td>
-		</tr>
-		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_VMPRODUCTID_TIP');?>"><?php echo JText::_('COM_REDFORM_VMPRODUCTID'); ?></span>
-			</td>
-			<td>
-				<?php echo $this->lists['vmproductid']; ?> 
-			</td>
-		</tr>
-	</table>
-	<?php
-	echo $pane->endPanel();
-	echo $pane->startPanel( JText::_('COM_REDFORM_PAYMENT'), 'payment_tab' );
-	?>
-	<table class="adminform">
-		<tr class="row<?php echo $row; ?>">
-			<td width="25%" valign="top" align="right">
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENTACTIVE_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENTACTIVE'); ?></span>
-			</td>
-			<td>
-				<?php echo $this->lists['paymentactive']; ?>
-			</td>
-		</tr>
-		<tr class="row<?php echo $row; ?>">
-			<td width="25%" valign="top" align="right">
-				<label for="show_js_price" class="hasTip" title="<?php echo JText::_('COM_REDFORM_FORM_SHOW_JS_PRICE_TIP');?>"><?php echo JText::_('COM_REDFORM_FORM_SHOW_JS_PRICE_LABEL'); ?></label>
-			</td>
-			<td>
-				<?php echo $this->lists['show_js_price']; ?>
-			</td>
-		</tr>
-		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENTCURRENCY_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENTCURRENCY'); ?></span>
-			</td>
-			<td>
-				<?php echo $this->lists['currency']; ?>
-			</td>
-		</tr>
-		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENTPROCESSING_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENTPROCESSING'); ?></span>
-			</td>
-			<td>
-				<?php echo $editor->display( "paymentprocessing", $this->row->paymentprocessing, 800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
-			</td>
-		</tr>
-		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENTACCEPTED_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENTACCEPTED'); ?></span>
-			</td>
-			<td>
-				<?php echo $editor->display( "paymentaccepted", $this->row->paymentaccepted, 800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
-			</td>
-		</tr>
-		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT'); ?></span>
-			</td>
-			<td>
-				<input name="contactpaymentnotificationsubject" type="text" value="<?php echo ($this->row->contactpaymentnotificationsubject ? $this->row->contactpaymentnotificationsubject : JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT')); ?>" size="80" />
-			</td>
-		</tr>
-		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY'); ?></span>
-			</td>
-			<td>
-				<?php echo $editor->display( "contactpaymentnotificationbody",
-				                             ($this->row->contactpaymentnotificationbody ? $this->row->contactpaymentnotificationbody : JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_DEFAULT')),
-				                             800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
-			</td>
-		</tr>
-		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT'); ?></span>
-			</td>
-			<td>
-				<input name="submitterpaymentnotificationsubject" type="text" value="<?php echo ($this->row->submitterpaymentnotificationsubject ? $this->row->submitterpaymentnotificationsubject : JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT')); ?>" size="80" />
-			</td>
-		</tr>
-		<tr class="row<?php echo $row = 1 - $row; ?>">
-			<td>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY'); ?></span>
-			</td>
-			<td>
-				<?php echo $editor->display( "submitterpaymentnotificationbody",                          
-				                             ($this->row->submitterpaymentnotificationbody ? $this->row->submitterpaymentnotificationbody : JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_DEFAULT')),
-				                             800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
-			</td>
-		</tr>
-	</table>
-	<?php
-	echo $pane->endPanel();
-	echo $pane->endPane();
-	?>
-  <?php echo JHTML::_( 'form.token' ); ?>
+	</fieldset>
+	<fieldset>
+		<legend><?php echo JText::_('COM_REDFORM_VIRTUEMART'); ?></legend>
+		<table class="adminform">
+			<tr class="row<?php echo $row; ?>">
+				<td width="25%" valign="top" align="right">
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_VMACTIVE_TIP');?>"><?php echo JText::_('COM_REDFORM_VMACTIVE'); ?></span>
+				</td>
+				<td>
+					<?php echo $this->lists['virtuemartactive']; ?>
+				</td>
+			</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td>
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_VMITEMID_TIP');?>"><?php echo JText::_('COM_REDFORM_VMITEMID'); ?></span>
+				</td>
+				<td>
+					<input name="vmitemid" type="text" value="<?php echo $this->row->vmitemid; ?>" />
+				</td>
+			</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td>
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_VMPRODUCTID_TIP');?>"><?php echo JText::_('COM_REDFORM_VMPRODUCTID'); ?></span>
+				</td>
+				<td>
+					<?php echo $this->lists['vmproductid']; ?> 
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset>
+		<legend><?php echo JText::_('COM_REDFORM_PAYMENT'); ?></legend>
+		<table class="adminform">
+			<tr class="row<?php echo $row; ?>">
+				<td width="25%" valign="top" align="right">
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENTACTIVE_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENTACTIVE'); ?></span>
+				</td>
+				<td>
+					<?php echo $this->lists['paymentactive']; ?>
+				</td>
+			</tr>
+			<tr class="row<?php echo $row; ?>">
+				<td width="25%" valign="top" align="right">
+					<label for="show_js_price" class="hasTip" title="<?php echo JText::_('COM_REDFORM_FORM_SHOW_JS_PRICE_TIP');?>"><?php echo JText::_('COM_REDFORM_FORM_SHOW_JS_PRICE_LABEL'); ?></label>
+				</td>
+				<td>
+					<?php echo $this->lists['show_js_price']; ?>
+				</td>
+			</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td>
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENTCURRENCY_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENTCURRENCY'); ?></span>
+				</td>
+				<td>
+					<?php echo $this->lists['currency']; ?>
+				</td>
+			</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td>
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENTPROCESSING_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENTPROCESSING'); ?></span>
+				</td>
+				<td>
+					<?php echo $editor->display( "paymentprocessing", $this->row->paymentprocessing, 800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
+				</td>
+			</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td>
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENTACCEPTED_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENTACCEPTED'); ?></span>
+				</td>
+				<td>
+					<?php echo $editor->display( "paymentaccepted", $this->row->paymentaccepted, 800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
+				</td>
+			</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td>
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT'); ?></span>
+				</td>
+				<td>
+					<input name="contactpaymentnotificationsubject" type="text" value="<?php echo ($this->row->contactpaymentnotificationsubject ? $this->row->contactpaymentnotificationsubject : JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT')); ?>" size="80" />
+				</td>
+			</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td>
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY'); ?></span>
+				</td>
+				<td>
+					<?php echo $editor->display( "contactpaymentnotificationbody",
+					                             ($this->row->contactpaymentnotificationbody ? $this->row->contactpaymentnotificationbody : JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_DEFAULT')),
+					                             800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
+				</td>
+			</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td>
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT'); ?></span>
+				</td>
+				<td>
+					<input name="submitterpaymentnotificationsubject" type="text" value="<?php echo ($this->row->submitterpaymentnotificationsubject ? $this->row->submitterpaymentnotificationsubject : JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT')); ?>" size="80" />
+				</td>
+			</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td>
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY'); ?></span>
+				</td>
+				<td>
+					<?php echo $editor->display( "submitterpaymentnotificationbody",                          
+					                             ($this->row->submitterpaymentnotificationbody ? $this->row->submitterpaymentnotificationbody : JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_DEFAULT')),
+					                             800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+	
+	<?php echo JHTML::_( 'form.token' ); ?>
 	<input type="hidden" name="id" value="<?php echo $this->row->id; ?>" />
 	<input type="hidden" name="option" value="com_redform" />
 	<input type="hidden" name="task" value="" />

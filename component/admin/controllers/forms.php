@@ -66,7 +66,7 @@ class RedformControllerForms extends JControllerLegacy
     $model  = $this->getModel('form');
     $task   = JRequest::getVar('task');
 
-    $user =& JFactory::getUser();
+    $user = JFactory::getUser();
     // Error if checkedout by another administrator
     if ($model->isCheckedOut( $user->get('id') )) {
     	$this->setRedirect( 'index.php?option=com_redform&view=forms', JText::_('COM_REDFORM_EDITED_BY_ANOTHER_ADMIN' ) );

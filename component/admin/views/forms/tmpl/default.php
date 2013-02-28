@@ -19,13 +19,14 @@
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?>
 <form action="index.php" method="post" id="adminForm" name="adminForm">
-	<table class="adminlist">
+	<table class="table table-striped">
+		<thead>
 		<tr>
-			<th width="20">
+			<th width="1%" class="nowrap center hidden-phone">
 			<?php echo JText::_('COM_REDFORM_ID'); ?>
 			</th>
-			<th width="20">
-			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->forms ); ?>);" />
+			<th width="1%" class="hidden-phone">
+				<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 			</th>
 			<th class="title">
 			<?php echo JText::_('COM_REDFORM_Form_name'); ?>
@@ -49,6 +50,8 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 			<?php echo JText::_('COM_REDFORM_Tag'); ?>
 			</th>
 		</tr>
+		</thead>
+		<tbody>
 		<?php
 		$k = 0;
 		for ($i=0, $n=count( $this->forms ); $i < $n; $i++) {
@@ -86,13 +89,13 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				<td>
 				<?php
 					$date = JFactory::getDate($row->startdate);
-					echo $date->toFormat('%d-%m-%Y  %H:%M:%S');
+					echo $date->format('d-m-Y  H:i:s');
 				?>
 				</td>
 				<td>
 				<?php if ($row->formexpires) {
 					$date = JFactory::getDate($row->enddate);
-					echo $date->toFormat('%d-%m-%Y  %H:%M:%S');
+					echo $date->format('d-m-Y  H:i:s');
 				}
 				?>
 				</td>
@@ -120,9 +123,12 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 			$k = 1 - $k;
 		}
 		?>
+		</tbody>
+		<tfoot>
 		<tr>
             <td colspan="9"><?php echo $this->pagination->getListFooter(); ?></td>
          </tr>
+         </tfoot>
 		</table>
 	<input type="hidden" name="option" value="com_redform" />
 	<input type="hidden" name="task" value="" />
