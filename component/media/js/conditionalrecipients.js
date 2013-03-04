@@ -19,12 +19,12 @@ window.addEvent('domready', function() {
 		var span = document.id("cr_params");
 		span.empty();
 		if (this.value == 'between') {
-			new Element('input', {type: 'text', name: 'cr_param1', id: 'cr_param1', class: 'cr_param', 'size': 10}).injectInside(span);
+			new Element('input', {type: 'text', name: 'cr_param1', id: 'cr_param1', class: 'cr_param', 'size': 10}).inject(span);
 			span.appendText(' ');
-			new Element('input', {type: 'text', name: 'cr_param2', id: 'cr_param2', class: 'cr_param', 'size': 10}).injectInside(span);
+			new Element('input', {type: 'text', name: 'cr_param2', id: 'cr_param2', class: 'cr_param', 'size': 10}).inject(span);
 		}
 		if (this.value == 'superior' || this.value == 'inferior') {
-			new Element('input', {type: 'text', name: 'cr_param1', id: 'cr_param1', class: 'cr_param', 'size': 10}).injectInside(span);
+			new Element('input', {type: 'text', name: 'cr_param1', id: 'cr_param1', class: 'cr_param', 'size': 10}).inject(span);
 		}
 	}).fireEvent('change');
 	

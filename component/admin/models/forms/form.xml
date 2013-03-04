@@ -1,27 +1,263 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form>
-	<field
-		name="id"
-		type="text"
-		default="0"
-		label="JGLOBAL_FIELD_ID_LABEL"
-		description ="JGLOBAL_FIELD_ID_DESC"
-		class="readonly"
-		readonly="true"/>
+	<fieldset name="details" label="COM_REDFORM_FORM_FIELDSET_DETAILS">
+		<field
+			name="id"
+			type="text"
+			default="0"
+			label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC"
+			class="readonly"
+			readonly="true"/>
+		
+		<field
+			name="formname"
+			type="text"
+			label="COM_REDFORM_FORM_NAME"
+			description="COM_REDFORM_FORM_NAME_TIP"
+			class="inputbox"
+			size="40"
+			required="true"/>
+		
+		<field
+			name="showname"
+			type="list"
+			default="1"
+			label="COM_REDFORM_FORM_SHOW_NAME"
+			description="COM_REDFORM_FORM_SHOW_NAME_TIP"
+			class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field
+			name="access"
+			type="accesslevel"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
+			class="inputbox"/>
+			
+		<field
+			name="classname"
+			type="text"
+			label="COM_REDFORM_FORM_CSS_CLASS_NAME"
+			description="COM_REDFORM_FORM_CSS_CLASS_NAME_TIP"
+			class="inputbox"
+			size="40"
+			required="false"/>
+			
+		<field
+			name="startdate"
+			type="calendar"
+			label="COM_REDFORM_FORM_START_DATE"
+			description="COM_REDFORM_FORM_START_DATE_TIP"
+			class="inputbox"/>
+			
+		<field
+			name="formexpires"
+			type="list"
+			default="0"
+			label="COM_REDFORM_FORM_EXPIRES"
+			description="COM_REDFORM_FORM_EXPIRES_TIP"
+			class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+			
+		<field
+			name="enddate"
+			type="calendar"
+			label="COM_REDFORM_FORM_END_DATE"
+			description="COM_REDFORM_FORM_END_DATE_TIP"
+			class="inputbox"/>
+			
+		<field
+			name="captchaactive"
+			type="list"
+			default="0"
+			label="COM_REDFORM_CAPTCHA_ACTIVE"
+			description="COM_REDFORM_CAPTCHA_ACTIVE"
+			class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+	</fieldset>
 	
-	<field
-		name="formname"
-		type="text"
-		label="JGLOBAL_TITLE"
-		description="JFIELD_TITLE_DESC"
-		class="inputbox"
-		size="40"
-		required="true"/>
+	<fieldset name="notification" label="COM_REDFORM_FORM_FIELDSET_NOTIFICATION">
+		
+		<field
+			name="submitnotification"
+			type="list"
+			default="1"
+			label="COM_REDFORM_FORM_NOTIFICATION"
+			description="COM_REDFORM_FORM_NOTIFICATION_TIP"
+			class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+					
+		<field
+			name="notificationtext"
+			type="reeditor"
+			label="COM_REDFORM_FORM_POST_SUBMISSION_TEXT"
+			description="COM_REDFORM_FORM_POST_SUBMISSION_TEXT_TIP"
+			class="inputbox"/>
+			
+		<field
+			name="redirect"
+			type="text"
+			label="COM_REDFORM_REDIRECT_URL"
+			description="COM_REDFORM_REDIRECT_URL_TIP"
+			class="inputbox validate-url"
+			size="80"
+			required="false"/>
+			
+		<field
+			name="contactpersoninform"
+			type="list"
+			default="0"
+			label="COM_REDFORM_NOTIFY_CONTACTPERSON"
+			description="COM_REDFORM_NOTIFY_CONTACTPERSON_TIP"
+			class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+					
+		<field
+			name="contactpersonemail"
+			type="text"
+			label="COM_REDFORM_CONTACTPERSON_EMAIL"
+			description="COM_REDFORM_CONTACTPERSON_EMAIL_TIP"
+			class="inputbox"/>
+			
+		<field
+			name="contactpersonfullpost"
+			type="list"
+			default="1"
+			label="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS"
+			description="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS_TIP"
+			class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+			
+		<field
+			name="submitterinform"
+			type="list"
+			default="1"
+			label="COM_REDFORM_NOTIFY_SUBMITTER"
+			description="COM_REDFORM_NOTIFY_SUBMITTER_TIP"
+			class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+					
+		<field
+			name="submissionsubject"
+			type="text"
+			size="80"
+			label="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_SUBJECT"
+			description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_SUBJECT_TIP"
+			class="inputbox"/>			
+					
+		<field
+			name="submissionbody"
+			type="reeditor"
+			label="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY"
+			description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY_TIP"
+			class="inputbox"/>	
+							       
+		<field
+			name="cond_recipients"
+			type="conditionalrecipients"
+			label="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS"
+			description="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS_TIP"
+			class="inputbox"/>
+			
+	</fieldset>
 	
-	<field
-		name="access"
-		type="accesslevel"
-		label="JFIELD_ACCESS_LABEL"
-		description="JFIELD_ACCESS_DESC"
-		class="span12 small"/>
+	<fieldset name="payment" label="COM_REDFORM_FORM_FIELDSET_PAYMENT">
+					
+		<field
+			name="paymentactive"
+			type="list"
+			default="1"
+			label="COM_REDFORM_PAYMENTACTIVE"
+			description="COM_REDFORM_PAYMENTACTIVE_TIP"
+			class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field
+			name="show_js_price"
+			type="list"
+			default="1"
+			label="COM_REDFORM_FORM_SHOW_JS_PRICE_LABEL"
+			description="COM_REDFORM_FORM_SHOW_JS_PRICE_TIP"
+			class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+					
+		<field
+			name="currency"
+			type="recurrency"
+			default="1"
+			label="COM_REDFORM_PAYMENTCURRENCY"
+			description="COM_REDFORM_PAYMENTCURRENCY_TIP"
+			class="inputbox">
+			<option value="">COM_REDFORM_SELECT_CURRENCY</option>
+		</field>
+		
+		<field
+			name="paymentprocessing"
+			type="reeditor"
+			label="COM_REDFORM_PAYMENTPROCESSING"
+			description="COM_REDFORM_PAYMENTPROCESSING_TIP"
+			class="inputbox"/>		
+					
+		<field
+			name="paymentaccepted"
+			type="reeditor"
+			label="COM_REDFORM_PAYMENTACCEPTED"
+			description="COM_REDFORM_PAYMENTACCEPTED_TIP"
+			class="inputbox"/>	
+								
+		<field
+			name="contactpaymentnotificationsubject"
+			type="retext"
+			size="80"
+			label="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT"
+			description="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_TIP"
+			default="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT"
+			class="inputbox"/>		
+
+		<field
+			name="contactpaymentnotificationbody"
+			type="reeditor"
+			label="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY"
+			description="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_TIP"
+			default="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_DEFAULT"
+			class="inputbox"/>	
+		
+		<field
+			name="submitterpaymentnotificationsubject"
+			type="retext"
+			size="80"
+			label="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT"
+			description="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_TIP"
+			default="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT"
+			class="inputbox"/>	
+					
+		<field
+			name="submitterpaymentnotificationbody"
+			type="reeditor"
+			label="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY"
+			description="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_TIP"
+			default="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_DEFAULT"
+			class="inputbox"/>		
+			
+	</fieldset>
+	
 </form>

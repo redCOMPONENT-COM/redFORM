@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,6 +24,13 @@ if(!defined('DS')){
 	define('DS',DIRECTORY_SEPARATOR);
 }
 
+// Load FOF
+include_once JPATH_LIBRARIES . '/fof/include.php';
+if (!defined('FOF_INCLUDED'))
+{
+	JError::raiseError('500', 'FOF is not installed');
+}
+
 // Access check.
 if (!JFactory::getUser()->authorise('core.manage', 'com_redform'))
 {
@@ -41,7 +48,7 @@ if (file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
 	define('REDMEMBER_INTEGRATION', true);
 }
 else {
-	define('REDMEMBER_INTEGRATION', false);	
+	define('REDMEMBER_INTEGRATION', false);
 }
 
 /* Load the necessary stylesheet */

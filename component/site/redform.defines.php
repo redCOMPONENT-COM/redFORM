@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
@@ -28,7 +28,14 @@ if(!defined('DS')){
 	define('DS',DIRECTORY_SEPARATOR);
 }
 
-define('RDF_PATH_SITE',  JPATH_SITE . DS . 'components' .DS . 'com_redform'); 
+// Load FOF
+include_once JPATH_LIBRARIES . '/fof/include.php';
+if (!defined('FOF_INCLUDED'))
+{
+	JError::raiseError('500', 'FOF is not installed');
+}
+
+define('RDF_PATH_SITE',  JPATH_SITE . DS . 'components' .DS . 'com_redform');
 define('RDF_PATH_ADMIN', JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_redform');
 
 JLoader::discover('RedformTable', RDF_PATH_ADMIN.DS.'tables');
