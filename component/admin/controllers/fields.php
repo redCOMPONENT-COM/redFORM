@@ -65,7 +65,7 @@ class RedformControllerFields extends JControllerLegacy
     $model  = $this->getModel('field');
     $task   = JRequest::getVar('task');
 
-    $user =& JFactory::getUser();
+    $user = JFactory::getUser();
     // Error if checkedout by another administrator
     if ($model->isCheckedOut( $user->get('id') )) {
       $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_EDITED_BY_ANOTHER_ADMIN' ) );
@@ -101,7 +101,7 @@ class RedformControllerFields extends JControllerLegacy
       }
       $msg  = JText::_('COM_REDFORM_FIELD_SAVED');
 
-      $cache = &JFactory::getCache('com_redform');
+      $cache = JFactory::getCache('com_redform');
       $cache->clean();
 
     } else {

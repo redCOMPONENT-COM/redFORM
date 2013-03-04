@@ -48,10 +48,12 @@
 		<folder>views</folder>
 	</files>
 		
-	<!-- Image files -->
-	<media folder="images" destination="com_redform">
+	<!-- media files -->
+	<media folder="media" destination="com_redform">
 		<filename>index.html</filename>
 		<folder>images</folder>
+		<folder>css</folder>
+		<folder>js</folder>
 	</media>
 	
 	<administration>

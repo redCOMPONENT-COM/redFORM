@@ -127,7 +127,7 @@ class RedformModelField extends JModelLegacy
    */
   function _initData()
   {
-    $this->_data = & JTable::getInstance('Fields', 'RedformTable');
+    $this->_data =  JTable::getInstance('Fields', 'RedformTable');
     $this->_data->published = 1;
     $this->_data->fieldtype = 'textfield';
     return $this->_data;
@@ -172,11 +172,11 @@ class RedformModelField extends JModelLegacy
     {
       // Make sure we have a user id to checkout the event with
       if (is_null($uid)) {
-        $user =& JFactory::getUser();
+        $user = JFactory::getUser();
         $uid  = $user->get('id');
       }
       // Lets get to it and checkout the thing...
-      $row = & $this->getTable('Fields', 'RedformTable');
+      $row =  $this->getTable('Fields', 'RedformTable');
       return $row->checkout($uid, $this->_id);
     }
     return false;
@@ -194,7 +194,7 @@ class RedformModelField extends JModelLegacy
   {
     if ($this->_id)
     {
-      $row = & $this->getTable('Fields', 'RedformTable');
+      $row =  $this->getTable('Fields', 'RedformTable');
       return $row->checkin($this->_id);
     }
     return false;
@@ -292,13 +292,13 @@ class RedformModelField extends JModelLegacy
 	 */
 	private function AddFieldTable($row, $oldrow) 
 	{
-		$db = & JFactory::getDBO();
+		$db =  JFactory::getDBO();
 		
 		/* column name for this field */
 		$field = 'field_'. $row->id;
 		
 		/* Get columns from the active form */
-		$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->getPrefix().'rwf_forms_'.$row->form_id)." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
+		$q = "SHOW COLUMNS FROM ".$db->qn($db->getPrefix().'rwf_forms_'.$row->form_id)." WHERE  ".$db->qn('Field')." = ".$db->Quote($field);
 		$db->setQuery($q);
 		$db->query();
 		$result = $db->loadResult();
@@ -306,7 +306,7 @@ class RedformModelField extends JModelLegacy
 		/* Check if the field already exists */
 		if (!$result) {
 			/* Field doesn't exist, need to create it */
-			$q = ' ALTER TABLE '. $db->nameQuote('#__rwf_forms_'.$row->form_id) .' ADD '. $db->nameQuote($field) .' TEXT NULL';
+			$q = ' ALTER TABLE '. $db->qn('#__rwf_forms_'.$row->form_id) .' ADD '. $db->qn($field) .' TEXT NULL';
 			$db->setQuery($q);
 			if (!$db->query()) JError::raiseWarning('error', $db->getErrorMsg());
 		}
@@ -316,7 +316,7 @@ class RedformModelField extends JModelLegacy
 		{
 			$result = array();
 			/* Check if the column exists on the old table */
-			$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->getPrefix().'rwf_forms_'.$oldrow->form_id)." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
+			$q = "SHOW COLUMNS FROM ".$db->qn($db->getPrefix().'rwf_forms_'.$oldrow->form_id)." WHERE  ".$db->qn('Field')." = ".$db->Quote($field);
 			$db->setQuery($q);
 			$db->query();
 			$result = $db->loadResult();
@@ -324,7 +324,7 @@ class RedformModelField extends JModelLegacy
 			/* Check if the field already exists */
 			if ($result) {
 				/* Drop the old column */
-				$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$oldrow->form_id)." DROP ".$db->nameQuote($field);
+				$q = "ALTER TABLE ".$db->qn('#__rwf_forms_'.$oldrow->form_id)." DROP ".$db->qn($field);
 				$db->setQuery($q);
 				if (!$db->query()) JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_remove_field_from_old_form').' '.$db->getErrorMsg());
 			}
@@ -332,23 +332,23 @@ class RedformModelField extends JModelLegacy
 		
 		/* Get indexes from the active form */
 		$indexresult = null;
-		$q = "SHOW KEYS FROM ".$db->nameQuote($db->getPrefix().'rwf_forms_'.$row->form_id)." WHERE key_name = ".$db->Quote($field);
+		$q = "SHOW KEYS FROM ".$db->qn($db->getPrefix().'rwf_forms_'.$row->form_id)." WHERE key_name = ".$db->Quote($field);
 		$db->setQuery($q);
 		$db->query();
 		$indexresult = $db->loadAssocList('Key_name');
 		
 		/* Check if the field has to be unique */
-		$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$row->form_id);
+		$q = "ALTER TABLE ".$db->qn('#__rwf_forms_'.$row->form_id);
 		if ($row->unique && !isset($indexresult[$field])) 
 		{
-			$q .= ' ADD UNIQUE ('. $db->nameQuote($field) .' (255))';
+			$q .= ' ADD UNIQUE ('. $db->qn($field) .' (255))';
 			$db->setQuery($q);
 			if (!$db->query()) 
 			{
 				JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_make_the_field_unique').' '.$db->getErrorMsg());
 				/* Remove unique status */
-				$q = "UPDATE ".$db->nameQuote('#__rwf_fields')."
-					SET ".$db->nameQuote('unique')." = 0
+				$q = "UPDATE ".$db->qn('#__rwf_fields')."
+					SET ".$db->qn('unique')." = 0
 					WHERE id = ".$row->id;
 				$db->setQuery($q);
 				$db->query();
@@ -356,7 +356,7 @@ class RedformModelField extends JModelLegacy
 		}
 		else if (isset($indexresult[$field])) 
 		{
-			$q .= ' DROP INDEX' . $db->nameQuote($field);
+			$q .= ' DROP INDEX' . $db->qn($field);
 			$db->setQuery($q);
 			if (!$db->query()) JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_remove_the_field_unique_status').' '.$db->getErrorMsg());
 		}
@@ -399,7 +399,7 @@ class RedformModelField extends JModelLegacy
 	{
 		$res = array();
 		JPluginHelper::importPlugin( 'redform_mailing' );
-		$dispatcher =& JDispatcher::getInstance();
+		$dispatcher = JDispatcher::getInstance();
 		$results = $dispatcher->trigger( 'getIntegrationName', array( &$res ) );
 		return $res;
 	}

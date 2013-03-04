@@ -37,8 +37,8 @@ else { ?>
 			<th width="20">
 			<?php echo JText::_('#'); ?>
 			</th>
-			<th width="20">
-			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->fields ); ?>);" />
+			<th width="1%" class="hidden-phone">
+				<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 			</th>
 			<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDEVENT_Field', 'field', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
 			<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDEVENT_FIELD_HEADER', 'field_header', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>

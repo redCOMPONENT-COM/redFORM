@@ -34,7 +34,7 @@ class RedformViewFields extends JViewLegacy {
 	{
 		$option = JRequest::getVar('option');
 		
-		$mainframe = &JFactory::getApplication();
+		$mainframe = JFactory::getApplication();
 		
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.values.filter_order_Dir',	'filter_order_Dir',	'', 'word' );
 		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.values.filter_order', 		'filter_order', 	'ordering', 'cmd' );
@@ -82,7 +82,7 @@ class RedformViewFields extends JViewLegacy {
 			JToolBarHelper::unpublishList();
 			JToolBarHelper::spacer();
 			JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FIELDS_DELETE_WARNING'));
-			JToolBarHelper::editListX();
+			JToolBarHelper::editList();
 			JToolBarHelper::addNew();
 			JToolBarHelper::divider();
 			if (JFactory::getUser()->authorise('core.admin', 'com_redform'))

@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,8 +24,8 @@ jimport( 'joomla.application.component.view' );
 
 /**
  * redFORM View
- */
-class RedformViewValue extends JViewLegacy 
+*/
+class RedformViewValue extends JViewLegacy
 {
 	/**
 	 * redFORM view display method
@@ -33,20 +33,20 @@ class RedformViewValue extends JViewLegacy
 	 **/
 	function display($tpl = null)
 	{
-		$mainframe = & JFactory::getApplication();
-		 
+		$mainframe = JFactory::getApplication();
+
 		$document = JFactory::getDocument();
 
 		$row = $this->get('Data');
 
-		$editor = &JFactory::getEditor();
+		$editor = JFactory::getEditor();
 
 		/* Create the published field */
-		$lists['published']= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published) ;
+		$lists['published'] = JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published) ;
 
 		/* Get the fields */
 		$fields = $this->get('FieldsOptions');
-		$lists['fields']= JHTML::_('select.genericlist',  $fields, 'field_id', '', 'value', 'text', $row->field_id) ;
+		$lists['fields'] = JHTML::_('select.genericlist',  $fields, 'field_id', '', 'value', 'text', $row->field_id) ;
 
 		/* Set variabels */
 		$this->assignRef('row', $row);
@@ -75,4 +75,3 @@ class RedformViewValue extends JViewLegacy
 	}
 
 }
-?>

@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -23,10 +23,10 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class com_redformInstallerScript
-{	
+{
     private $installed_mods             = array();
     private $installed_plugs            = array();
-    
+
     /**
      * method to run after an install/update/uninstall method
      *
@@ -63,7 +63,7 @@ class com_redformInstallerScript
                          </table>
                          </div>';
 		}
-		
+
 		if (count($this->installed_mods)){
 			echo '<div>
                           <table class="adminlist" cellspacing="1">
@@ -111,22 +111,22 @@ class com_redformInstallerScript
 // 			else {
 // 				echo JText::_('COM_REDFORM_Error_publishing_redform_content_plugin').'<br />';
 // 			}
-			 
+
 // 		}
 	}
-	
+
 	protected function installModsPlugs($parent)
 	{
 		$manifest       = $parent->get("manifest");
 		$parent         = $parent->getParent();
 		$source         = $parent->getPath("source");
-	
+
 		//**********************************************************************
 		// DO THIS IF WE DECIDE TO AUTOINSTALL PLUGINS/MODULES
 		//**********************************************************************
 		// install plugins and modules
 		$installer = new JInstaller();
-	
+
 		// Install plugins
 		foreach($manifest->plugins->plugin as $plugin) {
 			$attributes                 = $plugin->attributes();
@@ -141,7 +141,7 @@ class com_redformInstallerScript
 			}
 		}
 		return true;
-	
+
 		// Install modules
 		foreach($manifest->modules->module as $module) {
 			$attributes             = $module->attributes();

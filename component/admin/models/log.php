@@ -52,7 +52,7 @@ class RedFormModelLog extends JModelLegacy
 	 */
 	function getData()
 	{
-		$app = & JFactory::getApplication();
+		$app =  JFactory::getApplication();
 
 		$contents = '';
 		$file = $app->getCfg('log_path').DS.'com_redform.log';

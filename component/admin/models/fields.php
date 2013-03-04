@@ -94,7 +94,7 @@ class RedformModelFields extends JModelLegacy {
 	{
 		if (empty($this->_data))
 		{
-			$db = & JFactory::getDBO();
+			$db =  JFactory::getDBO();
 
 			// first, call the pagination to set the limits
 			$this->getPagination();
@@ -208,9 +208,9 @@ class RedformModelFields extends JModelLegacy {
    */
   function publish($cid = array(), $publish = 1, $user_id = 0)
   {
-    $user   =& JFactory::getUser();
+    $user   = JFactory::getUser();
 
-    $table = & $this->getTable('Fields', 'RedformTable');
+    $table =  $this->getTable('Fields', 'RedformTable');
     if (!$table->publish($cid, $publish)) {
       $this->setError($table->getError());
       return false;
@@ -224,7 +224,7 @@ class RedformModelFields extends JModelLegacy {
     */
 	function delete($cid) 
 	{
-		$mainframe = & JFactory::getApplication();
+		$mainframe =  JFactory::getApplication();
 		$db = JFactory::getDBO();
 		JArrayHelper::toInteger( $cid );
 
@@ -350,7 +350,7 @@ class RedformModelFields extends JModelLegacy {
    */
   function move($direction)
   {
-    $row =& JTable::getInstance('Fields', 'RedformTable');
+    $row = JTable::getInstance('Fields', 'RedformTable');
 
     if (!$row->load( $this->_id ) ) {
       $this->setError($this->_db->getErrorMsg());

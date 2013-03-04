@@ -34,8 +34,8 @@ class RedFormViewLog extends JViewLegacy {
 	function display($tpl = null)
 	{
 		//initialise variables
-		$document	= & JFactory::getDocument();
-		$user 		= & JFactory::getUser();
+		$document	=  JFactory::getDocument();
+		$user 		=  JFactory::getUser();
 
 		//build toolbar
 		JToolBarHelper::title( JText::_('COM_REDFORM_LOG' ), 'home' );
@@ -43,7 +43,7 @@ class RedFormViewLog extends JViewLegacy {
     //create the toolbar
 
 		// Get data from the model
-		$log      = & $this->get( 'Data');
+		$log      =  $this->get( 'Data');
 
 		// set menu
 		RedformHelper::setMenu();
@@ -54,4 +54,3 @@ class RedFormViewLog extends JViewLegacy {
 		parent::display($tpl);
 	}
 }
-?>

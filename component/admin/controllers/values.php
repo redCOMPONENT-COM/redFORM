@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -23,241 +23,241 @@ jimport('joomla.application.component.controller');
 
 /**
  * redFORM Controller
- */
+*/
 class RedformControllerValues extends JControllerLegacy
 {
-  /**
-   * constructor
-   *
-   */
-  function __construct() 
-  {
-    parent::__construct();
-    $this->registerTask('apply',         'save');
-    $this->registerTask('ajaxedit',      'edit');
-    $this->registerTask('ajaxsave',      'save');
-    $this->registerTask('ajaxremove',    'remove');
-    $this->registerTask('ajaxorderup',   'orderup');
-    $this->registerTask('ajaxorderdown', 'orderdown');
-    $this->registerTask('ajaxpublish',   'publish');
-    $this->registerTask('ajaxunpublish', 'unpublish');
-  }
-    
-  /**
-   * logic to create the new event screen
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function add( )
-  {
-    global $option;
+	/**
+	 * constructor
+	 *
+	 */
+	function __construct()
+	{
+		parent::__construct();
+		$this->registerTask('apply',         'save');
+		$this->registerTask('ajaxedit',      'edit');
+		$this->registerTask('ajaxsave',      'save');
+		$this->registerTask('ajaxremove',    'remove');
+		$this->registerTask('ajaxorderup',   'orderup');
+		$this->registerTask('ajaxorderdown', 'orderdown');
+		$this->registerTask('ajaxpublish',   'publish');
+		$this->registerTask('ajaxunpublish', 'unpublish');
+	}
 
-    $this->setRedirect( 'index.php?option=com_redform&view=value' );
-  }
-  
-  /**
-   * logic to create the edit element screen
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function edit( )
-  {
-    JRequest::setVar( 'view', 'value' );
-    JRequest::setVar( 'hidemainmenu', 1 );
+	/**
+	 * logic to create the new event screen
+	 *
+	 * @access public
+	 * @return void
+	 * @since 0.9
+	 */
+	function add( )
+	{
+		global $option;
 
-    $model  = $this->getModel('value');
-    $task   = JRequest::getVar('task');
+		$this->setRedirect( 'index.php?option=com_redform&view=value' );
+	}
 
-    $user =& JFactory::getUser();
-    // Error if checkedout by another administrator
-    if ($model->isCheckedOut( $user->get('id') )) {
-      $this->setRedirect( 'index.php?option=com_redform&view=values', JText::_('COM_REDFORM_EDITED_BY_ANOTHER_ADMIN' ) );
-    }
-    $model->checkout();
+	/**
+	 * logic to create the edit element screen
+	 *
+	 * @access public
+	 * @return void
+	 * @since 0.9
+	 */
+	function edit( )
+	{
+		JRequest::setVar( 'view', 'value' );
+		JRequest::setVar( 'hidemainmenu', 1 );
 
-    parent::display();
-  }
-  
-  function save()
-  {
-    // Check for request forgeries
-    JRequest::checkToken() or die( 'Invalid Token' );
-    
-    $task   = JRequest::getVar('task');
+		$model  = $this->getModel('value');
+		$task   = JRequest::getVar('task');
 
-    // Sanitize
-    $post = JRequest::get('post', JREQUEST_ALLOWHTML);
+		$user = JFactory::getUser();
+		// Error if checkedout by another administrator
+		if ($model->isCheckedOut( $user->get('id') )) {
+			$this->setRedirect( 'index.php?option=com_redform&view=values', JText::_('COM_REDFORM_EDITED_BY_ANOTHER_ADMIN' ) );
+		}
+		$model->checkout();
 
-    $model = $this->getModel('value');
+		parent::display();
+	}
 
-    if ($row = $model->store($post)) {
+	function save()
+	{
+		// Check for request forgeries
+		JRequest::checkToken() or die( 'Invalid Token' );
 
-      switch ($task)
-      {
-        case 'apply':
-          $link = 'index.php?option=com_redform&view=value&hidemainmenu=1&cid[]='.$row->id;
-          break;
+		$task   = JRequest::getVar('task');
 
-        default:
-          $link = 'index.php?option=com_redform&view=values';
-          break;
-      }
-      $msg  = JText::_('COM_REDFORM_VALUE_SAVED');
+		// Sanitize
+		$post = JRequest::get('post', JREQUEST_ALLOWHTML);
 
-      $cache = &JFactory::getCache('com_redform');
-      $cache->clean();
+		$model = $this->getModel('value');
 
-    } else {
-      $msg  = '';
-      $link   = 'index.php?option=com_redform&view=values';
-    }
+		if ($row = $model->store($post)) {
 
-    $model->checkin();
-    
-    if (JRequest::getCmd('task') == 'ajaxsave') {
-    	$doc = &Jfactory::getDocument();
-    	$doc->addScriptDeclaration('
-		window.parent.newvalue();
-    	window.parent.SqueezeBox.close();
-    	');
-    	return;
-    }
-    
-    $this->setRedirect( $link, $msg );
-  }
-  
-  /**
-   * logic for cancel an action
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function cancel()
-  {
-    // Check for request forgeries
-    JRequest::checkToken() or die( 'Invalid Token' );
-    
-    $row = & JTable::getInstance('values', 'RedformTable');
-    $row->bind(JRequest::get('post'));
-    $row->checkin();
+			switch ($task)
+			{
+				case 'apply':
+					$link = 'index.php?option=com_redform&view=value&hidemainmenu=1&cid[]='.$row->id;
+					break;
 
-    $this->setRedirect( 'index.php?option=com_redform&view=values' );
-  }
-   
- /**
-   * Logic to publish
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function publish()
-  {
-    $cid  = JRequest::getVar( 'cid', array(0), 'request', 'array' );
+				default:
+					$link = 'index.php?option=com_redform&view=values';
+					break;
+			}
+			$msg  = JText::_('COM_REDFORM_VALUE_SAVED');
 
-    if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_publish' ) );
-    }
+			$cache = JFactory::getCache('com_redform');
+			$cache->clean();
 
-    $model = $this->getModel('values');
+		} else {
+			$msg  = '';
+			$link   = 'index.php?option=com_redform&view=values';
+		}
 
-    if(!$model->publish($cid, 1)) {
-      echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
-    }
-  
-    if (JRequest::getCmd('task') == 'ajaxpublish') {
-    	return;
-    }
-    
-    $total = count( $cid );
-    $msg  = $total.' '.JText::_('COM_REDFORM_VALUES_PUBLISHED');
+		$model->checkin();
 
-    $this->setRedirect( 'index.php?option=com_redform&view=values', $msg );
-  }
+		if (JRequest::getCmd('task') == 'ajaxsave') {
+			$doc = Jfactory::getDocument();
+			$doc->addScriptDeclaration('
+			window.parent.newvalue();
+			window.parent.SqueezeBox.close();
+			');
+			return;
+		}
 
-  /**
-   * Logic to unpublish
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function unpublish()
-  {
-    $cid  = JRequest::getVar( 'cid', array(0), 'request', 'array' );
+		$this->setRedirect( $link, $msg );
+	}
 
-    if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_unpublish' ) );
-    }
+	/**
+	 * logic for cancel an action
+	 *
+	 * @access public
+	 * @return void
+	 * @since 0.9
+	 */
+	function cancel()
+	{
+		// Check for request forgeries
+		JRequest::checkToken() or die( 'Invalid Token' );
 
-    $model = $this->getModel('values');
+		$row =  JTable::getInstance('values', 'RedformTable');
+		$row->bind(JRequest::get('post'));
+		$row->checkin();
 
-    if(!$model->publish($cid, 0)) {
-      echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
-    }
-  
-    if (JRequest::getCmd('task') == 'ajaxunpublish') {
-    	return;
-    }
-    
-    $total = count( $cid );
-    $msg  = $total.' '.JText::_('COM_REDFORM_VALUES_UNPUBLISHED');
+		$this->setRedirect( 'index.php?option=com_redform&view=values' );
+	}
 
-    $this->setRedirect( 'index.php?option=com_redform&view=values', $msg );
-  }
-  
+	/**
+	 * Logic to publish
+	 *
+	 * @access public
+	 * @return void
+	 * @since 0.9
+	 */
+	function publish()
+	{
+		$cid  = JRequest::getVar( 'cid', array(0), 'request', 'array' );
 
-  /**
-   * Logic to delete element
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function remove()
-  {
-    $cid    = JRequest::getVar( 'cid', array(0), 'request', 'array' );
+		if (!is_array( $cid ) || count( $cid ) < 1) {
+			JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_publish' ) );
+		}
 
-    if (!is_array( $cid ) || count( $cid ) < 1) {
-      JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_delete' ) );
-    }
+		$model = $this->getModel('values');
 
-    $model = $this->getModel('values');
+		if(!$model->publish($cid, 1)) {
+			echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
+		}
 
-    if ($model->delete($cid)) {
-      $msg = JText::_('COM_REDFORM_VALUES_DELETED');
-    }
-    else {
-      $msg = JText::_('COM_REDFORM_VALUES_DELETION_ERROR' . ': ' . $model->getError());
-    }
+		if (JRequest::getCmd('task') == 'ajaxpublish') {
+			return;
+		}
 
-    $cache = &JFactory::getCache('com_redform');
-    $cache->clean();
-    
-    if (JRequest::getCmd('task') == 'ajaxremove') {
-    	return;
-    }
+		$total = count( $cid );
+		$msg  = $total.' '.JText::_('COM_REDFORM_VALUES_PUBLISHED');
 
-    $this->setRedirect( 'index.php?option=com_redform&view=values', $msg );
-  }
-  
-  /**
-   * returns options for forms selecto list
-   *
-   * @return array
-   */
-  function getFormsOptions()
-  {
-    $query = "SELECT id AS value, formname AS text FROM #__rwf_forms";
-    $this->_db->setQuery($query);
-    return $this->_db->loadObjectList();
-  }
-	
+		$this->setRedirect( 'index.php?option=com_redform&view=values', $msg );
+	}
+
+	/**
+	 * Logic to unpublish
+	 *
+	 * @access public
+	 * @return void
+	 * @since 0.9
+	 */
+	function unpublish()
+	{
+		$cid  = JRequest::getVar( 'cid', array(0), 'request', 'array' );
+
+		if (!is_array( $cid ) || count( $cid ) < 1) {
+			JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_unpublish' ) );
+		}
+
+		$model = $this->getModel('values');
+
+		if(!$model->publish($cid, 0)) {
+			echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
+		}
+
+		if (JRequest::getCmd('task') == 'ajaxunpublish') {
+			return;
+		}
+
+		$total = count( $cid );
+		$msg  = $total.' '.JText::_('COM_REDFORM_VALUES_UNPUBLISHED');
+
+		$this->setRedirect( 'index.php?option=com_redform&view=values', $msg );
+	}
+
+
+	/**
+	 * Logic to delete element
+	 *
+	 * @access public
+	 * @return void
+	 * @since 0.9
+	 */
+	function remove()
+	{
+		$cid    = JRequest::getVar( 'cid', array(0), 'request', 'array' );
+
+		if (!is_array( $cid ) || count( $cid ) < 1) {
+			JError::raiseError(500, JText::_('COM_REDFORM_Select_an_item_to_delete' ) );
+		}
+
+		$model = $this->getModel('values');
+
+		if ($model->delete($cid)) {
+			$msg = JText::_('COM_REDFORM_VALUES_DELETED');
+		}
+		else {
+			$msg = JText::_('COM_REDFORM_VALUES_DELETION_ERROR' . ': ' . $model->getError());
+		}
+
+		$cache = JFactory::getCache('com_redform');
+		$cache->clean();
+
+		if (JRequest::getCmd('task') == 'ajaxremove') {
+			return;
+		}
+
+		$this->setRedirect( 'index.php?option=com_redform&view=values', $msg );
+	}
+
+	/**
+	 * returns options for forms selecto list
+	 *
+	 * @return array
+	 */
+	function getFormsOptions()
+	{
+		$query = "SELECT id AS value, formname AS text FROM #__rwf_forms";
+		$this->_db->setQuery($query);
+		return $this->_db->loadObjectList();
+	}
+
 	/**
 	 * Fields competition
 	 */
@@ -265,11 +265,11 @@ class RedformControllerValues extends JControllerLegacy
 		/* Create the view */
 		$view = $this->getView('values', 'raw');
 		$view->setModel( $this->getModel( 'values', 'RedformModel' ), true );
-					
+
 		/* Display it all */
 		$view->display();
 	}
-	
+
 	/**
 	 * Fields competition
 	 */
@@ -277,57 +277,57 @@ class RedformControllerValues extends JControllerLegacy
 		/* Create the view */
 		$view = $this->getView('values', 'json');
 		$view->setModel( $this->getModel( 'values', 'RedformModel' ), true );
-					
+
 		/* Display it all */
 		$view->display();
 	}
-	
-  function saveorder()
-  {
-    $model = $this->getModel('values');
-    
-    if ($model->saveorder()) {
-      $this->setRedirect( 'index.php?option=com_redform&view=values');
-    }
-    else {
-      $this->setRedirect( 'index.php?option=com_redform&view=values', JText::_('COM_REDFORM_ERROR_REORDERING'));      
-    }
-  	
-  }
-  
-  /**
-   * Logic to orderup
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function orderup()
-  {
-    $model = $this->getModel('value');
-    $model->move(-1);
-    if (JRequest::getCmd('task') == 'ajaxorderup') {
-    	return;
-    }
 
-    $this->setRedirect( 'index.php?option=com_redform&view=values');
-  }
+	function saveorder()
+	{
+		$model = $this->getModel('values');
 
-  /**
-   * Logic to orderdown
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function orderdown()
-  {
-    $model = $this->getModel('value');
-    $model->move(1);
-    if (JRequest::getCmd('task') == 'ajaxorderdown') {
-    	return;
-    }
+		if ($model->saveorder()) {
+			$this->setRedirect( 'index.php?option=com_redform&view=values');
+		}
+		else {
+			$this->setRedirect( 'index.php?option=com_redform&view=values', JText::_('COM_REDFORM_ERROR_REORDERING'));
+		}
 
-    $this->setRedirect( 'index.php?option=com_redform&view=values');
-  }
+	}
+
+	/**
+	 * Logic to orderup
+	 *
+	 * @access public
+	 * @return void
+	 * @since 0.9
+	 */
+	function orderup()
+	{
+		$model = $this->getModel('value');
+		$model->move(-1);
+		if (JRequest::getCmd('task') == 'ajaxorderup') {
+			return;
+		}
+
+		$this->setRedirect( 'index.php?option=com_redform&view=values');
+	}
+
+	/**
+	 * Logic to orderdown
+	 *
+	 * @access public
+	 * @return void
+	 * @since 0.9
+	 */
+	function orderdown()
+	{
+		$model = $this->getModel('value');
+		$model->move(1);
+		if (JRequest::getCmd('task') == 'ajaxorderdown') {
+			return;
+		}
+
+		$this->setRedirect( 'index.php?option=com_redform&view=values');
+	}
 }
