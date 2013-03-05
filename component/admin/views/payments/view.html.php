@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,42 +24,41 @@ jimport( 'joomla.application.component.view' );
 
 /**
  * redFORM View
- */
+*/
 class RedformViewPayments extends JViewLegacy {
-	
-  function display($tpl = null) 
-  {
+
+	function display($tpl = null)
+	{
 		$mainframe = JFactory::getApplication();
 		$option = JRequest::getVar('option');
-		
-		$user 		= & JFactory::getUser();
-		$document	= & JFactory::getDocument();		
-  	$params   = JComponentHelper::getParams('com_redform');
-  	
-  	$rows       = $this->get('Data');
-  	$pagination = $this->get('Pagination');
-  	
-  	$lists = array();
 
-  	/* Set variabels */
-  	$this->assignRef('rows',        $rows);
-  	$this->assignRef('pagination',  $pagination);
-  	$this->assignRef('lists',       $lists);
-    $this->assignRef('params',      $params);
-    $this->assignRef('key',         JRequest::getVar('submit_key'));
+		$user 		= JFactory::getUser();
+		$document	= JFactory::getDocument();
+		$params   = JComponentHelper::getParams('com_redform');
 
-  	JToolBarHelper::title(JText::_( 'COM_REDFORM_PAYMENTS_HISTORY' ), 'redform_submitters');
-  	JToolBarHelper::addNew();
-  	JToolBarHelper::editListX();
-  	JToolBarHelper::deleteListX();
+		$rows       = $this->get('Data');
+		$pagination = $this->get('Pagination');
+
+		$lists = array();
+
+		/* Set variabels */
+		$this->assignRef('rows',        $rows);
+		$this->assignRef('pagination',  $pagination);
+		$this->assignRef('lists',       $lists);
+		$this->assignRef('params',      $params);
+		$this->assign('key',         JRequest::getVar('submit_key'));
+
+		JToolBarHelper::title(JText::_( 'COM_REDFORM_PAYMENTS_HISTORY' ), 'redform_submitters');
+		JToolBarHelper::addNew();
+		JToolBarHelper::editList();
+		JToolBarHelper::deleteList();
 		JToolBarHelper::custom('back', 'back', 'back', 'back', false);
-  	  	
-  	// set the menu
-  	RedformHelper::setMenu();
 
-  	/* Display the page */
-  	parent::display($tpl);
-  }
-  
+		// set the menu
+		RedformHelper::setMenu();
+
+		/* Display the page */
+		parent::display($tpl);
+	}
+
 }
-?>

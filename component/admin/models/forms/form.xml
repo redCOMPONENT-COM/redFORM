@@ -179,7 +179,7 @@
 	<fieldset name="payment" label="COM_REDFORM_FORM_FIELDSET_PAYMENT">
 					
 		<field
-			name="paymentactive"
+			name="activatepayment"
 			type="list"
 			default="1"
 			label="COM_REDFORM_PAYMENTACTIVE"

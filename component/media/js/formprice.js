@@ -71,7 +71,7 @@ function updatePrice()
 		// insert total right after last div.redform-form
 		new Element('div', {id : 'totalprice', 'class' : "fieldline"})
 		    .set('html', '<div class="label">'+totalpricestr+'</div><div class="field">'+currency+' <span></span></div>')
-		    .injectAfter(instance.getElements('.redform-form').getLast());
+		    .inject(instance.getElements('.redform-form').getLast());
 		instance.getElement("#totalprice span").set('text', Math.round(price*100)/100);
 	}
 	else if (instance.getElement("#totalprice")) {

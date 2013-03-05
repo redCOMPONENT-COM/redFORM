@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@ $colspan  = $nbfields + 5 + ($this->form->activatepayment ? 2 : 0 );
 if (empty($this->integration) && $this->params->get('showintegration', false)) {
 	$colspan++;
 }
+JHtml::_('behavior.tooltip');
 ?>
 <script type="text/javascript">
 function submitbutton(pressbutton) {
@@ -35,7 +36,7 @@ function submitbutton(pressbutton) {
 	else {
 		submitform(pressbutton);
 	}
-} 
+}
 </script>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 	<div class="button2-left">
@@ -44,7 +45,7 @@ function submitbutton(pressbutton) {
 			               . '&form_id=' . (empty($this->form) ? 0 : $this->form->id)
 			               . (!empty($this->integration) ? '&integration='.$this->integration : '')
 			               . ($this->xref ? '&xref='.$this->xref : '')
-			               . '&format=raw'; 
+			               . '&format=raw';
 			               ?>
 			<?php echo JHTML::link($csvlink, JText::_('COM_REDFORM_CSV_EXPORT')); ?>
 		</div>
@@ -80,26 +81,26 @@ function submitbutton(pressbutton) {
 	<?php endif; ?>
 	<?php foreach ($this->fields as $key => $value) { ?>
 		<th><?php echo $value->field_header; ?></th>
-	<?php } ?> 
+	<?php } ?>
 	<?php if ($this->form->activatepayment): ?>
 		<th width="20"><?php echo JText::_('COM_REDFORM_Price'); ?></th>
 		<th width="20"><?php echo JText::_('COM_REDFORM_Payment'); ?></th>
 	<?php endif;?>
 	</tr></thead>
-	
+
 	<tfoot>
 	<tr>
 		<th colspan="<?php echo $colspan; ?>"><?php echo $this->pagination->getListFooter(); ?></th>
 	 </tr>
 	</tfoot>
-	
+
 	<tbody>
 	<?php
 	/* Data */
 	$k = 1;
-	if (count($this->submitters) > 0) 
+	if (count($this->submitters) > 0)
 	{
-		foreach ($this->submitters as $id => $row) 
+		foreach ($this->submitters as $id => $row)
 		{
 			$link 	= 'index.php?option=com_redform&task=edit&controller=submitters&hidemainmenu=1&form_id='.$row->form_id.'&cid[]='. $row->sid;
 			?>
@@ -126,10 +127,10 @@ function submitbutton(pressbutton) {
 				<?php endif; ?>
 				</td>
 				<?php
-				foreach ($this->fields as $key => $field) 
+				foreach ($this->fields as $key => $field)
 				{
 					$fieldname = 'field_'. $field->id;
-					if (isset($row->$fieldname)) 
+					if (isset($row->$fieldname))
 					{
 						$data = str_replace('~~~', '<br />', $row->$fieldname);
 						if (stristr($data, JPATH_ROOT)) $data = '<a href="'.str_replace(DS, '/', str_replace(JPATH_ROOT, JURI::root(true), $data)).'" target="_blank">'.$data.'</a>';
@@ -137,25 +138,25 @@ function submitbutton(pressbutton) {
 					}
 					else echo '<td></td>';
 				}
-				?>			
+				?>
 				<?php if ($this->form->activatepayment): ?>
 					<td><?php echo $row->price; ?></td>
 					<td class="price <?php echo ($row->paid ? 'paid' : 'unpaid'); ?>">
 						<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit_key='.$row->submit_key), JText::_('COM_REDFORM_history')); ?>
 						<?php if (!$row->paid): ?>
-						<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'publish_x.png'); ?><?php echo $link; ?></span>
+						<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID').'::'.$row->status; ?>"><?php echo JHTML::image('media/com_redform/images/no.png', 'no.png'); ?><?php echo $link; ?></span>
 						<?php echo ' '.JHTML::link(JURI::root().'/index.php?option=com_redform&controller=payment&task=select&key='.$row->submit_key, JText::_('COM_REDFORM_link')); ?>
 						<?php else: ?>
-						<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'tick.png'); ?><?php echo $link; ?></span>
-						<?php endif; ?>						
+						<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID').'::'.$row->status; ?>"><?php echo JHTML::image('media/com_redform/images/ok.png', 'ok.png'); ?><?php echo $link; ?></span>
+						<?php endif; ?>
 					</td>
 				<?php endif;?>
 			</tr>
-			<?php 
+			<?php
 			$k++;
 		}
 	}
-	
+
 	?>
 	</tbody>
 </table>
