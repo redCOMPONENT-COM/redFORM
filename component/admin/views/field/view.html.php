@@ -38,6 +38,7 @@ class RedformViewField extends JViewLegacy {
 		$document	=  JFactory::getDocument();
 		JHTML::_('behavior.modal');
 		$document->addScript(JURI::root().'/media/com_redform/js/ajaxvalues.js');
+		$document->addScriptDeclaration("var redformmedia = '".JURI::root()."/media/com_redform'");
 
 		$row = $this->get('Data');
 

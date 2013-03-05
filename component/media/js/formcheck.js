@@ -231,8 +231,8 @@ function AddUser()
 		new Element('a', {'href' : '#'}).set('text', '# '+(curform+1)).addEvent('click', function(ev) {
 			ev.preventDefault();
 			ShowSingleForm('div#formfield'+(curform+1));
-		}).injectInside(document.id("signedusers"));
-		new Element('br').injectInside(document.id("signedusers"));
+		}).inject(document.id("signedusers"));
+		new Element('br').inject(document.id("signedusers"));
 		document.getElement("input[name='curform']").setProperty('value', curform+1);
 	}
 }

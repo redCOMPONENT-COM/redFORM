@@ -26,7 +26,6 @@ $row = 0;
 ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm" class="form-validate form-horizontal">
 	<div class="span10 form-horizontal">
-
 	<fieldset>
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="#details" data-toggle="tab"><?php echo JText::_('COM_REDFORM_Form');?></a></li>
@@ -91,6 +90,7 @@ $row = 0;
 			</div>
 		</div>
 	</fieldset>
+	</div>
 
 	<?php echo JHTML::_( 'form.token' ); ?>
 	<input type="hidden" name="id" value="<?php echo $this->row->id; ?>" />

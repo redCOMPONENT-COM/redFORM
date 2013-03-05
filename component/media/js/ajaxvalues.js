@@ -18,7 +18,7 @@ window.addEvent('domready', function() {
 	SqueezeBox.initialize({handler: 'iframe', size: {x: 600, y: 500}});
     $$('a.valuemodal').each(function(el) {
       el.addEvent('click', function(e) {
-        new Event(e).stop();
+        e.stop();
         SqueezeBox.fromElement(el);
       });
     });
@@ -72,7 +72,7 @@ function update_values()
 					if(document.id('value-'+el.id) != null){
 						document.id('value-'+el.id).dispose();
 					}
-					newRow(el).injectInside(rows);
+					newRow(el).inject(rows);
 					
 				});
 			},
@@ -109,40 +109,40 @@ function newRow(value)
 
 	var tr = new Element('tr', {'id': 'value-'+value.id, 'class': 'value-details'});
 	// value
-	new Element('td').appendText(value.value).injectInside(tr);
+	new Element('td').appendText(value.value).inject(tr);
 	// label
-	new Element('td').appendText(value.label).injectInside(tr);
+	new Element('td').appendText(value.label).inject(tr);
 	// published
-	new Element('td').appendText(value.price).injectInside(tr);
+	new Element('td').appendText(value.price).inject(tr);
 	if (value.published == 1) {
-		new Element('img', {'src': 'http://'+document.location.host+'/administrator/templates/bluestork/images/admin/tick.png', 'style': 'cursor:pointer;', 'alt': textyes, events: {click: function(){ ajaxgetandupdate('index.php?option=com_redform&controller=values&task=ajaxunpublish&tmpl=component&cid[]='+value.id);}}})
-			.injectInside(new Element('td').injectInside(tr));
+		new Element('img', {'src': redformmedia+'/images/ok.png', 'style': 'cursor:pointer;', 'alt': textyes, events: {click: function(){ ajaxgetandupdate('index.php?option=com_redform&controller=values&task=ajaxunpublish&tmpl=component&cid[]='+value.id);}}})
+			.inject(new Element('td').inject(tr));
 	}
 	else {
-		new Element('img', {'src': 'http://'+document.location.host+'/administrator/templates/bluestork/images/admin/publish_x.png', 'style': 'cursor:pointer;', 'alt': textno, events: {click: function(){ ajaxgetandupdate('index.php?option=com_redform&controller=values&task=ajaxpublish&tmpl=component&cid[]='+value.id);}}})
-		.injectInside(new Element('td').injectInside(tr));
+		new Element('img', {'src': redformmedia+'/images/no.png', 'style': 'cursor:pointer;', 'alt': textno, events: {click: function(){ ajaxgetandupdate('index.php?option=com_redform&controller=values&task=ajaxpublish&tmpl=component&cid[]='+value.id);}}})
+		.inject(new Element('td').inject(tr));
 	}  
 	// up/down links
-	var tdlink = new Element('td').injectInside(tr);
+	var tdlink = new Element('td').inject(tr);
 	var upurl  = 'index.php?option=com_redform&controller=values&task=ajaxorderup&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
 	var downurl = 'index.php?option=com_redform&controller=values&task=ajaxorderdown&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
-	new Element('div', { 'alt': textup, 'class': "upactive" , events: {click: function(){ajaxgetandupdate(upurl);}}})
-		.injectInside(tdlink);
-	new Element('div', { 'alt': textdown, 'class': "downactive" , events: {click: function(){ajaxgetandupdate(downurl);}}})
-		.injectInside(tdlink);
-	new Element('span').set('text', value.ordering).injectInside(tdlink);
+	new Element('img',{'src': redformmedia+'/images/uparrow.png', 'style': 'cursor:pointer;', 'alt': textup, 'class': "uparrow" , events: {click: function(){ajaxgetandupdate(upurl);}}})
+		.inject(tdlink);
+	new Element('img',{'src': redformmedia+'/images/downarrow.png', 'style': 'cursor:pointer;', 'alt': textdown, 'class': "downarrow" , events: {click: function(){ajaxgetandupdate(downurl);}}})
+		.inject(tdlink);
+	new Element('span').set('text', value.ordering).inject(tdlink);
 	// edit link
-	var tdlink = new Element('td').injectInside(tr);
+	var tdlink = new Element('td').inject(tr);
 	new Element('a', {'href': 'index.php?option=com_redform&controller=values&task=ajaxedit&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid})
-	.appendText(edittext).injectInside(tdlink).addEvent('click', function(e) {
-		new Event(e).stop();
+	.appendText(edittext).inject(tdlink).addEvent('click', function(e) {
+		e.stop();
 		SqueezeBox.fromElement(this);
 	});
 	// remove link
-	var tddelete = new Element('td', {'class': 'cell-delvalue'}).injectInside(tr);
+	var tddelete = new Element('td', {'class': 'cell-delvalue'}).inject(tr);
 	var link = 'index.php?option=com_redform&controller=values&task=ajaxremove&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
 	new Element('a', {'href': '#', events: {click: function(){ajaxgetandupdate(link);}}})
-	.appendText(deletetext).injectInside(tddelete).addEvent('click', function(e) {
+	.appendText(deletetext).inject(tddelete).addEvent('click', function(e) {
 		ajaxgetandupdate(link);
 	});
 	return tr;
