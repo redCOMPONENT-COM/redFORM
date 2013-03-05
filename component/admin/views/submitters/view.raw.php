@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,58 +24,58 @@ jimport( 'joomla.application.component.view' );
 
 /**
  * redFORM View
- */
+*/
 class RedformViewSubmitters extends JViewLegacy {
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) 
+	function display($tpl = null)
 	{
 		/* Get the submitters list */
 		$submitters = $this->get('Submitters');
 		$integration = JRequest::getVar('integration', '');
-  	/* Get the event details if there is an xref value */
-  	if (JRequest::getInt('xref', false) && $integration == 'redevent')
-  	{ // check integration too !
-  		$course = $this->get('Course');
-  		$coursetitle = $course->course_title;
-  	}
-  	else 
-  	{
-  		$course      = null;
-  		$coursetitle = null;
-  	}
+		/* Get the event details if there is an xref value */
+		if (JRequest::getInt('xref', false) && $integration == 'redevent')
+		{ // check integration too !
+			$course = $this->get('Course');
+			$coursetitle = $course->course_title;
+		}
+		else
+		{
+			$course      = null;
+			$coursetitle = null;
+		}
 		$fields = $this->get('Fields');
 		$export_data = $this->get('SubmittersExport');
-  	$form = $this->get('Form');
-  	
-  	$this->assignRef('form', $form);  	
-  	$this->assignRef('course', $course);
-    $this->assignRef('xref', JRequest::getInt('xref', 0));
-    $this->assignRef('integration', $integration);
-				
+		$form = $this->get('Form');
+
+		$this->assignRef('form', $form);
+		$this->assignRef('course', $course);
+		$this->assign('xref', JRequest::getInt('xref', 0));
+		$this->assign('integration', $integration);
+
 		$this->assignRef('export_data', $export_data);
 		$this->assignRef('fields',     $fields);
 		$this->assignRef('event',      $coursetitle);
 		$this->assignRef('submitters', $submitters);
-		
+
 		parent::display($tpl);
 	}
 
-	function writecsvrow($fields, $delimiter = ',', $enclosure = '"') 
+	function writecsvrow($fields, $delimiter = ',', $enclosure = '"')
 	{
-    $delimiter_esc = preg_quote($delimiter, '/');
-    $enclosure_esc = preg_quote($enclosure, '/');
+		$delimiter_esc = preg_quote($delimiter, '/');
+		$enclosure_esc = preg_quote($enclosure, '/');
 
-    $output = array();
-    foreach ($fields as $field) {
-        $output[] = preg_match("/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field) ? (
-            $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure
-        ) : $field;
-    }
+		$output = array();
+		foreach ($fields as $field) {
+			$output[] = preg_match("/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field) ? (
+			$enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure
+			) : $field;
+}
 
-    return join($delimiter, $output) . "\n";
-	} 
+return join($delimiter, $output) . "\n";
+}
 }
 ?>
