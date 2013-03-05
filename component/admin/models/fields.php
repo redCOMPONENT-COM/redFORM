@@ -239,7 +239,7 @@ class RedformModelFields extends JModelLegacy {
 		foreach ($fields as $key => $field) 
 		{
 			$tablefield = 'field_'. $field->id;
-			$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$field->form_id)." DROP ".$db->nameQuote($tablefield);
+			$q = "ALTER TABLE ".$db->qn('#__rwf_forms_'.$field->form_id)." DROP ".$db->qn($tablefield);
 			$db->setQuery($q);
 			if (!$db->query()) {
 				JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_remove_field_from_old_form').' '.$db->getErrorMsg());
@@ -307,7 +307,7 @@ class RedformModelFields extends JModelLegacy {
 		/* Get the form IDs */
 		$q = "SELECT id FROM #__rwf_forms";
 		$db->setQuery($q);
-		$forms = $db->loadResultArray();
+		$forms = $db->loadColumn();
 		
 		/* Go through all the forms */
 		foreach ($forms as $key => $form_id) 
@@ -318,22 +318,22 @@ class RedformModelFields extends JModelLegacy {
 				FROM #__rwf_fields
 				WHERE form_id = ".$form_id;
 			$db->setQuery($q);
-			$fields = $db->loadResultArray();
+			$fields = $db->loadColumn();
 			/* ID field is required */
 			$fields[] = 'id';
 			
 			/* Load the columns that are created for this form */
 			$columns = array();
-			$q = "SHOW COLUMNS FROM ".$db->nameQuote('#__rwf_forms_'.$form_id);
+			$q = "SHOW COLUMNS FROM ".$db->qn('#__rwf_forms_'.$form_id);
 			$db->setQuery($q);
 			$db->query();
-			$columns = $db->loadResultArray();
+			$columns = $db->loadColumn();
 			/* Get the columns to be deleted */
 			$del_columns = array_diff($columns, $fields);
 			
 			/* Remove any columns that are no longer fields */
 			foreach ($del_columns as $ckey => $column) {
-				$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$form_id)." DROP `".$column."`";
+				$q = "ALTER TABLE ".$db->qn('#__rwf_forms_'.$form_id)." DROP `".$column."`";
 				$db->setQuery($q);
 				$db->query();
 			}

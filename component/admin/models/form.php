@@ -261,7 +261,7 @@ class RedformModelForm extends JModelAdmin
 			$q = "SELECT id FROM #__rwf_fields
 				WHERE ( $cids )";
 			$database->setQuery($q);
-			$fieldids = $database->loadResultArray();
+			$fieldids = $database->loadColumn();
 			
 			/* See if there is any data */
 			

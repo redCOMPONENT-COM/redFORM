@@ -111,7 +111,7 @@ class RedformModelSubmitter extends JModelLegacy {
 	    if ($form_id && $form_id > 0) 
 	    {
 	      $query = "SELECT f.*, s.*, s.id as sid
-	        FROM ".$db->nameQuote('#__rwf_forms_'.$form_id)." f
+	        FROM ".$db->qn('#__rwf_forms_'.$form_id)." f
 	        LEFT JOIN #__rwf_submitters s
 	        ON f.id = s.answer_id
 	        WHERE s.id = ".$cid; 
@@ -228,7 +228,7 @@ class RedformModelSubmitter extends JModelLegacy {
 		if ($form_id && $sid) 
 		{
 			$query = "SELECT *
-				FROM ".$this->_db->nameQuote('#__rwf_forms_'.$form_id)." f
+				FROM ".$this->_db->qn('#__rwf_forms_'.$form_id)." f
 				LEFT JOIN #__rwf_submitters s
 				ON f.id = s.answer_id
 				WHERE s.id = ".$this->_db->Quote($sid); 
@@ -428,7 +428,7 @@ class RedformModelSubmitter extends JModelLegacy {
   	
   	/* Load the fields */
   	$q = "SELECT id, field, fieldtype, ordering, params
-        FROM ".$db->nameQuote('#__rwf_fields')."
+        FROM ".$db->qn('#__rwf_fields')."
         WHERE form_id = ".$form_id."
         ORDER BY ordering";
   	$db->setQuery($q);

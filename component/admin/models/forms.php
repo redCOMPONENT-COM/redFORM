@@ -149,7 +149,7 @@ class RedformModelForms extends JModelLegacy
   		$q = "SELECT id FROM #__rwf_fields
   		WHERE ( $cids )";
   		$database->setQuery($q);
-  		$fieldids = $database->loadResultArray();
+  		$fieldids = $database->loadColumn();
 
   		/* See if there is any data */
 
@@ -247,11 +247,11 @@ class RedformModelForms extends JModelLegacy
 		/* construct form name */
 		$q = "SHOW TABLES LIKE ".$db->Quote($db->getPrefix().'rwf_forms_'.$formid);
 		$db->setQuery($q);
-		$result = $db->loadResultArray();
+		$result = $db->loadColumn();
 		if (count($result) == 0) {
 			/* Table doesn't exist, need to create it */
-			$q = "CREATE TABLE ".$db->nameQuote('#__rwf_forms_'.$formid)." (";
-			$q .= $db->nameQuote('id')." INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ";
+			$q = "CREATE TABLE ".$db->qn('#__rwf_forms_'.$formid)." (";
+			$q .= $db->qn('id')." INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ";
 			$q .= ") COMMENT = ".$db->Quote('redFORMS Form '.$formid);
 			$db->setQuery($q);
 			if (!$db->query()) JError::raiseWarning('error', $db->getErrorMsg());

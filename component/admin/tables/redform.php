@@ -46,7 +46,7 @@ class RedformTableRedform extends JTable {
 		
 		$query = ' SELECT * FROM #__rwf_fields WHERE form_id ='. $db->Quote($this->id);
 		$db->setQuery($query);
-		return $db->loadResultArray();
+		return $db->loadColumn();
 	}
 	
 	function store( $updateNulls=false )

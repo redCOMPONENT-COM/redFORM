@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -22,9 +22,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 	<table class="table table-striped">
 		<thead>
 		<tr>
-			<th width="1%" class="nowrap center hidden-phone">
-			<?php echo JText::_('COM_REDFORM_ID'); ?>
-			</th>
+			<th width="1%" class="nowrap center hidden-phone">#</th>
 			<th width="1%" class="hidden-phone">
 				<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 			</th>
@@ -56,10 +54,10 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 		$k = 0;
 		for ($i=0, $n=count( $this->forms ); $i < $n; $i++) {
 			$row = $this->forms[$i];
-			
+
 			JFilterOutput::objectHTMLSafe($row);
 			$link 	= 'index.php?option=com_redform&task=edit&controller=forms&cid[]='. $row->id;
-						
+
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
 			$my  = JFactory::getUser();
 			?>
@@ -103,8 +101,8 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 					<?php echo JHtml::_('jgrid.published', $row->published, $i); ?>
 				</td>
 				<td width="10%" align="center">
-					<?php echo $row->formstarted ? 
-					           JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) : 
+					<?php echo $row->formstarted ?
+					           JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) :
 					           JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
 				</td>
 				<td>
@@ -114,7 +112,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				?>
 				</td>
 				<td>
-				<?php 
+				<?php
 					echo "{redform}".$row->id."{/redform}";
 				?>
 				</td>

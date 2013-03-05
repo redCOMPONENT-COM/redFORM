@@ -109,7 +109,7 @@ class RedformTableFields extends JTable {
            . ' ORDER BY ordering '
            ;
     $db->setQuery($query);
-    return $db->loadResultArray();
+    return $db->loadColumn();
   }
 
 }

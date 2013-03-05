@@ -35,7 +35,7 @@ class RedformController extends JControllerLegacy
 		if (JRequest::getVar('view', '') == '') {
 			JRequest::setVar('view', 'forms');
 		}
-		parent::display();
+		parent::display($cachable, $urlparams);
 	}
 
 	/**

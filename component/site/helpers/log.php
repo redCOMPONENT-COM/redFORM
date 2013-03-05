@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ defined('_JEXEC') or die('Restricted access');
  * Helper class for logging
  * @package    Notes
  * @subpackage com_notes
- */
+*/
 class RedformHelperLog
 {
 	/**
@@ -31,18 +31,18 @@ class RedformHelperLog
 	 * @param string $comment  The comment to log
 	 * @param int $userId      An optional user ID
 	 */
-	function simpleLog($comment, $userId = 0)
+	public static function simpleLog($comment, $userId = 0)
 	{
 		JLog::addLogger(
-			array('text_file' => 'com_redform.log'),
-			JLog::DEBUG,
-			'com_redform'		
+		array('text_file' => 'com_redform.log'),
+		JLog::DEBUG,
+		'com_redform'
 		);
 		JLog::add($comment, JLog::DEBUG, 'com_redform');
 	}
 
 
-	function clear()
+	public static function clear()
 	{
 		$app = & JFactory::getApplication();
 

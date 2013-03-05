@@ -111,7 +111,7 @@ class RedFormModelPayment extends JModelLegacy
 		$query = ' SELECT price FROM #__rwf_submitters WHERE submit_key = '. $this->_db->Quote($this->_submit_key)
 		            ;
 		$this->_db->setQuery($query);
-		$res = $this->_db->loadResultArray();
+		$res = $this->_db->loadColumn();
 		$total = 0.0;
 		foreach ($res as $p) {
 			$total += $p;
