@@ -85,6 +85,6 @@
 	
 	<!-- Plugins here -->
 	<plugins>
-		<plugin folder="admin/plugins" plugin="plg_content_redform" group="content" />
+		<plugin folder="admin/plugins" plugin="plg_content_redform" element="redform" group="content" publish="true"/>
 	</plugins>
 </extension>

@@ -128,14 +128,22 @@ class com_redformInstallerScript
 		$installer = new JInstaller();
 
 		// Install plugins
-		foreach($manifest->plugins->plugin as $plugin) {
+		foreach($manifest->plugins->plugin as $plugin)
+		{
 			$attributes                 = $plugin->attributes();
 			$plg                        = $source . '/' . $attributes['folder'].'/'.$attributes['plugin'];
 // 			echo '<pre>';print_r($plg); echo '</pre>';exit;
 			$new                        = ($attributes['new']) ? '&nbsp;(<span class="green">New in v.'.$attributes['new'].'!</span>)' : '';
-			if($installer->install($plg)){
+			if($installer->install($plg))
+			{
+				if (isset($attributes['publish']) && $attributes['publish'])
+				{
+					$this->publishPlugin($attributes['element'], $attributes['group']);
+				}
 				$this->installed_plugs[]    = array('plugin' => $attributes['plugin'].$new, 'group'=> $attributes['group'], 'upgrade' => true);
-			}else{
+			}
+			else
+			{
 				$this->installed_plugs[]    = array('plugin' => $attributes['plugin'], 'group'=> $attributes['group'], 'upgrade' => false);
 				$this->iperror[] = JText::_('Error installing plugin').': '.$attributes['plugin'];
 			}
@@ -143,16 +151,32 @@ class com_redformInstallerScript
 		return true;
 
 		// Install modules
-		foreach($manifest->modules->module as $module) {
+		foreach($manifest->modules->module as $module)
+		{
 			$attributes             = $module->attributes();
 			$mod                    = $source . '/' . $attributes['folder'].'/'.$attributes['module'];
 			$new                    = ($attributes['new']) ? '&nbsp;(<span class="green">New in v.'.$attributes['new'].'!</span>)' : '';
-			if($installer->install($mod)){
+			if($installer->install($mod))
+			{
 				$this->installed_mods[] = array('module' => $attributes['module'].$new, 'upgrade' => true);
-			}else{
+			}
+			else
+			{
 				$this->installed_mods[] = array('module' => $attributes['module'], 'upgrade' => false);
 				$this->iperror[] = JText::_('Error installing module').': '.$attributes['module'];
 			}
 		}
+	}
+
+	protected function publishPlugin($element, $folder)
+	{
+		$db      = JFactory::getDbo();
+		$query = $db->getQuery(true)
+		->update($db->qn('#__extensions'))
+		->set($db->qn('enabled').' = '.$db->q('1'))
+		->where($db->qn('element').' = '.$db->q($element))
+		->where($db->qn('folder').' = '.$db->q($folder));
+		$db->setQuery($query);
+		$db->execute();
 	}
 }
