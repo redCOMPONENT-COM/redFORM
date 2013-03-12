@@ -424,6 +424,12 @@ class RedFormCore extends JObject {
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
+
+						if ($field->parameters->get('placeholder'))
+						{
+							$element .= 'placeholder="' . addslashes($field->parameters->get('placeholder')) . '"';
+						}
+
 						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 						$element .= ' value="';
 						if ($answers)
@@ -441,6 +447,7 @@ class RedFormCore extends JObject {
 						else {
 							$element .= $field->default;
 						}
+
 						$element .= "\" />\n";
 						$element .= "</div>\n";
 
@@ -484,6 +491,12 @@ class RedFormCore extends JObject {
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
+
+						if ($field->parameters->get('placeholder'))
+						{
+							$element .= 'placeholder="' . addslashes($field->parameters->get('placeholder')) . '"';
+						}
+
 						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 						$element .= ' value="';
 						if ($answers)
@@ -512,6 +525,12 @@ class RedFormCore extends JObject {
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
+
+						if ($field->parameters->get('placeholder'))
+						{
+							$element .= 'placeholder="' . addslashes($field->parameters->get('placeholder')) . '"';
+						}
+
 						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 						$element .= ' value="';
 						if ($answers)
@@ -540,6 +559,12 @@ class RedFormCore extends JObject {
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' size="'.$field->parameters->get('size', 25).'"';
 						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
+
+						if ($field->parameters->get('placeholder'))
+						{
+							$element .= 'placeholder="' . addslashes($field->parameters->get('placeholder')) . '"';
+						}
+
 						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 						$element .= ' value="';
 						if ($answers)
@@ -662,6 +687,12 @@ class RedFormCore extends JObject {
 							$element .= ' id="field'.$field->id.'" ';
 							$element .= ' size="'.$field->parameters->get('size', 25).'"';
 							$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
+
+							if ($field->parameters->get('placeholder'))
+							{
+								$element .= 'placeholder="' . addslashes($field->parameters->get('placeholder')) . '"';
+							}
+
 							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
 							$element .= ' value="';
 							if ($answers)
