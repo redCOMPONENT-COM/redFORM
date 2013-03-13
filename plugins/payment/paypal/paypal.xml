@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.7" type="plugin" group="redform_payment" method="upgrade">
-  <name>PLG_REDFORM_PAYMENT_PAYPAL</name>
+<extension version="1.7" type="plugin" group="redform_payment"
+	method="upgrade">
+	<name>PLG_REDFORM_PAYMENT_PAYPAL</name>
 	<creationDate>jan, 2012</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
@@ -8,21 +9,36 @@
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
 	<version>2.5</version>
-  <description>PLG_REDFORM_PAYMENT_PAYPAL_XML_DESCRIPTION</description>
-  
-  <files>
-    <filename plugin="paypal">paypal.php</filename>
-    <folder>paypal</folder>
-    <filename>index.html</filename>
-    <folder>language</folder>
-  </files>
+	<description>PLG_REDFORM_PAYMENT_PAYPAL_XML_DESCRIPTION</description>
 
-  <config><fields name="params"><fieldset name="extra" label="extra">    
-    <field name="paypal_account" type="text" default="" label="PAYPAL_ACCOUNT" description="PAYPAL_ACCOUNT_DESC" />
-    <field name="paypal_sandbox" type="radio" default="1" label="PAYPAL_USE_SANDBOX" description="PAYPAL_USE_SANDBOX_DESC">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
-    </field>
-  </fieldset></fields></config>
-  
+	<files>
+		<filename plugin="paypal">paypal.php</filename>
+		<folder>paypal</folder>
+		<filename>index.html</filename>
+		<folder>language</folder>
+	</files>
+
+	<config>
+		<fields name="params">
+			<fieldset name="extra" label="extra">
+				<field name="paypal_account" type="text" default=""
+					label="PAYPAL_ACCOUNT" description="PAYPAL_ACCOUNT_DESC" />
+
+				<field name="paypal_sandbox" type="radio" default="1"
+					label="PAYPAL_USE_SANDBOX" description="PAYPAL_USE_SANDBOX_DESC">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+
+				<field name="inc_languages"
+				       type="language"
+				       multiple="true"
+				       size="5"
+				       label="PLG_REDFORM_PAYMENT_INCLUDE_LANGUAGES" description="PLG_REDFORM_PAYMENT_INCLUDE_LANGUAGES_DESC">
+				</field>
+				
+			</fieldset>
+		</fields>
+	</config>
+
 </extension>

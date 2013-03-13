@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.7" type="plugin" group="redform_payment" method="upgrade">
-  <name>PLG_REDFORM_IRIDIUM</name>
+<extension version="1.7" type="plugin" group="redform_payment"
+	method="upgrade">
+	<name>PLG_REDFORM_IRIDIUM</name>
 	<creationDate>jan, 2013</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
@@ -8,40 +9,43 @@
 	<copyright>(C) 2008 - 2013 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
 	<version>2.5</version>
-  <description>PLG_REDFORM_IRIDIUM_XML_DESC</description>
-  
-  <files>
-    <filename plugin="iridium">iridium.php</filename>
-    <folder>helpers</folder>
-    <filename>index.html</filename>
-    <folder>language</folder>
-  </files>
+	<description>PLG_REDFORM_IRIDIUM_XML_DESC</description>
 
-  <config>
+	<files>
+		<filename plugin="iridium">iridium.php</filename>
+		<folder>helpers</folder>
+		<filename>index.html</filename>
+		<folder>language</folder>
+	</files>
+
+	<config>
 		<fields name="params">
-		  <fieldset name="extra" label="extra">
-		    
-		    <field name="merchantid" type="text" default="" 
-		           label="PLG_REDFORM_IRIDIUM_MERCHANTID_LABEL" 
-		           description="PLG_REDFORM_IRIDIUM_MERCHANTID_DESC" />
-		           
-		    <field name="password" type="text" default="" 
-		           label="PLG_REDFORM_IRIDIUM_PASSWORD_LABEL" 
-		           description="PLG_REDFORM_IRIDIUM_PASSWORD_DESC" />
-		           
-			<field type="list" name="hashmethod" default="sha1"
-			       label="PLG_REDFORM_IRIDIUM_HASHTYPE_LABEL" 
-			       description="PLG_REDFORM_IRIDIUM_HASHTYPE_DESC" >
-				<option value="sha1">SHA1</option>
-				<option value="md5">MD5</option>
-			</field>
-			
-		    <field name="presharedkey" type="text" default="" 
-		           label="PLG_REDFORM_IRIDIUM_PRESHAREDKEY_LABEL" 
-		           description="PLG_REDFORM_IRIDIUM_PRESHAREDKEY_DESC" />
-		           				
-		  </fieldset>
-	  </fields>
-  </config>
-  
+			<fieldset name="extra" label="extra">
+
+				<field name="merchantid" type="text" default=""
+					label="PLG_REDFORM_IRIDIUM_MERCHANTID_LABEL" description="PLG_REDFORM_IRIDIUM_MERCHANTID_DESC" />
+
+				<field name="password" type="text" default=""
+					label="PLG_REDFORM_IRIDIUM_PASSWORD_LABEL" description="PLG_REDFORM_IRIDIUM_PASSWORD_DESC" />
+
+				<field type="list" name="hashmethod" default="sha1"
+					label="PLG_REDFORM_IRIDIUM_HASHTYPE_LABEL" description="PLG_REDFORM_IRIDIUM_HASHTYPE_DESC">
+					<option value="sha1">SHA1</option>
+					<option value="md5">MD5</option>
+				</field>
+
+				<field name="presharedkey" type="text" default=""
+					label="PLG_REDFORM_IRIDIUM_PRESHAREDKEY_LABEL" description="PLG_REDFORM_IRIDIUM_PRESHAREDKEY_DESC" />
+
+
+				<field name="inc_languages"
+				       type="language"
+				       multiple="true"
+				       size="5"
+				       label="PLG_REDFORM_PAYMENT_INCLUDE_LANGUAGES" description="PLG_REDFORM_PAYMENT_INCLUDE_LANGUAGES_DESC">
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+
 </extension>

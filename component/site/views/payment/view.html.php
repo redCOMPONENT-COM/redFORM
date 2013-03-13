@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -26,9 +26,9 @@ jimport( 'joomla.application.component.view');
 /**
  */
 class RedformViewPayment extends JView {
-	
-	function display($tpl = null) 
-	{		
+
+	function display($tpl = null)
+	{
 		if ($this->getLayout() == 'select') {
 			return $this->_displaySelect($tpl);
 		}
@@ -37,46 +37,46 @@ class RedformViewPayment extends JView {
 		}
 		parent::display($tpl);
 	}
-	
-	function _displaySelect($tpl = null) 
+
+	function _displaySelect($tpl = null)
 	{
 		$uri 		    = &JFactory::getURI();
 		$document   = &JFactory::getDocument();
-		
+
 		$submit_key = JRequest::getVar('key',    '');
 		$source     = JRequest::getVar('source', '');
 		if (empty($submit_key)) {
 			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_KEY');
 			return;
 		}
-		
+
 		$document->setTitle($document->getTitle().' - '.JText::_('COM_REDFORM'));
-		
+
 		$gwoptions = $this->get('GatewayOptions');
 		if (!count($gwoptions)) {
 			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_GATEWAY');
 			return;
 		}
 		$lists['gwselect'] = JHTML::_('select.genericlist', $gwoptions, 'gw');
-		
+
 		$price    = $this->get('Price');
 		$currency = $this->get('Currency');
-		
-		$this->assignRef('lists',  $lists);		
-    $this->assign('action',    htmlspecialchars($uri->toString()));
-    $this->assign('key',       $submit_key);
-    $this->assign('source',    $submit_key);
-    $this->assign('price',     $price);
-    $this->assign('currency',  $currency);
-    
+
+		$this->assignRef('lists',  $lists);
+		$this->assign('action',    htmlspecialchars($uri->toString()));
+		$this->assign('key',       $submit_key);
+		$this->assign('source',    $submit_key);
+		$this->assign('price',     $price);
+		$this->assign('currency',  $currency);
+
 		parent::display($tpl);
 	}
-	
+
 	function _displayFinal($tpl = null)
 	{
 		$document   = &JFactory::getDocument();
 		$document->setTitle($document->getTitle().' - '.JText::_('COM_REDFORM'));
-				
+
 		$form = $this->get('form');
 		$text = '';
 		switch (JRequest::getVar('state'))
@@ -88,9 +88,9 @@ class RedformViewPayment extends JView {
 				$text = $form->paymentprocessing;
 				break;
 		}
-		
+
 		$this->assign('text',  $text);
-		
+
 		parent::display($tpl);
 	}
 }
