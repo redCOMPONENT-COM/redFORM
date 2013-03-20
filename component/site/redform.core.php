@@ -375,7 +375,17 @@ class RedFormCore extends JObject {
 						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
 						$element .= ' id="field'.$field->id.'" ';
 						$element .= ' cols="'.$field->parameters->get('cols',25).'" rows="'.$field->parameters->get('rows',6).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
+
+						if ($field->readonly && !$app->isAdmin())
+						{
+							$element .= ' readonly="readonly"';
+						}
+
+						if ($field->parameters->get('placeholder'))
+						{
+							$element .= 'placeholder="' . addslashes($field->parameters->get('placeholder')) . '"';
+						}
+
 						$element .= ">";
 						if ($answers)
 						{
