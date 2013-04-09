@@ -98,18 +98,20 @@ function submitbutton(pressbutton) {
 	<?php
 	/* Data */
 	$k = 1;
+	$i = 0;
 	if (count($this->submitters) > 0)
 	{
 		foreach ($this->submitters as $id => $row)
 		{
-			$link 	= 'index.php?option=com_redform&task=edit&controller=submitters&hidemainmenu=1&form_id='.$row->form_id.'&cid[]='. $row->sid;
+			$link 	= 'index.php?option=com_redform&task=edit&controller=submitters&hidemainmenu=1&form_id='.$row->form_id.'&cid[]='. $row->id;
+			$checked = JHTML::_('grid.checkedout',  $row, $i++, 'sid');
 			?>
 			<tr class="row<?php echo $k = $k - 1; ?>">
 				<td align="center">
 					<?php echo $this->pagination->getRowOffset($id); ?>
 				</td>
 				<td>
-					<input type="checkbox" onclick="isChecked(this.checked);" value="<?php echo $row->sid; ?>" name="cid[]" id="cb<?php echo $id; ?>"/>
+					<?php echo $checked; ?>
 				</td>
 				<td><?php echo JHTML::link($link, $row->submission_date); ?></td>
 				<td><?php echo $row->formname; ?></td>

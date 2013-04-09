@@ -93,7 +93,7 @@ class RedformViewSubmitters extends JViewLegacy {
 
 		//TODO: fix the add/modify submitters from backend
 		JToolBarHelper::editList();
-		if (JRequest::getVar('xref', false)) JToolBarHelper::addNewX();
+		if (JRequest::getVar('xref', false)) JToolBarHelper::addNew();
 		JToolBarHelper::divider();
 		if (JFactory::getUser()->authorise('core.admin', 'com_redform'))
 		{
@@ -105,4 +105,3 @@ class RedformViewSubmitters extends JViewLegacy {
 	}
 
 }
-?>

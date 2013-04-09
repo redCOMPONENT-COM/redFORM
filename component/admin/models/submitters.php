@@ -77,7 +77,7 @@ class RedformModelSubmitters extends JModelLegacy {
 		$form_id = JRequest::getVar('form_id', 0);
 		$integration = JRequest::getVar('integration', 0);
 
-		$query =  ' SELECT s.submission_date, s.form_id, s.id AS sid, f.formname, u.*, s.price, s.submit_key, p.status, p.paid, s.integration, s.xref '
+		$query =  ' SELECT u.*, s.submission_date, s.form_id, s.id AS sid, f.formname, s.price, s.submit_key, p.status, p.paid, s.integration, s.xref '
 		. ($integration === 'redevent' ? ', r.id as attendee_id ': '')
 		. ' FROM '.$this->_db->qn('#__rwf_submitters').' AS s '
 		. ' INNER JOIN ' . $this->_db->qn('#__rwf_forms').' AS f ON s.form_id = f.id '
