@@ -56,7 +56,7 @@ class RedformController extends JControllerLegacy
 	function jsprice()
 	{
 		header('Content-type: text/javascript');
-		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'assets'.DS.'js'.DS.'formprice.js');
+		require_once(JPATH_SITE.'/media/com_redform/js/formprice.js');
 		die();
 	}
 
@@ -66,7 +66,7 @@ class RedformController extends JControllerLegacy
 	function jscheck()
 	{
 		header('Content-type: text/javascript');
-		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'assets'.DS.'js'.DS.'formcheck.js');
+		require_once(JPATH_SITE.'/media/com_redform/js/formcheck.js');
 		die();
 	}
 }
