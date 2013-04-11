@@ -48,15 +48,52 @@ class RedFormCore extends JObject {
 	public function __construct()
 	{
 		parent::__construct();
-		$lang =& JFactory::getLanguage();
+		$lang = JFactory::getLanguage();
 		$lang->load('com_redform', JPATH_SITE.DS.'components'.DS.'com_redform');
 		$lang->load('com_redform', JPATH_SITE, null, true);
 	}
 
+	/**
+	 * Returns a reference to the global User object, only creating it if it
+	 * doesn't already exist.
+	 *
+	 *
+	 * @param   int  $form_id  the form to use - Can be an integer or string - If string, it is converted to ID automatically.
+	 *
+	 * @return 	RedFormCore		The  object.
+	 *
+	 * @since 	1.5
+	 */
+	public static function &getInstance($form_id = 0)
+	{
+		static $instances;
+
+		if (!isset ($instances))
+		{
+			$instances = array ();
+		}
+
+		if (empty($instances[$form_id]))
+		{
+			$inst = new RedFormCore();
+			$inst->setFormId($form_id);
+			$instances[$form_id] = $inst;
+		}
+
+		return $instances[$form_id];
+	}
+
+	/**
+	 * sets form id
+	 *
+	 * @param unknown $id
+	 */
 	public function setFormId($id)
 	{
-		if ($this->_form_id !== $id) {
+		if ($this->_form_id !== $id)
+		{
 			$this->_form_id = intval($id);
+			$this->_fields = null;
 		}
 	}
 
@@ -1527,6 +1564,131 @@ class RedFormCore extends JObject {
 		if ($isvalid) {
 			return array($email, $name);
 		}
+	}
+
+	/**
+	 * submit form using user data from redmember
+	 *
+	 * @param   int     $user_id      user id
+	 * @param   string  $integration  integration key
+	 * @param   array   $options      extra submission data
+	 *
+	 * @return boolean true on success
+	 */
+	public function quickSubmit($user_id, $integration = null, $options = null)
+	{
+		if (!$user_id)
+		{
+			$this->setError('user id is required');
+			return false;
+		}
+
+		if (!$this->_form_id)
+		{
+			$this->setError('form id not set');
+			return false;
+		}
+
+		// Get User data
+		$userData = $this->getUserData($user_id);
+
+		$data = $this->prepareUserData($userData);
+
+		return $this->saveAnswers($integration, $options, $data);
+	}
+
+	/**
+	 * pulls users data
+	 *
+	 * should get it from redmember
+	 *
+	 * @param   int  $user_id  user id
+	 *
+	 * @return object
+	 */
+	protected function getUserData($user_id)
+	{
+		// for now, just get data from native joomla users
+		return JFactory::getUser($user_id);
+	}
+
+	/**
+	 * prepares data for saving
+	 *
+	 * @param   int     $xref      session id
+	 * @param   object  $form      form data
+	 * @param   object  $userData  user data
+	 *
+	 * @return array
+	 */
+	protected function prepareUserData($userData, $form_index = 1)
+	{
+		$data = array('form_id' => $this->_form_id);
+
+		$fields = $this->getFields();
+
+		foreach ($fields as $field)
+		{
+			$key   = 'field' . $field->id . '_' . $form_index;
+
+			if ($field->redmember_field)
+			{
+				// waiting for redmember coding !
+			}
+
+			switch ($field->fieldtype)
+			{
+				case 'fullname':
+					$data[$key]['fullname'][] = $userData->name;
+					break;
+
+				case 'username':
+					$data[$key]['username'][] = $userData->username;
+					break;
+
+				case 'email':
+					$data[$key]['email'][] = $userData->email;
+					break;
+
+				case 'textarea':
+				case 'date':
+				case 'wysiwyg':
+					$data[$key][$field->fieldtype] = $field->default;
+					break;
+
+				case 'text':
+				case 'hidden':
+				case 'select':
+					$data[$key][$field->fieldtype][] = $field->default;
+					break;
+
+				case 'checkbox':
+				case 'multiselect':
+				case 'recipients':
+				case 'radio':
+					$data[$key][$field->fieldtype] = explode("\n", $field->default);
+					break;
+
+				case 'price':
+					if (count($field->options))
+					{
+						$value = $field->options[0]->value;
+					}
+					else
+					{
+						$value = $field->default;
+					}
+					$data[$key][$field->fieldtype][] = $value;
+					break;
+
+
+				default:
+					// Unknown field...Do nothing
+					break;
+			}
+		}
+
+		return $data;
 	}
 }
 

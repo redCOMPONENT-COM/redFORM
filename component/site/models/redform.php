@@ -152,7 +152,18 @@ class RedformModelRedform extends JModel {
 			$registry = new JRegistry;
 			$registry->loadString($field->params);
 			$fields[$k]->parameters = $registry;
+
+			// Get Options
+			$query = $this->_db->getQuery(true);
+
+			$query->select('v.*');
+			$query->from('#__rwf_values AS v');
+			$query->where('v.field_id = ' . $field->id);
+
+			$this->_db->setQuery($query);
+			$fields[$k]->options = $this->_db->loadObjectList();
 		}
+
 		return $fields;
 	}
 
@@ -559,7 +570,7 @@ class RedformModelRedform extends JModel {
 		$redevent = false;
 
 		/* Check for the submit key */
-		$submit_key = JRequest::getVar('submit_key', false);
+		$submit_key = $data ? @$data['submit_key'] : JRequest::getVar('submit_key', false);
 		if (!$submit_key) {
 			$captcha_allowed = true;
 			$submit_key = uniqid();
@@ -568,14 +579,14 @@ class RedformModelRedform extends JModel {
 		$result->submit_key = $submit_key;
 
 		/* Get the form details */
-		$form = $this->getForm(JRequest::getInt('form_id'));
+		$form = $this->getForm($data ? $data['form_id'] : JRequest::getInt('form_id'));
 
 		/* Load the fields */
 		$fieldlist = $this->getfields($form->id);
 
 		/* Load the posted variables */
 		$post = $data ? $data : JRequest::get('post');
-		$files = JRequest::get('files');
+		$files = $data ? array() : JRequest::get('files');
 		$posted = array_merge($post, $files);
 
 		// number of submitted active forms (min is 1)
@@ -632,7 +643,6 @@ class RedformModelRedform extends JModel {
 		} /* End multi-user signup */
 
 		$this->_answers = $allanswers;
-
 		// save to session in case we need to display form again
 		$sessiondata = array();
 		foreach ($allanswers as $a)
@@ -1017,4 +1027,3 @@ class RedformModelRedform extends JModel {
 		}
 	}
 }
-?>
