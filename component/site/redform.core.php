@@ -678,9 +678,10 @@ class RedFormCore extends JObject {
 						}
 						else
 						{
+							$attribs = array('class' => $class);
 							$element .= JHTML::_('calendar', $val, 'field'.$field->id.'.'.$signup.'[date]', 'field'.$field->id,
 							               $field->parameters->get('dateformat','%Y-%m-%d'),
-							               'class="'.$class.'"');
+							               $attribs);
 						}
 						break;
 
