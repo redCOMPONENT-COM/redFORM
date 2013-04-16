@@ -30,6 +30,7 @@ require_once('redform.defines.php');
 require_once(RDF_PATH_SITE.DS.'classes'.DS.'field.php');
 require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
 require_once(RDF_PATH_SITE.DS.'helpers'.DS.'log.php');
+require_once(RDF_PATH_SITE.DS.'helpers'.DS.'analytics.php');
 
 class RedFormCore extends JObject {
 
@@ -167,6 +168,18 @@ class RedFormCore extends JObject {
 		$html .= '<input type="hidden" name="referer" value="'.htmlspecialchars($uri->toString()).'" />';
 
 		$html .= '</form>';
+
+		// Analytics
+		if (redFORMHelperAnalytics::load())
+		{
+			$event = new stdclass;
+			$event->category = 'form';
+			$event->action = 'display';
+			$event->label = "display form {$form->formname}";
+			$event->value = null;
+			redFORMHelperAnalytics::trackEvent($event);
+		}
+
 		return $html;
 	}
 
@@ -976,6 +989,7 @@ class RedFormCore extends JObject {
 			$this->setError($model->getError());
 			return false;
 		}
+
 		return $result;
 	}
 

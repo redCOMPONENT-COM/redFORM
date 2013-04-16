@@ -14,7 +14,15 @@
 		<field name="allow_negative_total" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL" description="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL_DESC">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
-		</field> 	
+		</field>
+		
+		<field type="spacer" hr="true" />
+		<field name="enable_ga" type="radio" default="0" label="COM_REDFORM_SETTINGS_ENABLE_GOOGLE_ANALYTICS" description="COM_REDFORM_SETTINGS_ENABLE_GOOGLE_ANALYTICS_DESC">
+			<option value="0">JDisabled</option>
+			<option value="1">JEnabled</option>
+		</field>
+		<field name="ga_code" type="text" default="UA-1111111-22" label="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE" description="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE_DESC"/>
+		
 	</fieldset>
 		
 	<fieldset	name="permissions"
