@@ -28,6 +28,18 @@ defined('_JEXEC') or die('Restricted access');
 class redFORMHelperAnalytics
 {
 	/**
+	 * return true if GA is enabled
+	 *
+	 * @return boolean
+	 */
+	public static function isEnabled()
+	{
+		$params = JComponentHelper::getParams('com_redform');
+
+		return $params->get('enable_ga', 0) ? true : false;
+	}
+
+	/**
 	 * load google analytics
 	 *
 	 * @return boolean true if analytics is enabled
@@ -45,11 +57,11 @@ class redFORMHelperAnalytics
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','gared');
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-		  gared('create', '{$params->get('ga_code')}');
-		  gared('require', 'ecommerce', 'ecommerce.js');
-		  gared('send', 'pageview');
+		  ga('create', '{$params->get('ga_code')}');
+		  ga('require', 'ecommerce', 'ecommerce.js');
+		  ga('send', 'pageview');
 JS;
 		$js_classic = <<<JS
 		  var _gaq = _gaq || [];
@@ -79,7 +91,7 @@ JS;
 		$params = JComponentHelper::getParams('com_redform');
 
 		$js_ua = <<<JS
-			gared('ecommerce:addTransaction', {
+			ga('ecommerce:addTransaction', {
 			'id' : '{$trans->id}',           // transaction ID - required
 			'affiliation' : '{$trans->affiliation}',  // affiliation or store name
 			'revenue' : '{$trans->revenue}'          // total - required
@@ -101,7 +113,7 @@ JS;
 		$params = JComponentHelper::getParams('com_redform');
 
 		$js_ua = <<<JS
-			gared('ecommerce:addItem', {
+			ga('ecommerce:addItem', {
 			'id' : '{$item->id}',  // Transaction ID. Required.
 			'name' : '{$item->name}',      // Product name. Required.
 			'price' : '{$item->price}'    // Unit price.
@@ -133,7 +145,7 @@ JS;
 		$value = $event->value ? $event->value : 1;
 
 		$js_ua = <<<JS
-			gared('send', 'event',
+			ga('send', 'event',
 			'{$event->category}',
 			'{$event->action}',
 			'{$event->label}',

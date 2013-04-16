@@ -21,12 +21,13 @@
 			<option value="0">JDisabled</option>
 			<option value="1">JEnabled</option>
 		</field>
+		<!-- 
 		<field name="ga_mode" type="radio" default="0" label="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE" description="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE_DESC">
 			<option value="0">COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE_UA</option>
 			<option value="1">COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE_CLASSIC</option>
 		</field>
 		<field name="ga_code" type="text" default="UA-1111111-22" label="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE" description="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE_DESC"/>
-		
+		 -->
 	</fieldset>
 		
 	<fieldset	name="permissions"

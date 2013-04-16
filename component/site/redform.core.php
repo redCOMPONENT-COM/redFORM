@@ -170,7 +170,7 @@ class RedFormCore extends JObject {
 		$html .= '</form>';
 
 		// Analytics
-		if (redFORMHelperAnalytics::load())
+		if (redFORMHelperAnalytics::isEnabled())
 		{
 			$event = new stdclass;
 			$event->category = 'form';
