@@ -102,7 +102,7 @@ class RedformControllerPayment extends JController {
 		}
 
 		// Analytics
-		if (redFORMHelperAnalytics::load())
+		if (redFORMHelperAnalytics::isEnabled())
 		{
 			$payement = $model->getPaymentDetails($submit_key);
 
