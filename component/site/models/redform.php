@@ -681,11 +681,13 @@ class RedformModelRedform extends JModel {
 		foreach ($allanswers as $answers)
 		{
 			$res = $answers->savedata($postvalues);
-			if (!$res) {
+			if (!$res)
+			{
 				$this->setError(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED'));
 				return false;
 			}
-			else {
+			else
+			{
 				// delete session data
 				$mainframe->setUserState('formdata'.$form->id, null);
 				$result->posts[] = array('sid' => $res);
