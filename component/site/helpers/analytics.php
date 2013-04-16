@@ -60,7 +60,6 @@ class redFORMHelperAnalytics
 		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 		  ga('create', '{$params->get('ga_code')}');
-		  ga('require', 'ecommerce', 'ecommerce.js');
 		  ga('send', 'pageview');
 JS;
 		$js_classic = <<<JS
@@ -91,6 +90,7 @@ JS;
 		$params = JComponentHelper::getParams('com_redform');
 
 		$js_ua = <<<JS
+		  	ga('require', 'ecommerce', 'ecommerce.js');
 			ga('ecommerce:addTransaction', {
 			'id' : '{$trans->id}',           // transaction ID - required
 			'affiliation' : '{$trans->affiliation}',  // affiliation or store name
