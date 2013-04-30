@@ -132,6 +132,30 @@ JS;
 	}
 
 	/**
+	 * Adds a pageview
+	 *
+	 * @param   sting  $page  optional page name
+	 *
+	 * @return void
+	 */
+	public static function pageView($page = null)
+	{
+		$params = JComponentHelper::getParams('com_redform');
+
+		if ($page)
+		{
+			$js_ua = "ga('send', 'pageview', '{$page}');";
+			$js_classic = "_gaq.push(['_trackPageview',	'{$page}']);";
+		}
+		else
+		{
+			$js_ua = "ga('send', 'pageview');";
+			$js_classic = "_gaq.push(['_trackPageview']);";
+		}
+		JFactory::getDocument()->addScriptDeclaration($params->get('ga_mode', 0) ? $js_classic : $js_ua);
+	}
+
+	/**
 	 * tracks an event
 	 *
 	 * @param   object  $event  event data
