@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -29,63 +29,65 @@ class com_redformInstallerScript
 	 *
 	 * @return void
 	 */
-	function preflight($type, $parent) 
+	function preflight($type, $parent)
 	{
 		if ($type == 'update')
 		{
 			// get db version
-			$db = &JFactory::getDbo();
+			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			
+
 			$query->select('s.version_id');
 			$query->from('#__extensions AS e');
 			$query->join('INNER', '#__schemas AS s ON s.extension_id = e.extension_id');
 			$query->where('e.element = '.$db->Quote('com_redform'));
 			$db->setQuery($query);
 			$version = $db->loadResult();
-			
-			if (version_compare("2.0.b.5.0", $version)) 
+
+			if (version_compare("2.0.b.5.0", $version))
 			{
 				$fields = $db->getTableColumns('#__rwf_values');
-				if (!isset($fields['price'])) 
+				if (!isset($fields['price']))
 				{
 					$query = ' ALTER TABLE #__rwf_values ADD '.$db->nameQuote('price') . ' DOUBLE NULL DEFAULT NULL ';
 					$db->setQuery($query);
 					try {
 						$db->query();
-					}	
+					}
 					catch (Exception $e) {
 						echo $e->getMessage();
-					}	
+					}
 				}
 			}
 		}
 	}
-	
+
 	public function postflight()
-	{				
+	{
 		/* Install plugin */
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.folder');
-		JFolder::copy(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_redform'.DS.'plugins'.DS.'content_redform', JPATH_SITE.DS.'tmp'.DS.'redform_plugin', '', true);
-		JFile::move(JPATH_SITE.DS.'tmp'.DS.'redform_plugin'.DS.'redform.xm', JPATH_SITE.DS.'tmp'.DS.'redform_plugin'.DS.'redform.xml');
+		$plg = JPATH_SITE.'/administrator/components/com_redform/plugins/content_redform';
+
+		$db = JFactory::getDbo();
 		$installer = new JInstaller();
-		$installer->setAdapter('plugin');
-		if (!$installer->install(JPATH_SITE.DS.'tmp'.DS.'redform_plugin')) {
-			echo JText::_('COM_REDFORM_Plugin_install_failed') . $installer->getError().'<br />';
-		}
-		else {
-			$db = &JFactory::getDbo();
+
+		if ($installer->install($plg))
+		{
 			// autopublish the plugin
-			$query = ' UPDATE #__extensions SET enabled = 1 WHERE name = '. $db->Quote('Content - redFORM');
+			$query = ' UPDATE #__extensions SET enabled = 1 WHERE folder = '. $db->Quote('content') . ' AND element = '.$db->Quote('redform');
 			$db->setQuery($query);
-			if ($db->query()) {
+
+			if ($db->query())
+			{
 				echo JText::_('COM_REDFORM_Succesfully_installed_redform_content_plugin').'<br />';
 			}
-			else {
+			else
+			{
 				echo JText::_('COM_REDFORM_Error_publishing_redform_content_plugin').'<br />';
 			}
-			 
+		}
+		else
+		{
+			echo JText::_('COM_REDFORM_Plugin_install_failed') . $installer->getError().'<br />';
 		}
 	}
 }
