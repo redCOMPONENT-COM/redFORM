@@ -189,10 +189,11 @@ class RedFormCore extends JObject {
 	 * - submit_key as a string
 	 * - an array of submitters ids
 	 *
-	 * @param int form id
-	 * @param mixed submit_key or array of submitters ids
-	 * @param int number of instance of the form to display
-	 * @param array options
+	 * @param   int    $form_id    form id
+	 * @param   mixed  $reference  submit_key or array of submitters ids
+	 * @param   int    $multi      number of instance of the form to display
+	 * @param   array  $options    array of possible options: eventdetails, booking, extrafields
+	 *
 	 * @return string
 	 */
 	function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
@@ -939,6 +940,9 @@ class RedFormCore extends JObject {
 			$html .= '<input type="hidden" name="competition_id" value="'.$redcompetition->competitionid.'" />';
 		}
 
+		// Get an unique id just for the submission
+		$uniq = uniqid();
+
 		/* Add the captcha, only if initial submit */
 		if ($form->captchaactive && empty($submit_key))
 		{
@@ -955,17 +959,21 @@ class RedFormCore extends JObject {
 				$html .= $captcha;
 				$html .= '</div>';
 				$html .= '</div>';
+
+				JFactory::getSession()->set('checkcaptcha' . $uniq, 1);
 			}
 		}
 
-		if (!empty($submit_key)) {
-			// link to add signups
+		if (!empty($submit_key))
+		{
+			// Link to add signups
 			$html .= '<input type="hidden" name="submit_key" value="'.$submit_key.'" />';
 		}
 
 		$html .= '<input type="hidden" name="curform" value="'.($answers && count($answers) ? count($answers) : 1).'" />';
 		$html .= '<input type="hidden" name="form_id" value="'.$form_id.'" />';
 		$html .= '<input type="hidden" name="multi" value="'.$multi.'" />';
+		$html .= '<input type="hidden" name="' . JSession::getFormToken() . '" value="' . $uniq . '" />';
 
 		$html .= '</div>'; // div #redform
 
@@ -1058,13 +1066,16 @@ class RedFormCore extends JObject {
 	 */
 	function getSubmitKeyAnswers($submit_key = null)
 	{
-		if ($submit_key) {
+		if ($submit_key)
+		{
 			$this->setSubmitKey($submit_key);
 		}
-		else if (!$this->_submit_key) {
+		elseif (!$this->_submit_key)
+		{
 			JError::raiseWarning(0, 'COM_REDFORM_CORE_MISSING_SUBMIT_KEY');
 			return false;
 		}
+
 		if (empty($this->_sk_answers))
 		{
 			$mainframe = &JFactory::getApplication();
@@ -1080,11 +1091,13 @@ class RedFormCore extends JObject {
 			if (empty($submitters))
 			{
 				$answers = $mainframe->getUserState($this->_submit_key);
-				if (!$answers) {
+				if (!$answers)
+				{
 					return false;
 				}
 			}
-			else {
+			else
+			{
 				$sids = array();
 				foreach ($submitters as $s)
 				{

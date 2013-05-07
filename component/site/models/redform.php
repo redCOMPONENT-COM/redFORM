@@ -23,7 +23,7 @@
 defined('_JEXEC') or die( 'Restricted access' );
 
 jimport('joomla.application.component.model');
-jimport( 'joomla.html.parameter' );
+jimport('joomla.html.parameter');
 
 require_once RDF_PATH_SITE.DS.'classes'.DS.'answers.php';
 
@@ -31,17 +31,19 @@ require_once RDF_PATH_SITE.DS.'classes'.DS.'answers.php';
  */
 class RedformModelRedform extends JModel {
 
-	var $_form_id = 0;
+	protected  $_form_id = 0;
 
-  var $_event = null;
+	protected $_event = null;
 
-  var $_form = null;
+	protected $_form = null;
 
-  var $_fields = null;
+	protected $_fields = null;
 
-  var $_answers = null;
+	protected $_answers = null;
 
-  var $mailer = null;
+	protected $mailer = null;
+
+	protected $submit_key = null;
 
 	function __construct()
 	{
@@ -50,85 +52,95 @@ class RedformModelRedform extends JModel {
 		$this->setFormId(JRequest::getInt('form_id'));
 	}
 
-  /**
-   * Method to set the form identifier
-   *
-   * @access  public
-   * @param int event identifier
-   */
-  function setFormId($id)
-  {
-    // Set event id and wipe data
-    $this->_form_id = $id;
-    $this->_form    = null;
-    $this->_fields  = null;
-  }
+	/**
+	 * Method to set the form identifier
+	 *
+	 * @access  public
+	 * @param int event identifier
+	 */
+	function setFormId($id)
+	{
+		// Set event id and wipe data
+		$this->_form_id = $id;
+		$this->_form    = null;
+		$this->_fields  = null;
+	}
 
-  /**
-   * returns form object
-   *
-   * @param int form id
-   * @return object form
-   */
-  function &getForm($id=0)
-  {
-  	if ($id) {
-  		$this->setFormId($id);
-  	}
+	public function setSubmitKey($key)
+	{
+		$this->submit_key = $key;
+	}
 
-  	if (empty($this->_form))
-  	{
-	    /* Get the form details */
-	  	$query = 'SELECT * FROM #__rwf_forms WHERE id = '. $this->_db->Quote($this->_form_id);
-	  	$this->_db->setQuery($query, 0, 1);
-	  	$this->_form = $this->_db->loadObject();
-  	}
+	public function getSubmitKey()
+	{
+		return $this->submit_key;
+	}
 
-  	return $this->_form;
-  }
+	/**
+	 * returns form object
+	 *
+	 * @param int form id
+	 * @return object form
+	 */
+	function &getForm($id=0)
+	{
+		if ($id) {
+			$this->setFormId($id);
+		}
 
-  /**
-   * get the form fields name
-   *
-   * @param int $form_id
-   */
-  function getfields($form_id = 0)
-  {
-  	if (!$form_id) {
-  		$form_id = $this->_form_id;
-  	}
+		if (empty($this->_form))
+		{
+			/* Get the form details */
+			$query = 'SELECT * FROM #__rwf_forms WHERE id = '. $this->_db->Quote($this->_form_id);
+			$this->_db->setQuery($query, 0, 1);
+			$this->_form = $this->_db->loadObject();
+		}
 
-  	$db = & $this->_db;
+		return $this->_form;
+	}
 
-  	/* Load the fields */
-  	$q = "SELECT id, field, fieldtype, ordering, published, params
-        FROM ".$db->nameQuote('#__rwf_fields')."
-        WHERE form_id = ".$form_id."
-        ORDER BY ordering";
-  	$db->setQuery($q);
-  	$fields = $db->loadObjectList('id');
+	/**
+	 * get the form fields name
+	 *
+	 * @param int $form_id
+	 */
+	function getfields($form_id = 0)
+	{
+		if (!$form_id) {
+			$form_id = $this->_form_id;
+		}
 
-  	foreach ($fields as $k =>$field)
-  	{
-  		$query = ' SELECT id, value, price FROM #__rwf_values WHERE field_id = '. $this->_db->Quote($field->id);
-  		$this->_db->setQuery($query);
-  		$fields[$k]->values = $this->_db->loadObjectList();
-  	}
+		$db = & $this->_db;
 
-  	foreach ($fields as $k => $field)
-  	{
+		/* Load the fields */
+		$q = "SELECT id, field, fieldtype, ordering, published, params
+		FROM ".$db->nameQuote('#__rwf_fields')."
+		WHERE form_id = ".$form_id."
+		ORDER BY ordering";
+		$db->setQuery($q);
+		$fields = $db->loadObjectList('id');
+
+		foreach ($fields as $k =>$field)
+		{
+			$query = ' SELECT id, value, price FROM #__rwf_values WHERE field_id = '. $this->_db->Quote($field->id);
+			$this->_db->setQuery($query);
+			$fields[$k]->values = $this->_db->loadObjectList();
+		}
+
+		foreach ($fields as $k => $field)
+		{
 			$paramsdefs = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' . DS . 'field_'.$field->fieldtype.'.xml';
 			if (!empty($field->params) && file_exists($paramsdefs))
-	  	{
-	  		$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );
-	  	}
-	  	else {
-	  		$fields[$k]->parameters = new JRegistry();
-	  	}
-  	}
+			{
+				$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );
+			}
+			else {
+				$fields[$k]->parameters = new JRegistry();
+			}
+		}
 
-  	return $fields;
-  }
+		return $fields;
+	}
 
 	function getFormFields()
 	{
@@ -137,12 +149,12 @@ class RedformModelRedform extends JModel {
 			return false;
 		}
 		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, f.published, m.listnames '
-		   . '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
-		   . ' FROM #__rwf_fields AS f '
-		   . ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id '
-		   . ' WHERE f.form_id = '.$this->_form_id
-		   . ' ORDER BY f.ordering'
-		   ;
+		. '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
+		. ' FROM #__rwf_fields AS f '
+		. ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id '
+		. ' WHERE f.form_id = '.$this->_form_id
+		. ' ORDER BY f.ordering'
+		;
 		$this->_db->setQuery($q);
 		$fields = $this->_db->loadObjectList();
 
@@ -170,10 +182,10 @@ class RedformModelRedform extends JModel {
 	function getFormValues($field_id)
 	{
 		$q = " SELECT id, value, label, field_id, price
-			FROM #__rwf_values
-			WHERE published = 1
-			AND field_id = ".$field_id."
-			ORDER BY ordering";
+		FROM #__rwf_values
+		WHERE published = 1
+		AND field_id = ".$field_id."
+		ORDER BY ordering";
 		$this->_db->setQuery($q);
 		return $this->_db->loadObjectList();
 	}
@@ -212,7 +224,7 @@ class RedformModelRedform extends JModel {
 
 			if (count($results) && $res == false) {
 				$this->setError(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
-	      return false;
+				return false;
 			}
 		}
 
@@ -326,6 +338,7 @@ class RedformModelRedform extends JModel {
 			$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$allanswers[0]->getAnswerId().'&form_id='.JRequest::getInt('form_id');
 			$mainframe->redirect(JRoute::_($redirect, false));
 		}
+
 		return array($form->submitnotification, $form->notificationtext);
 	}
 
@@ -345,113 +358,75 @@ class RedformModelRedform extends JModel {
 		return $mailer;
 	}
 
-	 /**
-	  * Get the VirtueMart settings
-	  */
-	 public function getVmSettings()
-	 {
+	/**
+	 * Get the VirtueMart settings
+	 */
+	public function getVmSettings()
+	{
 		$db = JFactory::getDBO();
 		$q = "SELECT virtuemartactive, vmproductid, vmitemid
-			FROM #__rwf_forms
-			WHERE id = ".JRequest::getInt('form_id');
+		FROM #__rwf_forms
+		WHERE id = ".JRequest::getInt('form_id');
 		$db->setQuery($q);
 		return $db->loadObject();
-	 }
-
-	 /**
-	 * See which attendees should be removed
-	 */
-	private function getConfirmAttendees() {
-		$db = JFactory::getDBO();
-		$attendees = JRequest::getVar('confirm', false);
-
-		if ($attendees) {
-			/* Get the ID's of setup attendees */
-			$q = "SELECT id, answer_id, form_id
-				FROM #__rwf_submitters
-				WHERE submit_key = ".$db->Quote(JRequest::getVar('submit_key'));
-			$db->setQuery($q);
-			$attendees_ids = $db->loadObjectList();
-
-			/* Check for attendees to be removed */
-			foreach ($attendees_ids as $key => $attendee) {
-				if (in_array($attendee->answer_id, $attendees)) {
-					unset($attendees_ids[$key]);
-				}
-			}
-
-			/* Remove the leftovers from the database */
-			foreach ($attendees_ids as $key => $attendee) {
-				$q = "DELETE FROM #__rwf_forms_".$attendee->form_id."
-					WHERE id = ".$attendee->answer_id;
-				$db->setQuery($q);
-				$db->query();
-
-				$q = "DELETE FROM #__rwf_submitters
-					WHERE id = ".$attendee->id;
-				$db->setQuery($q);
-				$db->query();
-			}
-		}
-		return true;
 	}
 
 	/**
 	 * Retrieve the product details
 	 */
-	 public function getProductDetails() {
-	 	$db = JFactory::getDBO();
+	public function getProductDetails() {
+		$db = JFactory::getDBO();
 		$q = "SELECT product_full_image, product_name FROM #__vm_product WHERE product_id = ".JRequest::getInt('productid');
 		$db->setQuery($q);
 		return $db->loadObject();
-	 }
+	}
 
-	 /**
-	  * returns event associated to xref
-	  *
-	  * @param int $xref
-	  * @return object
-	  */
-	 function getEvent($xref)
-	 {
-     $db = JFactory::getDBO();
-	 	 $query = ' SELECT e.*, x.* '
-	 	        . ' FROM #__redevent_event_venue_xref AS x '
-	 	        . ' INNER JOIN #__redevent_events AS e ON e.id = x.eventid '
-	 	        . ' WHERE x.id = '. $db->Quote((int) $xref)
-	 	        ;
-	 	 $db->setQuery($query);
-	 	 return $db->loadObject();
-	 }
-
-  /**
-   * Adds email from answers to mailing list
-   *
-   * @param rfanswers object
-   */
-  function updateMailingList($rfanswers)
+	/**
+	 * returns event associated to xref
+	 *
+	 * @param int $xref
+	 * @return object
+	 */
+	function getEvent($xref)
 	{
-	 	// mailing lists management
-	 	// get info from answers
-	 	$fullname  = $rfanswers->getFullname() ? $rfanswers->getFullname() : $rfanswers->getUsername();
-	 	$listnames = $rfanswers->getListNames();
+		$db = JFactory::getDBO();
+		$query = ' SELECT e.*, x.* '
+		. ' FROM #__redevent_event_venue_xref AS x '
+		. ' INNER JOIN #__redevent_events AS e ON e.id = x.eventid '
+		. ' WHERE x.id = '. $db->Quote((int) $xref)
+		;
+		$db->setQuery($query);
+		return $db->loadObject();
+	}
 
-	 	JPluginHelper::importPlugin( 'redform_mailing' );
+	/**
+	 * Adds email from answers to mailing list
+	 *
+	 * @param rfanswers object
+	 */
+	function updateMailingList($rfanswers)
+	{
+		// mailing lists management
+		// get info from answers
+		$fullname  = $rfanswers->getFullname() ? $rfanswers->getFullname() : $rfanswers->getUsername();
+		$listnames = $rfanswers->getListNames();
+
+		JPluginHelper::importPlugin( 'redform_mailing' );
 		$dispatcher =& JDispatcher::getInstance();
 
-	 	foreach ((array) $listnames as $field_id => $lists)
-	 	{
-	 		$subscriber = new stdclass();
-	 		$subscriber->name  = empty($fullname) ? $lists['email'] : $fullname;
-	 		$subscriber->email = $lists['email'];
+		foreach ((array) $listnames as $field_id => $lists)
+		{
+			$subscriber = new stdclass();
+			$subscriber->name  = empty($fullname) ? $lists['email'] : $fullname;
+			$subscriber->email = $lists['email'];
 
 			$integration = $this->getMailingList($field_id);
 
-	 		foreach ((array) $lists['lists'] as $listkey => $mailinglistname)
-	 		{
+			foreach ((array) $lists['lists'] as $listkey => $mailinglistname)
+			{
 				$results = $dispatcher->trigger( 'subscribe', array( $integration, $subscriber, $mailinglistname ) );
-	 		}
-	 	}
+			}
+		}
 	}
 
 	function notifysubmitter($answers, $form)
@@ -487,12 +462,12 @@ class RedformModelRedform extends JModel {
 						$info .= "<tr>";
 						$info .= "<th>". $answer['field'] ."</th>";
 						if ($answer['type'] == 'file') {
-	          	$info .= "<td>". basename($answer['value']) ."</td>";
+							$info .= "<td>". basename($answer['value']) ."</td>";
 						}
 						else {
-	          	$info .= "<td>". $answer['value'] ."</td>";
+							$info .= "<td>". $answer['value'] ."</td>";
 						}
-	          $info .= "</tr>";
+						$info .= "</tr>";
 					}
 					$info .= "</table>";
 					$submission_body = str_replace('[answers]', $info, $submission_body);
@@ -513,16 +488,16 @@ class RedformModelRedform extends JModel {
 	function getFieldsValues()
 	{
 		$query = ' SELECT v.id, v.value, v.field_id, v.fieldtype '
-		       . '      , m.listnames '
-		       . '      , f.field, f.validate, f.unique, f.tooltip '
-		       . ' FROM #__rwf_values AS v '
-		       . ' INNER JOIN #__rwf_fields AS f ON v.field_id = f.id '
-		       . ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
-		       . ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = f.field_id '
-		       . ' WHERE v.published = 1 AND f.published = 1 AND fo.published = 1 '
-		       . '   AND fo.id = '.$this->_db->Quote($this->_form_id)
-		       . ' ORDER BY f.ordering, v.ordering '
-		       ;
+		. '      , m.listnames '
+		. '      , f.field, f.validate, f.unique, f.tooltip '
+		. ' FROM #__rwf_values AS v '
+		. ' INNER JOIN #__rwf_fields AS f ON v.field_id = f.id '
+		. ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
+		. ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = f.field_id '
+		. ' WHERE v.published = 1 AND f.published = 1 AND fo.published = 1 '
+		. '   AND fo.id = '.$this->_db->Quote($this->_form_id)
+		. ' ORDER BY f.ordering, v.ordering '
+		;
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadObjectList();
 
@@ -536,29 +511,32 @@ class RedformModelRedform extends JModel {
 			$quoted[] = $this->_db->Quote($id);
 		}
 		$query = ' SELECT f.id, f.field, f.validate, f.unique, f.tooltip, f.form_id '
-		       . ' FROM #__rwf_fields AS f '
-		       . ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
-		       . ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = m.id '
-		       . ' WHERE f.published = 1 AND fo.published = 1 '
-		       . '   AND f.id IN ('.implode(',', $quoted) .')'
-		       . ' ORDER BY f.ordering '
-		       ;
+		. ' FROM #__rwf_fields AS f '
+		. ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
+		. ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = m.id '
+		. ' WHERE f.published = 1 AND fo.published = 1 '
+		. '   AND f.id IN ('.implode(',', $quoted) .')'
+		. ' ORDER BY f.ordering '
+		;
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadObjectList();
 
 		return $res;
 	}
 
-
 	/**
-	 * Save a form
+	 * save data to database
 	 *
-	 * @todo take field names from fields table
+	 * @param   string  $integration_key  integration key
+	 * @param   array   $options          options: skip_captcha, ...
+	 * @param   array   $data             form data, leave null to use posted data
+	 *
+	 * @return boolean|stdclass
 	 */
-	function apisaveform($integration_key = '', $options = array(), $data = null)
+	public function apisaveform($integration_key = '', $options = array(), $data = null)
 	{
-		$mainframe = & JFactory::getApplication();
-		$db = & $this->_db;
+		$app = JFactory::getApplication();
+		$db = $this->_db;
 
 		$result = new stdclass(); // create a new class for this ?
 		$result->posts = array();
@@ -569,28 +547,54 @@ class RedformModelRedform extends JModel {
 		$redcompetition = false;
 		$redevent = false;
 
-		/* Check for the submit key */
-		$submit_key = $data ? @$data['submit_key'] : JRequest::getVar('submit_key', false);
-		if (!$submit_key) {
-			$captcha_allowed = true;
+		// Check the token
+		$token = JSession::getFormToken();
+
+		// Get data from post if not specified
+		if (!$data)
+		{
+			$data = array_merge(JRequest::get('post'), JRequest::get('files'));
+
+			if (!isset($data['form_id']))
+			{
+				$data['form_id'] = $app->input->getInt('form_id');
+			}
+
+			if (!isset($data['submit_key']))
+			{
+				$data['submit_key'] = $app->input->getCmd('submit_key', false);
+			}
+
+			if (!isset($data['curform']))
+			{
+				$data['curform'] = $app->input->getInt('curform', 1);
+			}
+		}
+
+		if (!isset($data[$token]))
+		{
+			$this->setError('Form integrity check failed');
+			return false;
+		}
+
+		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
+
+		if (!$submit_key = $data['submit_key'])
+		{
 			$submit_key = uniqid();
 		}
+		$this->setSubmitKey($submit_key);
 
 		$result->submit_key = $submit_key;
 
 		/* Get the form details */
-		$form = $this->getForm($data ? $data['form_id'] : JRequest::getInt('form_id'));
+		$form = $this->getForm($data['form_id']);
 
 		/* Load the fields */
 		$fieldlist = $this->getfields($form->id);
 
-		/* Load the posted variables */
-		$post = $data ? $data : JRequest::get('post');
-		$files = $data ? array() : JRequest::get('files');
-		$posted = array_merge($post, $files);
-
 		// number of submitted active forms (min is 1)
-		$totalforms = JRequest::getInt('curform') ? JRequest::getInt('curform') : 1;
+		$totalforms = $data['curform'];
 
 		$allanswers = array();
 		/* Loop through the different forms */
@@ -599,35 +603,43 @@ class RedformModelRedform extends JModel {
 			// new answers object
 			$answers = new rfanswers();
 			$answers->setFormId($form->id);
+
 			if (isset($options['baseprice']))
 			{
-				if (is_array($options['baseprice'])) {
+				if (is_array($options['baseprice']))
+				{
 					$answers->initPrice(isset($options['baseprice'][$signup-1]) ? $options['baseprice'][$signup-1] : 0);
 				}
-				else {
+				else
+				{
 					$answers->initPrice($options['baseprice']);
 				}
 			}
 
 			/* Create an array of values to store */
 			$postvalues = array();
+
 			// remove the _X parts, where X is the form (signup) number
-			foreach ($posted as $key => $value) {
-				if ((strpos($key, 'field') === 0) && (strpos($key, '_'.$signup, 5) > 0)) {
-					$postvalues[str_replace('_'.$signup, '', $key)] = $value;
+			foreach ($data as $key => $value)
+			{
+				if ((strpos($key, 'field') === 0) && (strpos($key, '_' . $signup, 5) > 0))
+				{
+					$postvalues[str_replace('_' . $signup, '', $key)] = $value;
 				}
 			}
-			if (isset($posted['submitter_id'.$signup])) {
-				$postvalues['sid'] = intval($post['submitter_id'.$signup]);
+
+			if (isset($data['submitter_id' . $signup]))
+			{
+				$postvalues['sid'] = intval($data['submitter_id'.$signup]);
 			}
 
-			$postvalues['form_id'] = $post['form_id'];
+			$postvalues['form_id'] = $data['form_id'];
 			$postvalues['submit_key'] = $submit_key;
 
 			$postvalues['integration'] = $integration_key;
 
 			/* Get the raw form data */
-			$postvalues['rawformdata'] = serialize($posted);
+			$postvalues['rawformdata'] = serialize($data);
 
 			/* Build up field list */
 			foreach ($fieldlist as $key => $field)
@@ -635,61 +647,82 @@ class RedformModelRedform extends JModel {
 				if (isset($postvalues['field'.$key]))
 				{
 					/* Get the answers */
-					$answers->addPostAnswer($field, $postvalues['field'.$key]);
+					$answers->addPostAnswer($field, $postvalues['field' . $key]);
 				}
 			}
 
 			$allanswers[] = $answers;
-		} /* End multi-user signup */
+		}
+		/* End multi-user signup */
 
 		$this->_answers = $allanswers;
-		// save to session in case we need to display form again
+
+		// Save to session in case we need to display form again
 		$sessiondata = array();
+
 		foreach ($allanswers as $a)
 		{
 			$sessiondata[] = $a->toSession();
 		}
-		$mainframe->setUserState('formdata'.$post['form_id'], $sessiondata);
 
-		// captcha verification
-		if ($form->captchaactive && $captcha_allowed)
+		$app->setUserState('formdata' . $data['form_id'], $sessiondata);
+
+		// Captcha verification
+		if ($check_captcha)
 		{
-			JPluginHelper::importPlugin( 'redform_captcha' );
+			JPluginHelper::importPlugin('redform_captcha');
 			$res = true;
-			$dispatcher =& JDispatcher::getInstance();
-			$results = $dispatcher->trigger( 'onCheckCaptcha', array( &$res ) );
+			$dispatcher = JDispatcher::getInstance();
+			$results = $dispatcher->trigger('onCheckCaptcha', array(&$res));
 
-			if (count($results) && $res == false) {
+			if (count($results) && $res == false)
+			{
+				// Save to session
+				$sessiondata = array();
+
+				foreach ($allanswers as $a)
+				{
+					$sessiondata[] = $a->toSession();
+				}
+
+				$app->setUserState($submit_key, $sessiondata);
+
 				$this->setError(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
+
 				return false;
 			}
 		}
 
-		// savetosession: data is saved to session using the submit key
+		// Savetosession: data is saved to session using the submit key
 		if (isset($options['savetosession']))
 		{
 			$sessiondata = array();
+
 			foreach ($allanswers as $a)
 			{
 				$sessiondata[] = $a->toSession();
 			}
-			$mainframe->setUserState($submit_key, $sessiondata);
+
+			$app->setUserState($submit_key, $sessiondata);
+
 			return $result;
 		}
 
-		// else save to db !
+		// Else save to db !
 		foreach ($allanswers as $answers)
 		{
 			$res = $answers->savedata($postvalues);
+
 			if (!$res)
 			{
 				$this->setError(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED'));
+
 				return false;
 			}
 			else
 			{
-				// delete session data
-				$mainframe->setUserState('formdata'.$form->id, null);
+				// Delete session data
+				$app->setUserState('formdata'.$form->id, null);
 				$result->posts[] = array('sid' => $res);
 			}
 
@@ -710,6 +743,7 @@ class RedformModelRedform extends JModel {
 				$this->notifysubmitter($answers, $form);
 			}
 		}
+
 		return $result;
 	}
 
@@ -918,9 +952,9 @@ class RedformModelRedform extends JModel {
 
 		// we need the form_id...
 		$query = ' SELECT s.form_id '
-		       . ' FROM #__rwf_submitters AS s '
-		       . ' WHERE s.id IN ('.$ids.')'
-		       ;
+		. ' FROM #__rwf_submitters AS s '
+		. ' WHERE s.id IN ('.$ids.')'
+		;
 		$this->_db->setQuery($query, 0, 1);
 		$form_id = $this->_db->loadResult();
 
@@ -930,11 +964,11 @@ class RedformModelRedform extends JModel {
 		}
 
 		$query = ' SELECT s.id as sid, f.*, s.price, p.paid, p.status '
-		       . ' FROM #__rwf_forms_'.$form_id.' AS f '
-		       . ' INNER JOIN #__rwf_submitters AS s on s.answer_id = f.id '
-		       . ' LEFT JOIN #__rwf_payment AS p on s.submit_key = p.submit_key '
-		       . ' WHERE s.id IN ('.$ids.')';
-		       ;
+		. ' FROM #__rwf_forms_'.$form_id.' AS f '
+		. ' INNER JOIN #__rwf_submitters AS s on s.answer_id = f.id '
+		. ' LEFT JOIN #__rwf_payment AS p on s.submit_key = p.submit_key '
+		. ' WHERE s.id IN ('.$ids.')';
+		;
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadObjectList('sid');
 
@@ -976,9 +1010,9 @@ class RedformModelRedform extends JModel {
 	function getMailingList($field_id)
 	{
 		$query = ' SELECT mailinglist '
-		       . ' FROM #__rwf_mailinglists  '
-		       . ' WHERE field_id = ' . $this->_db->Quote($field_id)
-		       ;
+		. ' FROM #__rwf_mailinglists  '
+		. ' WHERE field_id = ' . $this->_db->Quote($field_id)
+		;
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadResult();
 		return $res;
@@ -1012,13 +1046,13 @@ class RedformModelRedform extends JModel {
 	function hasActivePayment($key)
 	{
 		$query = ' SELECT s.price '
-		       . ' FROM #__rwf_submitters AS s '
-		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-		       . ' LEFT JOIN #__rwf_payment AS p ON s.submit_key = p.submit_key AND p.paid = 1 '
-		       . ' WHERE s.submit_key = ' . $this->_db->Quote($key)
-		       . '   AND p.id IS NULL '
-		       . '   AND f.activatepayment = 1 '
-		       ;
+		. ' FROM #__rwf_submitters AS s '
+		. ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
+		. ' LEFT JOIN #__rwf_payment AS p ON s.submit_key = p.submit_key AND p.paid = 1 '
+		. ' WHERE s.submit_key = ' . $this->_db->Quote($key)
+		. '   AND p.id IS NULL '
+		. '   AND f.activatepayment = 1 '
+		;
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadResult();
 		if (!$res) {
