@@ -657,23 +657,36 @@ class RedFormCore extends JObject {
 
 						if ($answers)
 						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
+							if (isset($answers[($signup-1)]->fields->$cleanfield))
+							{
 								$val = $answers[($signup-1)]->fields->$cleanfield;
 							}
-							else {
+							else
+							{
 								$val = null;
 							}
 						}
-						else if ($user->get($field->redmember_field)) { // redmember uses unix timestamp
+						elseif ($user->get($field->redmember_field))
+						{
+							// redmember uses unix timestamp
 							$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), $user->get($field->redmember_field));
 						}
-						else {
-							if ($field->default && strtotime($field->default)) {
+						else
+						{
+							if ($field->default && strtotime($field->default))
+							{
 								$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($field->default));
 							}
-							else {
+							else
+							{
 								$val = null;
 							}
+						}
+
+						if ($val && !strtotime($val))
+						{
+							$element .= '<span>(invalid: ' . $val .')</span>';
+							$val = null;
 						}
 
 						$class = $field->parameters->get('class','');
