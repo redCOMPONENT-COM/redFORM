@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ require_once JPATH_COMPONENT_SITE.DS.'classes'.DS.'answers.php';
 /**
  */
 class RedformModelSubmitter extends JModel {
-	
+
   /**
    * Form id
    *
@@ -42,13 +42,13 @@ class RedformModelSubmitter extends JModel {
   var $_data = null;
 
 	var $_form_id = 0;
-	
+
   var $_event = null;
-  
+
   var $_form = null;
-  
+
   var $_fields = null;
-  
+
   /**
    * Constructor
    *
@@ -108,16 +108,16 @@ class RedformModelSubmitter extends JModel {
 	    $cid = JRequest::getVar('cid');
 	    $cid = (int) $cid[0];
 	    $db = JFactory::getDBO();
-	    if ($form_id && $form_id > 0) 
+	    if ($form_id && $form_id > 0)
 	    {
 	      $query = "SELECT f.*, s.*, s.id as sid
 	        FROM ".$db->nameQuote('#__rwf_forms_'.$form_id)." f
 	        LEFT JOIN #__rwf_submitters s
 	        ON f.id = s.answer_id
-	        WHERE s.id = ".$cid; 
+	        WHERE s.id = ".$cid;
 	      $db->setQuery($query);
 	      $this->_data = $this->_db->loadObject();
-	      
+
 	      if ($this->_data->integration == 'redevent')
 	      {
 		      $query = ' SELECT r.uid '
@@ -125,21 +125,21 @@ class RedformModelSubmitter extends JModel {
 		             . ' WHERE r.submit_key = '. $db->Quote($this->_data->submit_key)
 		             ;
 		      $db->setQuery($query);
-		      $this->_data->uid = $this->_db->loadResult();	      	
+		      $this->_data->uid = $this->_db->loadResult();
 	      }
 	      return (boolean) $this->_data;
 	    }
     }
     return true;
   }
-  
+
   function _initData()
   {
   	// TODO: should query columns from the table
     //$this->_data = & JTable::getInstance('redform', 'RedformTable');
     return $this->_data;
   }
-  
+
   /**
    * Tests if the form is checked out
    *
@@ -164,7 +164,7 @@ class RedformModelSubmitter extends JModel {
       return false;
     }
   }
-  
+
   /**
    * Method to checkout/lock the item
    *
@@ -188,7 +188,7 @@ class RedformModelSubmitter extends JModel {
     }
     return false;
   }
-  
+
 
   /**
    * Method to checkin/unlock the item
@@ -206,11 +206,11 @@ class RedformModelSubmitter extends JModel {
     }
     return false;
   }
-	
+
 	/**
 	 * Gets the details of a single submitter
 	 */
-	function getSubmitter($sid = 0) 
+	function getSubmitter($sid = 0)
 	{
 		if ($sid)
 		{
@@ -224,14 +224,14 @@ class RedformModelSubmitter extends JModel {
 			$sid = JRequest::getVar('cid');
 			$sid = $sid[0];
 		}
-		
-		if ($form_id && $sid) 
+
+		if ($form_id && $sid)
 		{
 			$query = "SELECT *
 				FROM ".$this->_db->nameQuote('#__rwf_forms_'.$form_id)." f
 				LEFT JOIN #__rwf_submitters s
 				ON f.id = s.answer_id
-				WHERE s.id = ".$this->_db->Quote($sid); 
+				WHERE s.id = ".$this->_db->Quote($sid);
 			$this->_db->setQuery($query);
 			return $this->_db->loadObject();
 		}
@@ -239,21 +239,21 @@ class RedformModelSubmitter extends JModel {
 			return false;
 		}
 	}
-		
+
 	function store()
 	{
 		echo '<pre>';print_r('deprecated ?'); echo '</pre>';exit;
 		$mainframe = & JFactory::getApplication();
 		$db = & $this->_db;
-		
+
 		/* Default values */
 		$answer  = '';
 		$return  = false;
 		$redcompetition = false;
 		$redevent = false;
-		
+
 		$event_task = JRequest::getVar('event_task');
-		
+
 		$submitter_id = Jrequest::getInt('submitter_id', 0);
 		if ($submitter_id) {
 			$submitter = $this->getSubmitter($submitter_id);
@@ -263,18 +263,18 @@ class RedformModelSubmitter extends JModel {
 			$submitter = false;
 			$submit_key = uniqid();
 		}
-		
+
 		/* Get the form details */
 		$form = $this->getForm(JRequest::getInt('form_id'));
-					
+
 		/* Load the fields */
 		$fieldlist = $this->getfields($form->id);
-			
+
 		/* Load the posted variables */
 		$post = JRequest::get('post');
 		$files = JRequest::get('files');
 		$posted = array_merge($post, $files);
-				
+
 		/* See if we have an event ID */
 		if (JRequest::getInt('event_xref', 0)) {
 			$redevent = true;
@@ -282,7 +282,7 @@ class RedformModelSubmitter extends JModel {
 		}
 		else if (isset($post['integration']) && $post['integration'] == 'redevent') {
 			$redevent = true;
-			$posted['xref'] = JRequest::getInt('xref', 0);			
+			$posted['xref'] = JRequest::getInt('xref', 0);
 		}
 		else if (JRequest::getInt('competition_id', 0)) {
 			$redcompetition = true;
@@ -291,27 +291,27 @@ class RedformModelSubmitter extends JModel {
 		else {
 			$posted['xref'] = 0;
 		}
-		
+
 		if ($posted['xref'] && $redevent) {
 			$event = $this->getEvent($posted['xref']);
 		}
 		else {
 			$event = null;
 		}
-						
-		
+
+
 		// new answers object
 		$answers = new rfanswers();
 		$answers->setFormId($form->id);
 		if ($event) {
 			$answers->initPrice($event->course_price);
 		}
-		
+
 		/* Create an array of values to store */
 		$postvalues = array();
 		// remove the _X parts, where X is the form (signup) number
-		$signup = 1; 
-		foreach ($posted as $key => $value) 
+		$signup = 1;
+		foreach ($posted as $key => $value)
 		{
 			if ((strpos($key, 'field') === 0) && (strpos($key, '_'.$signup, 5) > 0)) {
 				$postvalues[str_replace('_'.$signup, '', $key)] = $value;
@@ -323,41 +323,49 @@ class RedformModelSubmitter extends JModel {
 		$postvalues['form_id'] = $post['form_id'];
 		$postvalues['submit_key'] = $submit_key;
 		if (isset($post['integration'])) {
-			$postvalues['integration'] = $post['integration'];			
+			$postvalues['integration'] = $post['integration'];
 		}
-				
+
 		/* Get the raw form data */
 		$postvalues['rawformdata'] = serialize($posted);
-		
+
 		/* Build up field list */
 		foreach ($fieldlist as $key => $field)
 		{
 			if (isset($postvalues['field'.$key]))
 			{
 				/* Get the answers */
-				$answers->addPostAnswer($field, $postvalues['field'.$key]);
+				try
+				{
+					$answers->addPostAnswer($field, $postvalues['field'.$key]);
+				}
+				catch (Exception $e)
+				{
+					$this->setError($e->getMessage());
+					return false;
+				}
 			}
 		}
-			
+
 		if ($submitter)
-		{					
+		{
 			// this 'anwers' were already posted
 			$answers->setAnswerId($submitter->answer_id);
 		}
-		
-		// save answers		
+
+		// save answers
 		if (!$answers->save($postvalues)) {
-			return false;		
+			return false;
 		}
-		
+
 		// add an attendee in redevent ?
-		$uid = JRequest::getInt('uid');		
-		
+		$uid = JRequest::getInt('uid');
+
 		$this->updateMailingList($answers);
-					
+
 		return true;
 	}
-	
+
 	/**
 	 * Get the course title
 	 */
@@ -374,11 +382,11 @@ class RedformModelSubmitter extends JModel {
 		$db->setQuery($q);
 		return $db->loadResult();
 	}
-	
+
 	/**
 	 * Initialise the mailer object to start sending mails
 	 */
-	 private function Mailer() 
+	 private function Mailer()
 	 {
 		 $mainframe = JFactory::getApplication();
 		jimport('joomla.mail.helper');
@@ -405,11 +413,11 @@ class RedformModelSubmitter extends JModel {
   	$query = 'SELECT * FROM #__rwf_forms WHERE id = '. $this->_db->Quote($id);
   	$this->_db->setQuery($query, 0, 1);
   	$form = $this->_db->loadObject();
-    
+
     if ($form) {
     	$this->_form = $form;
     }
-    
+
   	return $this->_form;
   }
 
@@ -425,7 +433,7 @@ class RedformModelSubmitter extends JModel {
   	}
 
   	$db = & $this->_db;
-  	
+
   	/* Load the fields */
   	$q = "SELECT id, field, fieldtype, ordering, params
         FROM ".$db->nameQuote('#__rwf_fields')."
@@ -433,7 +441,7 @@ class RedformModelSubmitter extends JModel {
         ORDER BY ordering";
   	$db->setQuery($q);
   	$fields = $db->loadObjectList('id');
-  	
+
   	foreach ($fields as $k =>$field)
   	{
   		$query = ' SELECT id, value, price FROM #__rwf_values WHERE field_id = '. $this->_db->Quote($field->id);
@@ -442,16 +450,16 @@ class RedformModelSubmitter extends JModel {
   	}
   	return $fields;
   }
-  
+
 	 /**
 	 * See which attendees should be removed
 	 */
-	private function getConfirmAttendees() 
+	private function getConfirmAttendees()
 	{
 		$db = JFactory::getDBO();
 		$attendees = JRequest::getVar('confirm', false);
-		
-		if ($attendees) 
+
+		if ($attendees)
 		{
 			/* Get the ID's of setup attendees */
 			$q = "SELECT id, answer_id, form_id
@@ -459,23 +467,23 @@ class RedformModelSubmitter extends JModel {
 				WHERE submit_key = ".$db->Quote(JRequest::getVar('submit_key'));
 			$db->setQuery($q);
 			$attendees_ids = $db->loadObjectList();
-			
+
 			/* Check for attendees to be removed */
-			foreach ($attendees_ids as $key => $attendee) 
+			foreach ($attendees_ids as $key => $attendee)
 			{
 				if (in_array($attendee->answer_id, $attendees)) {
 					unset($attendees_ids[$key]);
 				}
 			}
-			
+
 			/* Remove the leftovers from the database */
-			foreach ($attendees_ids as $key => $attendee) 
+			foreach ($attendees_ids as $key => $attendee)
 			{
 				$q = "DELETE FROM #__rwf_forms_".$attendee->form_id."
 					WHERE id = ".$attendee->answer_id;
 				$db->setQuery($q);
 				$db->query();
-				
+
 				$q = "DELETE FROM #__rwf_submitters
 					WHERE id = ".$attendee->id;
 				$db->setQuery($q);
@@ -494,27 +502,27 @@ class RedformModelSubmitter extends JModel {
 	{
 	 	// mailing lists management
 	 	// get info from answers
-	 	$fullname  = $rfanswers->getFullname() ? $rfanswers->getFullname() : $rfanswers->getUsername();	 	
+	 	$fullname  = $rfanswers->getFullname() ? $rfanswers->getFullname() : $rfanswers->getUsername();
 	 	$listnames = $rfanswers->getListNames();
-	 	
+
 	 	JPluginHelper::importPlugin( 'redform_mailing' );
-		$dispatcher =& JDispatcher::getInstance();		
+		$dispatcher =& JDispatcher::getInstance();
 
 	 	foreach ((array) $listnames as $field_id => $lists)
-	 	{	 		 		
+	 	{
 	 		$subscriber = new stdclass();
 	 		$subscriber->name  = empty($fullname) ? $lists['email'] : $fullname;
 	 		$subscriber->email = $lists['email'];
-	 		
+
 			$integration = $this->getMailingList($field_id);
-			
+
 	 		foreach ((array) $lists['lists'] as $listkey => $mailinglistname)
 	 		{
-				$results = $dispatcher->trigger( 'subscribe', array( $integration, $subscriber, $mailinglistname ) );		
+				$results = $dispatcher->trigger( 'subscribe', array( $integration, $subscriber, $mailinglistname ) );
 	 		}
 	 	}
 	}
-	
+
 
 	 /**
 	  * returns event associated to xref

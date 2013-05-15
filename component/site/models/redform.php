@@ -294,7 +294,15 @@ class RedformModelRedform extends JModel {
 				if (isset($postvalues['field'.$key]))
 				{
 					/* Get the answers */
-					$answers->addPostAnswer($field, $postvalues['field'.$key]);
+					try
+					{
+						$answers->addPostAnswer($field, $postvalues['field'.$key]);
+					}
+					catch (Exception $e)
+					{
+						$this->setError($e->getMessage());
+						return false;
+					}
 				}
 			}
 
@@ -647,7 +655,15 @@ class RedformModelRedform extends JModel {
 				if (isset($postvalues['field'.$key]))
 				{
 					/* Get the answers */
-					$answers->addPostAnswer($field, $postvalues['field' . $key]);
+					try
+					{
+						$answers->addPostAnswer($field, $postvalues['field'.$key]);
+					}
+					catch (Exception $e)
+					{
+						$this->setError($e->getMessage());
+						return false;
+					}
 				}
 			}
 

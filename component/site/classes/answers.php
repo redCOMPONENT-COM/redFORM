@@ -128,9 +128,13 @@ class rfanswers
         $answer = $postedvalue['textarea'];
         break;
       case 'date':
-      	// convert date to mysql format
-
+      	// get date
         $answer = $postedvalue['date'];
+        if ($answer && !strtotime($answer))
+        {
+        	throw new Exception(JText::_('COM_REDFORM_INVALID_DATE_FORMAT'));
+        }
+
         break;
       case 'wysiwyg':
         $answer = $postedvalue['wysiwyg'];
@@ -236,6 +240,7 @@ class rfanswers
     $this->_fields[] = $field;
     $this->_values[] = $answer;
     $this->_types[] = ($keys[0] == 'name' ? 'file' : $keys[0]);
+
     return $answer;
   }
 
