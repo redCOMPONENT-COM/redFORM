@@ -23,15 +23,15 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
 class plgRedform_PaymentPaypal extends JPlugin {
- 
+
 //	var $_name = 'Paypal';
-	
-	public function plgRedform_PaymentPaypal(&$subject, $config = array()) 
+
+	public function plgRedform_PaymentPaypal(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -40,6 +40,7 @@ class plgRedform_PaymentPaypal extends JPlugin {
 	function onGetGateway(&$gateways)
 	{
 		require_once ('paypal'.DS.'helpers'.DS.'payment.php');
+		echo '<pre>';print_r('before this'); echo '</pre>';exit;
 		$helper = new PaymentPaypal($this->params);
 		$gateways[] = array('name' => 'Paypal', 'helper' => $helper);
 		return true;
