@@ -219,9 +219,9 @@ class RedFormCore extends JObject {
 		$form   = $model_redform->getForm();
 		$fields = $model_redform->getFormFields();
 
-	  // css
-    $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
-    $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/redform.css');
+		// css
+		$document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
+		$document->addStyleSheet(JURI::base().'components/com_redform/assets/css/redform.css');
 
 		// load jquery for the form javascript
 		if (JRequest::getVar('format', 'html') == 'html') {
@@ -229,19 +229,22 @@ class RedFormCore extends JObject {
 			jimport('joomla.html.html');
 		}
 
-  	// custom tooltip
-  	$toolTipArray = array('className'=>'redformtip'.$form->classname);
-    JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
+		// custom tooltip
+		$toolTipArray = array('className'=>'redformtip'.$form->classname);
+		JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
 
-    // currency for javascript
-    $js = "var currency = \"".$form->currency."\";\n";
-    $document->addScriptDeclaration($js);
+		// currency for javascript
+		$js = "var currency = \"".$form->currency."\";\n";
+		$document->addScriptDeclaration($js);
 
- 		self::JsCheck();
-    if ($form->show_js_price)
-    {
-  		self::jsPrice();
-    }
+		self::JsCheck();
+		if ($form->show_js_price)
+		{
+			self::jsPrice();
+		}
+
+		// Special for score form job
+		$document->addScript(JURI::root() . '/components/com_redform/assets/js/formscore.js');
 
 		// redmember integration: pull extra fields
 		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
@@ -413,7 +416,7 @@ class RedFormCore extends JObject {
 									}
 								}
 							}
-							$element .= ' type="radio" name="field'.$field->id.'.'.$signup.'[radio][]" value="'.$value->id.'" price="'.$value->price.'" />'.$value->label."\n";
+							$element .= ' type="radio" name="field'.$field->id.'.'.$signup.'[radio][]" value="'.$value->value.'" price="'.$value->price.'" />'.$value->label."\n";
 							$element .= "</div>\n";
 						}
 						$element .= "</div>\n";

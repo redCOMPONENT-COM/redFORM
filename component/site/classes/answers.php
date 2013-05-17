@@ -212,16 +212,11 @@ class rfanswers
         }
         break;
       case 'radio':
-      	/* Get the real value from the database */
-      	$q = "SELECT value
-                FROM #__rwf_values
-                WHERE id = ".$postedvalue['radio'][0];
-      	$db->setQuery($q);
-      	$answer = $db->loadResult();
+      	$answer = $postedvalue['radio'][0];
 
       	foreach ($field->values as $v)
       	{
-      		if ($v->id == $postedvalue['radio'][0]) {
+      		if ($v->value == $postedvalue['radio'][0]) {
         		$this->_price += $v->price;
       		}
       	}
