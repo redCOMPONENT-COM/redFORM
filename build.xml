@@ -99,17 +99,27 @@
 	        <depth max="0" min="0" />
 		  </fileset>
 		</foreach>
-		
+
 		<!-- plugins -->
-		<foreach param="dirname" absparam="absname" target="zipfolder">
-			<property name="myp" value="plugins" />
-		  <fileset dir="${dirs.root}/plugins">
-		  	<type type="dir"/>
-	        <depth max="0" min="0" />
-		  </fileset>
+		<foreach param="pdirname" absparam="pabsname" target="zipplugins">
+			<fileset dir="${dirs.root}/plugins">
+				<type type="dir"/>
+				<depth max="0" min="0" />
+			</fileset>
 		</foreach>
 		
 		<delete dir="${dirs.tmp}" quiet="yes" includeemptydirs="false" />
+	</target>
+	
+	<target name="zipplugins">
+	    <echo msg="handling plugins group ${pdirname}" />
+		<foreach param="dirname" absparam="absname" target="zipfolder">
+			<property name="myp" value="plugins" />
+			<fileset dir="${pabsname}">
+				<type type="dir"/>
+				<depth max="0" min="0" />
+			</fileset>
+		</foreach>
 	</target>
 	
 	<target name="zipfolder">
