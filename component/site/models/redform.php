@@ -587,9 +587,13 @@ class RedformModelRedform extends JModel {
 
 		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
 
-		if (!$submit_key = $data['submit_key'])
+		if (!isset($data['submit_key']))
 		{
 			$submit_key = uniqid();
+		}
+		else
+		{
+			$submit_key = $data['submit_key'];
 		}
 		$this->setSubmitKey($submit_key);
 
@@ -602,7 +606,7 @@ class RedformModelRedform extends JModel {
 		$fieldlist = $this->getfields($form->id);
 
 		// number of submitted active forms (min is 1)
-		$totalforms = $data['curform'];
+		$totalforms = isset($data['curform']) ? $data['curform'] : 1;
 
 		$allanswers = array();
 		/* Loop through the different forms */

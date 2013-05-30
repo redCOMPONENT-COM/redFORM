@@ -1665,6 +1665,8 @@ class RedFormCore extends JObject {
 	protected function prepareUserData($userData, $form_index = 1)
 	{
 		$data = array('form_id' => $this->_form_id);
+		$token = JSession::getFormToken();
+		$data[$token] = 1;
 
 		$fields = $this->getFields();
 
