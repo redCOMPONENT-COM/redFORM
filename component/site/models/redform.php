@@ -587,7 +587,7 @@ class RedformModelRedform extends JModel {
 
 		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
 
-		if (!isset($data['submit_key']))
+		if (!isset($data['submit_key']) || !$data['submit_key'])
 		{
 			$submit_key = uniqid();
 		}
@@ -595,6 +595,7 @@ class RedformModelRedform extends JModel {
 		{
 			$submit_key = $data['submit_key'];
 		}
+
 		$this->setSubmitKey($submit_key);
 
 		$result->submit_key = $submit_key;
