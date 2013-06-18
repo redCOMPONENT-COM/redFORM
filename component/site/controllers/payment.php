@@ -79,28 +79,6 @@ class RedformControllerPayment extends JController {
 
 		$submit_key = JRequest::getVar('key');
 
-		$model = $this->getModel('payment');
-		$model->setSubmitKey($submit_key);
-
-		$submitters = $model->getSubmitters();
-		if (count($submitters))
-		{
-			$first = current($submitters);
-			if (!empty($first->integration))
-			{
-				switch ($first->integration)
-				{
-					case 'redevent':
-						$mainframe->redirect('index.php?option=com_redevent&view=payment&submit_key='.$submit_key.'&state=processing');
-						break;
-
-					default:
-						$mainframe->redirect('index.php?option=com_'.$first->integration.'&view=payment&submit_key='.$submit_key.'&state=processing');
-						break;
-				}
-			}
-		}
-
 		// Analytics
 		if (redFORMHelperAnalytics::isEnabled())
 		{
@@ -123,6 +101,28 @@ class RedformControllerPayment extends JController {
 				$item->price = $s->price;
 			}
 			redFORMHelperAnalytics::addItem($item);
+		}
+
+		$model = $this->getModel('payment');
+		$model->setSubmitKey($submit_key);
+
+		$submitters = $model->getSubmitters();
+		if (count($submitters))
+		{
+			$first = current($submitters);
+			if (!empty($first->integration))
+			{
+				switch ($first->integration)
+				{
+					case 'redevent':
+						$mainframe->redirect('index.php?option=com_redevent&view=payment&submit_key='.$submit_key.'&state=processing');
+						break;
+
+					default:
+						$mainframe->redirect('index.php?option=com_'.$first->integration.'&view=payment&submit_key='.$submit_key.'&state=processing');
+						break;
+				}
+			}
 		}
 
 		JRequest::setVar('view',   'payment');
