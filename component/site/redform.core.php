@@ -996,9 +996,11 @@ class RedFormCore extends JObject {
 	/**
 	 * saves submitted form data
 	 *
-	 * @param string key, unique key for the 3rd party (allows to prevent deletions from within redform itself for 3rd party, and to find out which submission belongs to which 3rd party...)
-	 * @param array data if empty, the $_POST variable is used
-	 * @return int/array submission_id, or array of submission ids in case of success, 0 otherwise
+	 * @param   string  $integration_key  key, unique key for the 3rd party (allows to prevent deletions from within redform itself for 3rd party, and to find out which submission belongs to which 3rd party...)
+	 * @param   array   $options          options for registration
+	 * @param   array   $data             data if empty, the $_POST variable is used
+	 *
+	 * @return   int/array submission_id, or array of submission ids in case of success, 0 otherwise
 	 */
 	function saveAnswers($integration_key, $options = array(), $data = null)
 	{
@@ -1614,7 +1616,7 @@ class RedFormCore extends JObject {
 	 * @param   string  $integration  integration key
 	 * @param   array   $options      extra submission data
 	 *
-	 * @return boolean true on success
+	 * @return int/array submission_id, or array of submission ids in case of success, 0 otherwise
 	 */
 	public function quickSubmit($user_id, $integration = null, $options = null)
 	{

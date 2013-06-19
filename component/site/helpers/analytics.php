@@ -85,7 +85,7 @@ JS;
 	 *
 	 * @param   object  $trans  transaction details
 	 *
-	 * @return void
+	 * @return string js code
 	 */
 	public static function addTrans($trans)
 	{
@@ -107,9 +107,19 @@ JS;
 			'{$trans->revenue}'          // total - required
 			]);
 JS;
-		JFactory::getDocument()->addScriptDeclaration($params->get('ga_mode', 0) ? $js_classic : $js_ua);
+		$js = $params->get('ga_mode', 0) ? $js_classic : $js_ua;
+		JFactory::getDocument()->addScriptDeclaration($js);
+
+		return $js;
 	}
 
+	/**
+	 * add item for transaction
+	 *
+	 * @param   object  $item  item to be added
+	 *
+	 * @return string js code
+	 */
 	public static function addItem($item)
 	{
 		$params = JComponentHelper::getParams('com_redform');
@@ -130,9 +140,17 @@ JS;
 				'{$item->price}'       // Unit price.
 				]);
 JS;
-		JFactory::getDocument()->addScriptDeclaration($params->get('ga_mode', 0) ? $js_classic : $js_ua);
+		$js = $params->get('ga_mode', 0) ? $js_classic : $js_ua;
+		JFactory::getDocument()->addScriptDeclaration($js);
+
+		return $js;
 	}
 
+	/**
+	 * add tracktrans code
+	 *
+	 * @return string js code
+	 */
 	public static function trackTrans()
 	{
 		$params = JComponentHelper::getParams('com_redform');
@@ -144,7 +162,10 @@ JS;
 		$js_classic = <<<JS
 			_gaq.push(['_trackTrans']);
 JS;
-		JFactory::getDocument()->addScriptDeclaration($params->get('ga_mode', 0) ? $js_classic : $js_ua);
+		$js = $params->get('ga_mode', 0) ? $js_classic : $js_ua;
+		JFactory::getDocument()->addScriptDeclaration($js);
+
+		return $js;
 	}
 
 	/**
@@ -152,7 +173,7 @@ JS;
 	 *
 	 * @param   sting  $page  optional page name
 	 *
-	 * @return void
+	 * @return string js code
 	 */
 	public static function pageView($page = null)
 	{
@@ -168,7 +189,11 @@ JS;
 			$js_ua = "ga('send', 'pageview');";
 			$js_classic = "_gaq.push(['_trackPageview']);";
 		}
-		JFactory::getDocument()->addScriptDeclaration($params->get('ga_mode', 0) ? $js_classic : $js_ua);
+
+		$js = $params->get('ga_mode', 0) ? $js_classic : $js_ua;
+		JFactory::getDocument()->addScriptDeclaration($js);
+
+		return $js;
 	}
 
 	/**
@@ -176,7 +201,7 @@ JS;
 	 *
 	 * @param   object  $event  event data
 	 *
-	 * @return void
+	 * @return string js code
 	 */
 	public static function trackEvent($event)
 	{
@@ -201,7 +226,10 @@ JS;
 				$value
 				]);
 JS;
-		JFactory::getDocument()->addScriptDeclaration($params->get('ga_mode', 0) ? $js_classic : $js_ua);
+		$js = $params->get('ga_mode', 0) ? $js_classic : $js_ua;
+		JFactory::getDocument()->addScriptDeclaration($js);
+
+		return $js;
 	}
 
 	/**
@@ -210,13 +238,12 @@ JS;
 	 * @param   String  $submit_key  submit key to add transaction for
 	 * @param   Array   $options     optional parameters for tracking
 	 *
-	 * @return true on success
+	 * @return string js code
 	 */
 	public static function recordTrans($submit_key, array $options = array())
 	{
 		$model = JModel::getInstance('payment', 'RedformModel');
 		$model->setSubmitKey($submit_key);
-
 		$submitters = $model->getSubmitters();
 		$payment   = $model->getPaymentDetails($submit_key);
 
@@ -226,7 +253,7 @@ JS;
 		$trans->affiliation = isset($options['affiliate']) ? $options['affiliate'] : $payment->form;
 		$trans->revenue = $model->getPrice();
 
-		self::addTrans($trans);
+		$js = self::addTrans($trans);
 
 		// Add submitters as items
 		foreach ($submitters as $s)
@@ -236,9 +263,11 @@ JS;
 			$item->name = 'submitter' . $s->id;
 			$item->price = $s->price;
 		}
-		self::addItem($item);
+		$js .= self::addItem($item);
 
 		// push transaction to server
-		self::trackTrans();
+		$js .= self::trackTrans();
+
+		return $js;
 	}
 }
