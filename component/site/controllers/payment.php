@@ -75,33 +75,9 @@ class RedformControllerPayment extends JController {
 
 	function processing()
 	{
-		$mainframe = JFactory::getApplication();
+		$app = JFactory::getApplication();
 
-		$submit_key = JRequest::getVar('key');
-
-		// Analytics
-		if (redFORMHelperAnalytics::isEnabled())
-		{
-			$payement = $model->getPaymentDetails($submit_key);
-
-			// Add transaction
-			$trans = new stdclass;
-			$trans->id = $submit_key;
-			$trans->affiliation = $payement->form;
-			$trans->revenue = $model->getPrice();
-
-			redFORMHelperAnalytics::addTrans($trans);
-
-			// Add submitters as items
-			foreach ($submitters as $s)
-			{
-				$item = new stdclass;
-				$item->id = $submit_key;
-				$item->name = 'submitter' . $s->id;
-				$item->price = $s->price;
-			}
-			redFORMHelperAnalytics::addItem($item);
-		}
+		$submit_key = $app->input->getString('key');
 
 		$model = $this->getModel('payment');
 		$model->setSubmitKey($submit_key);
@@ -123,6 +99,32 @@ class RedformControllerPayment extends JController {
 						break;
 				}
 			}
+		}
+
+		// Analytics for default landing page
+		if (redFORMHelperAnalytics::isEnabled())
+		{
+			$payement = $model->getPaymentDetails($submit_key);
+
+			// Add transaction
+			$trans = new stdclass;
+			$trans->id = $submit_key;
+			$trans->affiliation = $payement->form;
+			$trans->revenue = $model->getPrice();
+
+			redFORMHelperAnalytics::addTrans($trans);
+
+			// Add submitters as items
+			foreach ($submitters as $s)
+			{
+				$item = new stdclass;
+				$item->id = $submit_key;
+				$item->name = 'submitter' . $s->id;
+				$item->price = $s->price;
+				redFORMHelperAnalytics::addItem($item);
+			}
+
+			redFORMHelperAnalytics::trackTrans();
 		}
 
 		JRequest::setVar('view',   'payment');

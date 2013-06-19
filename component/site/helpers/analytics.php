@@ -19,6 +19,8 @@
 
 defined('_JEXEC') or die('Restricted access');
 
+require_once JPATH_SITE . '/components/com_redform/models/payment.php';
+
 /**
  * Helper class
  *
@@ -131,6 +133,20 @@ JS;
 		JFactory::getDocument()->addScriptDeclaration($params->get('ga_mode', 0) ? $js_classic : $js_ua);
 	}
 
+	public static function trackTrans()
+	{
+		$params = JComponentHelper::getParams('com_redform');
+
+		$js_ua = <<<JS
+			ga('ecommerce:send');
+JS;
+
+		$js_classic = <<<JS
+			_gaq.push(['_trackTrans']);
+JS;
+		JFactory::getDocument()->addScriptDeclaration($params->get('ga_mode', 0) ? $js_classic : $js_ua);
+	}
+
 	/**
 	 * Adds a pageview
 	 *
@@ -186,5 +202,43 @@ JS;
 				]);
 JS;
 		JFactory::getDocument()->addScriptDeclaration($params->get('ga_mode', 0) ? $js_classic : $js_ua);
+	}
+
+	/**
+	 * full transaction tracking. adds javsacript code to document head
+	 *
+	 * @param   String  $submit_key  submit key to add transaction for
+	 * @param   Array   $options     optional parameters for tracking
+	 *
+	 * @return true on success
+	 */
+	public static function recordTrans($submit_key, array $options = array())
+	{
+		$model = JModel::getInstance('payment', 'RedformModel');
+		$model->setSubmitKey($submit_key);
+
+		$submitters = $model->getSubmitters();
+		$payment   = $model->getPaymentDetails($submit_key);
+
+		// Add transaction
+		$trans = new stdclass;
+		$trans->id = $submit_key;
+		$trans->affiliation = isset($options['affiliate']) ? $options['affiliate'] : $payment->form;
+		$trans->revenue = $model->getPrice();
+
+		self::addTrans($trans);
+
+		// Add submitters as items
+		foreach ($submitters as $s)
+		{
+			$item = new stdclass;
+			$item->id = $submit_key;
+			$item->name = 'submitter' . $s->id;
+			$item->price = $s->price;
+		}
+		self::addItem($item);
+
+		// push transaction to server
+		self::trackTrans();
 	}
 }
