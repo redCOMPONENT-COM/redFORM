@@ -40,7 +40,6 @@ class plgRedform_PaymentPaypal extends JPlugin {
 	function onGetGateway(&$gateways)
 	{
 		require_once ('paypal'.DS.'helpers'.DS.'payment.php');
-		echo '<pre>';print_r('before this'); echo '</pre>';exit;
 		$helper = new PaymentPaypal($this->params);
 		$gateways[] = array('name' => 'Paypal', 'helper' => $helper);
 		return true;
