@@ -95,6 +95,14 @@ class RedFormModelPayment extends JModel
 			}
 			$options[] = JHTML::_('select.option', $g['name'], $label);
 		}
+
+		$details = $this->getPaymentDetails();
+
+		// Filter gateways through plugins
+		JPluginHelper::importPlugin( 'redform_payment' );
+		$dispatcher = JDispatcher::getInstance();
+		$results = $dispatcher->trigger('onFilterGateways', array(&$options, $details));
+
 		return $options;
 	}
 
@@ -198,10 +206,16 @@ class RedFormModelPayment extends JModel
 	 * @param $key
 	 * @return unknown_type
 	 */
-	function getPaymentDetails($key)
+	function getPaymentDetails($key = null)
 	{
+		if (!$key)
+		{
+			$key = $this->_submit_key;
+		}
+
 		$submitters = $this->getSubmitters();
-		if (!count($submitters)) {
+		if (!count($submitters))
+		{
 			return false;
 		}
 		$asub = current($submitters);

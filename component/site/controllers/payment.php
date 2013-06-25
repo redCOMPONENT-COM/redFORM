@@ -40,10 +40,13 @@ class RedformControllerPayment extends JController {
 
 	function select()
 	{
-		$model  = &$this->getModel('payment');
+		$key     = JRequest::getVar('key');
+		$model   = $this->getModel('payment');
+		$model->setSubmitKey($key);
 		$options = $model->getGatewayOptions();
-		$key    = JRequest::getVar('key');
-		if (count($options) == 1) {
+
+		if (count($options) == 1)
+		{
 			$this->setRedirect('index.php?option=com_redform&controller=payment&task=process&key='.$key.'&gw='.$options[0]->value);
 			$this->redirect();
 		}
