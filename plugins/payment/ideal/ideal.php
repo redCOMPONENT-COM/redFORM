@@ -23,18 +23,18 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 // Import library dependencies
 jimport('joomla.event.plugin');
 
-// load language file for frontend
-JPlugin::loadLanguage( 'plg_redform_payment_ideal', JPATH_ADMINISTRATOR );
-
 class plgRedform_PaymentIdeal extends JPlugin {
- 	
-	public function plgRedform_PaymentIdeal(&$subject, $config = array()) 
+
+	public function plgRedform_PaymentIdeal(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
+
+		// load language file for frontend
+		JPlugin::loadLanguage( 'plg_redform_payment_ideal', JPATH_ADMINISTRATOR );
 	}
 
 	function onGetGateway(&$gateways)
