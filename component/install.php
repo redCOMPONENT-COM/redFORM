@@ -65,7 +65,7 @@ class com_redformInstallerScript
 	public function postflight()
 	{
 		/* Install plugin */
-		$plg = JPATH_SITE.'/administrator/components/com_redform/plugins/content_redform';
+		$plg = JPATH_SITE.'/administrator/components/com_redform/plugins/content/redform';
 
 		$db = JFactory::getDbo();
 		$installer = new JInstaller();

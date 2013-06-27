@@ -12,7 +12,7 @@
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
 	<!-- Runs on install/uninstall/update -->
-	<scriptfile>install.redform.php</scriptfile>
+	<scriptfile>install.php</scriptfile>
 
 	<!-- SQL queries -->
 	<install>
@@ -53,28 +53,8 @@
 	<!-- Image files -->
 	<!-- These are actually for the administrator but this is not supported 
 		by Joomla -->
-	<media folder="admin/images" destination="com_redform">
-		<filename>redform_answers_16.png</filename>
-		<filename>redform_answers_32.png</filename>
-		<filename>redform_answers_48.png</filename>
-		<filename>redform_contes_16.png</filename>
-		<filename>redform_contes_32.png</filename>
-		<filename>redform_contes_48.png</filename>
-		<filename>redform_details_16.png</filename>
-		<filename>redform_details_32.png</filename>
-		<filename>redform_details_48.png</filename>
-		<filename>redform_plus_16.png</filename>
-		<filename>redform_plus_32.png</filename>
-		<filename>redform_plus_48.png</filename>
-		<filename>redform_quest_16.png</filename>
-		<filename>redform_quest_32.png</filename>
-		<filename>redform_quest_48.png</filename>
-		<filename>redform_red_16.png</filename>
-		<filename>redform_red_32.png</filename>
-		<filename>redform_red_48.png</filename>
-		<filename>logoredform_400.png</filename>
-		<filename>logoredform_800.png</filename>
-		<filename>logoredform_1200.png</filename>
+	<media folder="media">
+		<folder>com_redform</folder>
 	</media>
 
 	<administration>

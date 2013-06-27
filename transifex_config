@@ -24,112 +24,112 @@ source_lang = en-GB
 
 [redFORM.redform25-plg_redform_captcha_recaptcha-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_captcha_recaptcha.ini
-source_file = plugins/captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha_recaptcha.ini
+source_file = plugins/redform_captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha_recaptcha.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_captcha_recaptcha-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_captcha_recaptcha.sys.ini
-source_file = plugins/captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha_recaptcha.sys.ini
+source_file = plugins/redform_captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha_recaptcha.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_captcha_simplemath-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_captcha_simplemath.ini
-source_file = plugins/captcha/simplemath/language/en-GB/en-GB.plg_redform_captcha_simplemath.ini
+source_file = plugins/redform_captcha/simplemath/language/en-GB/en-GB.plg_redform_captcha_simplemath.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_captcha_simplemath-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_captcha_simplemath.sys.ini
-source_file = plugins/captcha/simplemath/language/en-GB/en-GB.plg_redform_captcha_simplemath.sys.ini
+source_file = plugins/redform_captcha/simplemath/language/en-GB/en-GB.plg_redform_captcha_simplemath.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_mailing_jnews-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_jnews.ini
-source_file = plugins/mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.ini
+source_file = plugins/redform_mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_mailing_jnews-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_jnews.sys.ini
-source_file = plugins/mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.sys.ini
+source_file = plugins/redform_mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_mailing_acymailing-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_acymailing.ini
-source_file = plugins/mailing/acymailing/language/en-GB/en-GB.plg_redform_mailing_acymailing.ini
+source_file = plugins/redform_mailing/acymailing/language/en-GB/en-GB.plg_redform_mailing_acymailing.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_mailing_acymailing-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_acymailing.sys.ini
-source_file = plugins/mailing/acymailing/language/en-GB/en-GB.plg_redform_mailing_acymailing.sys.ini
+source_file = plugins/redform_mailing/acymailing/language/en-GB/en-GB.plg_redform_mailing_acymailing.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_mailing_phplist-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_phplist.ini
-source_file = plugins/mailing/phplist/language/en-GB/en-GB.plg_redform_mailing_phplist.ini
+source_file = plugins/redform_mailing/phplist/language/en-GB/en-GB.plg_redform_mailing_phplist.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_mailing_phplist-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_phplist.sys.ini
-source_file = plugins/mailing/phplist/language/en-GB/en-GB.plg_redform_mailing_phplist.sys.ini
+source_file = plugins/redform_mailing/phplist/language/en-GB/en-GB.plg_redform_mailing_phplist.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_custom-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_custom.ini
-source_file = plugins/payment/custom/language/en-GB/en-GB.plg_redform_payment_custom.ini
+source_file = plugins/redform_payment/custom/language/en-GB/en-GB.plg_redform_payment_custom.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_custom-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_custom.sys.ini
-source_file = plugins/payment/custom/language/en-GB/en-GB.plg_redform_payment_custom.sys.ini
+source_file = plugins/redform_payment/custom/language/en-GB/en-GB.plg_redform_payment_custom.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_epay-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_epay.ini
-source_file = plugins/payment/epay/language/en-GB/en-GB.plg_redform_payment_epay.ini
+source_file = plugins/redform_payment/epay/language/en-GB/en-GB.plg_redform_payment_epay.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_epay-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_epay.sys.ini
-source_file = plugins/payment/epay/language/en-GB/en-GB.plg_redform_payment_epay.sys.ini
+source_file = plugins/predform_ayment/epay/language/en-GB/en-GB.plg_redform_payment_epay.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_iridium-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_iridium.ini
-source_file = plugins/payment/iridium/language/en-GB/en-GB.plg_redform_payment_iridium.ini
+source_file = plugins/redform_payment/iridium/language/en-GB/en-GB.plg_redform_payment_iridium.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_iridium-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_iridium.sys.ini
-source_file = plugins/payment/iridium/language/en-GB/en-GB.plg_redform_payment_iridium.sys.ini
+source_file = plugins/redform_payment/iridium/language/en-GB/en-GB.plg_redform_payment_iridium.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_quickpay-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_quickpay.ini
-source_file = plugins/payment/quickpay/language/en-GB/en-GB.plg_redform_payment_quickpay.ini
+source_file = plugins/redform_payment/quickpay/language/en-GB/en-GB.plg_redform_payment_quickpay.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_quickpay-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_quickpay.sys.ini
-source_file = plugins/payment/quickpay/language/en-GB/en-GB.plg_redform_payment_quickpay.sys.ini
+source_file = plugins/redform_payment/quickpay/language/en-GB/en-GB.plg_redform_payment_quickpay.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_ideal-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_ideal.ini
-source_file = plugins/payment/ideal/language/en-GB/en-GB.plg_redform_payment_ideal.ini
+source_file = plugins/redform_payment/ideal/language/en-GB/en-GB.plg_redform_payment_ideal.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_ideal-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_ideal.sys.ini
-source_file = plugins/payment/ideal/language/en-GB/en-GB.plg_redform_payment_ideal.sys.ini
+source_file = plugins/redform_payment/ideal/language/en-GB/en-GB.plg_redform_payment_ideal.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_paypal-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_paypal.ini
-source_file = plugins/payment/paypal/language/en-GB/en-GB.plg_redform_payment_paypal.ini
+source_file = plugins/redform_payment/paypal/language/en-GB/en-GB.plg_redform_payment_paypal.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_paypal-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_paypal.sys.ini
-source_file = plugins/payment/paypal/language/en-GB/en-GB.plg_redform_payment_paypal.sys.ini
+source_file = plugins/redform_payment/paypal/language/en-GB/en-GB.plg_redform_payment_paypal.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_content_redform-ini]
@@ -139,5 +139,5 @@ source_lang = en-GB
 
 [redFORM.redform25-plg_content_redform-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_content_redform.sys.ini
-source_file = component/admin/plugins/content_redform/language/en-GB/en-GB.plg_content_redform.sys.ini
+source_file = component/admin/plugins/content/redform/language/en-GB/en-GB.plg_content_redform.sys.ini
 source_lang = en-GB
