@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.7" type="plugin" group="redform_payment" method="upgrade">
+  <name>PLG_REDFORM_PAGSEGURO</name>
+	<creationDate>##DATE##</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2008 - 2013 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>##VERSION##</version>
+  <description>PLG_REDFORM_PAGSEGURO_XML_DESC</description>
+
+  <files>
+    <filename plugin="pagseguro">pagseguro.php</filename>
+    <folder>helpers</folder>
+    <filename>index.html</filename>
+    <folder>language</folder>
+    <folder>PagSeguroLibrary</folder>
+  </files>
+
+  <config>
+		<fields name="params">
+		  <fieldset name="extra" label="extra">
+		  
+		    <field name="account" type="text" default=""
+		           label="PLG_REDFORM_PAGSEGURO_ACCOUNT_LABEL"
+		           description="PLG_REDFORM_PAGSEGURO_ACCOUNT_DESC" />
+
+		    <field name="token" type="text" default=""
+		           label="PLG_REDFORM_PAGSEGURO_SECURITY_TOKEN_LABEL"
+		           description="PLG_REDFORM_PAGSEGURO_SECURITY_TOKEN_DESC" />
+
+		  </fieldset>
+	  </fields>
+  </config>
+
+</extension>
