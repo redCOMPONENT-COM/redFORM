@@ -116,11 +116,12 @@ JS;
 	/**
 	 * add item for transaction
 	 *
-	 * @param   object  $item  item to be added
+	 * @param   object  $item      item to be added
+	 * @param   int     $quantity  quantity
 	 *
 	 * @return string js code
 	 */
-	public static function addItem($item)
+	public static function addItem($item, $quantity = 1)
 	{
 		$params = JComponentHelper::getParams('com_redform');
 
@@ -128,7 +129,8 @@ JS;
 			ga('ecommerce:addItem', {
 			'id' : '{$item->id}',  // Transaction ID. Required.
 			'name' : '{$item->name}',      // Product name. Required.
-			'price' : '{$item->price}'    // Unit price.
+			'price' : '{$item->price}',    // Unit price.
+			'quantity' : '{$quantity}'    // Unit quantity.
 			});
 JS;
 
@@ -136,8 +138,10 @@ JS;
 			_gaq.push(['_addItem',
 				'{$item->id}',  // Transaction ID. Required.
 				'{$item->name}',        // SKU/code - required			.
-				'{$item->name}',        // Product name.
-				'{$item->price}'       // Unit price.
+				'{$item->name}',        // Product name.		.
+				'',        // Category.
+				'{$item->price}',       // Unit price - required
+				'{$quantity}'    // Unit quantity- required
 				]);
 JS;
 		$js = $params->get('ga_mode', 0) ? $js_classic : $js_ua;
