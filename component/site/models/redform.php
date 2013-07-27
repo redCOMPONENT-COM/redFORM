@@ -639,6 +639,10 @@ class RedformModelRedform extends JModel {
 				{
 					$postvalues[str_replace('_' . $signup, '', $key)] = $value;
 				}
+				else
+				{
+					$postvalues[$key] = $value;
+				}
 			}
 
 			if (isset($data['submitter_id' . $signup]))
@@ -671,7 +675,6 @@ class RedformModelRedform extends JModel {
 					}
 				}
 			}
-
 			$allanswers[] = $answers;
 		}
 		/* End multi-user signup */
