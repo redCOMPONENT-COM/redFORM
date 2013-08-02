@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<falang type="contentelement">
+	<name>redFORM - Values</name>
+	<author>redCOMPONENT</author>
+	<version>##VERSION##</version>
+	<description>redFORM Values</description>
+	<reference>
+		<table name="rwf_values">
+			<field type="referenceid" name="id" translate="0">ID</field>
+			<field type="titletext" name="label" translate="1">Label</field>
+			<field type="text" name="value" translate="1">Value</field>
+		</table>
+	</reference>
+	<translationfilters>
+		<published>published</published>
+		<rwf_valueform>form_id</rwf_valueform>
+	</translationfilters>
+</falang>

@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<falang type="contentelement">
+	<name>redFORM - Fields</name>
+	<author>redCOMPONENT</author>
+	<version>##VERSION##</version>
+	<description>redFORM Fields</description>
+	<reference>
+		<table name="rwf_fields">
+			<field type="referenceid" name="id" translate="0">ID</field>
+			<field type="titletext" name="field" translate="1">Field</field>
+			<field type="text" name="field_header" translate="1">Field header</field>
+			<field type="text" name="default" translate="1">Default</field>
+			<field type="text" name="tooltip" translate="1">Tooltip</field>
+		</table>
+	</reference>
+	<translationfilters>
+		<published>published</published>
+		<rwf_form>form_id</rwf_form>
+	</translationfilters>
+</falang>

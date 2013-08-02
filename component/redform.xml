@@ -75,6 +75,7 @@
 			<filename>config.xml</filename>
 			<folder>controllers</folder>
 			<folder>css</folder>
+			<folder>falang</folder>
 			<folder>helpers</folder>
 			<folder>js</folder>
 			<folder>language</folder>
