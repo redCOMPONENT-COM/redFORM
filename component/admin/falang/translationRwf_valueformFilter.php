@@ -13,6 +13,16 @@ class translationRwf_valueformFilter extends translationFilter
 	}
 
 	/**
+	 * fallback for regular falang...
+	 *
+	 * @return string
+	 */
+	public function _createFilter()
+	{
+		return '';
+	}
+
+	/**
 	 * add filter to query
 	 *
 	 * @param   JDatabaseQuery  $query  query object
