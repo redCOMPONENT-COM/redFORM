@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Tracks" default="site" basedir=".">
 	<property file="build/build.properties" />
-	
+
 	<!-- Default properties, set only if not already assigned in the build.properties file -->
 	<property name="dirs.root" value="." />
 	<property name="dirs.tmp" value="tmp" />
@@ -10,17 +10,17 @@
 
 	<taskdef name="gitversion" classname="build.phingext.GitVersionTask" />
 	<taskdef name="gitdate" classname="build.phingext.GitDateTask" />
-		
+
 	<!--
 	====================================================================================================
 	Tasks - General
 	====================================================================================================
 	-->
-	
+
 	<target name="all" description="Makes everything"
 		depends="dev-release">
 	</target>
-	
+
 	<target name="dev-release" description="Makes the release"
 		depends="new-release,setup-properties,release">
 	</target>
@@ -30,7 +30,7 @@
 		<delete dir="${dirs.release}" quiet="yes" includeemptydirs="false" />
 		<mkdir dir="${dirs.release}" />
 	</target>
-	
+
 	<target name="setup-properties" description="Set up version and build properties">
 		<!-- Initialize the build.date timestamp -->
 		<tstamp>
@@ -44,17 +44,17 @@
 				<gitversion workingcopy="${dirs.root}" propertyname="git.lastrevision" />
 				<gitdate workingcopy="${dirs.root}" propertyname="git.timestamp" />
 				<!--<property name="version" value="rev${git.lastrevision}" override="true" />-->
-				<property name="version" value="${git.lastrevision}-${git.timestamp}" override="true" />
+				<property name="version" value="${git.lastrevision}" override="true" />
 			</then>
 		</if>
 	</target>
-	
+
 	<!--
 	====================================================================================================
 	Tasks - Joomla! packages
 	====================================================================================================
 	-->
-	
+
 	<target name="release" description="Installation Package for Joomla! 1.6+"
 		depends="new-release,setup-properties">
 
@@ -69,11 +69,11 @@
 				</replacetokens>
 			</filterchain>
 		</copy>
-		
+
 		<!-- Create the package -->
 		<tar basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
-		
-		<!-- admin modules 
+
+		<!-- admin modules
 		<foreach param="dirname" absparam="absname" target="zipfolder">
 			<property name="myp" value="modules/admin" />
 		  	<fileset dir="${dirs.root}/modules/admin">
@@ -82,7 +82,7 @@
 		  </fileset>
 		</foreach>
 		-->
-		<!-- site modules 
+		<!-- site modules
 		<foreach param="dirname" absparam="absname" target="zipfolder">
 			<property name="myp" value="modules/site" />
 		  	<fileset dir="${dirs.root}/modules/site">
@@ -107,10 +107,10 @@
 				<depth max="0" min="0" />
 			</fileset>
 		</foreach>
-		
+
 		<delete dir="${dirs.tmp}" quiet="yes" includeemptydirs="false" />
 	</target>
-	
+
 	<target name="zipplugins">
 	    <echo msg="handling plugins group ${pdirname}" />
 		<foreach param="dirname" absparam="absname" target="zipfolder">
@@ -121,7 +121,7 @@
 			</fileset>
 		</foreach>
 	</target>
-	
+
 	<target name="zipfolder">
 	    <echo msg="packaging ${dirname} ${absname}" />
 		<copy todir="${dirs.tmp}/${dirname}" >
@@ -145,7 +145,7 @@
 	Tasks - copy to your test site
 	====================================================================================================
 	-->
-	
+
 	<target name="site" description="Copies files to a existing joomla site" depends="setup-properties">
         <echo message="Copying administrator component..." />
 
@@ -190,8 +190,8 @@
             <fileset dir="${dirs.root}/component/media">
                 <include name="**" />
             </fileset>
-        </copy>		
-		
+        </copy>
+
         <!-- Component included Modules - Site
         <copy todir="${www.dir}/modules" overwrite="true">
             <fileset dir="${dirs.root}/component/admin/extras/modules/site">
@@ -220,7 +220,7 @@
 			</filterchain>
         </copy>
  -->
-        <!-- Modules - Site 
+        <!-- Modules - Site
         <copy todir="${www.dir}/modules" overwrite="true">
             <fileset dir="${dirs.root}/modules/site">
                 <include name="**" />
@@ -234,7 +234,7 @@
 			</filterchain>
         </copy>
 -->
-        <!-- Modules - Admin 
+        <!-- Modules - Admin
         <copy todir="${www.dir}/administrator/modules" overwrite="true">
             <fileset dir="${dirs.root}/modules/admin">
                 <include name="**" />
@@ -261,7 +261,7 @@
 				</replacetokens>
 			</filterchain>
         </copy>
-		
+
         <copy todir="${www.dir}/plugins" overwrite="true">
             <fileset dir="${dirs.root}/plugins">
                 <include name="**" />

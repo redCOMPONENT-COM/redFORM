@@ -89,7 +89,7 @@ source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_epay-sys-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_payment_epay.sys.ini
-source_file = plugins/predform_ayment/epay/language/en-GB/en-GB.plg_redform_payment_epay.sys.ini
+source_file = plugins/redform_payment/epay/language/en-GB/en-GB.plg_redform_payment_epay.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_iridium-ini]
@@ -134,7 +134,7 @@ source_lang = en-GB
 
 [redFORM.redform25-plg_content_redform-ini]
 file_filter = languages/<lang>/admin/<lang>/<lang>.plg_content_redform.ini
-source_file = component/admin/plugins/content_redform/language/en-GB/en-GB.plg_content_redform.ini
+source_file = component/admin/plugins/content/redform/language/en-GB/en-GB.plg_content_redform.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_content_redform-sys-ini]
