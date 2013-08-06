@@ -1,21 +1,21 @@
 /**
- * @copyright Copyright (C) 2008, 2009, 2010, 2011 redCOMPONENT.com. All rights reserved. 
+ * @copyright Copyright (C) 2008, 2009, 2010, 2011 redCOMPONENT.com. All rights reserved.
 * @license	GNU/GPL, see LICENSE.php
 * Joomla! is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
 * See COPYRIGHT.php for copyright notices and details.
-* 
+*
 */
 
 /**
  * Reform validation script
- * 
+ *
  * requires language strings to be defined inline
  */
 
-function CheckSubmit(form) 
+function CheckSubmit(form)
 {
 	var msg = '';
 	var result = true;
@@ -31,7 +31,7 @@ function CheckSubmit(form)
 		// get the input data of the form
 		var formelements = document.id(forms[j]).getElements('input').concat(document.id(forms[j]).getElements('select'), document.id(forms[j]).getElements('textarea'));
 
-		for(var i=0; i < formelements.length; i++) 
+		for(var i=0; i < formelements.length; i++)
 		{
 			var check_element = formelements[i];
 
@@ -44,7 +44,7 @@ function CheckSubmit(form)
 				}
 				if (result) result = fullresult;
 			}
-		
+
 			/* Text field */
 			if (check_element.name.indexOf("[text]") != -1 && check_element.className.match("required")) {
 				var textresult = CheckFill(check_element);
@@ -53,7 +53,7 @@ function CheckSubmit(form)
 				}
 				if (result) result = textresult;
 			}
-			
+
 			/* Textarea field */
 			if (check_element.name.indexOf("[textarea]") != -1 && check_element.className.match("required")) {
 				var textarearesult = CheckFill(check_element);
@@ -62,7 +62,7 @@ function CheckSubmit(form)
 				}
 				if (result) result = textarearesult;
 			}
-		
+
 			/* Username field */
 			if (check_element.name.indexOf("[username]") != -1 && check_element.className.match("required")) {
 				var usernameresult = CheckFill(check_element);
@@ -71,7 +71,16 @@ function CheckSubmit(form)
 				}
 				if (result) result = usernameresult;
 			}
-			
+
+			/* fileupload field */
+			if (check_element.name.indexOf("[fileupload]") != -1 && check_element.className.match("required")) {
+				var fileuploadresult = CheckFill(check_element);
+				if (!fileuploadresult) {
+					msg += getLabel(check_element).get('text')+': '+"<?php echo JText::_('COM_REDFORM_please_attach_a_file'); ?>\n";
+				}
+				if (result) result = fileuploadresult;
+			}
+
 			/* E-mail */
 			if (check_element.name.indexOf("[email]") != -1 && check_element.className.match("required")) {
 				if (CheckFill(check_element)) {
@@ -87,7 +96,7 @@ function CheckSubmit(form)
 			}
 
 			/* multiselect field */
-			if ((check_element.name.indexOf("[multiselect]") != -1 || check_element.name.indexOf("[select]") != -1) 
+			if ((check_element.name.indexOf("[multiselect]") != -1 || check_element.name.indexOf("[select]") != -1)
 					&& check_element.className.match("required")) {
 				var multires = CheckFill(check_element);
 				if (!multires) {
@@ -95,7 +104,7 @@ function CheckSubmit(form)
 				}
 				if (result) result = multires;
 			}
-		
+
 			/* Radio buttons */
 			if (check_element.name.indexOf("[radio]") != -1 && check_element.className.match("required")) {
 				radios = document.getElementsByName(check_element.name);
@@ -117,7 +126,7 @@ function CheckSubmit(form)
 					getListLabel(check_element).removeClass('emptyfield');
 				}
 			}
-  
+
 			/* Check boxes */
 			if (check_element.name.indexOf("[checkbox]") != -1 && check_element.className.match("required")) {
 				checkboxes = document.getElementsByName(check_element.name);
@@ -143,16 +152,16 @@ function CheckSubmit(form)
 	}
 	}
 	if (result == false) {
-		if (radiomsg)	msg+= radiomsg;		
-		if (checkboxmsg)	msg+= checkboxmsg;	
+		if (radiomsg)	msg+= radiomsg;
+		if (checkboxmsg)	msg+= checkboxmsg;
 		alert(msg);
-		return false;		
+		return false;
 	}
-	
+
 	return result;
 }
 
-function addClass(element, value) 
+function addClass(element, value)
 {
 	if (!element.className) {
 		element.className = value;
@@ -164,7 +173,7 @@ function addClass(element, value)
 	}
 }
 
-function CheckFill(element) 
+function CheckFill(element)
 {
 	if (!(document.id(element).getProperty('value'))) {
 		addEmpty(element);
@@ -198,7 +207,7 @@ function getListLabel(element) {
 	return document.getElement('label[for="'+name+'"]');
 }
 
-function CheckEmail(str) 
+function CheckEmail(str)
 {
 	/* Check if regular expressions are supported */
 	var supported = 0;
@@ -208,14 +217,14 @@ function CheckEmail(str)
 		if (tempReg.test(tempStr)) supported = 1;
 	}
 	if (!supported) return (str.indexOf(".") > 2) && (str.indexOf("@") > 0);
-	
+
 	/* Regular expressions supported */
 	var r1 = new RegExp("(@.*@)|(\\.\\.)|(@\\.)|(^\\.)");
 	var r2 = new RegExp("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,4}|[0-9]{1,4})(\\]?)$");
 	return (!r1.test(str) && r2.test(str));
 }
 
-function AddUser() 
+function AddUser()
 {
 	//jQuery("div#submit_button").show();
 	var curform = parseInt(document.getElement("input[name='curform']").getProperty('value'));

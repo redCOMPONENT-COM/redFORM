@@ -246,7 +246,7 @@ class rfanswers
 				$answer = implode("~~~", $submittervalues);
 				break;
 
-			case 'name':
+			case 'fileupload':
 				if (in_array('fileupload', array_keys($postedvalue['name'])))
 				{
 					$answer = $this->_fileupload($postedvalue);

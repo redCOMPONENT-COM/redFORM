@@ -901,8 +901,20 @@ class RedFormCore extends JObject {
 
 					case 'fileupload':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						if ($submitter_id == 0) {
-							$element .= "<input type=\"file\" id=\"field".$field->id."\" name=\"field".$field->id.'.'.$signup."[fileupload][]\" class=\"fileupload".$field->parameters->get('class','')."\" id=\"fileupload_".$field->id."\"/>";
+						if ($submitter_id == 0)
+						{
+							$attr = array('type="file"');
+							$attr[] = 'id="field' . $field->id .'"';
+							$attr[] = 'name="field' . $field->id . '.' . $signup . '[fileupload][]"';
+
+							$class = array('fileupload' . $field->parameters->get('class',''));
+							if ($field->validate)
+							{
+								$class[] = 'required';
+							}
+							$attr[] = 'class="' . implode(' ', $class) .'"';
+
+							$element .= '<input ' . implode(' ', $attr) . '/>';
 						}
 						$element .= "\n";
 						break;
