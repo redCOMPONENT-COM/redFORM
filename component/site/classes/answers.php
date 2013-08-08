@@ -173,7 +173,7 @@ class rfanswers
 
 				break;
 
-			case 'text':
+			case 'textfield':
 				$answer = is_array($postedvalue) ? $postedvalue['text'][0] : $postedvalue;
 				break;
 
