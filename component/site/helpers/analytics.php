@@ -116,7 +116,7 @@ JS;
 	/**
 	 * add item for transaction
 	 *
-	 * @param   object  $item      item to be added
+	 * @param   object  $item      item to be added (id, sku, productname, category, price)
 	 * @param   int     $quantity  quantity
 	 *
 	 * @return string js code
@@ -127,8 +127,10 @@ JS;
 
 		$js_ua = <<<JS
 			ga('ecommerce:addItem', {
-			'id' : '{$item->id}',  // Transaction ID. Required.
-			'name' : '{$item->name}',      // Product name. Required.
+			'id' : '{$item->transaction_id}',  // Transaction ID. Required.
+			'name' : '{$item->productname}',      // Product name. Required.
+			'sku' : '{$item->sku}',        // SKU/code - required			.
+			'category' : '{$item->category}',      // Product name. Required.
 			'price' : '{$item->price}',    // Unit price.
 			'quantity' : '{$quantity}'    // Unit quantity.
 			});
@@ -136,10 +138,10 @@ JS;
 
 		$js_classic = <<<JS
 			_gaq.push(['_addItem',
-				'{$item->id}',  // Transaction ID. Required.
-				'{$item->name}',        // SKU/code - required			.
-				'{$item->name}',        // Product name.		.
-				'',        // Category.
+				'{$item->id}',  // TTransaction ID. Required.
+				'{$item->sku}',        // SKU/code - required			.
+				'{$item->productname}',        // Product name.		.
+				'{$item->category}',        // Category.
 				'{$item->price}',       // Unit price - required
 				'{$quantity}'    // Unit quantity- required
 				]);
@@ -259,12 +261,18 @@ JS;
 
 		$js = self::addTrans($trans);
 
+		$productname = isset($options['productname']) ? $options['productname'] : null;
+		$sku         = isset($options['sku']) ? $options['sku'] : null;
+		$category    = isset($options['category']) ? $options['category'] : null;
+
 		// Add submitters as items
 		foreach ($submitters as $s)
 		{
 			$item = new stdclass;
 			$item->id = $submit_key;
-			$item->name = 'submitter' . $s->id;
+			$item->productname = $productname ? $productname : 'submitter' . $s->id;
+			$item->sku  = $sku ? $sku : 'submitter' . $s->id;
+			$item->category  = $category ? $category : '';
 			$item->price = $s->price;
 		}
 		$js .= self::addItem($item);
