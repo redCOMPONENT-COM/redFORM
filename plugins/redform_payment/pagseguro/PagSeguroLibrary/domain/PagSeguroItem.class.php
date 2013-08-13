@@ -54,7 +54,7 @@ class PagSeguroItem {
 	private $shippingCost;
 
 	/**
-	 * 
+	 *
 	 * Initializes a new instance of the Item class
 	 * @param array $data
 	 */
@@ -108,7 +108,7 @@ class PagSeguroItem {
 	 * @param String $description
 	 */
 	public function setDescription($description) {
-		$this->description = PagSeguroHelper::formatString($description, 255);
+		$this->description = PagSeguroHelper::formatString($description, 100);
 	}
 
 	/**
@@ -170,6 +170,6 @@ class PagSeguroItem {
 	public function setShippingCost($shippingCost) {
 		$this->shippingCost = $shippingCost;
 	}
-	
+
 }
 ?>

@@ -70,7 +70,7 @@ class PagSeguroHelper {
     public static function removeStringExtraSpaces($string){
         return trim(preg_replace("/( +)/", " ", $string));
     }
-    
+
     /**
      * Perform truncate of string value
      * @param string $string
@@ -79,20 +79,31 @@ class PagSeguroHelper {
      * @return string
      */
     public static function truncateValue($string, $limit, $endchars = '...'){
-        
+
         if (!is_array($string) && !is_object($string)){
-            
+
             $stringLength = strlen($string);
             $endcharsLength  = strlen($endchars);
-            
-            if ($stringLength > (int)$limit){
+
+            if ($stringLength > (int)$limit)
+            {
                 $cut = (int)($limit - $endcharsLength);
-                $string = substr($string, 0, $cut).$endchars;
+
+
+	            $string = mb_substr($string, 0, $cut, "UTF-8");
+
+	            // make sure it's still the proper lenght in bytes
+	            while (strlen($string) >= $cut)
+	            {
+		            $string = mb_substr($string, 0 , mb_strlen($string) - 1, "UTF-8");
+	            }
+
+	            $string = $string . $endchars;
             }
         }
         return $string;
     }
-    
+
     /**
      * Return formatted string to send in PagSeguro request
      * @param type $string
@@ -113,7 +124,7 @@ class PagSeguroHelper {
     public static function isEmpty($value){
         return (!isset($value) || trim($value) == "" );
     }
-    
+
     /**
      * Check if notification post is empty
      * @param array $notification_data
@@ -121,14 +132,14 @@ class PagSeguroHelper {
      */
     public static function isNotificationEmpty(Array $notification_data){
         $isEmpty = TRUE;
-        
+
         if (isset($notification_data['notificationCode']) && isset($notification_data['notificationType'])){
             $isEmpty = (PagSeguroHelper::isEmpty($notification_data['notificationCode']) || PagSeguroHelper::isEmpty($notification_data['notificationType']));
         }
-        
+
         return $isEmpty;
     }
-    
+
     /**
      * Remove all non digit character from string
      * @param string $value
