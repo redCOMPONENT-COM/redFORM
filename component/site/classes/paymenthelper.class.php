@@ -149,7 +149,7 @@ abstract class RDFPaymenthelper extends JObject {
 		{
 			$uri->setVar('lang', $lang);
 		}
-		
+
 		switch ($state)
 		{
 			case 'processing':

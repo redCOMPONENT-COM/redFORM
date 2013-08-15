@@ -52,10 +52,10 @@ class PaymentPaypal extends  RDFPaymenthelper
 		$submit_key = $request->key;
 
 		if (empty($return_url)) {
-			$return_url = $this->getUrl('processing', $submit_key));
+			$return_url = $this->getUrl('processing', $submit_key);
 		}
 		if (empty($cancel_url)) {
-			$cancel_url = $this->getUrl('cancel', $submit_key));
+			$cancel_url = $this->getUrl('cancel', $submit_key);
 		}
 
 		// get price and currency
