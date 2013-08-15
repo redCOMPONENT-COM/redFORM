@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -19,15 +19,16 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
 require_once (JPATH_SITE.'/components/com_redform/classes/paymenthelper.class.php');
 
-class PaymentIridium extends RDFPaymenthelper {
-	
+class PaymentIridium extends RDFPaymenthelper
+{
 	protected $gateway = 'iridium';
+
 	/**
 	 * sends the payment request associated to submit_key to the payment service
 	 * @param string $submit_key
@@ -42,15 +43,15 @@ class PaymentIridium extends RDFPaymenthelper {
 			echo JText::_('PLG_REDFORM_IRIDIUM_MISSING_PASSWORD');
 			return false;
 		}
-		
-		$document = JFactory::getDocument();	
-		
+
+		$document = JFactory::getDocument();
+
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
 		$currency = $details->currency;
-		
+
 		$date = JFactory::getDate();
-		
+
 		$req_params = array(
 			'MerchantID' => $this->params->get('merchantid'),
 			'Amount' => round($details->price*100, 2 ),
@@ -73,7 +74,7 @@ class PaymentIridium extends RDFPaymenthelper {
 			'CountryMandatory' => 'true',
 			'ResultDeliveryMethod' => 'POST',
 		);
-		
+
 		$hashdigest = array(
 			'PreSharedKey'  => $this->params->get('presharedkey'),
 			'MerchantID'    => $req_params['MerchantID'],
@@ -116,7 +117,7 @@ class PaymentIridium extends RDFPaymenthelper {
 		$hashstring = array();
 		foreach ($hashdigest as $key => $val) {
 			$hashstring[] = $key.'='.$val;
-		}		
+		}
 		$hashstring = implode('&', $hashstring);
 		if ($this->params->get('hashmethod', 'sha1') == 'md5') {
 			$req_params['HashDigest'] = md5($hashstring);
@@ -124,7 +125,7 @@ class PaymentIridium extends RDFPaymenthelper {
 		else {
 			$req_params['HashDigest'] = sha1($hashstring);
 		}
-		?>		
+		?>
 		<h3><?php echo JText::_('PLG_REDFORM_IRIDIUM_FORM_TITLE'); ?></h3>
 		<form action="https://mms.iridiumcorp.net/Pages/publicpages/paymentform.aspx" method="post">
 		<p><?php echo $request->title; ?></p>
@@ -133,9 +134,9 @@ class PaymentIridium extends RDFPaymenthelper {
 		<?php endforeach; ?>
 		<input type="submit" value="<?php echo JText::_('PLG_REDFORM_IRIDIUM_FORM_OPEN_PAYMENT_WINDOW'); ?>" />
 		</form>
-		<?php 
+		<?php
 	}
-	
+
 	/**
 	 * handle the recpetion of notification
 	 * @return bool paid status
@@ -143,13 +144,13 @@ class PaymentIridium extends RDFPaymenthelper {
   public function notify()
   {
     $mainframe = &JFactory::getApplication();
-    $db = & JFactory::getDBO();    
+    $db = & JFactory::getDBO();
     $paid = 0;
-    				
+
     $submit_key = JRequest::getvar('key');
     JRequest::setVar('submit_key', $submit_key);
     RedformHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_IRIDIUM_NOTIFICATION_RECEIVED', $submit_key));
-    
+
     // it was successull, get the details
     $resp = array();
     $resp[] = 'tid:'.JRequest::getVar('CrossReference');
@@ -158,7 +159,7 @@ class PaymentIridium extends RDFPaymenthelper {
     $resp[] = 'cur:'.RedformHelperLogCurrency::getIsoCode(JRequest::getVar('CurrencyCode'));
     $resp[] = 'date:'.JRequest::getVar('TransactionDateTime');
     $resp = implode("\n  ", $resp);
-    
+
     // calculate hassdigest
 	$hash_vars = array(
 		'PreSharedKey'  => $this->params->get('presharedkey'),
@@ -210,7 +211,7 @@ class PaymentIridium extends RDFPaymenthelper {
 	else {
 		$HashDigest = sha1($hashstring);
 	}
-	
+
 	try
 	{
 		if (strcmp($HashDigest, JRequest::getVar('HashDigest')))
@@ -218,7 +219,7 @@ class PaymentIridium extends RDFPaymenthelper {
 			$error = JText::sprintf('PLG_REDFORM_IRIDIUM_HASHDIGEST_MISMATCH', $submit_key);
 			throw new PaymentException($error);
 		}
-	
+
 		// hash match, record result
 		if (!JRequest::getVar('StatusCode') == 0)
 		{
@@ -236,7 +237,7 @@ class PaymentIridium extends RDFPaymenthelper {
 				case 30:
 					$reason = JText::_('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_EXCEPTION');
 					break;
-	
+
 				default:
 					$reason = JText::sprintf('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_UNKOWN_CODE', JRequest::getVar('StatusCode'));
 					break;
@@ -245,24 +246,24 @@ class PaymentIridium extends RDFPaymenthelper {
 			                       , $submit_key, $reason, JRequest::getVar('Message'));
 			throw new PaymentException($error);
 	    }
-	    
+
 	    $details = $this->_getSubmission($submit_key);
-	
+
 	    $currency = $details->currency;
 	    if (strcasecmp($currency, RedformHelperLogCurrency::getIsoCode(JRequest::getVar('CurrencyCode')))) {
-	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_CURRENCY_MISMATCH_EXPECTED_S_RECEIVED_S', 
+	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_CURRENCY_MISMATCH_EXPECTED_S_RECEIVED_S',
 			                        $submit_key, $currency, RedformHelperLogCurrency::getIsoCode(JRequest::getVar('CurrencyCode')));
 			throw new PaymentException($error);
 	    }
-	
+
 	    if (round($details->price*100, 2 ) != JRequest::getVar('Amount')) {
-	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PRICE_MISMATCH_EXPECTED_S_RECEIVED_S', 
+	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PRICE_MISMATCH_EXPECTED_S_RECEIVED_S',
 			         $submit_key, $details->price*100, JRequest::getVar('Amount'));
 			throw new PaymentException($error);
 		}
 		else {
 			$paid = 1;
-	    }    
+	    }
 	    $this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
 	}
 	catch (PaymentException $e) // just easier for debugging...
@@ -273,7 +274,7 @@ class PaymentIridium extends RDFPaymenthelper {
 	}
     return $paid;
   }
-   
+
 //   public function getUrl($state, $submit_key)
 //   {
 //   	return JURI::root();

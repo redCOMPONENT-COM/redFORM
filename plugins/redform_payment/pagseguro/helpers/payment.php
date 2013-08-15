@@ -18,18 +18,17 @@
  *
  */
 
-/**
- */
-// no direct access
+// No direct access
 defined('_JEXEC') or die('Restricted access');
 
-require_once (JPATH_SITE.'/components/com_redform/classes/paymenthelper.class.php');
-//require_once "../PagSeguroLibrary/PagSeguroLibrary.php";
+require_once JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.php';
+
 require_once JPATH_SITE . "/plugins/redform_payment/pagseguro/PagSeguroLibrary/PagSeguroLibrary.php";
 
-class PaymentPagseguro extends RDFPaymenthelper {
-
+class PaymentPagseguro extends RDFPaymenthelper
+{
 	protected $gateway = 'pagseguro';
+
 	/**
 	 * sends the payment request associated to submit_key to the payment service
 	 * @param string $submit_key

@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -19,14 +19,20 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class PaymentQuickpay extends JObject {
-	
-	var $params = null;
-	
+require_once (JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.php');
+
+/**
+ * @package  RED.redform
+ * @since    2.5
+ */
+class PaymentQuickpay extends  RDFPaymenthelper
+{
+	protected $params = null;
+
 	/**
 	 * contructor
 	 * @param object plgin params
@@ -35,20 +41,20 @@ class PaymentQuickpay extends JObject {
 	{
 		$this->params = $params;
 	}
-	
+
 	/**
 	 * sends the payment request associated to sumbit_key to the payment service
 	 * @param string $submit_key
 	 */
 	function process($request, $return_url = null, $cancel_url = null)
 	{
-		$document = JFactory::getDocument();	
-		
+		$document = JFactory::getDocument();
+
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 		$currency = $details->currency;
-		
+
 		$req_params = array(
 		  'protocol' => 4,
 		  'msgtype' => "authorize",
@@ -57,9 +63,9 @@ class PaymentQuickpay extends JObject {
 		  'ordernumber' => $request->uniqueid,
 		  'amount' => round($details->price*100, 2 ),
 		  'currency' => $currency,
-		  'continueurl' => JURI::base() . 'index.php?option=com_redform&controller=payment&task=processing&gw=quickpay&key='. $submit_key,
-		  'cancelurl' => JURI::base() . 'index.php?option=com_redform&controller=payment&task=paymentcancelled&gw=quickpay&key='. $submit_key,
-		  'callbackurl' => JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&tmpl=component&gw=quickpay&key='. $submit_key,
+		  'continueurl' => $this->getUrl('processing', $submit_key),
+		  'cancelurl' => $this->getUrl('paymentcancelled', $submit_key),
+		  'callbackurl' => $this->getUrl('notify', $submit_key),
 		  'autocapture' => 0,
 		  'cardtypelock' => $this->_getAllowedCard(),
 		  'description' => 0,
@@ -67,7 +73,7 @@ class PaymentQuickpay extends JObject {
 		  'splitpayment' => 0,
 		);
 		$md5 = md5(implode("", $req_params).$this->params->get('md5secret'));
-		
+
 		if (!$req_params['merchant']) {
 			echo JText::_('PLG_REDFORM_QUICKPAY_MISSING_QUICKPAYID');
 			return false;
@@ -76,7 +82,7 @@ class PaymentQuickpay extends JObject {
 			echo JText::_('PLG_REDFORM_QUICKPAY_MISSING_MD5SECRET');
 			return false;
 		}
-		?>		
+		?>
 		<h3><?php echo JText::_('Quickpay Payment Gateway'); ?></h3>
 		<form action="https://secure.quickpay.dk/form/" method="post">
 		<p><?php echo $request->title; ?></p>
@@ -86,9 +92,9 @@ class PaymentQuickpay extends JObject {
 		<input type="hidden" name="md5check" value="<?php echo $md5; ?>" />
 		<input type="submit" value="Open Quickpay payment window" />
 		</form>
-		<?php 
+		<?php
 	}
-	
+
 	/**
 	 * handle the recpetion of notification
 	 * @return bool paid status
@@ -96,13 +102,13 @@ class PaymentQuickpay extends JObject {
   function notify()
   {
     $mainframe = &JFactory::getApplication();
-    $db = & JFactory::getDBO();    
+    $db = & JFactory::getDBO();
     $paid = 0;
-    				
+
     $submit_key = JRequest::getvar('key');
     JRequest::setVar('submit_key', $submit_key);
     RedformHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_QUICKPAY_NOTIFICATION_RECEIVED', $submit_key));
-    
+
     // it was successull, get the details
     $resp = array();
     $resp[] = 'tid:'.JRequest::getVar('transaction');
@@ -112,7 +118,7 @@ class PaymentQuickpay extends JObject {
     $resp[] = 'date:'.substr(JRequest::getVar('time'), 0, 6);
     $resp[] = 'time:'.substr(JRequest::getVar('time'), 6);
     $resp = implode("\n  ", $resp);
-    
+
 		if ($this->params->get('md5secret'))
 		{
 			$req_params = array(
@@ -148,8 +154,8 @@ class PaymentQuickpay extends JObject {
 		    return false;
 	    }
     }
-    
-    
+
+
     if (!JRequest::getVar('qpstat') === '000')
     {
     	// payment was refused
@@ -158,7 +164,7 @@ class PaymentQuickpay extends JObject {
     	$this->writeTransaction($submit_key, JRequest::getVar('qpstat').': '.JRequest::getVar('qpstatmsg'), 'FAIL', 0);
 	    return 0;
     }
-    
+
     if (JRequest::getVar('state') == 0)
     {
 		// payment was refused
@@ -173,7 +179,7 @@ class PaymentQuickpay extends JObject {
     	$this->writeTransaction($submit_key, JText::sprintf('PLG_REDFORM_QUICKPAY_TRANSACTION_STATE_CANCELLED', $submit_key)."\n  ".$resp, 'FAIL', 0);
     	return 0;
     }
-    
+
     $details = $this->_getSubmission($submit_key);
 
     $currency = $details->currency;
@@ -192,18 +198,18 @@ class PaymentQuickpay extends JObject {
     }
     else {
     	$paid = 1;
-    }    
-    
+    }
+
 	  $this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
-    
+
     return $paid;
   }
-  
+
   function _getSubmission($submit_key)
   {
 		// get price and currency
 		$db  = &JFactory::getDBO();
-		
+
 		$query = ' SELECT f.currency, SUM(s.price) AS price, s.id AS sid '
 		       . ' FROM #__rwf_submitters AS s '
 		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
@@ -214,10 +220,10 @@ class PaymentQuickpay extends JObject {
 		$res = $db->loadObject();
 		return $res;
   }
-  
+
   /**
    * write transaction to db
-   * 
+   *
    * @param string $submit_key
    * @param string $data
    * @param string $status
@@ -225,8 +231,8 @@ class PaymentQuickpay extends JObject {
    */
   function writeTransaction($submit_key, $data, $status, $paid)
   {
-    $db = & JFactory::getDBO();    
-  	
+    $db = & JFactory::getDBO();
+
     // payment was refused
     $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
 				    . ' VALUES (NOW() '
@@ -239,7 +245,7 @@ class PaymentQuickpay extends JObject {
     $db->setQuery($query);
     $db->query();
   }
-  
+
 	/**
 	 * returns allowed card types
 	 * @return string
@@ -285,5 +291,5 @@ class PaymentQuickpay extends JObject {
 		}
 		return implode(",", $allowed);
   }
-  	
+
 }

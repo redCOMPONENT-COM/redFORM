@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -19,28 +19,34 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class PaymentCustom {
-	
-	var $params = null;
-	
+require_once (JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.php');
+
+/**
+ * @package  RED.redform
+ * @since    2.5
+ */
+class PaymentCustom extends  RDFPaymenthelper
+{
+	protected $params = null;
+
 	/**
 	 * contructor
 	 * @param object plgin params
 	 */
-	function PaymentCustom($params)
+	public function __construct($params)
 	{
 		$this->params = $params;
 	}
-	
+
 	/**
 	 * sends the payment request associated to sumbit_key to the payment service
 	 * @param string $submit_key
 	 */
-	function process($request, $return_url = null, $cancel_url = null)
+	public function process($request, $return_url = null, $cancel_url = null)
 	{
 		$text = $this->params->get('instructions');
 		if ($return_url) {
@@ -48,11 +54,11 @@ class PaymentCustom {
 		}
 		echo $text;
 	}
-	    
-  function writeTransaction($submit_key, $data, $status, $paid)
+
+  public function writeTransaction($submit_key, $data, $status, $paid)
   {
-    $db = & JFactory::getDBO();    
-  	
+    $db = & JFactory::getDBO();
+
     // payment was refused
     $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
 				    . ' VALUES (NOW() '
@@ -65,4 +71,14 @@ class PaymentCustom {
     $db->setQuery($query);
     $db->query();
   }
+
+	/**
+	 * notify
+	 *
+	 * @return bool|void
+	 */
+	public function notify()
+	{
+		// Not going to happen here...
+	}
 }

@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -19,14 +19,20 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class PaymentEpay extends JObject {
-	
-	var $params = null;
-	
+require_once (JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.php');
+
+/**
+ * @package  RED.redform
+ * @since    2.5
+ */
+class PaymentEpay extends  RDFPaymenthelper
+{
+	protected $params = null;
+
 	/**
 	 * contructor
 	 * @param object plgin params
@@ -35,7 +41,7 @@ class PaymentEpay extends JObject {
 	{
 		$this->params = $params;
 	}
-	
+
 	/**
 	 * sends the payment request associated to sumbit_key to the payment service
 	 * @param string $submit_key
@@ -43,13 +49,13 @@ class PaymentEpay extends JObject {
 	function process($request, $return_url = null, $cancel_url = null)
 	{
 		$document = JFactory::getDocument();
-		$document->addScript("http://www.epay.dk/js/standardwindow.js");		
-		
+		$document->addScript("http://www.epay.dk/js/standardwindow.js");
+
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
-		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);		
-		?>		
+		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
+		?>
 		<h3><?php echo JText::_('Epay Payment Gateway'); ?></h3>
 		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
 		<p><?php echo $request->title; ?></p>
@@ -59,15 +65,15 @@ class PaymentEpay extends JObject {
 		<input type="hidden" name="orderid" value="<?php echo $request->uniqueid; ?>">
 		<input type="hidden" name="user_attr_1" value="<?php echo $submit_key; ?>">
 		<input type="hidden" name="ordretext" value="">
-		<?php 
+		<?php
 		if ($this->params->get('EPAY_CALLBACK') == "1")
 		{
-			echo '<input type="hidden" name="callbackurl" value="' . JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=epay&accept=1&key='. $submit_key.'">';			
+			echo '<input type="hidden" name="callbackurl" value="' . $this->getUrl('notify', $submit_key) . '">';
 		}
 		$premd5 = $currency . round($details->price*100, 2 ) . $request->uniqueid  . $this->params->get('EPAY_MD5_KEY');
 		?>
-		<input type="hidden" name="accepturl" value="<?php echo JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=epay&accept=1&key='. $submit_key; ?>">
-		<input type="hidden" name="declineurl" value="<?php echo JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=epay&accept=0&key='. $submit_key; ?>">
+		<input type="hidden" name="accepturl" value="<?php echo $this->getUrl('notify', $submit_key); ?>">
+		<input type="hidden" name="declineurl" value="<?php echo $this->getUrl('notify', $submit_key); ?>">
 		<input type="hidden" name="group" value="<?php echo $this->params->get('EPAY_GROUP'); ?>">
 		<input type="hidden" name="instant" value="<?php echo $this->params->get('EPAY_INSTANT_CAPTURE'); ?>">
 		<input type="hidden" name="language" value="<?php echo $this->params->get('EPAY_LANGUAGE') ?>">
@@ -144,9 +150,9 @@ class PaymentEpay extends JObject {
 		<script type="text/javascript">open_ePay_window();</script>
 		<br>
 		<table border="0" width="100%"><tr><td><input type="button" onClick="open_ePay_window()" value="<?php echo JTEXT::_('OPEN_EPAY_PAYMENT_WINDOW') ?>"></td><td width="100%" id="flashLoader"></td></tr></table>
-		<?php 
+		<?php
 	}
-	
+
 	/**
 	 * handle the recpetion of notification
 	 * @return bool paid status
@@ -154,13 +160,13 @@ class PaymentEpay extends JObject {
   function notify()
   {
     $mainframe = &JFactory::getApplication();
-    $db = & JFactory::getDBO();    
+    $db = & JFactory::getDBO();
     $paid = 0;
-    				
+
     $submit_key = JRequest::getvar('key');
     JRequest::setVar('submit_key', $submit_key);
     RedformHelperLog::simpleLog('EPAY NOTIFICATION RECEIVED'. ' for ' . $submit_key);
-    
+
     if (JRequest::getVar('accept', 0) == 0)
     {
     	// payment was refused
@@ -177,12 +183,12 @@ class PaymentEpay extends JObject {
     $resp[] = 'date:'.JRequest::getVar('date');
     $resp[] = 'time:'.JRequest::getVar('time');
     $resp = implode("\n", $resp);
-    
+
     $details = $this->_getSubmission($submit_key);
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
-		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);		
-    
-    if (round($details->price*100, 2 ) != JRequest::getVar('amount')) {    	
+		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
+
+    if (round($details->price*100, 2 ) != JRequest::getVar('amount')) {
     	RedformHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH'. ' for ' . $submit_key);
     	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION PRICE MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
     	return false;
@@ -190,35 +196,35 @@ class PaymentEpay extends JObject {
     else {
     	$paid = 1;
     }
-    
-    if ($currency != JRequest::getVar('cur')) {    	
+
+    if ($currency != JRequest::getVar('cur')) {
     	RedformHelperLog::simpleLog('EPAY NOTIFICATION CURRENCY MISMATCH'. ' for ' . $submit_key);
     	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION CURRENCY MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
     	return false;
     }
-    
+
     if ($this->params->get('MD5', 0) > 0)
     {
     	$receivedkey = JRequest::getVar('eKey');
     	$calc = md5(JRequest::getVar('amount').JRequest::getVar('orderid').JRequest::getVar('tid').$this->params->get('EPAY_MD5_KEY'));
-    	if (strcmp($receivedkey, $calc)) 
+    	if (strcmp($receivedkey, $calc))
     	{
 	    	RedformHelperLog::simpleLog('EPAY NOTIFICATION MD5 KEY MISMATCH'. ' for ' . $submit_key);
 	    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION MD5 KEY MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
-	    	return false;    		
+	    	return false;
     	}
     }
-    
+
 	  $this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
-    
+
     return $paid;
   }
-  
+
   function _getSubmission($submit_key)
   {
 		// get price and currency
 		$db  = &JFactory::getDBO();
-		
+
 		$query = ' SELECT f.currency, SUM(s.price) AS price, s.id AS sid '
 		       . ' FROM #__rwf_submitters AS s '
 		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
@@ -229,11 +235,11 @@ class PaymentEpay extends JObject {
 		$res = $db->loadObject();
 		return $res;
   }
-  
+
   function writeTransaction($submit_key, $data, $status, $paid)
   {
-    $db = & JFactory::getDBO();    
-  	
+    $db = & JFactory::getDBO();
+
     // payment was refused
     $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
 				    . ' VALUES (NOW() '
@@ -246,5 +252,5 @@ class PaymentEpay extends JObject {
     $db->setQuery($query);
     $db->query();
   }
-  	
+
 }

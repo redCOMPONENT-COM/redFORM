@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -19,14 +19,20 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class PaymentPaypal {
-	
-	var $params = null;
-	
+require_once (JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.php');
+
+/**
+ * @package  RED.redform
+ * @since    2.5
+ */
+class PaymentPaypal extends  RDFPaymenthelper
+{
+	protected $params = null;
+
 	/**
 	 * contructor
 	 * @param object plgin params
@@ -35,26 +41,26 @@ class PaymentPaypal {
 	{
 		$this->params = $params;
 	}
-	
+
 	/**
 	 * sends the payment request associated to sumbit_key to the payment service
 	 * @param object $request
 	 */
 	function process($request, $return_url = null, $cancel_url = null)
-	{		
+	{
 		$app = JFactory::getApplication();
 		$submit_key = $request->key;
-		
+
 		if (empty($return_url)) {
-			$return_url = JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=processing&key='. $request->key);
+			$return_url = $this->getUrl('processing', $submit_key));
 		}
 		if (empty($cancel_url)) {
-			$cancel_url = JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=cancel&key='. $request->key);
+			$cancel_url = $this->getUrl('cancel', $submit_key));
 		}
-		
+
 		// get price and currency
 		$db  = &JFactory::getDBO();
-		
+
 		$query = ' SELECT f.currency, SUM(s.price) AS price '
 		       . ' FROM #__rwf_submitters AS s '
 		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
@@ -63,54 +69,54 @@ class PaymentPaypal {
 		            ;
 		$db->setQuery($query);
 		$res = $db->loadObject();
-				
+
 		if ($this->params->get('paypal_sandbox', 1) == 1) {
 			$paypalurl = "https://www.sandbox.paypal.com/cgi-bin/webscr";
 		}
 		else {
-		  $paypalurl = "https://www.paypal.com/cgi-bin/webscr";	
+		  $paypalurl = "https://www.paypal.com/cgi-bin/webscr";
 		}
-			
+
 		$post_variables = Array(
-	
+
 		"cmd" => "_xclick",
-	
+
 		"business" => $this->params->get('paypal_account'),
-	
+
 		"item_name" =>  $request->title,
-		
+
 		"no_shipping" =>  '1',
-			
+
 		"invoice" =>  $request->uniqueid,
-	
+
 		"amount" =>  $res->price,
-	 
+
 		"return" => $return_url,
-	
-		"notify_url" => JRoute::_(JURI::base() . 'index.php?option=com_redform&controller=payment&task=notify&gw=paypal&key='. $request->key),
-	
+
+		"notify_url" => $this->getUrl('notify', $submit_key),
+
 		"cancel_return" => $cancel_url,
-	
+
 		"undefined_quantity" => "0",
-	
+
 		"currency_code" => $res->currency,
-	
+
 		"no_note" => "1"
-	
+
 		);
-	
-		
+
+
 		$query_string = "?";
-	
+
 		foreach( $post_variables as $name => $value ) {
-	
+
 		$query_string .= $name. "=" . urlencode($value) ."&";
-	
+
 		}
-	
+
 		$app->redirect( $paypalurl . $query_string );
 	}
-	
+
 	/**
 	 * handle the recpetion of notification
 	 * @return bool paid status
@@ -119,8 +125,8 @@ class PaymentPaypal {
   {
     $mainframe = JFactory::getApplication();
     $db = JFactory::getDBO();
-    
-    				
+
+
     $post = JRequest::get( 'post' );
     $submit_key = JRequest::getvar('key');
     $paid = 0;
@@ -135,7 +141,7 @@ class PaymentPaypal {
       $req .= "&$key=$value";
       $data[] = "$key=$value";
     }
-    
+
     // assign posted variables to local variables
     $item_name = $post['item_name'];
     $item_number = $post['item_number'];
@@ -145,14 +151,14 @@ class PaymentPaypal {
     $txn_id = $post['txn_id'];
     $receiver_email = $post['receiver_email'];
     $payer_email = $post['payer_email'];
-    
+
     // post back to PayPal system to validate
 		if ($this->params->get('paypal_sandbox', 1) == 1) {
 			$paypalurl = "https://www.sandbox.paypal.com";
 		}
 		else {
 		  $paypalurl = "https://www.paypal.com";
-		}    
+		}
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $paypalurl.'/cgi-bin/webscr');
     curl_setopt($ch, CURLOPT_POST, 1);
@@ -167,10 +173,10 @@ class PaymentPaypal {
     // curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
     $res = curl_exec($ch);
     curl_close($ch);
-    
+
     //RedformHelperLog::simpleLog('PAYPAL curl result: '.$res);
-    
-    if (strcmp ($res, "VERIFIED") == 0) 
+
+    if (strcmp ($res, "VERIFIED") == 0)
     {
     	// check the payment_status is Completed
     	// check that txn_id has not been previously processed
@@ -194,17 +200,17 @@ class PaymentPaypal {
     	}
     	else if (strcasecmp($payment_status, 'completed') == 0) {
     		$paid = 1;
-    	}    	
-    }    
-    else if (strcmp ($res, "INVALID") == 0) 
+    	}
+    }
+    else if (strcmp ($res, "INVALID") == 0)
     {
     	// log for manual investigation
 			RedformHelperLog::simpleLog('PAYPAL NOTIFICATION INVALID IPN'. ' - ' . $submit_key);
     }
     else {
-    	RedformHelperLog::simpleLog('PAYPAL NOTIFICATION HTTP ERROR'. ' for ' . $submit_key);    	
+    	RedformHelperLog::simpleLog('PAYPAL NOTIFICATION HTTP ERROR'. ' for ' . $submit_key);
     }
-        
+
     // log ipn
     $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
 				    . ' VALUES (NOW(), ' . $db->Quote(implode("\n", $data))
@@ -215,8 +221,8 @@ class PaymentPaypal {
 				    . ') ';
     $db->setQuery($query);
     $db->query();
-    
-    // for routing 
+
+    // for routing
     JRequest::setVar('submit_key', $submit_key);
     return $paid;
   }

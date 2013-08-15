@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -19,12 +19,16 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
 require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 
+/**
+ * @package  RED.redevent
+ * @since    2.5
+ */
 abstract class RDFPaymenthelper extends JObject {
 
 	/**
@@ -32,28 +36,33 @@ abstract class RDFPaymenthelper extends JObject {
 	 * @var JRegistry
 	 */
 	protected $params = null;
-	
+
 	/**
 	 * name of the gateway for logs
 	 * @var string
 	 */
 	protected $gateway;
-	
+
 	protected $processing_url;
 	protected $cancel_url;
-	protected $notify_url;	
-	
+	protected $notify_url;
+
+	/**
+	 * @var object
+	 */
+	protected $submission;
+
 	/**
 	 * contructor
-	 * @param object plgin params
+	 * @param object plugin params
 	 */
 	public function __construct($params)
 	{
 		$this->params = $params;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param object $request payment request object
 	 * @param string $return_url
 	 * @param string $cancel_url
@@ -65,26 +74,31 @@ abstract class RDFPaymenthelper extends JObject {
 	 * @return bool paid status
 	 */
 	abstract public function notify();
-	
+
 	/**
-	 * returns details about the submissoin
+	 * returns details about the submission
 	 * @param string $submit_key
 	 * @return Ambigous <mixed, NULL>
 	 */
 	protected function _getSubmission($submit_key)
 	{
-		// get price and currency
-		$db  = JFactory::getDBO();
-	
-		$query = ' SELECT f.currency, SUM(s.price) AS price, s.id AS sid '
-				. ' FROM #__rwf_submitters AS s '
-						. ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-								. ' WHERE s.submit_key = '. $db->Quote($submit_key)
-								. ' GROUP BY s.submit_key'
-										;
-		$db->setQuery($query);
-		$res = $db->loadObject();
-		return $res;
+		if (!$this->submission)
+		{
+			// Get price and currency
+			$db    = JFactory::getDBO();
+			$query = $db->getQuery(true);
+
+			$query->select('f.currency, SUM(s.price) AS price, s.id AS sid');
+			$query->from('#__rwf_submitters AS s');
+			$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
+			$query->where('s.submit_key = ' . $db->Quote($submit_key));
+			$query->group('s.submit_key');
+
+			$db->setQuery($query);
+			$this->submission = $db->loadObject();
+		}
+
+		return $this->submission;
 	}
 
 	/**
@@ -98,7 +112,7 @@ abstract class RDFPaymenthelper extends JObject {
 	protected function writeTransaction($submit_key, $data, $status, $paid)
 	{
 		$db = & JFactory::getDBO();
-		 
+
 		// payment was refused
 		$query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
 				. ' VALUES (NOW() '
@@ -111,14 +125,31 @@ abstract class RDFPaymenthelper extends JObject {
 		$db->setQuery($query);
 		$db->query();
 	}
-	
+
+	/**
+	 * returns state url (notify, cancel, etc...)
+	 *
+	 * @param   string  $state       the state for the url
+	 * @param   string  $submit_key  submit key
+	 *
+	 * @return string
+	 */
 	protected function getUrl($state, $submit_key)
 	{
+		$app = JFactory::getApplication();
+		$lang = $app->input->get('lang');
+
 		$uri = JURI::getInstance(JURI::root());
 		$uri->setVar('option', 'com_redform');
 		$uri->setVar('controller', 'payment');
 		$uri->setVar('gw', $this->gateway);
 		$uri->setVar('key', $submit_key);
+
+		if (JLanguageMultilang::isEnabled() && $lang)
+		{
+			$uri->setVar('lang', $lang);
+		}
+		
 		switch ($state)
 		{
 			case 'processing':
@@ -131,6 +162,7 @@ abstract class RDFPaymenthelper extends JObject {
 				$uri->setVar('task', 'notify');
 				break;
 		}
+
 		return $uri->toString();
 	}
 }

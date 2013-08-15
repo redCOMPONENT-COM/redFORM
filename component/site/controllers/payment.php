@@ -40,14 +40,21 @@ class RedformControllerPayment extends JController {
 
 	function select()
 	{
-		$key     = JRequest::getVar('key');
+		$app  = JFactory::getApplication();
+		$key  = $app->input->get('key');
+
+		if ($app->input->get('lang'))
+		{
+			$lang_v = "&lang=" . $app->input->get('lang');
+		}
+
 		$model   = $this->getModel('payment');
 		$model->setSubmitKey($key);
 		$options = $model->getGatewayOptions();
 
 		if (count($options) == 1)
 		{
-			$this->setRedirect('index.php?option=com_redform&controller=payment&task=process&key='.$key.'&gw='.$options[0]->value);
+			$this->setRedirect('index.php?option=com_redform&controller=payment&task=process&key='.$key.'&gw='.$options[0]->value . $lang_v);
 			$this->redirect();
 		}
 		JRequest::setVar('view',   'payment');
@@ -82,6 +89,11 @@ class RedformControllerPayment extends JController {
 
 		$submit_key = $app->input->getString('key');
 
+		if ($app->input->get('lang'))
+		{
+			$lang_v = "&lang=" . $app->input->get('lang');;
+		}
+
 		$model = $this->getModel('payment');
 		$model->setSubmitKey($submit_key);
 
@@ -94,11 +106,11 @@ class RedformControllerPayment extends JController {
 				switch ($first->integration)
 				{
 					case 'redevent':
-						$mainframe->redirect('index.php?option=com_redevent&view=payment&submit_key='.$submit_key.'&state=processing');
+						$mainframe->redirect('index.php?option=com_redevent&view=payment&submit_key='.$submit_key.'&state=processing' . $lang_v);
 						break;
 
 					default:
-						$mainframe->redirect('index.php?option=com_'.$first->integration.'&view=payment&submit_key='.$submit_key.'&state=processing');
+						$mainframe->redirect('index.php?option=com_'.$first->integration.'&view=payment&submit_key='.$submit_key.'&state=processing' . $lang_v);
 						break;
 				}
 			}
