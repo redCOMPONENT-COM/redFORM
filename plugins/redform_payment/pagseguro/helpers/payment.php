@@ -72,7 +72,7 @@ class PaymentPagseguro extends RDFPaymenthelper
 
 		// Sets the url used by PagSeguro for redirect user after ends checkout process
 		$paymentRequest->setRedirectUrl($this->getUrl('processing', $submit_key));
-		$paymentRequest->setRedirectUrl($this->getUrl('notify', $submit_key));
+		$paymentRequest->setNotificationURL($this->getUrl('notify', $submit_key));
 
 		try
 		{
