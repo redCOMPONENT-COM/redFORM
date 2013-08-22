@@ -106,11 +106,11 @@ class RedformControllerPayment extends JController {
 				switch ($first->integration)
 				{
 					case 'redevent':
-						$mainframe->redirect('index.php?option=com_redevent&view=payment&submit_key='.$submit_key.'&state=processing' . $lang_v);
+						$app->redirect('index.php?option=com_redevent&view=payment&submit_key='.$submit_key.'&state=processing' . $lang_v);
 						break;
 
 					default:
-						$mainframe->redirect('index.php?option=com_'.$first->integration.'&view=payment&submit_key='.$submit_key.'&state=processing' . $lang_v);
+						$app->redirect('index.php?option=com_'.$first->integration.'&view=payment&submit_key='.$submit_key.'&state=processing' . $lang_v);
 						break;
 				}
 			}
