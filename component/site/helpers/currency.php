@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ defined('_JEXEC') or die('Restricted access');
  */
 class RedformHelperLogCurrency
 {
-	
+
 	protected static function get_iso_4217_currency_codes()
 	{
 		$a = array();
@@ -101,6 +101,7 @@ class RedformHelperLogCurrency
 		$a['PYG'] = array('Paraguay Guarani', '600');
 		$a['PEN'] = array('Peru New Sol', '604');
 		$a['PHP'] = array('Philippine Pesos', '608');
+		$a['PLN'] = array('Polish złoty', '0');
 		$a['QAR'] = array('Qatari Riyal', '634');
 		$a['RON'] = array('Romanian New Leu', '946');
 		$a['RUB'] = array('Russian Federation Ruble', '643');
@@ -132,7 +133,7 @@ class RedformHelperLogCurrency
 		$a['ZWD'] = array('Zimbabwe Dollar', '716');
 		return $a;
 	}
-	
+
 	/**
 	 * return iso code from iso number
 	 * @param string $code
@@ -164,9 +165,9 @@ class RedformHelperLogCurrency
 		}
 		else {
 			return false;
-		}			
+		}
 	}
-	
+
 	/**
 	 * get currencies as options, with ode as value
 	 * @return array
