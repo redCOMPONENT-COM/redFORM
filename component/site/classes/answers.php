@@ -456,6 +456,23 @@ class rfanswers
 		return true;
 	}
 
+
+	function deletePostAnswer($field){
+	  	$db = & JFactory::getDBO();
+	  	if ($this->_answer_id) // answers were already recorder, update them
+	    {
+	    	$q = "UPDATE ".$db->nameQuote('#__rwf_forms_'. $this->_form_id);
+	    	$q .= ' SET field_'.$field->id.' = NULL ';
+	    	$q .= " WHERE ID = ". $this->_answer_id;
+	    	$db->setQuery($q);
+	    	if (!$db->query()) {
+	    		JError::raiseError(0, JText::_('UPDATE ANSWERS FAILED'));
+	        	RedformHelperLog::simpleLog(JText::_('Cannot update answers').' '.$db->getErrorMsg());
+	    	}
+	    }
+  }
+
+
 	/**
 	 * new save function for new lib
 	 *

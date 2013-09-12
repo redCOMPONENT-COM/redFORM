@@ -113,7 +113,7 @@ class RedformModelRedform extends JModel {
 		$db = & $this->_db;
 
 		/* Load the fields */
-		$q = "SELECT id, field, fieldtype, ordering, published, params
+		$q = "SELECT id, field, fieldtype, ordering, published, params, save_to_data
 		FROM ".$db->nameQuote('#__rwf_fields')."
 		WHERE form_id = ".$form_id."
 		ORDER BY ordering";
@@ -333,7 +333,15 @@ class RedformModelRedform extends JModel {
 		if ($answers->isNew()) {
 			$this->notifymaintainer($allanswers);
 		}
-
+		/* remove fields */
+		foreach ($fieldlist as $key => $field)
+		{
+			if (isset($postvalues['field'.$key]) && $field->save_to_data == 0 )
+			{	//print_r($field->save_to_data);exit;
+				/* Get the answers */
+				$answers->deletePostAnswer($field);
+			}
+		}
 		if ($form->activatepayment)
 		{
 			$redirect = 'index.php?option=com_redform&controller=payment&task=select&key='.$submit_key;
@@ -767,6 +775,17 @@ class RedformModelRedform extends JModel {
 				$this->notifysubmitter($answers, $form);
 			}
 		}
+
+
+		/* remove fields */
+		foreach ($fieldlist as $key => $field)
+			{
+				if (isset($postvalues['field'.$key]) && $field->save_to_data == 0 )
+				{	//print_r($field->save_to_data);exit;
+					/* Get the answers */
+					$answers->deletePostAnswer($field);
+				}
+			}
 
 		return $result;
 	}

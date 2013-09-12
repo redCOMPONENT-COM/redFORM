@@ -156,6 +156,15 @@ JHTML::_('behavior.tooltip');
 		</tr>
 		<tr>
 			<td>
+			<?php echo JHTML::tooltip(JText::_('Set to yes to save the field.'), JText::_('Save'), 'tooltip.png', '', '', false); ?>
+			<?php echo JText::_('Save'); ?>
+			</td>
+			<td>
+			<?php echo $this->lists['save_to_data']; ?>
+			</td>
+		</tr>
+		<tr>
+			<td>
 			<label for="readonly"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_READONLY_TIP'), JText::_('COM_REDFORM_FIELD_READONLY'), 'tooltip.png', '', '', false); ?>
 			<?php echo JText::_('COM_REDFORM_FIELD_READONLY'); ?></label>
 			</td>
