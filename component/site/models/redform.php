@@ -437,7 +437,7 @@ class RedformModelRedform extends JModel {
 		}
 	}
 
-	function notifysubmitter($answers, $form)
+	function notifysubmitter(rfanswers $answers, $form)
 	{
 		$emails = $answers->getSubmitterEmails();
 		$cond_recipients = RedFormCore::getConditionalRecipients($form, $answers);
@@ -461,7 +461,7 @@ class RedformModelRedform extends JModel {
 
 				/* Mail submitter */
 				$submission_body = $form->submissionbody;
-				$submission_body = $this->_replaceTags($submission_body, $answers->getAnswers());
+				$submission_body = $this->_replaceTags($submission_body, $answers);
 
 				if (strstr($submission_body, '[answers]'))
 				{
@@ -477,6 +477,14 @@ class RedformModelRedform extends JModel {
 						}
 						$info .= "</tr>";
 					}
+
+					if ($p = $answers->getPrice())
+					{
+						$info .= '<tr><th>'.JText::_('COM_REDFORM_TOTAL_PRICE').'</th><td>';
+						$info .= $p;
+						$info .= '</td></tr>'."\n";
+					}
+
 					$info .= "</table>";
 					$submission_body = str_replace('[answers]', $info, $submission_body);
 				}
@@ -928,10 +936,10 @@ class RedformModelRedform extends JModel {
 								break;
 						}
 					}
-					if ($form->activatepayment)
+					if ($p = $answers->getPrice())
 					{
 						$htmlmsg .= '<tr><td>'.JText::_('COM_REDFORM_TOTAL_PRICE').'</td><td>';
-						$htmlmsg .= $answers->getPrice();
+						$htmlmsg .= $p;
 						$htmlmsg .= '</td></tr>'."\n";
 					}
 					$htmlmsg .= "</table><br />";
@@ -1022,7 +1030,7 @@ class RedformModelRedform extends JModel {
 			return $form->notificationtext;
 		}
 		else {
-			return $this->_replaceTags($form->notificationtext, reset($this->_answers)->getAnswers());
+			return $this->_replaceTags($form->notificationtext, reset($this->_answers));
 		}
 	}
 
@@ -1042,8 +1050,14 @@ class RedformModelRedform extends JModel {
 		return $res;
 	}
 
-	function _replaceTags($text, $answers)
+	function _replaceTags($text, rfanswers $answers)
 	{
+		// Price
+		if (strstr($text, '[totalprice]'))
+		{
+			$text = str_replace('[totalprice]', $answers->getPrice(), $text);
+		}
+
 		$matches = array();
 		if (!preg_match_all('(\[answer_[0-9]+\])', $text, $matches)) {
 			return $text;
@@ -1054,7 +1068,7 @@ class RedformModelRedform extends JModel {
 			// get field id from tag
 			$id = substr($tag, 8, -1);
 
-			foreach ($answers as $field)
+			foreach ($answers->getAnswers() as $field)
 			{
 				if ($field['field_id'] == $id)
 				{
