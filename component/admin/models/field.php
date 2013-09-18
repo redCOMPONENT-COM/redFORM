@@ -205,6 +205,7 @@ class RedformModelField extends JModelLegacy
    */
   function store($data)
   {
+		$app = JFactory::getApplication();
   	$row = $this->getTable('Fields', 'RedformTable');
   	$oldrow = $this->getTable('Fields', 'RedformTable');
   	$field_id = JRequest::getInt('id', false);
@@ -266,7 +267,7 @@ class RedformModelField extends JModelLegacy
 			  }
 			  $post['field_id'] = $row->id;
 			  if (!$mailinglistrow->bind($post)) {
-			  	$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_binding_the_mailinglist_data').' '.$row->getError(), 'error');
+				  $app->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_binding_the_mailinglist_data').' '.$row->getError(), 'error');
 			  	return false;
 			  }
 
@@ -275,7 +276,7 @@ class RedformModelField extends JModelLegacy
 
 			  /* save the changes */
 			  if (!$mailinglistrow->store()) {
-			  	$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_mailinglist_data').' '.$row->getError(), 'error');
+				  $app->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_mailinglist_data').' '.$row->getError(), 'error');
 			  	return false;
 			  }
 	  	}
@@ -292,6 +293,7 @@ class RedformModelField extends JModelLegacy
 	 */
 	private function AddFieldTable($row, $oldrow)
 	{
+		$app = JFactory::getApplication();
 		$db =  JFactory::getDBO();
 
 		/* column name for this field */
@@ -343,22 +345,39 @@ class RedformModelField extends JModelLegacy
 		{
 			$q .= ' ADD UNIQUE ('. $db->qn($field) .' (255))';
 			$db->setQuery($q);
-			if (!$db->query())
+
+			try
 			{
-				JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_make_the_field_unique').' '.$db->getErrorMsg());
-				/* Remove unique status */
-				$q = "UPDATE ".$db->qn('#__rwf_fields')."
-					SET ".$db->qn('unique')." = 0
-					WHERE id = ".$row->id;
-				$db->setQuery($q);
-				$db->query();
+				$db->execute();
+			}
+			catch (Exception $e)
+			{
+				// Query failed, remove unique attribute for this field
+				$cancel = $db->getQuery(true);
+
+				$cancel->update($db->qn('#__rwf_fields'));
+				$cancel->set($db->qn('unique') . ' = 0');
+				$cancel->where('id = ' . $row->id);
+
+				$db->setQuery($cancel);
+				$db->execute();
+
+				// Set error message
+				$app->enqueueMessage(JText::_('COM_REDFORM_Cannot_make_the_field_unique') . ' ' . $e->getMessage(), 'error');
 			}
 		}
-		else if (isset($indexresult[$field]))
+		elseif (isset($indexresult[$field]))
 		{
 			$q .= ' DROP INDEX' . $db->qn($field);
 			$db->setQuery($q);
-			if (!$db->query()) JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_remove_the_field_unique_status').' '.$db->getErrorMsg());
+			try
+			{
+				$db->execute();
+			}
+			catch (RuntimeException $e)
+			{
+				$app->enqueueMessage(JText::_('COM_REDFORM_Cannot_remove_the_field_unique_status') . ' ' . $e->getMessage(), 'error');
+			}
 		}
 	}
 
