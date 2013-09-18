@@ -407,8 +407,9 @@ class rfanswers
 		$db = JFactory::getDBO();
 
 
-		if (empty($this->_form_id)) {
-			JError::raiseError(0, JText::_('COM_REDFORM_ERROR_NO_FORM_ID'));
+		if (empty($this->_form_id))
+		{
+			throw new Exception(JText::_('COM_REDFORM_ERROR_NO_FORM_ID'), 500);
 		}
 
 		if (!count($this->_fields)) {
@@ -427,10 +428,13 @@ class rfanswers
 
 		$values = array();
 		$fields = array();
-		foreach ($this->_fields as $v) {
+		foreach ($this->_fields as $v)
+		{
 			$fields[] = $db->qn('field_'. $v->id);
 		}
-		foreach ($this->_values as $v) {
+
+		foreach ($this->_values as $v)
+		{
 			$values[] = $db->Quote($v);
 		}
 
@@ -453,41 +457,62 @@ class rfanswers
 		{
 			$submitter = $this->getSubmitter($sid);
 
-			$q = "UPDATE ".$db->qn('#__rwf_forms_'. $this->_form_id);
-			$set = array();
-			foreach ($fields as $ukey => $col) {
-				$set[] = $col ." = ". $values[$ukey];
-			}
-			$q .= ' SET '. implode(', ', $set);
-			$q .= " WHERE ID = ". $submitter->answer_id;
-			$db->setQuery($q);
+			$query = $db->getQuery(true);
+			$query->update($db->qn('#__rwf_forms_'. $this->_form_id));
 
-			if (!$db->query()) {
-				JError::raiseError(0, JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'));
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_update_answers').' '.$db->getErrorMsg());
+			foreach ($fields as $ukey => $col)
+			{
+				$query->set($db->qn($col) . " = " . $db->quote($values[$ukey]));
+			}
+
+			$query->where('id = ' . $submitter->answer_id);
+			$db->setQuery($query);
+
+			try
+			{
+				$db->execute();
+			}
+			catch (RuntimeException $e)
+			{
+				/* We cannot save the answers, do not continue */
+				if (stristr($e->getMessage(), 'duplicate entry'))
+				{
+					JRequest::setVar('ALREADY_ENTERED', true);
+					throw new Exception(JText::_('COM_REDFORM_ALREADY_ENTERED'), 500);
+				}
+				else
+				{
+					throw new Exception(JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'), 500);
+				}
+
+				return false;
 			}
 		}
 		else
 		{
-			/* Construct the query */
-			$q = "INSERT INTO ".$db->qn('#__rwf_forms_'. $this->_form_id)."
-			(" . implode(', ', $fields) . ")
-			VALUES (" . implode(', ', $values) . ")";
-			$db->setQuery($q);
+			$query = $db->getQuery(true);
+			$query->insert($db->qn('#__rwf_forms_'. $this->_form_id));
+			$query->columns($fields);
+			$query->values(implode(", ", $values));
 
-			if (!$db->query())
+			$db->setQuery($query);
+
+			try
+			{
+				$db->execute();
+			}
+			catch (RuntimeException $e)
 			{
 				/* We cannot save the answers, do not continue */
-				if (stristr($db->getErrorMsg(), 'duplicate entry')) {
+				if (stristr($e->getMessage(), 'duplicate entry'))
+				{
 					JRequest::setVar('ALREADY_ENTERED', true);
-					$mainframe->enqueueMessage(JText::_('COM_REDFORM_ALREADY_ENTERED'), 'error');
+					throw new Exception(JText::_('COM_REDFORM_ALREADY_ENTERED'), 500);
 				}
-				else {
-					$mainframe->enqueueMessage(JText::_('COM_REDFORM_Cannot_save_form_answers').' '.$db->getErrorMsg(),'error');
+				else
+				{
+					throw new Exception(JText::_('COM_REDFORM_Cannot_save_form_answers'), 500);
 				}
-				/* We cannot save the answers, do not continue */
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_save_form_answers').' '.$db->getErrorMsg());
-				return false;
 			}
 			$this->_answer_id = $db->insertid();
 			$sid = $this->updateSubmitter($params);

@@ -546,21 +546,16 @@ class RedformModelRedform extends JModelLegacy {
 	 */
 	function apisaveform($integration_key = '', $options = array(), $data = null)
 	{
-		$mainframe = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$db = $this->_db;
 
 		$result = new stdclass(); // create a new class for this ?
 		$result->posts = array();
 
-		/* Default values */
-		$answer  = '';
-		$return  = false;
-		$redcompetition = false;
-		$redevent = false;
-
 		/* Check for the submit key */
 		$submit_key = JRequest::getVar('submit_key', false);
-		if (!$submit_key) {
+		if (!$submit_key)
+		{
 			$captcha_allowed = true;
 			$submit_key = uniqid();
 		}
@@ -624,7 +619,11 @@ class RedformModelRedform extends JModelLegacy {
 				if (isset($postvalues['field'.$key]))
 				{
 					/* Get the answers */
-					$answers->addPostAnswer($field, $postvalues['field'.$key]);
+					if (!$answers->addPostAnswer($field, $postvalues['field'.$key]))
+					{
+						$this->setError($answers->getError());
+						return false;
+					}
 				}
 			}
 
@@ -639,7 +638,7 @@ class RedformModelRedform extends JModelLegacy {
 		{
 			$sessiondata[] = $a->toSession();
 		}
-		$mainframe->setUserState('formdata'.$post['form_id'], $sessiondata);
+		$app->setUserState('formdata'.$post['form_id'], $sessiondata);
 
 		// captcha verification
 		if ($form->captchaactive && $captcha_allowed)
@@ -663,21 +662,24 @@ class RedformModelRedform extends JModelLegacy {
 			{
 				$sessiondata[] = $a->toSession();
 			}
-			$mainframe->setUserState($submit_key, $sessiondata);
+			$app->setUserState($submit_key, $sessiondata);
 			return $result;
 		}
 
 		// else save to db !
 		foreach ($allanswers as $answers)
 		{
-			$res = $answers->savedata($postvalues);
-			if (!$res) {
-				$this->setError(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED'));
+			try
+			{
+				$res = $answers->savedata($postvalues);
+			}
+			catch (Exception $e)
+			{
+				$this->setError($e->getMessage());
 				return false;
 			}
-			else {
-				$result->posts[] = array('sid' => $res);
-			}
+
+			$result->posts[] = array('sid' => $res);
 
 			if ($answers->isNew())
 			{
