@@ -51,7 +51,7 @@
 	</files>
 
 	<!-- Image files -->
-	<!-- These are actually for the administrator but this is not supported 
+	<!-- These are actually for the administrator but this is not supported
 		by Joomla -->
 	<media folder="media">
 		<folder>com_redform</folder>
@@ -68,6 +68,7 @@
 
 		<!-- Core files admin -->
 		<files folder="admin">
+			<filename>access.xml</filename>
 			<filename>changelog.txt</filename>
 			<filename>controller.php</filename>
 			<filename>LICENSE.php</filename>
