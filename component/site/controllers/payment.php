@@ -201,7 +201,7 @@ class RedformControllerPayment extends JController
 		$model = $this->getModel('payment');
 
 		$alreadypaid = $model->hasAlreadyPaid();
-		$helper = $model->getGatewayHelper($gw);
+		$helper      = $model->getGatewayHelper($gw);
 
 		$res = $helper->notify();
 
@@ -212,6 +212,12 @@ class RedformControllerPayment extends JController
 
 			if (!$alreadypaid)
 			{
+				// Trigger event for custom handling
+				JPluginHelper::importPlugin('redform');
+				$dispatcher = JDispatcher::getInstance();
+				$dispatcher->trigger('onAfterPaymentVerified', array($submit_key));
+
+				// Built-in notifications
 				$model->notifyPaymentReceived();
 			}
 		}
