@@ -49,7 +49,7 @@ class PaymentEpay extends  RDFPaymenthelper
 	function process($request, $return_url = null, $cancel_url = null)
 	{
 		$document = JFactory::getDocument();
-		$document->addScript("http://www.epay.dk/js/standardwindow.js");
+		$document->addScript("https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js");
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
@@ -146,10 +146,10 @@ class PaymentEpay extends  RDFPaymenthelper
 			<input type="hidden" name="cardtype[]" value="22"/>
 			<?php endif; ?>
 		<?php endif; ?>
+
+			<input type="submit" value="<?php echo JTEXT::_('OPEN_EPAY_PAYMENT_WINDOW'); ?>">
 		</form>
-		<script type="text/javascript">open_ePay_window();</script>
 		<br>
-		<table border="0" width="100%"><tr><td><input type="button" onClick="open_ePay_window()" value="<?php echo JTEXT::_('OPEN_EPAY_PAYMENT_WINDOW') ?>"></td><td width="100%" id="flashLoader"></td></tr></table>
 		<?php
 	}
 
