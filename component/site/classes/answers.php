@@ -471,12 +471,12 @@ class rfanswers
 
 		if (empty($this->_form_id))
 		{
-			JError::raiseError(0, JText::_('COM_REDFORM_ERROR_NO_FORM_ID'));
+			throw new Exception(JText::_('COM_REDFORM_ERROR_NO_FORM_ID'), 404);
 		}
 
 		if (!count($this->_fields))
 		{
-			return true;
+			throw new Exception('No field to save !');
 		}
 
 		if (isset($params['sid']))
@@ -791,14 +791,21 @@ class rfanswers
 		return $this->_sid;
 	}
 
-	function toSession()
+	/**
+	 * Returns simple object field => value to save to session
+	 *
+	 * @return stdclass
+	 */
+	public function toSession()
 	{
 		$answers = new stdclass();
+
 		foreach ($this->_fields as $k => $field)
 		{
 			$tablefield = 'field_' . $field->id;
 			$answers->$tablefield = $this->_values[$k];
 		}
+
 		return $answers;
 	}
 }
