@@ -23,13 +23,13 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
 class plgRedform_mailingAcymailing extends JPlugin {
- 	
-	public function plgRedform_mailingAcymailing(&$subject, $config = array()) 
+
+	public function plgRedform_mailingAcymailing(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -40,21 +40,21 @@ class plgRedform_mailingAcymailing extends JPlugin {
 		$names[] = 'acymailing';
 		return true;
 	}
-	
+
 	function subscribe($integration, $subscriber, $listname)
-	{	
-		$app = & JFactory::getApplication();
-		
+	{
+		$app = JFactory::getApplication();
+
 		if (strtolower($integration) != 'acymailing') {
 			return true;
 		}
-		
+
 		$db = &JFactory::getDBO();
  		$fullname        = $subscriber->name;
  		$submitter_email = $subscriber->email;
 
  		$lists = $this->getLists();
- 		
+
  		$listid = 0;
  		foreach ($lists as $l)
  		{
@@ -67,20 +67,20 @@ class plgRedform_mailingAcymailing extends JPlugin {
  			$app->enqueueMessage(JText::_('PLG_REDFORM_MAILING_ACYMAILING_LIST_NOT_FOUND'), 'error');
  			return false;
  		}
- 		
+
  		// first, add user to acymailing
  		$myUser = new stdclass();
 		$myUser->email = $subscriber->email;
 		$myUser->name  = $subscriber->name;
-		
+
 		$subscriberClass = acymailing::get('class.subscriber');
-		
+
 		$subid = $subscriberClass->save($myUser); //this function will return you the ID of the user inserted in the AcyMailing table
- 		
+
 		// then add to the mailing list
  		$subscribe = array($listid);
  		$memberid  = $subid;
- 		
+
  		$newSubscription = array();
  		if (!empty($subscribe))
  		{
@@ -95,10 +95,10 @@ class plgRedform_mailingAcymailing extends JPlugin {
  		if (empty($newSubscription)) return; //there is nothing to do...
 
  		$subscriberClass->saveSubscription($subid,$newSubscription);
- 				
+
  		return true;
 	}
-	
+
 	function getLists()
 	{
 		$app = & JFactory::getApplication();
@@ -107,9 +107,9 @@ class plgRedform_mailingAcymailing extends JPlugin {
  			$app->enqueueMessage(JText::_('PLG_REDFORM_MAILING_ACYMAILING_NOT_FOUND'), 'error');
  			return false;
 		}
-		
+
 		$listClass = acymailing::get('class.list');
-		
+
 		$allLists = $listClass->getLists();
 		return $allLists;
 	}
