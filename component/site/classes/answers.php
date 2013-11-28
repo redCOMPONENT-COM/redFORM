@@ -254,7 +254,7 @@ class rfanswers
 				break;
 
 			case 'radio':
-				$value = is_array($postedvalue) ? $postedvalue['recipients'] : $postedvalue;
+				$value = is_array($postedvalue) ? $postedvalue['radio'][0] : $postedvalue;
 
 				/* Get the real value from the database */
 				$q = "SELECT value, price
