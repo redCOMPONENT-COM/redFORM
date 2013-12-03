@@ -55,7 +55,6 @@ class PaymentIdeal extends  RDFPaymenthelper
 		else {
 			return $this->_buildform($request, $return_url, $cancel_url);
 		}
-
 	}
 
 	/**
@@ -190,6 +189,8 @@ class PaymentIdeal extends  RDFPaymenthelper
 		<input type="submit" name="submit" value="<?php echo JText::_('IDEAL_PAY_VIA_IDEAL'); ?>" />
 		</form>
 		<?php
+
+	  return true;
   }
 
   function _processpost($request, $return_url = null, $cancel_url = null)

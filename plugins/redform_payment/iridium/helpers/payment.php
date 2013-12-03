@@ -135,6 +135,8 @@ class PaymentIridium extends RDFPaymenthelper
 		<input type="submit" value="<?php echo JText::_('PLG_REDFORM_IRIDIUM_FORM_OPEN_PAYMENT_WINDOW'); ?>" />
 		</form>
 		<?php
+
+		return true;
 	}
 
 	/**

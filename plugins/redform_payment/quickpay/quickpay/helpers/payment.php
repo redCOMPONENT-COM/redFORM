@@ -93,6 +93,8 @@ class PaymentQuickpay extends  RDFPaymenthelper
 		<input type="submit" value="Open Quickpay payment window" />
 		</form>
 		<?php
+
+		return true;
 	}
 
 	/**

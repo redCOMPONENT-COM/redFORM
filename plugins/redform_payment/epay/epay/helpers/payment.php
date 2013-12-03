@@ -151,6 +151,8 @@ class PaymentEpay extends  RDFPaymenthelper
 		</form>
 		<br>
 		<?php
+
+		return true;
 	}
 
 	/**

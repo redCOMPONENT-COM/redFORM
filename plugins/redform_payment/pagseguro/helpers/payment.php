@@ -103,6 +103,8 @@ class PaymentPagseguro extends RDFPaymenthelper
 		<h3><?php echo JText::_('PLG_REDFORM_PAGSEGURO_FORM_TITLE'); ?></h3>
 		<?php echo JHtml::link($url, JText::_('PLG_REDFORM_IRIDIUM_FORM_OPEN_PAYMENT_WINDOW')); ?>
 		<?php
+
+		return true;
 	}
 
 	/**

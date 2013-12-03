@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -52,10 +52,10 @@ class RedformTableFields extends JTable {
 	/** @var string The tooltip for a field */
 	var $tooltip = null;
 	/** @var string linked redmember field db name */
-	var $redmember_field = null;	
+	var $redmember_field = null;
 	/** @var string custom params */
 	var $params = null;
-	
+
 	/**
 	* @param database A database connector object
 	*/
@@ -73,7 +73,7 @@ class RedformTableFields extends JTable {
 		}
 		return parent::bind($array, $ignore);
 	}
-	
+
 	function check()
 	{
 		if (empty($this->fieldtype)) {
@@ -90,7 +90,7 @@ class RedformTableFields extends JTable {
 		}
 		return true;
 	}
-	
+
   /**
    * returns values records ids associated to this field
    *
@@ -101,9 +101,9 @@ class RedformTableFields extends JTable {
     if (empty($this->id)) {
       return array();
     }
-    
+
     $db =& $this->getDBO();
-    
+
     $query = ' SELECT * FROM #__rwf_values '
            . ' WHERE field_id ='. $db->Quote($this->id)
            . ' ORDER BY ordering '
@@ -111,6 +111,6 @@ class RedformTableFields extends JTable {
     $db->setQuery($query);
     return $db->loadResultArray();
   }
-  
+
 }
 ?>
