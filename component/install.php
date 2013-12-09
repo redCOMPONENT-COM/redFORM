@@ -64,6 +64,9 @@ class com_redformInstallerScript
 
 	public function postflight()
 	{
+		// Install library
+		$this->installLibraries($parent);
+
 		/* Install plugin */
 		$plg = JPATH_SITE.'/administrator/components/com_redform/plugins/content/redform';
 
@@ -89,5 +92,75 @@ class com_redformInstallerScript
 		{
 			echo JText::_('COM_REDFORM_Plugin_install_failed') . $installer->getError().'<br />';
 		}
+	}
+
+	/**
+	 * Install the package libraries
+	 *
+	 * @param   object  $parent  class calling this method
+	 *
+	 * @return  void
+	 */
+	private function installLibraries($parent)
+	{
+		// Required objects
+		$installer = $this->getInstaller();
+		$manifest  = $parent->get('manifest');
+		$src       = $parent->getParent()->getPath('source');
+
+		if ($nodes = $manifest->libraries->library)
+		{
+			foreach ($nodes as $node)
+			{
+				$extName = $node->attributes()->name;
+				$extPath = $src . '/libraries/' . $extName;
+				$result  = 0;
+
+				// Standard install
+				if (is_dir($extPath))
+				{
+					$result = $installer->install($extPath);
+				}
+				elseif ($extId = $this->searchExtension($extName, 'library', '-1'))
+					// Discover install
+				{
+					$result = $installer->discover_install($extId);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Search a extension in the database
+	 *
+	 * @param   string  $element  Extension technical name/alias
+	 * @param   string  $type     Type of extension (component, file, language, library, module, plugin)
+	 * @param   string  $state    State of the searched extension
+	 * @param   string  $folder   Folder name used mainly in plugins
+	 *
+	 * @return  integer           Extension identifier
+	 */
+	protected function searchExtension($element, $type, $state = null, $folder = null)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true)
+			->select('extension_id')
+			->from($db->quoteName("#__extensions"))
+			->where("type = " . $db->quote($type))
+			->where("element = " . $db->quote($element));
+
+		if (!is_null($state))
+		{
+			$query->where("state = " . (int) $state);
+		}
+
+		if (!is_null($folder))
+		{
+			$query->where("folder = " . $db->quote($folder));
+		}
+
+		$db->setQuery($query);
+
+		return $db->loadResult();
 	}
 }

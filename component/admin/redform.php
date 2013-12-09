@@ -1,73 +1,56 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package    Redform.Admin
+ *
+ * @copyright  Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later, see LICENSE.
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Access check.
-if (!JFactory::getUser()->authorise('core.manage', 'com_redform'))
-{
-	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-}
-
-// log helper class
-require_once (JPATH_COMPONENT_SITE.'/helpers/log.php');
+// TODO: this should go...
 require_once (JPATH_COMPONENT_ADMINISTRATOR.'/helpers/helper.php');
-
 require_once (JPATH_COMPONENT_SITE.'/redform.core.php');
+/* Load the necessary stylesheet */
+$document = JFactory::getDocument();
+$document->addStyleSheet('com_redform/redform.css');
 
-// redmember integration
-if (file_exists(JPATH_ROOT.'/components/com_redmember')) {
+// Redmember integration
+if (file_exists(JPATH_ROOT.'/components/com_redmember'))
+{
 	define('REDMEMBER_INTEGRATION', true);
 }
-else {
+else
+{
 	define('REDMEMBER_INTEGRATION', false);
 }
 
-/* Load the necessary stylesheet */
-$document = JFactory::getDocument();
-$document->addStyleSheet( JURI::root().'administrator/components/com_redform/css/redform.css' );
+// Register backend prefix
+RLoader::registerPrefix('Redform', __DIR__);
 
-// Set the table directory
-JLoader::discover('RedformTable', JPATH_COMPONENT.'/tables');
+// Register library prefix
+RLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
 
-// Require the base controller
-require_once (JPATH_COMPONENT.'/controller.php');
+// Make available the fields
+JFormHelper::addFieldPath(JPATH_LIBRARIES . '/redform/form/fields');
 
-// Require specific controller if requested
-if( $controller = JRequest::getWord('controller') ) {
-  $path = JPATH_COMPONENT.'/controllers/'.$controller.'.php';
-  if (file_exists($path)) {
-    require_once $path;
-  } else {
-    $controller = '';
-  }
+// Make available the form rules
+JFormHelper::addRulePath(JPATH_LIBRARIES . '/redform/form/rules');
+
+// Add the include path for html
+JHtml::addIncludePath(JPATH_LIBRARIES . '/redform/html');
+
+$app = JFactory::getApplication();
+
+// Check access.
+if (!JFactory::getUser()->authorise('core.manage', 'com_redform'))
+{
+	$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+
+	return false;
 }
 
-// Create the controller
-$classname	= 'RedformController'.ucfirst($controller);
-$controller = new $classname( );
-
-// Perform the Request task
-$controller->execute( JRequest::getCmd('task'));
-
-// Redirect if set by the controller
+// Instantiate and execute the front controller.
+$controller = JControllerLegacy::getInstance('Redform');
+$controller->execute($app->input->get('task'));
 $controller->redirect();
-
-?>

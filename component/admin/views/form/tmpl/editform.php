@@ -20,12 +20,12 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 JHTML::_('behavior.tooltip');
 jimport('joomla.html.pane');
-$editor =& JFactory::getEditor();
+$editor = JFactory::getEditor();
 ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
-	<?php $pane   =& JPane::getInstance('tabs');
-	echo $pane->startPane("settings");
-	echo $pane->startPanel( JText::_('COM_REDFORM_Form'), 'form_tab' );
+	<?php
+	echo JHtml::_('tabs.start', 'settings');
+	echo JHtml::_('tabs.panel', JText::_('COM_REDFORM_Form'), 'form_tab');
 	$row = 0;
 	?>
 		<table class="adminform">
@@ -109,8 +109,7 @@ $editor =& JFactory::getEditor();
 		</tr>
 		</table>
 	<?php
-	echo $pane->endPanel();
-    echo $pane->startPanel( JText::_('COM_REDFORM_Notification'), 'notification_tab' );
+	echo JHtml::_('tabs.panel', JText::_('COM_REDFORM_Notification'), 'notification_tab');
 	$row = 0;
 	?>
 		<table class="adminform">
@@ -208,8 +207,7 @@ $editor =& JFactory::getEditor();
 		</tr>
 		</table>
 	<?php
-	echo $pane->endPanel();
-	echo $pane->startPanel( JText::_('COM_REDFORM_VIRTUEMART'), 'virtuemart_tab' );
+	echo JHtml::_('tabs.panel', JText::_('COM_REDFORM_VIRTUEMART'), 'virtuemart_tab');
 	?>
 	<table class="adminform">
 		<tr class="row<?php echo $row; ?>">
@@ -238,8 +236,7 @@ $editor =& JFactory::getEditor();
 		</tr>
 	</table>
 	<?php
-	echo $pane->endPanel();
-	echo $pane->startPanel( JText::_('COM_REDFORM_PAYMENT'), 'payment_tab' );
+	echo JHtml::_('tabs.panel', JText::_('COM_REDFORM_PAYMENT'), 'payment_tab');
 	?>
 	<table class="adminform">
 		<tr class="row<?php echo $row; ?>">
@@ -320,8 +317,7 @@ $editor =& JFactory::getEditor();
 		</tr>
 	</table>
 	<?php
-	echo $pane->endPanel();
-	echo $pane->endPane();
+	echo JHtml::_('tabs.end');
 	?>
   <?php echo JHTML::_( 'form.token' ); ?>
 	<input type="hidden" name="id" value="<?php echo $this->row->id; ?>" />
