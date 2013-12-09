@@ -27,10 +27,10 @@ jimport('joomla.mail.helper');
 
 require_once('redform.defines.php');
 
-require_once(RDF_PATH_SITE.DS.'classes'.DS.'field.php');
-require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
-require_once(RDF_PATH_SITE.DS.'helpers'.DS.'log.php');
-require_once(RDF_PATH_SITE.DS.'helpers'.DS.'analytics.php');
+require_once(RDF_PATH_SITE.'/classes/field.php');
+require_once(RDF_PATH_SITE.'/models/redform.php');
+require_once(RDF_PATH_SITE.'/helpers/log.php');
+require_once(RDF_PATH_SITE.'/helpers/analytics.php');
 
 class RedFormCore extends JObject {
 
@@ -50,7 +50,7 @@ class RedFormCore extends JObject {
 	{
 		parent::__construct();
 		$lang = JFactory::getLanguage();
-		$lang->load('com_redform', JPATH_SITE.DS.'components'.DS.'com_redform');
+		$lang->load('com_redform', JPATH_SITE.'/components/com_redform');
 		$lang->load('com_redform', JPATH_SITE, null, true);
 	}
 
@@ -244,7 +244,7 @@ class RedFormCore extends JObject {
     }
 
 		// redmember integration: pull extra fields
-		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
+		if ($user->get('id') && file_exists(JPATH_ROOT.'/components/com_redmember')) {
 			$this->getRedmemberfields($user);
 		}
 
@@ -1016,7 +1016,7 @@ class RedFormCore extends JObject {
 	 */
 	function saveAnswers($integration_key, $options = array(), $data = null)
 	{
-		require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
+		require_once(RDF_PATH_SITE.'/models/redform.php');
 		$model = new RedformModelRedform();
 
 		if (!$result = $model->apisaveform($integration_key, $options, $data))

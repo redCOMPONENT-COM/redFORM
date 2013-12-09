@@ -37,7 +37,7 @@ class plgRedform_PaymentPagseguro extends JPlugin {
 
 	function onGetGateway(&$gateways)
 	{
-		require_once ('helpers'.DS.'payment.php');
+		require_once ('helpers/payment.php');
 		$helper = new PaymentPagseguro($this->params);
 		$gateways[] = array('name' => 'pagseguro', 'helper' => $helper);
 		return true;

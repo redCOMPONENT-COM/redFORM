@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -20,18 +20,18 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
 // Require the base controller
-require_once (JPATH_COMPONENT.DS.'controller.php');
-require_once (JPATH_COMPONENT_SITE.DS.'redform.core.php');
-require_once (JPATH_COMPONENT_SITE.DS.'helpers'.DS.'log.php');
+require_once (JPATH_COMPONENT.'/controller.php');
+require_once (JPATH_COMPONENT_SITE.'/redform.core.php');
+require_once (JPATH_COMPONENT_SITE.'/helpers/log.php');
 
 // Require specific controller if requested
 if($controller = JRequest::getWord('controller')) {
-	$path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
+	$path = JPATH_COMPONENT.'/controllers/'.$controller.'.php';
 	if (file_exists($path)) {
 		require_once $path;
 	} else {

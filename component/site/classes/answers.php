@@ -311,10 +311,10 @@ class rfanswers
 		$db->setQuery($query);
 		$formname = $db->loadResult();
 
-		$filepath = JPATH_SITE . DS . $params->get('upload_path', 'images/redform');
+		$filepath = JPATH_SITE . '/' . $params->get('upload_path', 'images/redform');
 		$folder = JFile::makeSafe(str_replace(' ', '', $formname));
 
-		$fullpath = $filepath . DS . $folder;
+		$fullpath = $filepath . '/' . $folder;
 		if (!JFolder::exists($fullpath))
 		{
 			if (!JFolder::create($fullpath))
@@ -337,9 +337,9 @@ class rfanswers
 			{
 				if (JFolder::exists($fullpath) && is_writable($fullpath))
 				{
-					if (move_uploaded_file($src_file, $fullpath . DS . $dest_filename))
+					if (move_uploaded_file($src_file, $fullpath . '/' . $dest_filename))
 					{
-						$answer = $fullpath . DS . $dest_filename;
+						$answer = $fullpath . '/' . $dest_filename;
 					}
 					else
 					{

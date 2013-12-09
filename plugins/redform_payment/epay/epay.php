@@ -23,13 +23,13 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
 class plgRedform_PaymentEpay extends JPlugin {
- 	
-	public function plgRedform_PaymentEpay(&$subject, $config = array()) 
+
+	public function plgRedform_PaymentEpay(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -37,7 +37,7 @@ class plgRedform_PaymentEpay extends JPlugin {
 
 	function onGetGateway(&$gateways)
 	{
-		require_once ('epay'.DS.'helpers'.DS.'payment.php');
+		require_once ('epay/helpers/payment.php');
 		$helper = new PaymentEpay($this->params);
 		$gateways[] = array('name' => 'epay', 'helper' => $helper);
 		return true;

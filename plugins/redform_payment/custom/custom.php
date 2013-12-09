@@ -39,7 +39,7 @@ class plgRedform_PaymentCustom extends JPlugin {
 
 	function onGetGateway(&$gateways)
 	{
-		require_once ('custom'.DS.'helpers'.DS.'payment.php');
+		require_once ('custom/helpers/payment.php');
 		$helper = new PaymentCustom($this->params);
 		$gateways[] = array('name' => 'custom', 'helper' => $helper, 'label' => $this->params->get('gatewaylabel', 'custom'));
 		return true;

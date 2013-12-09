@@ -23,13 +23,13 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
 class plgRedform_mailingPhplist extends JPlugin {
- 	
-	public function plgRedform_mailingPhplist(&$subject, $config = array()) 
+
+	public function plgRedform_mailingPhplist(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -40,29 +40,29 @@ class plgRedform_mailingPhplist extends JPlugin {
 		$names[] = 'Phplist';
 		return true;
 	}
-	
+
 	function subscribe($integration, $subscriber, $listname)
-	{	
+	{
 		if (strtolower($integration) != 'phplist') {
 			return true;
 		}
-		
+
 		$db = &JFactory::getDBO();
  		$fullname        = $subscriber->name;
- 		$submitter_email = $subscriber->email;		
- 		
+ 		$submitter_email = $subscriber->email;
+
  		$path = $this->params->get('phplist_path');
 
- 		if (JFolder::exists(JPATH_SITE.DS.$path)) 
+ 		if (JFolder::exists(JPATH_SITE . '/' . $path))
  		{
  			/* Include the PHPList API */
- 			require_once('phplist'.DS.'phplistuser.php');
- 			require_once('phplist'.DS.'simpleemail.php');
- 			require_once('phplist'.DS.'query.php');
- 			require_once('phplist'.DS.'errorhandler.php');
+ 			require_once('phplist/phplistuser.php');
+ 			require_once('phplist/simpleemail.php');
+ 			require_once('phplist/query.php');
+ 			require_once('phplist/errorhandler.php');
 
  			/* Get the PHPList path configuration */
- 			PhpListUser::$PHPListPath = JPATH_SITE.DS.$path;
+ 			PhpListUser::$PHPListPath = JPATH_SITE . '/' . $path;
 
  			$user = new PhpListUser();
  			$user->set_email($submitter_email);
@@ -70,7 +70,7 @@ class plgRedform_mailingPhplist extends JPlugin {
  			$user->addListId($listid);
  			$user->save();
  		}
- 		
+
  		return true;
 	}
 }

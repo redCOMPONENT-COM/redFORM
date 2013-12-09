@@ -23,13 +23,13 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 // Import library dependencies
 jimport('joomla.event.plugin');
 
 class plgRedform_PaymentIridium extends JPlugin {
- 	
-	public function __construct(&$subject, $config = array()) 
+
+	public function __construct(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -37,7 +37,7 @@ class plgRedform_PaymentIridium extends JPlugin {
 
 	function onGetGateway(&$gateways)
 	{
-		require_once ('helpers'.DS.'payment.php');
+		require_once ('helpers/payment.php');
 		$helper = new PaymentIridium($this->params);
 		$gateways[] = array('name' => 'iridium', 'helper' => $helper);
 		return true;

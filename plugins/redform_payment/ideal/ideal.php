@@ -39,8 +39,8 @@ class plgRedform_PaymentIdeal extends JPlugin {
 
 	function onGetGateway(&$gateways)
 	{
-		require_once ('ideal'.DS.'helpers'.DS.'payment.php');
-		require_once ('ideal'.DS.'helpers'.DS.'ideal.class.php');
+		require_once ('ideal/helpers/payment.php');
+		require_once ('ideal/helpers/ideal.class.php');
 		$helper = new PaymentIdeal($this->params);
 		$gateways[] = array('name' => 'ideal', 'helper' => $helper);
 		return true;

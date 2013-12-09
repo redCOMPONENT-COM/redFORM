@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -27,17 +27,17 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_redform'))
 }
 
 // log helper class
-require_once (JPATH_COMPONENT_SITE.DS.'helpers'.DS.'log.php');
-require_once (JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'helper.php');
+require_once (JPATH_COMPONENT_SITE.'/helpers/log.php');
+require_once (JPATH_COMPONENT_ADMINISTRATOR.'/helpers/helper.php');
 
-require_once (JPATH_COMPONENT_SITE.DS.'redform.core.php');
+require_once (JPATH_COMPONENT_SITE.'/redform.core.php');
 
 // redmember integration
-if (file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
+if (file_exists(JPATH_ROOT.'/components/com_redmember')) {
 	define('REDMEMBER_INTEGRATION', true);
 }
 else {
-	define('REDMEMBER_INTEGRATION', false);	
+	define('REDMEMBER_INTEGRATION', false);
 }
 
 /* Load the necessary stylesheet */
@@ -45,14 +45,14 @@ $document = JFactory::getDocument();
 $document->addStyleSheet( JURI::root().'administrator/components/com_redform/css/redform.css' );
 
 // Set the table directory
-JLoader::discover('RedformTable', JPATH_COMPONENT.DS.'tables');
+JLoader::discover('RedformTable', JPATH_COMPONENT.'/tables');
 
 // Require the base controller
-require_once (JPATH_COMPONENT.DS.'controller.php');
+require_once (JPATH_COMPONENT.'/controller.php');
 
 // Require specific controller if requested
 if( $controller = JRequest::getWord('controller') ) {
-  $path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
+  $path = JPATH_COMPONENT.'/controllers/'.$controller.'.php';
   if (file_exists($path)) {
     require_once $path;
   } else {

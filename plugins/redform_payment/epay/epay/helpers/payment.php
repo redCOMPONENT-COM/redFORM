@@ -53,7 +53,7 @@ class PaymentEpay extends  RDFPaymenthelper
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
-		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
+		require_once(JPATH_SITE.'/components/com_redform/helpers/currency.php');
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
 		?>
 		<h3><?php echo JText::_('Epay Payment Gateway'); ?></h3>
@@ -187,7 +187,7 @@ class PaymentEpay extends  RDFPaymenthelper
     $resp = implode("\n", $resp);
 
     $details = $this->_getSubmission($submit_key);
-		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
+		require_once(JPATH_SITE.'/components/com_redform/helpers/currency.php');
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
 
     if (round($details->price*100, 2 ) != JRequest::getVar('amount')) {

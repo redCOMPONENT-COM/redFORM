@@ -52,7 +52,7 @@ class PaymentQuickpay extends  RDFPaymenthelper
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
-		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
+		require_once(JPATH_SITE.'/components/com_redform/helpers/currency.php');
 		$currency = $details->currency;
 
 		$req_params = array(

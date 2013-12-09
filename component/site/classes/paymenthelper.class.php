@@ -23,7 +23,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
+require_once(JPATH_SITE.'/components/com_redform/helpers/currency.php');
 
 /**
  * @package  RED.redevent

@@ -23,13 +23,13 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
 class plgRedform_mailingCcnewsletter extends JPlugin {
- 	
-	public function plgRedform_mailingCcnewsletter(&$subject, $config = array()) 
+
+	public function plgRedform_mailingCcnewsletter(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -40,32 +40,32 @@ class plgRedform_mailingCcnewsletter extends JPlugin {
 		$names[] = 'ccnewsletter';
 		return true;
 	}
-	
+
 	function subscribe($integration, $subscriber, $listname)
-	{			
+	{
 		if (strtolower($integration) != 'ccnewsletter') {
 			return true;
 		}
-		
+
 		$db = &JFactory::getDBO();
  		$fullname        = $subscriber->name;
- 		$submitter_email = $subscriber->email;		
- 				
- 		if (file_exists(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_ccnewsletter' . DS . 'tables' .DS .'subscriber.php'))
+ 		$submitter_email = $subscriber->email;
+
+ 		if (file_exists(JPATH_ADMINISTRATOR . '/components/com_ccnewsletter/tables/subscriber.php'))
  		{
  			/* ccNewsletter is installed, let's add the user */
- 			$query = ' SELECT id ' 
- 			       . ' FROM #__ccnewsletter_subscribers ' 
+ 			$query = ' SELECT id '
+ 			       . ' FROM #__ccnewsletter_subscribers '
  			       . ' WHERE email = ' . $db->Quote($submitter_email)
  			       ;
  			$db->setQuery($query);
  			$res = $db->loadResult();
- 			
+
  			if ($res) { // already subscribed
  				return true;
  			}
- 			
- 			require_once( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_ccnewsletter' . DS . 'tables' .DS .'subscriber.php');
+
+ 			require_once( JPATH_ADMINISTRATOR . '/components/com_ccnewsletter/tables/subscriber.php');
  			$ccsubscriber = &JTable::getInstance('subscriber', 'RedformTable');
  			$ccsettings = array('name' => $fullname,
                               'email' => $submitter_email,

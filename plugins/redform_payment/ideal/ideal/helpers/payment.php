@@ -155,7 +155,7 @@ class PaymentIdeal extends  RDFPaymenthelper
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
-		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
+		require_once(JPATH_SITE.'/components/com_redform/helpers/currency.php');
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
 
 		$ideal = new iDEAL_Payment($this->params->get('partner_id'));

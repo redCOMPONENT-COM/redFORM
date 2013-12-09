@@ -23,7 +23,7 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 // Import library dependencies
 jimport('joomla.event.plugin');
 
@@ -31,15 +31,15 @@ jimport('joomla.event.plugin');
 //JPlugin::loadLanguage( 'plg_redform_payment_quickpay', JPATH_ADMINISTRATOR );
 
 class plgRedform_PaymentQuickpay extends JPlugin {
- 	
-	public function plgRedform_PaymentQuickpay(&$subject, $config = array()) 
+
+	public function plgRedform_PaymentQuickpay(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 	}
 
 	function onGetGateway(&$gateways)
 	{
-		require_once ('quickpay'.DS.'helpers'.DS.'payment.php');
+		require_once ('quickpay/helpers/payment.php');
 		$helper = new Paymentquickpay($this->params);
 		$gateways[] = array('name' => 'quickpay', 'helper' => $helper);
 		return true;
