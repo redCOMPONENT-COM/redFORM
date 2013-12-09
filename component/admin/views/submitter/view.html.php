@@ -30,7 +30,7 @@ class RedformViewSubmitter extends JViewLegacy {
   function display($tpl = null)
   {
   	$document = &JFactory::getDocument();
-  	JHTML::_('behavior.mootools');
+  	JHTML::_('behavior.framework');
 
   	$js = <<<EOF
 			Joomla.submitform = function(pressbutton, form){

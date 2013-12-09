@@ -35,7 +35,7 @@ class RedformViewForm extends JViewLegacy {
 	{
 		$mainframe = &JFactory::getApplication();
 		$document	= & JFactory::getDocument();
-		JHTML::_('behavior.mootools');
+		JHTML::_('behavior.framework');
     $document->addScript('components/com_redform/js/conditionalrecipients.js');
     $document->addScriptDeclaration(
     	 'var emailrequired = "'.JText::_('COM_REDFORM_MISSING_OR_INVALID_EMAIL')."\";\n"
@@ -54,7 +54,7 @@ class RedformViewForm extends JViewLegacy {
 		$lists['published']= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published);
 
 		/* Get the access level option */
-		$lists['access'] = JHTML::_('list.accesslevel',  $row );
+		$lists['access'] = JHtml::_('access.assetgrouplist', 'access', $row->access);
 
 		/* Get the contactperson info option */
 		$lists['contactpersoninform']= JHTML::_('select.booleanlist',  'contactpersoninform', 'class="inputbox"', $row->contactpersoninform);
