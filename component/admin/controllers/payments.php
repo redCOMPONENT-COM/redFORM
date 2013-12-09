@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,19 +24,19 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Controller
  */
-class RedformControllerPayments extends JController
+class RedformControllerPayments extends JControllerLegacy
 {
   /**
    * constructor
    *
    */
-  function __construct() 
+  function __construct()
   {
     parent::__construct();
     $this->registerTask('apply', 'save');
     $this->registerTask('add',   'edit');
   }
-		
+
   /**
    * logic to create the new event screen
    *
@@ -50,7 +50,7 @@ class RedformControllerPayments extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=field' );
   }
-  
+
   /**
    * logic to create the edit element screen
    *
@@ -63,38 +63,38 @@ class RedformControllerPayments extends JController
 		// Set the view and the model
 		$view = 'payment';
 		$view = & $this->getView( $view, 'html' );
-		
+
 		$model = & $this->getModel( 'payment' );
 		$object  = $model->getData();
-  
+
 		if (empty($object->gateway)) {
 			$layout = JRequest::getVar('layout', 'form');
-		} 
+		}
 		else {
 			$layout = JRequest::getVar('layout', 'default');
 		}
-		
+
 		$view->setModel( $model, true );
-		
+
 		$view->setLayout( $layout );
-		
+
 		// Display the view
-		$view->display();		
+		$view->display();
   }
-  
+
   function save()
-  {   
+  {
     // Check for request forgeries
     JRequest::checkToken() or die( 'Invalid Token' );
-    
+
     $task   = JRequest::getVar('task');
 
     // Sanitize
     $post = JRequest::get('post');
 
     $model = $this->getModel('payment');
-    
-    if ($row = $model->store($post)) 
+
+    if ($row = $model->store($post))
     {
     	$model->notifyPaymentReceived();
       switch ($task)
@@ -120,7 +120,7 @@ class RedformControllerPayments extends JController
     $this->setRedirect( $link, $msg );
     $this->redirect();
   }
-  
+
   /**
    * logic for cancel an action
    *
@@ -132,14 +132,14 @@ class RedformControllerPayments extends JController
   {
     // Check for request forgeries
 //    JRequest::checkToken() or die( 'Invalid Token' );
-    
+
     $key = JRequest::getVar('submit_key');
 
 		$link = 'index.php?option=com_redform&view=payments&submit_key='.$key;
 		$msg = JText::_('COM_REDFORM_Action_cancelled');
     $this->setRedirect( $link, $msg );
 	}
-  
+
   /**
    * logic for cancel an action
    *
@@ -151,14 +151,14 @@ class RedformControllerPayments extends JController
   {
     // Check for request forgeries
 //    JRequest::checkToken() or die( 'Invalid Token' );
-    
+
     $model = $this->getModel('payments');
     $formid = $model->getFormId();
 
 		$link = 'index.php?option=com_redform&view=submitters&form_id='.$formid;
     $this->setRedirect( $link, $msg );
 	}
-   
+
   /**
    * Logic to delete element
    *
@@ -181,7 +181,7 @@ class RedformControllerPayments extends JController
     if ($model->delete($cid)) {
     	$msg = JText::_('COM_REDFORM_PAYMENT_DELETED');
     }
-    else {    	
+    else {
       $msg = JText::_('COM_REDFORM_PAYMENT_DELETION_ERROR' . ': ' . $model->getError());
     }
 
@@ -191,7 +191,7 @@ class RedformControllerPayments extends JController
     $key = JRequest::getVar('submit_key');
 
 		$link = 'index.php?option=com_redform&view=payments&submit_key='.$key;
-		
+
     $this->setRedirect( $link, $msg );
   }
 }

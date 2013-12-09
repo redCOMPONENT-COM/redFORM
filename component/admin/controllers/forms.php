@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,14 +24,14 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Controller
  */
-class RedformControllerForms extends JController
+class RedformControllerForms extends JControllerLegacy
 {
 
 	/**
 	 * constructor
 	 *
 	 */
-	function __construct() 
+	function __construct()
 	{
 		parent::__construct();
 		$this->registerTask('apply','save');
@@ -50,7 +50,7 @@ class RedformControllerForms extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=form' );
   }
-  
+
   /**
    * logic to create the edit event screen
    *
@@ -75,12 +75,12 @@ class RedformControllerForms extends JController
 
     parent::display();
   }
-  
+
   function save()
-  {   
+  {
   	// Check for request forgeries
     JRequest::checkToken() or die( 'Invalid Token' );
-    
+
     $task   = JRequest::getVar('task');
 
     // Sanitize
@@ -113,7 +113,7 @@ class RedformControllerForms extends JController
     $model->checkin();
     $this->setRedirect( $link, $msg );
   }
-  
+
   /**
    * logic for cancel an action
    *
@@ -125,24 +125,24 @@ class RedformControllerForms extends JController
   {
     // Check for request forgeries
     JRequest::checkToken() or die( 'Invalid Token' );
-    
+
     $row = & JTable::getInstance('redform', 'RedformTable');
     $row->bind(JRequest::get('post'));
     $row->checkin();
 
     $this->setRedirect( 'index.php?option=com_redform&view=forms' );
   }
-  
+
   function details()
   {
     JRequest::setVar( 'view', 'form' );
     JRequest::setVar( 'layout', 'detailsform' );
-  	
+
     parent::display();
   }
-  
 
-  
+
+
  /**
    * Logic to publish
    *
@@ -196,7 +196,7 @@ class RedformControllerForms extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=forms', $msg );
   }
-  
+
 
   /**
    * Logic to delete element
@@ -224,13 +224,13 @@ class RedformControllerForms extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=forms', $msg );
   }
-  
+
   function submitters()
   {
     $cid = JRequest::getVar( 'cid', array(0), 'post', 'array' );
     $this->setRedirect( 'index.php?option=com_redform&view=submitters&form_id=' . $cid[0] );
   }
-  
+
   /**
    * copy the form, and it's fields
    *
@@ -239,16 +239,16 @@ class RedformControllerForms extends JController
   {
     $cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
     JArrayHelper::toInteger( $cids );
-    
+
     $model = $this->getModel('form');
-    
+
     if ($model->copy($cids)) {
 	    $total = count( $cids );
 	    $msg  = $total.' '.JText::_('COM_REDFORM_FORMS_COPIED');
     }
-    
+
     $this->setRedirect( 'index.php?option=com_redform&view=forms', $msg );
-  	
+
   }
 }
 ?>

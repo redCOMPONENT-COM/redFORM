@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -25,23 +25,23 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewField extends JView {
+class RedformViewField extends JViewLegacy {
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) 
+	function display($tpl = null)
 	{
-		$app = &Jfactory::getApplication();		
+		$app = &Jfactory::getApplication();
    	$uri = JFactory::getURI();
-   		
+
 		$document	= & JFactory::getDocument();
-		JHTML::_('behavior.modal'); 
+		JHTML::_('behavior.modal');
     $document->addScript(JURI::root().'/administrator/components/com_redform/js/ajaxvalues.js');
-		
+
 		$row = $this->get('Data');
-		
-		if (REDMEMBER_INTEGRATION) 
+
+		if (REDMEMBER_INTEGRATION)
 		{
 			$options = array();
 			$options[] = JHTML::_('select.option', '', JText::_('COM_REDFORM_Select_corresponding_redmember_field'));
@@ -64,7 +64,7 @@ class RedformViewField extends JView {
 		/* Get the forms */
 		$forms = $this->get('FormsOptions');
 		$state = '';
-		for ($i = 0; $i < count($forms); $i++) 
+		for ($i = 0; $i < count($forms); $i++)
 		{
 			if ($forms[$i]->value == $row->form_id && $forms[$i]->startdate < date('Y-m-d H:i:s', time())) {
 				$state = 'disabled';
@@ -72,9 +72,9 @@ class RedformViewField extends JView {
 			}
 		}
 		$forms = array_merge( array(JHTML::_('select.option', 0, JText::_('COM_REDFORM_FIELD_SELECT_FORM'))),
-		                      $forms	 
+		                      $forms
 		                    );
-		
+
 		if ($row->form_id > 0) {
 			$selected = $row->form_id;
 		}
@@ -82,7 +82,7 @@ class RedformViewField extends JView {
 			$selected = JRequest::getInt('form_id');
 		}
 		$lists['forms']= JHTML::_('select.genericlist',  $forms, 'form_id', ($state == 'disabled' ? 'disabled="disabled"' : ''), 'value', 'text', $selected) ;
-		
+
 		/* Create the value field types */
 		$fieldtypes = array(
 			array('fieldtype' => 'textfield', 'fieldname' => JText::_('COM_REDFORM_textfield')),
@@ -103,9 +103,9 @@ class RedformViewField extends JView {
 	    array('fieldtype' => 'hidden', 'fieldname' => JText::_('COM_REDFORM_hiddenfield')),
 		);
 		$lists['fieldtypes']= JHTML::_('select.genericlist',  $fieldtypes, 'fieldtype', '', 'fieldtype', 'fieldname', $row->fieldtype) ;
-		
+
 		/* Get the mailing lists if we have an e-mail field */
-		if ($row->fieldtype == 'email') 
+		if ($row->fieldtype == 'email')
 		{
 			/* Get the mailing lists that can be used */
 			$activelists = $this->get('ActiveMailinglists');
@@ -120,8 +120,8 @@ class RedformViewField extends JView {
 			$lists['mailinglists'] = JHTML::_('select.genericlist', $options, 'mailinglist', '', 'value', 'text', $mailinglist->mailinglist);
 			$this->assignRef('mailinglist', $mailinglist);
 			$this->assign('displaymailinglist', count($activelists));
-		}		
-		
+		}
+
 		/* Get the toolbar */
 		switch (JRequest::getCmd('task')) {
 			case 'add':
@@ -144,6 +144,6 @@ class RedformViewField extends JView {
 
 		/* Display the page */
 		parent::display($tpl);
-	}		
+	}
 }
 ?>

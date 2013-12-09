@@ -29,7 +29,7 @@ require_once RDF_PATH_SITE.'/classes/answers.php';
 
 /**
  */
-class RedformModelRedform extends JModel {
+class RedformModelRedform extends JModelLegacy {
 
 	protected  $_form_id = 0;
 

@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ jimport( 'joomla.application.component.view');
  * @package		redform
  * @since 2.0
  */
-class RedformViewPayment extends JView
+class RedformViewPayment extends JViewLegacy
 {
 	function display($tpl = null)
 	{
@@ -47,9 +47,9 @@ class RedformViewPayment extends JView
 
 		//get the object
 		$object =& $this->get('data');
-		
+
 		$this->assignRef('object',		$object);
-		
+
 		parent::display($tpl);
 	}
 
@@ -57,19 +57,19 @@ class RedformViewPayment extends JView
 	{
 		$mainframe = JFactory::getApplication();
 		$option = JRequest::getVar('option');
-		
+
 		$db		=& JFactory::getDBO();
 		$uri 	=& JFactory::getURI();
 		$user 	=& JFactory::getUser();
 		$model	=& $this->getModel();
-		
+
     $document = & JFactory::getDocument();
 
 		$lists = array();
 		//get the project
 		$object	=& $this->get('data');
 		$isNew  = ($object->id < 1);
-		 
+
 		$this->assignRef('lists',      $lists);
 		$this->assignRef('object',     $object);
 		$this->assignRef('submit_key', JRequest::getVar('submit_key'));

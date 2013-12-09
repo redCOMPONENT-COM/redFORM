@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ jimport( 'joomla.application.component.model' );
 /**
  * redFORM Model
  */
-class RedformModelForm extends JModel 
+class RedformModelForm extends JModelLegacy
 {
   /**
    * Form id
@@ -101,30 +101,30 @@ class RedformModelForm extends JModel
           ;
       $this->_db->setQuery($query);
       $this->_data = $this->_db->loadObject();
-      
+
       if (!$this->_data) {
       	return false;
       }
-    
+
 			if (strtotime($this->_data->startdate) > time() || ($this->_data->formexpires && strtotime($this->_data->enddate) < time())) {
 				$this->_data->formstarted = false;
 			}
-			else {				
+			else {
 				$this->_data->formstarted = true;
 			}
-      
+
       return (boolean) $this->_data;
     }
     return true;
   }
-  
+
   function _initData()
   {
     $this->_data = & JTable::getInstance('redform', 'RedformTable');
 		$this->_data->formstarted = false;
   	return $this->_data;
   }
-  
+
   /**
    * Tests if the form is checked out
    *
@@ -149,7 +149,7 @@ class RedformModelForm extends JModel
       return false;
     }
   }
-  
+
   /**
    * Method to checkout/lock the item
    *
@@ -173,7 +173,7 @@ class RedformModelForm extends JModel
     }
     return false;
   }
-  
+
 
   /**
    * Method to checkin/unlock the item
@@ -191,7 +191,7 @@ class RedformModelForm extends JModel
     }
     return false;
   }
-  
+
   /**
    * method to store data in db
    *
@@ -230,8 +230,8 @@ class RedformModelForm extends JModel
   	$this->AddFormTable($row->id);
 
   	return $row;
-  }   
-   
+  }
+
    /**
     * Delete a competition
     */
@@ -240,7 +240,7 @@ class RedformModelForm extends JModel
       $database = JFactory::getDBO();
       $cid = JRequest::getVar('cid');
       JArrayHelper::toInteger( $cid );
-	  
+
       if (!is_array( $cid ) || count( $cid ) < 1) {
          $mainframe->enqueueMessage(JText::_('COM_REDFORM_No_form_found_to_delete'));
          return false;
@@ -256,16 +256,16 @@ class RedformModelForm extends JModel
          else {
             if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('COM_REDFORM_Forms_have_been_deleted'));
             else $mainframe->enqueueMessage(JText::_('COM_REDFORM_Form_has_been_deleted'));
-			
+
 			/* Get the field ids */
 			$cids = 'form_id=' . implode( ' OR form_id=', $cid );
 			$q = "SELECT id FROM #__rwf_fields
 				WHERE ( $cids )";
 			$database->setQuery($q);
 			$fieldids = $database->loadResultArray();
-			
+
 			/* See if there is any data */
-			
+
 			if (count($fieldids) > 0) {
 				/* Now delete the fields */
 				$cids = 'form_id=' . implode( ' OR form_id=', $cid );
@@ -277,7 +277,7 @@ class RedformModelForm extends JModel
 				}
 				else {
 					$mainframe->enqueueMessage(JText::_('COM_REDFORM_Form_fields_have_been_deleted'));
-					
+
 					/* Delete the values */
 					$cids = 'field_id=' . implode( ' OR field_id=', $fieldids );
 					$q = "DELETE FROM #__rwf_values
@@ -292,7 +292,7 @@ class RedformModelForm extends JModel
 				}
 			}
 			else $mainframe->enqueueMessage(JText::_('COM_REDFORM_No_fields_found'));
-			
+
 			/* Delete the submitters */
 			$cids = 'form_id=' . implode( ' OR form_id=', $cid );
 			$q = "DELETE FROM #__rwf_submitters
@@ -304,7 +304,7 @@ class RedformModelForm extends JModel
 			else {
 				$mainframe->enqueueMessage(JText::_('COM_REDFORM_Submitters_fields_have_been_deleted'));
 			}
-			
+
 			/* Now delete the submitter values */
 			$cids = 'form_id=' . implode( ' OR form_id=', $cid );
 			foreach ($cid as $key => $fid) {
@@ -320,15 +320,15 @@ class RedformModelForm extends JModel
          }
       }
    }
-   
+
    /**
     * Convert a calendar date to MySQL date format
 	*/
-	function ConvertCalendarDate(&$dtstamp) {		
+	function ConvertCalendarDate(&$dtstamp) {
 		$date = JFactory::getDate($dtstamp);
 		return $date->toMySQL();
 	}
-	 
+
 	/**
 	 * Get the number of contestants
 	 */
@@ -340,7 +340,7 @@ class RedformModelForm extends JModel
 		$db->setQuery($q);
 		return $db->loadObjectList('form_id');
 	}
-	
+
 	/**
 	 * Adds a table if it doesn't exist yet
 	 */
@@ -359,7 +359,7 @@ class RedformModelForm extends JModel
 			if (!$db->query()) JError::raiseWarning('error', $db->getErrorMsg());
 		}
 	}
-	
+
 	/**
 	  * Check if VirtueMart is installed
 	  */
@@ -371,7 +371,7 @@ class RedformModelForm extends JModel
 		 if ($result) return true;
 		 else return false;
 	}
-	
+
 	/**
 	 * Get a list of VirtueMart products
 	 */
@@ -383,7 +383,7 @@ class RedformModelForm extends JModel
 		$db->setQuery($q);
 		return $db->loadObjectList();
 	}
-	
+
 
   /**
    * Clones the forms and their fields
@@ -399,60 +399,60 @@ class RedformModelForm extends JModel
       $form->load($cid);
       // get associated fields
 	    $fields = $form->getFormFields();
-      
+
       // copy the form
 	    $form->id = null;
       $form->formname =  JText::_('COM_REDFORM_Copy_of') .' '. $form->formname;
-      $form->store();      
-      
+      $form->store();
+
 	    /* Add form table */
 	    $this->AddFormTable($form->id);
-                      
+
 	    // now copy the fields
 	    foreach ($fields as $field_id)
 	    {
 	    	// get field
 	    	$field = & $this->getTable('fields', 'RedformTable');
 	      $field->load($field_id);
-	      
+
 	      // get associated values
 	      $values = $field->getValues();
-	      
+
 	      // copy the form
 	      $field->id = null;
         $field->form_id = $form->id;
-        
+
         $fieldmodel = & JModel::getInstance('field', 'RedformModel');
         $newfield = $fieldmodel->store($field->getProperties());
-                
+
         // copy associated values
         foreach ($values as $v)
         {
         	// get value
         	$value = & $this->getTable('values', 'RedformTable');
         	$value->load($v);
-        	
+
         	$value->id = null;
         	$value->field_id = $newfield->id;
 	        $valuemodel = & JModel::getInstance('value', 'RedformModel');
 	        $data = $value->getProperties();
 	        $data['form_id'] = $form->id;
 	        unset($data['ordering']);
-	        $newvalue = $valuemodel->store($data);        	
+	        $newvalue = $valuemodel->store($data);
         }
 	    }
     }
     return true;
   }
-  
+
   /**
    * returns form fields as options
    * @return array
    */
   public function getFieldsOptions()
   {
-  	$query = ' SELECT f.id AS value, f.field AS text ' 
-  	       . ' FROM #__rwf_fields AS f ' 
+  	$query = ' SELECT f.id AS value, f.field AS text '
+  	       . ' FROM #__rwf_fields AS f '
   	       . ' WHERE f.form_id = '.$this->_id
   	       . ' ORDER BY f.field ';
   	$this->_db->setQuery($query);

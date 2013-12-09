@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @subpackage redform
  * @since		0.9
  */
-class RedFormModelLog extends JModel
+class RedFormModelLog extends JModelLegacy
 {
 	/**
 	 * Constructor

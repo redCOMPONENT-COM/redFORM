@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -28,11 +28,11 @@ jimport('joomla.application.component.model');
  * @package		redform
  * @since 2.0
  */
-class RedformModelPayments extends JModel 
+class RedformModelPayments extends JModelLegacy
 {
 	/**
 	 * key for which we want to display payments
-	 * 
+	 *
 	 * @var unknown_type
 	 */
 	var $_key = null;
@@ -56,7 +56,7 @@ class RedformModelPayments extends JModel
    * @var object
    */
   var $_pagination = null;
-  
+
   /**
    * Constructor
    *
@@ -74,19 +74,19 @@ class RedformModelPayments extends JModel
 
     $this->setState('limit', $limit);
     $this->setState('limitstart', $limitstart);
-    
+
     $key = JRequest::getVar('submit_key', null, 'request', 'string');
     if ($key) {
     	$this->setKey($key);
     }
   }
-  
+
   function setKey($key)
   {
   	$this->_key = $key;
   	$this->_data = null;
   }
-  
+
   /**
    * Method to get List data
    *
@@ -102,20 +102,20 @@ class RedformModelPayments extends JModel
       if (!$this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit')))
       echo $this->_db->getErrorMsg();
     }
-    
+
     return $this->_data;
   }
-  
+
   function getFormId()
   {
-  	$query = ' SELECT form_id ' 
-  	       . ' FROM #__rwf_submitters ' 
+  	$query = ' SELECT form_id '
+  	       . ' FROM #__rwf_submitters '
   	       . ' WHERE submit_key = ' . $this->_db->Quote($this->_key);
   	$this->_db->setQuery($query);
   	$res = $this->_db->loadResult();
   	return $res;
   }
-  
+
 	function _buildQuery()
 	{
 		// Get the WHERE and ORDER BY clauses for the query
@@ -162,7 +162,7 @@ class RedformModelPayments extends JModel
 
 		return $where;
 	}
-	
+
   /**
    * Method to get a pagination object
    *
@@ -180,7 +180,7 @@ class RedformModelPayments extends JModel
 
     return $this->_pagination;
   }
-  
+
 
   /**
    * Total nr of items

@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -25,17 +25,17 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewFields extends JView {
+class RedformViewFields extends JViewLegacy {
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) 
+	function display($tpl = null)
 	{
 		$option = JRequest::getVar('option');
-		
+
 		$mainframe = &JFactory::getApplication();
-		
+
 		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.values.filter_order_Dir',	'filter_order_Dir',	'', 'word' );
 		$filter_order		  = $mainframe->getUserStateFromRequest( $option.'.values.filter_order', 		'filter_order', 	'ordering', 'cmd' );
     	$form_id          = $mainframe->getUserStateFromRequest( $option.'.fields.form_id', 'form_id', 0, 'int');
@@ -52,15 +52,15 @@ class RedformViewFields extends JView {
 		$forms = array_merge($forms, $this->get('FormsOptions'));
 		/* Create the dropdown list */
 		$lists['form_id'] = JHTML::_('select.genericlist',  $forms, 'form_id', 'onchange="this.form.submit();"', 'value', 'text', $form_id) ;
-		
+
 		// again for batch
 		$lists['batch_form_options'] = JHTML::_('select.options', $this->get('FormsOptions'));
-		
+
 		// table ordering
 		$lists['order_Dir'] = $filter_order_Dir;
 		$lists['order'] = $filter_order;
 
-		
+
 		/* Check if there are any forms */
 		$countforms = (count($forms) > 1);
 
@@ -69,10 +69,10 @@ class RedformViewFields extends JView {
 		$this->assignRef('fields', $fields);
 		$this->assignRef('lists', $lists);
 		$this->assignRef('countforms', $countforms);
-				
+
 		// set menu
 		RedformHelper::setMenu();
-		
+
     /* Get the toolbar */
 		JToolBarHelper::title(JText::_('COM_REDFORM_Fields' ), 'redform_fields');
 		/* Only show add if there are forms */
@@ -90,8 +90,8 @@ class RedformViewFields extends JView {
 				JToolBarHelper::preferences('com_redform');
 			}
 		}
-		
+
 		/* Display the page */
 		parent::display($tpl);
-	}		
+	}
 }

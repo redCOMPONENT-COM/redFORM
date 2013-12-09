@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,18 +24,18 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Controller
  */
-class RedformControllerFields extends JController
+class RedformControllerFields extends JControllerLegacy
 {
   /**
    * constructor
    *
    */
-  function __construct() 
+  function __construct()
   {
     parent::__construct();
     $this->registerTask('apply','save');
   }
-		
+
   /**
    * logic to create the new event screen
    *
@@ -49,7 +49,7 @@ class RedformControllerFields extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=field' );
   }
-  
+
   /**
    * logic to create the edit element screen
    *
@@ -74,12 +74,12 @@ class RedformControllerFields extends JController
 
     parent::display();
   }
-  
+
   function save()
-  {   
+  {
     // Check for request forgeries
     JRequest::checkToken() or die( 'Invalid Token' );
-    
+
     $task   = JRequest::getVar('task');
 
     // Sanitize
@@ -112,7 +112,7 @@ class RedformControllerFields extends JController
     $model->checkin();
     $this->setRedirect( $link, $msg );
   }
-  
+
   /**
    * logic for cancel an action
    *
@@ -124,14 +124,14 @@ class RedformControllerFields extends JController
   {
     // Check for request forgeries
     JRequest::checkToken() or die( 'Invalid Token' );
-    
+
     $row = & JTable::getInstance('Fields', 'RedformTable');
     $row->bind(JRequest::get('post'));
     $row->checkin();
 
     $this->setRedirect( 'index.php?option=com_redform&view=fields' );
   }
-   
+
  /**
    * Logic to publish
    *
@@ -185,7 +185,7 @@ class RedformControllerFields extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=fields', $msg );
   }
-  
+
 
   /**
    * Logic to delete element
@@ -209,7 +209,7 @@ class RedformControllerFields extends JController
     if ($model->delete($cid)) {
     	$msg = JText::_('COM_REDFORM_FIELDS_DELETED');
     }
-    else {    	
+    else {
       $msg = JText::_('COM_REDFORM_FIELDS_DELETION_ERROR' . ': ' . $model->getError());
     }
 
@@ -218,32 +218,32 @@ class RedformControllerFields extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=fields', $msg );
   }
-  
+
   function sanitize()
-  {  	
+  {
     $model = $this->getModel('fields');
-    
+
     if ($model->sanitize()) {
       $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_SANITIZE_COMPLETE'));
     }
     else {
-      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_SANITIZE_ERROR'));    	
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_SANITIZE_ERROR'));
     }
   }
-  
+
   function saveorder()
   {
     $model = $this->getModel('fields');
-    
+
     if ($model->saveorder()) {
       $this->setRedirect( 'index.php?option=com_redform&view=fields');
     }
     else {
-      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_ERROR_REORDERING'));      
+      $this->setRedirect( 'index.php?option=com_redform&view=fields', JText::_('COM_REDFORM_ERROR_REORDERING'));
     }
-  	
+
   }
-  
+
   /**
    * Logic to orderup
    *
@@ -273,8 +273,8 @@ class RedformControllerFields extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=fields');
   }
-  
-  
+
+
   /**
    * copy fields
    */
@@ -282,12 +282,12 @@ class RedformControllerFields extends JController
   {
     $cids = JRequest::getVar( 'cid', array(0), 'post', 'array' );
   	JArrayHelper::toInteger($cids);
-  
+
   	$form_id = JRequest::getInt('batch_dest_form_id');
-  	  	
+
   	$msg = '';
   	$msgtype = 'message';
-  
+
   	$model = $this->getModel('field');
   	if ($res = $model->copy($cids, $form_id)) {
   		$msg = JText::sprintf('COM_REDFORM_FIELDS_COPY_SUCCESS_D', count($cids));
@@ -296,7 +296,7 @@ class RedformControllerFields extends JController
   		$msg = $model->getError();
   		$msgtype = 'error';
   	}
-  	 
+
   	$this->setRedirect( 'index.php?option=com_redform&view=fields', $msg, $msgtype);
   	$this->redirect();
   }

@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,13 +24,13 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Controller
  */
-class RedformControllerValues extends JController
+class RedformControllerValues extends JControllerLegacy
 {
   /**
    * constructor
    *
    */
-  function __construct() 
+  function __construct()
   {
     parent::__construct();
     $this->registerTask('apply',         'save');
@@ -42,7 +42,7 @@ class RedformControllerValues extends JController
     $this->registerTask('ajaxpublish',   'publish');
     $this->registerTask('ajaxunpublish', 'unpublish');
   }
-    
+
   /**
    * logic to create the new event screen
    *
@@ -56,7 +56,7 @@ class RedformControllerValues extends JController
 
     $this->setRedirect( 'index.php?option=com_redform&view=value' );
   }
-  
+
   /**
    * logic to create the edit element screen
    *
@@ -81,12 +81,12 @@ class RedformControllerValues extends JController
 
     parent::display();
   }
-  
+
   function save()
   {
     // Check for request forgeries
     JRequest::checkToken() or die( 'Invalid Token' );
-    
+
     $task   = JRequest::getVar('task');
 
     // Sanitize
@@ -117,7 +117,7 @@ class RedformControllerValues extends JController
     }
 
     $model->checkin();
-    
+
     if (JRequest::getCmd('task') == 'ajaxsave') {
     	$doc = &Jfactory::getDocument();
     	$doc->addScriptDeclaration('
@@ -126,10 +126,10 @@ class RedformControllerValues extends JController
     	');
     	return;
     }
-    
+
     $this->setRedirect( $link, $msg );
   }
-  
+
   /**
    * logic for cancel an action
    *
@@ -141,14 +141,14 @@ class RedformControllerValues extends JController
   {
     // Check for request forgeries
     JRequest::checkToken() or die( 'Invalid Token' );
-    
+
     $row = & JTable::getInstance('values', 'RedformTable');
     $row->bind(JRequest::get('post'));
     $row->checkin();
 
     $this->setRedirect( 'index.php?option=com_redform&view=values' );
   }
-   
+
  /**
    * Logic to publish
    *
@@ -169,11 +169,11 @@ class RedformControllerValues extends JController
     if(!$model->publish($cid, 1)) {
       echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
     }
-  
+
     if (JRequest::getCmd('task') == 'ajaxpublish') {
     	return;
     }
-    
+
     $total = count( $cid );
     $msg  = $total.' '.JText::_('COM_REDFORM_VALUES_PUBLISHED');
 
@@ -200,17 +200,17 @@ class RedformControllerValues extends JController
     if(!$model->publish($cid, 0)) {
       echo "<script> alert('".$model->getError()."'); window.history.go(-1); </script>\n";
     }
-  
+
     if (JRequest::getCmd('task') == 'ajaxunpublish') {
     	return;
     }
-    
+
     $total = count( $cid );
     $msg  = $total.' '.JText::_('COM_REDFORM_VALUES_UNPUBLISHED');
 
     $this->setRedirect( 'index.php?option=com_redform&view=values', $msg );
   }
-  
+
 
   /**
    * Logic to delete element
@@ -238,14 +238,14 @@ class RedformControllerValues extends JController
 
     $cache = &JFactory::getCache('com_redform');
     $cache->clean();
-    
+
     if (JRequest::getCmd('task') == 'ajaxremove') {
     	return;
     }
 
     $this->setRedirect( 'index.php?option=com_redform&view=values', $msg );
   }
-  
+
   /**
    * returns options for forms selecto list
    *
@@ -257,7 +257,7 @@ class RedformControllerValues extends JController
     $this->_db->setQuery($query);
     return $this->_db->loadObjectList();
   }
-	
+
 	/**
 	 * Fields competition
 	 */
@@ -265,11 +265,11 @@ class RedformControllerValues extends JController
 		/* Create the view */
 		$view = $this->getView('values', 'raw');
 		$view->setModel( $this->getModel( 'values', 'RedformModel' ), true );
-					
+
 		/* Display it all */
 		$view->display();
 	}
-	
+
 	/**
 	 * Fields competition
 	 */
@@ -277,24 +277,24 @@ class RedformControllerValues extends JController
 		/* Create the view */
 		$view = $this->getView('values', 'json');
 		$view->setModel( $this->getModel( 'values', 'RedformModel' ), true );
-					
+
 		/* Display it all */
 		$view->display();
 	}
-	
+
   function saveorder()
   {
     $model = $this->getModel('values');
-    
+
     if ($model->saveorder()) {
       $this->setRedirect( 'index.php?option=com_redform&view=values');
     }
     else {
-      $this->setRedirect( 'index.php?option=com_redform&view=values', JText::_('COM_REDFORM_ERROR_REORDERING'));      
+      $this->setRedirect( 'index.php?option=com_redform&view=values', JText::_('COM_REDFORM_ERROR_REORDERING'));
     }
-  	
+
   }
-  
+
   /**
    * Logic to orderup
    *

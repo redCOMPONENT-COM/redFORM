@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ jimport( 'joomla.form.form' );
 /**
  * Fields Model
  */
-class RedformModelField extends JModel 
+class RedformModelField extends JModelLegacy
 {
   /**
    * Field id
@@ -67,14 +67,14 @@ class RedformModelField extends JModel
     $this->_id      = $id;
     $this->_data  = null;
   }
-  	
+
 	function getFormsOptions()
 	{
 		$query = "SELECT id AS value, formname AS text, startdate FROM #__rwf_forms";
 		$this->_db->setQuery($query);
 		return $this->_db->loadObjectList();
 	}
-	
+
   /**
    * get the data
    *
@@ -87,24 +87,24 @@ class RedformModelField extends JModel
 
     }
     else  $this->_initData();
-    
+
     // Get the form.
     $registry = new JRegistry;
     $registry->loadString($this->_data->params);
     $this->_data->params = $registry->toArray();
-    
+
     JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
     $form = JForm::getInstance('extended', 'field_'.$this->_data->fieldtype);
     $form->bind(array('params' => $this->_data->params));
-    
+
     $this->_data->form = $form;
     return $this->_data;
   }
-	   
+
    /**
     * Retrieve a field to edit
     */
-   function _loadData() 
+   function _loadData()
    {
 	    // Lets load the content if it doesn't already exist
 	    if (empty($this->_data))
@@ -119,7 +119,7 @@ class RedformModelField extends JModel
 	    }
 	    return true;
    }
-   
+
   /**
    * load default data
    *
@@ -181,7 +181,7 @@ class RedformModelField extends JModel
     }
     return false;
   }
-  
+
 
   /**
    * Method to checkin/unlock the item
@@ -223,7 +223,7 @@ class RedformModelField extends JModel
   		$this->setError(JText::_('COM_REDFORM_There_was_a_problem_binding_the_field_data'), 'error');
   		return false;
   	}
-  	
+
   	if (empty($row->ordering)) $row->ordering = $row->getNextOrder('form_id = '.$row->form_id);
 
   	/* pre-save checks */
@@ -237,26 +237,26 @@ class RedformModelField extends JModel
   		$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_field_data'), 'error');
   		return false;
   	}
-  	
+
   	$this->_id = $row->id;
-  	 
+
   	/* Add form table */
   	$this->AddFieldTable($row, $oldrow);
 
   	/* mailing list handling in case of email field type */
   	if ($row->fieldtype == 'email')
-	  {		 
+	  {
 	  	// first, clear previous records
-	  	$query = ' DELETE FROM #__rwf_mailinglists ' 
+	  	$query = ' DELETE FROM #__rwf_mailinglists '
 	  	       . ' WHERE field_id = ' . $this->_db->Quote($row->id);
 	  	$this->_db->setQuery($query);
 	  	$res = $this->_db->query();
-	  	
+
 	  	if ( isset($data['mailinglist']) && !empty($data['mailinglist']) )
 	  	{
 			  /* Load the table */
 			  $mailinglistrow = $this->getTable('Mailinglists', 'RedformTable');
-			  	
+
 			  /* Fix up the mailinglist */
 			  if (isset($post['listname'])) {
 			  	$post['listnames'] = implode(';', $post['listname']);
@@ -269,10 +269,10 @@ class RedformModelField extends JModel
 			  	$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_binding_the_mailinglist_data').' '.$row->getError(), 'error');
 			  	return false;
 			  }
-	
+
 			  /* Pass on the ID */
 			  $mailinglistrow->field_id = $row->id;
-	
+
 			  /* save the changes */
 			  if (!$mailinglistrow->store()) {
 			  	$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_mailinglist_data').' '.$row->getError(), 'error');
@@ -280,29 +280,29 @@ class RedformModelField extends JModel
 			  }
 	  	}
 	  }
-		  
+
   	return $row;
   }
-      	
+
 	/**
 	 * Adds a table if it doesn't exist yet
 	 *
 	 * @param object field table record object with updated value
 	 * @param object previously recorded field table record object corresponding to current field id
 	 */
-	private function AddFieldTable($row, $oldrow) 
+	private function AddFieldTable($row, $oldrow)
 	{
 		$db = & JFactory::getDBO();
-		
+
 		/* column name for this field */
 		$field = 'field_'. $row->id;
-		
+
 		/* Get columns from the active form */
 		$q = "SHOW COLUMNS FROM ".$db->nameQuote($db->getPrefix().'rwf_forms_'.$row->form_id)." WHERE  ".$db->nameQuote('Field')." = ".$db->Quote($field);
 		$db->setQuery($q);
 		$db->query();
 		$result = $db->loadResult();
-		
+
 		/* Check if the field already exists */
 		if (!$result) {
 			/* Field doesn't exist, need to create it */
@@ -310,9 +310,9 @@ class RedformModelField extends JModel
 			$db->setQuery($q);
 			if (!$db->query()) JError::raiseWarning('error', $db->getErrorMsg());
 		}
-		
+
 		/* Check if the field moved form */
-		if ($oldrow->form_id && $row->form_id <> $oldrow->form_id) 
+		if ($oldrow->form_id && $row->form_id <> $oldrow->form_id)
 		{
 			$result = array();
 			/* Check if the column exists on the old table */
@@ -320,7 +320,7 @@ class RedformModelField extends JModel
 			$db->setQuery($q);
 			$db->query();
 			$result = $db->loadResult();
-			
+
 			/* Check if the field already exists */
 			if ($result) {
 				/* Drop the old column */
@@ -329,21 +329,21 @@ class RedformModelField extends JModel
 				if (!$db->query()) JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_remove_field_from_old_form').' '.$db->getErrorMsg());
 			}
 		}
-		
+
 		/* Get indexes from the active form */
 		$indexresult = null;
 		$q = "SHOW KEYS FROM ".$db->nameQuote($db->getPrefix().'rwf_forms_'.$row->form_id)." WHERE key_name = ".$db->Quote($field);
 		$db->setQuery($q);
 		$db->query();
 		$indexresult = $db->loadAssocList('Key_name');
-		
+
 		/* Check if the field has to be unique */
 		$q = "ALTER TABLE ".$db->nameQuote('#__rwf_forms_'.$row->form_id);
-		if ($row->unique && !isset($indexresult[$field])) 
+		if ($row->unique && !isset($indexresult[$field]))
 		{
 			$q .= ' ADD UNIQUE ('. $db->nameQuote($field) .' (255))';
 			$db->setQuery($q);
-			if (!$db->query()) 
+			if (!$db->query())
 			{
 				JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_make_the_field_unique').' '.$db->getErrorMsg());
 				/* Remove unique status */
@@ -354,14 +354,14 @@ class RedformModelField extends JModel
 				$db->query();
 			}
 		}
-		else if (isset($indexresult[$field])) 
+		else if (isset($indexresult[$field]))
 		{
 			$q .= ' DROP INDEX' . $db->nameQuote($field);
 			$db->setQuery($q);
 			if (!$db->query()) JError::raiseWarning('error', JText::_('COM_REDFORM_Cannot_remove_the_field_unique_status').' '.$db->getErrorMsg());
 		}
 	}
-	
+
 	/**
 	 * returns redmember fields as options
 	 * @return aray
@@ -377,13 +377,13 @@ class RedformModelField extends JModel
 		$res = $this->_db->loadObjectList();
 		return $res;
 	}
-	
+
 	public function getValues()
 	{
 		$field = $this->getData();
-		
-		$query = ' SELECT v.* ' 
-		       . ' FROM #__rwf_values AS v ' 
+
+		$query = ' SELECT v.* '
+		       . ' FROM #__rwf_values AS v '
 		       . ' WHERE v.field_id = ' . $this->_db->Quote($field->id)
 		       . ' ORDER BY v.ordering '
 		       ;
@@ -391,11 +391,11 @@ class RedformModelField extends JModel
 		$res = $this->_db->loadObjectList();
 		return $res;
 	}
-	
+
 	/**
 	 * Get the mailingslists for the e-mail field
 	 */
-	function getActiveMailinglists() 
+	function getActiveMailinglists()
 	{
 		$res = array();
 		JPluginHelper::importPlugin( 'redform_mailing' );
@@ -407,17 +407,17 @@ class RedformModelField extends JModel
 	/**
 	 * Get the current mailingslist settings for this field
 	 */
-	function getMailinglist() 
+	function getMailinglist()
 	{
 		/* Load the table */
 		$mailinglistrow = $this->getTable('Mailinglists', 'RedformTable');
 		$mailinglistrow->load($this->_id);
 		return $mailinglistrow;
 	}
-	
+
 	/**
 	 * copy fields to specified form
-	 * 
+	 *
 	 * @param array $field_ids
 	 * @param int $form_id
 	 * @return boolean true on success
@@ -431,24 +431,24 @@ class RedformModelField extends JModel
 			$row->load($field_id);
 			$row->id = null;
 			$row->form_id = $form_id;
-	
+
 			$row->ordering = $row->getNextOrder('form_id = '.$row->form_id);
-			
+
 			/* pre-save checks */
 			if (!$row->check()) {
 				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_checking_the_field_data'), 'error');
 				return false;
 			}
-	
+
 			/* save the changes */
 			if (!$row->store()) {
 				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_field_data'), 'error');
 				return false;
 			}
-				
+
 			/* Add field to form table */
 			$this->AddFieldTable($row, null);
-				
+
 			// copy associated values
 			$query = ' SELECT * '
 			. ' FROM #__rwf_values '
@@ -456,7 +456,7 @@ class RedformModelField extends JModel
 			;
 			$this->_db->setQuery($query);
 			$res = $this->_db->loadObjectList();
-	
+
 			foreach($res as $r)
 			{
 				/* Load the table */
@@ -464,14 +464,14 @@ class RedformModelField extends JModel
 				$valuerow->bind($r);
 				$valuerow->id = null;
 				$valuerow->field_id = $row->id;
-	
+
 				/* save the changes */
 				if (!$valuerow->store()) {
 					$this->setError(JText::_('COM_REDFORM_There_was_a_problem_copying_field_options').' '.$row->getError(), 'error');
 					return false;
 				}
 			}
-	
+
 			/* mailing list handling in case of email field type */
 			if ($row->fieldtype == 'email')
 			{
@@ -482,7 +482,7 @@ class RedformModelField extends JModel
 				;
 				$this->_db->setQuery($query);
 				$res = $this->_db->loadObjectList();
-	
+
 				foreach($res as $r)
 				{
 					/* Load the table */
@@ -490,7 +490,7 @@ class RedformModelField extends JModel
 					$mailinglistrow->bind($r);
 					$mailinglistrow->id = null;
 					$mailinglistrow->field_id = $row->id;
-	
+
 					/* save the changes */
 					if (!$mailinglistrow->store()) {
 						$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_mailinglist_data').' '.$row->getError(), 'error');
@@ -498,9 +498,9 @@ class RedformModelField extends JModel
 					}
 				}
 			}
-				
+
 		}
-	
+
 		return true;
 	}
 }

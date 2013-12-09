@@ -22,7 +22,7 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Component Controller
  */
-class RedformController extends JController
+class RedformController extends JControllerLegacy
 {
 	/**
 	 * Method to display the view

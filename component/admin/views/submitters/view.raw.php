@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -25,12 +25,12 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewSubmitters extends JView {
+class RedformViewSubmitters extends JViewLegacy {
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) 
+	function display($tpl = null)
 	{
 		/* Get the submitters list */
 		$submitters = $this->get('Submitters');
@@ -41,7 +41,7 @@ class RedformViewSubmitters extends JView {
   		$course = $this->get('Course');
   		$coursetitle = $course->course_title;
   	}
-  	else 
+  	else
   	{
   		$course      = null;
   		$coursetitle = null;
@@ -49,21 +49,21 @@ class RedformViewSubmitters extends JView {
 		$fields = $this->get('Fields');
 		$export_data = $this->get('SubmittersExport');
   	$form = $this->get('Form');
-  	
-  	$this->assignRef('form', $form);  	
+
+  	$this->assignRef('form', $form);
   	$this->assignRef('course', $course);
     $this->assignRef('xref', JRequest::getInt('xref', 0));
     $this->assignRef('integration', $integration);
-				
+
 		$this->assignRef('export_data', $export_data);
 		$this->assignRef('fields',     $fields);
 		$this->assignRef('event',      $coursetitle);
 		$this->assignRef('submitters', $submitters);
-		
+
 		parent::display($tpl);
 	}
 
-	function writecsvrow($fields, $delimiter = ',', $enclosure = '"') 
+	function writecsvrow($fields, $delimiter = ',', $enclosure = '"')
 	{
     $delimiter_esc = preg_quote($delimiter, '/');
     $enclosure_esc = preg_quote($enclosure, '/');
@@ -76,6 +76,6 @@ class RedformViewSubmitters extends JView {
     }
 
     return join($delimiter, $output) . "\n";
-	} 
+	}
 }
 ?>

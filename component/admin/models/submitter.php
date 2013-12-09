@@ -25,7 +25,7 @@ require_once JPATH_COMPONENT_SITE.'/classes/answers.php';
 
 /**
  */
-class RedformModelSubmitter extends JModel {
+class RedformModelSubmitter extends JModelLegacy {
 
   /**
    * Form id

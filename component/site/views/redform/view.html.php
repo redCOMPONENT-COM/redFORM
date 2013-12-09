@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -25,26 +25,26 @@ jimport( 'joomla.application.component.view');
 
 /**
  */
-class RedformViewRedform extends JView {
-	
-	function display($tpl = null) 
+class RedformViewRedform extends JViewLegacy {
+
+	function display($tpl = null)
 	{
 		$mainframe = JFactory::getApplication();
-				
+
 		/* Get the VirtueMart settings */
 		$vmsettings = $this->get('VmSettings');
-		
+
 		/* Set the page title */
 		$document = JFactory::getDocument();
 		$document->setTitle($document->getTitle().' - '.JText::_('COM_REDFORM'));
-		
+
 		/* Get the product image and description */
 		$productdetails = $this->get('ProductDetails');
-		
+
 		/* Assign the necessary data */
 		$this->assignRef('vmsettings', $vmsettings);
 		$this->assignRef('productdetails', $productdetails);
-		
+
 		parent::display($tpl);
 	}
 }

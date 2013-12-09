@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Controller
  */
-class RedformControllerSubmitters extends JController
+class RedformControllerSubmitters extends JControllerLegacy
 {
 	/**
 	 * Method to display the view
@@ -33,15 +33,15 @@ class RedformControllerSubmitters extends JController
 	 */
 	function __construct() {
 		parent::__construct();
-		
+
 		/* Redirect templates to templates as this is the standard call */
 		$this->registerTask('save', 'apply');
 		$this->registerTask('add',  'edit');
 		$this->registerTask('forcedelete',  'remove');
 	}
-	
+
 	function remove()
-	{		
+	{
     $cid = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
     if (!is_array( $cid ) || count( $cid ) < 1) {
@@ -54,17 +54,17 @@ class RedformControllerSubmitters extends JController
     	$msg = $model->delete($cid, true);
     }
     else {
-    	$msg = $model->delete($cid);    	
+    	$msg = $model->delete($cid);
     }
 
     $cache = &JFactory::getCache('com_redform');
     $cache->clean();
 
     $form_id = JRequest::getVar('form_id', 0);
-    
+
     $this->setRedirect( 'index.php?option=com_redform&view=submitters' . ($form_id ? '&form_id='.$form_id : ''), $msg );
 	}
-	
+
   /**
    * logic for cancel an action
    *
@@ -78,7 +78,7 @@ class RedformControllerSubmitters extends JController
     // JRequest::checkToken() or die( 'Invalid Token' );
     $this->setRedirect( 'index.php?option=com_redform&view=submitters' );
   }
-	
+
 	/**
 	 * Submitters
 	 */
@@ -86,7 +86,7 @@ class RedformControllerSubmitters extends JController
     JRequest::setVar( 'view', 'submitters' );
     parent::display();
 	}
-	
+
 	/**
 	 * Export submitters data
 	 */
@@ -96,7 +96,7 @@ class RedformControllerSubmitters extends JController
 		$view->setLayout('submitters_export');
 		$view->display();
 	}
-	
+
 
   /**
    * logic to create the edit event screen
@@ -112,8 +112,8 @@ class RedformControllerSubmitters extends JController
 
     parent::display();
   }
-	
-	
+
+
 	/**
 	 * Redirect back to redEVENT
 	 */
@@ -121,23 +121,23 @@ class RedformControllerSubmitters extends JController
 		$mainframe = JFactory::getApplication();
 		$mainframe->redirect('index.php?option=com_redevent&view=attendees&xref='.JRequest::getInt('xref'));
 	}
-	
+
 	function save()
-	{		
+	{
     $form_id = JRequest::getVar('form_id', 0);
     $xref = JRequest::getVar('xref', 0);
     $integration = JRequest::getVar('integration', '');
-    
+
     $rfcore = new RedFormCore();
     $res = $rfcore->saveAnswers($integration);
-    
+
     if ($res) {
     	$msg = JText::_('COM_REDFORM_Submission_updated');
     	$type = 'message';
-    }    
+    }
     else {
-    	$msg = JText::_('COM_REDFORM_Submission_update_failed');   
-    	$type = 'error'; 	
+    	$msg = JText::_('COM_REDFORM_Submission_update_failed');
+    	$type = 'error';
     }
     $url = 'index.php?option=com_redform&controller=submitters&task=submitters';
     if ($form_id) {
@@ -149,7 +149,7 @@ class RedformControllerSubmitters extends JController
     if ($xref) {
     	$url .= '&xref='.$xref;
     }
-    $this->setRedirect( $url, $msg, $type );    
+    $this->setRedirect( $url, $msg, $type );
 	}
 }
 ?>
