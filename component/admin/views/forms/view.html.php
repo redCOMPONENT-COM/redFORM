@@ -59,7 +59,7 @@ class RedformViewForms extends JViewLegacy {
 	{
 		JToolBarHelper::title(JText::_('COM_REDFORM' ), 'redform_redform');
 		JToolBarHelper::addNew();
-		JToolBarHelper::editListX();
+		JToolBarHelper::editList();
     JToolBarHelper::custom('copy', 'copy', 'copy', 'COM_REDFORM_Clone', true);
 		JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FORMS_DELETE_WARNING'));
 		JToolBarHelper::divider();

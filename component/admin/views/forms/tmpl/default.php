@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -53,10 +53,10 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 		$k = 0;
 		for ($i=0, $n=count( $this->forms ); $i < $n; $i++) {
 			$row = $this->forms[$i];
-			
+
 			JFilterOutput::objectHTMLSafe($row);
 			$link 	= 'index.php?option=com_redform&task=edit&controller=forms&cid[]='. $row->id;
-						
+
 			$checked = JHTML::_('grid.checkedout',  $row, $i);
 			$my  = JFactory::getUser();
 			?>
@@ -86,13 +86,13 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				<td>
 				<?php
 					$date = JFactory::getDate($row->startdate);
-					echo $date->toFormat('%d-%m-%Y  %H:%M:%S');
+					echo $date->toSql();
 				?>
 				</td>
 				<td>
 				<?php if ($row->formexpires) {
 					$date = JFactory::getDate($row->enddate);
-					echo $date->toFormat('%d-%m-%Y  %H:%M:%S');
+					echo $date->toSql();
 				}
 				?>
 				</td>
@@ -100,8 +100,8 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 					<?php echo JHtml::_('jgrid.published', $row->published, $i); ?>
 				</td>
 				<td width="10%" align="center">
-					<?php echo $row->formstarted ? 
-					           JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) : 
+					<?php echo $row->formstarted ?
+					           JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) :
 					           JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
 				</td>
 				<td>
@@ -111,7 +111,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?
 				?>
 				</td>
 				<td>
-				<?php 
+				<?php
 					echo "{redform}".$row->id."{/redform}";
 				?>
 				</td>

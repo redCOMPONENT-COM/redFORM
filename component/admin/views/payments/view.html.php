@@ -50,7 +50,7 @@ class RedformViewPayments extends JViewLegacy {
 
   	JToolBarHelper::title(JText::_( 'COM_REDFORM_PAYMENTS_HISTORY' ), 'redform_submitters');
   	JToolBarHelper::addNew();
-  	JToolBarHelper::editListX();
+  	JToolBarHelper::editList();
   	JToolBarHelper::deleteListX();
 		JToolBarHelper::custom('back', 'back', 'back', 'back', false);
 

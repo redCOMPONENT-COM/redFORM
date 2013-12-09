@@ -64,7 +64,7 @@ class RedformViewValues extends JViewLegacy
 			JToolBarHelper::unpublishList();
 			JToolBarHelper::spacer();
 			JToolBarHelper::deleteList();
-			JToolBarHelper::editListX();
+			JToolBarHelper::editList();
 			JToolBarHelper::addNew();
 		}
 
@@ -96,11 +96,10 @@ class RedformViewValues extends JViewLegacy
 					JToolBarHelper::unpublishList();
 					JToolBarHelper::spacer();
 					JToolBarHelper::deleteList();
-					JToolBarHelper::editListX();
+					JToolBarHelper::editList();
 					JToolBarHelper::addNew();
 				}
 				break;
 		}
 	}
 }
-?>
