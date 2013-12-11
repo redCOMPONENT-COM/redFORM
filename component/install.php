@@ -24,6 +24,23 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class com_redformInstallerScript
 {
+	public $installer = null;
+
+	/**
+	 * Get the common JInstaller instance used to install all the extensions
+	 *
+	 * @return JInstaller The JInstaller object
+	 */
+	public function getInstaller()
+	{
+		if (is_null($this->installer))
+		{
+			$this->installer = new JInstaller;
+		}
+
+		return $this->installer;
+	}
+
 	/**
 	 * method to run before an install/update/uninstall method
 	 *
@@ -62,7 +79,7 @@ class com_redformInstallerScript
 		}
 	}
 
-	public function postflight()
+	public function postflight($type, $parent)
 	{
 		// Install library
 		$this->installLibraries($parent);

@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  View
  * @since       1.0
  */
-abstract class RedformView extends RViewAdmin
+abstract class RDFView extends RViewAdmin
 {
 	/**
 	 * The component title to display in the topbar layout (if using it).

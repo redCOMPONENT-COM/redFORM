@@ -14,7 +14,7 @@ defined('_JEXEC') or die('Restricted access');
  * @package  Redform.Admin
  * @since    2.0
  */
-class RedformHelperLog
+class RDFHelperLog
 {
 	/**
 	 * Simple log

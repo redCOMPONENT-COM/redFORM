@@ -13,33 +13,28 @@ $data = $displayData;
 
 $active = null;
 
-$useracl = JFactory::getUser();
-
 if (isset($data['active']))
 {
 	$active = $data['active'];
 }
 
-$dashboardClass = ($active === 'dashboard') ? 'active' : '';
-$usersClass = ($active === 'users') ? 'active' : '';
-$companiesClass = ($active === 'companies') ? 'active' : '';
-$departmentsClass = ($active === 'departments') ? 'active' : '';
-$wardrobesClass = ($active === 'wardrobes') ? 'active' : '';
-$productsClass = ($active === 'products') ? 'active' : '';
-$categoriesClass = ($active === 'categories') ? 'active' : '';
-$currenciesClass = ($active === 'currencies') ? 'active' : '';
-$ordersClass = ($active === 'orders') ? 'active' : '';
-$layoutsClass = ($active === 'layouts') ? 'active' : '';
-$form = JFactory::getApplication()->input->get('jform', array(), 'array');
-$userId = null;
+$formsClass = ($active === 'forms') ? 'active' : '';
+$fieldsClass = ($active === 'fields') ? 'active' : '';
 ?>
 
 <ul class="nav nav-tabs nav-stacked">
 	<li>
-		<a class="<?php echo $usersClass ?>"
+		<a class="<?php echo $formsClass ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=forms') ?>">
 			<i class="icon-user"></i>
 			<?php echo JText::_('COM_REDFORM_FORM_LIST_TITLE') ?>
+		</a>
+	</li>
+	<li>
+		<a class="<?php echo $fieldsClass ?>"
+		   href="<?php echo JRoute::_('index.php?option=com_redform&view=fields') ?>">
+			<i class="icon-user"></i>
+			<?php echo JText::_('COM_REDFORM_FIELD_LIST_TITLE') ?>
 		</a>
 	</li>
 </ul>

@@ -9,8 +9,8 @@
 defined('_JEXEC') or die;
 
 // TODO: this should go...
-require_once (JPATH_COMPONENT_ADMINISTRATOR.'/helpers/helper.php');
-require_once (JPATH_COMPONENT_SITE.'/redform.core.php');
+require_once (JPATH_COMPONENT_ADMINISTRATOR . '/helpers/helper.php');
+require_once (JPATH_COMPONENT_SITE . '/redform.core.php');
 /* Load the necessary stylesheet */
 $document = JFactory::getDocument();
 $document->addStyleSheet('com_redform/redform.css');
@@ -29,7 +29,7 @@ else
 RLoader::registerPrefix('Redform', __DIR__);
 
 // Register library prefix
-RLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+RLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
 
 // Make available the fields
 JFormHelper::addFieldPath(JPATH_LIBRARIES . '/redform/form/fields');

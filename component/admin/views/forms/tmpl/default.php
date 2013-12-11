@@ -71,10 +71,7 @@ $saveOrder = $listOrder == 'ordering';
 					<?php echo JText::_('COM_REDFORM_SUBMITTERS'); ?>
 				</th>
 				<th width="18%" class="nowrap hidden-phone">
-					<?php echo JText::_('COM_REDFORM_TAG'); ?>
-				</th>
-				<th width="1%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('rsearchtools.sort', 'JGRID_HEADING_ID', 'f.id', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_TAG', 'f.id', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 			</thead>
@@ -122,9 +119,7 @@ $saveOrder = $listOrder == 'ordering';
 								JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) :
 								JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
 						</td>
-						<td>
-
-						</td>
+						<td></td>
 						<td>
 							<?php echo '{redform}' . $item->id . '{/redform}'; ?>
 						</td>
