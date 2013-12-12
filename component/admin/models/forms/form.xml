@@ -150,6 +150,8 @@
 				type="rdfconditionalrecipients"
 				label="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS"
 				description="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS_TIP"
+				cols="50"
+				rows="10"
 				/>
 	</fieldset>
 

@@ -179,16 +179,27 @@ class RedformModelForm extends RModelAdmin
 	/**
 	 * Returns form fields as options
 	 *
+	 * @param   null  $id  form id
+	 *
 	 * @return array
 	 */
-	public function getFieldsOptions()
+	public function getFieldsOptions($id = null)
 	{
-		$query = ' SELECT f.id AS value, f.field AS text '
-			. ' FROM #__rwf_fields AS f '
-			. ' WHERE f.form_id = ' . $this->_id
-			. ' ORDER BY f.field ';
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObjectList();
+		if (!($id) && $this->_id)
+		{
+			$id = $this->_id;
+		}
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('f.id AS value, f.field AS text');
+		$query->from('#__rwf_fields AS f');
+		$query->where('f.form_id = ' . (int) $id);
+		$query->order('f.field');
+
+		$db->setQuery($query);
+		$res = $db->loadObjectList();
 
 		return $res;
 	}

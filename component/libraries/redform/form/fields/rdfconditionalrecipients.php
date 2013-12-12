@@ -28,7 +28,9 @@ class JFormFieldRdfconditionalrecipients extends JFormFieldTextarea
 	 */
 	protected $type = 'Rdfconditionalrecipients';
 
-	protected $fields = array();
+	public $fields = array();
+
+	public $textarea;
 
 	/**
 	 * Method to get the field input markup.
@@ -43,22 +45,23 @@ class JFormFieldRdfconditionalrecipients extends JFormFieldTextarea
 			JHTML::_('select.option', 'inferior', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_inferior')),
 			JHTML::_('select.option', 'superior', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_superior')),
 		);
-		$cr_function = JHTML::_('select.genericlist', $options, 'cr_function', 'class="inputbox"');
+		$this->fields['functions'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_LABEL'),
+			'field' => JHTML::_('select.genericlist', $options, 'cr_function', 'class="inputbox"')
+		);
 
-		$this->fields['functions'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_LABEL'))
+		$this->fields['email'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL'),
+			'field' => '<input type="text" name="cr_email" id="cr_email"/>'
+		);
 
-		$text = array();
-		$text[] = '<div id="cond_recipients_ui">';
-		$text[] = '<label for="cr_email">' . JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL') . '</label>'
-			. '<input type="text" name="cr_email" id="cr_email"/>';
-		$text[] = '<label for="cr_name">' . JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL') . '</label>'
-			. '<input type="text" name="cr_name" id="cr_name"/>';
-		$text[] = '<label for="cr_field">' . JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_LABEL') . '</label>'
-			. '<input type="text" name="cr_field" id="cr_field"/>';
-		$text[] = '<label for="cr_function">' . JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_LABEL') . '</label>'
-			. $cr_function;
-		$text[] = '<span id="cr_params"></span>';
-		$text[] = parent::getInput();
+		$this->fields['name'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL'),
+			'field' => '<input type="text" name="cr_name" id="cr_name"/>'
+		);
+
+		$this->fields['field'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_LABEL'),
+			'field' => '<select name="cr_field" id="cr_field"></select>'
+		);
+
+		$this->textarea = parent::getInput();
 
 		return RLayoutHelper::render('fields.rdfconditionalrecipients', $this);
 	}

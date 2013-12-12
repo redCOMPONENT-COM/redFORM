@@ -40,6 +40,11 @@ class RedformViewForm extends RDFView
 		$this->form	= $this->get('Form');
 		$this->item	= $this->get('Item');
 
+		Jtext::script('COM_REDFORM_MISSING_OR_INVALID_EMAIL');
+		Jtext::script('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_REQUIRED');
+		Jtext::script('COM_REDFORM_CONDITIONAL_RECIPIENT_MISSING_PARAMETER');
+		Jtext::script('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_REQUIRED');
+
 		parent::display($tpl);
 	}
 
