@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 /**
- * Companies Model
+ * Forms Model
  *
  * @package     Redform.Backend
  * @subpackage  Models
