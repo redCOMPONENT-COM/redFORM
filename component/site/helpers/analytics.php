@@ -127,7 +127,7 @@ JS;
 
 		$js_ua = <<<JS
 			ga('ecommerce:addItem', {
-			'id' : '{$item->transaction_id}',  // Transaction ID. Required.
+			'id' : '{$item->id}',  // Transaction ID. Required.
 			'name' : '{$item->productname}',      // Product name. Required.
 			'sku' : '{$item->sku}',        // SKU/code - required			.
 			'category' : '{$item->category}',      // Product name. Required.
@@ -274,7 +274,7 @@ JS;
 			$item->sku  = $sku ? $sku : 'submitter' . $s->id;
 			$item->category  = $category ? $category : '';
 			$item->price = $s->price;
-			
+
 			$js .= self::addItem($item);
 		}
 
