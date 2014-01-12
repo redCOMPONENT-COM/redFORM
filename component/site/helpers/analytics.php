@@ -274,8 +274,9 @@ JS;
 			$item->sku  = $sku ? $sku : 'submitter' . $s->id;
 			$item->category  = $category ? $category : '';
 			$item->price = $s->price;
+			
+			$js .= self::addItem($item);
 		}
-		$js .= self::addItem($item);
 
 		// push transaction to server
 		$js .= self::trackTrans();
