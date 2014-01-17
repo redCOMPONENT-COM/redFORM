@@ -1747,6 +1747,30 @@ class RedFormCore extends JObject {
 
 		return $data;
 	}
+
+	/**
+	 * Return submission(s) price(s) associated to a submit_key
+	 *
+	 * @param   string  $submit_key  submit key
+	 *
+	 * @return array indexed by submitter_id
+	 */
+	protected static function getSubmissionPrice($submit_key)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('s.id, s.submit_key, s.price, f.currency');
+		$query->from('#__rwf_submitters AS s');
+		$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
+		$query->where('s.submit_key = ' . $db->q($submit_key));
+
+		$db->setQuery($query);
+		$res = $db->loadObjectList('s.id');
+
+		return ($res);
+	}
+
 }
 
 class formanswers
