@@ -221,6 +221,11 @@ class RedFormModelPayment extends JModel
 		$asub = current($submitters);
 		$form = $this->getForm();
 
+		if (!$form->currency)
+		{
+			throw new Exception('Currency must be set in form properties for payment - Please contact system administrator', 500);
+		}
+
 		$obj = new stdclass;
 		$obj->integration = $asub->integration;
 		$obj->form        = $form->formname ;
