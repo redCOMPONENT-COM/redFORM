@@ -1755,7 +1755,7 @@ class RedFormCore extends JObject {
 	 *
 	 * @return array indexed by submitter_id
 	 */
-	protected static function getSubmissionPrice($submit_key)
+	public static function getSubmissionPrice($submit_key)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
