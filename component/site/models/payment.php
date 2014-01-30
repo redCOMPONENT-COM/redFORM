@@ -34,15 +34,17 @@ jimport('joomla.application.component.model');
  */
 class RedFormModelPayment extends JModel
 {
-	var $_gateways = null;
+	protected $_gateways = null;
 
-	var $_submit_key = null;
+	protected $_submit_key = null;
 
-	var $_form = null;
+	protected $_form = null;
 
-	var $_submitters = null;
+	protected $_submitters = null;
 
-	var $_gatewayhelper = null;
+	protected $_gatewayhelper = null;
+
+	protected $paymentsDetails = array();
 
 	function __construct($config)
 	{
@@ -66,10 +68,13 @@ class RedFormModelPayment extends JModel
 	{
 		if (empty($this->_gateways))
 		{
-			JPluginHelper::importPlugin( 'redform_payment' );
+			$details = $this->getPaymentDetails();
+
+			JPluginHelper::importPlugin('redform_payment');
 			$dispatcher = JDispatcher::getInstance();
+
 			$gateways = array();
-			$results = $dispatcher->trigger('onGetGateway', array(&$gateways));
+			$results = $dispatcher->trigger('onGetGateway', array(&$gateways, $details));
 			$this->_gateways = $gateways;
 		}
 
@@ -82,26 +87,30 @@ class RedFormModelPayment extends JModel
 	 */
 	function getGatewayOptions()
 	{
+		$details = $this->getPaymentDetails();
+
 		$gw = $this->getGateways();
 
 		$options = array();
+
 		foreach ($gw as $g)
 		{
-			if (isset($g['label'])) {
+			if (isset($g['label']))
+			{
 				$label = $g['label'];
 			}
-			else {
+			else
+			{
 				$label = $g['name'];
 			}
+
 			$options[] = JHTML::_('select.option', $g['name'], $label);
 		}
 
-		$details = $this->getPaymentDetails();
-
 		// Filter gateways through plugins
-		JPluginHelper::importPlugin( 'redform_payment' );
+		JPluginHelper::importPlugin('redform_payment');
 		$dispatcher = JDispatcher::getInstance();
-		$results = $dispatcher->trigger('onFilterGateways', array(&$options, $details));
+		$dispatcher->trigger('onFilterGateways', array(&$options, $details));
 
 		return $options;
 	}
@@ -213,42 +222,55 @@ class RedFormModelPayment extends JModel
 			$key = $this->_submit_key;
 		}
 
-		$submitters = $this->getSubmitters();
-		if (!count($submitters))
+		if (!isset($this->paymentsDetails[$key]))
 		{
-			return false;
-		}
-		$asub = current($submitters);
-		$form = $this->getForm();
+			$submitters = $this->getSubmitters();
 
-		if (!$form->currency)
-		{
-			throw new Exception('Currency must be set in form properties for payment - Please contact system administrator', 500);
+			if (!count($submitters))
+			{
+				return false;
+			}
+
+			$asub = current($submitters);
+			$form = $this->getForm();
+
+			if (!$form->currency)
+			{
+				throw new Exception('Currency must be set in form properties for payment - Please contact system administrator', 500);
+			}
+
+			$obj = new stdclass;
+			$obj->integration = $asub->integration;
+			$obj->form        = $form->formname ;
+			$obj->form_id     = $form->id;
+			$obj->key         = $key;
+			$obj->currency    = $form->currency;
+
+			switch ($asub->integration)
+			{
+				case 'redevent':
+					$event = $this->getEventAttendee($key);
+					$obj->title = JText::_('COM_REDFORM_Event_registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
+					$obj->uniqueid = $event->uniqueid;
+					break;
+
+				default:
+					if (JFactory::getApplication()->input->get('paymenttitle'))
+					{
+						$obj->title = JFactory::getApplication()->input->get('paymenttitle');
+					}
+					else
+					{
+						$obj->title = JText::_('COM_REDFORM_Form_submission').': '.$form->formname;
+					}
+
+					$obj->uniqueid = $key;
+					break;
+			}
+			$this->paymentsDetails[$key] = $obj;
 		}
 
-		$obj = new stdclass;
-		$obj->integration = $asub->integration;
-		$obj->form        = $form->formname ;
-		$obj->form_id     = $form->id;
-		$obj->key         = $key;
-		switch ($asub->integration)
-		{
-			case 'redevent':
-				$event = $this->getEventAttendee($key);
-				$obj->title = JText::_('COM_REDFORM_Event_registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
-				$obj->uniqueid = $event->uniqueid;
-				break;
-			default:
-				if (JRequest::getVar('paymenttitle')) {
-					$obj->title = JRequest::getVar('paymenttitle');
-				}
-				else {
-					$obj->title = JText::_('COM_REDFORM_Form_submission').': '.$form->formname;
-				}
-				$obj->uniqueid = $key;
-				break;
-		}
-		return $obj;
+		return $this->paymentsDetails[$key];
 	}
 
 	function getEventAttendee($key)

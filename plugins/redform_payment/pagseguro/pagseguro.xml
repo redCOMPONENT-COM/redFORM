@@ -21,7 +21,7 @@
   <config>
 		<fields name="params">
 		  <fieldset name="extra" label="extra">
-		  
+
 		    <field name="account" type="text" default=""
 		           label="PLG_REDFORM_PAGSEGURO_ACCOUNT_LABEL"
 		           description="PLG_REDFORM_PAGSEGURO_ACCOUNT_DESC" />
@@ -30,6 +30,11 @@
 		           label="PLG_REDFORM_PAGSEGURO_SECURITY_TOKEN_LABEL"
 		           description="PLG_REDFORM_PAGSEGURO_SECURITY_TOKEN_DESC" />
 
+			  <field name="allowed_currencies" type="textarea"
+					 label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
+					 description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
+					 rows="10"
+					  />
 		  </fieldset>
 	  </fields>
   </config>

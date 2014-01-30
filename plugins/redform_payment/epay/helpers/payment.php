@@ -31,22 +31,16 @@ require_once (JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.
  */
 class PaymentEpay extends  RDFPaymenthelper
 {
-	protected $params = null;
-
 	/**
-	 * contructor
-	 * @param object plgin params
+	 * Display or redirect to the payment page for the gateway
+	 *
+	 * @param   object  $request     payment request object
+	 * @param   string  $return_url  return url for redirection
+	 * @param   string  $cancel_url  cancel url for redirection
+	 *
+	 * @return true on success
 	 */
-	function PaymentEpay($params)
-	{
-		$this->params = $params;
-	}
-
-	/**
-	 * sends the payment request associated to sumbit_key to the payment service
-	 * @param string $submit_key
-	 */
-	function process($request, $return_url = null, $cancel_url = null)
+	public function process($request, $return_url = null, $cancel_url = null)
 	{
 		$document = JFactory::getDocument();
 		$document->addScript("https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js");

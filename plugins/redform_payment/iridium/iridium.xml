@@ -9,7 +9,7 @@
 	<license>GNU/GPL</license>
 	<version>##VERSION##</version>
   <description>PLG_REDFORM_IRIDIUM_XML_DESC</description>
-  
+
   <files>
     <filename plugin="iridium">iridium.php</filename>
     <folder>helpers</folder>
@@ -20,28 +20,34 @@
   <config>
 		<fields name="params">
 		  <fieldset name="extra" label="extra">
-		    
-		    <field name="merchantid" type="text" default="" 
-		           label="PLG_REDFORM_IRIDIUM_MERCHANTID_LABEL" 
+
+		    <field name="merchantid" type="text" default=""
+		           label="PLG_REDFORM_IRIDIUM_MERCHANTID_LABEL"
 		           description="PLG_REDFORM_IRIDIUM_MERCHANTID_DESC" />
-		           
-		    <field name="password" type="text" default="" 
-		           label="PLG_REDFORM_IRIDIUM_PASSWORD_LABEL" 
+
+		    <field name="password" type="text" default=""
+		           label="PLG_REDFORM_IRIDIUM_PASSWORD_LABEL"
 		           description="PLG_REDFORM_IRIDIUM_PASSWORD_DESC" />
-		           
+
 			<field type="list" name="hashmethod" default="sha1"
-			       label="PLG_REDFORM_IRIDIUM_HASHTYPE_LABEL" 
+			       label="PLG_REDFORM_IRIDIUM_HASHTYPE_LABEL"
 			       description="PLG_REDFORM_IRIDIUM_HASHTYPE_DESC" >
 				<option value="sha1">SHA1</option>
 				<option value="md5">MD5</option>
 			</field>
-			
-		    <field name="presharedkey" type="text" default="" 
-		           label="PLG_REDFORM_IRIDIUM_PRESHAREDKEY_LABEL" 
+
+		    <field name="presharedkey" type="text" default=""
+		           label="PLG_REDFORM_IRIDIUM_PRESHAREDKEY_LABEL"
 		           description="PLG_REDFORM_IRIDIUM_PRESHAREDKEY_DESC" />
-		           				
+
+
+			  <field name="allowed_currencies" type="textarea"
+					 label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
+					 description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
+					 rows="10"
+					  />
 		  </fieldset>
 	  </fields>
   </config>
-  
+
 </extension>
