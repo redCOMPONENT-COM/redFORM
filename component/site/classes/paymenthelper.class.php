@@ -40,7 +40,7 @@ abstract class RDFPaymenthelper extends JObject
 	protected $params = null;
 
 	/**
-	 * name of the gateway for logs
+	 * name of the gateway for dispatching
 	 * @var string
 	 */
 	protected $gateway;
@@ -183,7 +183,7 @@ abstract class RDFPaymenthelper extends JObject
 				$uri->setVar('task', 'processing');
 				break;
 			case 'cancel':
-				$uri->setVar('task', 'cancelled');
+				$uri->setVar('task', 'paymentcancelled');
 				break;
 			case 'notify':
 				$uri->setVar('task', 'notify');

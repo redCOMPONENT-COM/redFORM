@@ -32,6 +32,12 @@ require_once 'ideal.class.php';
  */
 class PaymentIdeal extends  RDFPaymenthelper
 {
+	/**
+	 * name of the gateway for dispatching
+	 * @var string
+	 */
+	protected $gateway = 'ideal';
+
 	protected $params = null;
 
 	/**

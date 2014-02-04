@@ -31,6 +31,12 @@ require_once (JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.
  */
 class PaymentQuickpay extends  RDFPaymenthelper
 {
+	/**
+	 * name of the gateway for dispatching
+	 * @var string
+	 */
+	protected $gateway = 'quickpay';
+
 	protected $params = null;
 
 	/**
