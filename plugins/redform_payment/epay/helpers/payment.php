@@ -73,7 +73,7 @@ class PaymentEpay extends  RDFPaymenthelper
 		$premd5 = $currency . round($details->price*100, 2 ) . $request->uniqueid  . $this->params->get('EPAY_MD5_KEY');
 		?>
 		<input type="hidden" name="accepturl" value="<?php echo $this->getUrl('notify', $submit_key); ?>">
-		<input type="hidden" name="declineurl" value="<?php echo $this->getUrl('notify', $submit_key); ?>">
+		<input type="hidden" name="declineurl" value="<?php echo $this->getUrl('decline', $submit_key); ?>">
 		<input type="hidden" name="group" value="<?php echo $this->params->get('EPAY_GROUP'); ?>">
 		<input type="hidden" name="instant" value="<?php echo $this->params->get('EPAY_INSTANT_CAPTURE'); ?>">
 		<input type="hidden" name="language" value="<?php echo $this->params->get('EPAY_LANGUAGE') ?>">
@@ -255,4 +255,33 @@ class PaymentEpay extends  RDFPaymenthelper
     $db->query();
   }
 
+
+	/**
+	 * returns state uri object (notify, cancel, etc...)
+	 *
+	 * @param   string  $state       the state for the url
+	 * @param   string  $submit_key  submit key
+	 *
+	 * @return string
+	 */
+	protected function getUri($state, $submit_key)
+	{
+		$uri = parent::getUri($state, $submit_key);
+
+		switch ($state)
+		{
+			case 'cancel':
+				$uri->setVar('accept', '0');
+				break;
+			case 'notify':
+				$uri->setVar('accept', '1');
+				break;
+			case 'decline':
+				$uri->setVar('task', 'notify');
+				$uri->setVar('accept', '0');
+				break;
+		}
+
+		return $uri;
+	}
 }

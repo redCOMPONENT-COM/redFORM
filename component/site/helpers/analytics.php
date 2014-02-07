@@ -19,8 +19,6 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-require_once JPATH_SITE . '/components/com_redform/models/payment.php';
-
 /**
  * Helper class
  *
@@ -248,6 +246,8 @@ JS;
 	 */
 	public static function recordTrans($submit_key, array $options = array())
 	{
+		require_once JPATH_SITE . '/components/com_redform/models/payment.php';
+
 		$model = JModel::getInstance('payment', 'RedformModel');
 		$model->setSubmitKey($submit_key);
 		$submitters = $model->getSubmitters();

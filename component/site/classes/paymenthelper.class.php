@@ -163,6 +163,21 @@ abstract class RDFPaymenthelper extends JObject
 	 */
 	protected function getUrl($state, $submit_key)
 	{
+		$uri = $this->getUri($state, $submit_key);
+
+		return $uri->toString();
+	}
+
+	/**
+	 * returns state uri object (notify, cancel, etc...)
+	 *
+	 * @param   string  $state       the state for the url
+	 * @param   string  $submit_key  submit key
+	 *
+	 * @return string
+	 */
+	protected function getUri($state, $submit_key)
+	{
 		$app = JFactory::getApplication();
 		$lang = $app->input->get('lang');
 
@@ -190,7 +205,7 @@ abstract class RDFPaymenthelper extends JObject
 				break;
 		}
 
-		return $uri->toString();
+		return $uri;
 	}
 
 	/**
