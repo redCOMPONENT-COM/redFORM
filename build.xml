@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Tracks" default="site" basedir=".">
+<project name="redFORM" default="site" basedir=".">
 	<property file="build/build.properties" />
 
 	<!-- Default properties, set only if not already assigned in the build.properties file -->
