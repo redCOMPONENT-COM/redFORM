@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -18,9 +18,9 @@
  */
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-$rfcore = new redFormCore(); 
+$rfcore = new RedFormCore();
 ?>
-<form action="index.php?option=com_redform&controller=submitters" method="post" name="redform"  
+<form action="index.php?option=com_redform&controller=submitters" method="post" name="redform"
       id="adminForm" enctype="multipart/form-data" onsubmit="return CheckSubmit(this);">
 <?php echo $rfcore->getFormFields($this->form_id, array($this->submitter->sid), 1); ?>
 <input type="hidden" name="task" id="task" value="save" />

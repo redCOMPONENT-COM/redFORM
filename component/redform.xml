@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE install SYSTEM "http://www.joomla.org/xml/dtd/1.5/component-install.dtd">
 <extension type="component" version="1.7" method="upgrade">
 	<name>redFORM</name>
 	<creationDate>##DATE##</creationDate>
@@ -88,4 +87,9 @@
 		</files>
 
 	</administration>
+
+	<!-- Libraries to install -->
+	<libraries>
+		<library name="redform"/>
+	</libraries>
 </extension>
