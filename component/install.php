@@ -217,4 +217,47 @@ class com_redformInstallerScript
 			}
 		}
 	}
+
+	/**
+	 * method to uninstall the component
+	 *
+	 * @param   object  $parent  class calling this method
+	 *
+	 * @return  void
+	 *
+	 * @throws  RuntimeException
+	 */
+	public function uninstall($parent)
+	{
+		// Uninstall extensions
+		$this->uninstallLibraries($parent);
+	}
+
+	/**
+	 * Uninstall the package libraries
+	 *
+	 * @param   object  $parent  class calling this method
+	 *
+	 * @return  void
+	 */
+	protected function uninstallLibraries($parent)
+	{
+		// Required objects
+		$installer = $this->getInstaller();
+		$manifest  = $this->getManifest($parent);
+
+		if ($nodes = $manifest->libraries->library)
+		{
+			foreach ($nodes as $node)
+			{
+				$extName = $node->attributes()->name;
+				$result  = 0;
+
+				if ($extId = $this->searchExtension($extName, 'library', 0))
+				{
+					$result = $installer->uninstall('library', $extId);
+				}
+			}
+		}
+	}
 }
