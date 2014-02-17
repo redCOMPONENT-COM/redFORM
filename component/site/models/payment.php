@@ -236,7 +236,7 @@ class RedFormModelPayment extends JModel
 
 			if (!$form->currency)
 			{
-				throw new Exception('Currency must be set in form properties for payment - Please contact system administrator', 500);
+				// throw new Exception('Currency must be set in form properties for payment - Please contact system administrator', 500);
 			}
 
 			$obj = new stdclass;
