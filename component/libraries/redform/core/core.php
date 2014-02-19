@@ -244,7 +244,8 @@ class RedFormCore extends JObject {
     }
 
 		// redmember integration: pull extra fields
-		if ($user->get('id') && file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {
+		if ($user->get('id') && file_exists(JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php'))
+		{
 			$this->getRedmemberfields($user);
 		}
 
@@ -1059,29 +1060,24 @@ class RedFormCore extends JObject {
 
 	/**
 	 * adds extra fields from redmember to user object
-	 * @param $user object user
+	 *
+	 * @param   object  &$user  object user
+	 *
 	 * @return object user
 	 */
-	function getRedmemberfields(&$user)
+	protected function getRedmemberfields(&$user)
 	{
-		$db = JFactory::getDBO();
-		$user_id = $user->get('id');
-		if (!$user_id) {
-			return false;
-		}
-		$query = ' SELECT * FROM #__redmember_users WHERE user_id = '. $db->Quote($user_id);
-		$db->setQuery($query, 0, 1);
-		$res = $db->loadObject();
+		include_once JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php';
 
-		if ($res)
+		$all = RedmemberLib::getUserData($user->id);
+
+		$fields = get_object_vars($all);
+
+		foreach ($fields as $key => $value)
 		{
-			foreach ($res as $name => $value)
-			{
-				if (preg_match('/^rm_/', $name)) {
-					$user->set($name, $value);
-				}
-			}
+			$user->{$key} = $value;
 		}
+
 		return $user;
 	}
 
