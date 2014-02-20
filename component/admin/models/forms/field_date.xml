@@ -2,8 +2,8 @@
 <form>
 	<fields name="params">
 		<fieldset name="extra" label="extra">
-		<field type="spacer" default="REDFORM_FIELD_DATE_PARAMS_NOTE_TEXT" label="COM_REDFORM_note" description="COM_REDFORM_FIELD_DATE_PARAMS_NOTE_TEXT" />
-    <field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS" description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
-    <field name="dateformat" type="text" default="%Y-%m-%d" label="COM_REDFORM_FIELD_DATE_PARAMS_DATE_FORMAT_LABEL" description="COM_REDFORM_FIELD_DATE_PARAMS_DATE_FORMAT_DESC"/>
+			<field type="spacer" default="REDFORM_FIELD_DATE_PARAMS_NOTE_TEXT" label="COM_REDFORM_note" description="COM_REDFORM_FIELD_DATE_PARAMS_NOTE_TEXT" />
+		<field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS" description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
+		<field name="dateformat" type="text" default="%Y-%m-%d" label="COM_REDFORM_FIELD_DATE_PARAMS_DATE_FORMAT_LABEL" description="COM_REDFORM_FIELD_DATE_PARAMS_DATE_FORMAT_DESC"/>
 	</fieldset></fields>
 </form>
