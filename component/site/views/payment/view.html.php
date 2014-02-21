@@ -70,14 +70,14 @@ class RedformViewPayment extends JView {
 		$this->assign('currency',  $currency);
 
 		// Analytics
-		if (redFORMHelperAnalytics::isEnabled())
+		if (RedFormHelperAnalytics::isEnabled())
 		{
 			$event = new stdclass;
 			$event->category = 'payement';
 			$event->action = 'display';
 			$event->label = "display payment form {$submit_key}";
 			$event->value = null;
-			redFORMHelperAnalytics::trackEvent($event);
+			RedFormHelperAnalytics::trackEvent($event);
 		}
 
 		parent::display($tpl);

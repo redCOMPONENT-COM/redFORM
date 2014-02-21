@@ -30,7 +30,6 @@ require_once(JPATH_SITE . '/components/com_redform/redform.defines.php');
 require_once(RDF_PATH_SITE.DS.'classes'.DS.'field.php');
 require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
 require_once(RDF_PATH_SITE.DS.'helpers'.DS.'log.php');
-require_once(RDF_PATH_SITE.DS.'helpers'.DS.'analytics.php');
 
 class RedFormCore extends JObject {
 
@@ -170,14 +169,14 @@ class RedFormCore extends JObject {
 		$html .= '</form>';
 
 		// Analytics
-		if (redFORMHelperAnalytics::isEnabled())
+		if (RedFormHelperAnalytics::isEnabled())
 		{
 			$event = new stdclass;
 			$event->category = 'form';
 			$event->action = 'display';
 			$event->label = "display form {$form->formname}";
 			$event->value = null;
-			redFORMHelperAnalytics::trackEvent($event);
+			RedFormHelperAnalytics::trackEvent($event);
 		}
 
 		return $html;
