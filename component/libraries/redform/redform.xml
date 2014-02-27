@@ -13,5 +13,6 @@
     <files>
         <folder>form</folder>
 		<folder>core</folder>
+        <folder>helper</folder>
     </files>
 </extension>
