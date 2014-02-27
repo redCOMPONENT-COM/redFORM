@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `classname` varchar(45) default NULL,
   `contactpersoninform` tinyint(1) NOT NULL default '0',
   `contactpersonemail` varchar(255) default NULL,
+  `contactpersonemailsubject` varchar(255) default NULL,
   `contactpersonfullpost` int(11) NOT NULL default '0',
   `submitterinform` tinyint(1) NOT NULL default '0',
   `submitnotification` tinyint(1) NOT NULL default '0',
