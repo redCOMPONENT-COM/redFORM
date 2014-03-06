@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ jimport('joomla.html.pane');
 $editor =& JFactory::getEditor();
 ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
-	<?php $pane   =& JPane::getInstance('tabs'); 
+	<?php $pane   =& JPane::getInstance('tabs');
 	echo $pane->startPane("settings");
 	echo $pane->startPanel( JText::_('COM_REDFORM_Form'), 'form_tab' );
 	$row = 0;
@@ -34,7 +34,7 @@ $editor =& JFactory::getEditor();
 				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_FORM_NAME_TIP');?>"><?php echo JText::_('COM_REDFORM_FORM_NAME'); ?></span>
 			</td>
 			<td>
-			<input class="inputbox" type="text" size="40" name="formname" value="<?php echo $this->row->formname; ?>"> 
+			<input class="inputbox" type="text" size="40" name="formname" value="<?php echo $this->row->formname; ?>">
 			</td>
 		</tr>
 		<tr class="row<?php echo $row = 1 - $row; ?>">
@@ -66,7 +66,7 @@ $editor =& JFactory::getEditor();
 				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_FORM_START_DATE_TIP');?>"><?php echo JText::_('COM_REDFORM_FORM_START_DATE'); ?></span>
 			</td>
 			<td>
-			<?php 
+			<?php
 				$date = JFactory::getDate($this->row->startdate);
 				echo JHTML::_('calendar', $date->toFormat('%d-%m-%Y  %H:%M:%S'), 'startdate', 'startdate', '%d-%m-%Y  %H:%M:%S', 'size="40"');
 			?>
@@ -85,7 +85,7 @@ $editor =& JFactory::getEditor();
 				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_FORM_END_DATE_TIP');?>"><?php echo JText::_('COM_REDFORM_FORM_END_DATE'); ?></span>
 			</td>
 			<td>
-			<?php 
+			<?php
 				$date = JFactory::getDate($this->row->enddate);
 				echo JHTML::_('calendar', $date->toFormat('%d-%m-%Y  %H:%M:%S'), 'enddate', 'enddate', '%d-%m-%Y  %H:%M:%S', 'size="40"');
 			?>
@@ -157,6 +157,14 @@ $editor =& JFactory::getEditor();
 				<input name="contactpersonemail" type="text" value="<?php echo $this->row->contactpersonemail; ?>" size="80" />
 			</td>
 		</tr>
+			<tr class="row<?php echo $row = 1 - $row; ?>">
+				<td valign="top" align="right">
+					<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_CONTACTPERSON_EMAIL_SUBJECT_TIP');?>"><?php echo JText::_('COM_REDFORM_CONTACTPERSON_EMAIL_SUBJECT'); ?></span>
+				</td>
+				<td>
+					<input name="contactpersonemailsubject" type="text" value="<?php echo $this->row->contactpersonemailsubject; ?>" size="80" />
+				</td>
+			</tr>
 		<tr class="row<?php echo $row = 1 - $row; ?>">
 			<td valign="top" align="right">
 				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS_TIP');?>"><?php echo JText::_('COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS'); ?></span>
@@ -196,11 +204,11 @@ $editor =& JFactory::getEditor();
 			</td>
 			<td>
 				<div id="cond_recipients_ui">
-					<label for="cr_email"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL');?></label><input type="text" name="cr_email" id="cr_email"/> 
-					<label for="cr_name"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL');?></label><input type="text" name="cr_name" id="cr_name"/> 
-					<label for="cr_field"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_LABEL');?></label><?php echo $this->lists['cr_field']; ?> 
-					<label for="cr_function"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_LABEL');?></label><?php echo $this->lists['cr_function']; ?> 
-					<span id="cr_params"></span> 
+					<label for="cr_email"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL');?></label><input type="text" name="cr_email" id="cr_email"/>
+					<label for="cr_name"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL');?></label><input type="text" name="cr_name" id="cr_name"/>
+					<label for="cr_field"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_LABEL');?></label><?php echo $this->lists['cr_field']; ?>
+					<label for="cr_function"><?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_LABEL');?></label><?php echo $this->lists['cr_function']; ?>
+					<span id="cr_params"></span>
 					<button type="button" id="cr_button"><?php echo JText::_('COM_REDFORM_ADD');?></button>
 				</div>
 				<textarea name="cond_recipients" id="cond_recipients" rows="10" cols="80"><?php echo $this->row->cond_recipients; ?></textarea>
@@ -233,7 +241,7 @@ $editor =& JFactory::getEditor();
 				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_VMPRODUCTID_TIP');?>"><?php echo JText::_('COM_REDFORM_VMPRODUCTID'); ?></span>
 			</td>
 			<td>
-				<?php echo $this->lists['vmproductid']; ?> 
+				<?php echo $this->lists['vmproductid']; ?>
 			</td>
 		</tr>
 	</table>
@@ -313,7 +321,7 @@ $editor =& JFactory::getEditor();
 				<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_TIP');?>"><?php echo JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY'); ?></span>
 			</td>
 			<td>
-				<?php echo $editor->display( "submitterpaymentnotificationbody",                          
+				<?php echo $editor->display( "submitterpaymentnotificationbody",
 				                             ($this->row->submitterpaymentnotificationbody ? $this->row->submitterpaymentnotificationbody : JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_DEFAULT')),
 				                             800, 300, 100, 30, array('pagebreak', 'readmore')); ?>
 			</td>

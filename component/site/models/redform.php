@@ -862,12 +862,22 @@ class RedformModelRedform extends JModel {
 			$mailer->addReplyTo($sender);
 
 			// set the email subject
-			if ($new) {
-				$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('COM_REDFORM_CONTACT_NOTIFICATION_EMAIL_SUBJECT')));
+			$replaceHelper = new RedFormHelperTagsreplace($form, $allanswers[0]->getAnswers());
+
+			if (trim($form->contactpersonemailsubject))
+			{
+				$subject = $replaceHelper->replace($form->contactpersonemailsubject);
 			}
-			else {
-				$mailer->setSubject(str_replace('[formname]', $form->formname, JText::_('COM_REDFORM_CONTACT_NOTIFICATION_UPDATE_EMAIL_SUBJECT')));
+			elseif ($new)
+			{
+				$subject = $replaceHelper->replace(JText::_('COM_REDFORM_CONTACT_NOTIFICATION_EMAIL_SUBJECT'));
 			}
+			else
+			{
+				$subject = $replaceHelper->replace(JText::_('COM_REDFORM_CONTACT_NOTIFICATION_UPDATE_EMAIL_SUBJECT'));
+			}
+
+			$mailer->setSubject($subject);
 
 			// Mail body
 			$htmlmsg = '<html><head><title></title></title></head><body>';
