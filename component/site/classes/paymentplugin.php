@@ -59,7 +59,7 @@ abstract class RDFPaymentPlugin extends JPlugin
 	 *
 	 * @return bool
 	 */
-	public function onGetGateway(&$gateways, $details)
+	public function onGetGateway(&$gateways, $details = null)
 	{
 		$reflector = new ReflectionClass(get_class($this));
 		$dirpath   = dirname($reflector->getFileName());
@@ -69,7 +69,7 @@ abstract class RDFPaymentPlugin extends JPlugin
 		$helperClass = 'Payment' . ucfirst($this->gateway);
 		$helper = new $helperClass($this->params);
 
-		if ($helper->currencyIsAllowed($details->currency))
+		if (!$details || $helper->currencyIsAllowed($details->currency))
 		{
 			$gateways[] = array('name' => $this->gateway, 'helper' => $helper, 'label' => $this->params->get('gatewaylabel', $this->gateway));
 		}
