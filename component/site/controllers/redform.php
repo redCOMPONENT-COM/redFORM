@@ -78,6 +78,10 @@ class RedformControllerRedform extends RedformController {
 
 		$result = $model->apisaveform();
 
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onAfterRedformSavedSubmission', array(&$result));
+
 		$referer = JRequest::getVar('referer');
 
 		if (!$result)
