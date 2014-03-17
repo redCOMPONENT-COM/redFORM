@@ -23,7 +23,7 @@ function CheckSubmit(form)
 	var radiomsg = false;
 
 	// only check the form that were activated by the user
-	var forms = $$('.formbox');
+	var forms = document.id(form).getElements('.formbox');
 	var nb_active = parseInt(document.getElement("input[name='curform']").getProperty('value'));
 
 	for (var j = 0 ; j < nb_active ; j++)
