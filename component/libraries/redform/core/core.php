@@ -983,6 +983,12 @@ class RedformCore extends JObject {
 			if ($multi > 1) {
 				$html .= '</fieldset>';
 			}
+
+			if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
+			{
+				$html .= $this->getGatewaySelect();
+			}
+
 			if (isset($this->_rwfparams['uid']))
 			{
 				$html .= '<div>'.JText::_('COM_REDFORM_JOOMLA_USER').': '. JHTML::_('list.users', 'uid', $this->_rwfparams['uid'], 1, NULL, 'name', 0 ).'</div>';
@@ -1213,7 +1219,7 @@ class RedformCore extends JObject {
 			$results = array();
 			foreach ($answers as $a)
 			{
-				$result = new formanswers();
+				$result = new RedformCoreFormAnswers;
 				$result->sid        = (isset($a->sid) ? $a->sid : null);
 				$result->submit_key = $submit_key;
 				$result->fields     = $a;
@@ -1800,11 +1806,36 @@ class RedformCore extends JObject {
 		return ($res);
 	}
 
-}
+	/**
+	 * Return field for gateway select
+	 *
+	 * @return bool|string
+	 */
+	protected function getGatewaySelect()
+	{
+		$helper = new RedformCorePaymentGateway;
+		$options = $helper->getOptions();
 
-class formanswers
-{
-	var $sid;
-	var $submit_key;
-	var $fields;
+		if (!$options)
+		{
+			return false;
+		}
+
+		if (count($options) == 1)
+		{
+			// Just a hidden field
+			$html = '<input name="gw" type="hidden" value="' . $options[0]->value . '"/>';
+		}
+		else
+		{
+			$select = JHtml::_('select.genericlist', $options, 'gw');
+
+			$html = '<div class="fieldline">';
+			$html .= '<div class="label">' . JText::_('COM_REDFORM_SELECT_PAYMENT_METHOD') . '</div>';
+			$html .= '<div class="field">' . $select . '</div>';
+			$html .= '</div>';
+		}
+
+		return $html;
+	}
 }

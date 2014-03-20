@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
  *
  * @package     Redform.Libraries
  * @subpackage  Helper
+ * @since       2.5
  */
 class RedformHelperTagsreplace
 {
