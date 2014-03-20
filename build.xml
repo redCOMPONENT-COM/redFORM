@@ -56,7 +56,7 @@
 	-->
 
 	<target name="release" description="Installation Package for Joomla! 1.6+"
-		depends="new-release,setup-properties">
+		depends="setup-properties, new-release">
 
 		<copy todir="${dirs.tmp}/component" >
 			<fileset dir="${dirs.root}/component">
@@ -282,5 +282,27 @@
 			</filterchain>
         </copy>
 
+    </target>
+
+    <!--
+    ====================================================================================================
+    Tasks - Copy to test site
+    ====================================================================================================
+    -->
+    <target name="unit-test" description="Copy to test site"
+            depends="setup-test, site">
+        <phpunit configuration="tests/unit/phpunit.xml"
+                 printsummary="true">
+            <batchtest>
+                <fileset dir="tests/unit/suite">
+                    <include name="**/*Test.php"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
+    </target>
+
+    <target name="setup-test" description="Init to copy to test site"
+            depends="setup-properties">
+        <property name="www.dir" value="${www.dirtest}" override="true"/>
     </target>
 </project>
