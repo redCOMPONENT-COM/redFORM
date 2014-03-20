@@ -1838,4 +1838,27 @@ class RedformCore extends JObject {
 
 		return $html;
 	}
+
+	/**
+	 * Return true if submission was paid
+	 *
+	 * @param   string  $submit_key  submission submit key
+	 *
+	 * @return mixed
+	 */
+	public function isPaidSubmitkey($submit_key)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('p.paid, p.status');
+		$query->from('#__rwf_payment AS p');
+		$query->where('p.submit_key = ' . $db->quote($submit_key));
+		$query->order('p.id DESC');
+
+		$db->setQuery($query);
+		$res = $db->loadObject();
+
+		return $res->paid;
+	}
 }

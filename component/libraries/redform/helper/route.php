@@ -29,6 +29,18 @@ class RedformHelperRoute
 		return self::buildUrl($parts);
 	}
 
+	public static function getPaymentProcessRoute($submit_key, $gateway)
+	{
+		$parts = array( "option" => "com_redform",
+			"controller"   => 'payment',
+			"task"   => 'process',
+			"gw"   => $gateway,
+			"key"   => $submit_key,
+		);
+
+		return self::buildUrl($parts);
+	}
+
 	/**
 	 * Returns the route from parts
 	 *

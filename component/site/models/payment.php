@@ -250,6 +250,7 @@ class RedformModelPayment extends JModel
 			{
 				case 'redevent':
 					$event = $this->getEventAttendee($key);
+
 					$obj->title = JText::_('COM_REDFORM_Event_registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
 					$obj->uniqueid = $event->uniqueid;
 					break;
@@ -285,9 +286,12 @@ class RedformModelPayment extends JModel
 		              ;
 		$this->_db->setQuery($query, 0, 1);
 		$res = $this->_db->loadObject();
-		if ($res) {
-			$res->uniqueid = $res->course_code.'-'.$res->xref.'-'.$res->attendee_id;
+
+		if ($res)
+		{
+			$res->uniqueid = $res->course_code . '-' . $res->xref . '-' . $res->attendee_id;
 		}
+
 		return $res;
 	}
 
