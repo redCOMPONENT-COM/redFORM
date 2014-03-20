@@ -3,7 +3,7 @@
  * @version 1.0 $Id: archive.php 217 2009-06-06 20:04:26Z julien $
  * @package Joomla
  * @subpackage redform
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @subpackage redform
  * @since		0.9
  */
-class RedFormModelLog extends JModel
+class RedformModelLog extends JModel
 {
 	/**
 	 * Constructor
@@ -67,7 +67,7 @@ class RedFormModelLog extends JModel
 			}
 			fclose($handle);
 		}
-		
+
 		if (empty($contents)) {
 			$contents = array(JText::_('COM_REDFORM_No_log'));
 		}

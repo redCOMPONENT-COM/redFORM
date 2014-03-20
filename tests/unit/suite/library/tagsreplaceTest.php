@@ -10,7 +10,7 @@
 require_once 'PHPUnit/Autoload.php';
 
 // Register library prefix
-JLoader::registerPrefix('RedForm', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
 
 /**
  * Test class for currency.
@@ -53,7 +53,7 @@ class tagsreplaceTest extends JoomlaTestCase
 	 */
 	public function testReplace($formdata, $answers, $text, $expected)
 	{
-		$helper = new RedFormHelperTagsreplace($formdata, $answers);
+		$helper = new RedformHelperTagsreplace($formdata, $answers);
 
 		$resp = $helper->replace($text);
 

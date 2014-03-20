@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @subpackage redform
  * @since		0.9
  */
-class RedFormModelPayment extends JModel
+class RedformModelPayment extends JModel
 {
 	protected $_gateways = null;
 
@@ -322,7 +322,7 @@ class RedFormModelPayment extends JModel
 		$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
 		$mailer->setBody(JText::sprintf($body, $form->formname, $link));
 
-		$core = new RedFormCore();
+		$core = new RedformCore();
 		$emails = $core->getSubmissionContactEmail($this->_submit_key);
 
 		if (!$emails) {

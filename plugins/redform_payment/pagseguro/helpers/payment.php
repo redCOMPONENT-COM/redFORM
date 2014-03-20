@@ -97,7 +97,7 @@ class PaymentPagseguro extends RDFPaymenthelper
 		$paymentRequest->setNotificationURL($this->getUrl('notify', $submit_key));
 
 		// Get email and fullname from answers
-		$rfcore = new RedFormCore;
+		$rfcore = new RedformCore;
 		$emails = $rfcore->getSubmissionContactEmail($submit_key);
 
 		if ($emails)

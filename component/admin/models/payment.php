@@ -3,7 +3,7 @@
  * @version 1.0 $Id: archive.php 217 2009-06-06 20:04:26Z julien $
  * @package Joomla
  * @subpackage redform
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ class RedformModelPayment extends JModel
    * @var array
    */
   var $_data = null;
-	
+
 	var $_submit_key = null;
 
   /**
@@ -63,7 +63,7 @@ class RedformModelPayment extends JModel
     $this->setId((int)$array[0]);
 		$this->setSubmitKey(JRequest::getVar('submit_key', ''));
 	}
-		
+
 	function setSubmitKey($key)
 	{
 		if (!empty($key)) {
@@ -83,7 +83,7 @@ class RedformModelPayment extends JModel
     $this->_id    = $id;
     $this->_data  = null;
   }
-  
+
 
 
   /**
@@ -98,7 +98,7 @@ class RedformModelPayment extends JModel
 
     return $this->_data;
   }
-  
+
 	/**
 	 * Method to remove an item
 	 *
@@ -116,7 +116,7 @@ class RedformModelPayment extends JModel
 			$cids = implode( ',', $cid );
 			$query = 'DELETE FROM #__rwf_payment'
 				. ' WHERE id IN ( '.$cids.' )';
-			
+
 			$this->_db->setQuery( $query );
 			if(!$this->_db->query()) {
 				$this->setError($this->_db->getErrorMsg());
@@ -161,7 +161,7 @@ class RedformModelPayment extends JModel
 		// Lets load the content if it doesn't already exist
 		if (empty($this->_data))
 		{
-			$row = & $this->getTable('Payments', 'RedFormTable');
+			$row = & $this->getTable('Payments', 'RedformTable');
 			if (!$row->date) {
 				$row->date = strftime('%Y-%m-%d %H:%M:%S');
 			}
@@ -170,7 +170,7 @@ class RedformModelPayment extends JModel
 		}
 		return true;
 	}
-	
+
   /**
    * Method to store the item
    *
@@ -182,9 +182,9 @@ class RedformModelPayment extends JModel
   {
   	$array = JRequest::getVar('cid', array(0), '', 'array');
   	$cid = intval($array[0]);
-  	
-		$row = & $this->getTable('Payments', 'RedFormTable');
-		
+
+		$row = & $this->getTable('Payments', 'RedformTable');
+
     // Bind the form fields to the items table
     if (!$row->bind($data)) {
       $this->setError($this->_db->getErrorMsg());
@@ -192,7 +192,7 @@ class RedformModelPayment extends JModel
     }
 
     $row->id = $cid;
-    
+
     // Make sure the item is valid
     if (!$row->check()) {
       $this->setError($row->getError());
@@ -204,10 +204,10 @@ class RedformModelPayment extends JModel
       $this->setError($this->_db->getErrorMsg());
       return false;
     }
-    
+
     return $row;
   }
-  
+
   /**
   * send notification on payment received
   *
@@ -218,7 +218,7 @@ class RedformModelPayment extends JModel
   	$res = ($this->_notifySubmitter() ? $res : false);
   	return $res;
   }
-  
+
   /**
    * send email to submitter on payment received
    */
@@ -230,28 +230,28 @@ class RedformModelPayment extends JModel
   	$mailer->FromName = $mainframe->getCfg('sitename');
   	$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
   	$mailer->IsHTML(true);
-  
+
   	$form = $this->getForm();
-  	  		
+
   	// set the email subject
   	$subject = (empty($form->submitterpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationsubject);
   	$body    = (empty($form->submitterpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationbody);
   	$mailer->setSubject(JText::sprintf($subject, $form->formname));
   	$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
   	$mailer->setBody(JText::sprintf($body, $form->formname, $link));
-  
-  	$core = new RedFormCore();
+
+  	$core = new RedformCore();
   	$emails = $core->getSubmissionContactEmail($this->_submit_key);
-  	
+
   	if (!$emails) {
   		return false;
   	}
-  	
+
   	foreach ((array) $emails as $sid)
-  	{  		
+  	{
   		foreach ((array) $sid as $email)
   		{
-	  		$mailer->addRecipient($email['email']);	
+	  		$mailer->addRecipient($email['email']);
   		}
   	}
 		if (!$mailer->send()) {
@@ -259,7 +259,7 @@ class RedformModelPayment extends JModel
 		}
   	return true;
   }
-  
+
   /**
    * send email to form contact on payment received
    */
@@ -271,7 +271,7 @@ class RedformModelPayment extends JModel
   	$mailer->FromName = $mainframe->getCfg('sitename');
   	$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
   	$mailer->IsHTML(true);
-  
+
   	$form = $this->getForm();
   	if ($form->contactpersoninform)
   	{
@@ -291,18 +291,18 @@ class RedformModelPayment extends JModel
   		// set the email subject and body
   		$subject = (empty($form->contactpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->contactpaymentnotificationsubject);
   		$body    = (empty($form->contactpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_DEFAULT') : $form->contactpaymentnotificationbody);
-  			
+
   		$mailer->setSubject(JText::sprintf($subject, $form->formname));
   		$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
   		$mailer->setBody(JText::sprintf($body, $form->formname, $link));
-  			
+
   		if ($mailer->send()) {
   			return true;
   		}
   	}
   	return true;
   }
-  
+
   /**
   * returns form associated to submit_key
   * @return object
@@ -313,7 +313,7 @@ class RedformModelPayment extends JModel
   	JError::raiseError(0, JText::_('COM_REDFORM_Missing_key'));
   			return false;
   	}
-  
+
   	if (empty($this->_form))
   	{
   	$query = ' SELECT f.* '

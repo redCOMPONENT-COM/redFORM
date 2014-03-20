@@ -129,7 +129,7 @@ class RedformControllerPayment extends JController
 		}
 
 		// Analytics for default landing page
-		if (RedFormHelperAnalytics::isEnabled())
+		if (RedformHelperAnalytics::isEnabled())
 		{
 			$payement = $model->getPaymentDetails($submit_key);
 
@@ -139,7 +139,7 @@ class RedformControllerPayment extends JController
 			$trans->affiliation = $payement->form;
 			$trans->revenue = $model->getPrice();
 
-			RedFormHelperAnalytics::addTrans($trans);
+			RedformHelperAnalytics::addTrans($trans);
 
 			// Add submitters as items
 			foreach ($submitters as $s)
@@ -150,10 +150,10 @@ class RedformControllerPayment extends JController
 				$item->sku = 'submitter' . $s->id;
 				$item->category = '';
 				$item->price = $s->price;
-				RedFormHelperAnalytics::addItem($item);
+				RedformHelperAnalytics::addItem($item);
 			}
 
-			RedFormHelperAnalytics::trackTrans();
+			RedformHelperAnalytics::trackTrans();
 		}
 
 		$app->input->set('view', 'payment');

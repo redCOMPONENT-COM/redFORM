@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ class RedformControllerRedform extends JController
 	 */
 	function __construct() {
 		parent::__construct();
-		
+
 		/* Redirect templates to templates as this is the standard call */
 		$this->registerTask('save','redform');
 		$this->registerTask('remove','redform');
@@ -42,17 +42,17 @@ class RedformControllerRedform extends JController
 		$this->registerTask('cancel','redform');
 		$this->registerTask('apply','edit');
 	}
-	
+
 	/**
 	 * Gets a list of IP/IP ranges in the database
 	 */
 	function Redform() {
 		JRequest::setVar('view', 'redform');
 		JRequest::setVar('layout', 'redform');
-		
+
 		parent::display();
 	}
-	
+
 	/**
 	 * Editing a competition
 	 */
@@ -60,10 +60,10 @@ class RedformControllerRedform extends JController
 		JRequest::setVar('hidemainmenu', 1);
 		JRequest::setVar('view', 'redform');
 		JRequest::setVar('layout', 'editform');
-		
+
 		parent::display();
 	}
-	
+
 	/**
 	 * Adding a competition
 	 */
@@ -71,26 +71,26 @@ class RedformControllerRedform extends JController
 		JRequest::setVar('hidemainmenu', 1);
 		JRequest::setVar('view', 'redform');
 		JRequest::setVar('layout', 'editform');
-		
+
 		parent::display();
 	}
-	
+
 	/**
 	 * Editing configuration
 	 */
 	function Configuration() {
 		JRequest::setVar('view', 'configuration');
 		JRequest::setVar('layout', 'configuration');
-		
+
 		parent::display();
 	}
-	
+
 	/**
 	 * Details competition
 	 */
 	function Details() {
 		JRequest::setVar('hidemainmenu', 1);
-		
+
 		$view =& $this->getView('redform', 'html');
 		$view->setModel( $this->getModel( 'redform', 'RedformModel' ), true );
 		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' );
@@ -98,7 +98,7 @@ class RedformControllerRedform extends JController
 		$view->setLayout('detailsform');
 		$view->display();
 	}
-	
+
 	/**
 	 * Fields competition
 	 */
@@ -106,10 +106,10 @@ class RedformControllerRedform extends JController
 		JRequest::setVar('hidemainmenu', 1);
 		JRequest::setVar('view', 'fields');
 		JRequest::setVar('layout', 'fields');
-		
+
 		parent::display();
 	}
-	
+
 	/**
 	 * List of submitters
 	 */
@@ -120,7 +120,7 @@ class RedformControllerRedform extends JController
 		$view->setModel( $this->getModel( 'redform', 'RedformModel' ));
 		$view->setLayout('submitters');
 		$view->display();
-	}	
+	}
 
   /**
    * Clears log file
@@ -131,26 +131,25 @@ class RedformControllerRedform extends JController
     JRequest::setVar('view', 'log');
     parent::display();
   }
-	
+
   /**
    * Clears log file
    *
    */
   function clearlog()
   {
-    RedFormHelperLog::clear();
+    RedformHelperLog::clear();
     $msg = JText::_('COM_REDFORM_LOG_CLEARED');
     $this->setRedirect('index.php?option=com_redform&task=log', $msg);
     $this->redirect();
   }
-  
+
   function display()
   {
   	// set a default view
   	if (JRequest::getVar('view', '') == '') {
-      JRequest::setVar('view', 'forms');		
+      JRequest::setVar('view', 'forms');
   	}
     parent::display();
   }
 }
-?>

@@ -1,7 +1,7 @@
 <?php
 /**
  * @version 1.0 $Id: view.html.php 165 2009-06-01 16:37:38Z julien $
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ jimport( 'joomla.application.component.view');
  * @subpackage EventList
  * @since 0.9
  */
-class RedFormViewLog extends JView {
+class RedformViewLog extends JView {
 
 	function display($tpl = null)
 	{
@@ -47,11 +47,10 @@ class RedFormViewLog extends JView {
 
 		// set menu
 		RedformHelper::setMenu();
-		
+
 		//assign vars to the template
 		$this->assignRef('log'		, $log);
 
 		parent::display($tpl);
 	}
 }
-?>

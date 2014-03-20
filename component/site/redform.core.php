@@ -24,6 +24,6 @@
 defined('_JEXEC') or die('Restricted access');
 
 // Register library prefix
-JLoader::registerPrefix('RedForm', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
 
-$rfcore = new RedFormCore;
+$rfcore = new RedformCore;
