@@ -56,7 +56,7 @@ class PaymentEpay extends  RDFPaymenthelper
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
 		?>
-		<h3><?php echo JText::_('Epay Payment Gateway'); ?></h3>
+		<h3><?php echo JText::_('PLG_REDFORM_PAYMENT_EPAY_FORM_TITLE'); ?></h3>
 		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
 		<p><?php echo $request->title; ?></p>
 		<input type="hidden" name="merchantnumber" value="<?php echo $this->params->get('EPAY_MERCHANTNUMBER'); ?>">
