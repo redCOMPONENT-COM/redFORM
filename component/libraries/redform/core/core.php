@@ -984,11 +984,6 @@ class RedformCore extends JObject {
 				$html .= '</fieldset>';
 			}
 
-			if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
-			{
-				$html .= $this->getGatewaySelect($form);
-			}
-
 			if (isset($this->_rwfparams['uid']))
 			{
 				$html .= '<div>'.JText::_('COM_REDFORM_JOOMLA_USER').': '. JHTML::_('list.users', 'uid', $this->_rwfparams['uid'], 1, NULL, 'name', 0 ).'</div>';
@@ -1003,6 +998,11 @@ class RedformCore extends JObject {
 		if ($redcompetition) {
 			$html .= '<input type="hidden" name="competition_task" value="'.$redcompetition->task.'" />';
 			$html .= '<input type="hidden" name="competition_id" value="'.$redcompetition->competitionid.'" />';
+		}
+
+		if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
+		{
+			$html .= $this->getGatewaySelect($form);
 		}
 
 		// Get an unique id just for the submission
