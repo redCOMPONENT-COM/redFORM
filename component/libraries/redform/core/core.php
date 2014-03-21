@@ -986,7 +986,7 @@ class RedformCore extends JObject {
 
 			if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
 			{
-				$html .= $this->getGatewaySelect();
+				$html .= $this->getGatewaySelect($form);
 			}
 
 			if (isset($this->_rwfparams['uid']))
@@ -1811,10 +1811,13 @@ class RedformCore extends JObject {
 	 *
 	 * @return bool|string
 	 */
-	protected function getGatewaySelect()
+	protected function getGatewaySelect($form)
 	{
 		$helper = new RedformCorePaymentGateway;
-		$options = $helper->getOptions();
+
+		$config = new stdclass;
+		$config->currency = $form->currency;
+		$options = $helper->getOptions($config);
 
 		if (!$options)
 		{

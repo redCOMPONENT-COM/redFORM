@@ -25,11 +25,11 @@ class RedformCorePaymentGateway {
 	/**
 	 * Return gateway options
 	 *
-	 * @param   array  $config  options to filter the gateways
+	 * @param   object  $config  options to filter the gateways
 	 *
 	 * @return array
 	 */
-	public function getOptions($config = array())
+	public function getOptions($config = null)
 	{
 		$this->config = $config;
 		$options = array();
