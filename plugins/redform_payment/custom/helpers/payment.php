@@ -81,7 +81,7 @@ class PaymentCustom extends  RDFPaymenthelper
 		$submit_key = $app->input->get('key');
 
 		$paid = $this->params->get('payment_status', 'pending') == 'paid';
-		$data = 'tid=' . uniqid();
+		$data = 'tid:' . uniqid();
 
 		if ($paid)
 		{
