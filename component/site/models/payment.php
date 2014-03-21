@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @subpackage redform
  * @since		0.9
  */
-class RedFormModelPayment extends JModel
+class RedformModelPayment extends JModel
 {
 	protected $_gateways = null;
 
@@ -250,6 +250,7 @@ class RedFormModelPayment extends JModel
 			{
 				case 'redevent':
 					$event = $this->getEventAttendee($key);
+
 					$obj->title = JText::_('COM_REDFORM_Event_registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
 					$obj->uniqueid = $event->uniqueid;
 					break;
@@ -285,9 +286,12 @@ class RedFormModelPayment extends JModel
 		              ;
 		$this->_db->setQuery($query, 0, 1);
 		$res = $this->_db->loadObject();
-		if ($res) {
-			$res->uniqueid = $res->course_code.'-'.$res->xref.'-'.$res->attendee_id;
+
+		if ($res)
+		{
+			$res->uniqueid = $res->course_code . '-' . $res->xref . '-' . $res->attendee_id;
 		}
+
 		return $res;
 	}
 
@@ -322,7 +326,7 @@ class RedFormModelPayment extends JModel
 		$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
 		$mailer->setBody(JText::sprintf($body, $form->formname, $link));
 
-		$core = new RedFormCore();
+		$core = new RedformCore();
 		$emails = $core->getSubmissionContactEmail($this->_submit_key);
 
 		if (!$emails) {

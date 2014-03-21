@@ -440,7 +440,7 @@ class RedformModelRedform extends JModel {
 	function notifysubmitter(rfanswers $answers, $form)
 	{
 		$emails = $answers->getSubmitterEmails();
-		$cond_recipients = RedFormCore::getConditionalRecipients($form, $answers);
+		$cond_recipients = RedformCore::getConditionalRecipients($form, $answers);
 
 		foreach ($emails as $submitter_email)
 		{
@@ -792,7 +792,7 @@ class RedformModelRedform extends JModel {
 		/* Inform contact person if need */
 		// form recipients
 		$recipients = $allanswers[0]->getRecipients();
-		$cond_recipients = RedFormCore::getConditionalRecipients($form, $allanswers[0]);
+		$cond_recipients = RedformCore::getConditionalRecipients($form, $allanswers[0]);
 		if ($cond_recipients)
 		{
 			foreach ($cond_recipients as $c) {
@@ -862,7 +862,7 @@ class RedformModelRedform extends JModel {
 			$mailer->addReplyTo($sender);
 
 			// set the email subject
-			$replaceHelper = new RedFormHelperTagsreplace($form, $allanswers[0]->getAnswers());
+			$replaceHelper = new RedformHelperTagsreplace($form, $allanswers[0]->getAnswers());
 
 			if (trim($form->contactpersonemailsubject))
 			{
@@ -984,7 +984,7 @@ class RedformModelRedform extends JModel {
 				$ids = $sids;
 			}
 			else {
-				JErrorRaiseWarning(0, JText::_('COM_REDFORM_Wrong_parameters_for_redformcore_getSidsAnswers'));
+				JErrorRaiseWarning(0, JText::_('COM_REDFORM_WRONG_PARAMETERS_FOR_REDFORMCORE_GETSIDSANSWERS'));
 				return false;
 			}
 		}

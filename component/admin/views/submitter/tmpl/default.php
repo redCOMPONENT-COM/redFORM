@@ -18,7 +18,7 @@
  */
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-$rfcore = new RedFormCore();
+$rfcore = new RedformCore();
 ?>
 <form action="index.php?option=com_redform&controller=submitters" method="post" name="redform"
       id="adminForm" enctype="multipart/form-data" onsubmit="return CheckSubmit(this);">

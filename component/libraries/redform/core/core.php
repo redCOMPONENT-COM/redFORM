@@ -31,7 +31,7 @@ require_once(RDF_PATH_SITE.DS.'classes'.DS.'field.php');
 require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
 require_once(RDF_PATH_SITE.DS.'helpers'.DS.'log.php');
 
-class RedFormCore extends JObject {
+class RedformCore extends JObject {
 
 	private $_form_id;
 
@@ -60,7 +60,7 @@ class RedFormCore extends JObject {
 	 *
 	 * @param   int  $form_id  the form to use - Can be an integer or string - If string, it is converted to ID automatically.
 	 *
-	 * @return 	RedFormCore		The  object.
+	 * @return 	RedformCore		The  object.
 	 *
 	 * @since 	1.5
 	 */
@@ -75,7 +75,7 @@ class RedFormCore extends JObject {
 
 		if (empty($instances[$form_id]))
 		{
-			$inst = new RedFormCore();
+			$inst = new RedformCore();
 			$inst->setFormId($form_id);
 			$instances[$form_id] = $inst;
 		}
@@ -169,14 +169,14 @@ class RedFormCore extends JObject {
 		$html .= '</form>';
 
 		// Analytics
-		if (RedFormHelperAnalytics::isEnabled())
+		if (RedformHelperAnalytics::isEnabled())
 		{
 			$event = new stdclass;
 			$event->category = 'form';
 			$event->action = 'display';
 			$event->label = "display form {$form->formname}";
 			$event->value = null;
-			RedFormHelperAnalytics::trackEvent($event);
+			RedformHelperAnalytics::trackEvent($event);
 		}
 
 		return $html;
@@ -983,6 +983,12 @@ class RedFormCore extends JObject {
 			if ($multi > 1) {
 				$html .= '</fieldset>';
 			}
+
+			if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
+			{
+				$html .= $this->getGatewaySelect();
+			}
+
 			if (isset($this->_rwfparams['uid']))
 			{
 				$html .= '<div>'.JText::_('COM_REDFORM_JOOMLA_USER').': '. JHTML::_('list.users', 'uid', $this->_rwfparams['uid'], 1, NULL, 'name', 0 ).'</div>';
@@ -1213,7 +1219,7 @@ class RedFormCore extends JObject {
 			$results = array();
 			foreach ($answers as $a)
 			{
-				$result = new formanswers();
+				$result = new RedformCoreFormAnswers;
 				$result->sid        = (isset($a->sid) ? $a->sid : null);
 				$result->submit_key = $submit_key;
 				$result->fields     = $a;
@@ -1800,11 +1806,59 @@ class RedFormCore extends JObject {
 		return ($res);
 	}
 
-}
+	/**
+	 * Return field for gateway select
+	 *
+	 * @return bool|string
+	 */
+	protected function getGatewaySelect()
+	{
+		$helper = new RedformCorePaymentGateway;
+		$options = $helper->getOptions();
 
-class formanswers
-{
-	var $sid;
-	var $submit_key;
-	var $fields;
+		if (!$options)
+		{
+			return false;
+		}
+
+		if (count($options) == 1)
+		{
+			// Just a hidden field
+			$html = '<input name="gw" type="hidden" value="' . $options[0]->value . '"/>';
+		}
+		else
+		{
+			$select = JHtml::_('select.genericlist', $options, 'gw');
+
+			$html = '<div class="fieldline">';
+			$html .= '<div class="label">' . JText::_('COM_REDFORM_SELECT_PAYMENT_METHOD') . '</div>';
+			$html .= '<div class="field">' . $select . '</div>';
+			$html .= '</div>';
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Return true if submission was paid
+	 *
+	 * @param   string  $submit_key  submission submit key
+	 *
+	 * @return mixed
+	 */
+	public function isPaidSubmitkey($submit_key)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('p.paid, p.status');
+		$query->from('#__rwf_payment AS p');
+		$query->where('p.submit_key = ' . $db->quote($submit_key));
+		$query->order('p.id DESC');
+
+		$db->setQuery($query);
+		$res = $db->loadObject();
+
+		return $res->paid;
+	}
 }
