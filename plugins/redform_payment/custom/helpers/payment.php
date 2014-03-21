@@ -54,29 +54,21 @@ class PaymentCustom extends  RDFPaymenthelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
-		$text = $this->params->get('instructions');
-		if ($return_url) {
-			echo '<p>'.JHTML::link($return_url, JText::_('Return')).'</b>';
+		$text = array($this->params->get('instructions'));
+
+		if ($return_url)
+		{
+			$text[] = '<p>' . JHTML::link($return_url, JText::_('Return')) . '</b>';
 		}
-		echo $text;
+
+		$text[] = '<form class="custom-payment" method="post" action="' . $this->getUrl('notify', $request->key) . '">';
+		$text[] = '<button type="submit">' . $this->params->get('confirmButtonLabel', 'Confirm') . '</button>';
+		$text[] = '</form>';
+
+		echo implode("\n", $text);
+
+		return true;
 	}
-
-  public function writeTransaction($submit_key, $data, $status, $paid)
-  {
-    $db = & JFactory::getDBO();
-
-    // payment was refused
-    $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
-				    . ' VALUES (NOW() '
-				    . ', '. $db->Quote($data)
-				    . ', '. $db->Quote($submit_key)
-				    . ', '. $db->Quote($status)
-				    . ', '. $db->Quote('custom')
-				    . ', '. $db->Quote($paid)
-				    . ') ';
-    $db->setQuery($query);
-    $db->query();
-  }
 
 	/**
 	 * notify
@@ -85,6 +77,21 @@ class PaymentCustom extends  RDFPaymenthelper
 	 */
 	public function notify()
 	{
-		// Not going to happen here...
+		$app = JFactory::getApplication();
+		$submit_key = $app->input->get('key');
+
+		$paid = $this->params->get('payment_status', 'pending') == 'paid';
+		$data = 'tid=' . uniqid();
+
+		if ($paid)
+		{
+			$this->writeTransaction($submit_key, $data, 'Paid', 1);
+		}
+		else
+		{
+			$this->writeTransaction($submit_key, $data, 'Pending', 0);
+		}
+
+		return $paid;
 	}
 }
