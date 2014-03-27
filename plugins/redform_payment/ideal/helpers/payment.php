@@ -111,7 +111,7 @@ class PaymentIdeal extends  RDFPaymenthelper
 	  	$this->writeTransaction($submit_key, $ideal->getInfo(), 'NOTPAID', 0);
 			return false;
 		}
-		if ($ideal->getAmount() != round($details->price*100, 2 ))
+		if ($ideal->getAmount() != round($details->price*100))
 		{
     	RedformHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PRICE MISMATCH'). ' / ' . $submit_key);
     	$this->writeTransaction($submit_key, JText::_('IDEAL NOTIFICATION PRICE MISMATCH')."\n".$ideal->getInfo(), 'FAILED', 0);
@@ -187,7 +187,7 @@ class PaymentIdeal extends  RDFPaymenthelper
 
 		<?php echo JHTML::_( 'form.token' ); ?>
 		<input type="hidden" name="partner_id" value="<?php echo $this->params->get('partner_id'); ?>">
-		<input type="hidden" name="amount" value="<?php echo round($details->price*100, 2 ); ?>">
+		<input type="hidden" name="amount" value="<?php echo round($details->price*100); ?>">
 		<input type="hidden" name="description" value="<?php echo $request->title; ?>">
 		<input type="hidden" name="task" value="process">
 		<input type="hidden" name="key" value="<?php echo $request->key; ?>">
@@ -216,7 +216,7 @@ class PaymentIdeal extends  RDFPaymenthelper
 		$bank = sprintf('%04d', JRequest::getInt('bank_id'));
 
 		$res = $ideal->createPayment($bank,
-		                      round($details->price*100, 2 ),
+		                      round($details->price*100),
 		                      $request->title,
 			$this->getUrl('notify', $submit_key),
 			$this->getUrl('notify', $submit_key));
