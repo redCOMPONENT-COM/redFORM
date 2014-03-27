@@ -59,7 +59,7 @@ class PaymentEpay extends  RDFPaymenthelper
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
 		?>
 		<h3><?php echo JText::_('PLG_REDFORM_PAYMENT_EPAY_FORM_TITLE'); ?></h3>
-		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
+		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" id="ePay">
 		<p><?php echo $request->title; ?></p>
 		<input type="hidden" name="merchantnumber" value="<?php echo $this->params->get('EPAY_MERCHANTNUMBER'); ?>">
 		<input type="hidden" name="amount" value="<?php echo round($details->price*100); ?>">

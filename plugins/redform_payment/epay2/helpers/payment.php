@@ -48,8 +48,10 @@ class PaymentEpay2 extends  RDFPaymenthelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
+		JHtml::_('behavior.mootools');
 		$document = JFactory::getDocument();
 		$document->addScript("https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js");
+		$document->addScript(JURI::root(). "plugins/redform_payment/epay2/js/epay.js");
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
@@ -57,7 +59,7 @@ class PaymentEpay2 extends  RDFPaymenthelper
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
 		?>
 		<h3><?php echo JText::_('Epay Payment Gateway'); ?></h3>
-		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
+		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" id="ePay">
 		<p><?php echo $request->title; ?></p>
 		<input type="hidden" name="merchantnumber" value="<?php echo $this->params->get('EPAY_MERCHANTNUMBER'); ?>">
 		<input type="hidden" name="amount" value="<?php echo round($details->price*100); ?>">
