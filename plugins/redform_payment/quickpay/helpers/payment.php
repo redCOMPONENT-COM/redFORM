@@ -67,7 +67,7 @@ class PaymentQuickpay extends  RDFPaymenthelper
 		  'merchant' => $this->params->get('quickpayid'),
 		  'language' => "en",
 		  'ordernumber' => $request->uniqueid,
-		  'amount' => round($details->price*100, 2 ),
+		  'amount' => round($details->price*100),
 		  'currency' => $currency,
 		  'continueurl' => $this->getUrl('processing', $submit_key),
 		  'cancelurl' => $this->getUrl('paymentcancelled', $submit_key),
@@ -198,7 +198,7 @@ class PaymentQuickpay extends  RDFPaymenthelper
     	return false;
     }
 
-    if (round($details->price*100, 2 ) != JRequest::getVar('amount')) {
+    if (round($details->price*100) != JRequest::getVar('amount')) {
     	$error = JText::sprintf('PLG_REDFORM_QUICKPAY_PRICE_MISMATCH', $submit_key);
     	RedformHelperLog::simpleLog($error);
     	$this->writeTransaction($submit_key, $error.$resp, 'FAIL', 0);

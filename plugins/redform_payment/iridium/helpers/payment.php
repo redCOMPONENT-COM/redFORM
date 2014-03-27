@@ -54,7 +54,7 @@ class PaymentIridium extends RDFPaymenthelper
 
 		$req_params = array(
 			'MerchantID' => $this->params->get('merchantid'),
-			'Amount' => round($details->price*100, 2 ),
+			'Amount' => round($details->price*100),
 			'CurrencyCode' => RedformHelperLogCurrency::getIsoNumber($currency),
 			'EchoAVSCheckResult'  => 'true',
 			'EchoCV2CheckResult'  => 'true',
@@ -258,7 +258,7 @@ class PaymentIridium extends RDFPaymenthelper
 			throw new PaymentException($error);
 	    }
 
-	    if (round($details->price*100, 2 ) != JRequest::getVar('Amount')) {
+	    if (round($details->price*100) != JRequest::getVar('Amount')) {
 	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PRICE_MISMATCH_EXPECTED_S_RECEIVED_S',
 			         $submit_key, $details->price*100, JRequest::getVar('Amount'));
 			throw new PaymentException($error);
