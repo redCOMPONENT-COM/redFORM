@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -30,11 +30,11 @@ class RedformViewForms extends JView {
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) 
+	function display($tpl = null)
 	{
 		// set the menu
-		RedformHelper::setMenu();
-		
+		RedformHelperAdmin::setMenu();
+
 		/* Get the competitions list */
 		$forms = $this->get('Forms');
 
@@ -47,15 +47,15 @@ class RedformViewForms extends JView {
 		$this->assignRef('pagination',   $pagination);
 		$this->assignRef('forms',   $forms);
 		$this->assignRef('submitters',   $submitters);
-				
+
 		/* Get the toolbar */
 		$this->toolbar();
-		
+
 		/* Display the page */
 		parent::display($tpl);
 	}
-	
-	function toolbar() 
+
+	function toolbar()
 	{
 		JToolBarHelper::title(JText::_('COM_REDFORM' ), 'redform_redform');
 		JToolBarHelper::addNew();

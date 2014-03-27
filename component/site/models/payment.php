@@ -359,21 +359,26 @@ class RedformModelPayment extends JModel
 		$mailer->IsHTML(true);
 
 		$form = $this->getForm();
+
 		if ($form->contactpersoninform)
 		{
-			if (strstr($form->contactpersonemail, ';')) {
-				$addresses = explode(";", $form->contactpersonemail);
+			$addresses = RedformHelper::extractEmails($form->contactpersonemail, true);
+
+			if (!$addresses)
+			{
+				return true;
 			}
-			else {
-				$addresses = explode(",", $form->contactpersonemail);
-			}
+
 			foreach ($addresses as $a)
 			{
-				$a = trim($a);
-				if (JMailHelper::isEmailAddress($a)) {
-					$mailer->addRecipient($a);
-				}
+				$mailer->addRecipient($a);
 			}
+
+			$core = new RedformCore();
+			$answers = $core->getAnswers($this->_submit_key);
+
+			$replaceHelper = new RedformHelperTagsreplace($form, reset($answers)->fields);
+
 			// set the email subject and body
 			$subject = (empty($form->contactpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->contactpaymentnotificationsubject);
 			$body    = (empty($form->contactpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_DEFAULT') : $form->contactpaymentnotificationbody);
@@ -382,7 +387,8 @@ class RedformModelPayment extends JModel
 			$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
 			$mailer->setBody(JText::sprintf($body, $form->formname, $link));
 
-			if ($mailer->send()) {
+			if ($mailer->send())
+			{
 				return true;
 			}
 		}

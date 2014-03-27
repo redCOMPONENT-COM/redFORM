@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -26,27 +26,27 @@ jimport( 'joomla.application.component.view' );
  * redFORM View
  */
 class RedformViewSubmitters extends JView {
-	
-  function display($tpl = null) 
+
+  function display($tpl = null)
   {
   	$params = JComponentHelper::getParams('com_redform');
-  	/* Get the forms */  
+  	/* Get the forms */
   	$forms = $this->get('FormsOptions');
-  
+
   	// set the menu
-  	RedformHelper::setMenu();
-    	
+  	RedformHelperAdmin::setMenu();
+
   	if (empty($forms)) {
   		echo '<p>'.JText::_('COM_REDFORM_SUBMITTERS_NO_FORM').'</p>';
   		return;
   	}
-  	
+
   	// we need to chose a form by default, for the database queries (form table names...)
   	$id = JRequest::getVar('form_id', false);
   	if (!$id && isset($forms[0])) {
   		JRequest::setVar('form_id', $forms[0]->value);
   	}
-        
+
   	/* Create the dropdown list */
   	$lists['form_id'] = JHTML::_('select.genericlist',  $forms, 'form_id', '', 'value', 'text', JRequest::getVar('form_id'));
 
@@ -90,7 +90,7 @@ class RedformViewSubmitters extends JView {
   	if ($this->params->get('showintegration', false)) {
   		JToolBarHelper::custom('forcedelete', 'delete', 'delete',JText::_('COM_REDFORM_Force_delete'), true);
   	}
-  	
+
   	//TODO: fix the add/modify submitters from backend
   	JToolBarHelper::editListX();
   	if (JRequest::getVar('xref', false)) JToolBarHelper::addNewX();
@@ -99,10 +99,10 @@ class RedformViewSubmitters extends JView {
 		{
 			JToolBarHelper::preferences('com_redform');
 		}
-  	
+
   	/* Display the page */
   	parent::display($tpl);
   }
-  
+
 }
 ?>

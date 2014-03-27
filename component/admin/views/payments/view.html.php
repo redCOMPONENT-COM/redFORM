@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -26,19 +26,19 @@ jimport( 'joomla.application.component.view' );
  * redFORM View
  */
 class RedformViewPayments extends JView {
-	
-  function display($tpl = null) 
+
+  function display($tpl = null)
   {
 		$mainframe = JFactory::getApplication();
 		$option = JRequest::getVar('option');
-		
+
 		$user 		= & JFactory::getUser();
-		$document	= & JFactory::getDocument();		
+		$document	= & JFactory::getDocument();
   	$params   = JComponentHelper::getParams('com_redform');
-  	
+
   	$rows       = $this->get('Data');
   	$pagination = $this->get('Pagination');
-  	
+
   	$lists = array();
 
   	/* Set variabels */
@@ -53,13 +53,13 @@ class RedformViewPayments extends JView {
   	JToolBarHelper::editListX();
   	JToolBarHelper::deleteListX();
 		JToolBarHelper::custom('back', 'back', 'back', 'back', false);
-  	  	
+
   	// set the menu
-  	RedformHelper::setMenu();
+  	RedformHelperAdmin::setMenu();
 
   	/* Display the page */
   	parent::display($tpl);
   }
-  
+
 }
 ?>
