@@ -60,7 +60,7 @@ class PaymentEpay2 extends  RDFPaymenthelper
 		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
 		<p><?php echo $request->title; ?></p>
 		<input type="hidden" name="merchantnumber" value="<?php echo $this->params->get('EPAY_MERCHANTNUMBER'); ?>">
-		<input type="hidden" name="amount" value="<?php echo round($details->price*100, 2 ); ?>">
+		<input type="hidden" name="amount" value="<?php echo round($details->price*100); ?>">
 		<input type="hidden" name="currency" value="<?php echo $currency?>">
 		<input type="hidden" name="orderid" value="<?php echo $request->uniqueid; ?>">
 		<input type="hidden" name="user_attr_1" value="<?php echo $submit_key; ?>">
@@ -70,7 +70,7 @@ class PaymentEpay2 extends  RDFPaymenthelper
 		{
 			echo '<input type="hidden" name="callbackurl" value="' . $this->getUrl('notify', $submit_key) . '">';
 		}
-		$premd5 = $currency . round($details->price*100, 2 ) . $request->uniqueid  . $this->params->get('EPAY_MD5_KEY');
+		$premd5 = $currency . round($details->price*100) . $request->uniqueid  . $this->params->get('EPAY_MD5_KEY');
 		?>
 		<input type="hidden" name="accepturl" value="<?php echo $this->getUrl('notify', $submit_key); ?>">
 		<input type="hidden" name="declineurl" value="<?php echo $this->getUrl('decline', $submit_key); ?>">
@@ -190,7 +190,7 @@ class PaymentEpay2 extends  RDFPaymenthelper
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
 
-    if (round($details->price*100, 2 ) != JRequest::getVar('amount')) {
+    if (round($details->price*100) != JRequest::getVar('amount')) {
     	RedformHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH'. ' for ' . $submit_key);
     	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION PRICE MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
     	return false;
