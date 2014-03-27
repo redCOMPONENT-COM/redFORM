@@ -48,8 +48,10 @@ class PaymentEpay extends  RDFPaymenthelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
+		JHtml::_('behavior.mootools');
 		$document = JFactory::getDocument();
 		$document->addScript("https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js");
+		$document->addScript(JURI::root(). "plugins/redform_payment/epay/js/epay.js");
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
@@ -147,6 +149,7 @@ class PaymentEpay extends  RDFPaymenthelper
 			<?php endif; ?>
 		<?php endif; ?>
 
+			<p><?php echo $this->params->get('PLG_REDFORM_EPAY_REDIRECT_TEXT', 'You will be redirected to the payment window in 5 seconds'); ?></p>
 			<input type="submit" value="<?php echo JTEXT::_('OPEN_EPAY_PAYMENT_WINDOW'); ?>">
 		</form>
 		<br>
