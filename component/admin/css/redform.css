@@ -67,7 +67,7 @@
 	color: #CFCFCF;
 }
 
-table.adminform tr.row1 label.radiobtn, 
+table.adminform tr.row1 label.radiobtn,
 table.adminform tr.row0 label.radiobtn,
 #trpublished label.radiobtn,
 table.admintable label.radiobtn
@@ -107,4 +107,8 @@ div#cond_recipients_ui input.error,
 div#cond_recipients_ui select.error {
 	border: 1px solid red;
 	background-color: pink;
+}
+
+.submitters-price {
+    white-space: nowrap;
 }

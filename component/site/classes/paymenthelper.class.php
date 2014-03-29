@@ -112,9 +112,8 @@ abstract class RDFPaymenthelper extends JObject
 			$db    = JFactory::getDBO();
 			$query = $db->getQuery(true);
 
-			$query->select('f.currency, SUM(s.price) AS price, s.id AS sid');
+			$query->select('s.currency, SUM(s.price) AS price, s.id AS sid');
 			$query->from('#__rwf_submitters AS s');
-			$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
 			$query->where('s.submit_key = ' . $db->Quote($submit_key));
 			$query->group('s.submit_key');
 

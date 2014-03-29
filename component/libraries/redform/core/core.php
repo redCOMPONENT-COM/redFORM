@@ -199,8 +199,8 @@ class RedformCore extends JObject {
 	{
 		$uri       = JURI::getInstance();
 		$user      = JFactory::getUser();
-		$document  = &JFactory::getDocument();
-		$app       = &Jfactory::getApplication();
+		$document  = JFactory::getDocument();
+		$app       = Jfactory::getApplication();
 
 
 		// was this form already submitted before (and there was an error for example, or editing)
@@ -218,29 +218,39 @@ class RedformCore extends JObject {
 		$form   = $model_redform->getForm();
 		$fields = $model_redform->getFormFields();
 
-	  // css
-    $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/tooltip.css');
-    $document->addStyleSheet(JURI::base().'components/com_redform/assets/css/redform.css');
+		// css
+		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/tooltip.css');
+		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/redform.css');
 
 		// load jquery for the form javascript
-		if (JRequest::getVar('format', 'html') == 'html') {
+		if ($app->input->get('format', 'html') == 'html')
+		{
 			JHTML::_('behavior.tooltip');
 			jimport('joomla.html.html');
 		}
 
-  	// custom tooltip
-  	$toolTipArray = array('className'=>'redformtip'.$form->classname);
-    JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
+		if (isset($options['currency']) && $options['currency'])
+		{
+			$currency = $options['currency'];
+		}
+		else
+		{
+			$currency = $form->currency;
+		}
 
-    // currency for javascript
-    $js = "var currency = \"".$form->currency."\";\n";
-    $document->addScriptDeclaration($js);
+		// custom tooltip
+		$toolTipArray = array('className' => 'redformtip' . $form->classname);
+		JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
 
- 		self::JsCheck();
-    if ($form->show_js_price)
-    {
-  		self::jsPrice();
-    }
+		// currency for javascript
+		$js = "var currency = \"" . $currency . "\";\n";
+		$document->addScriptDeclaration($js);
+
+		self::JsCheck();
+		if ($form->show_js_price)
+		{
+			self::jsPrice();
+		}
 
 		// redmember integration: pull extra fields
 		if ($user->get('id') && file_exists(JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php'))
@@ -330,10 +340,10 @@ class RedformCore extends JObject {
 			}
 
 			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price > 0) {
-				$html .= '<div class="eventprice" price="'.$options['eventdetails']->course_price.'">'.JText::_('COM_REDFORM_Registration_price').': '.$form->currency.' '.$options['eventdetails']->course_price.'</div>';
+				$html .= '<div class="eventprice" price="'.$options['eventdetails']->course_price.'">'.JText::_('COM_REDFORM_Registration_price').': '.$currency.' '.$options['eventdetails']->course_price.'</div>';
 			}
 			if ($form->activatepayment && isset($options['booking']) && $options['booking']->course_price > 0) {
-				$html .= '<div class="bookingprice" price="'.$options['booking']->course_price.'">'.JText::_('COM_REDFORM_Registration_price').': '.$form->currency.' '.$options['booking']->course_price.'</div>';
+				$html .= '<div class="bookingprice" price="'.$options['booking']->course_price.'">'.JText::_('COM_REDFORM_Registration_price').': '.$currency.' '.$options['booking']->course_price.'</div>';
 			}
 
 			if (isset($options['extrafields']) && count($options['extrafields']))
@@ -751,7 +761,7 @@ class RedformCore extends JObject {
 						// if has not null value, it is a fixed price, if not this is a user input price
 						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
 						{
-							$element .= $form->currency .' '.$values[0]->value;
+							$element .= $currency .' '.$values[0]->value;
 							$element .= '<input type="hidden" class="rfprice" id="field'.$field->id.'" name="field'.$field->id.'.'.$signup.'[price][]" value="'.$values[0]->value.'" />';
 						}
 						else // like a text input
@@ -1002,7 +1012,7 @@ class RedformCore extends JObject {
 
 		if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
 		{
-			$html .= $this->getGatewaySelect($form);
+			$html .= $this->getGatewaySelect($currency);
 		}
 
 		// Get an unique id just for the submission
@@ -1039,6 +1049,11 @@ class RedformCore extends JObject {
 		$html .= '<input type="hidden" name="form_id" value="'.$form_id.'" />';
 		$html .= '<input type="hidden" name="multi" value="'.$multi.'" />';
 		$html .= '<input type="hidden" name="' . JSession::getFormToken() . '" value="' . $uniq . '" />';
+
+		if ($currency)
+		{
+			$html .= '<input type="hidden" name="currency" value="' . $currency . '" />';
+		}
 
 		$html .= '</div>'; // div #redform
 
@@ -1795,7 +1810,7 @@ class RedformCore extends JObject {
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('s.id, s.submit_key, s.price, f.currency');
+		$query->select('s.id, s.submit_key, s.price, s.currency');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
 		$query->where('s.submit_key = ' . $db->q($submit_key));
@@ -1809,14 +1824,16 @@ class RedformCore extends JObject {
 	/**
 	 * Return field for gateway select
 	 *
+	 * @param string   $currency  currency to use as filtering
+	 *
 	 * @return bool|string
 	 */
-	protected function getGatewaySelect($form)
+	protected function getGatewaySelect($currency)
 	{
 		$helper = new RedformCorePaymentGateway;
 
 		$config = new stdclass;
-		$config->currency = $form->currency;
+		$config->currency = $currency;
 		$options = $helper->getOptions($config);
 
 		if (!$options)

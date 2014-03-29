@@ -123,22 +123,6 @@ class PaymentIdeal extends  RDFPaymenthelper
     return $paid;
   }
 
-  function _getSubmission($submit_key)
-  {
-		// get price and currency
-		$db  = &JFactory::getDBO();
-
-		$query = ' SELECT f.currency, SUM(s.price) AS price, s.id AS sid '
-		       . ' FROM #__rwf_submitters AS s '
-		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-		       . ' WHERE s.submit_key = '. $db->Quote($submit_key)
-		       . ' GROUP BY s.submit_key'
-		            ;
-		$db->setQuery($query);
-		$res = $db->loadObject();
-		return $res;
-  }
-
   function writeTransaction($submit_key, $data, $status, $paid)
   {
     $db = & JFactory::getDBO();
