@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `confirmed` tinyint(1) NOT NULL default '0',
   `confirmdate` datetime default NULL,
   `price` double NULL DEFAULT NULL,
+  `currency` varchar(3) DEFAULT NULL,
   PRIMARY KEY  (`id`),
   KEY `form_id` (`form_id`),
   KEY `event_id` (`xref`),

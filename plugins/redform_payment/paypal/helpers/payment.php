@@ -65,16 +65,7 @@ class PaymentPaypal extends  RDFPaymenthelper
 		}
 
 		// get price and currency
-		$db  = &JFactory::getDBO();
-
-		$query = ' SELECT f.currency, SUM(s.price) AS price '
-		       . ' FROM #__rwf_submitters AS s '
-		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-		       . ' WHERE s.submit_key = '. $db->Quote($request->key)
-		       . ' GROUP BY s.submit_key'
-		            ;
-		$db->setQuery($query);
-		$res = $db->loadObject();
+		$res = $this->_getSubmission($submit_key);
 
 		if ($this->params->get('paypal_sandbox', 1) == 1) {
 			$paypalurl = "https://www.sandbox.paypal.com/cgi-bin/webscr";
@@ -189,14 +180,7 @@ class PaymentPaypal extends  RDFPaymenthelper
     	// check that receiver_email is your Primary PayPal email
     	// check that payment_amount/payment_currency are correct
 
-    	$query = ' SELECT f.currency, SUM(s.price) AS price '
-    	. ' FROM #__rwf_submitters AS s '
-    	. ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-    	. ' WHERE s.submit_key = '. $db->Quote($submit_key)
-    	. ' GROUP BY s.submit_key'
-    	;
-    	$db->setQuery($query);
-    	$res = $db->loadObject();
+	    $res = $this->_getSubmission($submit_key);
 
     	if ($payment_amount != $res->price) {
     		RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG AMOUNT('. $res->price.') - ' . $submit_key);
