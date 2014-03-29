@@ -242,10 +242,6 @@ class RedformCore extends JObject {
 		$toolTipArray = array('className' => 'redformtip' . $form->classname);
 		JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
 
-		// currency for javascript
-		$js = "var currency = \"" . $currency . "\";\n";
-		$document->addScriptDeclaration($js);
-
 		self::JsCheck();
 		if ($form->show_js_price)
 		{
