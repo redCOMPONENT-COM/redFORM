@@ -130,6 +130,7 @@ JS;
 			'sku' : '{$item->sku}',        // SKU/code - required			.
 			'category' : '{$item->category}',      // Product name. Required.
 			'price' : '{$item->price}',    // Unit price.
+			'currency' : '{$item->currency}',
 			'quantity' : '{$quantity}'    // Unit quantity.
 			});
 JS;
@@ -143,7 +144,9 @@ JS;
 				'{$item->price}',       // Unit price - required
 				'{$quantity}'    // Unit quantity- required
 				]);
+			_gaq.push(['_set', 'currencyCode', '{$item->currency}']);
 JS;
+
 		$js = $params->get('ga_mode', 0) ? $js_classic : $js_ua;
 		JFactory::getDocument()->addScriptDeclaration($js);
 
@@ -274,6 +277,7 @@ JS;
 			$item->sku  = $sku ? $sku : 'submitter' . $s->id;
 			$item->category  = $category ? $category : '';
 			$item->price = $s->price;
+			$item->currency = $s->currency;
 
 			$js .= self::addItem($item);
 		}

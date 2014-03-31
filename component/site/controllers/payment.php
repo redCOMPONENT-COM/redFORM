@@ -150,6 +150,7 @@ class RedformControllerPayment extends JController
 				$item->sku = 'submitter' . $s->id;
 				$item->category = '';
 				$item->price = $s->price;
+				$item->currency = $s->currency;
 				RedformHelperAnalytics::addItem($item);
 			}
 
