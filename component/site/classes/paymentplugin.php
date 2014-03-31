@@ -71,7 +71,7 @@ abstract class RDFPaymentPlugin extends JPlugin
 
 		if (!$details || $helper->currencyIsAllowed($details->currency))
 		{
-			$label = $this->params->get('gatewaylabel') ? $this->params->get('gatewaylabel') . ' (' . $this->gateway . ')' : $this->gateway;
+			$label = $this->params->get('gatewaylabel', $this->gateway);
 			$gateways[] = array('name' => $this->gateway, 'helper' => $helper, 'label' => $label);
 		}
 
