@@ -111,7 +111,7 @@ class PaymentIdeal extends  RDFPaymenthelper
 	  	$this->writeTransaction($submit_key, $ideal->getInfo(), 'NOTPAID', 0);
 			return false;
 		}
-		if ($ideal->getAmount() != round($details->price*100, 2 ))
+		if ($ideal->getAmount() != round($details->price*100))
 		{
     	RedformHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PRICE MISMATCH'). ' / ' . $submit_key);
     	$this->writeTransaction($submit_key, JText::_('IDEAL NOTIFICATION PRICE MISMATCH')."\n".$ideal->getInfo(), 'FAILED', 0);
@@ -121,22 +121,6 @@ class PaymentIdeal extends  RDFPaymenthelper
 	  $this->writeTransaction($submit_key, $ideal->getInfo(), 'SUCCESS', 1);
 
     return $paid;
-  }
-
-  function _getSubmission($submit_key)
-  {
-		// get price and currency
-		$db  = &JFactory::getDBO();
-
-		$query = ' SELECT f.currency, SUM(s.price) AS price, s.id AS sid '
-		       . ' FROM #__rwf_submitters AS s '
-		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-		       . ' WHERE s.submit_key = '. $db->Quote($submit_key)
-		       . ' GROUP BY s.submit_key'
-		            ;
-		$db->setQuery($query);
-		$res = $db->loadObject();
-		return $res;
   }
 
   function writeTransaction($submit_key, $data, $status, $paid)
@@ -187,7 +171,7 @@ class PaymentIdeal extends  RDFPaymenthelper
 
 		<?php echo JHTML::_( 'form.token' ); ?>
 		<input type="hidden" name="partner_id" value="<?php echo $this->params->get('partner_id'); ?>">
-		<input type="hidden" name="amount" value="<?php echo round($details->price*100, 2 ); ?>">
+		<input type="hidden" name="amount" value="<?php echo round($details->price*100); ?>">
 		<input type="hidden" name="description" value="<?php echo $request->title; ?>">
 		<input type="hidden" name="task" value="process">
 		<input type="hidden" name="key" value="<?php echo $request->key; ?>">
@@ -216,7 +200,7 @@ class PaymentIdeal extends  RDFPaymenthelper
 		$bank = sprintf('%04d', JRequest::getInt('bank_id'));
 
 		$res = $ideal->createPayment($bank,
-		                      round($details->price*100, 2 ),
+		                      round($details->price*100),
 		                      $request->title,
 			$this->getUrl('notify', $submit_key),
 			$this->getUrl('notify', $submit_key));

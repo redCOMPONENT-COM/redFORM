@@ -129,7 +129,7 @@ class RedformModelPayment extends JModel
 		$query = ' SELECT price FROM #__rwf_submitters WHERE submit_key = '. $this->_db->Quote($this->_submit_key)
 		            ;
 		$this->_db->setQuery($query);
-		$res = $this->_db->loadResultArray();
+		$res = $this->_db->loadColumn();
 		$total = 0.0;
 		foreach ($res as $p) {
 			$total += $p;
@@ -143,9 +143,17 @@ class RedformModelPayment extends JModel
 	 */
 	function getCurrency()
 	{
-		$form = $this->getForm();
+		if (empty($this->_submit_key))
+		{
+			throw new LogicException(JText::_('COM_REDFORM_Missing_key'), 500);
+			return false;
+		}
 
-		return $form->currency;
+		$query = ' SELECT currency FROM #__rwf_submitters WHERE submit_key = '. $this->_db->Quote($this->_submit_key)
+		;
+		$this->_db->setQuery($query);
+
+		return $this->_db->loadResult();
 	}
 
 	/**
@@ -234,9 +242,9 @@ class RedformModelPayment extends JModel
 			$asub = current($submitters);
 			$form = $this->getForm();
 
-			if (!$form->currency)
+			if (!$asub->currency)
 			{
-				throw new Exception('Currency must be set in form properties for payment - Please contact system administrator', 500);
+				throw new Exception('Currency must be set in submission for payment - Please contact system administrator', 500);
 			}
 
 			$obj = new stdclass;
@@ -244,7 +252,7 @@ class RedformModelPayment extends JModel
 			$obj->form        = $form->formname ;
 			$obj->form_id     = $form->id;
 			$obj->key         = $key;
-			$obj->currency    = $form->currency;
+			$obj->currency    = $asub->currency;
 
 			switch ($asub->integration)
 			{

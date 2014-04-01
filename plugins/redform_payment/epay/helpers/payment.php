@@ -48,8 +48,10 @@ class PaymentEpay extends  RDFPaymenthelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
+		JHtml::_('behavior.mootools');
 		$document = JFactory::getDocument();
 		$document->addScript("https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js");
+		$document->addScript(JURI::root(). "plugins/redform_payment/epay/js/epay.js");
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
@@ -60,7 +62,7 @@ class PaymentEpay extends  RDFPaymenthelper
 		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
 		<p><?php echo $request->title; ?></p>
 		<input type="hidden" name="merchantnumber" value="<?php echo $this->params->get('EPAY_MERCHANTNUMBER'); ?>">
-		<input type="hidden" name="amount" value="<?php echo round($details->price*100, 2 ); ?>">
+		<input type="hidden" name="amount" value="<?php echo round($details->price*100); ?>">
 		<input type="hidden" name="currency" value="<?php echo $currency?>">
 		<input type="hidden" name="orderid" value="<?php echo $request->uniqueid; ?>">
 		<input type="hidden" name="user_attr_1" value="<?php echo $submit_key; ?>">
@@ -70,10 +72,12 @@ class PaymentEpay extends  RDFPaymenthelper
 		{
 			echo '<input type="hidden" name="callbackurl" value="' . $this->getUrl('notify', $submit_key) . '">';
 		}
-		$premd5 = $currency . round($details->price*100, 2 ) . $request->uniqueid  . $this->params->get('EPAY_MD5_KEY');
+		$premd5 = $currency . round($details->price*100) . $request->uniqueid  . $this->params->get('EPAY_MD5_KEY');
 		?>
 		<input type="hidden" name="accepturl" value="<?php echo $this->getUrl('notify', $submit_key); ?>">
 		<input type="hidden" name="declineurl" value="<?php echo $this->getUrl('decline', $submit_key); ?>">
+		<input type="hidden" name="ordertext" value="<?php echo $request->title; ?>">
+		<input type="hidden" name="description" value="<?php echo $request->title; ?>">
 		<input type="hidden" name="group" value="<?php echo $this->params->get('EPAY_GROUP'); ?>">
 		<input type="hidden" name="instant" value="<?php echo $this->params->get('EPAY_INSTANT_CAPTURE'); ?>">
 		<input type="hidden" name="language" value="<?php echo $this->params->get('EPAY_LANGUAGE') ?>">
@@ -147,6 +151,7 @@ class PaymentEpay extends  RDFPaymenthelper
 			<?php endif; ?>
 		<?php endif; ?>
 
+			<p><?php echo $this->params->get('PLG_REDFORM_EPAY_REDIRECT_TEXT', 'You will be redirected to the payment window in 5 seconds'); ?></p>
 			<input type="submit" value="<?php echo JTEXT::_('OPEN_EPAY_PAYMENT_WINDOW'); ?>">
 		</form>
 		<br>
@@ -190,7 +195,7 @@ class PaymentEpay extends  RDFPaymenthelper
 		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 		$currency = RedformHelperLogCurrency::getIsoNumber($details->currency);
 
-    if (round($details->price*100, 2 ) != JRequest::getVar('amount')) {
+    if (round($details->price*100) != JRequest::getVar('amount')) {
     	RedformHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH'. ' for ' . $submit_key);
     	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION PRICE MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
     	return false;
@@ -220,22 +225,6 @@ class PaymentEpay extends  RDFPaymenthelper
 	  $this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
 
     return $paid;
-  }
-
-  function _getSubmission($submit_key)
-  {
-		// get price and currency
-		$db  = &JFactory::getDBO();
-
-		$query = ' SELECT f.currency, SUM(s.price) AS price, s.id AS sid '
-		       . ' FROM #__rwf_submitters AS s '
-		       . ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-		       . ' WHERE s.submit_key = '. $db->Quote($submit_key)
-		       . ' GROUP BY s.submit_key'
-		            ;
-		$db->setQuery($query);
-		$res = $db->loadObject();
-		return $res;
   }
 
   function writeTransaction($submit_key, $data, $status, $paid)

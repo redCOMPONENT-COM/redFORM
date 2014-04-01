@@ -13,6 +13,7 @@
 	<files>
 		<filename plugin="epay">epay.php</filename>
 		<folder>helpers</folder>
+        <folder>js</folder>
 		<filename>index.html</filename>
 		<folder>language</folder>
 	</files>
@@ -39,6 +40,11 @@
 					   description="EPAY_CFG_PAYMENT_STATUS_FAILED_EXPLAIN">
 					<option value="0">epay_invalid_status_fail</option>
 				</field>
+
+                <field name="PLG_REDFORM_EPAY_REDIRECT_TEXT" type="text"
+                       label="PLG_REDFORM_EPAY_REDIRECT_TEXT_LABEL"
+                       description="PLG_REDFORM_EPAY_REDIRECT_TEXT_DESC"
+                       default="You will be redirected to the payment window in 5 seconds."/>
 
 				<field type="spacer" name="test" label="testlbl" default="EPAY_CFG_EPAY_CARDTYPES"/>
 
@@ -185,7 +191,7 @@
 
 				<field name="EPAY_WINDOW_STATE" type="list" default="1" label="EPAY_CFG_EPAY_WINDOWSTATE"
 					   description="">
-					<option value="1">EPAY_CFG_EPAY_WINDOWSTATE_1</option>
+					<!--<option value="1">EPAY_CFG_EPAY_WINDOWSTATE_1</option>-->
 					<option value="2">EPAY_CFG_EPAY_WINDOWSTATE_2</option>
 				</field>
 
