@@ -319,22 +319,31 @@ class RedformModelPayment extends JModel
 	 */
 	function _notifySubmitter()
 	{
-		$mainframe = &JFactory::getApplication();
-		$mailer = &JFactory::getMailer();
+		$mainframe = JFactory::getApplication();
+		$mailer = JFactory::getMailer();
+
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
 		$mailer->IsHTML(true);
 
 		$form = $this->getForm();
+
+		$core = new RedformCore;
+		$answers = $core->getAnswers($this->_submit_key);
+		$answersArray = get_object_vars(reset($answers)->fields);
+		$replaceHelper = new RedformHelperTagsreplace($form, $answersArray);
+
 		// set the email subject
 		$subject = (empty($form->submitterpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationsubject);
-		$body    = (empty($form->submitterpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationbody);
-		$mailer->setSubject(JText::sprintf($subject, $form->formname));
-		$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
-		$mailer->setBody(JText::sprintf($body, $form->formname, $link));
+		$subject = $replaceHelper->replace($subject);
+		$mailer->setSubject($subject);
 
-		$core = new RedformCore();
+		$body    = (empty($form->submitterpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationbody);
+		$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
+		$body = $replaceHelper->replace($body, array('[submitters]' => $link));
+		$mailer->setBody($body);
+
 		$emails = $core->getSubmissionContactEmail($this->_submit_key);
 
 		if (!$emails) {
@@ -385,7 +394,6 @@ class RedformModelPayment extends JModel
 			$core = new RedformCore;
 			$answers = $core->getAnswers($this->_submit_key);
 			$answersArray = get_object_vars(reset($answers)->fields);
-
 			$replaceHelper = new RedformHelperTagsreplace($form, $answersArray);
 
 			// set the email subject and body
