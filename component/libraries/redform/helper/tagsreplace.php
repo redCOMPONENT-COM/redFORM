@@ -40,7 +40,7 @@ class RedformHelperTagsreplace
 	 *
 	 * @return string
 	 */
-	public function replace($text)
+	public function replace($text, $extra = array())
 	{
 		if (!preg_match_all('/\[([^\]\[\s]+)(?:\s*)([^\]]*)\]/i', $text, $alltags, PREG_SET_ORDER))
 		{
@@ -59,6 +59,14 @@ class RedformHelperTagsreplace
 			}
 		}
 
+		if ($extra)
+		{
+			foreach ($extra as $tag => $replace)
+			{
+				$text = str_replace($tag, $replace, $text);
+			}
+		}
+
 		return $text;
 	}
 
@@ -71,12 +79,9 @@ class RedformHelperTagsreplace
 
 		$id = $match[1];
 
-		foreach ($this->answers as $answer)
+		if (isset($this->answers['field_' . $id]))
 		{
-			if ($answer['field_id'] == $id)
-			{
-				return $answer['value'];
-			}
+			return $this->answers['field_' . $id];
 		}
 
 		return false;

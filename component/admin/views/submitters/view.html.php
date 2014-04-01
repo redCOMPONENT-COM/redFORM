@@ -39,7 +39,7 @@ class RedformViewSubmitters extends JView
 		$forms = $this->get('FormsOptions');
 
 		// Set the menu
-		RedformHelper::setMenu();
+		RedformHelperAdmin::setMenu();
 
 		if (empty($forms))
 		{
