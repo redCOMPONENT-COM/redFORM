@@ -359,8 +359,8 @@ class RedformModelPayment extends JModel
 	 */
 	function _notifyFormContact()
 	{
-		$mainframe = &JFactory::getApplication();
-		$mailer = &JFactory::getMailer();
+		$mainframe = JFactory::getApplication();
+		$mailer = JFactory::getMailer();
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
@@ -382,18 +382,23 @@ class RedformModelPayment extends JModel
 				$mailer->addRecipient($a);
 			}
 
-			$core = new RedformCore();
+			$core = new RedformCore;
 			$answers = $core->getAnswers($this->_submit_key);
+			$answersArray = get_object_vars(reset($answers)->fields);
 
-			$replaceHelper = new RedformHelperTagsreplace($form, reset($answers)->fields);
+			$replaceHelper = new RedformHelperTagsreplace($form, $answersArray);
 
 			// set the email subject and body
 			$subject = (empty($form->contactpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->contactpaymentnotificationsubject);
+			$subject = $replaceHelper->replace($subject);
+
 			$body    = (empty($form->contactpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_DEFAULT') : $form->contactpaymentnotificationbody);
 
-			$mailer->setSubject(JText::sprintf($subject, $form->formname));
 			$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
-			$mailer->setBody(JText::sprintf($body, $form->formname, $link));
+			$body = $replaceHelper->replace($body, array('[submitters]' => $link));
+
+			$mailer->setSubject($subject);
+			$mailer->setBody($body);
 
 			if ($mailer->send())
 			{

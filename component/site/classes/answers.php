@@ -692,6 +692,23 @@ class rfanswers
 	}
 
 	/**
+	 * Get just a one dimensional array of answers indexed by 'field_<field id>'
+	 *
+	 * @return array
+	 */
+	public function getAnswersByFieldId()
+	{
+		$answers = array();
+
+		foreach ($this->_fields as $k => $field)
+		{
+			$answers['field_' . $field->id] = $this->_values[$k];
+		}
+
+		return $answers;
+	}
+
+	/**
 	 * return answer for specified field
 	 *
 	 * @param int $field_id
