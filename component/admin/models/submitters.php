@@ -183,43 +183,10 @@ class RedformModelSubmitters extends JModelList
 		}
 	}
 
-	/**
-	 * Show all orders for which an invitation to fill in
-	 * a testimonal has been sent
-	 */
-	public function getSubmittersExport()
-	{
-		$form_id = JRequest::getVar('form_id', false);
-		$xref = JRequest::getVar('xref', JRequest::getVar('filter', false));
-
-		$db = JFactory::getDBO();
-		$query = ' SELECT s.submission_date, s.price, f.formname, u.*, s.price, p.status, p.paid '
-			. ' FROM #__rwf_submitters AS s '
-			. ' INNER JOIN #__rwf_forms AS f ON s.form_id = f.id '
-			. ' INNER JOIN #__rwf_forms_' . $form_id . ' AS u ON s.answer_id = u.id '
-			. ' LEFT JOIN #__rwf_payment AS p ON p.submit_key = s.submit_key';
-		$where = array();
-		if ($form_id && $form_id > 0)
-		{
-			$where[] = "s.form_id = " . $form_id;
-		}
-		if ($xref && $xref > 0)
-		{
-			$where[] = "s.xref = " . $xref;
-		}
-		if (count($where))
-		{
-			$query .= ' WHERE ' . implode(' AND ', $where);
-		}
-		$query .= " ORDER BY s.submission_date ASC ";
-		$db->setQuery($query);
-		return $db->loadObjectList();
-	}
-
 	public function getFields()
 	{
 		$db = JFactory::getDBO();
-		$form_id = JRequest::getInt('form_id', false);
+		$form_id = $this->getState('form_id');
 
 		$query = ' SELECT f.id, f.field '
 			. '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
