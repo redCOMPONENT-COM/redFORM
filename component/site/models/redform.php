@@ -862,7 +862,7 @@ class RedformModelRedform extends JModel {
 			$mailer->addReplyTo($sender);
 
 			// set the email subject
-			$replaceHelper = new RedformHelperTagsreplace($form, $allanswers[0]->getAnswers());
+			$replaceHelper = new RedformHelperTagsreplace($form, $allanswers[0]->getAnswersByFieldId());
 
 			if (trim($form->contactpersonemailsubject))
 			{

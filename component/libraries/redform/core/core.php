@@ -1189,7 +1189,7 @@ class RedformCore extends JObject {
 	 *
 	 * @param mixed submit_key string or array int submitter ids
 	 */
-	function getAnswers($reference)
+	public function getAnswers($reference)
 	{
 		if (!$this->_answers)
 		{
@@ -1307,11 +1307,13 @@ class RedformCore extends JObject {
 				if ($field->fieldtype == 'info')
 				{
 					$val = $this->getFieldValues($field->id);
-					$field->answer = (isset($val[0]) ? $val[0]->value : '');
+					$field->value = (isset($val[0]) ? $val[0]->value : '');
+					$field->answer = $field->value;
 				}
 				else {
 					$prop = 'field_'.$field->id;
-					$field->answer = $answer->$prop;
+					$field->value = $answer->$prop;
+					$field->answer = $field->value;
 				}
 				$f[] = clone($field);
 			}
@@ -1503,25 +1505,27 @@ class RedformCore extends JObject {
 
 	function getSids($key)
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = " SELECT s.id "
 		       . " FROM #__rwf_submitters as s "
-		       . " WHERE submit_key = ".$db->quote($key)
+		       . " WHERE submit_key = " . $db->quote($key)
 		       ;
 		$db->setQuery($query);
-		return $db->loadResultArray();
+
+		return $db->loadColumn();
 	}
 
 	function getSidSubmitKey($sid)
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = " SELECT s.submit_key "
 		       . " FROM #__rwf_submitters as s "
 		       . " WHERE id = ".$db->quote($sid)
 		       ;
 		$db->setQuery($query);
+
 		return $db->loadResult();
 	}
 

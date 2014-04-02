@@ -25,9 +25,10 @@ class tagsreplaceTest extends JoomlaTestCase
 		$formdata = new stdclass;
 		$formdata->formname = 'test form';
 
-		$answers = array();
-		$answers[] = array('field' => 'name', 'field_id' => 2, 'value' => 'julien', 'type' => 'name');
-		$answers[] = array('field' => 'email', 'field_id' => 3, 'value' => 'julien@redweb.dk', 'type' => 'email');
+		$answers = array(
+			'field_2' => 'julien',
+			'field_3' => 'julien@redweb.dk'
+		);
 
 		return array(
 			'nothing' => array($formdata, $answers, 'a first test', 'a first test'),

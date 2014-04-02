@@ -43,7 +43,6 @@ function submitbutton(pressbutton) {
 			<?php $csvlink = 'index.php?option=com_redform&controller=submitters&task=export'
 			               . '&form_id=' . (empty($this->form) ? 0 : $this->form->id)
 			               . (!empty($this->integration) ? '&integration='.$this->integration : '')
-			               . ($this->xref ? '&xref='.$this->xref : '')
 			               . '&format=raw';
 			               ?>
 			<?php echo JHTML::link($csvlink, JText::_('COM_REDFORM_CSV_EXPORT')); ?>
@@ -51,22 +50,23 @@ function submitbutton(pressbutton) {
 	</div>
 	<br clear="all" />
 	<div id="formname"><?php echo (empty($this->form) ? JText::_('COM_REDFORM_All') : $this->form->formname); ?>
-	<?php if ($this->coursetitle): ?><br /><?php echo $this->coursetitle; ?><?php endif; ?>
 	</div>
-  <?php if (!$this->xref): // if xref is set, prevent selecting another form ?>
 	<table>
       <tr>
          <td align="left" width="100%">
-            <?php echo JText::_('COM_REDFORM_Filter'); ?>:
-			<?php echo $this->lists['form_id']; ?>
+            <div class="form_filter">
+	            <?php echo JText::_('COM_REDFORM_Filter'); ?>:
+	            <?php echo $this->lists['form_id']; ?>
             <button onclick="this.form.submit();"><?php echo JText::_('COM_REDFORM_Go'); ?></button>
-         </td>
+            </div>
+
+	         <div class="date_filters">
+		         <div class="date_from"><?php echo JText::_('COM_REDFORM_FILTER_FROM_LABEL'); ?> <?php echo $this->filter_from; ?></div>
+		         <div class="date_to"><?php echo JText::_('COM_REDFORM_FILTER_TO_LABEL'); ?> <?php echo $this->filter_to; ?></div>
+	         </div>
+	      </td>
       </tr>
     </table>
- <?php else: ?>
- <input type="hidden" name="form_id" value="<?php echo $this->form->id; ?>">
- <input type="hidden" name="xref" value="<?php echo $this->xref; ?>">
- <?php endif; ?>
 <table class="adminlist">
 	<!-- Headers -->
 	<thead><tr>

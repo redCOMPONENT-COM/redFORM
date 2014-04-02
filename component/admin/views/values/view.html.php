@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -25,13 +25,13 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewValues extends JView 
+class RedformViewValues extends JView
 {
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) 
+	function display($tpl = null)
 	{
 		/* Get the pagination */
 		$pagination = $this->get('Pagination');
@@ -53,10 +53,10 @@ class RedformViewValues extends JView
 		$this->assignRef('values', $values);
 		$this->assignRef('fields', $fields);
 		$this->assignRef('lists', $lists);
-		
+
     // set the menu
-    RedformHelper::setMenu();
-				
+    RedformHelperAdmin::setMenu();
+
 		/* Get the toolbar */
 		JToolBarHelper::title(JText::_('COM_REDFORM_Values' ), 'redform_values');
 		if ($fields > 0) {
@@ -67,11 +67,11 @@ class RedformViewValues extends JView
 			JToolBarHelper::editListX();
 			JToolBarHelper::addNew();
 		}
-		
+
 		/* Display the page */
 		parent::display($tpl);
 	}
-		
+
 	function toolbar() {
 		switch (JRequest::getCmd('task')) {
 			case 'edit':
