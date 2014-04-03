@@ -14,6 +14,7 @@
     <filename plugin="pagseguro">pagseguro.php</filename>
     <folder>helpers</folder>
     <filename>index.html</filename>
+    <folder>js</folder>
     <folder>language</folder>
     <folder>PagSeguroLibrary</folder>
   </files>

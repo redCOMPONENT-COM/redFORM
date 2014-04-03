@@ -102,7 +102,7 @@ class PaymentPagseguro extends RDFPaymenthelper
 
 		if ($emails)
 		{
-			$contact = reset($emails);
+			$contact = reset(reset($emails));
 			$paymentRequest->setSenderEmail($contact['email']);
 
 			if (isset($contact['fullname']))
@@ -118,12 +118,16 @@ class PaymentPagseguro extends RDFPaymenthelper
 		}
 		catch (PagSeguroServiceException $e)
 		{
-			throw new PaymentException($e->getMessage());
+			throw new PaymentException('Pagseguro error: ' . $e->getMessage());
 		}
+
+		JHtml::_('behavior.mootools');
+		$document = JFactory::getDocument();
+		$document->addScript(JURI::root(). "plugins/redform_payment/pagseguro/js/pagseguro.js");
 
 		?>
 		<h3><?php echo JText::_('PLG_REDFORM_PAGSEGURO_FORM_TITLE'); ?></h3>
-		<?php echo JHtml::link($url, JText::_('PLG_REDFORM_IRIDIUM_FORM_OPEN_PAYMENT_WINDOW')); ?>
+		<?php echo JHtml::link($url, JText::_('PLG_REDFORM_IRIDIUM_FORM_OPEN_PAYMENT_WINDOW'), array('id' => 'pagsegurolink')); ?>
 		<?php
 
 		return true;
