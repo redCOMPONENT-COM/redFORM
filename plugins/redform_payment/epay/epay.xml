@@ -44,7 +44,7 @@
                 <field name="PLG_REDFORM_EPAY_REDIRECT_TEXT" type="text"
                        label="PLG_REDFORM_EPAY_REDIRECT_TEXT_LABEL"
                        description="PLG_REDFORM_EPAY_REDIRECT_TEXT_DESC"
-                       default="You will be redirected to the payment window in 5 seconds."/>
+                       default="You should be redirected to the payment window now. If not, click the button below."/>
 
 				<field type="spacer" name="test" label="testlbl" default="EPAY_CFG_EPAY_CARDTYPES"/>
 
