@@ -45,7 +45,12 @@ class RedformRfieldTextfield extends RedformRfield
 		$properties['type'] = 'text';
 		$properties['name'] = $this->getFormElementName();
 		$properties['id'] = $this->getFormElementId();
-		$properties['class'] = trim($this->getParam('class'));
+
+		if ($class = trim($this->getParam('class')))
+		{
+			$properties['class'] = $class;
+		}
+
 		$properties['value'] = $this->getValue();
 
 		$properties['size'] =  $this->getParam('size', 25);

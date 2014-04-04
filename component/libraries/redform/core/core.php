@@ -511,6 +511,9 @@ class RedformCore extends JObject {
 					case 'hidden':
 					case 'radio':
 					case 'checkbox':
+					case 'select':
+					case 'multiselect':
+					case 'recipients':
 						$rfield = RedformRfieldFactory::getField($field->id);
 						$rfield->setFormCount($signup);
 						$rfield->setUser($user);
@@ -629,78 +632,6 @@ class RedformCore extends JObject {
 							$element .= '"';
 							$element .= '/>';
 						}
-						$element .= "\n";
-						break;
-
-					case 'select':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<select id=\"field".$field->id."\" name=\"field".$field->id.'.'.$signup."[select][]\" class=\"".$field->parameters->get('class','').($field->validate ?" required" : '')."\"";
-						$element .= ">";
-						foreach ($values as $id => $value)
-						{
-							$element .= "<option value=\"".$value->value."\"";
-							if ($answers)
-							{
-								if ($answers[($signup-1)]->fields->$cleanfield == $value->value) {
-									$element .= ' selected="selected"';
-								}
-							}
-							else if ($user->get($field->redmember_field) == $value->value) {
-								$element .= ' selected="selected"';
-							}
-							else if ($field->default)
-							{
-								$def_vals = explode("\n", $field->default);
-								foreach ($def_vals as $val)
-								{
-									if ($value->value == trim($val)) {
-										$element .= ' selected="selected"';
-										break;
-									}
-								}
-							}
-							$element .= ' price="'.$value->price.'" >'.$value->label."</option>";
-						}
-						$element .= '</select>';
-						$element .= "\n";
-						break;
-
-					case 'multiselect':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= '<select id="field'.$field->id.'" name="field'.$field->id.'.'.$signup.'[multiselect][]"'
-						          . ' multiple="multiple" size="'.$field->parameters->get('size',5).'"'
-						          . ' class="'.trim($field->parameters->get('class','').($field->validate ?" required" : '')).'"';
-						$element .= '>';
-						foreach ($values as $id => $value)
-						{
-							$element .= "<option value=\"".$value->value."\"";
-							if ($answers)
-							{
-								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
-									$element .= ' selected="selected"';
-								}
-							}
-							else if ($user->get($field->redmember_field))
-							{
-								$fvalues = explode(',', $user->get($field->redmember_field));
-								if (in_array($value->value, $fvalues)) {
-									$element .= ' selected="selected"';
-								}
-							}
-							else if ($field->default)
-							{
-								$def_vals = explode("\n", $field->default);
-								foreach ($def_vals as $val)
-								{
-									if ($value->value == trim($val)) {
-										$element .= ' selected="selected"';
-										break;
-									}
-								}
-							}
-							$element .= ' price="'.$value->price.'" />'.$value->label."</option>";
-						}
-						$element .= '</select>';
 						$element .= "\n";
 						break;
 

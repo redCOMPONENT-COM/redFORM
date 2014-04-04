@@ -22,6 +22,14 @@ class RedformRfieldHidden extends RedformRfieldTextfield
 
 	protected $hidden = true;
 
+	protected function getInputProperties()
+	{
+		$properties = parent::getInputProperties();
+		$properties['type'] = 'hidden';
+
+		return $properties;
+	}
+
 	/**
 	 * Try to get a default value from integrations
 	 *
