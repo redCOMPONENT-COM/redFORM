@@ -53,8 +53,8 @@ class RedformRfieldTextfield extends RedformRfield
 
 		$properties['value'] = $this->getValue();
 
-		$properties['size'] =  $this->getParam('size', 25);
-		$properties['maxlength'] =  $this->getParam('maxlength', 250);
+		$properties['size'] = $this->getParam('size', 25);
+		$properties['maxlength'] = $this->getParam('maxlength', 250);
 
 		if ($this->load()->readonly && !$app->isAdmin())
 		{
@@ -63,7 +63,7 @@ class RedformRfieldTextfield extends RedformRfield
 
 		if ($this->load()->validate)
 		{
-			if ($properties['class'])
+			if (isset($properties['class']))
 			{
 				$properties['class'] .= ' required';
 			}

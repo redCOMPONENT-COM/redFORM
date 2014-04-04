@@ -384,79 +384,11 @@ class RedformCore extends JObject {
 
 				switch ($field->fieldtype)
 				{
-					case 'email':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<div class=\"emailfields\">";
-						$element .= "<div class=\"emailfield\">";
-						$element .= "<input class=\"".$field->parameters->get('class','')." ";
-						if ($field->validate) $element .= "required";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' size="'.$field->parameters->get('size', 25).'"';
-						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-
-						if ($placeholder = $field->parameters->get('placeholder'))
-						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
-						}
-
-						$element .= ' value="';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else if ($signup == 1 && $user->email) {
-							$element .= $user->email;
-						}
-						else {
-							$element .= $field->default;
-						}
-
-						$element .= "\" />\n";
-						$element .= "</div>\n";
-
-						/* check if there is a mailing list integration */
-						if (strlen($field->listnames) > 0)
-						{
-							$listnames = explode(";", $field->listnames);
-							if (count($listnames))
-							{
-								if ($field->parameters->get('force_mailing_list', 0))
-								{
-									// auto subscribe => use hidden field
-									foreach ($listnames AS $listkey => $listname)
-									{
-										$element .= '<input type="hidden" name="field'.$field->id.'.'.$signup.'[email][listnames][]" value="'.$listname.'" />';
-									}
-								}
-								else
-								{
-									$element .= "<div class=\"newsletterfields\">";
-									$element .= '<div id="signuptitle">'.JText::_('COM_REDFORM_SIGN_UP_MAILINGLIST').'</div>';
-									$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
-									foreach ($listnames AS $listkey => $listname)
-									{
-										$element .= "<div class=\"field_".$listkey."\">";
-										$element .= "<input type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
-									}
-									$element .= "</div>\n";
-									$element .= "</div>\n";
-								}
-							}
-						}
-						$element .= "</div>\n";
-						break;
-
 					case 'textfield':
 					case 'username':
 					case 'fullname':
 					case 'hidden':
+					case 'email':
 					case 'textarea':
 					case 'wysiwyg':
 					case 'radio':
@@ -550,41 +482,6 @@ class RedformCore extends JObject {
 							               $field->parameters->get('dateformat','%Y-%m-%d'),
 							               $attribs);
 						}
-						break;
-
-					case 'price1':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						// if has not null value, it is a fixed price, if not this is a user input price
-						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
-						{
-							$element .= $currency .' '.$values[0]->value;
-							$element .= '<input type="hidden" class="rfprice" id="field'.$field->id.'" name="field'.$field->id.'.'.$signup.'[price][]" value="'.$values[0]->value.'" />';
-						}
-						else // like a text input
-						{
-							$element .= '<input class="rfprice '. $field->parameters->get('class','') .($field->validate ? " required" : '') .'"';
-							$element .= ' type="text" name="field'.$field->id.'.'.$signup.'[price][]"';
-							$element .= ' id="field'.$field->id.'" ';
-							$element .= ' size="'.$field->parameters->get('size', 25).'"';
-							$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-							$element .= ' value="';
-							if ($answers)
-							{
-								if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-									$element .= $answers[($signup-1)]->fields->$cleanfield;
-								}
-							}
-							else if ($user->get($field->redmember_field)) {
-								$element .= $user->get($field->redmember_field);
-							}
-							else {
-								$element .= $field->default;
-							}
-							$element .= '"';
-							$element .= '/>';
-						}
-						$element .= "\n";
 						break;
 				}
 
