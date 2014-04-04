@@ -20,12 +20,58 @@ class RedformRfieldTextfield extends RedformRfield
 {
 	protected $type = 'textfield';
 
+	/**
+	 * Returns field Input
+	 *
+	 * @return string
+	 */
+	public function getInput()
+	{
+		$properties = $this->getInputProperties();
+
+		return sprintf('<input %s/>', $this->propertiesToString($properties));
+	}
+
+	/**
+	 * Return input properties array
+	 *
+	 * @return array
+	 */
 	protected function getInputProperties()
 	{
-		$properties = parent::getInputProperties();
+		$app = JFactory::getApplication();
+
+		$properties = array();
+		$properties['type'] = 'text';
+		$properties['name'] = $this->getFormElementName();
+		$properties['id'] = $this->getFormElementId();
+		$properties['class'] = trim($this->getParam('class'));
+		$properties['value'] = $this->getValue();
 
 		$properties['size'] =  $this->getParam('size', 25);
 		$properties['maxlength'] =  $this->getParam('maxlength', 250);
+
+		if ($this->load()->readonly && !$app->isAdmin())
+		{
+			$properties['readonly'] = 'readonly';
+		}
+
+		if ($this->load()->validate)
+		{
+			if ($properties['class'])
+			{
+				$properties['class'] .= ' required';
+			}
+			else
+			{
+				$properties['class'] = ' required';
+			}
+		}
+
+		if ($placeholder = $this->getParam('placeholder'))
+		{
+			$properties['placeholder'] = addslashes($placeholder);
+		}
 
 		return $properties;
 	}

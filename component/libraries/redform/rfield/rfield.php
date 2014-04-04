@@ -37,6 +37,13 @@ abstract class RedformRfield extends JObject
 	protected $data = null;
 
 	/**
+	 * Field options
+	 *
+	 * @var array
+	 */
+	protected $options;
+
+	/**
 	 * Field value
 	 *
 	 * @var null
@@ -132,10 +139,7 @@ abstract class RedformRfield extends JObject
 	 *
 	 * @return string
 	 */
-	public function getInput()
-	{
-		return sprintf('<input %s/>', $this->getInputPropertiesString());
-	}
+	abstract public function getInput();
 
 	/**
 	 * Returns field value
@@ -278,64 +282,6 @@ abstract class RedformRfield extends JObject
 	}
 
 	/**
-	 * Get input properties as string
-	 *
-	 * @return string
-	 */
-	protected function getInputPropertiesString()
-	{
-		$res = array();
-
-		foreach ($this->getInputProperties() as $property => $value)
-		{
-			$res[] = $property . '="' . $value . '"';
-		}
-
-		return implode(" ", $res);
-	}
-
-	/**
-	 * Return input properties array
-	 *
-	 * @return array
-	 */
-	protected function getInputProperties()
-	{
-		$app = JFactory::getApplication();
-
-		$properties = array();
-		$properties['type'] = 'text';
-		$properties['name'] = $this->getFormElementName();
-		$properties['id'] = $this->getFormElementId();
-		$properties['class'] = trim($this->getParam('class'));
-		$properties['value'] = $this->getValue();
-
-		if ($this->load()->readonly && !$app->isAdmin())
-		{
-			$properties['readonly'] = 'readonly';
-		}
-
-		if ($this->load()->validate)
-		{
-			if ($properties['class'])
-			{
-				$properties['class'] .= ' required';
-			}
-			else
-			{
-				$properties['class'] = ' required';
-			}
-		}
-
-		if ($placeholder = $this->getParam('placeholder'))
-		{
-			$properties['placeholder'] = addslashes($placeholder);
-		}
-
-		return $properties;
-	}
-
-	/**
 	 * Load field data from database
 	 *
 	 * @return mixed|null
@@ -363,5 +309,57 @@ abstract class RedformRfield extends JObject
 		}
 
 		return $this->data;
+	}
+
+	/**
+	 * Return field options (for select, radio, etc...)
+	 *
+	 * @return mixed
+	 */
+	protected function getOptions()
+	{
+		if (!$this->options)
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select('id, value, label, field_id, price');
+			$query->from('#__rwf_values');
+			$query->where('published = 1');
+			$query->where('field_id = ' . $this->id);
+			$query->order('ordering');
+
+			$db->setQuery($query);
+			$this->options = $db->loadObjectList();
+		}
+
+		return $this->options;
+	}
+
+	/**
+	 * Return element properties string
+	 *
+	 * @param   array  $properties  array of property => value
+	 *
+	 * @return string
+	 */
+	protected function propertiesToString($properties)
+	{
+		$strings = array_map(array($this, 'mapProperties'), array_keys($properties), $properties);
+
+		return implode(' ', $strings);
+	}
+
+	/**
+	 * Call back function
+	 *
+	 * @param   string  $property  the property
+	 * @param   string  $value     the value
+	 *
+	 * @return string
+	 */
+	protected function mapProperties($property, $value)
+	{
+		return $property . '="' . $value . '"';
 	}
 }

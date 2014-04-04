@@ -384,46 +384,6 @@ class RedformCore extends JObject {
 
 				switch ($field->fieldtype)
 				{
-					case 'radio':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= '<div class="fieldoptions">';
-						foreach ($values as $id => $value)
-						{
-							$element .= '<div class="fieldoption">';
-							$element .= "<input class=\"".$field->parameters->get('class','')." ";
-							if ($field->validate) $element .= "required";
-							$element .= "\"";
-							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-							if ($answers)
-							{
-								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
-									$element .= ' checked="checked"';
-								}
-							}
-							else if ($user->get($field->redmember_field))
-							{
-								$fvalues = explode(',', $user->get($field->redmember_field));
-								if (in_array($value->value, $fvalues)) {
-									$element .= ' checked="checked"';
-								}
-							}
-							else if ($field->default)
-							{
-								$def_vals = explode("\n", $field->default);
-								foreach ($def_vals as $val)
-								{
-									if ($value->value == trim($val)) {
-										$element .= ' checked="checked"';
-										break;
-									}
-								}
-							}
-							$element .= ' type="radio" name="field'.$field->id.'.'.$signup.'[radio][]" value="'.$value->id.'" price="'.$value->price.'" />'.$value->label."\n";
-							$element .= "</div>\n";
-						}
-						$element .= "</div>\n";
-						break;
-
 					case 'textarea':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						$element .= '<textarea class="'.$field->parameters->get('class','');
@@ -549,6 +509,8 @@ class RedformCore extends JObject {
 					case 'username':
 					case 'fullname':
 					case 'hidden':
+					case 'radio':
+					case 'checkbox':
 						$rfield = RedformRfieldFactory::getField($field->id);
 						$rfield->setFormCount($signup);
 						$rfield->setUser($user);
@@ -668,46 +630,6 @@ class RedformCore extends JObject {
 							$element .= '/>';
 						}
 						$element .= "\n";
-						break;
-
-					case 'checkbox':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= '<div class="fieldoptions">';
-						foreach ($values as $id => $value)
-						{
-							$element .= '<div class="fieldoption">';
-							$element .= "<input class=\"".$field->parameters->get('class','')." ";
-							if ($field->validate) $element .= "required";
-							$element .= "\"";
-							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-							if ($answers && isset($answers[($signup-1)]->fields->$cleanfield))
-							{
-								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
-									$element .= ' checked="checked"';
-								}
-							}
-							else if ($user->get($field->redmember_field))
-							{
-								$fvalues = explode(',', $user->get($field->redmember_field));
-								if (in_array($value->value, $fvalues)) {
-									$element .= ' checked="checked"';
-								}
-							}
-							else if ($field->default)
-							{
-								$def_vals = explode("\n", $field->default);
-								foreach ($def_vals as $val)
-								{
-									if ($value->value == trim($val)) {
-										$element .= ' checked="checked"';
-										break;
-									}
-								}
-							}
-							$element .= ' type="checkbox" name="field'.$field->id.'.'.$signup.'[checkbox][]" value="'.$value->value.'" price="'.$value->price.'" /> '.$value->label."\n";
-							$element .= "</div>\n";
-						}
-						$element .= "</div>\n";
 						break;
 
 					case 'select':
