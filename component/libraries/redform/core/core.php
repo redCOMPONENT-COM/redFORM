@@ -27,7 +27,6 @@ jimport('joomla.mail.helper');
 
 require_once(JPATH_SITE . '/components/com_redform/redform.defines.php');
 
-require_once(RDF_PATH_SITE.DS.'classes'.DS.'field.php');
 require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
 require_once(RDF_PATH_SITE.DS.'helpers'.DS.'log.php');
 
@@ -546,149 +545,33 @@ class RedformCore extends JObject {
 						$element .= "</div>\n";
 						break;
 
-					case 'fullname':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<input class=\"".$field->parameters->get('class','');
-						if ($field->validate) $element .= " required";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' size="'.$field->parameters->get('size', 25).'"';
-						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-
-						if ($placeholder = $field->parameters->get('placeholder'))
-						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
-						}
-
-						$element .= ' value="';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else if ($signup == 1 && $user->name) {
-							$element .= $user->name;
-						}
-						else {
-							$element .= $field->default;
-						}
-
-						$element .= "\" />\n";
-						break;
-
-					case 'username':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<input class=\"".$field->parameters->get('class','');
-						if ($field->validate) $element .= " required";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' size="'.$field->parameters->get('size', 25).'"';
-						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-
-						if ($placeholder = $field->parameters->get('placeholder'))
-						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
-						}
-
-						$element .= ' value="';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else if ($signup == 1 && $user->username) {
-							$element .= $user->username;
-						}
-						else {
-							$element .= $field->default;
-						}
-
-						$element .= "\" />\n";
-						break;
-
 					case 'textfield':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<input class=\"".$field->parameters->get('class','');
-						if ($field->validate) $element .= " required";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' size="'.$field->parameters->get('size', 25).'"';
-						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-
-						if ($placeholder = $field->parameters->get('placeholder'))
-						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
-						}
-
-						$element .= ' value="';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else {
-							$element .= $field->default;
-						}
-
-						$element .= "\" />\n";
-						break;
-
+					case 'username':
+					case 'fullname':
 					case 'hidden':
-						$label = '';
-						$element .= "<input class=\"".$field->parameters->get('class','');
-						if ($field->validate) $element .= " required";
-						$element .= "\" type=\"hidden\" name=\"field".$field->id.'.'.$signup."[hidden][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' value="';
+						$rfield = RedformRfieldFactory::getField($field->id);
+						$rfield->setFormCount($signup);
+						$rfield->setUser($user);
+
+						$value = null;
+
 						if ($answers)
 						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else
-						{
-							switch ($field->parameters->get('valuemethod', 'constant'))
+							if (isset($answers[($signup-1)]->fields->$cleanfield))
 							{
-								case 'jrequest':
-									$varname= $field->parameters->get('jrequestvar');
-									if (!$varname) {
-										$app->enqueueMessage(JText::_('COM_REDFORM_ERROR_HIDDEN_FIELD_VARNAME_NOT_DEFINED'), 'warning');
-									}
-									else {
-										$element .= JRequest::getVar($varname);
-									}
-									break;
-
-								case 'phpeval':
-									$code= $field->parameters->get('phpeval');
-									$element .= eval($code);
-									break;
-
-								case 'constant':
-								default:
-									$element .= $field->default;
+								$value = $answers[($signup-1)]->fields->$cleanfield;
 							}
 						}
-						$element .= "\" />\n";
+
+						$rfield->setValue($value, true);
+
+						if (!$rfield->isHidden())
+						{
+							$label = '<div id="field_'.$field->id.'" class="label">' . $rfield->getLabel() . '</div>';
+						}
+
+						$element .= $rfield->getInput();
+						$element .= "\n";
 						break;
 
 					case 'date':
