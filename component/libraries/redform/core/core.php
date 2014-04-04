@@ -464,6 +464,8 @@ class RedformCore extends JObject {
 					case 'select':
 					case 'multiselect':
 					case 'recipients':
+					case 'fileupload':
+					case 'price':
 						$rfield = RedformRfieldFactory::getField($field->id);
 						$rfield->setFormCount($signup);
 						$rfield->setUser($user);
@@ -550,7 +552,7 @@ class RedformCore extends JObject {
 						}
 						break;
 
-					case 'price':
+					case 'price1':
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 						// if has not null value, it is a fixed price, if not this is a user input price
 						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
@@ -581,26 +583,6 @@ class RedformCore extends JObject {
 							}
 							$element .= '"';
 							$element .= '/>';
-						}
-						$element .= "\n";
-						break;
-
-					case 'fileupload':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						if ($submitter_id == 0)
-						{
-							$attr = array('type="file"');
-							$attr[] = 'id="field' . $field->id .'"';
-							$attr[] = 'name="field' . $field->id . '.' . $signup . '[fileupload][]"';
-
-							$class = array('fileupload' . $field->parameters->get('class',''));
-							if ($field->validate)
-							{
-								$class[] = 'required';
-							}
-							$attr[] = 'class="' . implode(' ', $class) .'"';
-
-							$element .= '<input ' . implode(' ', $attr) . '/>';
 						}
 						$element .= "\n";
 						break;

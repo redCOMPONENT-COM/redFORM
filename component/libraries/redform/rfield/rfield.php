@@ -295,7 +295,8 @@ abstract class RedformRfield extends JObject
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, f.published');
+			$query->select('f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly');
+			$query->select('f.form_id, f.default, f.published');
 			$query->select('CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header');
 			$query->from('#__rwf_fields AS f');
 			$query->where('f.id = ' . $this->id);
