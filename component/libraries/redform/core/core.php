@@ -352,141 +352,53 @@ class RedformCore extends JObject {
 				}
 			}
 
-			foreach ($fields as $key => $field)
+			foreach ($fields as $field)
 			{
-				if (!($app->isAdmin() || $field->published)) { // only display unpublished fields in backend form
+				if (!($app->isAdmin() || $field->published))
+				{
+					// only display unpublished fields in backend form
 					continue;
 				}
 
-				if ($field->fieldtype != 'hidden') {
+				// Init rfield
+				$rfield = RedformRfieldFactory::getField($field->id);
+				$rfield->setFormCount($signup);
+				$rfield->setUser($user);
+				$cleanfield = 'field_'. $field->id;
+
+				// Set value if editing
+				if ($answers && isset($answers[($signup-1)]->fields->$cleanfield))
+				{
+					$value = $answers[($signup-1)]->fields->$cleanfield;
+					$rfield->setValue($value, true);
+				}
+
+				if (!$rfield->isHidden())
+				{
 					$html .= '<div id="fieldline_'.$field->id.'" class="fieldline type-'.$field->fieldtype.$field->parameters->get('class','').'">';
 				}
 
-				$values = $model_redform->getFormValues($field->id);
-
-				if ($field->fieldtype == 'info')
+				if (!$rfield->isHidden())
 				{
-					if ($values && count($values))
-					{
-						$html .= '<div class="infofield">' . $values[0]->value . '</div>';
-					}
-					$html .= '</div>';
-					continue;
-				}
-
-				$cleanfield = 'field_'. $field->id;
-				if ($field->fieldtype == 'hidden') {
-					$element = "";
-				}
-				else {
 					$element = "<div class=\"field\">";
 				}
-
-				switch ($field->fieldtype)
+				else
 				{
-					case 'textfield':
-					case 'username':
-					case 'fullname':
-					case 'hidden':
-					case 'email':
-					case 'textarea':
-					case 'wysiwyg':
-					case 'radio':
-					case 'checkbox':
-					case 'select':
-					case 'multiselect':
-					case 'recipients':
-					case 'fileupload':
-					case 'price':
-					case 'date':
-						$rfield = RedformRfieldFactory::getField($field->id);
-						$rfield->setFormCount($signup);
-						$rfield->setUser($user);
-
-						$value = null;
-
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield))
-							{
-								$value = $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-
-						$rfield->setValue($value, true);
-
-						if (!$rfield->isHidden())
-						{
-							$label = '<div id="field_'.$field->id.'" class="label">' . $rfield->getLabel() . '</div>';
-						}
-
-						$element .= $rfield->getInput();
-						$element .= "\n";
-						break;
-
-					case 'date1':
-						JHTML::_('behavior.calendar');
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield))
-							{
-								$val = $answers[($signup-1)]->fields->$cleanfield;
-							}
-							else
-							{
-								$val = null;
-							}
-						}
-						elseif ($user->get($field->redmember_field))
-						{
-							// redmember uses unix timestamp
-							$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), $user->get($field->redmember_field));
-						}
-						else
-						{
-							if ($field->default && strtotime($field->default))
-							{
-								$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($field->default));
-							}
-							else
-							{
-								$val = null;
-							}
-						}
-
-						if ($val && !strtotime($val))
-						{
-							$element .= '<span>(invalid: ' . $val .')</span>';
-							$val = null;
-						}
-
-						$class = $field->parameters->get('class','');
-						if ($field->validate) $class .= " required";
-
-						if ($field->readonly && !$app->isAdmin())
-						{
-							$element .= $val;
-							$element .= '<input class="'.$class.'"';
-							$element .= " type=\"hidden\" name=\"field".$field->id.'.'.$signup."[text][]\"";
-							$element .= ' id="field'.$field->id.'" ';
-							$element .= ' size="'.$field->parameters->get('size', strlen($val)+1).'"';
-							$element .= ' maxlength="'.$field->parameters->get('maxlength', 25).'"';
-							$element .= ' readonly="readonly"';
-							$element .= ' value="'.$val."\" />\n";
-						}
-						else
-						{
-							$attribs = array('class' => $class);
-							$element .= JHTML::_('calendar', $val, 'field'.$field->id.'.'.$signup.'[date]', 'field'.$field->id,
-							               $field->parameters->get('dateformat','%Y-%m-%d'),
-							               $attribs);
-						}
-						break;
+					$element = '';
 				}
 
-				if ($field->fieldtype == 'hidden')
+				if (!$rfield->isHidden() && $rfield->displayLabel())
+				{
+					$label = '<div id="field_'.$field->id.'" class="label">' . $rfield->getLabel() . '</div>';
+				}
+				else
+				{
+					$label = '';
+				}
+
+				$element .= $rfield->getInput();
+
+				if ($rfield->isHidden())
 				{
 					$html .= $element;
 				}
@@ -495,19 +407,25 @@ class RedformCore extends JObject {
 					$html .= $label.$element;
 					$html .= '</div>'; // fieldtype div
 
-					if ($field->validate || strlen($field->tooltip))
+					if ($rfield->isRequired() || strlen($field->tooltip))
 					{
 						$html .= '<div class="fieldinfo">';
-						if ($field->validate) {
+
+						if ($rfield->isRequired())
+						{
 							$img = JHTML::image(JURI::root().'components/com_redform/assets/images/warning.png', JText::_('COM_REDFORM_Required'));
 							$html .= ' <span class="editlinktip hasTipField" title="'.JText::_('COM_REDFORM_Required').'" style="text-decoration: none; color: #333;">'. $img .'</span>';
 						}
-						if (strlen($field->tooltip) > 0) {
+
+						if (strlen($field->tooltip) > 0)
+						{
 							$img = JHTML::image(JURI::root().'components/com_redform/assets/images/info.png', JText::_('COM_REDFORM_ToolTip'));
 							$html .= ' <span class="editlinktip hasTipField" title="'.htmlspecialchars($field->field).'::'.htmlspecialchars($field->tooltip).'" style="text-decoration: none; color: #333;">'. $img .'</span>';
 						}
+
 						$html .= '</div>';
 					}
+
 					$html .= '</div>'; // fieldline_ div
 				}
 

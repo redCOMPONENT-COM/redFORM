@@ -79,6 +79,13 @@ abstract class RedformRfield extends JObject
 	protected $hidden = false;
 
 	/**
+	 * Should the label be shown
+	 *
+	 * @var bool
+	 */
+	protected $showLabel = true;
+
+	/**
 	 * Get field xml for configuration
 	 *
 	 * @return string
@@ -202,6 +209,16 @@ abstract class RedformRfield extends JObject
 	public function isRequired()
 	{
 		return $this->load()->validate;
+	}
+
+	/**
+	 * Show the label ?
+	 *
+	 * @return bool
+	 */
+	public function displayLabel()
+	{
+		return $this->showLabel;
 	}
 
 	/**
