@@ -21,6 +21,18 @@ class RedformRfieldMultiselect extends RedformRfieldSelect
 	protected $type = 'multiselect';
 
 	/**
+	 * Get postfixed field name for form
+	 *
+	 * @return string
+	 */
+	protected function getFormElementName()
+	{
+		$name = parent::getFormElementName() . '[]';
+
+		return $name;
+	}
+
+	/**
 	 * Return input properties array
 	 *
 	 * @return array
@@ -29,7 +41,6 @@ class RedformRfieldMultiselect extends RedformRfieldSelect
 	{
 		$properties = parent::getSelectProperties();
 		$properties['multiple'] = 'multiple';
-		$properties['size'] = $this->getParam('size', 5);
 
 		return $properties;
 	}

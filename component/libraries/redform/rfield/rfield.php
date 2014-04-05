@@ -86,6 +86,51 @@ abstract class RedformRfield extends JObject
 	protected $showLabel = true;
 
 	/**
+	 * Magic method
+	 *
+	 * @param   string  $name  property name
+	 *
+	 * @return string
+	 *
+	 * @throws Exception
+	 */
+	public function __get($name)
+	{
+		switch ($name)
+		{
+			case 'id':
+				return $this->getId();
+
+			case 'fieldtype':
+				return $this->type;
+
+			case 'default':
+				return $this->getParam('default');
+
+			case 'value':
+				return $this->getValue();
+
+			case 'published':
+				return $this->load()->published;
+
+			case 'tooltip':
+				return $this->load()->tooltip;
+
+			case 'name':
+			case 'field':
+				return $this->load()->field;
+		}
+
+		$trace = debug_backtrace();
+		throw new Exception(
+			'Undefined property via __get(): ' . $name .
+			' in ' . $trace[0]['file'] .
+			' on line ' . $trace[0]['line'],
+			500);
+		return null;
+	}
+
+	/**
 	 * Get field xml for configuration
 	 *
 	 * @return string
@@ -159,6 +204,23 @@ abstract class RedformRfield extends JObject
 	}
 
 	/**
+	 * Returns field value ready to be saved in database
+	 *
+	 * @return string
+	 */
+	public function getDatabaseValue()
+	{
+		if (is_array($this->value))
+		{
+			return implode('~~~', $this->value);
+		}
+		else
+		{
+			return $this->value;
+		}
+	}
+
+	/**
 	 * Set field value, try to look up if null
 	 *
 	 * @param   string  $value   value
@@ -174,6 +236,20 @@ abstract class RedformRfield extends JObject
 		{
 			$this->lookupDefaultValue();
 		}
+
+		return $this->value;
+	}
+
+	/**
+	 * Set field value from post data
+	 *
+	 * @param   string  $value  value
+	 *
+	 * @return string new value
+	 */
+	public function setValueFromPost($value)
+	{
+		$this->value = $value;
 
 		return $this->value;
 	}
@@ -219,6 +295,16 @@ abstract class RedformRfield extends JObject
 	public function displayLabel()
 	{
 		return $this->showLabel;
+	}
+
+	/**
+	 * Return price, possibly depending on current field value
+	 *
+	 * @return float
+	 */
+	public function getPrice()
+	{
+		return 0;
 	}
 
 	/**
@@ -275,7 +361,7 @@ abstract class RedformRfield extends JObject
 	 *
 	 * @return string
 	 */
-	protected function getParam($name, $default = '')
+	public function getParam($name, $default = '')
 	{
 		return $this->getParameters()->get($name, $default);
 	}

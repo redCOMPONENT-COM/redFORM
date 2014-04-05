@@ -17,513 +17,299 @@
 
 class rfanswers
 {
-	public $_test = 0;
+	private $answerId = 0;
 
-	public $_answer_id = 0;
+	private $fields = null;
 
-	public $_fields = null;
+	private $formId = 0;
 
-	public $_values = null;
+	private $submitter_email = array();
 
-	public $_types = null;
+	private $listnames = array();
 
-	public $_form_id = 0;
+	private $recipients = array();
 
-	public $_submitter_email = array();
+	private $basePrice = 0;
 
-	public $_fullname = null;
+	private $isnew = true;
 
-	public $_username = null;
+	private $sid = 0;
 
-	public $_listnames = array();
-
-	public $_recipients = array();
-
-	private $_price = 0;
-
-	private $_answers = null;
-
-	private $_isnew = true;
-
-	private $_sid = 0;
-
-	private $_db;
-
+	/**
+	 * Constructor
+	 */
 	public function __construct()
 	{
-		$this->_db = & JFactory::getDBO();
+		$this->fields = array();
 	}
 
+	/**
+	 * Set form id
+	 *
+	 * @param   int  $id  form id
+	 *
+	 * @return void
+	 */
 	public function setFormId($id)
 	{
-		$this->_form_id = (int) $id;
+		$this->formId = (int) $id;
 	}
 
-
+	/**
+	 * Set answer id
+	 *
+	 * @param   int  $id  id
+	 *
+	 * @return void
+	 */
 	public function setAnswerId($id)
 	{
-		$this->_answer_id = (int) $id;
+		$this->answerId = (int) $id;
 	}
 
-	public function getAnswerId($id)
+	/**
+	 * Get answer id
+	 *
+	 * @return int
+	 */
+	public function getAnswerId()
 	{
-		return $this->_answer_id;
+		return $this->answerId;
 	}
 
+	/**
+	 * Get posted newsletters names
+	 *
+	 * @return mixed
+	 */
 	public function getListNames()
 	{
-		return $this->_listnames;
+		if (!$this->listnames)
+		{
+			$this->listnames = array();
+
+			foreach ($this->fields as $field)
+			{
+				if ($field->fieldtype == 'email')
+				{
+					$this->listnames[$field->id] = array('email' => $field->value, 'lists' => $field->getSelectedNewsletters());
+				}
+			}
+		}
+
+		return $this->listnames;
 	}
 
+	/**
+	 * Return emails associated to submission for notifications
+	 *
+	 * @return array
+	 */
 	public function getSubmitterEmails()
 	{
-		return $this->_submitter_email;
+		if (!$this->submitter_email)
+		{
+			$this->submitter_email = array();
+
+			foreach ($this->fields as $field)
+			{
+				if ($field->fieldtype == 'email' && $field->getParam('notify', 1))
+				{
+					$this->submitter_email[] = $field->value;
+				}
+			}
+		}
+
+		return $this->submitter_email;
 	}
 
+	/**
+	 * Return set recipients
+	 *
+	 * @return array
+	 */
 	public function getRecipients()
 	{
-		return $this->_recipients;
+		if (!$this->recipients)
+		{
+			foreach ($this->fields as $field)
+			{
+				if ($field->fieldtype == 'recipients' && count($field->value))
+				{
+					$this->recipients = array_merge($this->recipients, $field->value);
+				}
+			}
+		}
+
+		return $this->recipients;
 	}
 
+	/**
+	 * Return fullname value, if field type was set in form
+	 *
+	 * @return mixed
+	 */
 	public function getFullname()
 	{
-		return $this->_fullname;
+		foreach ($this->fields as $field)
+		{
+			if ($field->fieldtype == 'fullname')
+			{
+				return $field->value;
+			}
+		}
+
+		return false;
 	}
 
+	/**
+	 * Return username value, if field type was set in form
+	 *
+	 * @return mixed
+	 */
 	public function getUsername()
 	{
-		return $this->_username;
+		foreach ($this->fields as $field)
+		{
+			if ($field->fieldtype == 'username')
+			{
+				return $field->value;
+			}
+		}
+
+		return false;
 	}
 
+	/**
+	 * Set an initial price, before fields prices
+	 *
+	 * @param   float  $initial  initial price
+	 *
+	 * @return void
+	 */
 	public function initPrice($initial)
 	{
-		$this->_price = $initial;
+		$this->basePrice = $initial;
 	}
 
+	/**
+	 * Return total price
+	 *
+	 * @return float
+	 */
 	public function getPrice()
 	{
-		return $this->_price;
+		return $this->getSubmissionPrice();
 	}
 
+	/**
+	 * Is it a new submission
+	 *
+	 * @return bool
+	 */
 	public function isNew()
 	{
-		return $this->_isnew;
+		return $this->isnew;
 	}
 
+	/**
+	 * Set as new submission
+	 *
+	 * @param   bool  $val  true if new
+	 *
+	 * @return void
+	 */
 	public function setNew($val)
 	{
-		$this->_isnew = $val ? true : false;
+		$this->isnew = $val ? true : false;
 	}
 
+	/**
+	 * Add post answer for field
+	 *
+	 * @param   RedformRfield  $field        field
+	 * @param   mixed          $postedvalue  posted data
+	 *
+	 * @return mixed hte value
+	 */
 	public function addPostAnswer($field, $postedvalue)
 	{
-		$db = JFactory::getDBO();
+		$value = $field->setValueFromPost($postedvalue);
+		$this->fields[] = $field;
 
-		$answer = '';
-
-		switch ($field->fieldtype)
-		{
-			case 'textarea':
-				$answer = is_array($postedvalue) ? $postedvalue['textarea'] : $postedvalue;
-				break;
-
-			case 'date':
-				// Get date
-				$answer = is_array($postedvalue) ? $postedvalue['date'] : $postedvalue;
-				if ($answer && !strtotime($answer))
-				{
-					throw new Exception(JText::_('COM_REDFORM_INVALID_DATE_FORMAT'));
-				}
-				break;
-
-			case 'wysiwyg':
-				$answer = is_array($postedvalue) ? $postedvalue['wysiwyg'] : $postedvalue;
-				break;
-
-			case 'fullname':
-				$answer = is_array($postedvalue) ? $postedvalue['fullname'][0] : $postedvalue;
-				$this->_fullname = $answer;
-				break;
-
-			case 'username':
-				$answer = is_array($postedvalue) ? $postedvalue['username'][0] : $postedvalue;
-				$this->_username = $answer;
-				break;
-
-			case 'email':
-				// TODO: store submitter email and listnames
-				if (is_array($postedvalue))
-				{
-					$answer = $postedvalue['email'][0];
-
-					if (array_key_exists('listnames', $postedvalue['email']))
-					{
-						$this->_listnames[$field->id] = array('email' => $answer, 'lists' => $postedvalue['email']['listnames']);
-					}
-				}
-				else
-				{
-					$answer = $postedvalue;
-				}
-
-				if ($field->parameters->get('notify', 1))
-				{
-					$this->_submitter_email[] = $answer;
-				}
-
-				break;
-
-			case 'textfield':
-				$answer = is_array($postedvalue) ? $postedvalue['text'][0] : $postedvalue;
-				break;
-
-			case 'hidden':
-				$answer = is_array($postedvalue) ? $postedvalue['hidden'][0] : $postedvalue;
-				break;
-
-			case 'select':
-				$answer = is_array($postedvalue) ? $postedvalue['select'][0] : $postedvalue;
-
-				foreach ($field->values as $v)
-				{
-					if ($v->value == $answer)
-					{
-						$this->_price += $v->price;
-					}
-				}
-				break;
-
-			case 'checkbox':
-				$options = is_array($postedvalue) ? $postedvalue['checkbox'] : $postedvalue;
-				$submittervalues = array();
-
-				foreach ($options as $key => $submitteranswer)
-				{
-					$submittervalues[] = $submitteranswer;
-
-					foreach ($field->values as $v)
-					{
-						if ($v->value == $submitteranswer)
-						{
-							$this->_price += $v->price;
-						}
-					}
-				}
-
-				$answer = implode("~~~", $submittervalues);
-				break;
-
-			case 'multiselect':
-				$options = is_array($postedvalue) ? $postedvalue['multiselect'] : $postedvalue;
-				$submittervalues = array();
-
-				foreach ($options as $key => $submitteranswer)
-				{
-					$submittervalues[] = $submitteranswer;
-
-					foreach ($field->values as $v)
-					{
-						if ($v->value == $submitteranswer)
-						{
-							$this->_price += $v->price;
-						}
-					}
-				}
-
-				$answer = implode("~~~", $submittervalues);
-				break;
-
-			case 'recipients':
-				$options = is_array($postedvalue) ? $postedvalue['recipients'] : $postedvalue;
-				$submittervalues = array();
-
-				foreach ($options as $key => $submitteranswer)
-				{
-					$submittervalues[] = $submitteranswer;
-					$this->_recipients[] = $submitteranswer;
-				}
-
-				$answer = implode("~~~", $submittervalues);
-				break;
-
-			case 'fileupload':
-				if (in_array('fileupload', array_keys($postedvalue['name'])))
-				{
-					$answer = $this->_fileupload($postedvalue);
-				}
-				break;
-
-			case 'radio':
-				$value = is_array($postedvalue) ? $postedvalue['radio'][0] : $postedvalue;
-
-				/* Get the real value from the database */
-				$q = "SELECT value, price
-                FROM #__rwf_values
-                WHERE id = " . $value;
-				$db->setQuery($q);
-				$res = $db->loadObject();
-
-				$answer = $res->value;
-				$this->_price += $res->price;
-				break;
-
-			case 'price':
-				if (count($field->values))
-				{
-					$answer = $field->values[0]->value;
-				}
-				else
-				{
-					$answer = is_array($postedvalue) ? $postedvalue['price'][0] : $postedvalue;
-				}
-				$this->_price += $answer;
-				break;
-		}
-		$this->_fields[] = $field;
-		$this->_values[] = $answer;
-		$this->_types[]  = $field->fieldtype;
-
-		return $answer;
-	}
-
-	/**
-	 * manages file post field
-	 *
-	 * @param array $field
-	 *
-	 * @return string answer
-	 */
-	protected function _fileupload($field)
-	{
-		/* Check if the folder exists */
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
-
-		$params = JComponentHelper::getParams('com_redform');
-
-		$db = & JFactory::getDBO();
-		$answer = '';
-
-		/* Get the file path for file upload */
-		$query = ' SELECT f.formname '
-			. ' FROM #__rwf_forms AS f '
-			. ' WHERE f.id = ' . $db->Quote($this->_form_id);
-		$db->setQuery($query);
-		$formname = $db->loadResult();
-
-		$filepath = JPATH_SITE . DS . $params->get('upload_path', 'images/redform');
-		$folder = JFile::makeSafe(str_replace(' ', '', $formname));
-
-		$fullpath = $filepath . DS . $folder;
-		if (!JFolder::exists($fullpath))
-		{
-			if (!JFolder::create($fullpath))
-			{
-				JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_CREATE_FOLDER') . ': ' . $fullpath);
-				$status = false;
-				return false;
-			}
-		}
-		clearstatcache();
-
-		$src_file = $field['tmp_name']['fileupload'][0];
-		// make sure we have a unique name for file
-		$dest_filename = uniqid() . '_' . basename($field['name']['fileupload'][0]);
-
-		if (JFolder::exists($fullpath))
-		{
-			/* Start processing uploaded file */
-			if (is_uploaded_file($src_file))
-			{
-				if (JFolder::exists($fullpath) && is_writable($fullpath))
-				{
-					if (move_uploaded_file($src_file, $fullpath . DS . $dest_filename))
-					{
-						$answer = $fullpath . DS . $dest_filename;
-					}
-					else
-					{
-						JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_UPLOAD_FILE'));
-						return false;
-					}
-				}
-				else
-				{
-					JError::raiseWarning(0, JText::_('COM_REDFORM_FOLDER_DOES_NOT_EXIST'));
-					return false;
-				}
-			}
-		}
-		else
-		{
-			JError::raiseWarning(0, JText::_('COM_REDFORM_FOLDER_DOES_NOT_EXIST'));
-			return false;
-		}
-		return $answer;
-	}
-
-	/**
-	 * save the answer
-	 *
-	 * @param array $params: submit_key, xref, etc...
-	 *
-	 * @return true on success
-	 */
-	public function save($params = array())
-	{
-		$mainframe = Jfactory::getApplication();
-		$db = & JFactory::getDBO();
-
-		if (empty($this->_form_id))
-		{
-			JError::raiseError(0, JText::_('COM_REDFORM_ERROR_NO_FORM_ID'));
-		}
-
-		if (!count($this->_fields))
-		{
-			return true;
-		}
-
-		$values = array();
-		$fields = array();
-		foreach ($this->_fields as $v)
-		{
-			$fields[] = $db->nameQuote('field_' . $v->id);
-		}
-		foreach ($this->_values as $v)
-		{
-			$values[] = $db->Quote($v);
-		}
-
-		// we need to make sure all table fields are updated: typically, if a field is of type checkbox, if not checked it won't be posted, hence we have to set the value to empty
-		$q = " SHOW COLUMNS FROM " . $db->nameQuote('#__rwf_forms_' . $this->_form_id);
-		$db->setQuery($q);
-		$columns = $db->loadResultArray();
-		foreach ($columns as $col)
-		{
-			if (strstr($col, 'field_') && !in_array($db->nameQuote($col), $fields))
-			{
-				$fields[] = $db->nameQuote($col);
-				$values[] = $db->Quote('');
-			}
-		}
-
-		if ($this->_answer_id) // answers were already recorder, update them
-		{
-			$q = "UPDATE " . $db->nameQuote('#__rwf_forms_' . $this->_form_id);
-			$set = array();
-			foreach ($fields as $ukey => $col)
-			{
-				$set[] = $col . " = " . $values[$ukey];
-			}
-			$q .= ' SET ' . implode(', ', $set);
-			$q .= " WHERE ID = " . $this->_answer_id;
-			$db->setQuery($q);
-
-			if (!$db->query())
-			{
-				JError::raiseError(0, JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'));
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_update_answers') . ' ' . $db->getErrorMsg());
-			}
-			$this->setPrice();
-		}
-		else
-		{
-			/* Construct the query */
-			$q = "INSERT INTO " . $db->nameQuote('#__rwf_forms_' . $this->_form_id) . "
-            (" . implode(', ', $fields) . ")
-            VALUES (" . implode(', ', $values) . ")";
-			$db->setQuery($q);
-
-			if (!$db->query())
-			{
-				/* We cannot save the answers, do not continue */
-				if (stristr($db->getErrorMsg(), 'duplicate entry'))
-				{
-					JRequest::setVar('ALREADY_ENTERED', true);
-					$mainframe->enqueueMessage(JText::_('COM_REDFORM_ALREADY_ENTERED'), 'error');
-				}
-				else $mainframe->enqueueMessage(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getErrorMsg(), 'error');
-				/* We cannot save the answers, do not continue */
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getErrorMsg());
-				return false;
-			}
-			$this->_answer_id = $db->insertid();
-			$res = $this->updateSubmitter($params);
-			$this->setPrice();
-			return $res;
-		}
-		return true;
+		return $value;
 	}
 
 	/**
 	 * new save function for new lib
 	 *
-	 * @param $params
+	 * @param   array  $params  parameters (sid)
 	 *
 	 * @return int submitter_id
+	 *
+	 * @throws Exception
 	 */
-	function savedata($params = array())
+	public function savedata($params = array())
 	{
 		$mainframe = Jfactory::getApplication();
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 
-
-		if (empty($this->_form_id))
+		if (empty($this->formId))
 		{
 			throw new Exception(JText::_('COM_REDFORM_ERROR_NO_FORM_ID'), 404);
 		}
 
-		if (!count($this->_fields))
+		if (!count($this->fields))
 		{
 			throw new Exception('No field to save !');
 		}
 
 		if (isset($params['sid']))
 		{
-			$this->_isnew = intval($params['sid']) == 0;
+			$this->isnew = intval($params['sid']) == 0;
 			$sid = intval($params['sid']);
 		}
 		else
 		{
-			$this->_isnew = true;
+			$this->isnew = true;
 			$sid = 0;
 		}
 
 		$values = array();
 		$fields = array();
-		foreach ($this->_fields as $v)
+
+		foreach ($this->fields as $v)
 		{
-			$fields[] = $db->nameQuote('field_' . $v->id);
-		}
-		foreach ($this->_values as $v)
-		{
-			$values[] = $db->Quote($v);
+			$fields[] = $db->quoteName('field_' . $v->id);
+			$values[] = $db->quote($v->getDatabaseValue());
 		}
 
-		// we need to make sure all table fields are updated: typically, if a field is of type checkbox, if not checked it won't be posted, hence we have to set the value to empty
-		$q = " SHOW COLUMNS FROM " . $db->nameQuote('#__rwf_forms_' . $this->_form_id);
+		// We need to make sure all table fields are updated: typically, if a field is of type checkbox, if not checked it won't be posted, hence we have to set the value to empty
+		$q = " SHOW COLUMNS FROM " . $db->quoteName('#__rwf_forms_' . $this->formId);
 		$db->setQuery($q);
-		$columns = $db->loadResultArray();
+		$columns = $db->loadColumn();
+
 		foreach ($columns as $col)
 		{
-			if (strstr($col, 'field_') && !in_array($db->nameQuote($col), $fields))
+			if (strstr($col, 'field_') && !in_array($db->quoteName($col), $fields))
 			{
-				$fields[] = $db->nameQuote($col);
-				$values[] = $db->Quote('');
+				$fields[] = $db->quoteName($col);
+				$values[] = $db->quote('');
 			}
 		}
 
-		if ($sid) // answers were already recorded, update them
+		if ($sid) // Answers were already recorded, update them
 		{
 			$submitter = $this->getSubmitter($sid);
 
-			$q = "UPDATE " . $db->nameQuote('#__rwf_forms_' . $this->_form_id);
+			$q = "UPDATE " . $db->quoteName('#__rwf_forms_' . $this->formId);
 			$set = array();
+
 			foreach ($fields as $ukey => $col)
 			{
 				$set[] = $col . " = " . $values[$ukey];
 			}
+
 			$q .= ' SET ' . implode(', ', $set);
 			$q .= " WHERE ID = " . $submitter->answer_id;
 			$db->setQuery($q);
@@ -537,7 +323,7 @@ class rfanswers
 		else
 		{
 			/* Construct the query */
-			$q = "INSERT INTO " . $db->nameQuote('#__rwf_forms_' . $this->_form_id) . "
+			$q = "INSERT INTO " . $db->quoteName('#__rwf_forms_' . $this->formId) . "
             (" . implode(', ', $fields) . ")
             VALUES (" . implode(', ', $values) . ")";
 			$db->setQuery($q);
@@ -545,98 +331,83 @@ class rfanswers
 			if (!$db->query())
 			{
 				/* We cannot save the answers, do not continue */
-				if (stristr($db->getErrorMsg(), 'duplicate entry'))
+				if (stristr($db->getError(), 'duplicate entry'))
 				{
-					JRequest::setVar('ALREADY_ENTERED', true);
+					$mainframe->input->set('ALREADY_ENTERED', true);
 					$mainframe->enqueueMessage(JText::_('COM_REDFORM_ALREADY_ENTERED'), 'error');
 				}
 				else
 				{
-					$mainframe->enqueueMessage(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getErrorMsg(), 'error');
+					$mainframe->enqueueMessage(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getError(), 'error');
 				}
+
 				/* We cannot save the answers, do not continue */
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getErrorMsg());
+				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getError());
+
 				return false;
 			}
-			$this->_answer_id = $db->insertid();
+
+			$this->answerId = $db->insertid();
 			$sid = $this->updateSubmitter($params);
 		}
-		$this->_sid = $sid;
+
+		$this->sid = $sid;
 		$this->setPrice();
+
 		return $sid;
 	}
 
-	function updateSubmitter($params = array())
+	/**
+	 * Update submitters table
+	 *
+	 * @param   array  $params  parameters
+	 *
+	 * @return bool
+	 */
+	protected function updateSubmitter($params = array())
 	{
-		$db = & JFactory::getDBO();
-		$mainframe = & JFactory::getApplication();
+		$db = JFactory::getDBO();
+		$mainframe = JFactory::getApplication();
 
-		// prepare data for submitter record
-		$submitterdata['answer_id'] = $this->_answer_id;
+		// Prepare data for submitter record
+		$submitterdata['answer_id'] = $this->answerId;
+
 		if (empty($params['submit_key']))
 		{
 			JError::raiseError(0, JText::_('COM_REDFORM_ERROR_SUBMIT_KEY_MISSING'));
 		}
+
 		$submitterdata = array_merge($submitterdata, $params);
-		$submitterdata['form_id'] = $this->_form_id;
+		$submitterdata['form_id'] = $this->formId;
 
 		/* Store the submitter details */
-		$row = & JTable::getInstance('Submitters', 'RedformTable');
-
-		if (isset($params['xref']) && (int) $params['xref'])
-		{
-			$submitterdata['xref'] = $params['xref'];
-			/* Add some settings */
-			/* Get activate setting for event */
-			$q = "SELECT activate
-              FROM #__redevent_events AS e
-              LEFT JOIN #__redevent_event_venue_xref AS x
-              ON e.id = x.eventid
-              WHERE x.id = " . $params['xref'];
-			$db->setQuery($q);
-			$activate = $db->loadResult();
-
-			/* Check if the user needs to confirm */
-			if ($activate)
-			{
-				$submitterdata['confirmed'] = 0;
-			}
-			else
-			{
-				/* Automatically confirm user */
-				$submitterdata['confirmed'] = 1;
-				$submitterdata['confirmdate'] = gmdate('Y-m-d H:i:s');
-			}
-		}
-		else
-		{
-			/* Automatically confirm user */
-			$submitterdata['confirmed'] = 1;
-			$submitterdata['confirmdate'] = gmdate('Y-m-d H:i:s');
-		}
+		$row = JTable::getInstance('Submitters', 'RedformTable');
 
 		if (!$row->bind($submitterdata))
 		{
 			$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_binding_the_submitter_data'), 'error');
 			RedformHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_binding_the_submitter_data') . ': ' . $row->getError());
+
 			return false;
 		}
+
 		/* Set the date */
 		$row->submission_date = date('Y-m-d H:i:s', time());
-		$row->submitternewsletter = ($this->_listnames && count($this->_listnames)) ? 1 : 0;
+		$row->submitternewsletter = ($this->listnames && count($this->listnames)) ? 1 : 0;
 
 		/* pre-save checks */
 		if (!$row->check())
 		{
 			$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data'), 'error');
 			RedformHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data') . ': ' . $row->getError());
+
 			return false;
 		}
 
 		/* save the changes */
 		if (!$row->store())
 		{
-			if (stristr($db->getErrorMsg(), 'Duplicate entry'))
+			if (stristr($db->getError(), 'Duplicate entry'))
 			{
 				$mainframe->enqueueMessage(JText::_('COM_REDFORM_You_have_already_entered_this_form'), 'error');
 				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_You_have_already_entered_this_form'));
@@ -646,48 +417,81 @@ class rfanswers
 				$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data'), 'error');
 				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data') . ': ' . $row->getError());
 			}
+
 			return false;
 		}
+
 		return $row->id;
 	}
 
-	// set price corresponding to answers in submitters table
-	function setPrice()
+	/**
+	 * Write price corresponding to answers in submitters table
+	 *
+	 * @return bool|mixed
+	 */
+	protected function setPrice()
 	{
-		if (!$this->_sid)
+		if (!$this->sid)
 		{
 			return false;
 		}
-		$params = & JComponentHelper::getParams('com_redform');
-		if ($params->get('allow_negative_total', 1))
+
+		$params = JComponentHelper::getParams('com_redform');
+
+		$price = $this->getSubmissionPrice();
+
+		if (!$params->get('allow_negative_total', 1))
 		{
-			$price = $this->_price;
+			$price = max(array(0, $price));
 		}
-		else
-		{
-			$price = max(array(0, $this->_price));
-		}
-		$db = & JFactory::getDBO();
+
+		$db = JFactory::getDBO();
 		$query = ' UPDATE #__rwf_submitters SET price = ' . $db->Quote($price)
-			. ' WHERE id = ' . $db->Quote($this->_sid);
+			. ' WHERE id = ' . $db->Quote($this->sid);
 		$db->setQuery($query);
 		$res = $db->query();
+
 		if (!$res)
 		{
-			RedformHelperLog::simpleLog($db->getErrorMsg());
+			RedformHelperLog::simpleLog($db->getError());
+
 			return false;
 		}
 
 		return $res;
 	}
 
-	function getAnswers()
+	/**
+	 * Calculate price from base price and fields values
+	 *
+	 * @return float
+	 */
+	protected function getSubmissionPrice()
+	{
+		$price = $this->basePrice;
+
+		foreach ($this->fields as $field)
+		{
+			$price += $field->getPrice();
+		}
+
+		return $price;
+	}
+
+	/**
+	 * Return shortened answers form
+	 *
+	 * @return array
+	 */
+	public function getAnswers()
 	{
 		$answers = array();
-		foreach ($this->_fields as $k => $field)
+
+		foreach ($this->fields as $field)
 		{
-			$answers[] = array('field' => $field->field, 'field_id' => $field->id, 'value' => $this->_values[$k], 'type' => $this->_types[$k]);
+			$answers[] = array('field' => $field->field, 'field_id' => $field->id, 'value' => $field->getValue(), 'type' => $field->fieldtype);
 		}
+
 		return $answers;
 	}
 
@@ -700,9 +504,9 @@ class rfanswers
 	{
 		$answers = array();
 
-		foreach ($this->_fields as $k => $field)
+		foreach ($this->fields as $field)
 		{
-			$answers['field_' . $field->id] = $this->_values[$k];
+			$answers['field_' . $field->id] = $field->getValue();
 		}
 
 		return $answers;
@@ -711,17 +515,19 @@ class rfanswers
 	/**
 	 * return answer for specified field
 	 *
-	 * @param int $field_id
+	 * @param   int  $field_id  field id
 	 *
 	 * @return string
 	 */
 	public function getFieldAnswer($field_id)
 	{
 		$answers = $this->getAnswers();
+
 		if (!$answers)
 		{
 			return false;
 		}
+
 		foreach ($answers as $a)
 		{
 			if ($field_id == $a['field_id'])
@@ -729,83 +535,119 @@ class rfanswers
 				return $a;
 			}
 		}
+
 		return false;
 	}
 
 	/**
 	 * loads answers of specified submitter
 	 *
-	 * @param int $submitter_id
+	 * @param   int  $submitter_id  submitter id
 	 *
 	 * @return true on success
 	 */
 	function getSubmitterAnswers($submitter_id)
 	{
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDbo();
 		$sid = (int) $submitter_id;
 
-		// get submission details first, to get the fieds
-		$query = ' SELECT s.* FROM #__rwf_submitters AS s WHERE s.id = ' . $db->quote($sid);
-		$db->setQuery($query);
-		$submitter = $db->loadObject();
+		// Get submission details first, to get the fieds
+		$submitter = $this->getSubmitter($sid);
 
 		if (!$submitter)
 		{
 			Jerror::raisewarning(0, JText::_('COM_REDFORM_unknown_submitter'));
+
 			return false;
 		}
 
-		// get fields
-		$query = ' SELECT f.* FROM #__rwf_fields AS f '
-			. ' WHERE f.form_id = ' . $db->quote($submitter->form_id)
-			. ' AND f.published = 1 '
-			. ' ORDER BY f.ordering ';
+		// Get fields
+		$query = $db->getQuery(true);
+
+		$query->select('f.id');
+		$query->from('#__rwf_fields AS f');
+		$query->where('f.form_id = ' . $db->quote($submitter->form_id));
+		$query->where('f.published = 1');
+		$query->order('ordering');
+
 		$db->setQuery($query);
-		$fields = $db->loadObjectList('id');
+		$fieldIds = $db->loadColumn();
 
 		$fnames = array();
-		foreach ($fields as $f)
+
+		foreach ($fieldIds as $fid)
 		{
-			$fnames[] = $db->namequote('f.field_' . $f->id);
+			$fnames[] = $db->quote('f.field_' . $fid);
 		}
 
-		// get values
-		$query = ' SELECT ' . implode(',', $fnames)
-			. ' FROM #__rwf_forms_' . $submitter->form_id . ' AS f '
-			. ' WHERE f.id = ' . $db->quote($submitter->answer_id);
+		// Get values
+		$query = $db->getQuery(true);
+
+		$query->select($fnames);
+		$query->from('#__rwf_forms_' . $submitter->form_id . ' AS f ');
+		$query->where('f.id = ' . $db->quote($submitter->answer_id));
+
 		$db->setQuery($query);
 		$answers = $db->loadObject();
 
 		if (!$answers)
 		{
 			Jerror::raisewarning(0, JText::_('COM_REDFORM_error_getting_submitter_answers'));
+
 			return false;
 		}
 
-		foreach ($fields as $id => $f)
+		$fields = array();
+
+		foreach ($fieldIds as $fid)
 		{
-			$property = 'field_' . $f->id;
+			$field = RedformRfieldFactory::getField($fid);
+
+			$property = 'field_' . $fid;
+
 			if (isset($answers->$property))
 			{
-				$fields[$id]->answer = $answers->$property;
+				$field->setValue($answers->$property);
 			}
+
+			$fields[] = $field;
 		}
+
 		return $fields;
 	}
 
-	function getSubmitter($id)
+	/**
+	 * Return data from submitters table
+	 *
+	 * @param   int  $id  submitter id
+	 *
+	 * @return mixed
+	 */
+	protected function getSubmitter($id)
 	{
-		$query = ' SELECT s.* '
-			. ' FROM #__rwf_submitters AS s '
-			. ' WHERE s.id = ' . $this->_db->Quote($id);
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObject();
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('s.*');
+		$query->from('#__rwf_submitters AS s');
+		$query->join('INNER', '#__');
+		$query->join('LEFT', '#__');
+		$query->where('s.id = ' . $db->quote($id));
+
+		$db->setQuery($query);
+		$res = $db->loadObject();
+
 		return $res;
 	}
 
-	function getSid()
+	/**
+	 * Get sid
+	 *
+	 * @return int
+	 */
+	public function getSid()
 	{
-		return $this->_sid;
+		return $this->sid;
 	}
 
 	/**
@@ -815,12 +657,12 @@ class rfanswers
 	 */
 	public function toSession()
 	{
-		$answers = new stdclass();
+		$answers = new stdclass;
 
-		foreach ($this->_fields as $k => $field)
+		foreach ($this->fields as $field)
 		{
 			$tablefield = 'field_' . $field->id;
-			$answers->$tablefield = $this->_values[$k];
+			$answers->$tablefield = $field->getValue();
 		}
 
 		return $answers;

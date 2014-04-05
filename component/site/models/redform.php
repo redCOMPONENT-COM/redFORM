@@ -106,37 +106,27 @@ class RedformModelRedform extends JModel {
 	 */
 	function getfields($form_id = 0)
 	{
-		if (!$form_id) {
+		if (!$form_id)
+		{
 			$form_id = $this->_form_id;
 		}
 
-		$db = & $this->_db;
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
 
-		/* Load the fields */
-		$q = "SELECT id, field, fieldtype, ordering, published, params
-		FROM ".$db->nameQuote('#__rwf_fields')."
-		WHERE form_id = ".$form_id."
-		ORDER BY ordering";
-		$db->setQuery($q);
-		$fields = $db->loadObjectList('id');
+		$query->select('id');
+		$query->from('#__rwf_fields');
+		$query->where('form_id = ' . $form_id);
+		$query->order('ordering');
 
-		foreach ($fields as $k =>$field)
+		$db->setQuery($query);
+		$ids = $db->loadColumn();
+
+		$fields = array();
+
+		foreach ($ids as $fieldId)
 		{
-			$query = ' SELECT id, value, price FROM #__rwf_values WHERE field_id = '. $this->_db->Quote($field->id);
-			$this->_db->setQuery($query);
-			$fields[$k]->values = $this->_db->loadObjectList();
-		}
-
-		foreach ($fields as $k => $field)
-		{
-			$paramsdefs = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' . DS . 'field_'.$field->fieldtype.'.xml';
-			if (!empty($field->params) && file_exists($paramsdefs))
-			{
-				$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );
-			}
-			else {
-				$fields[$k]->parameters = new JRegistry();
-			}
+			$fields[] = RedformRfieldFactory::getField($fieldId);
 		}
 
 		return $fields;
@@ -144,210 +134,13 @@ class RedformModelRedform extends JModel {
 
 	function getFormFields()
 	{
-		if (!$this->_form_id) {
+		if (!$this->_form_id)
+		{
 			$this->setError(JText::_('COM_REDFORM_FORM_ID_MISSING'));
 			return false;
 		}
-		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly, f.default, f.published, m.listnames '
-		. '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
-		. ' FROM #__rwf_fields AS f '
-		. ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id '
-		. ' WHERE f.form_id = '.$this->_form_id
-		. ' ORDER BY f.ordering'
-		;
-		$this->_db->setQuery($q);
-		$fields = $this->_db->loadObjectList();
 
-		foreach ($fields as $k => $field)
-		{
-			// Get the extra parameters
-			$registry = new JRegistry;
-			$registry->loadString($field->params);
-			$fields[$k]->parameters = $registry;
-
-			// Get Options
-			$query = $this->_db->getQuery(true);
-
-			$query->select('v.*');
-			$query->from('#__rwf_values AS v');
-			$query->where('v.field_id = ' . $field->id);
-
-			$this->_db->setQuery($query);
-			$fields[$k]->options = $this->_db->loadObjectList();
-		}
-
-		return $fields;
-	}
-
-	function getFormValues($field_id)
-	{
-		$q = " SELECT id, value, label, field_id, price
-		FROM #__rwf_values
-		WHERE published = 1
-		AND field_id = ".$field_id."
-		ORDER BY ordering";
-		$this->_db->setQuery($q);
-		return $this->_db->loadObjectList();
-	}
-
-	/**
-	 * Save a form
-	 *
-	 * @todo take field names from fields table
-	 */
-	function saveform()
-	{
-		$mainframe = & JFactory::getApplication();
-		$db = & $this->_db;
-
-		/* Default values */
-		$answer  = '';
-		$return  = false;
-		$redcompetition = false;
-		$redevent = false;
-
-		$event_task = JRequest::getVar('event_task');
-
-		/* Check for the submit key */
-		$submit_key = JRequest::getVar('submit_key', false);
-		if (!$submit_key) $submit_key = uniqid();
-
-		/* Get the form details */
-		$form = $this->getForm(JRequest::getInt('form_id'));
-
-		if ($form->captchaactive)
-		{
-			JPluginHelper::importPlugin( 'redform_captcha' );
-			$res = true;
-			$dispatcher =& JDispatcher::getInstance();
-			$results = $dispatcher->trigger( 'onCheckCaptcha', array( &$res ) );
-
-			if (count($results) && $res == false) {
-				$this->setError(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
-				return false;
-			}
-		}
-
-		/* Load the fields */
-		$fieldlist = $this->getfields($form->id);
-
-		/* Load the posted variables */
-		$post = JRequest::get('post');
-		$files = JRequest::get('files');
-		$posted = array_merge($post, $files);
-
-		if (JRequest::getInt('competition_id', false)) {
-			$redcompetition = true;
-			$event_id = JRequest::getInt('competition_id', 0);
-			$post['xref'] = $event_id;
-		}
-		else $post['xref'] = 0;
-
-		$event = null;
-
-		/* Loop through the different forms */
-		$totalforms = JRequest::getInt('curform');
-		//if ($event_task == 'userregister') $totalforms--;
-		/* Sign up minimal 1 */
-		if ($totalforms == 0) $totalforms = 1;
-
-		$allanswers = array();
-		for ($signup = 1; $signup <= $totalforms; $signup++)
-		{
-			// new answers object
-			$answers = new rfanswers();
-			$answers->setFormId($form->id);
-			if ($event) {
-				$answers->initPrice($event->course_price);
-			}
-
-			/* Create an array of values to store */
-			$postvalues = array();
-			// remove the _X parts, where X is the form (signup) number
-			foreach ($posted as $key => $value) {
-				if ((strpos($key, 'field') === 0) && (strpos($key, '_'.$signup, 5) > 0)) {
-					$postvalues[str_replace('_'.$signup, '', $key)] = $value;
-				}
-			}
-
-			/* Some default values needed */
-			if (isset($post['xref'])) {
-				$postvalues['xref'] = $post['xref'];
-			}
-			else {
-				$postvalues['xref'] = 0;
-			}
-			$postvalues['form_id'] = $post['form_id'];
-			$postvalues['submit_key'] = $submit_key;
-
-			if ($redcompetition)
-			{
-				$postvalues['integration'] = 'redcompetition';
-			}
-
-			/* Get the raw form data */
-			$postvalues['rawformdata'] = serialize($posted);
-
-			/* Build up field list */
-			foreach ($fieldlist as $key => $field)
-			{
-				if (isset($postvalues['field'.$key]))
-				{
-					/* Get the answers */
-					try
-					{
-						$answers->addPostAnswer($field, $postvalues['field'.$key]);
-					}
-					catch (Exception $e)
-					{
-						$this->setError($e->getMessage());
-						return false;
-					}
-				}
-			}
-
-			// save answers
-			if (!$answers->save($postvalues)) return false;
-
-			$this->updateMailingList($answers);
-
-			$allanswers[] = $answers;
-		} /* End multi-user signup */
-		$this->_answers = $allanswers;
-
-		/* Load the mailer in case we need to inform someone */
-		if ($form->submitterinform || $form->contactpersoninform) {
-			$this->Mailer();
-		}
-
-		/* Send a submission mail to the submitters if set */
-		if ($form->submitterinform)
-		{
-			foreach ($allanswers as $answers)
-			{
-				$this->notifysubmitter($answers, $form);
-			}
-		}
-
-		// send email to miantainers
-		if ($answers->isNew()) {
-			$this->notifymaintainer($allanswers);
-		}
-
-		if ($form->activatepayment)
-		{
-			$redirect = 'index.php?option=com_redform&controller=payment&task=select&key='.$submit_key;
-			$mainframe->redirect(JRoute::_($redirect, false));
-		}
-
-		/* All is good, check if we have an competition in that case redirect to redCOMPETITION */
-		if ($redcompetition)
-		{
-			$redirect = 'index.php?option=com_redcompetition&task='.JRequest::getVar('competition_task').'&competition_id='.JRequest::getInt('competition_id').'&submitter_id='.$allanswers[0]->getAnswerId().'&form_id='.JRequest::getInt('form_id');
-			$mainframe->redirect(JRoute::_($redirect, false));
-		}
-
-		return array($form->submitnotification, $form->notificationtext);
+		return $this->getfields($this->_form_id);
 	}
 
 	/**
@@ -667,14 +460,14 @@ class RedformModelRedform extends JModel {
 			$postvalues['rawformdata'] = serialize($data);
 
 			/* Build up field list */
-			foreach ($fieldlist as $key => $field)
+			foreach ($fieldlist as $field)
 			{
-				if (isset($postvalues['field'.$key]))
+				if (isset($postvalues['field' . $field->id]))
 				{
 					/* Get the answers */
 					try
 					{
-						$answers->addPostAnswer($field, $postvalues['field'.$key]);
+						$answers->addPostAnswer($field, $postvalues['field' . $field->id]);
 					}
 					catch (Exception $e)
 					{
@@ -905,6 +698,11 @@ class RedformModelRedform extends JModel {
 
 					foreach ($rows as $key => $answer)
 					{
+						if (is_array($answer['value']))
+						{
+							$answer['value'] = implode("<br/>", $answer['value']);
+						}
+
 						switch ($answer['type'])
 						{
 							case 'recipients':

@@ -375,7 +375,7 @@ class RedformCore extends JObject {
 
 				if (!$rfield->isHidden())
 				{
-					$html .= '<div id="fieldline_'.$field->id.'" class="fieldline type-'.$field->fieldtype.$field->parameters->get('class','').'">';
+					$html .= '<div id="fieldline_' . $field->id . '" class="fieldline type-' . $field->fieldtype . $field->getParam('class', '').'">';
 				}
 
 				if (!$rfield->isHidden())
@@ -687,15 +687,18 @@ class RedformCore extends JObject {
 
 	function getFields($form_id= null)
 	{
-		if ($form_id) {
+		if ($form_id)
+		{
 			$this->setFormId($form_id);
 		}
+
 		if (empty($this->_fields))
 		{
 			$model_redform = new RedformModelRedform();
 			$model_redform->setFormId($this->_form_id);
 			$this->_fields = $model_redform->getFormFields();
 		}
+
 		return $this->_fields;
 	}
 

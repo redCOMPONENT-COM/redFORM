@@ -21,41 +21,28 @@ class RedformRfieldRadio extends RedformRfield
 	protected $type = 'radio';
 
 	/**
-	 * Set field value, try to look up if null
+	 * Return price, possibly depending on current field value
 	 *
-	 * @param   string  $value   value
-	 * @param   bool    $lookup  set true to lookup for a default value if value is null
-	 *
-	 * @return string new value
+	 * @return float
 	 */
-	public function setValue($value, $lookup = false)
+	public function getPrice()
 	{
-		if ($value && !is_array($value))
+		$price = 0;
+
+		if (!$this->value)
 		{
-			$value = array($value);
+			return $price;
 		}
 
-		return parent::setValue($value, $lookup);
-	}
-
-	/**
-	 * Try to get a default value from integrations
-	 *
-	 * @return void
-	 */
-	protected function lookupDefaultValue()
-	{
-		if ($this->load()->redmember_field)
+		foreach ($this->getOptions() as $option)
 		{
-			$this->value = explode(',', $this->user->get($this->load()->redmember_field));
-		}
-		elseif ($this->load()->default)
-		{
-			$values = explode("\n", $this->load()->default);
-			$this->value = array_map('trim', $values);
+			if ($option->value == $this->getValue())
+			{
+				$price += $option->price;
+			}
 		}
 
-		return $this->value;
+		return $price;
 	}
 
 	public function getInput()

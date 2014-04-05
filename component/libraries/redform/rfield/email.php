@@ -21,6 +21,48 @@ class RedformRfieldEmail extends RedformRfieldTextfield
 	protected $type = 'email';
 
 	/**
+	 * Selected newsletters from post
+	 * @var array
+	 */
+	protected $selectedNewsletters = null;
+
+	/**
+	 * Set field value from post data
+	 *
+	 * @param   string  $value  value
+	 *
+	 * @return string new value
+	 *
+	 * @throws LogicException
+	 */
+	public function setValueFromPost($value)
+	{
+		if (!is_array($value) || !isset($value['email']))
+		{
+			throw new LogicException('wrong input for email field set value ');
+		}
+
+		$this->value = $value['email'];
+
+		if (isset($value['newsletter']))
+		{
+			$this->selectedNewsletters = $value['newsletter'];
+		}
+
+		return $this->value;
+	}
+
+	/**
+	 * Return selected newsletters
+	 *
+	 * @return array
+	 */
+	public function getSelectedNewsletters()
+	{
+		return $this->selectedNewsletters ? $this->selectedNewsletters : array();
+	}
+
+	/**
 	 * Returns field Input
 	 *
 	 * @return string

@@ -39,6 +39,48 @@ class RedformRfieldSelect extends RedformRfield
 	}
 
 	/**
+	 * Set field value from post data
+	 *
+	 * @param   string  $value  value
+	 *
+	 * @return string new value
+	 */
+	public function setValueFromPost($value)
+	{
+		if ($value && !is_array($value))
+		{
+			$value = array($value);
+		}
+
+		return parent::setValueFromPost($value);
+	}
+
+	/**
+	 * Return price, possibly depending on current field value
+	 *
+	 * @return float
+	 */
+	public function getPrice()
+	{
+		$price = 0;
+
+		if (!$this->value)
+		{
+			return $price;
+		}
+
+		foreach ($this->getOptions() as $option)
+		{
+			if (in_array($option->value, $this->value))
+			{
+				$price += $option->price;
+			}
+		}
+
+		return $price;
+	}
+
+	/**
 	 * Try to get a default value from integrations
 	 *
 	 * @return void
@@ -79,6 +121,23 @@ class RedformRfieldSelect extends RedformRfield
 	}
 
 	/**
+	 * Get postfixed field name for form
+	 *
+	 * @return string
+	 */
+	protected function getFormElementName()
+	{
+		$name = parent::getFormElementName();
+
+		if ($this->getParam('multiple'))
+		{
+			$name .= '[]';
+		}
+
+		return $name;
+	}
+
+	/**
 	 * Return input properties array
 	 *
 	 * @return array
@@ -90,6 +149,7 @@ class RedformRfieldSelect extends RedformRfield
 		$properties = array();
 		$properties['name'] = $this->getFormElementName();
 		$properties['class'] = trim($this->getParam('class'));
+		$properties['size'] = $this->getParam('size', 5);
 
 		if ($this->getParam('multiple'))
 		{

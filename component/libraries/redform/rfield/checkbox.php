@@ -39,6 +39,31 @@ class RedformRfieldCheckbox extends RedformRfield
 	}
 
 	/**
+	 * Return price, possibly depending on current field value
+	 *
+	 * @return float
+	 */
+	public function getPrice()
+	{
+		$price = 0;
+
+		if (!$this->value)
+		{
+			return $price;
+		}
+
+		foreach ($this->getOptions() as $option)
+		{
+			if (in_array($option->value, $this->value))
+			{
+				$price += $option->price;
+			}
+		}
+
+		return $price;
+	}
+
+	/**
 	 * Try to get a default value from integrations
 	 *
 	 * @return void
@@ -123,5 +148,17 @@ class RedformRfieldCheckbox extends RedformRfield
 		}
 
 		return $properties;
+	}
+
+	/**
+	 * Get postfixed field name for form
+	 *
+	 * @return string
+	 */
+	protected function getFormElementName()
+	{
+		$name = parent::getFormElementName() . '[]';
+
+		return $name;
 	}
 }

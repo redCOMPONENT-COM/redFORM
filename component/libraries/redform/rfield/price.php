@@ -42,6 +42,27 @@ class RedformRfieldPrice extends RedformRfield
 		return $element;
 	}
 
+	/**
+	 * Return price, possibly depending on current field value
+	 *
+	 * @return float
+	 */
+	public function getPrice()
+	{
+		$options = $this->getOptions();
+
+		if (count($options))
+		{
+			$price = reset($options)->value;
+		}
+		else
+		{
+			$price = $this->getValue();
+		}
+
+		return $price;
+	}
+
 	protected function getInputHidden($option)
 	{
 		$properties = $this->getInputProperties();
