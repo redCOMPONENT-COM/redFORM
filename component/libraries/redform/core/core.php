@@ -398,6 +398,7 @@ class RedformCore extends JObject {
 					case 'recipients':
 					case 'fileupload':
 					case 'price':
+					case 'date':
 						$rfield = RedformRfieldFactory::getField($field->id);
 						$rfield->setFormCount($signup);
 						$rfield->setUser($user);
@@ -423,7 +424,7 @@ class RedformCore extends JObject {
 						$element .= "\n";
 						break;
 
-					case 'date':
+					case 'date1':
 						JHTML::_('behavior.calendar');
 						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
 
