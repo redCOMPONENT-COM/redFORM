@@ -218,6 +218,8 @@
 			<fieldset name="extra" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_EXTRA">
 				<field name="gatewaylabel" type="text" default="" label="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL"
 					   description="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL_DESC"/>
+                <field name="gatewaybackendlabel" type="text" default="" label="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL"
+                       description="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL_DESC"/>
 			</fieldset>
 		</fields>
 	</config>
