@@ -46,7 +46,7 @@ class JFormFieldRFForm extends JFormFieldList
 		// Filter by state
 		$state = $this->element['state'] ? (int) $this->element['state'] : null;
 
-		// Get the companies
+		// Get the forms
 		$items = $this->getForms($state);
 
 		// Build the field options
