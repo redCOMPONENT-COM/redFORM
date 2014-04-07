@@ -20,6 +20,8 @@ class RedformRfieldRadio extends RedformRfield
 {
 	protected $type = 'radio';
 
+	protected $hasOptions = true;
+
 	/**
 	 * Return price, possibly depending on current field value
 	 *

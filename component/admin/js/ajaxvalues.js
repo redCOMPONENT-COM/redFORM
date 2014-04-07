@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (C) 2008, 2009, 2010, 2011 redCOMPONENT.com. All rights reserved. 
+ * @copyright Copyright (C) 2008, 2009, 2010, 2011 redCOMPONENT.com. All rights reserved.
 * @license	GNU/GPL, see LICENSE.php
 * Joomla! is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -10,8 +10,8 @@
 
 /**
  * javascript for dependant element xml parameter
- * 
- * 
+ *
+ *
  */
 // add update of field when fields it depends on change.
 window.addEvent('domready', function() {
@@ -22,10 +22,10 @@ window.addEvent('domready', function() {
         SqueezeBox.fromElement(el);
       });
     });
-    
+
 	update_values();
 });
-	
+
 function newvalue()
 {
 	window.parent.SqueezeBox.close();
@@ -37,20 +37,13 @@ function update_values()
 {
 	var type = document.id('fieldtype').value;
 	var id   = document.id('fieldid').value;
-	
+	var hasOptions = document.id('fieldHasOptions').value;
+
 	if (!parseInt(id)) {
 		return false;
 	}
-	
-	if ( type == 'select' 
-	  || type == 'multiselect'
-      || type == 'radio'
-      || type == 'checkbox'
-      || type == 'price'
-      || type == 'info'
-      || type == 'recipients'
-      //|| type == 'email'
-	) {
+
+	if (hasOptions) {
 		document.id('field-options').setStyle('display', 'block');
 	}
 	else {
@@ -58,7 +51,7 @@ function update_values()
 	}
 	var url = 'index.php?option=com_redform&view=field&format=raw&cid[]='+id+'&layout=values';
 	//alert(url);
-	
+
 	var theAjax = new Request({
 		url:		url,
 		method: 	'POST',
@@ -66,14 +59,14 @@ function update_values()
 			{
 				//alert('yes');
 				var rows = document.id('values-rows');
-				
+
 				var values = eval('(' + response + ')');
 				values.each(function(el){
 					if(document.id('value-'+el.id) != null){
 						document.id('value-'+el.id).dispose();
 					}
 					newRow(el).injectInside(rows);
-					
+
 				});
 			},
 		onFailure: function(response)
@@ -103,7 +96,7 @@ function ajaxgetandupdate(url)
 	theAjax.send();
 }
 
-function newRow(value) 
+function newRow(value)
 {
 	var fieldid   = document.id('fieldid').value;
 
@@ -121,7 +114,7 @@ function newRow(value)
 	else {
 		new Element('img', {'src': 'http://'+document.location.host+'/administrator/templates/bluestork/images/admin/publish_x.png', 'style': 'cursor:pointer;', 'alt': textno, events: {click: function(){ ajaxgetandupdate('index.php?option=com_redform&controller=values&task=ajaxpublish&tmpl=component&cid[]='+value.id);}}})
 		.injectInside(new Element('td').injectInside(tr));
-	}  
+	}
 	// up/down links
 	var tdlink = new Element('td').injectInside(tr);
 	var upurl  = 'index.php?option=com_redform&controller=values&task=ajaxorderup&tmpl=component&cid[]='+value.id+'&fieldid='+fieldid;
@@ -146,7 +139,7 @@ function newRow(value)
 		ajaxgetandupdate(link);
 	});
 	return tr;
-	
+
 
 }
 

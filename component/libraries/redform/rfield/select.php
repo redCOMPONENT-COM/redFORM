@@ -20,6 +20,8 @@ class RedformRfieldSelect extends RedformRfield
 {
 	protected $type = 'select';
 
+	protected $hasOptions = true;
+
 	/**
 	 * Set field value, try to look up if null
 	 *

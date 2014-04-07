@@ -20,6 +20,8 @@ class RedformRfieldCheckbox extends RedformRfield
 {
 	protected $type = 'checkbox';
 
+	protected $hasOptions = true;
+
 	/**
 	 * Set field value, try to look up if null
 	 *

@@ -86,6 +86,13 @@ abstract class RedformRfield extends JObject
 	protected $showLabel = true;
 
 	/**
+	 * does the field have options (select, radio, etc...)
+	 *
+	 * @var bool
+	 */
+	protected $hasOptions = false;
+
+	/**
 	 * Magic method
 	 *
 	 * @param   string  $name  property name
@@ -115,6 +122,9 @@ abstract class RedformRfield extends JObject
 
 			case 'tooltip':
 				return $this->load()->tooltip;
+
+			case 'hasOptions':
+				return $this->hasOptions;
 
 			case 'name':
 			case 'field':

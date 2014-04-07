@@ -40,6 +40,24 @@ abstract class RedformRfieldFactory extends JObject
 	}
 
 	/**
+	 * Return all supported types as options for select
+	 *
+	 * @return array
+	 */
+	public static function getTypesOptions()
+	{
+		$types = self::getTypes();
+		$options = array();
+
+		foreach ($types as $type)
+		{
+			$options[] = array('value' => $type, 'text' => JText::_('COM_REDFORM_FIELD_TYPE_' . $type));
+		}
+
+		return $options;
+	}
+
+	/**
 	 * Returns field associated to id
 	 *
 	 * @param   int  $id  field id
@@ -68,19 +86,35 @@ abstract class RedformRfieldFactory extends JObject
 				throw new Exception(JText::sprintf('field %d not found', $id));
 			}
 
-			$class = 'RedformRfield' . ucfirst($type);
-
-			if (!class_exists($class, true))
-			{
-				throw new Exception(JText::sprintf('Field type %s not found', $type));
-			}
-
-			$field = new $class;
+			$field = self::getFieldType($type);
 			$field->setId($id);
 
 			$fields[$id] = $field;
 		}
 
 		return $fields[$id];
+	}
+
+	/**
+	 * Return instance of field type
+	 *
+	 * @param   string  $type  type
+	 *
+	 * @return RedformRfield
+	 *
+	 * @throws Exception
+	 */
+	public static function getFieldType($type)
+	{
+		$class = 'RedformRfield' . ucfirst($type);
+
+		if (!class_exists($class, true))
+		{
+			throw new Exception(JText::sprintf('Field type %s not found', $type));
+		}
+
+		$field = new $class;
+
+		return $field;
 	}
 }

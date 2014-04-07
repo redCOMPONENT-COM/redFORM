@@ -20,6 +20,8 @@ class RedformRfieldPrice extends RedformRfield
 {
 	protected $type = 'price';
 
+	protected $hasOptions = true;
+
 	/**
 	 * Returns field Input
 	 *
