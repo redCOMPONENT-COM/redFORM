@@ -37,18 +37,11 @@ function update_values()
 {
 	var type = document.id('fieldtype').value;
 	var id   = document.id('fieldid').value;
-	var hasOptions = document.id('fieldHasOptions').value;
 
-	if (!parseInt(id)) {
+	if (!parseInt(id) || !document.id('field-options')) {
 		return false;
 	}
 
-	if (hasOptions) {
-		document.id('field-options').setStyle('display', 'block');
-	}
-	else {
-		document.id('field-options').setStyle('display', 'none');
-	}
 	var url = 'index.php?option=com_redform&view=field&format=raw&cid[]='+id+'&layout=values';
 	//alert(url);
 
