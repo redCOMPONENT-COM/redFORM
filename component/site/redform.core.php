@@ -15,15 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with redFORM; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
 /**
+ * Kept for legacy...
  */
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
 // Register library prefix
 JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
-
-$rfcore = new RedformCore;

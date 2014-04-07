@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -20,13 +20,15 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+// Register library prefix
+JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+
 // Require the base controller
 require_once (JPATH_COMPONENT.DS.'controller.php');
-require_once (JPATH_COMPONENT_SITE.DS.'redform.core.php');
 require_once (JPATH_COMPONENT_SITE.DS.'helpers'.DS.'log.php');
 
 // Require specific controller if requested
@@ -48,4 +50,3 @@ $controller->execute(JRequest::getCmd('task'));
 
 // Redirect if set by the controller
 $controller->redirect();
-?>
