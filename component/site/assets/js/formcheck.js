@@ -14,9 +14,19 @@
  *
  * requires language strings to be defined inline
  */
+document.addEvent('domready', function(){
+
+});
 
 function CheckSubmit(form)
 {
+	if (document.redformvalidator.isValid(form))
+	{
+		alert('ok');
+		return false;
+	}
+
+	return false;
 	var msg = '';
 	var result = true;
 	var checkboxmsg = false;

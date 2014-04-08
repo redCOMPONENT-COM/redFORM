@@ -548,8 +548,10 @@ class RedformCore extends JObject {
 
 	function JsCheck()
 	{
-		$doc = &JFactory::getDocument();
-		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jscheck'));
+		JHtml::_('behavior.formvalidation');
+		$doc = JFactory::getDocument();
+		$doc->addScript(JURI::root() . 'media/com_redform/js/redform-validate.js');
+//		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jscheck'));
 	}
 
 	/**
