@@ -27,7 +27,7 @@ class RedformRfieldFullname extends RedformRfieldTextfield
 	 */
 	protected function lookupDefaultValue()
 	{
-		if ($this->formCount == 1 && $this->user && $this->user->name)
+		if ($this->formIndex == 1 && $this->user && $this->user->name)
 		{
 			$this->value = $this->user->name;
 		}

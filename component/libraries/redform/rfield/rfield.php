@@ -62,7 +62,7 @@ abstract class RedformRfield extends JObject
 	 *
 	 * @var int
 	 */
-	protected $formCount = 1;
+	protected $formIndex = 1;
 
 	/**
 	 * User associated to submission, for value lookup
@@ -268,13 +268,13 @@ abstract class RedformRfield extends JObject
 	 * As redform supports multiple form submission at same time, we need to add a suffix to fields to mark which
 	 * instance they belong to
 	 *
-	 * @param   int  $count  form count
+	 * @param   int  $index  form index
 	 *
 	 * @return void
 	 */
-	public function setFormCount($count)
+	public function setFormIndex($index)
 	{
-		$this->formCount = (int) $count;
+		$this->formIndex = (int) $index;
 	}
 
 	/**
@@ -345,9 +345,9 @@ abstract class RedformRfield extends JObject
 	{
 		$name = 'field' . $this->id;
 
-		if ($this->formCount)
+		if ($this->formIndex)
 		{
-			$name .= '.' . $this->formCount;
+			$name .= '.' . $this->formIndex;
 		}
 
 		return $name;

@@ -95,9 +95,9 @@ class RedformRfieldEmail extends RedformRfieldTextfield
 	{
 		$name = 'field' . $this->id;
 
-		if ($this->formCount)
+		if ($this->formIndex)
 		{
-			$name .= '.' . $this->formCount;
+			$name .= '.' . $this->formIndex;
 		}
 
 		$name .= '[email]';
@@ -114,9 +114,9 @@ class RedformRfieldEmail extends RedformRfieldTextfield
 	{
 		$name = 'field' . $this->id;
 
-		if ($this->formCount)
+		if ($this->formIndex)
 		{
-			$name .= '.' . $this->formCount;
+			$name .= '.' . $this->formIndex;
 		}
 
 		$name .= '[newsletter][]';
@@ -131,7 +131,7 @@ class RedformRfieldEmail extends RedformRfieldTextfield
 	 */
 	protected function lookupDefaultValue()
 	{
-		if ($this->formCount == 1 && $this->user && $this->user->email)
+		if ($this->formIndex == 1 && $this->user && $this->user->email)
 		{
 			$this->value = $this->user->email;
 		}
