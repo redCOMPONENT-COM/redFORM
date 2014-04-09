@@ -237,6 +237,8 @@ class RedformCore extends JObject {
 		$toolTipArray = array('className' => 'redformtip' . $form->classname);
 		JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
 
+		$this->loadCheckScript();
+
 		if ($multi)
 		{
 			$this->loadMultipleFormScript();
@@ -282,7 +284,7 @@ class RedformCore extends JObject {
 			if (empty($answers))
 			{
 				// Link to add signups
-				$html .= '<div class="add-registration">' . JText::_('COM_REDFORM_SIGN_UP_USER') . '</div>';
+				$html .= '<div class="add-instance">' . JText::_('COM_REDFORM_SIGN_UP_USER') . '</div>';
 			}
 		}
 
@@ -466,7 +468,7 @@ class RedformCore extends JObject {
 			$html .= '<input type="hidden" name="submit_key" value="' . $submit_key . '" />';
 		}
 
-		$html .= '<input type="hidden" name="curform" value="' . ($answers && count($answers) ? count($answers) : 1) . '" />';
+		$html .= '<input type="hidden" name="nbactive" value="' . $initialActive . '" />';
 		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
 		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';
 		$html .= '<input type="hidden" name="' . JSession::getFormToken() . '" value="' . $uniq . '" />';
@@ -1287,5 +1289,15 @@ class RedformCore extends JObject {
 		$doc = JFactory::getDocument();
 		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
 		$doc->addScript(JURI::root() . '/media/com_redform/js/form-price.js');
+	}
+
+	/**
+	 * Load javascript for form validation
+	 *
+	 * @return void
+	 */
+	protected function loadCheckScript()
+	{
+		JHtml::_('behavior.formvalidation');
 	}
 }
