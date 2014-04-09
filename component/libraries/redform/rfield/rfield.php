@@ -347,7 +347,7 @@ abstract class RedformRfield extends JObject
 
 		if ($this->formIndex)
 		{
-			$name .= '.' . $this->formIndex;
+			$name .= '_' . $this->formIndex;
 		}
 
 		return $name;

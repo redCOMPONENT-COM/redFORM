@@ -97,7 +97,7 @@ class RedformRfieldEmail extends RedformRfieldTextfield
 
 		if ($this->formIndex)
 		{
-			$name .= '.' . $this->formIndex;
+			$name .= '_' . $this->formIndex;
 		}
 
 		$name .= '[email]';

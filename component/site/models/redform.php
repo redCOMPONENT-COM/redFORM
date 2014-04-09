@@ -374,9 +374,9 @@ class RedformModelRedform extends JModel {
 				$data['submit_key'] = $app->input->getCmd('submit_key', false);
 			}
 
-			if (!isset($data['curform']))
+			if (!isset($data['nbactive']))
 			{
-				$data['curform'] = $app->input->getInt('curform', 1);
+				$data['nbactive'] = $app->input->getInt('nbactive', 1);
 			}
 		}
 
@@ -408,7 +408,7 @@ class RedformModelRedform extends JModel {
 		$fieldlist = $this->getfields($form->id);
 
 		// number of submitted active forms (min is 1)
-		$totalforms = isset($data['curform']) ? $data['curform'] : 1;
+		$totalforms = isset($data['nbactive']) ? $data['nbactive'] : 1;
 
 		$allanswers = array();
 		/* Loop through the different forms */
@@ -467,7 +467,8 @@ class RedformModelRedform extends JModel {
 					/* Get the answers */
 					try
 					{
-						$answers->addPostAnswer($field, $postvalues['field' . $field->id]);
+						$clone = clone($field);
+						$answers->addPostAnswer($clone, $postvalues['field' . $clone->id]);
 					}
 					catch (Exception $e)
 					{
@@ -476,6 +477,7 @@ class RedformModelRedform extends JModel {
 					}
 				}
 			}
+
 			$allanswers[] = $answers;
 		}
 		/* End multi-user signup */

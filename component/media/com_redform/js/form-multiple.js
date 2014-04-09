@@ -65,7 +65,7 @@ var RedformFormMultiple = new Class({
 	updateIndex : function(subform, index, resetValue)
 	{
 		subform.getElements('input, textarea, select').each(function(el) {
-			var name = el.get('name').replace(/(field[0-9]+\.)([0-9+])/g, "$1" + index);
+			var name = el.get('name').replace(/(field[0-9]+_)([0-9+])/g, "$1" + index);
 			el.set('name', name);
 
 			if (resetValue && el.get('type') != 'hidden') {
