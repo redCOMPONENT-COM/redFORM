@@ -138,21 +138,26 @@ var RedformFormValidator = new Class({
 		return true;
 	},
 
-	isValid: function(form)
+	isFormValid : function(form)
 	{
-		var valid = true;
-
-		// Validate form fields
+		// Validate active subforms
 		var forms = document.id(form).getElements('.formbox');
 		var nb_active = parseInt(form.getElement("input[name='curform']").getValue());
 
 		for (var j = 0 ; j < nb_active ; j++)
 		{
-			var elements = forms[j].getElements('fieldset').concat(Array.from(forms[j].elements));
-			for (var i=0;i < elements.length; i++) {
-				if (this.validate(elements[i]) == false) {
-					valid = false;
-				}
+			this.isValid(forms[j]);
+		}
+	},
+
+	isValid: function(form)
+	{
+		var valid = true;
+
+		var elements = form.getElements('fieldset').concat(Array.from(form.elements));
+		for (var i=0;i < elements.length; i++) {
+			if (this.validate(elements[i]) == false) {
+				valid = false;
 			}
 		}
 

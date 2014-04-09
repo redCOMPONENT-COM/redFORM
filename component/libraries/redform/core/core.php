@@ -237,11 +237,14 @@ class RedformCore extends JObject {
 		$toolTipArray = array('className' => 'redformtip' . $form->classname);
 		JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
 
-		self::JsCheck();
+		if ($multi)
+		{
+			$this->loadMultipleFormScript();
+		}
 
 		if ($form->show_js_price)
 		{
-			self::jsPrice();
+			$this->loadPriceScript();
 		}
 
 		// Redmember integration: pull extra fields
@@ -250,11 +253,11 @@ class RedformCore extends JObject {
 			$this->getRedmemberfields($user);
 		}
 
-		$html = '<div id="redform' . $form->classname . '" class="redform-form">';
+		$html = '<div class="redform-form' . $form->classname . '">';
 
 		if ($form->showname)
 		{
-			$html .= '<div id="formname">' . $form->formname . '</div>';
+			$html .= '<div class="formname">' . $form->formname . '</div>';
 		}
 
 		if ($answers)
@@ -270,7 +273,7 @@ class RedformCore extends JObject {
 
 		if ($multi > 1 && $user->id == 0)
 		{
-			$html .= '<div id="needlogin">' . JText::_('COM_REDFORM_LOGIN_BEFORE_MULTI_SIGNUP') . '</div>';
+			$html .= '<div class="needlogin">' . JText::_('COM_REDFORM_LOGIN_BEFORE_MULTI_SIGNUP') . '</div>';
 			$multi = 1;
 		}
 
@@ -279,39 +282,19 @@ class RedformCore extends JObject {
 			if (empty($answers))
 			{
 				// Link to add signups
-				$html .= '<div id="signupuser"><a href="javascript: AddUser();">' . JText::_('COM_REDFORM_SIGN_UP_USER') . '</a></div>';
+				$html .= '<div class="add-registration">' . JText::_('COM_REDFORM_SIGN_UP_USER') . '</div>';
 			}
-
-			// Signups display controls
-			$html .= '<div id="signedusers" style="float: right">';
-			$html .=   '<div><a href="javascript: ShowAllUsers(true);" >' . JText::_('COM_REDFORM_SHOW_ALL_USERS') . '</a></div>'
-			         . '<div><a href="javascript: ShowAllUsers(false);" >' . JText::_('COM_REDFORM_HIDE_ALL_USERS') . '</a></div>'
-			         . '<ul>'.JText::_('COM_REDFORM_Signed_up') . ':';
-			$html .= '<li><a href="javascript: ShowSingleForm(\'div#formfield1\');"># 1</a></li>';
-
-			if ($answers)
-			{
-				for ($k = 2; $k < count($answers)+1; $k++)
-				{
-					$html .= '<li><a href="javascript: ShowSingleForm(\'div#formfield'.$k.'\');"># '.$k.'</a></li>';
-				}
-			}
-
-			$html   .= '</ul>';
-			$html .= '</div>';
 		}
 
+		$initialActive = $answers ? count($answers) : 1;
+
 		/* Loop through here for as many forms there are */
-		for ($signup = 1; $signup <= $multi; $signup++)
+		for ($signup = 1; $signup <= $initialActive; $signup++)
 		{
 			if ($answers && $answers[($signup-1)]->sid)
 			{
 				$submitter_id = $answers[($signup-1)]->sid;
-				$html .= '<input type="hidden" name="submitter_id'.$signup.'" value="'.$submitter_id.'" />';
-			}
-			else
-			{
-				$submitter_id = 0;
+				$html .= '<input type="hidden" name="submitter_id' . $signup . '" value="' . $submitter_id . '" />';
 			}
 
 			/* Make a collapsable box */
@@ -370,7 +353,7 @@ class RedformCore extends JObject {
 
 				if (!$rfield->isHidden())
 				{
-					$html .= '<div id="fieldline_' . $field->id . '" class="fieldline type-' . $field->fieldtype . $field->getParam('class', '') . '">';
+					$html .= '<div class="fieldline type-' . $field->fieldtype . $field->getParam('class', '') . '">';
 				}
 
 				if (!$rfield->isHidden())
@@ -384,7 +367,7 @@ class RedformCore extends JObject {
 
 				if (!$rfield->isHidden() && $rfield->displayLabel())
 				{
-					$label = '<div id="field_' . $field->id . '" class="label">' . $rfield->getLabel() . '</div>';
+					$label = '<div class="label">' . $rfield->getLabel() . '</div>';
 				}
 				else
 				{
@@ -1277,5 +1260,32 @@ class RedformCore extends JObject {
 		$res = $db->loadObject();
 
 		return $res->paid;
+	}
+
+	/**
+	 * Load javascript for multiple form
+	 *
+	 * @return void
+	 */
+	protected function loadMultipleFormScript()
+	{
+		JText::script('COM_REDFORM_MAX_SIGNUP_REACHED');
+		JText::script('COM_REDFORM_FIELDSET_SIGNUP_NB');
+		JFactory::getDocument()->addScript(JURI::root() . '/media/com_redform/js/form-multiple.js');
+	}
+
+	/**
+	 * Load javascript for form price
+	 *
+	 * @return void
+	 */
+	protected function loadPriceScript()
+	{
+		$params = JComponentHelper::getParams('com_redform');
+
+		JText::script('COM_REDFORM_Total_Price');
+		$doc = JFactory::getDocument();
+		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
+		$doc->addScript(JURI::root() . '/media/com_redform/js/form-price.js');
 	}
 }
