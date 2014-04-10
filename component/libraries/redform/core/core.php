@@ -142,7 +142,7 @@ class RedformCore extends JObject {
 
 		$form   = $model_redform->getForm();
 
-		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" class="'.$form->classname.'" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
+		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" class="form-validate '.$form->classname.'" enctype="multipart/form-data">';
 		$html .= $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
 		/* Get the user details form */
@@ -534,7 +534,14 @@ class RedformCore extends JObject {
 	 */
 	protected function getRedmemberfields(&$user)
 	{
-		include_once JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php';
+		$path = JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php';
+
+		if (!file_exists($path))
+		{
+			return $user;
+		}
+
+		require_once $path;
 
 		$all = RedmemberLib::getUserData($user->id);
 
@@ -1131,9 +1138,19 @@ class RedformCore extends JObject {
 		// Get User data
 		$userData = $this->getUserData($user_id);
 
-		$data = $this->prepareUserData($userData);
+		$fields = $this->prepareUserData($userData);
 
-		return $this->saveAnswers($integration, $options, $data);
+		require_once RDF_PATH_SITE . '/models/redform.php';
+		$model = new RedformModelRedform();
+		$model->setFormId($this->_form_id);
+
+		if (!$result = $model->quicksubmit($fields, $integration, $options))
+		{
+			$this->setError($model->getError());
+			return false;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -1147,8 +1164,10 @@ class RedformCore extends JObject {
 	 */
 	protected function getUserData($user_id)
 	{
-		// for now, just get data from native joomla users
-		return JFactory::getUser($user_id);
+		$user = JFactory::getUser($user_id);
+		$this->getRedmemberfields($user);
+
+		return $user;
 	}
 
 	/**
@@ -1161,10 +1180,6 @@ class RedformCore extends JObject {
 	 */
 	protected function prepareUserData($userData, $form_index = 1)
 	{
-		$data = array('form_id' => $this->_form_id);
-		$token = JSession::getFormToken();
-		$data[$token] = 1;
-
 		$fields = $this->getFields();
 
 		foreach ($fields as $field)
@@ -1172,12 +1187,9 @@ class RedformCore extends JObject {
 			$field->setFormIndex($form_index);
 			$field->setUser($userData);
 			$field->setValue(null, true);
-			$key = $field->getFormElementName();
-
-			$data[$key] = $field->getValue();
 		}
 
-		return $data;
+		return $fields;
 	}
 
 	/**

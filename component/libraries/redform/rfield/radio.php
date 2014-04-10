@@ -106,7 +106,7 @@ class RedformRfieldRadio extends RedformRfield
 
 		$value = $this->getValue();
 
-		if ($value && in_array($option->value, $value))
+		if ($value == $option->value)
 		{
 			$properties['checked'] = 'checked';
 		}

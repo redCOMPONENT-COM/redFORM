@@ -341,7 +341,7 @@ abstract class RedformRfield extends JObject
 	 *
 	 * @return string
 	 */
-	protected function getFormElementName()
+	public function getFormElementName()
 	{
 		$name = 'field' . $this->id;
 

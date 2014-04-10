@@ -91,7 +91,7 @@ class RedformRfieldEmail extends RedformRfieldTextfield
 	 *
 	 * @return string
 	 */
-	protected function getFormElementName()
+	public function getFormElementName()
 	{
 		$name = 'field' . $this->id;
 
@@ -122,6 +122,27 @@ class RedformRfieldEmail extends RedformRfieldTextfield
 		$name .= '[newsletter][]';
 
 		return $name;
+	}
+
+	/**
+	 * Return input properties array
+	 *
+	 * @return array
+	 */
+	protected function getInputProperties()
+	{
+		$properties = parent::getInputProperties();
+
+		if (isset($properties['class']) && $properties['class'])
+		{
+			$properties['class'] .= ' validate-email';
+		}
+		else
+		{
+			$properties['class'] = 'validate-email';
+		}
+
+		return $properties;
 	}
 
 	/**

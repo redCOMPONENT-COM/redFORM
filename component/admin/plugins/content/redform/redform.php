@@ -67,7 +67,10 @@ class plgContentRedform extends JPlugin {
 			JError::raiseWarning(0, JText::_('COM_REDFORM_COMPONENT_REQUIRED_FOR_REDFORM_PLUGIN'));
 			return false;
 		}
-		include_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'redform.core.php');
+
+		// Register library prefix
+		JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+
 		$this->_rfcore = new RedformCore();
 
     JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );

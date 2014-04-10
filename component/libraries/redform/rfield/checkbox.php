@@ -157,7 +157,7 @@ class RedformRfieldCheckbox extends RedformRfield
 	 *
 	 * @return string
 	 */
-	protected function getFormElementName()
+	public function getFormElementName()
 	{
 		$name = parent::getFormElementName() . '[]';
 

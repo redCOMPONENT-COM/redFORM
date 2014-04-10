@@ -35,6 +35,12 @@ class rfanswers
 
 	private $sid = 0;
 
+	private $submitKey;
+
+	private $integration;
+
+	private $currency;
+
 	/**
 	 * Constructor
 	 */
@@ -75,6 +81,52 @@ class rfanswers
 	public function getAnswerId()
 	{
 		return $this->answerId;
+	}
+
+	/**
+	 * Set submit key
+	 *
+	 * @param   string  $key  submit key
+	 *
+	 * @return void
+	 */
+	public function setSubmitKey($key)
+	{
+		$this->submitKey = $key;
+	}
+
+	/**
+	 * Set integration key
+	 *
+	 * @param   string  $key  integration key
+	 *
+	 * @return void
+	 */
+	public function setIntegration($key)
+	{
+		$this->integration = $key;
+	}
+
+	/**
+	 * Set currency
+	 *
+	 * @param   string  $currencyCode  currency code
+	 *
+	 * @return void
+	 */
+	public function setCurrency($currencyCode)
+	{
+		$this->currency = $currencyCode;
+	}
+
+	/**
+	 * Get currency
+	 *
+	 * @return string
+	 */
+	public function getCurrency()
+	{
+		return $this->currency;
 	}
 
 	/**
@@ -241,15 +293,25 @@ class rfanswers
 	}
 
 	/**
-	 * new save function for new lib
+	 * Add field to answers (value must already be set)
 	 *
-	 * @param   array  $params  parameters (sid)
+	 * @param   RedformRfield  $field  field
+	 *
+	 * @return void
+	 */
+	public function addField($field)
+	{
+		$this->fields[] = $field;
+	}
+
+	/**
+	 * Save submission
 	 *
 	 * @return int submitter_id
 	 *
 	 * @throws Exception
 	 */
-	public function savedata($params = array())
+	public function savedata()
 	{
 		$mainframe = Jfactory::getApplication();
 		$db = JFactory::getDBO();
@@ -264,15 +326,9 @@ class rfanswers
 			throw new Exception('No field to save !');
 		}
 
-		if (isset($params['sid']))
-		{
-			$this->isnew = intval($params['sid']) == 0;
-			$sid = intval($params['sid']);
-		}
-		else
+		if (!$this->sid)
 		{
 			$this->isnew = true;
-			$sid = 0;
 		}
 
 		$values = array();
@@ -298,9 +354,9 @@ class rfanswers
 			}
 		}
 
-		if ($sid) // Answers were already recorded, update them
+		if ($this->sid) // Answers were already recorded, update them
 		{
-			$submitter = $this->getSubmitter($sid);
+			$submitter = $this->getSubmitter($this->sid);
 
 			$q = "UPDATE " . $db->quoteName('#__rwf_forms_' . $this->formId);
 			$set = array();
@@ -348,50 +404,36 @@ class rfanswers
 			}
 
 			$this->answerId = $db->insertid();
-			$sid = $this->updateSubmitter($params);
+			$this->sid = $this->updateSubmitter();
 		}
 
-		$this->sid = $sid;
 		$this->setPrice();
 
-		return $sid;
+		return $this->sid;
 	}
 
 	/**
 	 * Update submitters table
 	 *
-	 * @param   array  $params  parameters
-	 *
 	 * @return bool
 	 */
-	protected function updateSubmitter($params = array())
+	protected function updateSubmitter()
 	{
 		$db = JFactory::getDBO();
 		$mainframe = JFactory::getApplication();
 
-		// Prepare data for submitter record
-		$submitterdata['answer_id'] = $this->answerId;
-
-		if (empty($params['submit_key']))
+		if (!$this->submitKey)
 		{
 			JError::raiseError(0, JText::_('COM_REDFORM_ERROR_SUBMIT_KEY_MISSING'));
 		}
 
-		$submitterdata = array_merge($submitterdata, $params);
-		$submitterdata['form_id'] = $this->formId;
-
-		/* Store the submitter details */
+		/* Prepare the submitter details */
 		$row = JTable::getInstance('Submitters', 'RedformTable');
-
-		if (!$row->bind($submitterdata))
-		{
-			$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_binding_the_submitter_data'), 'error');
-			RedformHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_binding_the_submitter_data') . ': ' . $row->getError());
-
-			return false;
-		}
-
-		/* Set the date */
+		$row->id = $this->sid;
+		$row->form_id = $this->formId;
+		$row->submit_key = $this->submitKey;
+		$row->answer_id = $this->answerId;
+		$row->integration = $this->integration;
 		$row->submission_date = date('Y-m-d H:i:s', time());
 		$row->submitternewsletter = ($this->listnames && count($this->listnames)) ? 1 : 0;
 
@@ -445,13 +487,16 @@ class rfanswers
 			$price = max(array(0, $price));
 		}
 
-		$db = JFactory::getDBO();
-		$query = ' UPDATE #__rwf_submitters SET price = ' . $db->Quote($price)
-			. ' WHERE id = ' . $db->Quote($this->sid);
-		$db->setQuery($query);
-		$res = $db->query();
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
 
-		if (!$res)
+		$query->update('#__rwf_submitters');
+		$query->set('price = ' . $db->quote($price));
+		$query->set('currency = ' . $db->quote($this->currency));
+		$query->where('id = ' . $db->Quote($this->sid));
+		$db->setQuery($query);
+
+		if (!$res = $db->query())
 		{
 			RedformHelperLog::simpleLog($db->getError());
 
@@ -630,14 +675,26 @@ class rfanswers
 
 		$query->select('s.*');
 		$query->from('#__rwf_submitters AS s');
-		$query->join('INNER', '#__');
-		$query->join('LEFT', '#__');
 		$query->where('s.id = ' . $db->quote($id));
 
 		$db->setQuery($query);
 		$res = $db->loadObject();
 
 		return $res;
+	}
+
+	/**
+	 * Set sid
+	 *
+	 * @param   int  $sid  submitter id
+	 *
+	 * @return rfanswers
+	 */
+	public function setSid($sid)
+	{
+		$this->sid = $sid;
+
+		return $this;
 	}
 
 	/**

@@ -350,12 +350,6 @@ class RedformModelRedform extends JModel {
 		$result = new stdclass(); // create a new class for this ?
 		$result->posts = array();
 
-		/* Default values */
-		$answer  = '';
-		$return  = false;
-		$redcompetition = false;
-		$redevent = false;
-
 		// Check the token
 		$token = JSession::getFormToken();
 
@@ -377,6 +371,11 @@ class RedformModelRedform extends JModel {
 			if (!isset($data['nbactive']))
 			{
 				$data['nbactive'] = $app->input->getInt('nbactive', 1);
+			}
+
+			if (!isset($data['currency']))
+			{
+				$data['currency'] = $app->input->getCmd('currency', '');
 			}
 		}
 
@@ -404,6 +403,8 @@ class RedformModelRedform extends JModel {
 		/* Get the form details */
 		$form = $this->getForm($data['form_id']);
 
+		$currency = $data['currency'] ? $data['currency'] : $form->currency;
+
 		/* Load the fields */
 		$fieldlist = $this->getfields($form->id);
 
@@ -411,12 +412,23 @@ class RedformModelRedform extends JModel {
 		$totalforms = isset($data['nbactive']) ? $data['nbactive'] : 1;
 
 		$allanswers = array();
+
 		/* Loop through the different forms */
 		for ($signup = 1; $signup <= $totalforms; $signup++)
 		{
 			// new answers object
 			$answers = new rfanswers();
 			$answers->setFormId($form->id);
+
+			if (isset($data['submitter_id' . $signup]))
+			{
+				$answers->setSid(intval($data['submitter_id'.$signup]));
+			}
+
+			$answers->setFormId($data['form_id']);
+			$answers->setSubmitKey($submit_key);
+			$answers->setIntegration($integration_key);
+			$answers->setCurrency($currency);
 
 			if (isset($options['baseprice']))
 			{
@@ -445,16 +457,6 @@ class RedformModelRedform extends JModel {
 					$postvalues[$key] = $value;
 				}
 			}
-
-			if (isset($data['submitter_id' . $signup]))
-			{
-				$postvalues['sid'] = intval($data['submitter_id'.$signup]);
-			}
-
-			$postvalues['form_id'] = $data['form_id'];
-			$postvalues['submit_key'] = $submit_key;
-
-			$postvalues['integration'] = $integration_key;
 
 			/* Get the raw form data */
 			$postvalues['rawformdata'] = serialize($data);
@@ -538,7 +540,7 @@ class RedformModelRedform extends JModel {
 		// Else save to db !
 		foreach ($allanswers as $answers)
 		{
-			$res = $answers->savedata($postvalues);
+			$res = $answers->savedata();
 
 			if (!$res)
 			{
@@ -570,6 +572,65 @@ class RedformModelRedform extends JModel {
 				$this->notifysubmitter($answers, $form);
 			}
 		}
+
+		return $result;
+	}
+
+	/**
+	 * Create a new submission from fields
+	 *
+	 * @param   array   $fields       RedformRfield fields, with value set
+	 * @param   string  $integration  integration key
+	 * @param   array   $options      options: baseprice, currency
+	 *
+	 * @return boolean true on success
+	 */
+	public function quicksubmit($fields, $integration = null, $options = null)
+	{
+		$result = new stdclass();
+		$result->posts = array();
+
+		$submit_key = uniqid();
+		$result->submit_key = $submit_key;
+
+		$form = $this->getForm();
+
+		// New answers object
+		$answers = new rfanswers();
+		$answers->setFormId($form->id);
+		$answers->setIntegration($integration);
+		$answers->setSubmitKey($submit_key);
+
+		if (isset($options['baseprice']))
+		{
+			$answers->initPrice($options['baseprice']);
+		}
+
+		if (isset($options['currency']))
+		{
+			$answers->setCurrency($options['currency']);
+		}
+
+		/* Build up field list */
+		foreach ($fields as $field)
+		{
+			$answers->addField($field);
+		}
+
+		$sid = $answers->savedata();
+
+		$this->updateMailingList($answers);
+
+		// send email to maintainers
+		$this->notifymaintainer(array($answers), true);
+
+		/* Send a submission mail to the submitters if set */
+		if ($form->submitterinform)
+		{
+			$this->notifysubmitter($answers, $form);
+		}
+
+		$result->posts[] = array('sid' => $sid);
 
 		return $result;
 	}
