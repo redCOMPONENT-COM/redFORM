@@ -1850,7 +1850,7 @@ class RedformCore extends JObject {
 		{
 			$select = JHtml::_('select.genericlist', $options, 'gw');
 
-			$html = '<div class="fieldline">';
+			$html = '<div class="fieldline gateway-select">';
 			$html .= '<div class="label">' . JText::_('COM_REDFORM_SELECT_PAYMENT_METHOD') . '</div>';
 			$html .= '<div class="field">' . $select . '</div>';
 			$html .= '</div>';
