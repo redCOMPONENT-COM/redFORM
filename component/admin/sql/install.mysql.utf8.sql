@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `validate` tinyint(1) NOT NULL DEFAULT '0',
   `unique` tinyint(1) NOT NULL DEFAULT '0',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
+  `save_to_data` tinyint(1) NOT NULL DEFAULT '1',
   `default` varchar(255) default NULL,
   `tooltip` varchar(255) default NULL,
   `params` text default NULL,

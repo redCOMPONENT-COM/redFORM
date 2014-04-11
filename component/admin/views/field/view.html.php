@@ -61,6 +61,9 @@ class RedformViewField extends JView {
 		/* Get the field validation */
 		$lists['unique']= JHTML::_('select.booleanlist',  'unique', 'class="inputbox"', $row->unique);
 
+		/* Get the field Save to data */
+		$lists['save_to_data']= JHTML::_('select.booleanlist',  'save_to_data', 'class="inputbox"', ($row->save_to_data != NULL ? $row->save_to_data : 1 ));
+
 		/* Get the forms */
 		$forms = $this->get('FormsOptions');
 		$state = '';
