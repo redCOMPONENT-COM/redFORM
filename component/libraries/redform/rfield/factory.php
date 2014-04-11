@@ -72,21 +72,8 @@ abstract class RedformRfieldFactory extends JObject
 
 		if (!isset($fields[$id]))
 		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-
-			$query->select('f.fieldtype')
-				->from('#__rwf_fields AS f')
-				->where('f.id = ' . $id);
-			$db->setQuery($query);
-			$type = $db->loadResult();
-
-			if (!$type)
-			{
-				throw new Exception(JText::sprintf('field %d not found', $id));
-			}
-
-			$field = self::getFieldType($type);
+			$type = static::getType($id);
+			$field = static::getFieldType($type);
 			$field->setId($id);
 
 			$fields[$id] = $field;
@@ -116,5 +103,27 @@ abstract class RedformRfieldFactory extends JObject
 		$field = new $class;
 
 		return $field;
+	}
+
+	/**
+	 * Return field type
+	 *
+	 * @param   int  $fieldId  field id
+	 *
+	 * @return string
+	 *
+	 * @throws Exception
+	 */
+	protected static function getType($fieldId)
+	{
+		$model = new RedformCoreModelField;
+		$data = $model->setId($fieldId)->getItem();
+
+		if (!$data)
+		{
+			throw new Exception(JText::sprintf('field %d not found', $fieldId));
+		}
+
+		return $data->fieldtype;
 	}
 }
