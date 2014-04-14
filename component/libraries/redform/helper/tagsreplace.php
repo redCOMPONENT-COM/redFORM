@@ -53,9 +53,14 @@ class RedformHelperTagsreplace
 			{
 				$text = str_replace($tag[0], $this->formdata->formname, $text);
 			}
-			elseif ($replace = $this->getAnswerReplace($tag[0]))
+			else
 			{
-				$text = str_replace($tag[0], $replace, $text);
+				$replace = $this->getAnswerReplace($tag[0]);
+
+				if ($replace !== false)
+				{
+					$text = str_replace($tag[0], $replace, $text);
+				}
 			}
 		}
 
