@@ -29,7 +29,7 @@ require_once (JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.
  * @package  RED.redform
  * @since    2.5
  */
-class PaymentPaypal extends  RDFPaymenthelper
+class PaymentPaypal extends  RedformPaymentHelper
 {
 	/**
 	 * name of the gateway for dispatching

@@ -25,9 +25,7 @@ defined('_JEXEC') or die('Restricted access');
 // Import library dependencies
 jimport('joomla.event.plugin');
 
-require_once 'paymenthelper.class.php';
-
-abstract class RDFPaymentPlugin extends JPlugin
+abstract class RedformPaymentPlugin extends JPlugin
 {
 	/**
 	 * Name of the plugin gateway

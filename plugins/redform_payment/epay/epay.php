@@ -22,10 +22,10 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-// Import dependency
-require_once JPATH_SITE . '/components/com_redform/classes/paymentplugin.php';
+// Register library prefix
+JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
 
-class plgRedform_PaymentEpay extends RDFPaymentPlugin
+class plgRedform_PaymentEpay extends RedformPaymentPlugin
 {
 	protected $gateway = 'epay';
 }

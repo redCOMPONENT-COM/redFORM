@@ -93,7 +93,6 @@ class RedformViewForm extends JView {
 		$lists['show_js_price']= JHTML::_('select.booleanlist',  'show_js_price', 'class="inputbox"', $row->show_js_price);
 
 		// currencies
-		require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'currency.php');
 		$options = array(JHTML::_('select.option', '', JText::_('COM_REDFORM_Select_currency')));
 		$options = array_merge($options, RedformHelperCurrency::getCurrencyOptions());
 		$lists['currency'] = JHTML::_('select.genericlist', $options, 'currency', 'class="inputbox"', 'value', 'text', $row->currency);

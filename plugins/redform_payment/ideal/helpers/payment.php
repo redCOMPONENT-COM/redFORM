@@ -30,7 +30,7 @@ require_once 'ideal.class.php';
  * @package  RED.redform
  * @since    2.5
  */
-class PaymentIdeal extends  RDFPaymenthelper
+class PaymentIdeal extends  RedformPaymentHelper
 {
 	/**
 	 * name of the gateway for dispatching
@@ -146,7 +146,6 @@ class PaymentIdeal extends  RDFPaymenthelper
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
-		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 		$currency = RedformHelperCurrency::getIsoNumber($details->currency);
 
 		$ideal = new iDEAL_Payment($this->params->get('partner_id'));

@@ -22,8 +22,6 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-require_once JPATH_SITE . '/components/com_redform/helpers/currency.php';
-
 /**
  * Payment helper abstract class
  *
@@ -31,7 +29,7 @@ require_once JPATH_SITE . '/components/com_redform/helpers/currency.php';
  * @subpackage  Payment
  * @since       2.5
  */
-abstract class RDFPaymenthelper extends JObject
+abstract class RedformPaymentHelper extends JObject
 {
 	/**
 	 * plugin params

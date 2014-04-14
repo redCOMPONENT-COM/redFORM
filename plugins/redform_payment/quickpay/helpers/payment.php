@@ -23,13 +23,11 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-require_once (JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.php');
-
 /**
  * @package  RED.redform
  * @since    2.5
  */
-class PaymentQuickpay extends  RDFPaymenthelper
+class PaymentQuickpay extends  RedformPaymentHelper
 {
 	/**
 	 * name of the gateway for dispatching
@@ -58,7 +56,6 @@ class PaymentQuickpay extends  RDFPaymenthelper
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
-		require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'helpers'.DS.'currency.php');
 		$currency = $details->currency;
 
 		$req_params = array(

@@ -34,7 +34,7 @@ require_once JPATH_SITE . "/plugins/redform_payment/pagseguro/PagSeguroLibrary/P
  * @subpackage  Payment.pagseguro
  * @since       2.0
  */
-class PaymentPagseguro extends RDFPaymenthelper
+class PaymentPagseguro extends RedformPaymentHelper
 {
 	protected $gateway = 'pagseguro';
 
