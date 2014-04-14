@@ -1,18 +1,21 @@
 <?php
 /**
- * @package    Redform.Admin
- * @copyright  Redform (C) 2008-2013 redCOMPONENT.com
- * @license    GNU General Public License version 2 or later, see LICENSE.
+ * @package     Redform.Libraries
+ * @subpackage  Helper
+ *
+ * @copyright   Copyright (C) 2012 - 2014 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
 /**
- * Helper class for logging
+ * Class RedformHelper log
  *
- * @package  Redform.Admin
- * @since    2.0
+ * @package     Redform.Libraries
+ * @subpackage  Helper
+ * @since       2.5
  */
 class RedformHelperLog
 {

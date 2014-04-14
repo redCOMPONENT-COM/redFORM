@@ -28,7 +28,6 @@ jimport('joomla.mail.helper');
 require_once(JPATH_SITE . '/components/com_redform/redform.defines.php');
 
 require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
-require_once(RDF_PATH_SITE.DS.'helpers'.DS.'log.php');
 
 class RedformCore extends JObject {
 

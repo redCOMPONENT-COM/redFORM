@@ -27,7 +27,6 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_redform'))
 }
 
 // log helper class
-require_once (JPATH_COMPONENT_SITE.DS.'helpers'.DS.'log.php');
 require_once (JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'helper.php');
 
 require_once (JPATH_COMPONENT_SITE.DS.'redform.core.php');
