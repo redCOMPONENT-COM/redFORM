@@ -1,32 +1,28 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.Libraries
+ * @subpackage  Helper
+ *
+ * @copyright   Copyright (C) 2012 - 2014 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
 defined('_JEXEC') or die('Restricted access');
 
 /**
- * Helper class for logging
- * @package    Notes
- * @subpackage com_notes
+ * Currency helper for redform
+ *
+ * @package     Redform.Libraries
+ * @subpackage  Helper
+ * @since       2.5
  */
-class RedformHelperLogCurrency
+class RedformHelperCurrency
 {
-
+	/**
+	 * Return array of codes
+	 *
+	 * @return array
+	 */
 	protected static function get_iso_4217_currency_codes()
 	{
 		$a = array();
@@ -131,55 +127,68 @@ class RedformHelperLogCurrency
 		$a['VND'] = array('Vietnam Dong', '704');
 		$a['AMK'] = array('Zambian Kwacha', '894');
 		$a['ZWD'] = array('Zimbabwe Dollar', '716');
+
 		return $a;
 	}
 
 	/**
 	 * return iso code from iso number
-	 * @param string $code
+	 *
+	 * @param   string  $number  iso number
+	 *
 	 * @return multitype:string |boolean code or false if not found
 	 */
 	public static function getIsoCode($number)
 	{
-		$cur = self::get_iso_4217_currency_codes();
+		$cur = static::get_iso_4217_currency_codes();
+
 		foreach ($cur as $code => $currency)
 		{
-			if ($currency[1] == $number) {
+			if ($currency[1] == $number)
+			{
 				return $code;
 			}
 		}
+
 		return false;
 	}
 
 	/**
 	 * return number corresponging to iso code
-	 * @param string 3 letters code (e.g USD, EUR,...)
+	 *
+	 * @param   string  $code  3 letters code (e.g USD, EUR,...)
+	 *
 	 * @return string
 	 */
 	public static function getIsoNumber($code)
 	{
-		$cur = self::get_iso_4217_currency_codes();
+		$cur = static::get_iso_4217_currency_codes();
+
 		if (in_array($code, array_keys($cur)))
 		{
 			return $cur[$code][1];
 		}
-		else {
+		else
+		{
 			return false;
 		}
 	}
 
 	/**
 	 * get currencies as options, with ode as value
+	 *
 	 * @return array
 	 */
 	public static function getCurrencyOptions()
 	{
-		$cur = self::get_iso_4217_currency_codes();
+		$cur = static::get_iso_4217_currency_codes();
 		$options = array();
+
 		foreach ($cur as $code => $val)
 		{
 			$options[] = JHTML::_('select.option', $code, $code . ' - ' . $val[0]);
 		}
+
 		return $options;
 	}
 }

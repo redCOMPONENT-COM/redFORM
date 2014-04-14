@@ -55,7 +55,7 @@ class PaymentIridium extends RDFPaymenthelper
 		$req_params = array(
 			'MerchantID' => $this->params->get('merchantid'),
 			'Amount' => round($details->price*100),
-			'CurrencyCode' => RedformHelperLogCurrency::getIsoNumber($currency),
+			'CurrencyCode' => RedformHelperCurrency::getIsoNumber($currency),
 			'EchoAVSCheckResult'  => 'true',
 			'EchoCV2CheckResult'  => 'true',
 			'EchoThreeDSecureAuthenticationCheckResult'  => 'true',
@@ -158,7 +158,7 @@ class PaymentIridium extends RDFPaymenthelper
     $resp[] = 'tid:'.JRequest::getVar('CrossReference');
     $resp[] = 'orderid:'.JRequest::getVar('OrderID');
     $resp[] = 'amount:'.JRequest::getVar('Amount');
-    $resp[] = 'cur:'.RedformHelperLogCurrency::getIsoCode(JRequest::getVar('CurrencyCode'));
+    $resp[] = 'cur:'.RedformHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'));
     $resp[] = 'date:'.JRequest::getVar('TransactionDateTime');
     $resp = implode("\n  ", $resp);
 
@@ -252,9 +252,9 @@ class PaymentIridium extends RDFPaymenthelper
 	    $details = $this->_getSubmission($submit_key);
 
 	    $currency = $details->currency;
-	    if (strcasecmp($currency, RedformHelperLogCurrency::getIsoCode(JRequest::getVar('CurrencyCode')))) {
+	    if (strcasecmp($currency, RedformHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode')))) {
 	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_CURRENCY_MISMATCH_EXPECTED_S_RECEIVED_S',
-			                        $submit_key, $currency, RedformHelperLogCurrency::getIsoCode(JRequest::getVar('CurrencyCode')));
+			                        $submit_key, $currency, RedformHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode')));
 			throw new PaymentException($error);
 	    }
 
