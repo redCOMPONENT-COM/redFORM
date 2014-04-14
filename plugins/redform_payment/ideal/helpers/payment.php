@@ -123,23 +123,6 @@ class PaymentIdeal extends  RedformPaymentHelper
     return $paid;
   }
 
-  function writeTransaction($submit_key, $data, $status, $paid)
-  {
-    $db = & JFactory::getDBO();
-
-    // payment was refused
-    $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
-				    . ' VALUES (NOW() '
-				    . ', '. $db->Quote($data)
-				    . ', '. $db->Quote($submit_key)
-				    . ', '. $db->Quote($status)
-				    . ', '. $db->Quote('ideal')
-				    . ', '. $db->Quote($paid)
-				    . ') ';
-    $db->setQuery($query);
-    $db->query();
-  }
-
   function _buildform($request, $return_url = null, $cancel_url = null)
   {
 		$document = JFactory::getDocument();

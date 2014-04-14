@@ -210,31 +210,6 @@ class PaymentQuickpay extends  RedformPaymentHelper
     return $paid;
   }
 
-  /**
-   * write transaction to db
-   *
-   * @param string $submit_key
-   * @param string $data
-   * @param string $status
-   * @param int $paid
-   */
-  function writeTransaction($submit_key, $data, $status, $paid)
-  {
-    $db = & JFactory::getDBO();
-
-    // payment was refused
-    $query =  ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
-				    . ' VALUES (NOW() '
-				    . ', '. $db->Quote($data)
-				    . ', '. $db->Quote($submit_key)
-				    . ', '. $db->Quote($status)
-				    . ', '. $db->Quote('quickpay')
-				    . ', '. $db->Quote($paid)
-				    . ') ';
-    $db->setQuery($query);
-    $db->query();
-  }
-
 	/**
 	 * returns allowed card types
 	 * @return string
