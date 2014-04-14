@@ -206,6 +206,19 @@ class RedformModelSubmitters extends JModelList
 		return $db->loadObjectList();
 	}
 
+	function getPagination()
+	{
+		$mainframe = JFactory::getApplication();
+		$option = JRequest::getVar('option');
+
+		/* Lets load the pagination if it doesn't already exist */
+		jimport('joomla.html.pagination');
+		$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
+		$this->_limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
+		$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
+		return $this->_pagination;
+	}
+
 	/**
 	 * Deletes one or more submitters
 	 *

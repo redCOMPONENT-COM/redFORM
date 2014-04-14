@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -25,13 +25,13 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewSubmitter extends JView {
-	
-  function display($tpl = null) 
+class RedformViewSubmitter extends JViewLegacy {
+
+  function display($tpl = null)
   {
   	$document = &JFactory::getDocument();
-  	JHTML::_('behavior.mootools');
-  	
+  	JHTML::_('behavior.framework');
+
   	$js = <<<EOF
 			Joomla.submitform = function(pressbutton, form){
 				if (pressbutton) {
@@ -45,9 +45,9 @@ class RedformViewSubmitter extends JView {
 EOF;
 
   	$document->addScriptDeclaration($js);
-  	
+
   	$submitter = & $this->get('Data');
-  	if ($submitter) 
+  	if ($submitter)
   	{
 	  	JRequest::setVar('answers', array($submitter));
 	  	JRequest::setVar('submit_key', $submitter->submit_key);
@@ -55,14 +55,14 @@ EOF;
 	  	JRequest::setVar('submitter_id', $submitter->id);
   	}
   	JRequest::setVar('redform_edit', true);
-  	
+
   	$this->assignRef('submitter', $submitter);
   	$this->assignRef('form_id',   JRequest::getVar('form_id'));
-  	
+
   	JToolBarHelper::title(JText::_('COM_REDFORM_EDIT_SUBMITTER' ), 'redform_submitters');
   	JToolBarHelper::save();
   	JToolBarHelper::cancel();
-        
+
   	/* Display the page */
   	parent::display($tpl);
   }

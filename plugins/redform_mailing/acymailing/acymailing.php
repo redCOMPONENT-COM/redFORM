@@ -102,7 +102,7 @@ class plgRedform_mailingAcymailing extends JPlugin {
 	function getLists()
 	{
 		$app = & JFactory::getApplication();
-		if(!include_once(rtrim(JPATH_ADMINISTRATOR,DS).DS.'components'.DS.'com_acymailing'.DS.'helpers'.DS.'helper.php'))
+		if(!include_once(rtrim(JPATH_ADMINISTRATOR, '/') . '/components/com_acymailing/helpers/helper.php'))
 		{
  			$app->enqueueMessage(JText::_('PLG_REDFORM_MAILING_ACYMAILING_NOT_FOUND'), 'error');
  			return false;
@@ -114,4 +114,3 @@ class plgRedform_mailingAcymailing extends JPlugin {
 		return $allLists;
 	}
 }
-?>

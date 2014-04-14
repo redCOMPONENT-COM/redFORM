@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RedformRfieldPrice extends RedformRfield
+class RDFRfieldPrice extends RedformRfield
 {
 	protected $type = 'price';
 

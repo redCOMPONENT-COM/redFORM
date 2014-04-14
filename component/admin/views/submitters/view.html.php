@@ -12,14 +12,15 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 
 /**
- * Class RedformViewSubmitters
+ * Class RDFViewSubmitters
  *
  * @package     Redform
  * @subpackage  front,views
  * @since       1.0
  */
-class RedformViewSubmitters extends JView
-{
+class RedformViewSubmitters extends JViewLegacy {
+
+
 	/**
 	 * Execute and display a template script.
 	 *

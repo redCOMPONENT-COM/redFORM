@@ -63,13 +63,13 @@ class plgContentRedform extends JPlugin {
 
 	protected function _process(&$row, $params = array())
 	{
-		if (!file_exists(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'redform.core.php')) {
+		if (!file_exists(JPATH_SITE.'/components/com_redform/redform.core.php')) {
 			JError::raiseWarning(0, JText::_('COM_REDFORM_COMPONENT_REQUIRED_FOR_REDFORM_PLUGIN'));
 			return false;
 		}
 
 		// Register library prefix
-		JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+		JLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
 
 		$this->_rfcore = new RedformCore();
 
@@ -194,7 +194,7 @@ class plgContentRedform extends JPlugin {
 
 		foreach ($fields as $k => $field)
 		{
-			$paramsdefs = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' . DS . 'field_'.$field->fieldtype.'.xml';
+			$paramsdefs = JPATH_ADMINISTRATOR . '/components/com_redform/models/field_'.$field->fieldtype.'.xml';
 			if (!empty($field->params) && file_exists($paramsdefs))
 			{
 				$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );

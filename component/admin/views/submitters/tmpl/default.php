@@ -129,13 +129,22 @@ function submitbutton(pressbutton) {
 				foreach ($this->fields as $key => $field)
 				{
 					$fieldname = 'field_'. $field->id;
+
 					if (isset($row->$fieldname))
 					{
 						$data = str_replace('~~~', '<br />', $row->$fieldname);
-						if (stristr($data, JPATH_ROOT)) $data = '<a href="'.str_replace(DS, '/', str_replace(JPATH_ROOT, JURI::root(true), $data)).'" target="_blank">'.$data.'</a>';
-						echo '<td>'.$data.'</td>';
+
+						if (stristr($data, JPATH_ROOT))
+						{
+							$data = '<a href="' . str_replace(JPATH_ROOT, JURI::root(true), $data) . '" target="_blank">' . $data . '</a>';
+						}
+
+						echo '<td>' . $data . '</td>';
 					}
-					else echo '<td></td>';
+					else
+					{
+						echo '<td></td>';
+					}
 				}
 				?>
 				<?php if ($this->form->activatepayment): ?>

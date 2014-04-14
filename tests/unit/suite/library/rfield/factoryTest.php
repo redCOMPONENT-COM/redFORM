@@ -10,7 +10,7 @@
 require_once 'PHPUnit/Autoload.php';
 
 // Register library prefix
-JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
 
 /**
  * Test class library rfield factory

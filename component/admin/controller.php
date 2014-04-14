@@ -1,52 +1,51 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package    Redform.Admin
+ *
+ * @copyright  Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later, see LICENSE.
  */
 
-jimport('joomla.application.component.controller');
+defined('_JEXEC') or die;
 
 /**
  * redFORM Component Controller
+ *
+ * @package  Redform.Admin
+ * @since    1.5
  */
-class RedformController extends JController
+class RedformController extends JControllerLegacy
 {
 	/**
-	 * Method to display the view
+	 * Typical view method for MVC based architecture
 	 *
-	 * @access	public
+	 * This function is provide as a default implementation, in most cases
+	 * you will need to override it in your own controllers.
+	 *
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 *
+	 * @return JControllerLegacy A JControllerLegacy object to support chaining.
 	 */
-  function display()
-  {
-    // set a default view
-    if (JRequest::getVar('view', '') == '') {
-      JRequest::setVar('view', 'forms');
-    }
-    parent::display();
-  }
+	public function display($cachable = false, $urlparams = array())
+	{
+		$input = JFactory::getApplication()->input;
+		$input->set('view', $input->get('view', 'forms'));
+		$input->set('task', $input->get('task', 'display'));
 
-  /**
-   * Clears log file
-   *
-   */
-  function clearlog()
-  {
-    RedformHelperLog::clear();
-    $msg = JText::_('COM_REDFORM_LOG_CLEARED');
-    $this->setRedirect('index.php?option=com_redform&view=log', $msg);
-    $this->redirect();
-  }
+		return parent::display($cachable, $urlparams);
+	}
+
+	/**
+	 * Clears log file
+	 *
+	 * @return void
+	 */
+	public function clearlog()
+	{
+		RedformHelperLog::clear();
+		$msg = JText::_('COM_REDFORM_LOG_CLEARED');
+		$this->setRedirect('index.php?option=com_redform&view=log', $msg);
+		$this->redirect();
+	}
 }

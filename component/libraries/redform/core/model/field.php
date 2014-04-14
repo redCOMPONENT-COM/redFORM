@@ -18,7 +18,7 @@ jimport('joomla.application.component.modelitem');
  * @subpackage  Core.Model
  * @since       2.5
  */
-class RedformCoreModelField extends JModelItem
+class RDFCoreModelField extends JModelItem
 {
 	protected $id = 0;
 

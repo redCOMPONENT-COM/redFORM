@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-abstract class RedformRfield extends JObject
+abstract class RDFRfield extends JObject
 {
 	/**
 	 * Field type name

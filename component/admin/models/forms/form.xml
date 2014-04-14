@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset addfieldpath="/libraries/redform/form/fields" name="details">
+		<field
+				name="id"
+				type="hidden"
+				default="0"
+				label="COM_REDFORM_ID_LABEL"
+				description="COM_REDFORM_ID_DESC"
+				readonly="true"
+				/>
+		<field
+				name="formname"
+				type="text"
+				label="COM_REDFORM_FORM_NAME"
+				description="COM_REDFORM_FORM_NAME_TIP"
+				required="true"
+				maxlength="255"
+				/>
+		<field
+				name="showname"
+				type="radio"
+				label="COM_REDFORM_FORM_SHOW_NAME"
+				description="COM_REDFORM_FORM_SHOW_NAME_TIP"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="access"
+				type="accesslevel"
+				label="COM_REDFORM_ACCESS"
+				description="COM_REDFORM_SET_ACCESS_LEVEL"
+				required="true"
+				maxlength="255"
+				/>
+		<field
+				name="classname"
+				type="text"
+				label="COM_REDFORM_FORM_CSS_CLASS_NAME"
+				description="COM_REDFORM_FORM_CSS_CLASS_NAME_TIP"
+				maxlength="255"
+				/>
+		<field
+				name="startdate"
+				type="calendar"
+				format="%d-%m-%Y  %H:%M:%S"
+				label="COM_REDFORM_FORM_START_DATE"
+				description="COM_REDFORM_FORM_START_DATE_TIP"
+				/>
+		<field
+				name="formexpires"
+				type="radio"
+				label="COM_REDFORM_FORM_EXPIRES"
+				description="COM_REDFORM_FORM_EXPIRES_TIP"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="enddate"
+				type="calendar"
+				format="%d-%m-%Y  %H:%M:%S"
+				label="COM_REDFORM_FORM_END_DATE"
+				description="COM_REDFORM_FORM_END_DATE_TIP"
+				/>
+		<field
+				name="captchaactive"
+				type="radio"
+				label="COM_REDFORM_CAPTCHA_ACTIVE"
+				description="COM_REDFORM_CAPTCHA_ACTIVE_TIP"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+	</fieldset>
+
+	<fieldset addfieldpath="/libraries/redform/form/fields" name="notifications">
+		<field
+				name="submitnotification"
+				type="radio"
+				label="COM_REDFORM_FORM_NOTIFICATION"
+				description="COM_REDFORM_FORM_NOTIFICATION_TIP"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="notificationtext"
+				type="editor"
+				label="COM_REDFORM_FORM_END_DATE"
+				description="COM_REDFORM_FORM_END_DATE_TIP"
+				/>
+		<field
+				name="redirect"
+				type="text"
+				label="COM_REDFORM_REDIRECT_URL"
+				description="COM_REDFORM_REDIRECT_URL_TIP"
+				maxlength="255"
+				/>
+		<field
+				name="contactpersoninform"
+				type="radio"
+				label="COM_REDFORM_NOTIFY_CONTACTPERSON"
+				description="COM_REDFORM_NOTIFY_CONTACTPERSON_TIP"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="contactpersonemail"
+				type="text"
+				label="COM_REDFORM_CONTACTPERSON_EMAIL"
+				description="COM_REDFORM_CONTACTPERSON_EMAIL_TIP"
+				maxlength="255"
+				/>
+		<field
+				name="contactpersonfullpost"
+				type="radio"
+				label="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS"
+				description="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS_TIP"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="submitterinform"
+				type="radio"
+				label="COM_REDFORM_NOTIFY_SUBMITTER"
+				description="COM_REDFORM_NOTIFY_SUBMITTER_TIP"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="submissionsubject"
+				type="text"
+				label="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_SUBJECT"
+				description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_SUBJECT_TIP"
+				maxlength="255"
+				/>
+		<field
+				name="submissionbody"
+				type="editor"
+				label="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY"
+				description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY_TIP"
+				/>
+		<field
+				name="cond_recipients"
+				type="rdfconditionalrecipients"
+				label="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS"
+				description="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS_TIP"
+				cols="50"
+				rows="10"
+				/>
+	</fieldset>
+
+	<fieldset addfieldpath="/libraries/redform/form/fields" name="payment">
+		<field
+				name="paymentactive"
+				type="radio"
+				label="COM_REDFORM_PAYMENTACTIVE"
+				description="COM_REDFORM_PAYMENTACTIVE_TIP"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="show_js_price"
+				type="radio"
+				label="COM_REDFORM_FORM_SHOW_JS_PRICE_LABEL"
+				description="COM_REDFORM_FORM_SHOW_JS_PRICE_TIP"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="currency"
+				type="rcurrency"
+				label="COM_REDFORM_PAYMENTCURRENCY"
+				description="COM_REDFORM_PAYMENTCURRENCY_TIP"
+				>
+			<option value="">COM_REDFORM_SELECT_CURRENCY</option>
+		</field>
+		<field
+				name="paymentprocessing"
+				type="editor"
+				label="COM_REDFORM_PAYMENTPROCESSING"
+				description="COM_REDFORM_PAYMENTPROCESSING_TIP"
+				/>
+		<field
+				name="paymentaccepted"
+				type="editor"
+				label="COM_REDFORM_PAYMENTACCEPTED"
+				description="COM_REDFORM_PAYMENTACCEPTED_TIP"
+				/>
+		<field
+				name="contactpaymentnotificationsubject"
+				type="text"
+				label="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT"
+				description="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_TIP"
+				maxlength="255"
+				/>
+		<field
+				name="contactpaymentnotificationbody"
+				type="editor"
+				label="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY"
+				description="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_TIP"
+				/>
+		<field
+				name="submitterpaymentnotificationsubject"
+				type="text"
+				label="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT"
+				description="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_TIP"
+				maxlength="255"
+				/>
+		<field
+				name="submitterpaymentnotificationbody"
+				type="editor"
+				label="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY"
+				description="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_TIP"
+				/>
+	</fieldset>
+</form>

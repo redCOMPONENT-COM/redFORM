@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RedformRfieldInteger extends RedformRfieldSelect
+class RDFRfieldInteger extends RedformRfieldSelect
 {
 	protected $type = 'integer';
 

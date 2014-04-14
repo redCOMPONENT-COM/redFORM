@@ -10,7 +10,7 @@
 require_once 'PHPUnit/Autoload.php';
 
 // Register library prefix
-JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
 
 /**
  * Test class for currency.
@@ -20,6 +20,7 @@ JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
  */
 class currencyTest extends JoomlaTestCase
 {
+
 	public function getTestGetObjectData()
 	{
 		return array( 'USD' => array('USD', 840, 'Should return something else'),

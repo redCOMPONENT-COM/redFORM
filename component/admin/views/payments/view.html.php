@@ -25,7 +25,7 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewPayments extends JView {
+class RedformViewPayments extends JViewLegacy {
 
   function display($tpl = null)
   {
@@ -50,7 +50,7 @@ class RedformViewPayments extends JView {
 
   	JToolBarHelper::title(JText::_( 'COM_REDFORM_PAYMENTS_HISTORY' ), 'redform_submitters');
   	JToolBarHelper::addNew();
-  	JToolBarHelper::editListX();
+  	JToolBarHelper::editList();
   	JToolBarHelper::deleteListX();
 		JToolBarHelper::custom('back', 'back', 'back', 'back', false);
 
@@ -62,4 +62,3 @@ class RedformViewPayments extends JView {
   }
 
 }
-?>

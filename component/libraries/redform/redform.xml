@@ -11,10 +11,12 @@
     <version>##VERSION##</version>
     <description>redFORM library</description>
     <files>
-        <folder>form</folder>
+        <folder>controller</folder>
         <folder>core</folder>
+        <folder>form</folder>
         <folder>helper</folder>
         <folder>payment</folder>
         <folder>rfield</folder>
+        <folder>view</folder>
     </files>
 </extension>

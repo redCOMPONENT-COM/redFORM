@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @package   redform
  * @since 2.0
  */
-class RedformModelPayment extends JModel
+class RedformModelPayment extends JModelLegacy
 {
   /**
    * item id
@@ -83,8 +83,6 @@ class RedformModelPayment extends JModel
     $this->_id    = $id;
     $this->_data  = null;
   }
-
-
 
   /**
    * Method to get an item
@@ -183,7 +181,7 @@ class RedformModelPayment extends JModel
   	$array = JRequest::getVar('cid', array(0), '', 'array');
   	$cid = intval($array[0]);
 
-		$row = & $this->getTable('Payments', 'RedformTable');
+		$row = $this->getTable('Payments', 'RedformTable');
 
     // Bind the form fields to the items table
     if (!$row->bind($data)) {
@@ -240,7 +238,7 @@ class RedformModelPayment extends JModel
   	$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
   	$mailer->setBody(JText::sprintf($body, $form->formname, $link));
 
-  	$core = new RedformCore();
+  	$core = new RedFormCore();
   	$emails = $core->getSubmissionContactEmail($this->_submit_key);
 
   	if (!$emails) {

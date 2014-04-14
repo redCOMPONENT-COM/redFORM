@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RedformRfieldFileupload extends RedformRfield
+class RDFRfieldFileupload extends RedformRfield
 {
 	protected $type = 'fileupload';
 
@@ -73,9 +73,9 @@ class RedformRfieldFileupload extends RedformRfield
 			{
 				if (JFolder::exists($fullpath) && is_writable($fullpath))
 				{
-					if (move_uploaded_file($src_file, $fullpath . DS . $dest_filename))
+					if (move_uploaded_file($src_file, $fullpath . '/' . $dest_filename))
 					{
-						$this->value = $fullpath . DS . $dest_filename;
+						$this->value = $fullpath . '/' . $dest_filename;
 					}
 					else
 					{

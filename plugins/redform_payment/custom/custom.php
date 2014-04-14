@@ -23,7 +23,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 // Register library prefix
-JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
 
 class plgRedform_PaymentCustom extends RedformPaymentPlugin
 {

@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RedformRfieldRecipients extends RedformRfieldSelect
+class RDFRfieldRecipients extends RedformRfieldSelect
 {
 	protected $type = 'recipients';
 }

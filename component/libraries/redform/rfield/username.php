@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RedformRfieldUsername extends RedformRfieldTextfield
+class RDFRfieldUsername extends RedformRfieldTextfield
 {
 	protected $type = 'username';
 

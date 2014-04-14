@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Helper
  * @since       2.5
  */
-class RedformHelperRoute
+class RDFHelperRoute
 {
 	public static function getPaymentRoute($submit_key)
 	{

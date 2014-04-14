@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @subpackage redform
  * @since		0.9
  */
-class RedformModelLog extends JModel
+class RedFormModelLog extends JModelLegacy
 {
 	/**
 	 * Constructor
@@ -55,7 +55,7 @@ class RedformModelLog extends JModel
 		$app = & JFactory::getApplication();
 
 		$contents = '';
-		$file = $app->getCfg('log_path').DS.'com_redform.log';
+		$file = $app->getCfg('log_path').'/com_redform.log';
 		if (file_exists($file)) {
 			$handle = fopen($file, "r");
 			if (!$handle) {

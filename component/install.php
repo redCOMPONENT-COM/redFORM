@@ -152,7 +152,7 @@ class com_redformInstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
-		// Install extensions
+		// Install library
 		$this->installLibraries($parent);
 
 		/* Install plugin */

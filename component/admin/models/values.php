@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ jimport( 'joomla.application.component.model' );
 
 /**
  */
-class RedformModelValues extends JModel 
+class RedformModelValues extends JModelLegacy
 {
 
 	/**
@@ -32,22 +32,22 @@ class RedformModelValues extends JModel
    * @var array
    */
   protected $_data = null;
-  
+
 	/** @var integer Total entries */
 	protected $_total = null;
-	
+
 	/** @var integer pagination limit starter */
 	protected $_limitstart = null;
-	
+
 	/** @var integer pagination limit */
 	protected $_limit = null;
-	   
+
 	/**
 	 * return values
 	 *
 	 * @return array
 	 */
-	function getValues() 
+	function getValues()
 	{
     if (empty($this->_data))
     {
@@ -55,7 +55,7 @@ class RedformModelValues extends JModel
 
       // first, call the pagination to set the limits
       $this->getPagination();
-      
+
       $db->setQuery($this->_buildQuery(), $this->_limitstart, $this->_limit);
       $this->_data = $db->loadObjectList();
     }
@@ -75,11 +75,11 @@ class RedformModelValues extends JModel
     $q .= ' ORDER BY f.id, fd.ordering, v.ordering ';
     return $q;
   }
-	
+
 	function getPagination() {
 		$mainframe = JFactory::getApplication();
 		$option = JRequest::getVar('option');
-	
+
 		/* Lets load the pagination if it doesn't already exist */
 		if (empty($this->_pagination)) {
 			jimport('joomla.html.pagination');
@@ -87,7 +87,7 @@ class RedformModelValues extends JModel
 			$this->_limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
 			$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
 		}
-		
+
 		return $this->_pagination;
 	}
 
@@ -97,7 +97,7 @@ class RedformModelValues extends JModel
    * @access public
    * @return integer
    */
-  function getTotal() 
+  function getTotal()
   {
     // Lets load the content if it doesn't already exist
     if (empty($this->_total))
@@ -107,7 +107,7 @@ class RedformModelValues extends JModel
 
     return $this->_total;
   }
-  
+
   /**
    * returns options for forms selecto list
    *
@@ -118,7 +118,7 @@ class RedformModelValues extends JModel
     $query = "SELECT id AS value, formname AS text FROM #__rwf_forms";
     $this->_db->setQuery($query);
     return $this->_db->loadObjectList();
-  }  
+  }
 
   /**
    * returns options for forms selecto list
@@ -130,7 +130,7 @@ class RedformModelValues extends JModel
     $query = "SELECT COUNT(*) FROM #__rwf_fields";
     $this->_db->setQuery($query);
     return $this->_db->loadResult();
-  }	
+  }
 
  /**
    * Method to (un)publish
@@ -148,11 +148,11 @@ class RedformModelValues extends JModel
       $this->setError($table->getError());
       return false;
     }
-    
+
     return true;
   }
-    
-   
+
+
   /**
    * Delete items
    */
@@ -161,7 +161,7 @@ class RedformModelValues extends JModel
 	$mainframe = JFactory::getApplication();
   	$database = & JFactory::getDBO();
   	JArrayHelper::toInteger( $cid );
-  	 
+
   	$cids = 'id=' . implode( ' OR id=', $cid );
   	$query = "DELETE FROM #__rwf_values"
   	. "\n  WHERE ( $cids )";
@@ -170,13 +170,13 @@ class RedformModelValues extends JModel
   		$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_value'));
   		return false;
   	}
-  	
+
   	if (count($cid) > 1) $mainframe->enqueueMessage(JText::_('COM_REDFORM_Values_have_been_deleted'));
   	else $mainframe->enqueueMessage(JText::_('COM_REDFORM_Value_has_been_deleted'));
-  		
+
   	return true;
   }
-   
+
    /**
     * Reorder values
 	*/
@@ -186,7 +186,7 @@ class RedformModelValues extends JModel
 		$order = JRequest::getVar('order');
 		$total = count($cid);
 		$row =& $this->getTable();
-		
+
 		if (empty( $cid )) {
 			return JError::raiseWarning( 500, JText::_('COM_REDFORM_No_items_selected' ) );
 		}
@@ -205,28 +205,28 @@ class RedformModelValues extends JModel
 	/**
 	 * Check if a field type is already existing
 	 */
-	function getCheckFieldType() 
+	function getCheckFieldType()
 	{
 		$db = JFactory::getDBO();
 		$qid = JRequest::getInt('field_id');
-		
+
 		$q = ' SELECT fieldtype	FROM #__rwf_fields WHERE id = '.$db->Quote($qid);
 		$db->setQuery($q, 0, 1);
-		
+
 		return $db->loadResult();
 	}
-	   
+
    /**
     * Reorder values
 	*/
-	function saveorder() 
+	function saveorder()
 	{
 		$db =& JFactory::getDBO();
 		$cid = JRequest::getVar('cid');
 		$order = JRequest::getVar('order');
 		$total = count($cid);
 		$row =& $this->getTable();
-		
+
 		if (empty( $cid )) {
 			return JError::raiseWarning( 500, JText::_('COM_REDFORM_No_items_selected' ) );
 		}

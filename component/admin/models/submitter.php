@@ -21,11 +21,11 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
 jimport( 'joomla.application.component.model' );
 
-require_once JPATH_COMPONENT_SITE.DS.'classes'.DS.'answers.php';
+require_once JPATH_COMPONENT_SITE.'/classes/answers.php';
 
 /**
  */
-class RedformModelSubmitter extends JModel {
+class RedformModelSubmitter extends JModelLegacy {
 
   /**
    * Form id

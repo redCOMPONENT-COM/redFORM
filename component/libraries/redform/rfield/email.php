@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RedformRfieldEmail extends RedformRfieldTextfield
+class RDFRfieldEmail extends RedformRfieldTextfield
 {
 	protected $type = 'email';
 

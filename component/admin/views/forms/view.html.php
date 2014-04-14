@@ -1,77 +1,131 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.Backend
+ * @subpackage  Views
+ *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
-
-jimport( 'joomla.application.component.view' );
+defined('_JEXEC') or die;
 
 /**
- * redFORM View
+ * Categories View
+ *
+ * @package     Redform.Backend
+ * @subpackage  Views
+ * @since       1.0
  */
-class RedformViewForms extends JView {
+class RedformViewForms extends RDFView
+{
 	/**
-	 * redFORM view display method
-	 * @return void
-	 **/
-	function display($tpl = null)
+	 * @var  array
+	 */
+	public $items;
+
+	/**
+	 * @var  object
+	 */
+	public $state;
+
+	/**
+	 * @var  JPagination
+	 */
+	public $pagination;
+
+	/**
+	 * @var  JForm
+	 */
+	public $filterForm;
+
+	/**
+	 * @var array
+	 */
+	public $activeFilters;
+
+	/**
+	 * @var array
+	 */
+	public $stoolsOptions = array();
+
+	/**
+	 * Display method
+	 *
+	 * @param   string  $tpl  The template name
+	 *
+	 * @return  void
+	 */
+	public function display($tpl = null)
 	{
-		// set the menu
-		RedformHelperAdmin::setMenu();
+		$model = $this->getModel('forms');
 
-		/* Get the competitions list */
-		$forms = $this->get('Forms');
+		$this->items = $model->getItems();
+		$this->state = $model->getState();
+		$this->pagination = $model->getPagination();
+		$this->filterForm = $model->getForm();
+		$this->activeFilters = $model->getActiveFilters();
+		$this->stoolsOptions['searchField'] = 'search_forms';
 
-		/* Get the pagination */
-		$pagination = & $this->get('Pagination');
-		/* Get the number of contestantst */
-		$submitters = $this->get('CountSubmitters');
-
-		/* Set variabels */
-		$this->assignRef('pagination',   $pagination);
-		$this->assignRef('forms',   $forms);
-		$this->assignRef('submitters',   $submitters);
-
-		/* Get the toolbar */
-		$this->toolbar();
-
-		/* Display the page */
 		parent::display($tpl);
 	}
 
-	function toolbar()
+	/**
+	 * Get the view title.
+	 *
+	 * @return  string  The view title.
+	 */
+	public function getTitle()
 	{
-		JToolBarHelper::title(JText::_('COM_REDFORM' ), 'redform_redform');
-		JToolBarHelper::addNew();
-		JToolBarHelper::editListX();
-    JToolBarHelper::custom('copy', 'copy', 'copy', 'COM_REDFORM_Clone', true);
-		JToolBarHelper::deleteList(JText::_('COM_REDFORM_COM_REDEVENT_FORMS_DELETE_WARNING'));
-		JToolBarHelper::divider();
-		JToolBarHelper::publishList();
-		JToolBarHelper::unpublishList();
-		JToolBarHelper::divider();
-		JToolBarHelper::custom('submitters', 'redform_submitters', 'redform_submitters', 'COM_REDFORM_Submitters', true);
-		JToolBarHelper::divider();
-		if (JFactory::getUser()->authorise('core.admin', 'com_redform'))
+		return JText::_('COM_REDFORM_FORM_LIST_TITLE');
+	}
+
+	/**
+	 * Get the toolbar to render.
+	 *
+	 * @return  RToolbar
+	 */
+	public function getToolbar()
+	{
+		$canDoCore = RedformHelpersAcl::getActions();
+		$user = JFactory::getUser();
+
+		$firstGroup = new RToolbarButtonGroup;
+		$secondGroup = new RToolbarButtonGroup;
+
+		// Add / edit
+		if ($canDoCore->get('core.create'))
 		{
-			JToolBarHelper::preferences('com_redform');
+			$new = RToolbarBuilder::createNewButton('form.add');
+			$firstGroup->addButton($new);
 		}
+
+		if ($canDoCore->get('core.edit'))
+		{
+			$edit = RToolbarBuilder::createEditButton('form.edit');
+			$firstGroup->addButton($edit);
+		}
+
+		// Publish / Unpublish
+		if ($canDoCore->get('core.edit.state'))
+		{
+			$publish = RToolbarBuilder::createPublishButton('forms.publish');
+			$unpublish = RToolbarBuilder::createUnpublishButton('forms.unpublish');
+
+			$firstGroup->addButton($publish)
+				->addButton($unpublish);
+		}
+
+		// Delete / Trash
+		if ($canDoCore->get('core.delete'))
+		{
+			$delete = RToolbarBuilder::createDeleteButton('forms.delete');
+			$secondGroup->addButton($delete);
+		}
+
+		$toolbar = new RToolbar;
+		$toolbar->addGroup($firstGroup)
+			->addGroup($secondGroup);
+
+		return $toolbar;
 	}
 }
-?>

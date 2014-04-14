@@ -1,132 +1,139 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+/**
+ * @package     Redform.Backend
+ * @subpackage  Views
+ *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );?>
-<form action="index.php" method="post" id="adminForm" name="adminForm">
-	<table class="adminlist">
-		<tr>
-			<th width="20">
-			<?php echo JText::_('COM_REDFORM_ID'); ?>
-			</th>
-			<th width="20">
-			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->forms ); ?>);" />
-			</th>
-			<th class="title">
-			<?php echo JText::_('COM_REDFORM_Form_name'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('COM_REDFORM_FORM_START_DATE'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('COM_REDFORM_FORM_END_DATE'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('COM_REDFORM_Published'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('COM_REDFORM_Active'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('COM_REDFORM_Submitters'); ?>
-			</th>
-			<th class="title">
-			<?php echo JText::_('COM_REDFORM_Tag'); ?>
-			</th>
-		</tr>
-		<?php
-		$k = 0;
-		for ($i=0, $n=count( $this->forms ); $i < $n; $i++) {
-			$row = $this->forms[$i];
-			
-			JFilterOutput::objectHTMLSafe($row);
-			$link 	= 'index.php?option=com_redform&task=edit&controller=forms&cid[]='. $row->id;
-						
-			$checked = JHTML::_('grid.checkedout',  $row, $i);
-			$my  = JFactory::getUser();
-			?>
-			<tr class="<?php echo 'row'. $k; ?>">
-				<td align="center">
-				<?php echo $this->pagination->getRowOffset($i); ?>
-				</td>
-				<td>
-				<?php echo $checked; ?>
-				</td>
-				<td>
-				<?php
-				if ( $row->checked_out && ( $row->checked_out != $my->id ) ) {
-					?>
-					<?php echo $row->formname; ?>
-					&nbsp;[ <i><?php echo JText::_('COM_REDFORM_Checked_Out'); ?></i> ]
-					<?php
-				} else {
-					?>
-					<a href="<?php echo $link; ?>" title="<?php echo JText::_('COM_REDFORM_Edit_form'); ?>">
-					<?php echo $row->formname; ?>
-					</a>
-					<?php
-				}
-				?>
-				</td>
-				<td>
-				<?php
-					$date = JFactory::getDate($row->startdate);
-					echo $date->toFormat('%d-%m-%Y  %H:%M:%S');
-				?>
-				</td>
-				<td>
-				<?php if ($row->formexpires) {
-					$date = JFactory::getDate($row->enddate);
-					echo $date->toFormat('%d-%m-%Y  %H:%M:%S');
-				}
-				?>
-				</td>
-				<td width="10%" align="center">
-					<?php echo JHtml::_('jgrid.published', $row->published, $i); ?>
-				</td>
-				<td width="10%" align="center">
-					<?php echo $row->formstarted ? 
-					           JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) : 
-					           JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
-				</td>
-				<td>
-				<?php
-					if (isset($this->submitters[$row->id])) echo $this->submitters[$row->id]->total;
-					else echo '0';
-				?>
-				</td>
-				<td>
-				<?php 
-					echo "{redform}".$row->id."{/redform}";
-				?>
-				</td>
+defined('_JEXEC') or die;
+
+JHtml::_('rbootstrap.tooltip');
+JHtml::_('rjquery.chosen', 'select');
+
+$action = JRoute::_('index.php?option=com_redform&view=forms');
+$listOrder = $this->state->get('list.ordering');
+$listDirn = $this->state->get('list.direction');
+$saveOrder = $listOrder == 'ordering';
+?>
+<form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
+
+	<?php
+	echo RLayoutHelper::render(
+		'searchtools.default',
+		array(
+			'view' => $this,
+			'options' => array(
+				'filterButton' => false,
+				'searchField' => 'search_forms',
+				'searchFieldSelector' => '#filter_search_forms',
+				'limitFieldSelector' => '#list_form_limit',
+				'activeOrder' => $listOrder,
+				'activeDirection' => $listDirn
+			)
+		)
+	);
+	?>
+
+	<hr/>
+	<?php if (empty($this->items)) : ?>
+		<div class="alert alert-info">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="pagination-centered">
+				<h3><?php echo JText::_('COM_REDFORM_NOTHING_TO_DISPLAY') ?></h3>
+			</div>
+		</div>
+	<?php else : ?>
+		<table class="table table-striped table-hover" id="categoryList">
+			<thead>
+			<tr>
+				<th width="1%" class="hidden-phone">
+					<input type="checkbox" name="checkall-toggle" value=""
+					       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
+				</th>
+				<th width="1%" class="nowrap center">
+					<?php echo JHtml::_('rsearchtools.sort', 'JSTATUS', 'f.published', $listDirn, $listOrder); ?>
+				</th>
+				<th class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'JGLOBAL_TITLE', 'f.formname', $listDirn, $listOrder); ?>
+				</th>
+				<th width="18%" class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_FORM_START_DATE', 'f.startdate', $listDirn, $listOrder); ?>
+				</th>
+				<th width="18%" class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_FORM_END_DATE', 'f.enddate', $listDirn, $listOrder); ?>
+				</th>
+				<th width="12%" class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_ACTIVE', 'f.formstarted', $listDirn, $listOrder); ?>
+				</th>
+				<th width="18%" class="nowrap hidden-phone">
+					<?php echo JText::_('COM_REDFORM_SUBMITTERS'); ?>
+				</th>
+				<th width="18%" class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_TAG', 'f.id', $listDirn, $listOrder); ?>
+				</th>
 			</tr>
-			<?php
-			$k = 1 - $k;
-		}
-		?>
-		<tr>
-            <td colspan="9"><?php echo $this->pagination->getListFooter(); ?></td>
-         </tr>
+			</thead>
+			<?php if ($this->items): ?>
+				<tbody>
+				<?php foreach ($this->items as $i => $item): ?>
+					<?php
+					$canChange = 1;
+					$canEdit = 1;
+					$canCheckin = 1;
+					?>
+					<tr>
+						<td>
+							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+						</td>
+						<td>
+							<?php echo JHtml::_('rgrid.published', $item->published, $i, 'forms.', $canChange, 'cb'); ?>
+						</td>
+						<td>
+							<?php if ($item->checked_out) : ?>
+								<?php echo JHtml::_('rgrid.checkedout', $i, $item->checked_out,
+									$item->checked_out_time, 'forms.', $canCheckin); ?>
+							<?php endif; ?>
+							<a href="<?php echo JRoute::_('index.php?option=com_redform&task=form.edit&id=' . $item->id); ?>">
+								<?php echo $this->escape($item->formname); ?>
+							</a>
+						</td>
+						<td>
+							<?php
+							$date = JFactory::getDate($item->startdate);
+							echo $date->toSql();
+							?>
+						</td>
+						<td>
+							<?php
+							if ($item->formexpires)
+							{
+								$date = JFactory::getDate($item->enddate);
+								echo $date->toSql();
+							}
+							?>
+						</td>
+						<td>
+							<?php echo $item->formstarted ?
+								JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) :
+								JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
+						</td>
+						<td></td>
+						<td>
+							<?php echo '{redform}' . $item->id . '{/redform}'; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+			<?php endif; ?>
 		</table>
-	<input type="hidden" name="option" value="com_redform" />
-	<input type="hidden" name="task" value="" />
-	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="controller" value="forms" />
-	<input type="hidden" name="view" value="forms" />
+		<?php echo $this->pagination->getPaginationLinks(null, array('showLimitBox' => false)); ?>
+	<?php endif; ?>
+
+	<div>
+		<input type="hidden" name="task" value="">
+		<input type="hidden" name="boxchecked" value="0">
+		<?php echo JHtml::_('form.token'); ?>
+	</div>
 </form>

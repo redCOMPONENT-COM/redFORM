@@ -25,11 +25,11 @@ defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.application.component.model');
 jimport('joomla.html.parameter');
 
-require_once RDF_PATH_SITE.DS.'classes'.DS.'answers.php';
+require_once RDF_PATH_SITE.'/classes/answers.php';
 
 /**
  */
-class RedformModelRedform extends JModel {
+class RedformModelRedform extends JModelLegacy {
 
 	protected  $_form_id = 0;
 

@@ -24,7 +24,7 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Controller
  */
-class RedformControllerSubmitters extends JController
+class RedformControllerSubmitters extends JControllerLegacy
 {
 	/**
 	 * Method to display the view
@@ -112,7 +112,6 @@ class RedformControllerSubmitters extends JController
 
     parent::display();
   }
-
 
 	/**
 	 * Redirect back to redEVENT

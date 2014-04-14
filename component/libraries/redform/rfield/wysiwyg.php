@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RedformRfieldWysiwyg extends RedformRfieldTextfield
+class RDFRfieldWysiwyg extends RedformRfieldTextfield
 {
 	protected $type = 'wysiwyg';
 

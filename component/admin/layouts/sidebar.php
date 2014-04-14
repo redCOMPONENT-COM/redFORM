@@ -1,0 +1,40 @@
+<?php
+/**
+ * @package     Redshopb.Admin
+ * @subpackage  Layouts
+ *
+ * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
+ */
+
+defined('_JEXEC') or die;
+
+$data = $displayData;
+
+$active = null;
+
+if (isset($data['active']))
+{
+	$active = $data['active'];
+}
+
+$formsClass = ($active === 'forms') ? 'active' : '';
+$fieldsClass = ($active === 'fields') ? 'active' : '';
+?>
+
+<ul class="nav nav-tabs nav-stacked">
+	<li>
+		<a class="<?php echo $formsClass ?>"
+		   href="<?php echo JRoute::_('index.php?option=com_redform&view=forms') ?>">
+			<i class="icon-user"></i>
+			<?php echo JText::_('COM_REDFORM_FORM_LIST_TITLE') ?>
+		</a>
+	</li>
+	<li>
+		<a class="<?php echo $fieldsClass ?>"
+		   href="<?php echo JRoute::_('index.php?option=com_redform&view=fields') ?>">
+			<i class="icon-user"></i>
+			<?php echo JText::_('COM_REDFORM_FIELD_LIST_TITLE') ?>
+		</a>
+	</li>
+</ul>

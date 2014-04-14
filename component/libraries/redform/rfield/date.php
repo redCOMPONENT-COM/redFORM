@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RedformRfieldDate extends RedformRfield
+class RDFRfieldDate extends RedformRfield
 {
 	protected $type = 'date';
 

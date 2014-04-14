@@ -24,7 +24,7 @@ jimport('joomla.application.component.controller');
 /**
  * redFORM Controller
  */
-class RedformControllerRedform extends JController
+class RedformControllerRedform extends JControllerLegacy
 {
 	/**
 	 * Method to display the view
@@ -93,7 +93,7 @@ class RedformControllerRedform extends JController
 
 		$view =& $this->getView('redform', 'html');
 		$view->setModel( $this->getModel( 'redform', 'RedformModel' ), true );
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' );
+		$this->addModelPath( JPATH_ADMINISTRATOR . '/components/com_redform/models' );
 		$view->setModel( $this->getModel( 'submitters', 'RedformModel' ));
 		$view->setLayout('detailsform');
 		$view->display();
@@ -116,7 +116,7 @@ class RedformControllerRedform extends JController
 	function Submitters() {
 		$view =& $this->getView('submitters', 'html');
 		$view->setModel( $this->getModel( 'submitters', 'RedformModel' ), true );
-		$this->addModelPath( JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_redform' . DS . 'models' );
+		$this->addModelPath( JPATH_ADMINISTRATOR . '/components/com_redform/models' );
 		$view->setModel( $this->getModel( 'redform', 'RedformModel' ));
 		$view->setLayout('submitters');
 		$view->display();

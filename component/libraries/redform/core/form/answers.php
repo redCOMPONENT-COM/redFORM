@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Helper
  * @since       2.5
  */
-class RedformCoreFormAnswers {
+class RDFCoreFormAnswers {
 	public $sid;
 	public $submit_key;
 	public $fields;

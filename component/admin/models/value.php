@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ jimport( 'joomla.application.component.model' );
 
 /**
  */
-class RedformModelValue extends JModel 
+class RedformModelValue extends JModelLegacy
 {
   /**
    * Field id
@@ -65,14 +65,14 @@ class RedformModelValue extends JModel
     $this->_id      = $id;
     $this->_data  = null;
   }
-    
+
   function getFormsOptions()
   {
     $query = "SELECT id AS value, formname AS text, startdate FROM #__rwf_forms";
     $this->_db->setQuery($query);
     return $this->_db->loadObjectList();
   }
-  
+
   function getFieldsOptions()
   {
     $query = ' SELECT fd.id AS value, CONCAT(f.formname, "::", fd.field) AS text '
@@ -99,11 +99,11 @@ class RedformModelValue extends JModel
 
     return $this->_data;
   }
-     
+
    /**
     * Retrieve a field to edit
     */
-   function _loadData() 
+   function _loadData()
    {
       // Lets load the content if it doesn't already exist
       if (empty($this->_data))
@@ -119,7 +119,7 @@ class RedformModelValue extends JModel
       }
       return true;
    }
-   
+
   /**
    * load default data
    *
@@ -129,11 +129,11 @@ class RedformModelValue extends JModel
   {
     $this->_data = & JTable::getInstance('Values', 'RedformTable');
     $this->_data->published = 1;
-    
-    if ($field_id = JRequest::getInt('fieldid')) 
+
+    if ($field_id = JRequest::getInt('fieldid'))
     {
-    	$query = ' SELECT fieldtype ' 
-    	       . ' FROM #__rwf_fields ' 
+    	$query = ' SELECT fieldtype '
+    	       . ' FROM #__rwf_fields '
     	       . ' WHERE id = ' . $this->_db->Quote($field_id);
     	$this->_db->setQuery($query);
     	$res = $this->_db->loadResult();
@@ -145,7 +145,7 @@ class RedformModelValue extends JModel
     }
     return $this->_data;
   }
-   
+
 
   /**
    * Tests if the element is checked out
@@ -195,7 +195,7 @@ class RedformModelValue extends JModel
     }
     return false;
   }
-  
+
 
   /**
    * Method to checkin/unlock the item
@@ -213,30 +213,30 @@ class RedformModelValue extends JModel
     }
     return false;
   }
-  
+
    /**
     * Save an value
     */
-   function store($data) 
+   function store($data)
    {
       $mainframe = JFactory::getApplication();
       $row = $this->getTable('Values', 'RedformTable');
-	  
+
 	  /* Get the posted data */
 	  $post = $data;
-	  
+
 	  $row->load($post['id']);
-	  
+
 	  /* Get the posted data */
       if (!$row->bind($post)) {
          $mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_binding_the_value_data').' '.$row->getError(), 'error');
          return false;
       }
-      
+
 		  if (empty($row->ordering)) {
 		  	$row->ordering = $row->getNextOrder('field_id = '.$row->field_id);
 		  }
-	  
+
       /* pre-save checks */
       if (!$row->check()) {
          $mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_checking_the_value_data').' '.$row->getError(), 'error');
@@ -248,28 +248,28 @@ class RedformModelValue extends JModel
          $mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_value_data').' '.$row->getError(), 'error');
          return false;
       }
-	  
+
       $row->reorder('field_id = '.$row->field_id);
-	  
+
       $mainframe->enqueueMessage(JText::_('COM_REDFORM_The_value_has_been_saved'));
       return $row;
    }
-   
+
    /**
     * Delete an value
     */
-   function getRemoveValue() 
+   function getRemoveValue()
    {
       $mainframe = JFactory::getApplication();
       $database = JFactory::getDBO();
       $cid = JRequest::getVar('cid');
       JArrayHelper::toInteger( $cid );
-	  
+
       if (!is_array( $cid ) || count( $cid ) < 1) {
          $mainframe->enqueueMessage(JText::_('COM_REDFORM_No_value_found_to_delete'));
          return false;
       }
-      if (count($cid)) 
+      if (count($cid))
       {
          $cids = 'id=' . implode( ' OR id=', $cid );
          $query = "DELETE FROM #__rwf_values"
@@ -284,21 +284,21 @@ class RedformModelValue extends JModel
          }
       }
    }
-	
+
 	/**
 	 * Check if a field type is already existing
 	 */
-	function getCheckFieldType() 
+	function getCheckFieldType()
 	{
 		$db = JFactory::getDBO();
 		$qid = JRequest::getInt('field_id');
-		
+
 		$q = ' SELECT fieldtype	FROM #__rwf_fields WHERE id = '.$db->Quote($qid);
 		$db->setQuery($q, 0, 1);
-		
+
 		return $db->loadResult();
 	}
-	
+
   /**
    * Method to move
    *

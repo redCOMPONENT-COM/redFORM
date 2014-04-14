@@ -27,9 +27,9 @@ jimport('joomla.mail.helper');
 
 require_once(JPATH_SITE . '/components/com_redform/redform.defines.php');
 
-require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
+require_once(RDF_PATH_SITE .'/models/redform.php');
 
-class RedformCore extends JObject {
+class RDFCore extends JObject {
 
 	private $_form_id;
 
@@ -47,7 +47,7 @@ class RedformCore extends JObject {
 	{
 		parent::__construct();
 		$lang = JFactory::getLanguage();
-		$lang->load('com_redform', JPATH_SITE.DS.'components'.DS.'com_redform');
+		$lang->load('com_redform', JPATH_SITE . '/components/com_redform');
 		$lang->load('com_redform', JPATH_SITE, null, true);
 	}
 
