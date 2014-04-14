@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="extra" label="extra">
+            <field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS"
+                   description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
+
+            <field name="size" type="text" default="1" label="COM_REDFORM_FIELD_SELECT_PARAMS_SIZE"
+                   description="COM_REDFORM_FIELD_SELECT_PARAMS_SIZE_DESC"/>
+
+            <field name="minvalue" type="text" default="1" label="COM_REDFORM_FIELD_INTEGER_PARAMS_MINVALUE"
+                   description="COM_REDFORM_FIELD_INTEGER_PARAMS_MINVALUE_DESC"/>
+
+            <field name="maxvalue" type="text" default="10" label="COM_REDFORM_FIELD_INTEGER_PARAMS_MAXVALUE"
+                   description="COM_REDFORM_FIELD_INTEGER_PARAMS_MAXVALUE_DESC"/>
+
+            <field name="step" type="text" default="1" label="COM_REDFORM_FIELD_INTEGER_PARAMS_STEP"
+                   description="COM_REDFORM_FIELD_INTEGER_PARAMS_STEP_DESC"/>
+
+            <field name="baseprice" type="text" default="1" label="COM_REDFORM_FIELD_INTEGER_PARAMS_BASEPRICE"
+                   description="COM_REDFORM_FIELD_INTEGER_PARAMS_BASEPRICE_DESC"/>
+        </fieldset>
+    </fields>
+</form>
