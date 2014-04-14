@@ -45,7 +45,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 	 * @param   string  $return_url  return url
 	 * @param   string  $cancel_url  cancel url
 	 *
-	 * @throws PaymentException
+	 * @throws RedformPaymentException
 	 * @return bool
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
@@ -118,7 +118,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 		}
 		catch (PagSeguroServiceException $e)
 		{
-			throw new PaymentException('Pagseguro error: ' . $e->getMessage());
+			throw new RedformPaymentException('Pagseguro error: ' . $e->getMessage());
 		}
 
 		JHtml::_('behavior.mootools');
@@ -136,7 +136,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 	/**
 	 * Handle the reception of notification
 	 *
-	 * @throws PaymentException
+	 * @throws RedformPaymentException
 	 * @return bool paid status
 	 */
 	public function notify()
@@ -164,13 +164,13 @@ class PaymentPagseguro extends RedformPaymentHelper
 
 				default:
 					$error = "Unknown notification type [" . $notificationType->getValue() . "] for key " . $submit_key;
-					throw new PaymentException($error);
+					throw new RedformPaymentException($error);
 			}
 		}
 		else
 		{
 			$error = "Invalid notification parameters for key " . $submit_key;
-			throw new PaymentException($error);
+			throw new RedformPaymentException($error);
 		}
 
 		try
@@ -201,7 +201,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 				}
 
 				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_NOT_PAID_KEY_S_REASON_S', $submit_key, $reason);
-				throw new PaymentException($error);
+				throw new RedformPaymentException($error);
 			}
 
 			$resp = array();
@@ -212,7 +212,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 
 			$this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
 		}
-		catch (PaymentException $e) // Just easier for debugging...
+		catch (RedformPaymentException $e) // Just easier for debugging...
 		{
 			RedformHelperLog::simpleLog($e->getMessage());
 			$this->writeTransaction($submit_key, $e->getMessage() . $resp, 'FAIL', 0);
@@ -230,7 +230,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 	 *
 	 * @return PagSeguroTransaction
 	 *
-	 * @throws PaymentException
+	 * @throws RedformPaymentException
 	 */
 	private function TransactionNotification($notificationCode)
 	{
@@ -242,7 +242,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 		}
 		catch (PagSeguroServiceException $e)
 		{
-			throw new PaymentException($e->getMessage());
+			throw new RedformPaymentException($e->getMessage());
 		}
 
 		return $transaction;

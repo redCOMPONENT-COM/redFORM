@@ -14,6 +14,7 @@
         <folder>form</folder>
         <folder>core</folder>
         <folder>helper</folder>
+        <folder>payment</folder>
         <folder>rfield</folder>
     </files>
 </extension>
