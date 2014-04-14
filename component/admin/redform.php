@@ -26,10 +26,13 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_redform'))
 	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
+// Register library prefix
+JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+
 // log helper class
 require_once (JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'helper.php');
 
-require_once (JPATH_COMPONENT_SITE.DS.'redform.core.php');
+require_once (JPATH_COMPONENT_SITE.DS.'redform.defines.php');
 
 // redmember integration
 if (file_exists(JPATH_ROOT.DS.'components'.DS.'com_redmember')) {

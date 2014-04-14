@@ -22,9 +22,6 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-require_once JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.php';
-require_once JPATH_SITE . '/components/com_redform/redform.core.php';
-
 require_once JPATH_SITE . "/plugins/redform_payment/pagseguro/PagSeguroLibrary/PagSeguroLibrary.php";
 
 /**

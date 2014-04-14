@@ -23,8 +23,6 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-require_once (JPATH_SITE . '/components/com_redform/classes/paymenthelper.class.php');
-
 /**
  * @package  RED.redform
  * @since    2.5
