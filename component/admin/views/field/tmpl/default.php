@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ JHTML::_('behavior.tooltip');
 				alert("<?php echo JText::_('COM_REDFORM_FIELD_JS_PLEASE_SELECT_FORM_FIRST'); ?>");
 			}
 		});
-		
+
 		document.id('fieldtype').addEvent('change', function(){
 			if (confirm("<?php echo JText::_('COM_REDFORM_FIELD_JS_CONFIRM_CHANGE_TYPE'); ?>")) {
 				submitbutton('apply');
@@ -66,13 +66,13 @@ JHTML::_('behavior.tooltip');
 		var countfields = $$('.listname-row').length;
 		if (countfields > 1) {
 			this.getParent().getParent().remove();
-		}		
+		}
 	}
-	
+
 	function submitbutton(pressbutton)
 	{
 		var form = document.adminForm;
-		
+
 		if (pressbutton == 'cancel') {
 			submitform( pressbutton );
 			return;
@@ -183,7 +183,7 @@ JHTML::_('behavior.tooltip');
 			</td>
 		</tr>
 		<?php endif; ?>
-		
+
 		<tr>
 			<td valign="top" align="right">
 			<label for="published"><?php echo JHTML::tooltip(JText::_('COM_REDFORM_FIELD_PUBLISHED_TIP'), JText::_('COM_REDFORM_Published'), 'tooltip.png', '', '', false); ?>
@@ -194,14 +194,14 @@ JHTML::_('behavior.tooltip');
 			</td>
 		</tr>
 		</table>
-		
-		
-		<?php if (isset($this->displaymailinglist) && $this->displaymailinglist): 
+
+
+		<?php if (isset($this->displaymailinglist) && $this->displaymailinglist):
 			$listnames = explode(';', $this->mailinglist->listnames);
 			?>
 		<fieldset class="adminform">
 		<legend><?php echo JText::_('COM_REDFORM_FIELD_EDIT_MAILINGLIST_FIELDSET')?></legend>
-	
+
 		<table class="admintable" id="mailinglist-table">
 			<tr id="trmailinglist">
 				<td class="key hasTip" title="<?php echo JText::_('COM_REDFORM_NEWSLETTERS').'::'.JText::_('COM_REDFORM_NEWSLETTERS_TIP'); ?>">
@@ -234,14 +234,15 @@ JHTML::_('behavior.tooltip');
 					</tr>
 				<?php endforeach; ?>
 		</table>
-				
-		</fieldset>					
-		<?php endif ;	?>
-		
+
+		</fieldset>
+		<?php endif; ?>
+
+		<?php if ($this->row->hasOptions): ?>
 		<!-- Values table -->
-		<fieldset class="adminform" id="field-options" style="display:none;">
+		<fieldset class="adminform" id="field-options">
 		<legend><?php echo JText::_('COM_REDFORM_FIELD_EDIT_OPTIONS')?></legend>
-	
+
 		<table class="adminlist">
 			<thead>
 				<tr>
@@ -254,7 +255,7 @@ JHTML::_('behavior.tooltip');
 		      <th>&nbsp;</th>
 				</tr>
 			</thead>
-		
+
 			<tbody>
 				<tr>
 					<td colspan="7">
@@ -264,14 +265,15 @@ JHTML::_('behavior.tooltip');
 					</td>
 				</tr>
 			</tbody>
-		
+
 			<tbody id="values-rows">
 			</tbody>
 		</table>
-				
+
 		</fieldset>
 		<!-- Values table end-->
-				
+		<?php endif; ?>
+
 		<?php if ($this->row->form): ?>
 		<div">
     <?php
@@ -307,7 +309,7 @@ JHTML::_('behavior.tooltip');
     ?>
 </div>
 		<?php endif; ?>
-		
+
   <?php echo JHTML::_( 'form.token' ); ?>
 	<input type="hidden" name="id" id="fieldid" value="<?php echo $this->row->id; ?>" />
 	<?php if ($this->state == 'disabled') { ?><input type="hidden" name="form_id" value="<?php echo $this->form_id; ?>" /><?php } ?>

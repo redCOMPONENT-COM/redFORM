@@ -2,17 +2,18 @@
 <extension type="library" method="upgrade" version="2.5">
     <name>redFORM - Libraries</name>
     <libraryname>redform</libraryname>
-	<creationDate>##DATE##</creationDate>
+    <creationDate>##DATE##</creationDate>
     <author>redCOMPONENT</author>
     <authorEmail>email@redcomponent.com</authorEmail>
     <authorUrl>www.redcomponent.com</authorUrl>
     <copyright>Copyright (C) 2014 redCOMPONENT.com. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later, see LICENSE.</license>
-	<version>##VERSION##</version>
+    <version>##VERSION##</version>
     <description>redFORM library</description>
     <files>
         <folder>form</folder>
-		<folder>core</folder>
+        <folder>core</folder>
         <folder>helper</folder>
+        <folder>rfield</folder>
     </files>
 </extension>

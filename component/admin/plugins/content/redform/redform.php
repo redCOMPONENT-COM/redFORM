@@ -67,7 +67,10 @@ class plgContentRedform extends JPlugin {
 			JError::raiseWarning(0, JText::_('COM_REDFORM_COMPONENT_REQUIRED_FOR_REDFORM_PLUGIN'));
 			return false;
 		}
-		include_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'redform.core.php');
+
+		// Register library prefix
+		JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+
 		$this->_rfcore = new RedformCore();
 
     JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );
@@ -225,14 +228,7 @@ class plgContentRedform extends JPlugin {
 
 	protected function getFormForm($form, $multi=1)
 	{
-		if (JRequest::getVar('format', 'html') == 'html')
-		{
-			return $this->_rfcore->displayForm($form->id, null, $multi);
-		}
-		else if (JRequest::getVar('format', 'html') == 'pdf')
-		{
-			JRequest::setVar('pdfform', $this->getPDFForm($form, $multi));
-		}
+		return $this->_rfcore->displayForm($form->id, null, $multi);
 	}
 
 	protected function getProductinfo()
@@ -252,10 +248,13 @@ class plgContentRedform extends JPlugin {
 	{
 		$db = JFactory::getDBO();
 		$user_id = $user->get('id');
-		if (!$user_id) {
+
+		if (!$user_id)
+		{
 			return false;
 		}
-		$query = ' SELECT * FROM #__redmember_users WHERE user_id = '. $db->Quote($user_id);
+
+		$query = ' SELECT * FROM #__redmember_users WHERE user_id = ' . $db->Quote($user_id);
 		$db->setQuery($query, 0, 1);
 		$res = $db->loadObject();
 
@@ -268,141 +267,7 @@ class plgContentRedform extends JPlugin {
 				}
 			}
 		}
+
 		return $user;
 	}
-
-	protected function getPDFForm($form, $multi = 1)
-	{
-		/* Get the field details */
-		$fields = $this->getFormFields($form->id);
-
-		$pdfform = JRequest::getVar('pdfform');
-		$footnote = false;
-		$multi = max($multi, 1); // make sure we display at least one form
-
-		/* Stuff to find and replace */
-		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', ',');
-		$replace = '';
-
-		/* display forms */
-		for ($signup = 1; $signup <= $multi; $signup++)
-		{
-			if ($signup > 1) $pdfform->Addpage('P');
-			$pdfform->Cell(0, 10, JText::_('COM_REDFORM_ATTENDEE').' '.$signup, 0, 1, 'L');
-			$footnote = false;
-
-			foreach ($fields as $key => $field)
-			{
-				$field->cssfield = strtolower($this->replace_accents(str_replace($find, $replace, $field->field)));
-
-				$values = $this->getFormValues($field->id);
-
-				if ($field->fieldtype == 'info' && count($values))
-				{
-					$pdfform->Cell(0, 10, $values[0]->value, 0, 1, 'L');
-					continue;
-				}
-
-				$pdfform->Cell(0, 10, $field->field, 0, 1, 'L');
-
-				$cleanfield = 'field_'. $field->id;
-				$element = '';
-				switch ($field->fieldtype)
-				{
-					case 'radio':
-						foreach ($values as $id => $value)
-						{
-							$pdfform->setX($pdfform->getX()+2);
-							$pdfform->Circle($pdfform->getX(), $pdfform->getY(), 2);
-							$pdfform->setXY($pdfform->getX()+3, $pdfform->getY()-5);
-							$pdfform->Write(10, $value->value);
-							$pdfform->Ln();
-						}
-						break;
-
-					case 'textarea':
-						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 100, 15);
-						$pdfform->Ln();
-						break;
-
-					case 'wysiwyg':
-						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 100, 15);
-						$pdfform->Ln();
-						break;
-
-					case 'price':
-						// if has not null value, it is a fixed price, if not this is a user input price
-						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
-						{
-							$pdfform->Write(10, $form->currency .' '.$values[0]->value);
-							$pdfform->Ln();
-						}
-						else // like a text input
-						{
-							$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
-							$pdfform->Ln();
-						}
-						break;
-
-					case 'email':
-						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
-						$pdfform->Ln();
-						break;
-
-					case 'fullname':
-						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
-						$pdfform->Ln();
-						break;
-
-					case 'username':
-						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
-						$pdfform->Ln();
-						break;
-
-					case 'textfield':
-					case 'birthday':
-						$pdfform->Rect($pdfform->getX(), $pdfform->getY(), 50, 7);
-						$pdfform->Ln();
-						break;
-
-					case 'checkbox':
-						foreach ($values as $id => $value)
-						{
-							$pdfform->Rect($pdfform->getX(), $pdfform->getY()+2, 5, 5);
-							$pdfform->setX($pdfform->getX()+5);
-							$pdfform->Write(10, $value->value);
-							$pdfform->Ln();
-						}
-						break;
-
-					case 'select':
-						foreach ($values as $id => $value)
-						{
-							$pdfform->Rect($pdfform->getX(), $pdfform->getY()+2, 5, 5);
-							$pdfform->setX($pdfform->getX()+5);
-							$pdfform->Write(10, $value->value);
-							$pdfform->Ln();
-						}
-						break;
-
-					case 'multiselect':
-						foreach ($values as $id => $value)
-						{
-							$pdfform->Rect($pdfform->getX(), $pdfform->getY()+2, 5, 5);
-							$pdfform->setX($pdfform->getX()+5);
-							$pdfform->Write(10, $value->value);
-							$pdfform->Ln();
-						}
-						break;
-
-				}
-
-			}
-		}
-		/* Close collapsable box */
-		if ($footnote) $pdfform->Write(10, JText::_('VALIDATE_FOOTNOTE'));
-
-		return $pdfform;
-	}
-
 }

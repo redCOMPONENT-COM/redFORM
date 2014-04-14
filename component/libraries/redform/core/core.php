@@ -27,7 +27,6 @@ jimport('joomla.mail.helper');
 
 require_once(JPATH_SITE . '/components/com_redform/redform.defines.php');
 
-require_once(RDF_PATH_SITE.DS.'classes'.DS.'field.php');
 require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
 require_once(RDF_PATH_SITE.DS.'helpers'.DS.'log.php');
 
@@ -143,7 +142,7 @@ class RedformCore extends JObject {
 
 		$form   = $model_redform->getForm();
 
-		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" class="'.$form->classname.'" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
+		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" class="form-validate '.$form->classname.'" enctype="multipart/form-data">';
 		$html .= $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
 		/* Get the user details form */
@@ -203,12 +202,15 @@ class RedformCore extends JObject {
 		$app       = Jfactory::getApplication();
 
 
-		// was this form already submitted before (and there was an error for example, or editing)
+		// Was this form already submitted before (and there was an error for example, or editing)
 		$answers    = $this->getAnswers($reference);
-		if ($answers && $reference)	{
+
+		if ($answers && $reference)
+		{
 			$submit_key = $answers[0]->submit_key;
 		}
-		else {
+		else
+		{
 			$submit_key = null;
 		}
 
@@ -221,13 +223,6 @@ class RedformCore extends JObject {
 		// css
 		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/tooltip.css');
 		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/redform.css');
-
-		// load jquery for the form javascript
-		if ($app->input->get('format', 'html') == 'html')
-		{
-			JHTML::_('behavior.tooltip');
-			jimport('joomla.html.html');
-		}
 
 		if (isset($options['currency']) && $options['currency'])
 		{
@@ -242,74 +237,29 @@ class RedformCore extends JObject {
 		$toolTipArray = array('className' => 'redformtip' . $form->classname);
 		JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
 
-		self::JsCheck();
-		if ($form->show_js_price)
+		$this->loadCheckScript();
+
+		if ($multi)
 		{
-			self::jsPrice();
+			$this->loadMultipleFormScript();
 		}
 
-		// redmember integration: pull extra fields
+		if ($form->show_js_price)
+		{
+			$this->loadPriceScript();
+		}
+
+		// Redmember integration: pull extra fields
 		if ($user->get('id') && file_exists(JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php'))
 		{
 			$this->getRedmemberfields($user);
 		}
 
-		/* Stuff to find and replace */
-		$find = array(' ', '_', '-', '.', '/', '&', ';', ':', '?', '!', ',');
-		$replace = '';
+		$html = '<div class="redform-form' . $form->classname . '">';
 
-		$html = '<div id="redform'.$form->classname.'" class="redform-form">';
-
-		if ($form->showname) {
-			$html .= '<div id="formname">'.$form->formname.'</div>';
-		}
-
-
-		// for virtuemart
-		if (JRequest::getInt('productid', false))
+		if ($form->showname)
 		{
-			$productinfo = $this->getProductinfo();
-			if (!stristr('http', $productinfo->product_full_image)){
-				$productimage = $uri->root().'/components/com_virtuemart/shop_image/product/'.$productinfo->product_full_image;
-			}
-			else {
-				$productimage = $productinfo->product_full_image;
-			}
-			$html .= '<div id="productimage">'.JHTML::_('image', $productimage, $productinfo->product_name).'</div>';
-			$html .= '<div id="productname">'.$productinfo->product_name.'</div>';
-		}
-
-		if ($multi > 1 && $user->id == 0)
-		{
-			$html .= '<div id="needlogin">'.JText::_('COM_REDFORM_LOGIN_BEFORE_MULTI_SIGNUP').'</div>';
-			$multi = 1;
-		}
-		// limit to max 30 sumbissions at the same time...
-		if ($multi > 30) {
-			$multi = 30;
-		}
-
-		if ($multi > 1)
-		{
-			if (empty($answers)) {
-				// link to add signups
-				$html .= '<div id="signupuser"><a href="javascript: AddUser();">'.JText::_('COM_REDFORM_SIGN_UP_USER').'</a></div>';
-			}
-
-			// signups display controls
-			$html .= '<div id="signedusers" style="float: right">';
-			$html .=   '<div><a href="javascript: ShowAllUsers(true);" >'.JText::_('COM_REDFORM_SHOW_ALL_USERS').'</a></div>'
-			         . '<div><a href="javascript: ShowAllUsers(false);" >'.JText::_('COM_REDFORM_HIDE_ALL_USERS').'</a></div>'
-			         . '<ul>'.JText::_('COM_REDFORM_Signed_up').':';
-			$html .= '<li><a href="javascript: ShowSingleForm(\'div#formfield1\');"># 1</a></li>';
-			if ($answers)
-			{
-				for ($k = 2; $k < count($answers)+1; $k++) {
-					$html .= '<li><a href="javascript: ShowSingleForm(\'div#formfield'.$k.'\');"># '.$k.'</a></li>';
-				}
-			}
-			$html   .= '</ul>';
-			$html .= '</div>';
+			$html .= '<div class="formname">' . $form->formname . '</div>';
 		}
 
 		if ($answers)
@@ -317,682 +267,158 @@ class RedformCore extends JObject {
 			// set multi to number of answers...
 			$multi = count($answers);
 		}
+		else
+		{
+			// limit to max 30 sumbissions at the same time...
+			$multi = min($multi, 30);
+		}
+
+		if ($multi > 1 && $user->id == 0)
+		{
+			$html .= '<div class="needlogin">' . JText::_('COM_REDFORM_LOGIN_BEFORE_MULTI_SIGNUP') . '</div>';
+			$multi = 1;
+		}
+
+		if ($multi > 1)
+		{
+			if (empty($answers))
+			{
+				// Link to add signups
+				$html .= '<div class="add-instance">' . JText::_('COM_REDFORM_SIGN_UP_USER') . '</div>';
+			}
+		}
+
+		$initialActive = $answers ? count($answers) : 1;
 
 		/* Loop through here for as many forms there are */
-		for ($signup = 1; $signup <= $multi; $signup++)
+		for ($signup = 1; $signup <= $initialActive; $signup++)
 		{
-			if ($answers && $answers[($signup-1)]->sid) {
+			if ($answers && $answers[($signup-1)]->sid)
+			{
 				$submitter_id = $answers[($signup-1)]->sid;
-				$html .= '<input type="hidden" name="submitter_id'.$signup.'" value="'.$submitter_id.'" />';
-			}
-			else {
-				$submitter_id = 0;
+				$html .= '<input type="hidden" name="submitter_id' . $signup . '" value="' . $submitter_id . '" />';
 			}
 
 			/* Make a collapsable box */
-			$html .= '<div id="formfield'.$signup.'" class="formbox" style="display: '.($signup == 1 ? 'block' : 'none').';">';
-			if ($multi > 1) {
-				$html .= '<fieldset><legend>'.JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $signup).'</legend>';
+			$html .= '<div id="formfield' . $signup . '" class="formbox" style="display: ' . ($signup == 1 ? 'block' : 'none') . ';">';
+
+			if ($multi > 1)
+			{
+				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $signup) . '</legend>';
 			}
 
-			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price > 0) {
-				$html .= '<div class="eventprice" price="'.$options['eventdetails']->course_price.'">'.JText::_('COM_REDFORM_Registration_price').': '.$currency.' '.$options['eventdetails']->course_price.'</div>';
+			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price > 0)
+			{
+				$html .= '<div class="eventprice" price="' . $options['eventdetails']->course_price . '">'
+					. JText::_('COM_REDFORM_Registration_price') . ': ' . $currency . ' ' . $options['eventdetails']->course_price
+					. '</div>';
 			}
-			if ($form->activatepayment && isset($options['booking']) && $options['booking']->course_price > 0) {
-				$html .= '<div class="bookingprice" price="'.$options['booking']->course_price.'">'.JText::_('COM_REDFORM_Registration_price').': '.$currency.' '.$options['booking']->course_price.'</div>';
+
+			if ($form->activatepayment && isset($options['booking']) && $options['booking']->course_price > 0)
+			{
+				$html .= '<div class="bookingprice" price="' . $options['booking']->course_price . '">'
+					. JText::_('COM_REDFORM_Registration_price') . ': ' . $currency . ' ' . $options['booking']->course_price
+					. '</div>';
 			}
 
 			if (isset($options['extrafields']) && count($options['extrafields']))
 			{
 				foreach ($options['extrafields'] as $field)
 				{
-					$html .= '<div class="fieldline'.(isset($field['class']) && !empty($field['class']) ? ' '.$field['class'] : '' ).'">';
-					$html .= '<div class="label">'.$field['label'].'</div>';
-					$html .= '<div class="field">'.$field['field'].'</div>';
+					$html .= '<div class="fieldline' . (isset($field['class']) && !empty($field['class']) ? ' ' . $field['class'] : '' ) . '">';
+					$html .= '<div class="label">' . $field['label'] . '</div>';
+					$html .= '<div class="field">' . $field['field'] . '</div>';
 					$html .= '</div>';
 				}
 			}
 
-			foreach ($fields as $key => $field)
+			foreach ($fields as $field)
 			{
-				if (!($app->isAdmin() || $field->published)) { // only display unpublished fields in backend form
-					continue;
-				}
-
-				if ($field->fieldtype != 'hidden') {
-					$html .= '<div id="fieldline_'.$field->id.'" class="fieldline type-'.$field->fieldtype.$field->parameters->get('class','').'">';
-				}
-
-				$values = $model_redform->getFormValues($field->id);
-
-				if ($field->fieldtype == 'info')
+				if (!($app->isAdmin() || $field->published))
 				{
-					if ($values && count($values))
-					{
-						$html .= '<div class="infofield">' . $values[0]->value . '</div>';
-					}
-					$html .= '</div>';
+					// Only display unpublished fields in backend form
 					continue;
 				}
 
-				$cleanfield = 'field_'. $field->id;
-				if ($field->fieldtype == 'hidden') {
-					$element = "";
+				// Init rfield
+				$rfield = RedformRfieldFactory::getField($field->id);
+				$rfield->setFormIndex($signup);
+				$rfield->setUser($user);
+				$cleanfield = 'field_' . $field->id;
+
+				// Set value if editing
+				if ($answers && isset($answers[($signup-1)]->fields->$cleanfield))
+				{
+					$value = $answers[($signup-1)]->fields->$cleanfield;
+					$rfield->setValue($value, true);
 				}
-				else {
+
+				if (!$rfield->isHidden())
+				{
+					$html .= '<div class="fieldline type-' . $field->fieldtype . $field->getParam('class', '') . '">';
+				}
+
+				if (!$rfield->isHidden())
+				{
 					$element = "<div class=\"field\">";
 				}
-
-				switch ($field->fieldtype)
+				else
 				{
-					case 'radio':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= '<div class="fieldoptions">';
-						foreach ($values as $id => $value)
-						{
-							$element .= '<div class="fieldoption">';
-							$element .= "<input class=\"".$field->parameters->get('class','')." ";
-							if ($field->validate) $element .= "required";
-							$element .= "\"";
-							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-							if ($answers)
-							{
-								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
-									$element .= ' checked="checked"';
-								}
-							}
-							else if ($user->get($field->redmember_field))
-							{
-								$fvalues = explode(',', $user->get($field->redmember_field));
-								if (in_array($value->value, $fvalues)) {
-									$element .= ' checked="checked"';
-								}
-							}
-							else if ($field->default)
-							{
-								$def_vals = explode("\n", $field->default);
-								foreach ($def_vals as $val)
-								{
-									if ($value->value == trim($val)) {
-										$element .= ' checked="checked"';
-										break;
-									}
-								}
-							}
-							$element .= ' type="radio" name="field'.$field->id.'.'.$signup.'[radio][]" value="'.$value->id.'" price="'.$value->price.'" />'.$value->label."\n";
-							$element .= "</div>\n";
-						}
-						$element .= "</div>\n";
-						break;
-
-					case 'textarea':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= '<textarea class="'.$field->parameters->get('class','');
-						if ($field->validate) $element .= ' required';
-						$element .= '" name="field'.$field->id.'.'.$signup.'[textarea]"';
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' cols="'.$field->parameters->get('cols',25).'" rows="'.$field->parameters->get('rows',6).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-
-						if ($placeholder = $field->parameters->get('placeholder'))
-						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
-						}
-
-						$element .= ">";
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else {
-							$element .= $field->default;
-						}
-						$element .= "</textarea>\n";
-						break;
-
-					case 'wysiwyg':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$content = '';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$content = $user->get($field->redmember_field);
-						}
-						else {
-							$content = $field->default;
-						}
-						$editor = & JFactory::getEditor();
-
-						// Cannot have buttons, it triggers an error with tinymce for unregistered users
-						$element .= $editor->display( "field".$field->id.'.'.$signup."[wysiwyg]", $content, '100%;', '200', '75', '20', false ) ;
-						$element .= "\n";
-						break;
-
-					case 'email':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<div class=\"emailfields\">";
-						$element .= "<div class=\"emailfield\">";
-						$element .= "<input class=\"".$field->parameters->get('class','')." ";
-						if ($field->validate) $element .= "required";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[email][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' size="'.$field->parameters->get('size', 25).'"';
-						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-
-						if ($placeholder = $field->parameters->get('placeholder'))
-						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
-						}
-
-						$element .= ' value="';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else if ($signup == 1 && $user->email) {
-							$element .= $user->email;
-						}
-						else {
-							$element .= $field->default;
-						}
-
-						$element .= "\" />\n";
-						$element .= "</div>\n";
-
-						/* check if there is a mailing list integration */
-						if (strlen($field->listnames) > 0)
-						{
-							$listnames = explode(";", $field->listnames);
-							if (count($listnames))
-							{
-								if ($field->parameters->get('force_mailing_list', 0))
-								{
-									// auto subscribe => use hidden field
-									foreach ($listnames AS $listkey => $listname)
-									{
-										$element .= '<input type="hidden" name="field'.$field->id.'.'.$signup.'[email][listnames][]" value="'.$listname.'" />';
-									}
-								}
-								else
-								{
-									$element .= "<div class=\"newsletterfields\">";
-									$element .= '<div id="signuptitle">'.JText::_('COM_REDFORM_SIGN_UP_MAILINGLIST').'</div>';
-									$element .= "<div class=\"field".$field->fieldtype."_listnames\">";
-									foreach ($listnames AS $listkey => $listname)
-									{
-										$element .= "<div class=\"field_".$listkey."\">";
-										$element .= "<input type=\"checkbox\" name=\"field".$field->id.'.'.$signup."[email][listnames][]\" value=\"".$listname."\" />".$listname.'</div>';
-									}
-									$element .= "</div>\n";
-									$element .= "</div>\n";
-								}
-							}
-						}
-						$element .= "</div>\n";
-						break;
-
-					case 'fullname':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<input class=\"".$field->parameters->get('class','');
-						if ($field->validate) $element .= " required";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[fullname][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' size="'.$field->parameters->get('size', 25).'"';
-						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-
-						if ($placeholder = $field->parameters->get('placeholder'))
-						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
-						}
-
-						$element .= ' value="';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else if ($signup == 1 && $user->name) {
-							$element .= $user->name;
-						}
-						else {
-							$element .= $field->default;
-						}
-
-						$element .= "\" />\n";
-						break;
-
-					case 'username':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<input class=\"".$field->parameters->get('class','');
-						if ($field->validate) $element .= " required";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[username][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' size="'.$field->parameters->get('size', 25).'"';
-						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-
-						if ($placeholder = $field->parameters->get('placeholder'))
-						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
-						}
-
-						$element .= ' value="';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else if ($signup == 1 && $user->username) {
-							$element .= $user->username;
-						}
-						else {
-							$element .= $field->default;
-						}
-
-						$element .= "\" />\n";
-						break;
-
-					case 'textfield':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<input class=\"".$field->parameters->get('class','');
-						if ($field->validate) $element .= " required";
-						$element .= "\" type=\"text\" name=\"field".$field->id.'.'.$signup."[text][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' size="'.$field->parameters->get('size', 25).'"';
-						$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-						if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-
-						if ($placeholder = $field->parameters->get('placeholder'))
-						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
-						}
-
-						$element .= ' value="';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else {
-							$element .= $field->default;
-						}
-
-						$element .= "\" />\n";
-						break;
-
-					case 'hidden':
-						$label = '';
-						$element .= "<input class=\"".$field->parameters->get('class','');
-						if ($field->validate) $element .= " required";
-						$element .= "\" type=\"hidden\" name=\"field".$field->id.'.'.$signup."[hidden][]\"";
-						$element .= ' id="field'.$field->id.'" ';
-						$element .= ' value="';
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-								$element .= $answers[($signup-1)]->fields->$cleanfield;
-							}
-						}
-						else if ($user->get($field->redmember_field)) {
-							$element .= $user->get($field->redmember_field);
-						}
-						else
-						{
-							switch ($field->parameters->get('valuemethod', 'constant'))
-							{
-								case 'jrequest':
-									$varname= $field->parameters->get('jrequestvar');
-									if (!$varname) {
-										$app->enqueueMessage(JText::_('COM_REDFORM_ERROR_HIDDEN_FIELD_VARNAME_NOT_DEFINED'), 'warning');
-									}
-									else {
-										$element .= JRequest::getVar($varname);
-									}
-									break;
-
-								case 'phpeval':
-									$code= $field->parameters->get('phpeval');
-									$element .= eval($code);
-									break;
-
-								case 'constant':
-								default:
-									$element .= $field->default;
-							}
-						}
-						$element .= "\" />\n";
-						break;
-
-					case 'date':
-						JHTML::_('behavior.calendar');
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-
-						if ($answers)
-						{
-							if (isset($answers[($signup-1)]->fields->$cleanfield))
-							{
-								$val = $answers[($signup-1)]->fields->$cleanfield;
-							}
-							else
-							{
-								$val = null;
-							}
-						}
-						elseif ($user->get($field->redmember_field))
-						{
-							// redmember uses unix timestamp
-							$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), $user->get($field->redmember_field));
-						}
-						else
-						{
-							if ($field->default && strtotime($field->default))
-							{
-								$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), strtotime($field->default));
-							}
-							else
-							{
-								$val = null;
-							}
-						}
-
-						if ($val && !strtotime($val))
-						{
-							$element .= '<span>(invalid: ' . $val .')</span>';
-							$val = null;
-						}
-
-						$class = $field->parameters->get('class','');
-						if ($field->validate) $class .= " required";
-
-						if ($field->readonly && !$app->isAdmin())
-						{
-							$element .= $val;
-							$element .= '<input class="'.$class.'"';
-							$element .= " type=\"hidden\" name=\"field".$field->id.'.'.$signup."[text][]\"";
-							$element .= ' id="field'.$field->id.'" ';
-							$element .= ' size="'.$field->parameters->get('size', strlen($val)+1).'"';
-							$element .= ' maxlength="'.$field->parameters->get('maxlength', 25).'"';
-							$element .= ' readonly="readonly"';
-							$element .= ' value="'.$val."\" />\n";
-						}
-						else
-						{
-							$attribs = array('class' => $class);
-							$element .= JHTML::_('calendar', $val, 'field'.$field->id.'.'.$signup.'[date]', 'field'.$field->id,
-							               $field->parameters->get('dateformat','%Y-%m-%d'),
-							               $attribs);
-						}
-						break;
-
-					case 'price':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						// if has not null value, it is a fixed price, if not this is a user input price
-						if (count($values) && $values[0]) // display price and add hidden field (shouldn't be used when processing as user could forge the form...)
-						{
-							$element .= $currency .' '.$values[0]->value;
-							$element .= '<input type="hidden" class="rfprice" id="field'.$field->id.'" name="field'.$field->id.'.'.$signup.'[price][]" value="'.$values[0]->value.'" />';
-						}
-						else // like a text input
-						{
-							$element .= '<input class="rfprice '. $field->parameters->get('class','') .($field->validate ? " required" : '') .'"';
-							$element .= ' type="text" name="field'.$field->id.'.'.$signup.'[price][]"';
-							$element .= ' id="field'.$field->id.'" ';
-							$element .= ' size="'.$field->parameters->get('size', 25).'"';
-							$element .= ' maxlength="'.$field->parameters->get('maxlength', 250).'"';
-							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-							$element .= ' value="';
-							if ($answers)
-							{
-								if (isset($answers[($signup-1)]->fields->$cleanfield)) {
-									$element .= $answers[($signup-1)]->fields->$cleanfield;
-								}
-							}
-							else if ($user->get($field->redmember_field)) {
-								$element .= $user->get($field->redmember_field);
-							}
-							else {
-								$element .= $field->default;
-							}
-							$element .= '"';
-							$element .= '/>';
-						}
-						$element .= "\n";
-						break;
-
-					case 'checkbox':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= '<div class="fieldoptions">';
-						foreach ($values as $id => $value)
-						{
-							$element .= '<div class="fieldoption">';
-							$element .= "<input class=\"".$field->parameters->get('class','')." ";
-							if ($field->validate) $element .= "required";
-							$element .= "\"";
-							if ($field->readonly && !$app->isAdmin()) $element .= ' readonly="readonly"';
-							if ($answers && isset($answers[($signup-1)]->fields->$cleanfield))
-							{
-								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
-									$element .= ' checked="checked"';
-								}
-							}
-							else if ($user->get($field->redmember_field))
-							{
-								$fvalues = explode(',', $user->get($field->redmember_field));
-								if (in_array($value->value, $fvalues)) {
-									$element .= ' checked="checked"';
-								}
-							}
-							else if ($field->default)
-							{
-								$def_vals = explode("\n", $field->default);
-								foreach ($def_vals as $val)
-								{
-									if ($value->value == trim($val)) {
-										$element .= ' checked="checked"';
-										break;
-									}
-								}
-							}
-							$element .= ' type="checkbox" name="field'.$field->id.'.'.$signup.'[checkbox][]" value="'.$value->value.'" price="'.$value->price.'" /> '.$value->label."\n";
-							$element .= "</div>\n";
-						}
-						$element .= "</div>\n";
-						break;
-
-					case 'select':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<select id=\"field".$field->id."\" name=\"field".$field->id.'.'.$signup."[select][]\" class=\"".$field->parameters->get('class','').($field->validate ?" required" : '')."\"";
-						$element .= ">";
-						foreach ($values as $id => $value)
-						{
-							$element .= "<option value=\"".$value->value."\"";
-							if ($answers)
-							{
-								if ($answers[($signup-1)]->fields->$cleanfield == $value->value) {
-									$element .= ' selected="selected"';
-								}
-							}
-							else if ($user->get($field->redmember_field) == $value->value) {
-								$element .= ' selected="selected"';
-							}
-							else if ($field->default)
-							{
-								$def_vals = explode("\n", $field->default);
-								foreach ($def_vals as $val)
-								{
-									if ($value->value == trim($val)) {
-										$element .= ' selected="selected"';
-										break;
-									}
-								}
-							}
-							$element .= ' price="'.$value->price.'" >'.$value->label."</option>";
-						}
-						$element .= '</select>';
-						$element .= "\n";
-						break;
-
-					case 'multiselect':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= '<select id="field'.$field->id.'" name="field'.$field->id.'.'.$signup.'[multiselect][]"'
-						          . ' multiple="multiple" size="'.$field->parameters->get('size',5).'"'
-						          . ' class="'.trim($field->parameters->get('class','').($field->validate ?" required" : '')).'"';
-						$element .= '>';
-						foreach ($values as $id => $value)
-						{
-							$element .= "<option value=\"".$value->value."\"";
-							if ($answers)
-							{
-								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
-									$element .= ' selected="selected"';
-								}
-							}
-							else if ($user->get($field->redmember_field))
-							{
-								$fvalues = explode(',', $user->get($field->redmember_field));
-								if (in_array($value->value, $fvalues)) {
-									$element .= ' selected="selected"';
-								}
-							}
-							else if ($field->default)
-							{
-								$def_vals = explode("\n", $field->default);
-								foreach ($def_vals as $val)
-								{
-									if ($value->value == trim($val)) {
-										$element .= ' selected="selected"';
-										break;
-									}
-								}
-							}
-							$element .= ' price="'.$value->price.'" />'.$value->label."</option>";
-						}
-						$element .= '</select>';
-						$element .= "\n";
-						break;
-
-					case 'recipients':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						$element .= "<select id=\"field".$field->id."\" name=\"field".$field->id.'.'.$signup."[recipients][]\""
-						         . ($field->parameters->get('multiple', 1) ? ' multiple="multiple"' : '')
-						         . ' size="'.$field->parameters->get('size', 5).'"'
-						         . ' class="'.$field->parameters->get('class','').($field->validate ?" required" : '').'"';
-						$element .= '>';
-						foreach ($values as $id => $value)
-						{
-							$element .= "<option value=\"".$value->value."\"";
-							if ($answers)
-							{
-								if (in_array($value->value, explode('~~~', $answers[($signup-1)]->fields->$cleanfield))) {
-									$element .= ' selected="selected"';
-								}
-							}
-							else if ($user->get($field->redmember_field))
-							{
-								$fvalues = explode(',', $user->get($field->redmember_field));
-								if (in_array($value->value, $fvalues)) {
-									$element .= ' selected="selected"';
-								}
-							}
-							else if ($field->default)
-							{
-								$def_vals = explode("\n", $field->default);
-								foreach ($def_vals as $val)
-								{
-									if ($value->value == trim($val)) {
-										$element .= ' selected="selected"';
-										break;
-									}
-								}
-							}
-							$element .= " >".$value->label."</option>";
-						}
-						$element .= '</select>';
-						$element .= "\n";
-						break;
-
-					case 'fileupload':
-						$label = '<div id="field_'.$field->id.'" class="label"><label for="field'.$field->id.'">'.$field->field.'</label></div>';
-						if ($submitter_id == 0)
-						{
-							$attr = array('type="file"');
-							$attr[] = 'id="field' . $field->id .'"';
-							$attr[] = 'name="field' . $field->id . '.' . $signup . '[fileupload][]"';
-
-							$class = array('fileupload' . $field->parameters->get('class',''));
-							if ($field->validate)
-							{
-								$class[] = 'required';
-							}
-							$attr[] = 'class="' . implode(' ', $class) .'"';
-
-							$element .= '<input ' . implode(' ', $attr) . '/>';
-						}
-						$element .= "\n";
-						break;
+					$element = '';
 				}
 
-				if ($field->fieldtype == 'hidden')
+				if (!$rfield->isHidden() && $rfield->displayLabel())
+				{
+					$label = '<div class="label">' . $rfield->getLabel() . '</div>';
+				}
+				else
+				{
+					$label = '';
+				}
+
+				$element .= $rfield->getInput();
+
+				if ($rfield->isHidden())
 				{
 					$html .= $element;
 				}
 				else
 				{
-					$html .= $label.$element;
-					$html .= '</div>'; // fieldtype div
+					$html .= $label . $element;
+					$html .= '</div>'; // Fieldtype div
 
-					if ($field->validate || strlen($field->tooltip))
+					if ($rfield->isRequired() || strlen($field->tooltip))
 					{
 						$html .= '<div class="fieldinfo">';
-						if ($field->validate) {
-							$img = JHTML::image(JURI::root().'components/com_redform/assets/images/warning.png', JText::_('COM_REDFORM_Required'));
-							$html .= ' <span class="editlinktip hasTipField" title="'.JText::_('COM_REDFORM_Required').'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+
+						if ($rfield->isRequired())
+						{
+							$img = JHTML::image(JURI::root() . 'components/com_redform/assets/images/warning.png', JText::_('COM_REDFORM_Required'));
+							$html .= ' <span class="editlinktip hasTipField" title="' . JText::_('COM_REDFORM_Required') . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 						}
-						if (strlen($field->tooltip) > 0) {
+
+						if (strlen($field->tooltip) > 0)
+						{
 							$img = JHTML::image(JURI::root().'components/com_redform/assets/images/info.png', JText::_('COM_REDFORM_ToolTip'));
-							$html .= ' <span class="editlinktip hasTipField" title="'.htmlspecialchars($field->field).'::'.htmlspecialchars($field->tooltip).'" style="text-decoration: none; color: #333;">'. $img .'</span>';
+							$html .= ' <span class="editlinktip hasTipField" title="' . htmlspecialchars($field->field) . '::' . htmlspecialchars($field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 						}
+
 						$html .= '</div>';
 					}
+
 					$html .= '</div>'; // fieldline_ div
 				}
 
 			}
-			if ($multi > 1) {
+
+			if ($multi > 1)
+			{
 				$html .= '</fieldset>';
 			}
 
 			if (isset($this->_rwfparams['uid']))
 			{
-				$html .= '<div>'.JText::_('COM_REDFORM_JOOMLA_USER').': '. JHTML::_('list.users', 'uid', $this->_rwfparams['uid'], 1, NULL, 'name', 0 ).'</div>';
+				$html .= '<div>' . JText::_('COM_REDFORM_JOOMLA_USER') . ': ' . JHTML::_('list.users', 'uid', $this->_rwfparams['uid'], 1, NULL, 'name', 0 ) . '</div>';
 			}
 			$html .= '</div>'; // formfield div
 		}
@@ -1001,9 +427,10 @@ class RedformCore extends JObject {
 		/* Add any redCOMPETITION values */
 		$redcompetition = JRequest::getVar('redcompetition', false);
 
-		if ($redcompetition) {
-			$html .= '<input type="hidden" name="competition_task" value="'.$redcompetition->task.'" />';
-			$html .= '<input type="hidden" name="competition_id" value="'.$redcompetition->competitionid.'" />';
+		if ($redcompetition)
+		{
+			$html .= '<input type="hidden" name="competition_task" value="' . $redcompetition->task . '" />';
+			$html .= '<input type="hidden" name="competition_id" value="' . $redcompetition->competitionid . '" />';
 		}
 
 		if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
@@ -1019,13 +446,13 @@ class RedformCore extends JObject {
 		{
 			JPluginHelper::importPlugin( 'redform_captcha' );
 			$captcha = '';
-			$dispatcher =& JDispatcher::getInstance();
+			$dispatcher = JDispatcher::getInstance();
 			$results = $dispatcher->trigger( 'onGetCaptchaField', array( &$captcha ) );
 
 			if (count($results))
 			{
 				$html .= '<div class="fieldline">';
-				$html .= '<div class="label"><label>'.JText::_('COM_REDFORM_CAPTCHA_LABEL').'</label></div>';
+				$html .= '<div class="label"><label>' . JText::_('COM_REDFORM_CAPTCHA_LABEL') . '</label></div>';
 				$html .= '<div id="redformcaptcha">';
 				$html .= $captcha;
 				$html .= '</div>';
@@ -1038,12 +465,12 @@ class RedformCore extends JObject {
 		if (!empty($submit_key))
 		{
 			// Link to add signups
-			$html .= '<input type="hidden" name="submit_key" value="'.$submit_key.'" />';
+			$html .= '<input type="hidden" name="submit_key" value="' . $submit_key . '" />';
 		}
 
-		$html .= '<input type="hidden" name="curform" value="'.($answers && count($answers) ? count($answers) : 1).'" />';
-		$html .= '<input type="hidden" name="form_id" value="'.$form_id.'" />';
-		$html .= '<input type="hidden" name="multi" value="'.$multi.'" />';
+		$html .= '<input type="hidden" name="nbactive" value="' . $initialActive . '" />';
+		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
+		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';
 		$html .= '<input type="hidden" name="' . JSession::getFormToken() . '" value="' . $uniq . '" />';
 
 		if ($currency)
@@ -1065,9 +492,9 @@ class RedformCore extends JObject {
 	 *
 	 * @return   int/array submission_id, or array of submission ids in case of success, 0 otherwise
 	 */
-	function saveAnswers($integration_key, $options = array(), $data = null)
+	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
-		require_once(RDF_PATH_SITE.DS.'models'.DS.'redform.php');
+		require_once RDF_PATH_SITE . '/models/redform.php';
 		$model = new RedformModelRedform();
 
 		if (!$result = $model->apisaveform($integration_key, $options, $data))
@@ -1079,33 +506,23 @@ class RedformCore extends JObject {
 		return $result;
 	}
 
-	/**
-	 * removes submissions
-	 *
-	 * @param array submission ids
-	 * @return bool true for success
-	 */
-	function removeAnswers($submission_ids)
+
+	protected function jsPrice()
 	{
-
-	}
-
-
-	function jsPrice()
-	{
-		$app = &JFactory::getApplication();
 		$params = JComponentHelper::getParams('com_redform');
-		$uri = JFactory::getURI();
-		$doc = &JFactory::getDocument();
-		$doc->addScriptDeclaration('var totalpricestr = "'.JText::_('COM_REDFORM_Total_Price')."\";\n");
-		$doc->addScriptDeclaration('var round_negative_price = '.($params->get('allow_negative_total', 1) ? 0 : 1).";\n");
+
+		$doc = JFactory::getDocument();
+		$doc->addScriptDeclaration('var totalpricestr = "' . JText::_('COM_REDFORM_Total_Price') . "\";\n");
+		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
 		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jsprice'));
 	}
 
-	function JsCheck()
+	protected function JsCheck()
 	{
-		$doc = &JFactory::getDocument();
-		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jscheck'));
+		JHtml::_('behavior.formvalidation');
+		$doc = JFactory::getDocument();
+		$doc->addScript(JURI::root() . 'media/com_redform/js/redform-validate.js');
+//		$doc->addScript(JRoute::_('index.php?option=com_redform&task=jscheck'));
 	}
 
 	/**
@@ -1117,7 +534,14 @@ class RedformCore extends JObject {
 	 */
 	protected function getRedmemberfields(&$user)
 	{
-		include_once JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php';
+		$path = JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php';
+
+		if (!file_exists($path))
+		{
+			return $user;
+		}
+
+		require_once $path;
 
 		$all = RedmemberLib::getUserData($user->id);
 
@@ -1243,15 +667,18 @@ class RedformCore extends JObject {
 
 	function getFields($form_id= null)
 	{
-		if ($form_id) {
+		if ($form_id)
+		{
 			$this->setFormId($form_id);
 		}
+
 		if (empty($this->_fields))
 		{
 			$model_redform = new RedformModelRedform();
 			$model_redform->setFormId($this->_form_id);
 			$this->_fields = $model_redform->getFormFields();
 		}
+
 		return $this->_fields;
 	}
 
@@ -1282,43 +709,42 @@ class RedformCore extends JObject {
 	 */
 	function getSidsFieldsAnswers($sids)
 	{
-		if ($sids) {
+		if ($sids)
+		{
 			$this->setSids($sids);
 		}
 
-		if (!is_array($this->_sids) || empty($this->_sids)) {
+		if (!is_array($this->_sids) || empty($this->_sids))
+		{
 			return false;
 		}
+
 		$answers = $this->getSidsAnswers($this->_sids);
 		$form_id = $this->getSidForm($this->_sids[0]);
 		$fields  = $this->getFields($form_id);
 
-		if (!$form_id) {
+		if (!$form_id)
+		{
 			$this->setError(JText::_('COM_REDFORM_FORM_NOT_FOUND'));
 			return false;
 		}
 
 		$res = array();
+
 		foreach ($answers as $sid => $answer)
 		{
 			$f = array();
+
 			foreach ($fields as $field)
 			{
-				if ($field->fieldtype == 'info')
-				{
-					$val = $this->getFieldValues($field->id);
-					$field->value = (isset($val[0]) ? $val[0]->value : '');
-					$field->answer = $field->value;
-				}
-				else {
-					$prop = 'field_'.$field->id;
-					$field->value = $answer->$prop;
-					$field->answer = $field->value;
-				}
+				$prop = 'field_'.$field->id;
+				$field->setValue($answer->$prop);
 				$f[] = clone($field);
 			}
+
 			$res[$sid] = $f;
 		}
+
 		return $res;
 	}
 
@@ -1434,57 +860,72 @@ class RedformCore extends JObject {
 	 * @param boolean email required, returns false if no email field
 	 * @return array or false
 	 */
-	function getSubmissionContactEmail($reference, $requires_email = true)
+	public function getSubmissionContactEmail($reference, $requires_email = true)
 	{
-		if (!is_array($reference)) {
+		if (!is_array($reference))
+		{
 			$sids = $this->getSids($reference);
 		}
-		else {
+		else
+		{
 			$sids = $reference;
 		}
+
 		$answers = $this->getSidsFieldsAnswers($sids);
 
 		$results = array();
+
 		foreach ((array) $answers as $sid => $fields)
 		{
 			$emails = array();
 			$fullnames = array();
 			$usernames = array();
+
 			foreach ((array) $fields as $f) // first look for email fields
 			{
 				if ($f->fieldtype == 'email')
 				{
-					if ($f->parameters->get('notify', 1)) { // set to receive notifications ?
-						$emails[] = $f->answer;
+					if ($f->getParam('notify', 1))
+					{
+						// set to receive notifications ?
+						$emails[] = $f->getValue();
 					}
 				}
+
 				if ($f->fieldtype == 'username')
 				{
-					$usernames[] = $f->answer;
+					$usernames[] = $f->getValue();
 				}
+
 				if ($f->fieldtype == 'fullname')
 				{
-					$fullnames[] = $f->answer;
+					$fullnames[] = $f->getValue();
 				}
 			}
 
-			if (!count($emails) && $requires_email) {
-				// no email field
+			if (!count($emails) && $requires_email)
+			{
+				// No email field
 				return false;
 			}
+
 			$result = array();
+
 			foreach ($emails as $k => $val)
 			{
 				$result[$k]['email']    = $val;
 				$result[$k]['username'] = isset($usernames[$k]) ? $usernames[$k] : '';
 				$result[$k]['fullname'] = isset($fullnames[$k]) ? $fullnames[$k] : '';
 
-				if (!isset($result[$k]['fullname']) && isset($result[$k]['username'])) {
+				if (!isset($result[$k]['fullname']) && isset($result[$k]['username']))
+				{
 					$result[$k]['fullname'] = $result[$k]['username'];
 				}
 			}
+
 			$results[$sid] = $result;
 		}
+
 		return $results;
 	}
 
@@ -1697,9 +1138,19 @@ class RedformCore extends JObject {
 		// Get User data
 		$userData = $this->getUserData($user_id);
 
-		$data = $this->prepareUserData($userData);
+		$fields = $this->prepareUserData($userData);
 
-		return $this->saveAnswers($integration, $options, $data);
+		require_once RDF_PATH_SITE . '/models/redform.php';
+		$model = new RedformModelRedform();
+		$model->setFormId($this->_form_id);
+
+		if (!$result = $model->quicksubmit($fields, $integration, $options))
+		{
+			$this->setError($model->getError());
+			return false;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -1709,93 +1160,36 @@ class RedformCore extends JObject {
 	 *
 	 * @param   int  $user_id  user id
 	 *
-	 * @return object
+	 * @return JUser
 	 */
 	protected function getUserData($user_id)
 	{
-		// for now, just get data from native joomla users
-		return JFactory::getUser($user_id);
+		$user = JFactory::getUser($user_id);
+		$this->getRedmemberfields($user);
+
+		return $user;
 	}
 
 	/**
 	 * prepares data for saving
 	 *
-	 * @param   int     $xref      session id
-	 * @param   object  $form      form data
-	 * @param   object  $userData  user data
+	 * @param   JUser  $userData    user
+	 * @param   int    $form_index  form index
 	 *
 	 * @return array
 	 */
 	protected function prepareUserData($userData, $form_index = 1)
 	{
-		$data = array('form_id' => $this->_form_id);
-		$token = JSession::getFormToken();
-		$data[$token] = 1;
-
 		$fields = $this->getFields();
 
 		foreach ($fields as $field)
 		{
-			$key   = 'field' . $field->id . '_' . $form_index;
-
-			if ($field->redmember_field)
-			{
-				// waiting for redmember coding !
-			}
-
-			switch ($field->fieldtype)
-			{
-				case 'fullname':
-					$data[$key]['fullname'][] = $userData->name;
-					break;
-
-				case 'username':
-					$data[$key]['username'][] = $userData->username;
-					break;
-
-				case 'email':
-					$data[$key]['email'][] = $userData->email;
-					break;
-
-				case 'textarea':
-				case 'date':
-				case 'wysiwyg':
-					$data[$key][$field->fieldtype] = $field->default;
-					break;
-
-				case 'text':
-				case 'hidden':
-				case 'select':
-					$data[$key][$field->fieldtype][] = $field->default;
-					break;
-
-				case 'checkbox':
-				case 'multiselect':
-				case 'recipients':
-				case 'radio':
-					$data[$key][$field->fieldtype] = explode("\n", $field->default);
-					break;
-
-				case 'price':
-					if (count($field->options))
-					{
-						$value = $field->options[0]->value;
-					}
-					else
-					{
-						$value = $field->default;
-					}
-					$data[$key][$field->fieldtype][] = $value;
-					break;
-
-
-				default:
-					// Unknown field...Do nothing
-					break;
-			}
+			$field->setFormIndex($form_index);
+			$field->setUser($userData);
+			$field->setValue(null, true);
 		}
 
-		return $data;
+		return $fields;
 	}
 
 	/**
@@ -1880,5 +1274,42 @@ class RedformCore extends JObject {
 		$res = $db->loadObject();
 
 		return $res->paid;
+	}
+
+	/**
+	 * Load javascript for multiple form
+	 *
+	 * @return void
+	 */
+	protected function loadMultipleFormScript()
+	{
+		JText::script('COM_REDFORM_MAX_SIGNUP_REACHED');
+		JText::script('COM_REDFORM_FIELDSET_SIGNUP_NB');
+		JFactory::getDocument()->addScript(JURI::root() . '/media/com_redform/js/form-multiple.js');
+	}
+
+	/**
+	 * Load javascript for form price
+	 *
+	 * @return void
+	 */
+	protected function loadPriceScript()
+	{
+		$params = JComponentHelper::getParams('com_redform');
+
+		JText::script('COM_REDFORM_Total_Price');
+		$doc = JFactory::getDocument();
+		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
+		$doc->addScript(JURI::root() . '/media/com_redform/js/form-price.js');
+	}
+
+	/**
+	 * Load javascript for form validation
+	 *
+	 * @return void
+	 */
+	protected function loadCheckScript()
+	{
+		JHtml::_('behavior.formvalidation');
 	}
 }
