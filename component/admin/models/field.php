@@ -1,207 +1,77 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.Backend
+ * @subpackage  Models
+ *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-
-jimport( 'joomla.application.component.model' );
-jimport( 'joomla.form.form' );
+defined('_JEXEC') or die;
 
 /**
- * Fields Model
+ *
+ * Field Model
+ *
+ * @package     Redform.Backend
+ * @subpackage  Models
+ * @since       2.5
  */
-class RedformModelField extends JModelLegacy
+class RedformModelField extends RModelAdmin
 {
-  /**
-   * Field id
-   *
-   * @var int
-   */
-  protected $_id = null;
-
-  /**
-   * Form data array
-   *
-   * @var array
-   */
-  protected $_data = null;
-
-  /**
-   * Constructor
-   *
-   * @since 0.9
-   */
-  function __construct()
-  {
-    parent::__construct();
-
-    $cid = JRequest::getVar( 'cid', array(0), '', 'array' );
-    JArrayHelper::toInteger($cid, array(0));
-    $this->setId($cid[0]);
-  }
-
-  /**
-   * Method to set the identifier
-   *
-   * @access  public
-   * @param int event identifier
-   */
-  function setId($id)
-  {
-    // Set event id and wipe data
-    $this->_id      = $id;
-    $this->_data  = null;
-  }
-
-	function getFormsOptions()
+	/**
+	 * Method for getting the form from the model.
+	 *
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
+	 */
+	public function getForm($data = array(), $loadData = true)
 	{
-		$query = "SELECT id AS value, formname AS text, startdate FROM #__rwf_forms";
-		$this->_db->setQuery($query);
-		return $this->_db->loadObjectList();
+		// Get the form.
+		$form = $this->loadForm(
+			$this->context . '.' . $this->formName, $this->formName,
+			array(
+				'control' => 'jform',
+				'load_data' => $loadData
+			)
+		);
+
+		if (empty($form))
+		{
+			return false;
+		}
+
+		$fieldType = JFactory::getApplication()->getUserState('com_redform.global.field.type', '');
+
+		if ($fieldType)
+		{
+			$form->loadFile('field_' . $fieldType);
+		}
+
+		return $form;
 	}
+	/**
+	 * Method to save the form data.
+	 *
+	 * @param   array  $data  The form data.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function save($data)
+	{
+		echo '<pre>'; echo print_r($data, true); echo '</pre>'; exit;
+		if (!parent::save($data))
+		{
+			return false;
+		}
 
-  /**
-   * get the data
-   *
-   * @return object
-   */
-  function &getData()
-  {
-    if ($this->_loadData())
-    {
+		// Clear the cache
+		$this->cleanCache();
 
-    }
-    else  $this->_initData();
-
-    // Get the form.
-    $registry = new JRegistry;
-    $registry->loadString($this->_data->params);
-    $this->_data->params = $registry->toArray();
-
-    JForm::addFormPath(JPATH_SITE . '/libraries/redform/rfield');
-    $form = JForm::getInstance('extended', $this->_data->fieldtype);
-    $form->bind(array('params' => $this->_data->params));
-
-    $this->_data->form = $form;
-
-	$this->_data->hasOptions = RedformRfieldFactory::getFieldType($this->_data->fieldtype)->hasOptions;
-
-    return $this->_data;
-  }
-
-   /**
-    * Retrieve a field to edit
-    */
-   function _loadData()
-   {
-	    // Lets load the content if it doesn't already exist
-	    if (empty($this->_data))
-	    {
-	      $query = 'SELECT *'
-	          . ' FROM #__rwf_fields'
-	          . ' WHERE id = '.$this->_id
-	          ;
-	      $this->_db->setQuery($query);
-	      $this->_data = $this->_db->loadObject();
-	      return (boolean) $this->_data;
-	    }
-	    return true;
-   }
-
-  /**
-   * load default data
-   *
-   * @return unknown
-   */
-  function _initData()
-  {
-    $this->_data = & JTable::getInstance('Fields', 'RedformTable');
-    $this->_data->published = 1;
-    $this->_data->fieldtype = 'textfield';
-    return $this->_data;
-  }
-
-  /**
-   * Tests if the element is checked out
-   *
-   * @access  public
-   * @param int A user id
-   * @return  boolean True if checked out
-   * @since 0.9
-   */
-  function isCheckedOut( $uid=0 )
-  {
-    if ($this->_loadData())
-    {
-      if ($uid) {
-        return ($this->_data->checked_out && $this->_data->checked_out != $uid);
-      } else {
-        return $this->_data->checked_out;
-      }
-    } elseif ($this->_id < 1) {
-      return false;
-    } else {
-      JError::raiseWarning( 0, 'Unable to Load Data');
-      return false;
-    }
-  }
-
-  /**
-   * Method to checkout/lock the item
-   *
-   * @access  public
-   * @param int $uid  User ID of the user checking the item out
-   * @return  boolean True on success
-   * @since 0.9
-   */
-  function checkout($uid = null)
-  {
-    if ($this->_id)
-    {
-      // Make sure we have a user id to checkout the event with
-      if (is_null($uid)) {
-        $user =& JFactory::getUser();
-        $uid  = $user->get('id');
-      }
-      // Lets get to it and checkout the thing...
-      $row = & $this->getTable('Fields', 'RedformTable');
-      return $row->checkout($uid, $this->_id);
-    }
-    return false;
-  }
-
-
-  /**
-   * Method to checkin/unlock the item
-   *
-   * @access  public
-   * @return  boolean True on success
-   * @since 0.9
-   */
-  function checkin()
-  {
-    if ($this->_id)
-    {
-      $row = & $this->getTable('Fields', 'RedformTable');
-      return $row->checkin($this->_id);
-    }
-    return false;
-  }
+		return true;
+	}
 
   /**
    * Save a field

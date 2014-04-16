@@ -18,4 +18,54 @@ defined('_JEXEC') or die;
  */
 class RedformControllerField extends RDFControllerForm
 {
+	/**
+	 * Add field
+	 *
+	 * @return void
+	 */
+	public function add()
+	{
+		$app = JFactory::getApplication();
+		$app->setUserState('com_redform.global.field.type', '');
+
+		return parent::add();
+	}
+
+	/**
+	 * Edit field
+	 *
+	 * @param   int     $key     [description]
+	 * @param   string  $urlVar  [description]
+	 *
+	 * @return void
+	 */
+	public function edit($key = null, $urlVar = null)
+	{
+		$app = JFactory::getApplication();
+		$fieldModel = RModel::getAdminInstance('Field');
+
+		$field = $fieldModel->getItem();
+		$app->setUserState('com_redform.global.field.type', $field->type);
+
+		return parent::edit($key, $urlVar);
+	}
+
+	/**
+	 * For auto-submit form when client choose type
+	 *
+	 * @return void
+	 */
+	public function setType()
+	{
+		$app = JFactory::getApplication();
+		$recordId = $app->input->get('id', 0, 'int');
+		$data = $app->input->get('jform', array(), 'array');
+
+		$app->setUserState('com_redform.edit.field.data', $data);
+		$app->setUserState('com_redform.global.field.type', $data['type']);
+
+		$redirect = JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($recordId), false);
+
+		$this->setRedirect($redirect);
+	}
 }

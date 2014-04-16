@@ -10,11 +10,11 @@
 defined('_JEXEC') or die;
 
 /**
- * Company Model
+ * Form Model
  *
  * @package     Redform.Backend
  * @subpackage  Models
- * @since       1.0
+ * @since       2.5
  */
 class RedformModelForm extends RModelAdmin
 {

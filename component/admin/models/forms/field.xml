@@ -14,8 +14,8 @@
 		<field
 				name="field"
 				type="text"
-				label="COM_REDFORM_FORM_NAME"
-				description="COM_REDFORM_FORM_NAME_TIP"
+				label="COM_REDFORM_FIELD_NAME"
+				description="COM_REDFORM_FIELD_NAME_TIP"
 				required="true"
 				maxlength="255"
 				/>
