@@ -103,10 +103,10 @@ $saveOrder = $listOrder == 'ordering';
 							</a>
 						</td>
 						<td>
-							<?php $this->escape($item->field_header); ?>
+							<?php echo $this->escape($item->field_header); ?>
 						</td>
 						<td>
-							<?php $this->escape($item->fieldtype); ?>
+							<?php echo $this->escape($item->fieldtype); ?>
 						</td>
 						<td>
 							<?php echo $item->validate ?
@@ -119,7 +119,7 @@ $saveOrder = $listOrder == 'ordering';
 								JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
 						</td>
 						<td>
-							<?php $this->escape($item->formname); ?>
+							<?php echo $this->escape($item->formname); ?>
 						</td>
 						<td>
 							<?php echo $item->id; ?>

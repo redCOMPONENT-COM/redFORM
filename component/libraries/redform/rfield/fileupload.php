@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RDFRfieldFileupload extends RedformRfield
+class RDFRfieldFileupload extends RDFRfield
 {
 	protected $type = 'fileupload';
 

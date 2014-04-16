@@ -93,7 +93,7 @@ abstract class RDFRfieldFactory extends JObject
 	 */
 	public static function getFieldType($type)
 	{
-		$class = 'RedformRfield' . ucfirst($type);
+		$class = 'RDFRfield' . ucfirst($type);
 
 		if (!class_exists($class, true))
 		{

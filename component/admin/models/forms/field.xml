@@ -7,53 +7,54 @@
 				name="id"
 				type="hidden"
 				default="0"
-				label="COM_REDFORM_FIELD_NAME"
-				description="COM_REDFORM_FIELD_NAME_TIP"
+				label=""
+				description=""
 				readonly="true"
 				/>
 		<field
 				name="field"
 				type="text"
-				label="COM_REDFORM_FIELD_NAME"
-				description="COM_REDFORM_FIELD_NAME_TIP"
+				label="COM_REDFORM_FORMS_XML_FIELD_NAME"
+				description="COM_REDFORM_FORMS_XML_FIELD_NAME_DESC"
 				required="true"
 				maxlength="255"
 				/>
 		<field
 				name="field_header"
 				type="text"
-				label="COM_REDFORM_COM_REDEVENT_FIELD_FORM_FIELD_HEADER_LABEL"
-				description="COM_REDFORM_COM_REDEVENT_FIELD_FORM_FIELD_HEADER_DESC"
+				label="COM_REDFORM_FORMS_XML_FIELD_HEADER"
+				description="COM_REDFORM_FORMS_XML_FIELD_HEADER_DESC"
 				required="false"
 				maxlength="255"
 				/>
 		<field
 				name="form_id"
-				type="rdfform"
-				label="COM_REDFORM_Form"
-				description="COM_REDFORM_COM_REDEVENT_FIELD_SELECT_FORM_DESC"
+				type="redformform"
+				label="COM_REDFORM_FORMS_XML_FIELD_FORM"
+				description="COM_REDFORM_FORMS_XML_FIELD_FORM_DESC"
 				required="true"
 				/>
 		<field
 				name="fieldtype"
-				type="rdffieldtype"
-				label="COM_REDFORM_FIELD_TYPE"
-				description="COM_REDFORM_FIELD_TYPE"
+				type="redformfieldtype"
+				label="COM_REDFORM_FORMS_XML_FIELD_TYPE"
+				description="COM_REDFORM_FORMS_XML_FIELD_TYPE_DESC"
 				required="true"
+                onchange="submitform('field.setType');"
 				/>
 		<field
 				name="tooltip"
 				type="textarea"
-				label="COM_REDFORM_ENTER_TOOLTIP"
-				description="COM_REDFORM_ENTER_TOOLTIP_INFO"
+				label="COM_REDFORM_FORMS_XML_FIELD_TOOLTIP"
+				description="COM_REDFORM_FORMS_XML_FIELD_TOOLTIP_DESC"
 				cols="80"
 				rows="5"
 				/>
 		<field
 				name="validate"
 				type="radio"
-				label="COM_REDFORM_REQUIRED"
-				description="COM_REDFORM_FIELD_REQUIRED_TIP"
+				label="COM_REDFORM_FORMS_XML_FIELD_REQUIRED"
+				description="COM_REDFORM_FORMS_XML_FIELD_REQUIRED_DESC"
 				default="0"
 				>
 			<option value="0">JNO</option>
@@ -62,8 +63,8 @@
 		<field
 				name="unique"
 				type="radio"
-				label="COM_REDFORM_UNIQUE"
-				description="COM_REDFORM_FIELD_UNIQUE_TIP"
+				label="COM_REDFORM_FORMS_XML_FIELD_UNIQUE"
+				description="COM_REDFORM_FORMS_XML_FIELD_UNIQUE_DESC"
 				default="0"
 				>
 			<option value="0">JNO</option>
@@ -72,8 +73,8 @@
 		<field
 				name="readonly"
 				type="radio"
-				label="COM_REDFORM_FIELD_READONLY"
-				description="COM_REDFORM_FIELD_READONLY_TIP"
+				label="COM_REDFORM_FORMS_XML_FIELD_READONLY"
+				description="COM_REDFORM_FORMS_XML_FIELD_READONLY_DESC"
 				default="0"
 				>
 			<option value="0">JNO</option>
@@ -82,22 +83,22 @@
 		<field
 				name="default"
 				type="textarea"
-				label="COM_REDFORM_FIELD_DEFAULT_VALUE"
-				description="COM_REDFORM_FIELD_DEFAULT_VALUE_TIP"
+				label="COM_REDFORM_FORMS_XML_FIELD_DEFAULT_VALUE"
+				description="COM_REDFORM_FORMS_XML_FIELD_DEFAULT_VALUE_DESC"
 				cols="80"
 				rows="5"
 				/>
 		<field
-				name="redmember_field"
+				name="published"
 				type="rpublished"
-				label="COM_REDFORM_FIELD_PUBLISHED"
-				description="COM_REDFORM_FIELD_PUBLISHED_TIP"
+				label="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED"
+				description="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED_DEC"
 				/>
 		<field
-				name="published"
+				name="redmember_field"
 				type="rdfredmemberfield"
-				label="COM_REDFORM_REDMEMBER_FIELD"
-				description="COM_REDFORM_SELECT_REDMEMBER_FIELD"
+				label="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD"
+				description="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_DESC"
 				maxlength="255"
 				/>
 		<field

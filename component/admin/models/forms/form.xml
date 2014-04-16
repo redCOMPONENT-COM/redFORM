@@ -147,7 +147,7 @@
 				/>
 		<field
 				name="cond_recipients"
-				type="rdfconditionalrecipients"
+				type="redformconditionalrecipients"
 				label="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS"
 				description="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS_TIP"
 				cols="50"

@@ -18,7 +18,7 @@ JFormHelper::loadFieldClass('textarea');
  * @subpackage  Fields
  * @since       1.0
  */
-class JFormFieldRdfconditionalrecipients extends JFormFieldTextarea
+class JFormFieldRedformconditionalrecipients extends JFormFieldTextarea
 {
 	/**
 	 * The form field type.
@@ -26,7 +26,7 @@ class JFormFieldRdfconditionalrecipients extends JFormFieldTextarea
 	 * @var    string
 	 * @since  11.1
 	 */
-	protected $type = 'Rdfconditionalrecipients';
+	protected $type = 'Redformconditionalrecipients';
 
 	public $fields = array();
 
@@ -63,6 +63,6 @@ class JFormFieldRdfconditionalrecipients extends JFormFieldTextarea
 
 		$this->textarea = parent::getInput();
 
-		return RLayoutHelper::render('fields.rdfconditionalrecipients', $this);
+		return RLayoutHelper::render('fields.redformconditionalrecipients', $this);
 	}
 }

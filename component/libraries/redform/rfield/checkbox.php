@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RDFRfieldCheckbox extends RedformRfield
+class RDFRfieldCheckbox extends RDFRfield
 {
 	protected $type = 'checkbox';
 

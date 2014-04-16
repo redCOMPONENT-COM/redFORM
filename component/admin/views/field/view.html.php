@@ -42,37 +42,8 @@ class RedformViewField extends RDFView
 	 */
 	public function display($tpl = null)
 	{
-		$app = JFactory::getApplication();
-
-		$fieldType = $app->getUserState('com_reditem.global.field.type', '');
-		$editData = $app->getUserState('com_reditem.edit.field.data', array());
-
 		$this->form	= $this->get('Form');
 		$this->item	= $this->get('Item');
-
-		if ($fieldType)
-		{
-			$this->form->loadFile('field_' . $fieldType, false);
-			$this->item->type = $fieldType;
-
-			if (isset($editData['params']) && is_array($editData['params']))
-			{
-				foreach ($editData['params'] as $key => $value)
-				{
-					$this->form->setValue($key, 'params', $value);
-				}
-			}
-			elseif (isset($this->item->params))
-			{
-				$params = new JRegistry($this->item->params);
-				$params = $params->toArray();
-
-				foreach ($params as $key => $value)
-				{
-					$this->form->setValue($key, 'params', $value);
-				}
-			}
-		}
 
 		parent::display($tpl);
 	}

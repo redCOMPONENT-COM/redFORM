@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RDFRfieldHidden extends RedformRfieldTextfield
+class RDFRfieldHidden extends RDFRfieldTextfield
 {
 	protected $type = 'hidden';
 

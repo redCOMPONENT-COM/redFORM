@@ -145,7 +145,7 @@ abstract class RDFRfield extends JObject
 	 *
 	 * @return string
 	 */
-	public function getXml()
+	public function getXmlPath()
 	{
 		return __DIR__ . '/' . $this->type . '.xml';
 	}

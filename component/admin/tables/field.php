@@ -180,7 +180,15 @@ class RedformTableField extends RTable
 	{
 		if ($this->id)
 		{
-			$this->beforeupdate = $this->load($this->id);
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select('*');
+			$query->from('#__rwf_fields');
+			$query->where('id = ' . $this->id);
+
+			$db->setQuery($query);
+			$this->beforeupdate = $db->loadObject();
 		}
 
 		return parent::beforeStore($updateNulls);
@@ -213,8 +221,8 @@ class RedformTableField extends RTable
 	 */
 	private function updateFieldTable($row, $oldrow)
 	{
+
 		$db = JFactory::getDBO();
-		$app = JFactory::getApplication();
 
 		/* column name for this field */
 		$field = 'field_' . $row->id;
@@ -223,7 +231,6 @@ class RedformTableField extends RTable
 		$q = "SHOW COLUMNS FROM " . $db->quoteName($db->getPrefix() . 'rwf_forms_' . $row->form_id)
 			. " WHERE  " . $db->quoteName('Field') . " = " . $db->Quote($field);
 		$db->setQuery($q);
-		$db->query();
 		$result = $db->loadResult();
 
 		/* Check if the field already exists */
@@ -234,7 +241,7 @@ class RedformTableField extends RTable
 				. ' ADD ' . $db->quoteName($field) . ' TEXT NULL';
 			$db->setQuery($q);
 
-			if (!$db->query())
+			if (!$db->execute())
 			{
 				$this->setError($db->getErrorMsg());
 
@@ -250,7 +257,7 @@ class RedformTableField extends RTable
 			$q = "SHOW COLUMNS FROM " . $db->quoteName($db->getPrefix() . 'rwf_forms_' . $oldrow->form_id)
 				. " WHERE  " . $db->quoteName('Field') . " = " . $db->Quote($field);
 			$db->setQuery($q);
-			$db->query();
+			$db->execute();
 			$result = $db->loadResult();
 
 			/* Check if the field already exists */
@@ -261,7 +268,7 @@ class RedformTableField extends RTable
 					. " DROP " . $db->quoteName($field);
 				$db->setQuery($q);
 
-				if (!$db->query())
+				if (!$db->execute())
 				{
 					$this->setError(JText::_('COM_REDFORM_Cannot_remove_field_from_old_form') . ' ' . $db->getErrorMsg());
 
@@ -275,7 +282,7 @@ class RedformTableField extends RTable
 		$q = "SHOW KEYS FROM " . $db->quoteName($db->getPrefix() . 'rwf_forms_' . $row->form_id)
 			. " WHERE key_name = " . $db->Quote($field);
 		$db->setQuery($q);
-		$db->query();
+		$db->execute();
 		$indexresult = $db->loadAssocList('Key_name');
 
 		/* Check if the field has to be unique */
@@ -286,16 +293,16 @@ class RedformTableField extends RTable
 			$q .= ' ADD UNIQUE (' . $db->quoteName($field) . ' (255))';
 			$db->setQuery($q);
 
-			if (!$db->query())
+			if (!$db->execute())
 			{
-				$app->enqueueMessage('error', JText::_('COM_REDFORM_Cannot_make_the_field_unique') . ' ' . $db->getErrorMsg());
+				$this->setError(JText::_('COM_REDFORM_Cannot_make_the_field_unique') . ' ' . $db->getErrorMsg());
 
 				/* Remove unique status */
 				$q = "UPDATE " . $db->quoteName('#__rwf_fields') . "
 					SET " . $db->quoteName('unique') . " = 0
 					WHERE id = " . $row->id;
 				$db->setQuery($q);
-				$db->query();
+				$db->execute();
 			}
 		}
 		elseif (isset($indexresult[$field]))
@@ -303,10 +310,14 @@ class RedformTableField extends RTable
 			$q .= ' DROP INDEX' . $db->quoteName($field);
 			$db->setQuery($q);
 
-			if (!$db->query())
+			if (!$db->execute())
 			{
-				$app->enqueueMessage(JText::_('COM_REDFORM_Cannot_remove_the_field_unique_status') . ' ' . $db->getErrorMsg());
+				$this->setError(JText::_('COM_REDFORM_Cannot_remove_the_field_unique_status') . ' ' . $db->getErrorMsg());
+
+				return false;
 			}
 		}
+
+		return true;
 	}
 }

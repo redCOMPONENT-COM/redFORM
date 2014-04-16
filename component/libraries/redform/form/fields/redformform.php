@@ -18,14 +18,14 @@ JFormHelper::loadFieldClass('list');
  * @subpackage  Fields
  * @since       1.0
  */
-class JFormFieldRFForm extends JFormFieldList
+class JFormFieldRedformForm extends JFormFieldList
 {
 	/**
 	 * The form field type.
 	 *
 	 * @var  string
 	 */
-	public $type = 'RFForm';
+	public $type = 'RedformForm';
 
 	/**
 	 * A static cache.

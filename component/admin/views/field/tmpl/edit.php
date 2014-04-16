@@ -12,14 +12,33 @@ defined('_JEXEC') or die;
 // HTML helpers
 JHtml::_('behavior.keepalive');
 JHtml::_('rbootstrap.tooltip');
-JHtml::_('rjquery.chosen', 'select');
-JHtml::_('rsearchtools.main');
+JHtml::_('rjquery.select2', 'select');
+JHTML::_('behavior.formvalidation');
 
-$action = JRoute::_('index.php?option=com_redform&view=field');
+$action = 'index.php?option=com_redform&task=field.edit&id=' . $this->item->id;
 $input = JFactory::getApplication()->input;
 $tab = $input->getString('tab', 'details');
 $isNew = (int) $this->item->id <= 0;
+
+$firstSpacer = false;
 ?>
+<script type="text/javascript">
+	Joomla.submitbutton = function(pressbutton) {
+
+		var form = document.adminForm;
+		if (pressbutton == 'field.cancel') {
+			submitform(pressbutton);
+			return true;
+		}
+		if (document.formvalidator.isValid(form)) {
+			submitform(pressbutton);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+</script>
 <?php if ($this->item->id) : ?>
 	<script type="text/javascript">
 		var loadedFieldTabs = {};
@@ -102,16 +121,111 @@ $isNew = (int) $this->item->id <= 0;
 
 			<div class="control-group">
 				<div class="control-label">
-					<?php echo $this->form->getLabel('parent_id'); ?>
+					<?php echo $this->form->getLabel('field_header'); ?>
 				</div>
 				<div class="controls">
-					<?php echo $this->form->getInput('parent_id'); ?>
+					<?php echo $this->form->getInput('field_header'); ?>
 				</div>
 			</div>
 
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('form_id'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('form_id'); ?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('fieldtype'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('fieldtype'); ?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('tooltip'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('tooltip'); ?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('validate'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('validate'); ?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('unique'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('unique'); ?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('readonly'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('readonly'); ?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('default'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('default'); ?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('published'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('published'); ?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('redmember_field'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('redmember_field'); ?>
+				</div>
+			</div>
+
+			<?php foreach ($this->form->getGroup('params') as $field) : ?>
+				<div class="control-group">
+					<?php if ($field->type == 'Spacerr') : ?>
+						<?php echo $field->label; ?>
+					<?php else : ?>
+						<div class="control-label">
+							<?php echo $field->label; ?>
+						</div>
+						<div class="controls">
+							<?php echo $field->input; ?>
+						</div>
+					<?php endif; ?>
+				</div>
+			<?php endforeach; ?>
+
 			<!-- hidden fields -->
-			<input type="hidden" name="option" value="com_redform">
-			<input type="hidden" name="id" value="<?php echo $this->item->id; ?>">
+			<?php echo $this->form->getInput('id'); ?>
 			<input type="hidden" name="task" value="">
 			<?php echo JHTML::_('form.token'); ?>
 		</form>
