@@ -22,7 +22,7 @@ $tab = $input->getString('tab', 'details');
 $isNew = (int) $this->item->id <= 0;
 
 $tableSortLink = 'index.php?option=com_redform&task=values.saveOrderAjax&tmpl=component';
-JHTML::_('rsortablelist.sortable', 'valuesTable', 'adminForm', 'asc', $tableSortLink, true, true);
+JHTML::_('rsortablelist.sortable', 'valuesTable', 'optionsForm', 'asc', $tableSortLink, true, true);
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function(pressbutton) {
@@ -48,9 +48,12 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'adminForm', 'asc', $tableSort
 			var redformvalues = new Class({
 
 				initialize : function() {
-					$('.save-option').click(function(event){
+					var that = this;
+					$('#valuesTable').on('click', '.save-option', function(event) {
 						var parents = $(event.currentTarget).parents('tr');
-						var elements = $(parents[0]).find(':input');
+						var parent = $(parents[0]);
+						var elements = parent.find(':input');
+						var id = parent.find('[name^=option-id]').val();
 						$.ajax({
 							url: 'index.php?option=com_redform&task=field.saveOption&format=json&view=field&id=<?php echo $this->item->id ?>',
 							beforeSend: function (xhr) {
@@ -58,9 +61,19 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'adminForm', 'asc', $tableSort
 							}
 							,
 							data:elements.serialize(),
+							dataType: 'json',
 							type : 'POST'
-						}).done(function (data) {
+						}).done(function(data) {
 							$('.values-content-content .spinner').hide();
+
+							if (data && data.id) {
+								if (!id) {
+									that.addOption(data);
+								}
+								else {
+									that.updateOption(parent, data);
+								}
+							}
 						});
 					});
 				},
@@ -87,12 +100,25 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'adminForm', 'asc', $tableSort
 				},
 
 				addOption : function(data) {
+					$('#newvalue').find(':input').val(null);
+					var tr = this.createRow(data);
+					$('#newvalue').before(tr);
+				},
+
+				updateOption : function(element, data) {
+					$('#newvalue').find(':input').val(null);
+					var tr = this.createRow(data);
+					element.replaceWith(tr);
+				},
+
+				createRow : function(data) {
 					var tr = $('#newvalue').clone().removeAttr('id');
+					tr.find('span.hide').removeClass('hide');
 					tr.find('[name^=option-id]').val(data.id);
 					tr.find('[name^=option-value]').val(data.value);
 					tr.find('[name^=option-label]').val(data.label);
 					tr.find('[name^=option-price]').val(data.price);
-					tr.find('[name^=order]').val(data.ordering);
+					tr.find('[name^=order]').attr('name', 'order[]').val(data.ordering);
 					tr.find('td.buttons .save-option').text('save').removeClass('btn-success').addClass('btn-primary');
 
 					var btnremove = $('<button/>', {
@@ -118,9 +144,10 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'adminForm', 'asc', $tableSort
 							}
 						});
 					}).text('delete');
+
 					tr.find('td.buttons .save-option').after(btnremove);
 
-					$('#newvalue').before(tr);
+					return tr;
 				}
 			});
 
@@ -284,6 +311,7 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'adminForm', 'asc', $tableSort
 	<?php if ($this->item->hasOptions && $this->item->id) : ?>
 		<div class="tab-pane" id="values">
 			<div class="row-fluid values-content">
+				<form name="optionsForm" id="optionsForm">
 				<table class="table table-striped table-hover" id="valuesTable">
 					<thead>
 					<tr>
@@ -307,10 +335,10 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'adminForm', 'asc', $tableSort
 					<tbody>
 						<tr id="newvalue">
 							<td class="order nowrap center">
-								<span class="sortable-handler hasTooltip inactive">
+								<span class="sortable-handler hasTooltip hide">
 									<i class="icon-move"></i>
 								</span>
-								<input type="text" style="display:none" name="order[]" value="0" class="text-area-order" />
+								<input type="text" style="display:none" name="order-fake[]" value="0" class="text-area-order" />
 							</td>
 							<td>
 								<input type="text" name="option-value[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_VALUE'); ?>"/>
@@ -322,12 +350,13 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'adminForm', 'asc', $tableSort
 								<input type="text" name="option-price[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_PRICE'); ?>"/>
 							</td>
 							<td class="buttons">
-								<input type="hidden" name="option-id[]" value="" />
+								<input type="checkbox" name="option-id[]" value="" class="hide"/>
 								<button type="button" name="option-save-button[]" class="save-option btn btn-success btn-sm"><?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ADD'); ?></button>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+				</form>
 			</div>
 		</div>
 	<?php endif; ?>
