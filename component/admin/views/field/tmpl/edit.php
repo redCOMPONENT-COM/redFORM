@@ -11,16 +11,18 @@ defined('_JEXEC') or die;
 
 // HTML helpers
 JHtml::_('behavior.keepalive');
-JHtml::_('rbootstrap.tooltip');
-JHtml::_('rjquery.select2', 'select');
 JHTML::_('behavior.formvalidation');
+JHtml::_('rbootstrap.tooltip');
+JHtml::_('rjquery.chosen', 'select');
+JHtml::_('rsearchtools.main');
 
 $action = 'index.php?option=com_redform&task=field.edit&id=' . $this->item->id;
 $input = JFactory::getApplication()->input;
 $tab = $input->getString('tab', 'details');
 $isNew = (int) $this->item->id <= 0;
 
-$firstSpacer = false;
+$tableSortLink = 'index.php?option=com_redform&task=values.saveOrderAjax&tmpl=component';
+JHTML::_('rsortablelist.sortable', 'valuesTable', 'adminForm', 'asc', $tableSortLink, true, true);
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function(pressbutton) {
@@ -41,49 +43,98 @@ $firstSpacer = false;
 </script>
 <?php if ($this->item->id) : ?>
 	<script type="text/javascript">
-		var loadedFieldTabs = {};
 		(function ($) {
-			function ajaxFieldTabSetup(tabName) {
-				$('a[href="#' + tabName + '"]').on('shown', function (e) {
 
-					// Tab already loaded
-					if (loadedFieldTabs[tabName] == true) {
-						return true;
-					}
+			var redformvalues = new Class({
+
+				initialize : function() {
+					$('.save-option').click(function(event){
+						var parents = $(event.currentTarget).parents('tr');
+						var elements = $(parents[0]).find(':input');
+						$.ajax({
+							url: 'index.php?option=com_redform&task=field.saveOption&format=json&view=field&id=<?php echo $this->item->id ?>',
+							beforeSend: function (xhr) {
+								$('.values-content-content .spinner').show();
+							}
+							,
+							data:elements.serialize(),
+							type : 'POST'
+						}).done(function (data) {
+							$('.values-content-content .spinner').hide();
+						});
+					});
+				},
+
+				getValues : function() {
+					var that = this;
 
 					// Perform the ajax request
 					$.ajax({
-						url: 'index.php?option=com_redform&task=field.ajax' + tabName + '&view=field&id=<?php echo $this->item->id ?>',
+						url: 'index.php?option=com_redform&task=field.getValues&format=json&view=field&id=<?php echo $this->item->id ?>',
+						dataType: 'json',
 						beforeSend: function (xhr) {
-							$('.' + tabName + '-content .spinner').show();
-							$('#fieldTabs').addClass('opacity-40');
+							$('.values-content-content .spinner').show();
 						}
-					}).done(function (data) {
-							$('.' + tabName + '-content .spinner').hide();
-							$('#fieldTabs').removeClass('opacity-40');
-							$('.' + tabName + '-content').html(data);
-							$('select').chosen();
-							$('.chzn-search').hide();
-							$('.hasTooltip').tooltip({"animation": true, "html": true, "placement": "top",
-								"selector": false, "title": "", "trigger": "hover focus", "delay": 0, "container": false});
-							loadedFieldTabs[tabName] = true;
+					}).done(function(data) {
+						$('.values-content-content .spinner').hide();
 
-							// Auto submit search fields after loading AJAX
-							$('.js-enter-submits').enterSubmits();
+						if (data && data.length) {
+							for (var i = 0; i < data.length; i++) {
+								that.addOption(data[i]);
+							}
+						}
+					});
+				},
+
+				addOption : function(data) {
+					var tr = $('#newvalue').clone().removeAttr('id');
+					tr.find('[name^=option-id]').val(data.id);
+					tr.find('[name^=option-value]').val(data.value);
+					tr.find('[name^=option-label]').val(data.label);
+					tr.find('[name^=option-price]').val(data.price);
+					tr.find('[name^=order]').val(data.ordering);
+					tr.find('td.buttons .save-option').text('save').removeClass('btn-success').addClass('btn-primary');
+
+					var btnremove = $('<button/>', {
+						'type' : 'button',
+						'class': 'btn btn-danger btn-sm',
+						'optionId': data.id
+					}).click(function(event){
+						var element = $(event.currentTarget);
+						$.ajax({
+							url: 'index.php?option=com_redform&task=field.removeValue&format=json&view=field&id=<?php echo $this->item->id ?>',
+							data: {'optionId' : element.attr('optionId')},
+							type : 'POST',
+							dataType: 'json',
+							beforeSend: function (xhr) {
+								$('.values-content-content .spinner').show();
+							}
+						}).done(function(data) {
+							$('.values-content-content .spinner').hide();
+
+							if (data && data.success) {
+								var parents = element.parents('tr');
+								$(parents[0]).remove();
+							}
 						});
-				})
-			}
+					}).text('delete');
+					tr.find('td.buttons .save-option').after(btnremove);
+
+					$('#newvalue').before(tr);
+				}
+			});
 
 			$(document).ready(function () {
-				ajaxFieldTabSetup('extra');
-				ajaxFieldTabSetup('values');
+				if ($('#tabvalues')) {
+					var obj = new redformvalues();
+					obj.getValues();
+				}
 			});
 		})(jQuery);
 	</script>
 	<?php if ($tab) : ?>
 		<script type="text/javascript">
 			jQuery(document).ready(function () {
-
 				// Show the corresponding tab
 				jQuery('#fieldTabs a[href="#<?php echo $tab ?>"]').tab('show');
 			});
@@ -98,10 +149,10 @@ $firstSpacer = false;
 		</a>
 	</li>
 
-	<?php if ($this->item->id) : ?>
+	<?php if ($this->item->hasOptions && $this->item->id) : ?>
 		<li>
 			<a href="#values" data-toggle="tab">
-				<?php echo JText::_('COM_REDFORM_FIELD_VALUES_LIST'); ?>
+				<?php echo JText::_('COM_REDFORM_FIELD_TAB_OPTIONS'); ?>
 			</a>
 		</li>
 	<?php endif; ?>
@@ -211,7 +262,7 @@ $firstSpacer = false;
 
 			<?php foreach ($this->form->getGroup('params') as $field) : ?>
 				<div class="control-group">
-					<?php if ($field->type == 'Spacerr') : ?>
+					<?php if ($field->type == 'Spacer') : ?>
 						<?php echo $field->label; ?>
 					<?php else : ?>
 						<div class="control-label">
@@ -230,12 +281,53 @@ $firstSpacer = false;
 			<?php echo JHTML::_('form.token'); ?>
 		</form>
 	</div>
-	<?php if ($this->item->id) : ?>
+	<?php if ($this->item->hasOptions && $this->item->id) : ?>
 		<div class="tab-pane" id="values">
 			<div class="row-fluid values-content">
-				<div class="spinner pagination-centered">
-					<?php echo JHtml::image('com_redform/ajax-loader.gif', '', null, true); ?>
-				</div>
+				<table class="table table-striped table-hover" id="valuesTable">
+					<thead>
+					<tr>
+						<th width="1%">
+							&nbsp;
+						</th>
+						<th class="nowrap center">
+							<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_HEADER_VALUE'); ?>
+						</th>
+						<th class="nowrap center">
+							<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_HEADER_LABEL'); ?>
+						</th>
+						<th class="nowrap center">
+							<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_HEADER_PRICE'); ?>
+						</th>
+						<th class="nowrap center">
+							&nbsp;
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr id="newvalue">
+							<td class="order nowrap center">
+								<span class="sortable-handler hasTooltip inactive">
+									<i class="icon-move"></i>
+								</span>
+								<input type="text" style="display:none" name="order[]" value="0" class="text-area-order" />
+							</td>
+							<td>
+								<input type="text" name="option-value[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_VALUE'); ?>"/>
+							</td>
+							<td>
+								<input type="text" name="option-label[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_LABEL'); ?>"/>
+							</td>
+							<td>
+								<input type="text" name="option-price[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_PRICE'); ?>"/>
+							</td>
+							<td class="buttons">
+								<input type="hidden" name="option-id[]" value="" />
+								<button type="button" name="option-save-button[]" class="save-option btn btn-success btn-sm"><?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ADD'); ?></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	<?php endif; ?>

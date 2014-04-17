@@ -43,7 +43,7 @@ class RedformTableField extends RTable
 	/**
 	 * @var string field type
 	 */
-	public $fieldtype = null;
+	public $fieldtype = 'textfield';
 
 
 	/**

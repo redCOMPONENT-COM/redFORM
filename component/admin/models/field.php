@@ -19,7 +19,26 @@ defined('_JEXEC') or die;
 class RedformModelField extends RModelAdmin
 {
 	/**
-	 * Replace the global params field with specific field params
+	 * Override to add hasOptions status
+	 *
+	 * @param   integer  $pk  The id of the primary key.
+	 *
+	 * @return  mixed    Object on success, false on failure.
+	 */
+	public function getItem($pk = null)
+	{
+		$item = parent::getItem($pk);
+
+		if ($item)
+		{
+			$item->hasOptions = RDFRfieldFactory::getFieldType($item->fieldtype)->hasOptions;
+		}
+
+		return $item;
+	}
+
+	/**
+	 * Override to replace the global params field with specific field params
 	 *
 	 * @param   JForm   $form   A JForm object.
 	 * @param   mixed   $data   The data expected for the form.
@@ -80,17 +99,87 @@ class RedformModelField extends RModelAdmin
 		return $res;
 	}
 
+	/**
+	 * Get Associated values (options)
+	 *
+	 * @return mixed
+	 */
 	public function getValues()
 	{
-		$field = $this->getData();
 
-		$query = ' SELECT v.* '
-		       . ' FROM #__rwf_values AS v '
-		       . ' WHERE v.field_id = ' . $this->_db->Quote($field->id)
-		       . ' ORDER BY v.ordering '
-		       ;
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObjectList();
+		$field = $this->getItem();
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('v.*');
+		$query->from('#__rwf_values AS v');
+		$query->where('v.field_id = ' . $db->Quote($field->id));
+		$query->order('v.ordering');
+
+		$db->setQuery($query);
+		$res = $db->loadObjectList();
+
+		return $res;
+	}
+
+	/**
+	 * Save value
+	 *
+	 * @param   array  $data  value array data to save (id value, label, price)
+	 *
+	 * @return int row id on success
+	 */
+	public function saveValue($data)
+	{
+		$row = $this->getTable('Values', 'RedformTable');
+		$row->bind($data);
+
+		if (!$data['id'])
+		{
+			$row->published = 1;
+
+			if ($current = $this->getValues())
+			{
+				$maxordering = array_pop($current)->ordering;
+				$row->ordering = $maxordering + 1;
+			}
+		}
+
+		if (!($row->check() && $row->store()))
+		{
+			$this->setError($row->getError());
+
+			return false;
+		}
+
+		return $row->id;
+	}
+
+	/**
+	 * Remove value
+	 *
+	 * @param   int  $id  value id
+	 *
+	 * @return bool
+	 */
+	public function removeValue($id)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->delete('#__rwf_values');
+		$query->where('id = ' . $id);
+
+		$db->setQuery($query);
+
+		if (!$res = $db->execute())
+		{
+			$this->setError($db->getError());
+
+			return false;
+		}
+
 		return $res;
 	}
 
