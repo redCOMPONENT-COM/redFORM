@@ -102,6 +102,13 @@ class RedformModelFields extends RModelList
 			$query->where('f.published = ' . (int) $state);
 		}
 
+		$formId = $this->getState('filter.form_id');
+
+		if (is_numeric($formId))
+		{
+			$query->where('f.form_id = ' . (int) $formId);
+		}
+
 		// Filter search
 		$search = $this->getState('filter.search_fields');
 

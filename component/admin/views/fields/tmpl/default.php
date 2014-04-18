@@ -25,7 +25,8 @@ $saveOrder = $listOrder == 'ordering';
 		array(
 			'view' => $this,
 			'options' => array(
-				'filterButton' => false,
+				'filterButton' => true,
+				'filtersHidden' => false,
 				'searchField' => 'search_fields',
 				'searchFieldSelector' => '#filter_search_fields',
 				'limitFieldSelector' => '#list_field_limit',

@@ -9,6 +9,17 @@
                 class="js-enter-submits"
                 />
         <field
+                name="form_id"
+                type="redformform"
+                class="chosen"
+                default=""
+                label="COM_REDCORE_FILTER_FORM"
+                description="COM_REDCORE_FILTER_FORM_DESC"
+                onchange="this.form.submit();"
+                >
+            <option value="">COM_REDFORM_FIELD_SELECT_FORM</option>
+        </field>
+        <field
                 name="field_state"
                 type="rpublished"
                 label="JOPTION_SELECT_PUBLISHED"
