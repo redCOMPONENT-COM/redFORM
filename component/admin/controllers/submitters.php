@@ -127,7 +127,7 @@ class RedformControllerSubmitters extends JControllerLegacy
     $xref = JRequest::getVar('xref', 0);
     $integration = JRequest::getVar('integration', '');
 
-    $rfcore = new RedformCore();
+    $rfcore = new RdfCore();
     $res = $rfcore->saveAnswers($integration);
 
     if ($res) {

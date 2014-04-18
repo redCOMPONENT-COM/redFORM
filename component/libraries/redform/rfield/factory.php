@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-abstract class RDFRfieldFactory extends JObject
+abstract class RdfRfieldFactory extends JObject
 {
 	/**
 	 * Return all supported types
@@ -62,7 +62,7 @@ abstract class RDFRfieldFactory extends JObject
 	 *
 	 * @param   int  $id  field id
 	 *
-	 * @return RedformRfield
+	 * @return RdfRfield
 	 *
 	 * @throws Exception
 	 */
@@ -87,13 +87,13 @@ abstract class RDFRfieldFactory extends JObject
 	 *
 	 * @param   string  $type  type
 	 *
-	 * @return RedformRfield
+	 * @return RdfRfield
 	 *
 	 * @throws Exception
 	 */
 	public static function getFieldType($type)
 	{
-		$class = 'RDFRfield' . ucfirst($type);
+		$class = 'RdfRfield' . ucfirst($type);
 
 		if (!class_exists($class, true))
 		{
@@ -116,7 +116,7 @@ abstract class RDFRfieldFactory extends JObject
 	 */
 	protected static function getType($fieldId)
 	{
-		$model = new RedformCoreModelField;
+		$model = new RdfCoreModelField;
 		$data = $model->setId($fieldId)->getItem();
 
 		if (!$data)

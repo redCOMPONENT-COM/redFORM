@@ -10,7 +10,7 @@
 require_once 'PHPUnit/Autoload.php';
 
 // Register library prefix
-JLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
 /**
  * Test class for currency.
@@ -37,7 +37,7 @@ class currencyTest extends JoomlaTestCase
 	 */
 	public function testGetIsoNumber($code, $expect, $message)
 	{
-		$cur = RedformHelperCurrency::getIsoNumber($code);
+		$cur = RdfHelperCurrency::getIsoNumber($code);
 
 		$this->assertEquals(
 			$cur,
@@ -63,7 +63,7 @@ class currencyTest extends JoomlaTestCase
 	 */
 	public function testGetIsoCode($iso_number, $expect, $message)
 	{
-		$cur = RedformHelperCurrency::getIsoCode($iso_number);
+		$cur = RdfHelperCurrency::getIsoCode($iso_number);
 
 		$this->assertEquals(
 			$cur,

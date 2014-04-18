@@ -27,9 +27,9 @@ jimport('joomla.mail.helper');
 
 require_once(JPATH_SITE . '/components/com_redform/redform.defines.php');
 
-require_once(RDF_PATH_SITE .'/models/redform.php');
+require_once(Rdf_PATH_SITE .'/models/redform.php');
 
-class RDFCore extends JObject {
+class RdfCore extends JObject {
 
 	private $_form_id;
 
@@ -73,7 +73,7 @@ class RDFCore extends JObject {
 
 		if (empty($instances[$form_id]))
 		{
-			$inst = new RedformCore();
+			$inst = new RdfCore();
 			$inst->setFormId($form_id);
 			$instances[$form_id] = $inst;
 		}
@@ -167,14 +167,14 @@ class RDFCore extends JObject {
 		$html .= '</form>';
 
 		// Analytics
-		if (RedformHelperAnalytics::isEnabled())
+		if (RdfHelperAnalytics::isEnabled())
 		{
 			$event = new stdclass;
 			$event->category = 'form';
 			$event->action = 'display';
 			$event->label = "display form {$form->formname}";
 			$event->value = null;
-			RedformHelperAnalytics::trackEvent($event);
+			RdfHelperAnalytics::trackEvent($event);
 		}
 
 		return $html;
@@ -340,7 +340,7 @@ class RDFCore extends JObject {
 				}
 
 				// Init rfield
-				$rfield = RedformRfieldFactory::getField($field->id);
+				$rfield = RdfRfieldFactory::getField($field->id);
 				$rfield->setFormIndex($signup);
 				$rfield->setUser($user);
 				$cleanfield = 'field_' . $field->id;
@@ -493,7 +493,7 @@ class RDFCore extends JObject {
 	 */
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
-		require_once RDF_PATH_SITE . '/models/redform.php';
+		require_once Rdf_PATH_SITE . '/models/redform.php';
 		$model = new RedformModelRedform();
 
 		if (!$result = $model->apisaveform($integration_key, $options, $data))
@@ -652,7 +652,7 @@ class RDFCore extends JObject {
 			$results = array();
 			foreach ($answers as $a)
 			{
-				$result = new RedformCoreFormAnswers;
+				$result = new RdfCoreFormAnswers;
 				$result->sid        = (isset($a->sid) ? $a->sid : null);
 				$result->submit_key = $submit_key;
 				$result->fields     = $a;
@@ -1027,20 +1027,20 @@ class RDFCore extends JObject {
 		array_walk($parts, 'trim');
 
 		if (count($parts) < 5) { // invalid condition...
-			RedformHelperLog::simpleLog('invalid condition formatting'. $conditionline);
+			RdfHelperLog::simpleLog('invalid condition formatting'. $conditionline);
 			return false;
 		}
 
 		// first should be the email address
 		if (!JMailHelper::isEmailAddress($parts[0])) {
-			RedformHelperLog::simpleLog('invalid email in conditional recipient: '. $parts[0]);
+			RdfHelperLog::simpleLog('invalid email in conditional recipient: '. $parts[0]);
 			return false;
 		}
 		$email = $parts[0];
 
 		// then the name of the recipient
 		if (!$parts[1]) {
-			RedformHelperLog::simpleLog('invalid name in conditional recipient: '. $parts[0]);
+			RdfHelperLog::simpleLog('invalid name in conditional recipient: '. $parts[0]);
 			return false;
 		}
 		$name = $parts[1];
@@ -1049,7 +1049,7 @@ class RDFCore extends JObject {
 		$field_id = intval($parts[2]);
 		$answer = $answers->getFieldAnswer($field_id);
 		if ($answer === false) {
-			RedformHelperLog::simpleLog('invalid field id for conditional recipient: '. $parts[1]);
+			RdfHelperLog::simpleLog('invalid field id for conditional recipient: '. $parts[1]);
 			return false;
 		}
 		$value = $answer['value'];
@@ -1060,7 +1060,7 @@ class RDFCore extends JObject {
 		{
 			case 'between':
 				if (!isset($parts[5])) {
-					RedformHelperLog::simpleLog('missing max value in between conditional recipient: '. $conditionline);
+					RdfHelperLog::simpleLog('missing max value in between conditional recipient: '. $conditionline);
 				}
 				if (is_numeric($value))
 				{
@@ -1102,7 +1102,7 @@ class RDFCore extends JObject {
 				break;
 
 			default:
-				RedformHelperLog::simpleLog('invalid email in conditional recipient: '. $parts[0]);
+				RdfHelperLog::simpleLog('invalid email in conditional recipient: '. $parts[0]);
 				return false;
 		}
 		if ($isvalid) {
@@ -1138,7 +1138,7 @@ class RDFCore extends JObject {
 
 		$fields = $this->prepareUserData($userData);
 
-		require_once RDF_PATH_SITE . '/models/redform.php';
+		require_once Rdf_PATH_SITE . '/models/redform.php';
 		$model = new RedformModelRedform();
 		$model->setFormId($this->_form_id);
 
@@ -1222,7 +1222,7 @@ class RDFCore extends JObject {
 	 */
 	protected function getGatewaySelect($currency)
 	{
-		$helper = new RedformCorePaymentGateway;
+		$helper = new RdfCorePaymentGateway;
 
 		$config = new stdclass;
 		$config->currency = $currency;

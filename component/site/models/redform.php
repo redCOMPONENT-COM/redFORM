@@ -25,7 +25,7 @@ defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.application.component.model');
 jimport('joomla.html.parameter');
 
-require_once RDF_PATH_SITE.'/classes/answers.php';
+require_once Rdf_PATH_SITE.'/classes/answers.php';
 
 /**
  */
@@ -126,7 +126,7 @@ class RedformModelRedform extends JModelLegacy {
 
 		foreach ($ids as $fieldId)
 		{
-			$fields[] = RedformRfieldFactory::getField($fieldId);
+			$fields[] = RdfRfieldFactory::getField($fieldId);
 		}
 
 		return $fields;
@@ -233,7 +233,7 @@ class RedformModelRedform extends JModelLegacy {
 	function notifysubmitter(rfanswers $answers, $form)
 	{
 		$emails = $answers->getSubmitterEmails();
-		$cond_recipients = RedformCore::getConditionalRecipients($form, $answers);
+		$cond_recipients = RdfCore::getConditionalRecipients($form, $answers);
 
 		foreach ($emails as $submitter_email)
 		{
@@ -288,7 +288,7 @@ class RedformModelRedform extends JModelLegacy {
 				/* Send the mail */
 				if (!$mailer->Send()) {
 					JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter)');
-					RedformHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter):'.$mailer->error);
+					RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter):'.$mailer->error);
 				}
 			}
 		}
@@ -579,7 +579,7 @@ class RedformModelRedform extends JModelLegacy {
 	/**
 	 * Create a new submission from fields
 	 *
-	 * @param   array   $fields       RedformRfield fields, with value set
+	 * @param   array   $fields       RdfRfield fields, with value set
 	 * @param   string  $integration  integration key
 	 * @param   array   $options      options: baseprice, currency
 	 *
@@ -648,7 +648,7 @@ class RedformModelRedform extends JModelLegacy {
 		/* Inform contact person if need */
 		// form recipients
 		$recipients = $allanswers[0]->getRecipients();
-		$cond_recipients = RedformCore::getConditionalRecipients($form, $allanswers[0]);
+		$cond_recipients = RdfCore::getConditionalRecipients($form, $allanswers[0]);
 		if ($cond_recipients)
 		{
 			foreach ($cond_recipients as $c) {
@@ -718,7 +718,7 @@ class RedformModelRedform extends JModelLegacy {
 			$mailer->addReplyTo($sender);
 
 			// set the email subject
-			$replaceHelper = new RedformHelperTagsreplace($form, $allanswers[0]->getAnswersByFieldId());
+			$replaceHelper = new RdfHelperTagsreplace($form, $allanswers[0]->getAnswersByFieldId());
 
 			if (trim($form->contactpersonemailsubject))
 			{
@@ -821,7 +821,7 @@ class RedformModelRedform extends JModelLegacy {
 
 			// send the mail
 			if (!$mailer->Send()) {
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);
+				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);
 			}
 		}
 	}

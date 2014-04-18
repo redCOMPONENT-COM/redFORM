@@ -126,7 +126,7 @@ class PaymentPaypal extends  RedformPaymentHelper
     $submit_key = JRequest::getvar('key');
     $paid = 0;
 
-    //RedformHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
+    //RdfHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
     // read the post from PayPal system and add 'cmd'
     $req = 'cmd=_notify-validate';
 
@@ -169,7 +169,7 @@ class PaymentPaypal extends  RedformPaymentHelper
     $res = curl_exec($ch);
     curl_close($ch);
 
-    //RedformHelperLog::simpleLog('PAYPAL curl result: '.$res);
+    //RdfHelperLog::simpleLog('PAYPAL curl result: '.$res);
 
     if (strcmp ($res, "VERIFIED") == 0)
     {
@@ -181,10 +181,10 @@ class PaymentPaypal extends  RedformPaymentHelper
 	    $res = $this->_getSubmission($submit_key);
 
     	if ($payment_amount != $res->price) {
-    		RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG AMOUNT('. $res->price.') - ' . $submit_key);
+    		RdfHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG AMOUNT('. $res->price.') - ' . $submit_key);
     	}
     	else if ($payment_currency != $res->currency) {
-    		RedformHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY ('. $res->currency.') - ' . $submit_key);
+    		RdfHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY ('. $res->currency.') - ' . $submit_key);
     	}
     	else if (strcasecmp($payment_status, 'completed') == 0) {
     		$paid = 1;
@@ -193,10 +193,10 @@ class PaymentPaypal extends  RedformPaymentHelper
     else if (strcmp ($res, "INVALID") == 0)
     {
     	// log for manual investigation
-			RedformHelperLog::simpleLog('PAYPAL NOTIFICATION INVALID IPN'. ' - ' . $submit_key);
+			RdfHelperLog::simpleLog('PAYPAL NOTIFICATION INVALID IPN'. ' - ' . $submit_key);
     }
     else {
-    	RedformHelperLog::simpleLog('PAYPAL NOTIFICATION HTTP ERROR'. ' for ' . $submit_key);
+    	RdfHelperLog::simpleLog('PAYPAL NOTIFICATION HTTP ERROR'. ' for ' . $submit_key);
     }
 
     // log ipn

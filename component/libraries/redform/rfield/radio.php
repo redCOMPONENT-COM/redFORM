@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RDFRfieldRadio extends RDFRfield
+class RdfRfieldRadio extends RdfRfield
 {
 	protected $type = 'radio';
 

@@ -94,7 +94,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 		$paymentRequest->setNotificationURL($this->getUrl('notify', $submit_key));
 
 		// Get email and fullname from answers
-		$rfcore = new RedformCore;
+		$rfcore = new RdfCore;
 		$emails = $rfcore->getSubmissionContactEmail($submit_key);
 
 		if ($emails)
@@ -143,7 +143,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 		$submit_key = $mainframe->input->get('key');
 		$mainframe->input->set('submit_key', $submit_key);
 
-		RedformHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_PAGSEGURO_NOTIFICATION_RECEIVED', $submit_key));
+		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_PAGSEGURO_NOTIFICATION_RECEIVED', $submit_key));
 
 		$code = $mainframe->input->get('notificationCode');
 		$type = $mainframe->input->get('notificationType');
@@ -211,7 +211,7 @@ class PaymentPagseguro extends RedformPaymentHelper
 		}
 		catch (RedformPaymentException $e) // Just easier for debugging...
 		{
-			RedformHelperLog::simpleLog($e->getMessage());
+			RdfHelperLog::simpleLog($e->getMessage());
 			$this->writeTransaction($submit_key, $e->getMessage() . $resp, 'FAIL', 0);
 
 			return false;

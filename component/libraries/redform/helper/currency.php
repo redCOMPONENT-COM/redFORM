@@ -16,7 +16,7 @@ defined('_JEXEC') or die('Restricted access');
  * @subpackage  Helper
  * @since       2.5
  */
-class RDFHelperCurrency
+class RdfHelperCurrency
 {
 	/**
 	 * Return array of codes

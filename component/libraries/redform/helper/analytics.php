@@ -25,7 +25,7 @@ defined('_JEXEC') or die('Restricted access');
  * @package     redFORM
  * @subpackage  component
  */
-class RDFHelperAnalytics
+class RdfHelperAnalytics
 {
 	/**
 	 * return true if GA is enabled

@@ -279,7 +279,7 @@ class rfanswers
 	/**
 	 * Add post answer for field
 	 *
-	 * @param   RedformRfield  $field        field
+	 * @param   RdfRfield  $field        field
 	 * @param   mixed          $postedvalue  posted data
 	 *
 	 * @return mixed hte value
@@ -295,7 +295,7 @@ class rfanswers
 	/**
 	 * Add field to answers (value must already be set)
 	 *
-	 * @param   RedformRfield  $field  field
+	 * @param   RdfRfield  $field  field
 	 *
 	 * @return void
 	 */
@@ -373,7 +373,7 @@ class rfanswers
 			if (!$db->query())
 			{
 				JError::raiseError(0, JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'));
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_update_answers') . ' ' . $db->getErrorMsg());
+				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_update_answers') . ' ' . $db->getErrorMsg());
 			}
 		}
 		else
@@ -398,7 +398,7 @@ class rfanswers
 				}
 
 				/* We cannot save the answers, do not continue */
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getError());
+				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getError());
 
 				return false;
 			}
@@ -441,7 +441,7 @@ class rfanswers
 		if (!$row->check())
 		{
 			$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data'), 'error');
-			RedformHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data') . ': ' . $row->getError());
+			RdfHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data') . ': ' . $row->getError());
 
 			return false;
 		}
@@ -452,12 +452,12 @@ class rfanswers
 			if (stristr($db->getError(), 'Duplicate entry'))
 			{
 				$mainframe->enqueueMessage(JText::_('COM_REDFORM_You_have_already_entered_this_form'), 'error');
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_You_have_already_entered_this_form'));
+				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_You_have_already_entered_this_form'));
 			}
 			else
 			{
 				$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data'), 'error');
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data') . ': ' . $row->getError());
+				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data') . ': ' . $row->getError());
 			}
 
 			return false;
@@ -498,7 +498,7 @@ class rfanswers
 
 		if (!$res = $db->query())
 		{
-			RedformHelperLog::simpleLog($db->getError());
+			RdfHelperLog::simpleLog($db->getError());
 
 			return false;
 		}
@@ -646,7 +646,7 @@ class rfanswers
 
 		foreach ($fieldIds as $fid)
 		{
-			$field = RedformRfieldFactory::getField($fid);
+			$field = RdfRfieldFactory::getField($fid);
 
 			$property = 'field_' . $fid;
 

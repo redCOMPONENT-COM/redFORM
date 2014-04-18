@@ -170,7 +170,7 @@ class RedFormModelPayment extends JModelLegacy
 				return $g['helper'];
 			}
 		}
-		RedformHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND'.': '.$name);
+		RdfHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND'.': '.$name);
 
 		return false;
 	}
@@ -329,10 +329,10 @@ class RedFormModelPayment extends JModelLegacy
 
 		$form = $this->getForm();
 
-		$core = new RedformCore;
+		$core = new RdfCore;
 		$answers = $core->getAnswers($this->_submit_key);
 		$answersArray = get_object_vars(reset($answers)->fields);
-		$replaceHelper = new RedformHelperTagsreplace($form, $answersArray);
+		$replaceHelper = new RdfHelperTagsreplace($form, $answersArray);
 
 		// set the email subject
 		$subject = (empty($form->submitterpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationsubject);
@@ -379,7 +379,7 @@ class RedFormModelPayment extends JModelLegacy
 
 		if ($form->contactpersoninform)
 		{
-			$addresses = RedformHelper::extractEmails($form->contactpersonemail, true);
+			$addresses = RdfHelper::extractEmails($form->contactpersonemail, true);
 
 			if (!$addresses)
 			{
@@ -391,10 +391,10 @@ class RedFormModelPayment extends JModelLegacy
 				$mailer->addRecipient($a);
 			}
 
-			$core = new RedformCore;
+			$core = new RdfCore;
 			$answers = $core->getAnswers($this->_submit_key);
 			$answersArray = get_object_vars(reset($answers)->fields);
-			$replaceHelper = new RedformHelperTagsreplace($form, $answersArray);
+			$replaceHelper = new RdfHelperTagsreplace($form, $answersArray);
 
 			// set the email subject and body
 			$subject = (empty($form->contactpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->contactpaymentnotificationsubject);

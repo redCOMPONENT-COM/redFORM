@@ -10,13 +10,13 @@
 defined('_JEXEC') or die;
 
 /**
- * Class RedformCoreFormAnswers
+ * Class RdfCoreFormAnswers
  *
  * @package     Redform.Libraries
  * @subpackage  Helper
  * @since       2.5
  */
-class RDFCoreFormAnswers {
+class RdfCoreFormAnswers {
 	public $sid;
 	public $submit_key;
 	public $fields;

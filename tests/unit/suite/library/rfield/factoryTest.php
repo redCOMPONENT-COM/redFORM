@@ -10,7 +10,7 @@
 require_once 'PHPUnit/Autoload.php';
 
 // Register library prefix
-JLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
 /**
  * Test class library rfield factory
@@ -47,7 +47,7 @@ class RfieldFactoryTest extends JoomlaTestCase
 	 */
 	public function testGetFixedTypes()
 	{
-		$types = RedformRfieldFactory::getTypes();
+		$types = RdfRfieldFactory::getTypes();
 
 		$intersect = array_intersect($types, $this->fixedTypes);
 		$this->assertTrue(count($intersect) == count($this->fixedTypes));
@@ -60,10 +60,10 @@ class RfieldFactoryTest extends JoomlaTestCase
 	 */
 	public function testGetFixedTypesInstances()
 	{
-		foreach ($types = RedformRfieldFactory::getTypes() as $type)
+		foreach ($types = RdfRfieldFactory::getTypes() as $type)
 		{
-			$instance = RedformRfieldFactory::getFieldType($type);
-			$this->assertInstanceOf('RedformRfield' . ucfirst($type), $instance);
+			$instance = RdfRfieldFactory::getFieldType($type);
+			$this->assertInstanceOf('RdfRfield' . ucfirst($type), $instance);
 		}
 	}
 
@@ -78,7 +78,7 @@ class RfieldFactoryTest extends JoomlaTestCase
 		$type = 'textfield';
 
 		$class = $this->getMockClass(
-			'RedformRfieldFactory',          /* name of class to mock     */
+			'RdfRfieldFactory',          /* name of class to mock     */
 			array('getType') /* list of methods to mock   */
 		);
 
@@ -86,6 +86,6 @@ class RfieldFactoryTest extends JoomlaTestCase
 			->method('getType')
 			->will($this->returnValue('textfield'));
 
-		$this->assertInstanceOf('RedformRfield' . ucfirst($type), $class::getField($id));
+		$this->assertInstanceOf('RdfRfield' . ucfirst($type), $class::getField($id));
 	}
 }

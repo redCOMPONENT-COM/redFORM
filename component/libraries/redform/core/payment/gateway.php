@@ -10,13 +10,13 @@
 defined('_JEXEC') or die;
 
 /**
- * Class RedformCorePaymentGateway
+ * Class RdfCorePaymentGateway
  *
  * @package     Redform.Libraries
  * @subpackage  Helper
  * @since       2.5
  */
-class RDFCorePaymentGateway {
+class RdfCorePaymentGateway {
 
 	protected $gateways;
 

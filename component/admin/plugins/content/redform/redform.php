@@ -23,6 +23,9 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 jimport( 'joomla.plugin.plugin' );
 jimport( 'joomla.html.parameter' );
 
+// Register library prefix
+RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
+
 class plgContentRedform extends JPlugin {
 	/**
 	 * specific redform plugin parameters
@@ -69,9 +72,9 @@ class plgContentRedform extends JPlugin {
 		}
 
 		// Register library prefix
-		JLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
+		JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
-		$this->_rfcore = new RedformCore();
+		$this->_rfcore = new RdfCore();
 
     JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );
 

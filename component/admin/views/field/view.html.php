@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Views
  * @since       1.0
  */
-class RedformViewField extends RDFView
+class RedformViewField extends RdfView
 {
 	/**
 	 * @var  JForm

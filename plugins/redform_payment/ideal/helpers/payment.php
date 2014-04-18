@@ -75,7 +75,7 @@ class PaymentIdeal extends  RedformPaymentHelper
 
     $submit_key = JRequest::getvar('key');
     JRequest::setVar('submit_key', $submit_key);
-    RedformHelperLog::simpleLog('IDEAL_NOTIFICATION_RECEIVED'. ' ' . $submit_key);
+    RdfHelperLog::simpleLog('IDEAL_NOTIFICATION_RECEIVED'. ' ' . $submit_key);
     $transaction_id = JRequest::getVar('transaction_id');
 
     // first check that we didn't already received the payment...
@@ -97,7 +97,7 @@ class PaymentIdeal extends  RedformPaymentHelper
     $res = $ideal->checkPayment($transaction_id);
 
 		if (!$res) {
-			RedformHelperLog::simpleLog(JText::_('IDEAL_PAYMENT_ERROR'). ' / ' . $submit_key.': '.$ideal->getErrorMessage().' ('. $ideal->getErrorCode().')');
+			RdfHelperLog::simpleLog(JText::_('IDEAL_PAYMENT_ERROR'). ' / ' . $submit_key.': '.$ideal->getErrorMessage().' ('. $ideal->getErrorCode().')');
 			JError::raiseWarning(0, $ideal->getErrorMessage());
 			return false;
 		}
@@ -106,13 +106,13 @@ class PaymentIdeal extends  RedformPaymentHelper
 
 		if (!$ideal->getPaidStatus())
 		{
-    	RedformHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PAYMENT REFUSED'). ' / ' . $submit_key);
+    	RdfHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PAYMENT REFUSED'). ' / ' . $submit_key);
 	  	$this->writeTransaction($submit_key, $ideal->getInfo(), 'NOTPAID', 0);
 			return false;
 		}
 		if ($ideal->getAmount() != round($details->price*100))
 		{
-    	RedformHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PRICE MISMATCH'). ' / ' . $submit_key);
+    	RdfHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PRICE MISMATCH'). ' / ' . $submit_key);
     	$this->writeTransaction($submit_key, JText::_('IDEAL NOTIFICATION PRICE MISMATCH')."\n".$ideal->getInfo(), 'FAILED', 0);
     	return false;
 		}
@@ -128,7 +128,7 @@ class PaymentIdeal extends  RedformPaymentHelper
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
-		$currency = RedformHelperCurrency::getIsoNumber($details->currency);
+		$currency = RdfHelperCurrency::getIsoNumber($details->currency);
 
 		$ideal = new iDEAL_Payment($this->params->get('partner_id'));
 		$ideal->setTestmode($this->params->get('testmode'));
@@ -187,7 +187,7 @@ class PaymentIdeal extends  RedformPaymentHelper
 			$this->getUrl('notify', $submit_key));
 
 		if (!$res) {
-			RedformHelperLog::simpleLog('IDEAL_PAYMENT_ERROR'. ' for ' . $submit_key.': '.$ideal->getErrorMessage().' ('. $ideal->getErrorCode().')');
+			RdfHelperLog::simpleLog('IDEAL_PAYMENT_ERROR'. ' for ' . $submit_key.': '.$ideal->getErrorMessage().' ('. $ideal->getErrorCode().')');
 			JError::raiseWarning(0, $ideal->getErrorMessage());
 			return false;
 		}

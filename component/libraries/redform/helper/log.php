@@ -11,13 +11,13 @@
 defined('_JEXEC') or die('Restricted access');
 
 /**
- * Class RedformHelper log
+ * Class RdfHelper log
  *
  * @package     Redform.Libraries
  * @subpackage  Helper
  * @since       2.5
  */
-class RDFHelperLog
+class RdfHelperLog
 {
 	/**
 	 * Simple log

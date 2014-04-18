@@ -16,7 +16,7 @@ defined('_JEXEC') or die('Restricted access');
  * @subpackage  payment
  * @since       2.5
  */
-abstract class RDFPaymentHelper extends JObject
+abstract class RdfPaymentHelper extends JObject
 {
 	/**
 	 * plugin params

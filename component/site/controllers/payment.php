@@ -129,7 +129,7 @@ class RedformControllerPayment extends JControllerLegacy
 		}
 
 		// Analytics for default landing page
-		if (RedformHelperAnalytics::isEnabled())
+		if (RdfHelperAnalytics::isEnabled())
 		{
 			$payement = $model->getPaymentDetails($submit_key);
 
@@ -139,7 +139,7 @@ class RedformControllerPayment extends JControllerLegacy
 			$trans->affiliation = $payement->form;
 			$trans->revenue = $model->getPrice();
 
-			RedformHelperAnalytics::addTrans($trans);
+			RdfHelperAnalytics::addTrans($trans);
 
 			// Add submitters as items
 			foreach ($submitters as $s)
@@ -151,10 +151,10 @@ class RedformControllerPayment extends JControllerLegacy
 				$item->category = '';
 				$item->price = $s->price;
 				$item->currency = $s->currency;
-				RedformHelperAnalytics::addItem($item);
+				RdfHelperAnalytics::addItem($item);
 			}
 
-			RedformHelperAnalytics::trackTrans();
+			RdfHelperAnalytics::trackTrans();
 		}
 
 		$app->input->set('view', 'payment');
@@ -190,11 +190,11 @@ class RedformControllerPayment extends JControllerLegacy
 		$submit_key = $app->input->get('key');
 		$gw = $app->input->get('gw', '');
 
-		RedformHelperLog::simpleLog('PAYMENT NOTIFICATION RECEIVED' . ': ' . $gw);
+		RdfHelperLog::simpleLog('PAYMENT NOTIFICATION RECEIVED' . ': ' . $gw);
 
 		if (empty($gw))
 		{
-			RedformHelperLog::simpleLog('PAYMENT NOTIFICATION MISSING GATEWAY' . ': ' . $gw);
+			RdfHelperLog::simpleLog('PAYMENT NOTIFICATION MISSING GATEWAY' . ': ' . $gw);
 
 			throw new Exception('PAYMENT NOTIFICATION MISSING GATEWAY' . ': ' . $gw, 404);
 		}

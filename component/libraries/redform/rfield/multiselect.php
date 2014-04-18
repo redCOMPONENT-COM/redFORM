@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-class RDFRfieldMultiselect extends RDFRfieldSelect
+class RdfRfieldMultiselect extends RdfRfieldSelect
 {
 	protected $type = 'multiselect';
 

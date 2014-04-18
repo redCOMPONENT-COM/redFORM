@@ -54,7 +54,7 @@ class PaymentEpay extends  RedformPaymentHelper
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
 
-		$currency = RedformHelperCurrency::getIsoNumber($details->currency);
+		$currency = RdfHelperCurrency::getIsoNumber($details->currency);
 		?>
 		<h3><?php echo JText::_('PLG_REDFORM_PAYMENT_EPAY_FORM_TITLE'); ?></h3>
 		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
@@ -170,12 +170,12 @@ class PaymentEpay extends  RedformPaymentHelper
 
     $submit_key = JRequest::getvar('key');
     JRequest::setVar('submit_key', $submit_key);
-    RedformHelperLog::simpleLog('EPAY NOTIFICATION RECEIVED'. ' for ' . $submit_key);
+    RdfHelperLog::simpleLog('EPAY NOTIFICATION RECEIVED'. ' for ' . $submit_key);
 
     if (JRequest::getVar('accept', 0) == 0)
     {
     	// payment was refused
-    	RedformHelperLog::simpleLog('EPAY NOTIFICATION PAYMENT REFUSED'. ' for ' . $submit_key);
+    	RdfHelperLog::simpleLog('EPAY NOTIFICATION PAYMENT REFUSED'. ' for ' . $submit_key);
     	$this->writeTransaction($submit_key, JRequest::getVar('error').': '.JRequest::getVar('errortext'), $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
 	    return 0;
     }
@@ -191,10 +191,10 @@ class PaymentEpay extends  RedformPaymentHelper
 
     $details = $this->_getSubmission($submit_key);
 
-		$currency = RedformHelperCurrency::getIsoNumber($details->currency);
+		$currency = RdfHelperCurrency::getIsoNumber($details->currency);
 
     if (round($details->price*100) != JRequest::getVar('amount')) {
-    	RedformHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH'. ' for ' . $submit_key);
+    	RdfHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH'. ' for ' . $submit_key);
     	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION PRICE MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
     	return false;
     }
@@ -203,7 +203,7 @@ class PaymentEpay extends  RedformPaymentHelper
     }
 
     if ($currency != JRequest::getVar('cur')) {
-    	RedformHelperLog::simpleLog('EPAY NOTIFICATION CURRENCY MISMATCH'. ' for ' . $submit_key);
+    	RdfHelperLog::simpleLog('EPAY NOTIFICATION CURRENCY MISMATCH'. ' for ' . $submit_key);
     	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION CURRENCY MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
     	return false;
     }
@@ -214,7 +214,7 @@ class PaymentEpay extends  RedformPaymentHelper
     	$calc = md5(JRequest::getVar('amount').JRequest::getVar('orderid').JRequest::getVar('tid').$this->params->get('EPAY_MD5_KEY'));
     	if (strcmp($receivedkey, $calc))
     	{
-	    	RedformHelperLog::simpleLog('EPAY NOTIFICATION MD5 KEY MISMATCH'. ' for ' . $submit_key);
+	    	RdfHelperLog::simpleLog('EPAY NOTIFICATION MD5 KEY MISMATCH'. ' for ' . $submit_key);
 	    	$this->writeTransaction($submit_key, 'EPAY NOTIFICATION MD5 KEY MISMATCH'."\n".$resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
 	    	return false;
     	}

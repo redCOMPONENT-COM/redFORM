@@ -16,4 +16,4 @@ defined('_JEXEC') or die('Restricted access');
  * @subpackage  payment
  * @since       2.5
  */
-class RDFPaymentException extends Exception {}
+class RdfPaymentException extends Exception {}

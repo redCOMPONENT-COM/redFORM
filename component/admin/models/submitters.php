@@ -267,7 +267,7 @@ class RedformModelSubmitters extends JModelList
 			if (!$database->query())
 			{
 				$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_answers'));
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_answers') . ': ' . $database->getErrorMsg());
+				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_answers') . ': ' . $database->getErrorMsg());
 				return false;
 			}
 
@@ -280,7 +280,7 @@ class RedformModelSubmitters extends JModelList
 			if (!$database->query())
 			{
 				$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_submitter'));
-				RedformHelperLog::simpleLog(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_submitter') . ': ' . $database->getErrorMsg());
+				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_submitter') . ': ' . $database->getErrorMsg());
 				return false;
 			}
 

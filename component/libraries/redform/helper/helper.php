@@ -10,13 +10,13 @@
 defined('_JEXEC') or die;
 
 /**
- * Class RedformHelper
+ * Class RdfHelper
  *
  * @package     Redform.Libraries
  * @subpackage  Helper
  * @since       2.5
  */
-class RDFHelper
+class RdfHelper
 {
 	/**
 	 * Return array of emails from comma or semicolon separated emails

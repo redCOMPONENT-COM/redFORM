@@ -31,7 +31,7 @@ class RedformModelField extends RModelAdmin
 
 		if ($item)
 		{
-			$item->hasOptions = RDFRfieldFactory::getFieldType($item->fieldtype)->hasOptions;
+			$item->hasOptions = RdfRfieldFactory::getFieldType($item->fieldtype)->hasOptions;
 		}
 
 		return $item;
@@ -58,7 +58,7 @@ class RedformModelField extends RModelAdmin
 		if (isset($data['fieldtype']))
 		{
 			$form->removeField('params');
-			$xml = RDFRfieldFactory::getFieldType($data['fieldtype'])->getXmlPath();
+			$xml = RdfRfieldFactory::getFieldType($data['fieldtype'])->getXmlPath();
 			$form->loadFile($xml, false);
 		}
 	}

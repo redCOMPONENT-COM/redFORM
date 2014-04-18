@@ -10,7 +10,7 @@
 require_once 'PHPUnit/Autoload.php';
 
 // Register library prefix
-JLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
 /**
  * Test class library helper
@@ -55,7 +55,7 @@ class helperTest extends JoomlaTestCase
 	 */
 	public function testExtractEmails($text, $validate, $expected)
 	{
-		$resp = RedformHelper::extractEmails($text, $validate);
+		$resp = RdfHelper::extractEmails($text, $validate);
 		$this->assertTrue(count($expected) == count(array_intersect($expected, $resp)));
 	}
 }

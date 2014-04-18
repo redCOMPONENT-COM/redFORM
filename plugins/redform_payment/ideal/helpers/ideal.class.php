@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -19,13 +19,13 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
 /*-----------------------------------------------------------------------
   Start              : 24 februari 2009
-  Door               : Mollie B.V. (RDF) © 2009
+  Door               : Mollie B.V. (Rdf) © 2009
 
   Versie             : 1.11 (gebaseerd op de Mollie iDEAL class van
                        Concepto IT Solution - http://www.concepto.nl/)
@@ -41,7 +41,7 @@ class iDEAL_Payment
 
 	protected $partner_id      = null;
 	protected $profile_key     = null;
-		
+
 	protected $testmode        = false;
 
 	protected $bank_id         = null;
@@ -130,7 +130,7 @@ class iDEAL_Payment
 			'reporturl'   => $this->getReportURL(),
 			'returnurl'   => $this->getReturnURL(),
 		);
-		
+
 		if ($this->profile_key)
 			$query_variables['profile_key'] = $this->profile_key;
 
@@ -138,7 +138,7 @@ class iDEAL_Payment
 			$this->api_host,
 			$this->api_port,
 			'/xml/ideal/',
-			http_build_query($query_variables, '', '&')			
+			http_build_query($query_variables, '', '&')
 		);
 
 		if (empty($create_xml)) {
@@ -164,7 +164,7 @@ class iDEAL_Payment
 			$this->error_message = JText::_('IDEAL_ERROR_ERRONEOUS_TRANSACTION_ID');
 			return false;
 		}
-		
+
 		$query_variables = array (
 			'a'              => 'check',
 			'partnerid'      => $this->partner_id,
@@ -205,7 +205,7 @@ class iDEAL_Payment
 			$this->error_message = JText::sprintf('IDEAL_ERROR_WRONG_DESCRIPTION_OR_AMOUNT', self::MIN_TRANS_AMOUNT, (int) $amount);
 			return false;
 		}
-		
+
 		$query_variables = array (
 			'a'           => 'create-link',
 			'partnerid'   => $this->partner_id,
@@ -310,18 +310,18 @@ class iDEAL_Payment
 
 	/* Getters en setters */
 	public function setProfileKey($profile_key)
-	{		
+	{
 		if (is_null($profile_key))
 			return false;
-			
+
 		return ($this->profile_key = $profile_key);
 	}
-	
+
 	public function getProfileKey()
 	{
 		return $this->profile_key;
 	}
-	
+
 	public function setPartnerId ($partner_id)
 	{
 		if (!is_numeric($partner_id)) {
@@ -453,7 +453,7 @@ class iDEAL_Payment
 	{
 		return $this->error_code;
 	}
-	
+
 	public function getInfo()
 	{
 		$info = array();

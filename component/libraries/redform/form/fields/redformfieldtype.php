@@ -41,7 +41,7 @@ class JFormFieldRedformFieldtype extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$options = RDFRfieldFactory::getTypesOptions();
+		$options = RdfRfieldFactory::getTypesOptions();
 
 		return array_merge(parent::getOptions(), $options);
 	}

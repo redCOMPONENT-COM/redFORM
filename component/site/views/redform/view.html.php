@@ -25,7 +25,7 @@ jimport( 'joomla.application.component.view');
 
 /**
  */
-class RDFViewRedform extends JViewLegacy {
+class RdfViewRedform extends JViewLegacy {
 
 	function display($tpl = null)
 	{

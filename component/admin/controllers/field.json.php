@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Controllers
  * @since       1.0
  */
-class RedformControllerField extends RDFControllerForm
+class RedformControllerField extends RdfControllerForm
 {
 	/**
 	 * Add field

@@ -12,13 +12,13 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modelitem');
 
 /**
- * Class RedformCoreModelField
+ * Class RdfCoreModelField
  *
  * @package     Redform.Libraries
  * @subpackage  Core.Model
  * @since       2.5
  */
-class RDFCoreModelField extends JModelItem
+class RdfCoreModelField extends JModelItem
 {
 	protected $id = 0;
 

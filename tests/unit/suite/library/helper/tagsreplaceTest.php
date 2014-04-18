@@ -10,7 +10,7 @@
 require_once 'PHPUnit/Autoload.php';
 
 // Register library prefix
-JLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
 /**
  * Test class for tagsreplace.
@@ -60,7 +60,7 @@ class tagsreplaceTest extends JoomlaTestCase
 	 */
 	public function testReplace($formdata, $answers, $text, $expected)
 	{
-		$helper = new RedformHelperTagsreplace($formdata, $answers);
+		$helper = new RdfHelperTagsreplace($formdata, $answers);
 
 		$resp = $helper->replace($text);
 

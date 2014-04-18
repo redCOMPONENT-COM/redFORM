@@ -10,13 +10,13 @@
 defined('_JEXEC') or die;
 
 /**
- * Class RedformHelperTagsreplace
+ * Class RdfHelperTagsreplace
  *
  * @package     Redform.Libraries
  * @subpackage  Helper
  * @since       2.5
  */
-class RDFHelperTagsreplace
+class RdfHelperTagsreplace
 {
 	private $answers;
 	private $formdata;

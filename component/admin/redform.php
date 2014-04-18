@@ -45,7 +45,7 @@ else
 RLoader::registerPrefix('Redform', __DIR__);
 
 // Register library prefix
-RLoader::registerPrefix('RDF', JPATH_LIBRARIES . '/redform');
+RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
 // Make available the fields
 JFormHelper::addFieldPath(JPATH_LIBRARIES . '/redform/form/fields');

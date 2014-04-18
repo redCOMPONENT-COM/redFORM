@@ -19,7 +19,7 @@ jimport('joomla.event.plugin');
  * @subpackage  payment
  * @since       2.5
  */
-abstract class RDFPaymentPlugin extends JPlugin
+abstract class RdfPaymentPlugin extends JPlugin
 {
 	/**
 	 * Name of the plugin gateway
