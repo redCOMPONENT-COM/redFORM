@@ -10,11 +10,11 @@
 defined('_JEXEC') or die;
 
 /**
- * Categories View
+ * Fields View
  *
  * @package     Redform.Backend
  * @subpackage  Views
- * @since       1.0
+ * @since       2.5
  */
 class RedformViewFields extends RdfView
 {
@@ -120,6 +120,13 @@ class RedformViewFields extends RdfView
 		{
 			$delete = RToolbarBuilder::createDeleteButton('fields.delete');
 			$secondGroup->addButton($delete);
+		}
+
+		// Options
+		if ($canDoCore->get('core.manage'))
+		{
+			$options = RToolbarBuilder::createOptionsButton('com_redform');
+			$secondGroup->addButton($options);
 		}
 
 		$toolbar = new RToolbar;

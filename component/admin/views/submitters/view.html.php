@@ -1,25 +1,62 @@
 <?php
 /**
- * @package     Redform
- * @subpackage  front,view
+ * @package     Redform.Backend
+ * @subpackage  Views
  *
- * @copyright   Copyright (C) 2012 - 2014 redCOMPONENT.com. All rights reserved.
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
-
 /**
- * Class RdfViewSubmitters
+ * Fields View
  *
- * @package     Redform
- * @subpackage  front,views
- * @since       1.0
+ * @package     Redform.Backend
+ * @subpackage  Views
+ * @since       2.5
  */
-class RedformViewSubmitters extends JViewLegacy {
+class RedformViewSubmitters extends RdfView
+{
+	/**
+	 * @var  array
+	 */
+	public $items;
 
+	/**
+	 * @var  object
+	 */
+	public $state;
+
+	/**
+	 * @var  JPagination
+	 */
+	public $pagination;
+
+	/**
+	 * @var  JForm
+	 */
+	public $filterForm;
+
+	/**
+	 * @var array
+	 */
+	public $activeFilters;
+
+	/**
+	 * @var array
+	 */
+	public $stoolsOptions = array();
+
+	/**
+	 * @var array
+	 */
+	public $fields = array();
+
+	/**
+	 * @var JRegistry
+	 */
+	public $params;
 
 	/**
 	 * Execute and display a template script.
@@ -33,70 +70,94 @@ class RedformViewSubmitters extends JViewLegacy {
 		$app = JFactory::getApplication();
 		$state = $this->get('State');
 
-		$params = $state->get('params');
-		$this->assignRef('params', $params);
+		$params = JComponentHelper::getParams('com_redform');
 
-		/* Get the forms */
-		$forms = $this->get('FormsOptions');
+		$model = $this->getModel('submitters');
 
-		// Set the menu
-		RedformHelperAdmin::setMenu();
-
-		if (empty($forms))
-		{
-			echo '<p>' . JText::_('COM_REDFORM_SUBMITTERS_NO_FORM') . '</p>';
-
-			return;
-		}
-
-		/* Create the dropdown list for form filter */
-		$form_id = $state->get('form_id');
-		$lists['form_id'] = JHTML::_('select.genericlist', $forms, 'form_id', '', 'value', 'text', $form_id);
-
-		/* Get the form name, if one is selected */
-		$form = $this->get('Form');
-		$this->assignRef('form', $form);
-
-		/* Get the pagination */
-		$pagination = $this->get('Pagination');
-
-		/* Get the submitters list */
-		$submitters = $this->get('Items');
+		$this->items = $model->getItems();
+		$this->state = $model->getState();
+		$this->pagination = $model->getPagination();
+		$this->filterForm = $model->getForm();
+		$this->activeFilters = $model->getActiveFilters();
+		$this->stoolsOptions['searchField'] = 'search_fields';
 
 		/* Get the fields list */
-		$fields = $this->get('Fields');
+		$this->fields = $model->getFields();
 
-		$filter_from = JHTML::_('calendar', $state->get('filter.from'), 'filter_from', 'filter_from');
-		$filter_to = JHTML::_('calendar', $state->get('filter.to'), 'filter_to', 'filter_to');
+		$this->formInfo = $model->getFormInfo();
 
-		/* Set variabels */
-		$this->assignRef('pagination', $pagination);
-		$this->assignRef('submitters', $submitters);
-		$this->assignRef('lists', $lists);
-		$this->assignRef('fields', $fields);
-		$this->assignRef('integration', $app->input->get('integration', ''));
-		$this->assignRef('filter_from', $filter_from);
-		$this->assignRef('filter_to', $filter_to);
+		$this->integration = $app->input->get('integration', '');
+		$this->params = $params;
 
-		JToolBarHelper::title(JText::_('COM_REDFORM_Submitters'), 'redform_submitters');
-
-		JToolBarHelper::deleteList(JText::_('COM_REDFORM_SUBMITTERS_DELETE_WARNING'));
-
-		if ($params->get('showintegration', false))
-		{
-			JToolBarHelper::custom('forcedelete', 'delete', 'delete', JText::_('COM_REDFORM_Force_delete'), true);
-		}
-
-		JToolBarHelper::editList();
-
-		JToolBarHelper::divider();
-
-		if (JFactory::getUser()->authorise('core.admin', 'com_redform'))
-		{
-			JToolBarHelper::preferences('com_redform');
-		}
-
-		/* Display the page */
 		parent::display($tpl);
+	}
+
+	/**
+	 * Get the view title.
+	 *
+	 * @return  string  The view title.
+	 */
+	public function getTitle()
+	{
+		return JText::_('COM_REDFORM_SUBMITTER_LIST_TITLE');
+	}
+
+	/**
+	 * Get the toolbar to render.
+	 *
+	 * @return  RToolbar
+	 */
+	public function getToolbar()
+	{
+		$params = JComponentHelper::getParams('com_redform');
+
+		$canDoCore = RedformHelpersAcl::getActions();
+		$user = JFactory::getUser();
+
+		$firstGroup = new RToolbarButtonGroup;
+		$secondGroup = new RToolbarButtonGroup;
+		$thirdGroup = new RToolbarButtonGroup;
+
+		if ($this->formInfo)
+		{
+			$csvlink = 'index.php?option=com_redform&task=submitters.export&format=raw'
+				. '&form_id=' . (empty($this->form) ? 0 : $this->formInfo->id)
+				. ($this->integration ? '&integration=' . $this->integration : '');
+			$csvexport = RToolbarBuilder::createCsvButton($csvlink);
+			$firstGroup->addButton($csvexport);
+		}
+
+		if ($canDoCore->get('core.edit'))
+		{
+			$edit = RToolbarBuilder::createEditButton('submitter.edit');
+			$firstGroup->addButton($edit);
+		}
+
+		// Delete / Trash
+		if ($canDoCore->get('core.delete'))
+		{
+			$delete = RToolbarBuilder::createDeleteButton('submitter.delete');
+
+			if ($params->get('showintegration', false))
+			{
+				$delete = RToolbarBuilder::createDeleteButton('submitter.forcedelete');
+			}
+
+			$secondGroup->addButton($delete);
+		}
+
+		// Options
+		if ($canDoCore->get('core.manage'))
+		{
+			$options = RToolbarBuilder::createOptionsButton('com_redform');
+			$thirdGroup->addButton($options);
+		}
+
+		$toolbar = new RToolbar;
+		$toolbar->addGroup($firstGroup)
+			->addGroup($secondGroup)
+			->addGroup($thirdGroup);
+
+		return $toolbar;
 	}
 }

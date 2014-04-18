@@ -20,21 +20,29 @@ if (isset($data['active']))
 
 $formsClass = ($active === 'forms') ? 'active' : '';
 $fieldsClass = ($active === 'fields') ? 'active' : '';
+$submittersClass = ($active === 'submitters') ? 'active' : '';
 ?>
 
 <ul class="nav nav-tabs nav-stacked">
 	<li>
 		<a class="<?php echo $formsClass ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=forms') ?>">
-			<i class="icon-user"></i>
+			<i class="icon-list"></i>
 			<?php echo JText::_('COM_REDFORM_FORM_LIST_TITLE') ?>
 		</a>
 	</li>
 	<li>
 		<a class="<?php echo $fieldsClass ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=fields') ?>">
-			<i class="icon-user"></i>
+			<i class="icon-check"></i>
 			<?php echo JText::_('COM_REDFORM_FIELD_LIST_TITLE') ?>
+		</a>
+	</li>
+	<li>
+		<a class="<?php echo $submittersClass ?>"
+		   href="<?php echo JRoute::_('index.php?option=com_redform&view=submitters') ?>">
+			<i class="icon-user"></i>
+			<?php echo JText::_('COM_REDFORM_SUBMITTER_LIST_TITLE') ?>
 		</a>
 	</li>
 </ul>

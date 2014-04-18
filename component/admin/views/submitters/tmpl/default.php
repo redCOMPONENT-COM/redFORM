@@ -1,138 +1,135 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.Backend
+ * @subpackage  Views
+ *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die;
 
-$nbfields = count($this->fields);
-$colspan  = $nbfields + 5 + ($this->form->activatepayment ? 2 : 0 );
-if (empty($this->integration) && $this->params->get('showintegration', false)) {
-	$colspan++;
-}
+JHtml::_('rbootstrap.tooltip');
+JHtml::_('rjquery.chosen', 'select');
+
+$action = JRoute::_('index.php?option=com_redform&view=submitters');
+$listOrder = $this->state->get('list.ordering');
+$listDirn = $this->state->get('list.direction');
 ?>
-<script type="text/javascript">
-function submitbutton(pressbutton) {
-	if (pressbutton == 'forcedelete') {
-		if (confirm('<?php echo JText::_('COM_REDFORM_FORCEDELETE_ALERT'); ?>')) {
-			submitform(pressbutton);
-		}
-	}
-	else {
-		submitform(pressbutton);
-	}
-}
-</script>
-<form action="index.php" method="post" name="adminForm" id="adminForm">
-	<div class="button2-left">
-		<div class="blank">
-			<?php $csvlink = 'index.php?option=com_redform&controller=submitters&task=export'
-			               . '&form_id=' . (empty($this->form) ? 0 : $this->form->id)
-			               . (!empty($this->integration) ? '&integration='.$this->integration : '')
-			               . '&format=raw';
-			               ?>
-			<?php echo JHTML::link($csvlink, JText::_('COM_REDFORM_CSV_EXPORT')); ?>
-		</div>
-	</div>
-	<br clear="all" />
-	<div id="formname"><?php echo (empty($this->form) ? JText::_('COM_REDFORM_All') : $this->form->formname); ?>
-	</div>
-	<table>
-      <tr>
-         <td align="left" width="100%">
-            <div class="form_filter">
-	            <?php echo JText::_('COM_REDFORM_Filter'); ?>:
-	            <?php echo $this->lists['form_id']; ?>
-            <button onclick="this.form.submit();"><?php echo JText::_('COM_REDFORM_Go'); ?></button>
-            </div>
 
-	         <div class="date_filters">
-		         <div class="date_from"><?php echo JText::_('COM_REDFORM_FILTER_FROM_LABEL'); ?> <?php echo $this->filter_from; ?></div>
-		         <div class="date_to"><?php echo JText::_('COM_REDFORM_FILTER_TO_LABEL'); ?> <?php echo $this->filter_to; ?></div>
-	         </div>
-	      </td>
-      </tr>
-    </table>
-<table class="adminlist">
-	<!-- Headers -->
-	<thead><tr>
-	<th width="20"><?php echo JText::_('COM_REDFORM_ID'); ?></th>
-	<th width="20"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->submitters ); ?>);" /></th>
-	<th><?php echo JText::_('COM_REDFORM_Submission_date'); ?></th>
-	<th><?php echo JText::_('COM_REDFORM_Form_name');?></th>
-	<th><?php echo JText::_('COM_REDFORM_Unique_id');?></th>
-	<?php if (!$this->integration && $this->params->get('showintegration', false)): ?>
-	<th><?php echo JText::_('COM_REDFORM_Integration');?></th>
-	<?php endif; ?>
-	<?php foreach ($this->fields as $key => $value) { ?>
-		<th><?php echo $value->field_header; ?></th>
-	<?php } ?>
-	<?php if ($this->form->activatepayment): ?>
-		<th width="20"><?php echo JText::_('COM_REDFORM_Price'); ?></th>
-		<th width="20"><?php echo JText::_('COM_REDFORM_Payment'); ?></th>
-	<?php endif;?>
-	</tr></thead>
+<form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
-	<tfoot>
-	<tr>
-		<th colspan="<?php echo $colspan; ?>"><?php echo $this->pagination->getListFooter(); ?></th>
-	 </tr>
-	</tfoot>
-
-	<tbody>
 	<?php
-	/* Data */
-	$k = 1;
-	if (count($this->submitters) > 0)
-	{
-		foreach ($this->submitters as $id => $row)
-		{
-			$link 	= 'index.php?option=com_redform&task=edit&controller=submitters&hidemainmenu=1&form_id='.$row->form_id.'&cid[]='. $row->sid;
+	echo RLayoutHelper::render(
+		'searchtools.default',
+		array(
+			'view' => $this,
+			'options' => array(
+				'filterButton' => true,
+				'filtersHidden' => false,
+				'searchField' => 'search_fields',
+				'searchFieldSelector' => '#filter_search_fields',
+				'limitFieldSelector' => '#list_field_limit',
+				'activeOrder' => $listOrder,
+				'activeDirection' => $listDirn
+			)
+		)
+	);
+	?>
+
+	<hr/>
+	<?php if (empty($this->items)) : ?>
+		<div class="alert alert-info">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="pagination-centered">
+				<h3><?php echo JText::_('COM_REDFORM_NOTHING_TO_DISPLAY') ?></h3>
+			</div>
+		</div>
+	<?php else : ?>
+	<table class="table table-striped table-hover" id="submitterList">
+		<thead>
+		<tr>
+			<th width="1%" class="hidden-phone">
+				<input type="checkbox" name="checkall-toggle" value=""
+				       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
+			</th>
+			<th width="1%" class="nowrap hidden-phone">
+				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_ID', 's.id', $listDirn, $listOrder); ?>
+			</th>
+			<th class="nowrap hidden-phone">
+				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Submission_date', 's.submission_date', $listDirn, $listOrder); ?>
+			</th>
+			<th class="nowrap hidden-phone">
+				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Form_name', 'f.formname', $listDirn, $listOrder); ?>
+			</th>
+			<th class="nowrap hidden-phone">
+				<?php echo JText::_('COM_REDFORM_Unique_id'); ?>
+			</th>
+
+			<?php if ($this->integration && $this->params->get('showintegration', false)): ?>
+				<th class="nowrap hidden-phone">
+					<?php echo JText::_('COM_REDFORM_Integration'); ?>
+				</th>
+			<?php endif; ?>
+
+			<?php foreach ($this->fields as $key => $value): ?>
+				<th class="nowrap hidden-phone">
+					<?php echo $value->field_header; ?>
+				</th>
+			<?php endforeach; ?>
+
+			<?php if ($this->formInfo->activatepayment): ?>
+				<th class="nowrap hidden-phone">
+					<?php echo JText::_('COM_REDFORM_Price'); ?>
+				</th>
+				<th class="nowrap hidden-phone">
+					<?php echo JText::_('COM_REDFORM_Payment'); ?>
+				</th>
+			<?php endif;?>
+		</tr>
+		</thead>
+
+		<?php if ($this->items): ?>
+		<tbody>
+		<?php foreach ($this->items as $i => $item): ?>
+			<?php
+			$canChange = 1;
+			$canEdit = 1;
+			$canCheckin = 1;
 			?>
-			<tr class="row<?php echo $k = $k - 1; ?>">
-				<td align="center">
-					<?php echo $this->pagination->getRowOffset($id); ?>
+			<tr>
+				<td>
+					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 				</td>
 				<td>
-					<input type="checkbox" onclick="isChecked(this.checked);" value="<?php echo $row->sid; ?>" name="cid[]" id="cb<?php echo $id; ?>"/>
+					<?php echo $item->id; ?>
 				</td>
-				<td><?php echo JHTML::link($link, $row->submission_date); ?></td>
-				<td><?php echo $row->formname; ?></td>
-				<?php if ($this->integration == 'redevent'): ?>
-				<td><?php echo $this->course->uniqueid_prefix.$row->attendee_id;?></td>
-				<?php else: ?>
-				<td><?php echo $row->submit_key;?></td>
-				<?php endif; ?>
-				<?php if (!$this->integration && $this->params->get('showintegration', false)): ?>
 				<td>
-					<?php if ($row->xref || $row->integration): ?>
-						<?php echo (!empty($row->integration) ? $row->integration : 'unspecified' );?>
-					<?php else: ?>
-					<?php endif; ?>
-				<?php endif; ?>
+					<a href="<?php echo JRoute::_('index.php?option=com_redform&task=submitter.edit&id=' . $item->id); ?>">
+						<?php echo $this->escape($item->submission_date); ?>
+					</a>
 				</td>
+				<td>
+					<?php echo $this->escape($item->formname); ?>
+				</td>
+				<td>
+					<?php echo $this->escape($item->submit_key); ?>
+				</td>
+
+				<?php if ($this->params->get('showintegration', false)): ?>
+					<td>
+						<?php echo $this->escape($item->integration); ?></td>
+					</td>
+				<?php endif; ?>
+
 				<?php
 				foreach ($this->fields as $key => $field)
 				{
 					$fieldname = 'field_'. $field->id;
 
-					if (isset($row->$fieldname))
+					if (isset($item->{$fieldname}))
 					{
-						$data = str_replace('~~~', '<br />', $row->$fieldname);
+						$data = str_replace('~~~', '<br />', $item->$fieldname);
 
 						if (stristr($data, JPATH_ROOT))
 						{
@@ -147,32 +144,31 @@ function submitbutton(pressbutton) {
 					}
 				}
 				?>
-				<?php if ($this->form->activatepayment): ?>
-					<td class="submitters-price"><?php echo $row->price ? $row->currency . ' ' . $row->price : ''; ?></td>
-					<td class="price <?php echo ($row->paid ? 'paid' : 'unpaid'); ?>">
-						<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit_key='.$row->submit_key), JText::_('COM_REDFORM_history')); ?>
-						<?php if (!$row->paid): ?>
-						<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'publish_x.png'); ?><?php echo $link; ?></span>
-						<?php echo ' '.JHTML::link(JURI::root().'/index.php?option=com_redform&controller=payment&task=select&key='.$row->submit_key, JText::_('COM_REDFORM_link')); ?>
+
+				<?php if ($this->formInfo->activatepayment): ?>
+					<td class="submitters-price"><?php echo $item->price ? $item->currency . ' ' . $item->price : ''; ?></td>
+					<td class="price <?php echo ($item->paid ? 'paid' : 'unpaid'); ?>">
+						<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit_key='.$item->submit_key), JText::_('COM_REDFORM_history')); ?>
+						<?php if (!$item->paid): ?>
+							<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID').'::'.$item->status; ?>"><?php echo JHTML::_('image.administrator', 'publish_x.png'); ?><?php echo $link; ?></span>
+							<?php echo ' '.JHTML::link(JURI::root().'/index.php?option=com_redform&controller=payment&task=select&key='.$item->submit_key, JText::_('COM_REDFORM_link')); ?>
 						<?php else: ?>
-						<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID').'::'.$row->status; ?>"><?php echo JHTML::_('image.administrator', 'tick.png'); ?><?php echo $link; ?></span>
+							<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID').'::'.$item->status; ?>"><?php echo JHTML::_('image.administrator', 'tick.png'); ?><?php echo $link; ?></span>
 						<?php endif; ?>
 					</td>
 				<?php endif;?>
 			</tr>
-			<?php
-			$k++;
-		}
-	}
+		<?php endforeach; ?>
+		</tbody>
+		<?php endif; ?>
+	</table>
+		<?php echo $this->pagination->getPaginationLinks(null, array('showLimitBox' => false)); ?>
+	<?php endif; ?>
 
-	?>
-	</tbody>
-</table>
-	<input type="hidden" name="option" value="com_redform" />
-	<input type="hidden" name="task" value="" />
-  <input type="hidden" name="view" value="submitters" />
-	<input type="hidden" name="boxchecked" value="0" />
-	<?php if (JRequest::getInt('xref', false)) { ?><input type="hidden" name="xref" value="<?php echo JRequest::getInt('xref'); ?>" /><?php } ?>
-	<?php if (!empty($this->integration)) { ?><input type="hidden" name="integration" value="<?php echo $this->integration; ?>" /><?php } ?>
-	<input type="hidden" name="controller" value="submitters" />
+	<div>
+		<input type="hidden" name="task" value="">
+		<input type="hidden" name="boxchecked" value="0">
+		<input type="hidden" name="integration" value="<?php echo $this->integration; ?>" />
+		<?php echo JHtml::_('form.token'); ?>
+	</div>
 </form>

@@ -1,25 +1,44 @@
 <?php
 /**
- * @package     Redform
- * @subpackage  front,view
+ * @package     Redform.Backend
+ * @subpackage  Models
  *
- * @copyright   Copyright (C) 2012 - 2014 redCOMPONENT.com. All rights reserved.
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
 /**
- * Class RedformModelSubmitters
+ * Submitters Model
  *
- * @package     Redform
- * @subpackage  front,models
- * @since       1.0
+ * @package     Redform.Backend
+ * @subpackage  Models
+ * @since       2.5
  */
-class RedformModelSubmitters extends JModelList
+class RedformModelSubmitters extends RModelList
 {
+	/**
+	 * Name of the filter form to load
+	 *
+	 * @var  string
+	 */
+	protected $filterFormName = 'filter_submitters';
+
+	/**
+	 * Limitstart field used by the pagination
+	 *
+	 * @var  string
+	 */
+	protected $limitField = 'field_limit';
+
+	/**
+	 * Limitstart field used by the pagination
+	 *
+	 * @var  string
+	 */
+	protected $limitstartField = 'auto';
+
 	/**
 	 * Constructor.
 	 *
@@ -40,13 +59,12 @@ class RedformModelSubmitters extends JModelList
 		parent::__construct($config);
 	}
 
-	public function setContext($context)
-	{
-		$this->context = $context;
-	}
-
 	/**
 	 * Method to auto-populate the model state.
+	 *
+	 * This method should only be called once per instantiation and is designed
+	 * to be called on the first call to the getState() method unless the model
+	 * configuration flag to ignore the request is set.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
@@ -57,21 +75,10 @@ class RedformModelSubmitters extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$formId = $this->getUserStateFromRequest($this->option . '.filter.formId', 'form_id', $this->getDefaultFormId(), 'int');
-		$this->setState('form_id', $formId);
+		$formId = $this->getUserStateFromRequest($this->context . '.filter.formId', 'filter.form_id', $this->getDefaultFormId(), 'int');
+		$this->setState('filter.form_id', $formId);
 
-		$filter_from = $this->getUserStateFromRequest($this->option . '.filter.from', 'filter_from', null, 'string');
-		$this->setState('filter.from', $filter_from);
-
-		$filter_to = $this->getUserStateFromRequest($this->option . '.filter.to', 'filter_to', null, 'string');
-		$this->setState('filter.to', $filter_to);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams($this->option);
-		$this->setState('params', $params);
-
-		// List state information.
-		parent::populateState('s.submission_date', 'desc');
+		parent::populateState('s.id', 'desc');
 	}
 
 	/**
@@ -88,7 +95,7 @@ class RedformModelSubmitters extends JModelList
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
-		$id	.= ':'.$this->getState('form_id');
+		$id	.= ':'.$this->getState('filter.form_id');
 		$id	.= ':'.$this->getState('filter.from');
 		$id	.= ':'.$this->getState('filter.to');
 
@@ -104,7 +111,7 @@ class RedformModelSubmitters extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$form_id = $this->getState('form_id');
+		$form_id = $this->getState('filter.form_id');
 
 		$subPayment = "SELECT MAX(id) as id, submit_key FROM #__rwf_payment GROUP BY submit_key";
 
@@ -143,31 +150,26 @@ class RedformModelSubmitters extends JModelList
 		return $query;
 	}
 
-	public function getFormsOptions()
-	{
-		$query = "SELECT id AS value, formname AS text FROM #__rwf_forms";
-		$this->_db->setQuery($query);
-
-		return $this->_db->loadObjectList();
-	}
-
 	protected function getDefaultFormId()
 	{
-		$options = $this->getFormsOptions();
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
 
-		if (!$options)
-		{
-			return 0;
-		}
+		$query->select('id');
+		$query->from('#__rwf_forms');
+		$query->order('id');
 
-		return $options[0]->value;
+		$db->setQuery($query);
+		$res = $db->loadResult();
+
+		return $res;
 	}
 
-	public function getForm($id = null)
+	public function getFormInfo($id = null)
 	{
 		if ($id == null)
 		{
-			$id = $this->getState('form_id');
+			$id = $this->getState('filter.form_id');
 		}
 
 		if ($id)
@@ -186,7 +188,7 @@ class RedformModelSubmitters extends JModelList
 	public function getFields()
 	{
 		$db = JFactory::getDBO();
-		$form_id = $this->getState('form_id');
+		$form_id = $this->getState('filter.form_id');
 
 		$query = ' SELECT f.id, f.field '
 			. '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
@@ -204,19 +206,6 @@ class RedformModelSubmitters extends JModelList
 		$db->setQuery($query);
 
 		return $db->loadObjectList();
-	}
-
-	function getPagination()
-	{
-		$mainframe = JFactory::getApplication();
-		$option = JRequest::getVar('option');
-
-		/* Lets load the pagination if it doesn't already exist */
-		jimport('joomla.html.pagination');
-		$this->_limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-		$this->_limitstart = $mainframe->getUserStateFromRequest( $option.'.limitstart', 'limitstart', 0, 'int' );
-		$this->_pagination = new JPagination( $this->getTotal(), $this->_limitstart, $this->_limit );
-		return $this->_pagination;
 	}
 
 	/**
