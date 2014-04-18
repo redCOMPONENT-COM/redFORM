@@ -21,8 +21,15 @@ $input = JFactory::getApplication()->input;
 $tab = $input->getString('tab', 'details');
 $isNew = (int) $this->item->id <= 0;
 
-$tableSortLink = 'index.php?option=com_redform&task=values.saveOrderAjax&tmpl=component';
-JHTML::_('rsortablelist.sortable', 'valuesTable', 'optionsForm', 'asc', $tableSortLink, true, true);
+if ($this->item->hasOptions && $this->item->id)
+{
+	JText::script('COM_REDFORM_JS_FIELD_VALUES_SAVE');
+	JText::script('COM_REDFORM_JS_FIELD_VALUES_DELETE');
+	JFactory::getDocument()->addScript(JURI::root() . 'media/com_redform/js/field-values.js');
+
+	$tableSortLink = 'index.php?option=com_redform&task=values.saveOrderAjax&tmpl=component';
+	JHTML::_('rsortablelist.sortable', 'valuesTable', 'optionsForm', 'asc', $tableSortLink, true, true);
+}
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function(pressbutton) {
@@ -41,132 +48,14 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'optionsForm', 'asc', $tableSo
 		}
 	}
 </script>
-<?php if ($this->item->id) : ?>
+
+<?php if ($tab) : ?>
 	<script type="text/javascript">
-		(function ($) {
-
-			var redformvalues = new Class({
-
-				initialize : function() {
-					var that = this;
-					$('#valuesTable').on('click', '.save-option', function(event) {
-						var parents = $(event.currentTarget).parents('tr');
-						var parent = $(parents[0]);
-						var elements = parent.find(':input');
-						var id = parent.find('[name^=option-id]').val();
-						$.ajax({
-							url: 'index.php?option=com_redform&task=field.saveOption&format=json&view=field&id=<?php echo $this->item->id ?>',
-							beforeSend: function (xhr) {
-								$('.values-content-content .spinner').show();
-							}
-							,
-							data:elements.serialize(),
-							dataType: 'json',
-							type : 'POST'
-						}).done(function(data) {
-							$('.values-content-content .spinner').hide();
-
-							if (data && data.id) {
-								if (!id) {
-									that.addOption(data);
-								}
-								else {
-									that.updateOption(parent, data);
-								}
-							}
-						});
-					});
-				},
-
-				getValues : function() {
-					var that = this;
-
-					// Perform the ajax request
-					$.ajax({
-						url: 'index.php?option=com_redform&task=field.getValues&format=json&view=field&id=<?php echo $this->item->id ?>',
-						dataType: 'json',
-						beforeSend: function (xhr) {
-							$('.values-content-content .spinner').show();
-						}
-					}).done(function(data) {
-						$('.values-content-content .spinner').hide();
-
-						if (data && data.length) {
-							for (var i = 0; i < data.length; i++) {
-								that.addOption(data[i]);
-							}
-						}
-					});
-				},
-
-				addOption : function(data) {
-					$('#newvalue').find(':input').val(null);
-					var tr = this.createRow(data);
-					$('#newvalue').before(tr);
-				},
-
-				updateOption : function(element, data) {
-					$('#newvalue').find(':input').val(null);
-					var tr = this.createRow(data);
-					element.replaceWith(tr);
-				},
-
-				createRow : function(data) {
-					var tr = $('#newvalue').clone().removeAttr('id');
-					tr.find('span.hide').removeClass('hide');
-					tr.find('[name^=option-id]').val(data.id);
-					tr.find('[name^=option-value]').val(data.value);
-					tr.find('[name^=option-label]').val(data.label);
-					tr.find('[name^=option-price]').val(data.price);
-					tr.find('[name^=order]').attr('name', 'order[]').val(data.ordering);
-					tr.find('td.buttons .save-option').text('save').removeClass('btn-success').addClass('btn-primary');
-
-					var btnremove = $('<button/>', {
-						'type' : 'button',
-						'class': 'btn btn-danger btn-sm',
-						'optionId': data.id
-					}).click(function(event){
-						var element = $(event.currentTarget);
-						$.ajax({
-							url: 'index.php?option=com_redform&task=field.removeValue&format=json&view=field&id=<?php echo $this->item->id ?>',
-							data: {'optionId' : element.attr('optionId')},
-							type : 'POST',
-							dataType: 'json',
-							beforeSend: function (xhr) {
-								$('.values-content-content .spinner').show();
-							}
-						}).done(function(data) {
-							$('.values-content-content .spinner').hide();
-
-							if (data && data.success) {
-								var parents = element.parents('tr');
-								$(parents[0]).remove();
-							}
-						});
-					}).text('delete');
-
-					tr.find('td.buttons .save-option').after(btnremove);
-
-					return tr;
-				}
-			});
-
-			$(document).ready(function () {
-				if ($('#tabvalues')) {
-					var obj = new redformvalues();
-					obj.getValues();
-				}
-			});
-		})(jQuery);
+		jQuery(document).ready(function () {
+			// Show the corresponding tab
+			jQuery('#fieldTabs a[href="#<?php echo $tab ?>"]').tab('show');
+		});
 	</script>
-	<?php if ($tab) : ?>
-		<script type="text/javascript">
-			jQuery(document).ready(function () {
-				// Show the corresponding tab
-				jQuery('#fieldTabs a[href="#<?php echo $tab ?>"]').tab('show');
-			});
-		</script>
-	<?php endif; ?>
 <?php endif; ?>
 
 <ul class="nav nav-tabs" id="fieldTabs">
@@ -308,6 +197,7 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'optionsForm', 'asc', $tableSo
 			<?php echo JHTML::_('form.token'); ?>
 		</form>
 	</div>
+
 	<?php if ($this->item->hasOptions && $this->item->id) : ?>
 		<div class="tab-pane" id="values">
 			<div class="row-fluid values-content">
@@ -338,6 +228,7 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'optionsForm', 'asc', $tableSo
 								<span class="sortable-handler hasTooltip hide">
 									<i class="icon-move"></i>
 								</span>
+								<input type="checkbox" name="option-id[]" value="" checked="checked" class="hide"/>
 								<input type="text" style="display:none" name="order-fake[]" value="0" class="text-area-order" />
 							</td>
 							<td>
@@ -350,7 +241,6 @@ JHTML::_('rsortablelist.sortable', 'valuesTable', 'optionsForm', 'asc', $tableSo
 								<input type="text" name="option-price[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_PRICE'); ?>"/>
 							</td>
 							<td class="buttons">
-								<input type="checkbox" name="option-id[]" value="" class="hide"/>
 								<button type="button" name="option-save-button[]" class="save-option btn btn-success btn-sm"><?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ADD'); ?></button>
 							</td>
 						</tr>
