@@ -157,7 +157,7 @@
 
 	<fieldset addfieldpath="/libraries/redform/form/fields" name="payment">
 		<field
-				name="paymentactive"
+				name="activatepayment"
 				type="radio"
 				label="COM_REDFORM_PAYMENTACTIVE"
 				description="COM_REDFORM_PAYMENTACTIVE_TIP"

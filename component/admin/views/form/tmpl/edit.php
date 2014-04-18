@@ -199,10 +199,10 @@ $isNew = (int) $this->item->id <= 0;
 		<div class="tab-pane" id="payment">
 			<div class="control-group">
 				<div class="control-label">
-					<?php echo $this->form->getLabel('paymentactive'); ?>
+					<?php echo $this->form->getLabel('activatepayment'); ?>
 				</div>
 				<div class="controls">
-					<?php echo $this->form->getInput('paymentactive'); ?>
+					<?php echo $this->form->getInput('activatepayment'); ?>
 				</div>
 			</div>
 			<div class="control-group">
