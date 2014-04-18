@@ -105,7 +105,7 @@ $listDirn = $this->state->get('list.direction');
 					<?php echo $item->id; ?>
 				</td>
 				<td>
-					<a href="<?php echo JRoute::_('index.php?option=com_redform&task=submitter.edit&id=' . $item->id); ?>">
+					<a href="<?php echo JRoute::_('index.php?option=com_redform&task=submitter.edit&id=' . $item->sid); ?>">
 						<?php echo $this->escape($item->submission_date); ?>
 					</a>
 				</td>

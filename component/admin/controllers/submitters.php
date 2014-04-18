@@ -1,46 +1,37 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.Backend
+ * @subpackage  Controllers
+ *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-
-jimport('joomla.application.component.controller');
+defined('_JEXEC') or die;
 
 /**
- * redFORM Controller
+ * Submitters Controller
+ *
+ * @package     Redform.Backend
+ * @subpackage  Controllers
+ * @since       1.5
  */
-class RedformControllerSubmitters extends JControllerLegacy
+class RedformControllerSubmitters extends RControllerAdmin
 {
 	/**
-	 * Method to display the view
+	 * Constructor.
 	 *
-	 * @access	public
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @throws  Exception
 	 */
-	function __construct() {
-		parent::__construct();
-
-		/* Redirect templates to templates as this is the standard call */
-		$this->registerTask('save', 'apply');
-		$this->registerTask('add',  'edit');
-		$this->registerTask('forcedelete',  'remove');
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+		$this->registerTask('forcedelete',  'delete');
 	}
 
-	function remove()
+	function delete()
 	{
     $cid = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 
@@ -63,91 +54,5 @@ class RedformControllerSubmitters extends JControllerLegacy
     $form_id = JRequest::getVar('form_id', 0);
 
     $this->setRedirect( 'index.php?option=com_redform&view=submitters' . ($form_id ? '&form_id='.$form_id : ''), $msg );
-	}
-
-  /**
-   * logic for cancel an action
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function cancel()
-  {
-    // Check for request forgeries
-    // JRequest::checkToken() or die( 'Invalid Token' );
-    $this->setRedirect( 'index.php?option=com_redform&view=submitters' );
-  }
-
-	/**
-	 * Submitters
-	 */
-	function Submitters() {
-    JRequest::setVar( 'view', 'submitters' );
-    parent::display();
-	}
-
-	/**
-	 * Export submitters data
-	 */
-	function Export() {
-		$view = $this->getView('submitters', 'raw');
-		$view->setModel( $this->getModel( 'submitters', 'RedformModel' ), true );
-		$view->setLayout('submitters_export');
-		$view->display();
-	}
-
-
-  /**
-   * logic to create the edit event screen
-   *
-   * @access public
-   * @return void
-   * @since 0.9
-   */
-  function edit( )
-  {
-    JRequest::setVar( 'view', 'submitter' );
-    JRequest::setVar( 'hidemainmenu', 1 );
-
-    parent::display();
-  }
-
-	/**
-	 * Redirect back to redEVENT
-	 */
-	public function RedEvent() {
-		$mainframe = JFactory::getApplication();
-		$mainframe->redirect('index.php?option=com_redevent&view=attendees&xref='.JRequest::getInt('xref'));
-	}
-
-	function save()
-	{
-    $form_id = JRequest::getVar('form_id', 0);
-    $xref = JRequest::getVar('xref', 0);
-    $integration = JRequest::getVar('integration', '');
-
-    $rfcore = new RdfCore();
-    $res = $rfcore->saveAnswers($integration);
-
-    if ($res) {
-    	$msg = JText::_('COM_REDFORM_Submission_updated');
-    	$type = 'message';
-    }
-    else {
-    	$msg = JText::_('COM_REDFORM_Submission_update_failed');
-    	$type = 'error';
-    }
-    $url = 'index.php?option=com_redform&controller=submitters&task=submitters';
-    if ($form_id) {
-    	$url .= '&form_id='.$form_id;
-    }
-    if ($integration) {
-    	$url .= '&integration='.$integration;
-    }
-    if ($xref) {
-    	$url .= '&xref='.$xref;
-    }
-    $this->setRedirect( $url, $msg, $type );
 	}
 }
