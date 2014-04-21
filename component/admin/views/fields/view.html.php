@@ -66,6 +66,17 @@ class RedformViewFields extends RdfView
 		$this->activeFilters = $model->getActiveFilters();
 		$this->stoolsOptions['searchField'] = 'search_fields';
 
+		// Items ordering
+		$this->ordering = array();
+
+		if ($this->items)
+		{
+			foreach ($this->items as &$item)
+			{
+				$this->ordering[0][] = $item->id;
+			}
+		}
+
 		parent::display($tpl);
 	}
 

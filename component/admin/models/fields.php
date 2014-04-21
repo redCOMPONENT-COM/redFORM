@@ -52,7 +52,10 @@ class RedformModelFields extends RModelList
 				'id', 'f.id',
 				'field', 'f.field',
 				'published', 'f.published',
-				'formnane', 'fo.formnane',
+				'formname', 'fo.formname',
+				'ordering', 'f.ordering',
+				'field_header', 'f.field_header',
+				'fieldtype', 'f.fieldtype',
 			);
 		}
 

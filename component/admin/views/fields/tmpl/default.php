@@ -15,7 +15,15 @@ JHtml::_('rjquery.chosen', 'select');
 $action = JRoute::_('index.php?option=com_redform&view=fields');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
-$saveOrder = $listOrder == 'ordering';
+$saveOrder = ($listOrder == 'f.ordering' && strtolower($listDirn) == 'asc');
+$search = $this->state->get('filter.search');
+$ordering = ($listOrder == 'f.ordering');
+
+if ($saveOrder)
+{
+	$tableSortLink = 'index.php?option=com_redform&task=fields.saveOrderAjax&tmpl=component';
+	JHTML::_('rsortablelist.sortable', 'fieldList', 'adminForm', strtolower($listDirn), $tableSortLink, true, true);
+}
 ?>
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
@@ -49,6 +57,9 @@ $saveOrder = $listOrder == 'ordering';
 		<table class="table table-striped table-hover" id="fieldList">
 			<thead>
 			<tr>
+				<th width="10" align="center">
+					<?php echo '#'; ?>
+				</th>
 				<th width="1%" class="hidden-phone">
 					<input type="checkbox" name="checkall-toggle" value=""
 					       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
@@ -57,14 +68,19 @@ $saveOrder = $listOrder == 'ordering';
 					<?php echo JHtml::_('rsearchtools.sort', 'JSTATUS', 'f.published', $listDirn, $listOrder); ?>
 				</th>
 				<th class="nowrap hidden-phone">
-					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDEVENT_Field', 'f.field', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Field', 'f.field', $listDirn, $listOrder); ?>
 				</th>
 				<th width="18%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDEVENT_FIELD_HEADER', 'f.field_header', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_FIELD_HEADER', 'f.field_header', $listDirn, $listOrder); ?>
 				</th>
 				<th width="18%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDEVENT_Type', 'f.fieldtype', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Type', 'f.fieldtype', $listDirn, $listOrder); ?>
 				</th>
+				<?php if ($search == ''): ?>
+					<th width="20" class="nowrap">
+						<?php echo JHTML::_('rsearchtools.sort', 'COM_REDFORM_ORDERING', 'f.ordering', $listDirn, $listOrder); ?>
+					</th>
+				<?php endif; ?>
 				<th width="12%" class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Required', 'f.validate', $listDirn, $listOrder); ?>
 				</th>
@@ -86,8 +102,10 @@ $saveOrder = $listOrder == 'ordering';
 					$canChange = 1;
 					$canEdit = 1;
 					$canCheckin = 1;
+					$orderkey = array_search($item->id, $this->ordering[0]);
 					?>
 					<tr>
+						<td><?php echo $this->pagination->getRowOffset($i); ?></td>
 						<td>
 							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 						</td>
@@ -109,6 +127,15 @@ $saveOrder = $listOrder == 'ordering';
 						<td>
 							<?php echo $this->escape($item->fieldtype); ?>
 						</td>
+						<?php if ($search == ''): ?>
+							<td class="order nowrap center">
+						<span class="sortable-handler hasTooltip <?php echo ($saveOrder) ? '' : 'inactive' ;?>"
+						      title="<?php echo ($saveOrder) ? '' :JText::_('COM_REDITEM_ORDERING_DISABLED');?>">
+							<i class="icon-move"></i>
+						</span>
+								<input type="text" style="display:none" name="order[]" value="<?php echo $orderkey + 1;?>" class="text-area-order" />
+							</td>
+						<?php endif; ?>
 						<td>
 							<?php echo $item->validate ?
 								JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) :
