@@ -120,10 +120,9 @@ class RedformViewSubmitters extends RdfView
 
 		if ($this->formInfo)
 		{
-			$csvlink = 'index.php?option=com_redform&task=submitters.export&format=raw'
-				. '&form_id=' . (empty($this->form) ? 0 : $this->formInfo->id)
+			$csvlink = 'index.php?option=com_redform&task=submitters&format=csv'
 				. ($this->integration ? '&integration=' . $this->integration : '');
-			$csvexport = RToolbarBuilder::createCsvButton($csvlink);
+			$csvexport = RToolbarBuilder::createCsvButton();
 			$firstGroup->addButton($csvexport);
 		}
 

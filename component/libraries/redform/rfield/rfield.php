@@ -129,6 +129,11 @@ abstract class RdfRfield extends JObject
 			case 'name':
 			case 'field':
 				return $this->load()->field;
+
+			default:
+				$data = $this->load();
+				if (isset($data->{$name}))
+				return $data->{$name};
 		}
 
 		$trace = debug_backtrace();
@@ -219,6 +224,24 @@ abstract class RdfRfield extends JObject
 	 * @return string
 	 */
 	public function getDatabaseValue()
+	{
+		if (is_array($this->value))
+		{
+			return implode('~~~', $this->value);
+		}
+		else
+		{
+			return $this->value;
+		}
+	}
+
+	/**
+	 * Returns field value ready to be printed.
+	 * Array values will be separated with ~~~
+	 *
+	 * @return string
+	 */
+	public function getValueAsString()
 	{
 		if (is_array($this->value))
 		{
