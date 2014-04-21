@@ -223,9 +223,9 @@ class RedformModelRedform extends JModelLegacy {
 
 			$integration = $this->getMailingList($field_id);
 
-			foreach ((array) $lists['lists'] as $listkey => $mailinglistname)
+			foreach ((array) $lists['lists'] as $mailinglistname)
 			{
-				$results = $dispatcher->trigger( 'subscribe', array( $integration, $subscriber, $mailinglistname ) );
+				$results = $dispatcher->trigger('subscribe', array($integration, $subscriber, $mailinglistname));
 			}
 		}
 	}
@@ -297,12 +297,10 @@ class RedformModelRedform extends JModelLegacy {
 	function getFieldsValues()
 	{
 		$query = ' SELECT v.id, v.value, v.field_id, v.fieldtype '
-		. '      , m.listnames '
 		. '      , f.field, f.validate, f.unique, f.tooltip '
 		. ' FROM #__rwf_values AS v '
 		. ' INNER JOIN #__rwf_fields AS f ON v.field_id = f.id '
 		. ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
-		. ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = f.field_id '
 		. ' WHERE v.published = 1 AND f.published = 1 AND fo.published = 1 '
 		. '   AND fo.id = '.$this->_db->Quote($this->_form_id)
 		. ' ORDER BY f.ordering, v.ordering '
@@ -322,7 +320,6 @@ class RedformModelRedform extends JModelLegacy {
 		$query = ' SELECT f.id, f.field, f.validate, f.unique, f.tooltip, f.form_id '
 		. ' FROM #__rwf_fields AS f '
 		. ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
-		. ' LEFT JOIN  #__rwf_mailinglists AS m ON v.id = m.id '
 		. ' WHERE f.published = 1 AND fo.published = 1 '
 		. '   AND f.id IN ('.implode(',', $quoted) .')'
 		. ' ORDER BY f.ordering '
@@ -907,18 +904,16 @@ class RedformModelRedform extends JModelLegacy {
 
 	/**
 	 * return mailing list instegration name associated to field
-	 * @param int field id
-	 * @return string mailing list integrationname
+	 *
+	 * @param   int   $field_id  field id
+	 *
+	 * @return  string mailing list integrationname
 	 */
 	function getMailingList($field_id)
 	{
-		$query = ' SELECT mailinglist '
-		. ' FROM #__rwf_mailinglists  '
-		. ' WHERE field_id = ' . $this->_db->Quote($field_id)
-		;
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadResult();
-		return $res;
+		$field = RdfRfieldFactory::getField($field_id);
+
+		return $field->getParam('mailinglist');
 	}
 
 	function _replaceTags($text, rfanswers $answers)

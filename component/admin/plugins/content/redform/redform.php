@@ -185,9 +185,8 @@ class plgContentRedform extends JPlugin {
 	{
 		$db = JFactory::getDBO();
 
-		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, m.listnames '
+		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params '
 		   . ' FROM #__rwf_fields AS f '
-		   . ' LEFT JOIN #__rwf_mailinglists AS m ON f.id = m.field_id'
 		   . ' WHERE f.published = 1 '
 		   . ' AND f.form_id = '.$form_id
 		   . ' ORDER BY f.ordering'

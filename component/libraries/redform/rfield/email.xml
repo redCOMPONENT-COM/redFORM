@@ -1,19 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form>
-	<fields name="params">
-		<fieldset name="extra" label="extra">
-			<field name="placeholder" type="text" default="" label="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_LABEL" description="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_DESC"/>
-	    <field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS" description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
-	    <field name="size" type="text" default="25" label="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE" description="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE_DESC"/>
-	    <field name="maxlength" type="text" default="250" label="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH" description="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH_DESC"/>
-	    <field name="force_mailing_list" type="radio" default="0" label="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST" description="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST_DESC">
-	      <option value="0">No</option>
-	      <option value="1">Yes</option>
-	    </field>
-	    <field name="notify" type="radio" default="1" label="COM_REDFORM_FIELD_EMAIL_PARAMS_NOTIFY_LABEL" description="COM_REDFORM_FIELD_EMAIL_PARAMS_NOTIFY_DESC">
-	      <option value="0">No</option>
-	      <option value="1">Yes</option>
-	    </field>
-		</fieldset>
-	</fields>
+    <fields name="params">
+        <fieldset name="extra" label="extra">
+            <field name="placeholder" type="text" default="" label="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_LABEL"
+                   description="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_DESC"/>
+            <field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS"
+                   description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
+            <field name="size" type="text" default="25" label="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE"
+                   description="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE_DESC"/>
+            <field name="maxlength" type="text" default="250" label="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH"
+                   description="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH_DESC"/>
+            <field name="force_mailing_list" type="radio" default="0"
+                   label="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST"
+                   description="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST_DESC">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </field>
+            <field name="notify" type="radio" default="1" label="COM_REDFORM_FIELD_EMAIL_PARAMS_NOTIFY_LABEL"
+                   description="COM_REDFORM_FIELD_EMAIL_PARAMS_NOTIFY_DESC">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </field>
+
+            <field type="redformnote"
+                   label=""
+                   description="COM_REDFORM_FIELD_EMAIL_PARAMS_NOTE_MAILINGLIST_INTEGRATION"/>
+            <field name="mailinglist"
+                   type="redformmailinglisttype"
+                   label="COM_REDFORM_FIELD_EMAIL_PARAMS_SELECT_MAILINGLISTTYPE"
+                   description="COM_REDFORM_FIELD_EMAIL_PARAMS_SELECT_MAILINGLISTTYPE_DESC"
+                    >
+                <option value="">JSelect</option>
+            </field>
+            <field name="listname"
+                   type="redformmailinglist"
+                   label="COM_REDFORM_FIELD_EMAIL_PARAMS_SELECT_MAILINGLIST"
+                   description="COM_REDFORM_FIELD_EMAIL_PARAMS_SELECT_MAILINGLIST_DESC"
+                    >
+            </field>
+        </fieldset>
+    </fields>
 </form>

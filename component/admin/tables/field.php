@@ -130,8 +130,7 @@ class RedformTableField extends RTable
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link	http://docs.joomla.org/JTable/delete
-	 * @since   11.1
+	 * @throws Exception
 	 */
 	public function delete($pk = null)
 	{
@@ -151,7 +150,7 @@ class RedformTableField extends RTable
 
 		if (!$db->query())
 		{
-			throw new Exception(JText::_('COM_REDFORM_Cannot_remove_field_from_form_table').' '.$db->getErrorMsg());
+			throw new Exception(JText::_('COM_REDFORM_Cannot_remove_field_from_form_table') . ' ' . $db->getError());
 		}
 
 		// Delete associated values
@@ -163,7 +162,7 @@ class RedformTableField extends RTable
 
 		if (!$db->query())
 		{
-			throw new Exception(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_field_values').' '.$db->getErrorMsg());
+			throw new Exception(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_field_values') . ' ' . $db->getError());
 		}
 
 		return true;

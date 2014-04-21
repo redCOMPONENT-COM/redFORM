@@ -184,29 +184,6 @@ class RedformModelField extends RModelAdmin
 	}
 
 	/**
-	 * Get the mailingslists for the e-mail field
-	 */
-	function getActiveMailinglists()
-	{
-		$res = array();
-		JPluginHelper::importPlugin( 'redform_mailing' );
-		$dispatcher =& JDispatcher::getInstance();
-		$results = $dispatcher->trigger( 'getIntegrationName', array( &$res ) );
-		return $res;
-	}
-
-	/**
-	 * Get the current mailingslist settings for this field
-	 */
-	function getMailinglist()
-	{
-		/* Load the table */
-		$mailinglistrow = $this->getTable('Mailinglists', 'RedformTable');
-		$mailinglistrow->load($this->_id);
-		return $mailinglistrow;
-	}
-
-	/**
 	 * copy fields to specified form
 	 *
 	 * @param array $field_ids
@@ -262,34 +239,6 @@ class RedformModelField extends RModelAdmin
 					return false;
 				}
 			}
-
-			/* mailing list handling in case of email field type */
-			if ($row->fieldtype == 'email')
-			{
-				// copy mailing list settings
-				$query = ' SELECT * '
-				. ' FROM #__rwf_mailinglists '
-				. ' WHERE field_id = ' . $field_id
-				;
-				$this->_db->setQuery($query);
-				$res = $this->_db->loadObjectList();
-
-				foreach($res as $r)
-				{
-					/* Load the table */
-					$mailinglistrow = $this->getTable('Mailinglists', 'RedformTable');
-					$mailinglistrow->bind($r);
-					$mailinglistrow->id = null;
-					$mailinglistrow->field_id = $row->id;
-
-					/* save the changes */
-					if (!$mailinglistrow->store()) {
-						$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_mailinglist_data').' '.$row->getError(), 'error');
-						return false;
-					}
-				}
-			}
-
 		}
 
 		return true;

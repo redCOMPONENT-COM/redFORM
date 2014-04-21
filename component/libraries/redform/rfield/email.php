@@ -166,24 +166,7 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 
 	protected function getNewsletters()
 	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('listnames');
-		$query->from('#__rwf_mailinglists');
-		$query->where('field_id = ' . $this->id);
-
-		$db->setQuery($query);
-		$res = $db->loadResult();
-
-		if ($res)
-		{
-			return explode(';', $res);
-		}
-		else
-		{
-			return false;
-		}
+		return $this->getParam('listname');
 	}
 
 	protected function addNewslettersElements($newsletters)
