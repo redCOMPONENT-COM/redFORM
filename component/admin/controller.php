@@ -45,7 +45,7 @@ class RedformController extends JControllerLegacy
 	{
 		RdfHelperLog::clear();
 		$msg = JText::_('COM_REDFORM_LOG_CLEARED');
-		$this->setRedirect('index.php?option=com_redform&view=log', $msg);
+		$this->setRedirect('index.php?option=com_redform&view=logs', $msg);
 		$this->redirect();
 	}
 }

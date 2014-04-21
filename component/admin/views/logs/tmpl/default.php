@@ -1,7 +1,7 @@
 <?php
 /**
  * @version 1.0 $Id: default.php 288 2009-06-22 15:42:41Z julien $
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -20,12 +20,12 @@
 
 defined('_JEXEC') or die('Restricted access');
 ?>
-<?php foreach ($this->log as $line): ?>
+<?php foreach ($this->items as $line): ?>
 <?php echo $line . '<br/>'; ?>
 <?php endforeach; ?>
 
-<form action="index.php" method="post" name="adminForm">  
+<form action="index.php" method="post" id="adminForm">
   <input type="hidden" name="option" value="com_redform" />
-  <input type="hidden" name="view" value="log" />
+  <input type="hidden" name="view" value="logs" />
   <input type="hidden" name="task" value="" />
 </form>
