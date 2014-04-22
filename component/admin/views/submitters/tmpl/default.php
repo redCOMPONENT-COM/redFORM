@@ -21,7 +21,7 @@ $listDirn = $this->state->get('list.direction');
 
 	<?php
 	echo RLayoutHelper::render(
-		'searchtools.default',
+		'submitters.searchtools.default',
 		array(
 			'view' => $this,
 			'options' => array(
