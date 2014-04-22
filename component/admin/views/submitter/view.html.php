@@ -51,7 +51,7 @@ class RedformViewSubmitter extends RdfView
 	{
 		$isNew = (int) $this->item->id <= 0;
 		$title = JText::_('COM_REDFORM_SUBMITTER_TITLE');
-		$state = $isNew ? JText::_('JNEW') : JText::_('JEDIT');
+		$state = $isNew ? JText::_('JNEW') : JText::_('COM_REDFORM_EDIT');
 
 		return $title . ' <small>' . $state . '</small>';
 	}

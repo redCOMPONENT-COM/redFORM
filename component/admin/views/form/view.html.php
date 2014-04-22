@@ -57,7 +57,7 @@ class RedformViewForm extends RdfView
 	{
 		$isNew = (int) $this->item->id <= 0;
 		$title = JText::_('COM_REDFORM_FORM_TITLE');
-		$state = $isNew ? JText::_('JNEW') : JText::_('JEDIT');
+		$state = $isNew ? JText::_('JNEW') : JText::_('COM_REDFORM_EDIT');
 
 		return $title . ' <small>' . $state . '</small>';
 	}
