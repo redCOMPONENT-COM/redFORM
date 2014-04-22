@@ -10,9 +10,9 @@
 defined('_JEXEC') or die;
 
 /**
- * Currency table.
+ * Form table.
  *
- * @package     Redshopb.Backend
+ * @package     Redform.Backend
  * @subpackage  Tables
  * @since       1.0
  */

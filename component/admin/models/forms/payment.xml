@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset
+            addfieldpath="/libraries/redform/form/fields"
+            name="details">
+        <field
+                name="id"
+                type="hidden"
+                default="0"
+                label=""
+                description=""
+                readonly="true"
+                />
+        <field
+                name="gateway"
+                type="redformgateway"
+                label="COM_REDFORM_GATEWAY"
+                description="COM_REDFORM_GATEWAY"
+                default="custom"
+                >
+        </field>
+        <field
+                name="date"
+                type="calendar"
+                format="%Y-%m-%d  %H:%M:%S"
+                label="COM_REDFORM_Date"
+                description="COM_REDFORM_Date"
+                />
+        <field
+                name="status"
+                type="text"
+                label="COM_REDFORM_Status"
+                description="COM_REDFORM_Status"
+                required="false"
+                maxlength="255"
+                />
+        <field
+                name="data"
+                type="textarea"
+                label="COM_REDFORM_Data"
+                description="COM_REDFORM_Data"
+                />
+        <field
+                name="paid"
+                type="radio"
+                label="COM_REDFORM_Paid"
+                description="COM_REDFORM_Paid"
+                default="0"
+                >
+            <option value="0">JNo</option>
+            <option value="1">JYes</option>
+        </field>
+        <field
+                name="submit_key"
+                type="hidden"
+                required="true"
+                />
+    </fieldset>
+</form>

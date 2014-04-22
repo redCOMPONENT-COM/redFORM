@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 JHtml::_('rbootstrap.tooltip');
 JHtml::_('rjquery.chosen', 'select');
 
-$action = JRoute::_('index.php?option=com_redform&view=payments');
+$action = JRoute::_('index.php?option=com_redform&view=payment');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
@@ -42,7 +42,7 @@ $listDirn = $this->state->get('list.direction');
 					<?php echo JText::_('COM_REDFORM_Status'); ?>
 				</th>
 				<th class="nowrap hidden-phone">
-					<?php echo JText::_('COM_REDFORM_Info'); ?>
+					<?php echo JText::_('COM_REDFORM_PAYMENT_DATA'); ?>
 				</th>
 				<th width="15%" class="nowrap">
 					<?php echo JText::_('COM_REDFORM_Paid'); ?>
@@ -60,9 +60,6 @@ $listDirn = $this->state->get('list.direction');
 					<tr>
 						<td>
 							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
-						</td>
-						<td>
-							<?php echo JHtml::_('rgrid.published', $item->published, $i, 'forms.', $canChange, 'cb'); ?>
 						</td>
 						<td>
 							<a href="<?php echo JRoute::_('index.php?option=com_redform&task=payment.edit&id=' . $item->id); ?>">

@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-jimport('joomla.form.fields.list');
+JFormHelper::loadFieldClass('list');
 
 /**
  * Redform mailing list type select field

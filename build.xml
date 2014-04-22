@@ -147,6 +147,9 @@
 	-->
 
 	<target name="site" description="Copies files to a existing joomla site" depends="setup-properties">
+        <delete dir="${www.dir}/administrator/components/com_${comp.name}" quiet="yes" includeemptydirs="false" />
+        <delete dir="${www.dir}/components/com_${comp.name}" quiet="yes" includeemptydirs="false" />
+
         <echo message="Copying administrator component..." />
 
         <!-- Manifest & install script -->

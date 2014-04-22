@@ -27,7 +27,7 @@ defined('_JEXEC') or die('Restricted access');
  * @package  RED.redform
  * @since    2.5
  */
-class PaymentCustom extends  RedformPaymentHelper
+class PaymentCustom extends  RdfPaymentHelper
 {
 	/**
 	 * name of the gateway for dispatching

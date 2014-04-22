@@ -73,7 +73,7 @@ class RedformViewPayments extends RdfView
 
 		if ($canDoCore->get('core.edit'))
 		{
-			$new = RToolbarBuilder::createNewButton('payment.new');
+			$new = RToolbarBuilder::createNewButton('payment.add');
 			$firstGroup->addButton($new);
 
 			$edit = RToolbarBuilder::createEditButton('payment.edit');
@@ -83,13 +83,13 @@ class RedformViewPayments extends RdfView
 		// Delete / Trash
 		if ($canDoCore->get('core.delete'))
 		{
-			$delete = RToolbarBuilder::createDeleteButton('payment.delete');
+			$delete = RToolbarBuilder::createDeleteButton('payments.delete');
 
 			$secondGroup->addButton($delete);
 		}
 
 		// Options
-		$back = RToolbarBuilder::createCancelButton('payments.back');
+		$back = RToolbarBuilder::createStandardButton('payments.back', JText::_('COM_REDFORM_BACK'), 'btn btn-default', 'icon-eject', false);
 		$thirdGroup->addButton($back);
 
 		$toolbar = new RToolbar;
