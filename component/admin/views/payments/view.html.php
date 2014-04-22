@@ -36,7 +36,7 @@ class RedformViewPayments extends RdfView
 	 */
 	public function display($tpl = null)
 	{
-		$model = $this->getModel('submitters');
+		$model = $this->getModel();
 
 		$this->items = $model->getItems();
 		$this->state = $model->getState();
@@ -73,7 +73,9 @@ class RedformViewPayments extends RdfView
 
 		if ($canDoCore->get('core.edit'))
 		{
-			$edit = RToolbarBuilder::createNewButton('payment.new');
+			$new = RToolbarBuilder::createNewButton('payment.new');
+			$firstGroup->addButton($new);
+
 			$edit = RToolbarBuilder::createEditButton('payment.edit');
 			$firstGroup->addButton($edit);
 		}
@@ -87,7 +89,7 @@ class RedformViewPayments extends RdfView
 		}
 
 		// Options
-		$back = RToolbarBuilder::createCancelButton('payment.back');
+		$back = RToolbarBuilder::createCancelButton('payments.back');
 		$thirdGroup->addButton($back);
 
 		$toolbar = new RToolbar;

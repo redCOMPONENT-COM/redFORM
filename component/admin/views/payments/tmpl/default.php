@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 JHtml::_('rbootstrap.tooltip');
 JHtml::_('rjquery.chosen', 'select');
 
-$action = JRoute::_('index.php?option=com_redform&view=forms');
+$action = JRoute::_('index.php?option=com_redform&view=payments');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 ?>
@@ -93,6 +93,7 @@ $listDirn = $this->state->get('list.direction');
 		<input type="hidden" name="task" value="">
 		<input type="hidden" name="boxchecked" value="0">
 		<input type="hidden" name="submit_key" value="<?php echo $this->state->get('submit_key'); ?>" />
+		<input type="hidden" name="return" value="<?php echo base64_encode('index.php?option=com_redform&view=submitters'); ?>" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

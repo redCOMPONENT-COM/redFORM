@@ -75,7 +75,7 @@ class RedformModelPayments extends RModelList
 		parent::populateState('date', 'desc');
 
 		$app = JFactory::getApplication();
-		$this->setState('submit_key', $app->input->getInt('key', ''));
+		$this->setState('submit_key', $app->input->getCmd('submit_key', ''));
 	}
 
 	/**
@@ -89,7 +89,7 @@ class RedformModelPayments extends RModelList
 
 		$query = $db->getQuery(true)
 			->select('*')
-			->from('#__rwf_payments');
+			->from('#__rwf_payment');
 
 		$query->where('submit_key = ' . $db->quote($this->getState('submit_key', '')));
 
@@ -97,48 +97,10 @@ class RedformModelPayments extends RModelList
 		$orderList = $this->getState('list.ordering');
 		$directionList = $this->getState('list.direction');
 
-		$order = !empty($orderList) ? $orderList : 'f.formname';
-		$direction = !empty($directionList) ? $directionList : 'ASC';
+		$order = !empty($orderList) ? $orderList : 'date';
+		$direction = !empty($directionList) ? $directionList : 'DESC';
 		$query->order($db->escape($order) . ' ' . $db->escape($direction));
 
 		return $query;
 	}
-
-  /**
-   * Method to get a pagination object
-   *
-   * @access public
-   * @return integer
-   */
-  function getPagination()
-  {
-    // Lets load the content if it doesn't already exist
-    if (empty($this->_pagination))
-    {
-      jimport('joomla.html.pagination');
-      $this->_pagination = new JPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
-    }
-
-    return $this->_pagination;
-  }
-
-
-  /**
-   * Total nr of items
-   *
-   * @access public
-   * @return integer
-   */
-  function getTotal()
-  {
-    // Lets load the total nr if it doesn't already exist
-    if (empty($this->_total))
-    {
-      $query = $this->_buildQuery();
-      $this->_total = $this->_getListCount($query);
-    }
-
-    return $this->_total;
-  }
 }
-?>
