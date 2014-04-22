@@ -25,7 +25,7 @@ jimport( 'joomla.application.component.view');
 
 /**
  */
-class RdfViewPayment extends JViewLegacy {
+class RedformViewPayment extends JViewLegacy {
 
 	function display($tpl = null)
 	{
@@ -42,6 +42,8 @@ class RdfViewPayment extends JViewLegacy {
 	{
 		$uri 		    = &JFactory::getURI();
 		$document   = &JFactory::getDocument();
+
+		$uri->delVar('task');
 
 		$submit_key = JRequest::getVar('key',    '');
 		$source     = JRequest::getVar('source', '');

@@ -246,7 +246,7 @@ class PaymentEpay extends  RdfPaymentHelper
 				$uri->setVar('accept', '1');
 				break;
 			case 'decline':
-				$uri->setVar('task', 'notify');
+				$uri->setVar('task', 'payment.notify');
 				$uri->setVar('accept', '0');
 				break;
 		}

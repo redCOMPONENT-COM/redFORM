@@ -39,7 +39,8 @@ class PaymentCustom extends  RdfPaymentHelper
 
 	/**
 	 * contructor
-	 * @param object plgin params
+	 *
+	 * @param   object  $params  plugin params
 	 */
 	public function __construct($params)
 	{
@@ -47,8 +48,9 @@ class PaymentCustom extends  RdfPaymentHelper
 	}
 
 	/**
-	 * sends the payment request associated to sumbit_key to the payment service
-	 * @param string $submit_key
+	 * sends the payment request associated to submit_key to the payment service
+	 *
+	 * @param   string  $submit_key
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
@@ -78,18 +80,11 @@ class PaymentCustom extends  RdfPaymentHelper
 		$app = JFactory::getApplication();
 		$submit_key = $app->input->get('key');
 
-		$paid = $this->params->get('payment_status', 'pending') == 'paid';
+		$status = $this->params->get('payment_status', 'pending') == 'paid';
 		$data = 'tid:' . uniqid();
 
-		if ($paid)
-		{
-			$this->writeTransaction($submit_key, $data, 'Paid', 1);
-		}
-		else
-		{
-			$this->writeTransaction($submit_key, $data, 'Pending', 0);
-		}
+		$this->writeTransaction($submit_key, $data, $status, 1);
 
-		return $paid;
+		return 1;
 	}
 }

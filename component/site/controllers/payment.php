@@ -169,7 +169,7 @@ class RedformControllerPayment extends JControllerLegacy
 	 *
 	 * @return void
 	 */
-	public function paymentcancelled()
+	public function cancelled()
 	{
 		$app = JFactory::getApplication();
 

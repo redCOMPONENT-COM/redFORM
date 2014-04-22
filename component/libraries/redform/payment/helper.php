@@ -182,13 +182,13 @@ abstract class RdfPaymentHelper extends JObject
 		switch ($state)
 		{
 			case 'processing':
-				$uri->setVar('task', 'processing');
+				$uri->setVar('task', 'payment.processing');
 				break;
 			case 'cancel':
-				$uri->setVar('task', 'paymentcancelled');
+				$uri->setVar('task', 'payment.cancelled');
 				break;
 			case 'notify':
-				$uri->setVar('task', 'notify');
+				$uri->setVar('task', 'payment.notify');
 				break;
 		}
 

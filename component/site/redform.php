@@ -24,30 +24,26 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
+
+if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+{
+	throw new Exception(JText::_('COM_REDITEM_REDCORE_INIT_FAILED'), 404);
+}
+
+// Bootstraps redCORE
+RBootstrap::bootstrap();
+
+$jinput = JFactory::getApplication()->input;
+
 // Register library prefix
 JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
-$rfcore = new RdfCore;
 // Require the base controller
 require_once (JPATH_COMPONENT . '/controller.php');
 require_once (JPATH_COMPONENT . '/redform.defines.php');
 
-// Require specific controller if requested
-if($controller = JRequest::getWord('controller')) {
-	$path = JPATH_COMPONENT.'/controllers/'.$controller.'.php';
-	if (file_exists($path)) {
-		require_once $path;
-	} else {
-		$controller = '';
-	}
-}
-
-// Create the controller
-$classname	= 'RedformController'.ucfirst($controller);
-$controller = new $classname( );
-
-// Perform the Request task
-$controller->execute(JRequest::getCmd('task'));
-
-// Redirect if set by the controller
+// Execute the controller
+$controller = JControllerLegacy::getInstance('redform');
+$controller->execute($jinput->get('task'));
 $controller->redirect();
