@@ -211,7 +211,7 @@ class RedformControllerPayment extends JController
 			// The payment was received !
 			$app->input->set('state', 'accepted');
 
-			if (!$alreadypaid)
+			if (!$alreadypaid && $gw != 'custom')
 			{
 				// Trigger event for custom handling
 				JPluginHelper::importPlugin('redform');
