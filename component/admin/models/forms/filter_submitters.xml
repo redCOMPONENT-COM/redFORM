@@ -19,6 +19,20 @@
                 >
             <option value="">COM_REDFORM_FIELD_SELECT_FORM</option>
         </field>
+        <field
+                name="from"
+                type="calendar"
+                format="%Y-%m-%d  %H:%M:%S"
+                label="COM_REDCORE_SUBMITTERS_FILTER_FROM"
+                description="COM_REDCORE_SUBMITTERS_FILTER_FROM_DESC"
+                />
+        <field
+                name="to"
+                type="calendar"
+                format="%Y-%m-%d  %H:%M:%S"
+                label="COM_REDCORE_SUBMITTERS_FILTER_TO"
+                description="COM_REDCORE_SUBMITTERS_FILTER_TO_DESC"
+                />
     </fields>
     <fields name="list">
         <field

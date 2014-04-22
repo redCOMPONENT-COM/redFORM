@@ -54,7 +54,7 @@ class PaymentEpay extends  RedformPaymentHelper
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
 
-		$currency = RdfHelperCurrency::getIsoNumber($details->currency);
+		$currency = RHelperCurrency::getIsoNumber($details->currency);
 		?>
 		<h3><?php echo JText::_('PLG_REDFORM_PAYMENT_EPAY_FORM_TITLE'); ?></h3>
 		<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
@@ -191,7 +191,7 @@ class PaymentEpay extends  RedformPaymentHelper
 
     $details = $this->_getSubmission($submit_key);
 
-		$currency = RdfHelperCurrency::getIsoNumber($details->currency);
+		$currency = RHelperCurrency::getIsoNumber($details->currency);
 
     if (round($details->price*100) != JRequest::getVar('amount')) {
     	RdfHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH'. ' for ' . $submit_key);

@@ -128,7 +128,7 @@ class PaymentIdeal extends  RedformPaymentHelper
 
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
-		$currency = RdfHelperCurrency::getIsoNumber($details->currency);
+		$currency = RHelperCurrency::getIsoNumber($details->currency);
 
 		$ideal = new iDEAL_Payment($this->params->get('partner_id'));
 		$ideal->setTestmode($this->params->get('testmode'));
