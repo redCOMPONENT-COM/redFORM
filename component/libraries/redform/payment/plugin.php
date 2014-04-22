@@ -12,6 +12,9 @@ defined('_JEXEC') or die('Restricted access');
 // Import library dependencies
 jimport('joomla.event.plugin');
 
+// Register library prefix
+JLoader::registerPrefix('R', JPATH_LIBRARIES . '/redcore');
+
 /**
  * Payment plugin abstract class
  *

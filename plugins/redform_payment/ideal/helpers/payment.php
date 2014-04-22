@@ -29,7 +29,7 @@ require_once 'ideal.class.php';
  * @package  RED.redform
  * @since    2.5
  */
-class PaymentIdeal extends  RedformPaymentHelper
+class PaymentIdeal extends  RdfPaymentHelper
 {
 	/**
 	 * name of the gateway for dispatching

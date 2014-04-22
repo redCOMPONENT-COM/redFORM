@@ -23,7 +23,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class PaymentIridium extends RedformPaymentHelper
+class PaymentIridium extends RdfPaymentHelper
 {
 	protected $gateway = 'iridium';
 

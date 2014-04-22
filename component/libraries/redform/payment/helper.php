@@ -9,6 +9,9 @@
 
 defined('_JEXEC') or die('Restricted access');
 
+// Register library prefix
+JLoader::registerPrefix('R', JPATH_LIBRARIES . '/redcore');
+
 /**
  * Payment helper abstract class
  *

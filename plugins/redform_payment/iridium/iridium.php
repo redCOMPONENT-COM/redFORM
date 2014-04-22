@@ -25,7 +25,7 @@ defined('_JEXEC') or die('Restricted access');
 // Register library prefix
 JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
-class plgRedform_PaymentIridium extends RedformPaymentPlugin
+class plgRedform_PaymentIridium extends RdfPaymentPlugin
 {
 	protected $gateway = 'iridium';
 }
