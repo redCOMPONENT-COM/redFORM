@@ -1,166 +1,107 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.Backend
+ * @subpackage  Models
+ *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
-
-jimport('joomla.application.component.model');
+defined('_JEXEC') or die;
 
 /**
- * Joomla redform Component Model
+ * Payments Model
  *
- * @package		redform
- * @since 2.0
+ * @package     Redform.Backend
+ * @subpackage  Models
+ * @since       1.0
  */
-class RedformModelPayments extends JModelLegacy
+class RedformModelPayments extends RModelList
 {
 	/**
-	 * key for which we want to display payments
+	 * Name of the filter form to load
 	 *
-	 * @var unknown_type
+	 * @var  string
 	 */
-	var $_key = null;
-   /**
-   * list data array
-   *
-   * @var array
-   */
-  var $_data = null;
+	protected $filterFormName = 'filter_forms';
 
-  /**
-   * total
-   *
-   * @var integer
-   */
-  var $_total = null;
+	/**
+	 * Limitstart field used by the pagination
+	 *
+	 * @var  string
+	 */
+	protected $limitField = 'form_limit';
 
-  /**
-   * Pagination object
-   *
-   * @var object
-   */
-  var $_pagination = null;
+	/**
+	 * Limitstart field used by the pagination
+	 *
+	 * @var  string
+	 */
+	protected $limitstartField = 'auto';
 
-  /**
-   * Constructor
-   *
-   * @since 0.1
-   */
-  function __construct()
-  {
-    parent::__construct();
-    $mainframe = JFactory::getApplication();
-    $option = JRequest::getVar('option');
-
-    // Get the pagination request variables
-    $limit      = $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-    $limitstart = $mainframe->getUserStateFromRequest( $option.'limitstart', 'limitstart', 0, 'int' );
-
-    $this->setState('limit', $limit);
-    $this->setState('limitstart', $limitstart);
-
-    $key = JRequest::getVar('submit_key', null, 'request', 'string');
-    if ($key) {
-    	$this->setKey($key);
-    }
-  }
-
-  function setKey($key)
-  {
-  	$this->_key = $key;
-  	$this->_data = null;
-  }
-
-  /**
-   * Method to get List data
-   *
-   * @access public
-   * @return array
-   */
-  function getData()
-  {
-    // Lets load the content if it doesn't already exist
-    if (empty($this->_data))
-    {
-      $query = $this->_buildQuery();
-      if (!$this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit')))
-      echo $this->_db->getErrorMsg();
-    }
-
-    return $this->_data;
-  }
-
-  function getFormId()
-  {
-  	$query = ' SELECT form_id '
-  	       . ' FROM #__rwf_submitters '
-  	       . ' WHERE submit_key = ' . $this->_db->Quote($this->_key);
-  	$this->_db->setQuery($query);
-  	$res = $this->_db->loadResult();
-  	return $res;
-  }
-
-	function _buildQuery()
+	/**
+	 * Constructor
+	 *
+	 * @param   array  $config  Configuration array
+	 */
+	public function __construct($config = array())
 	{
-		// Get the WHERE and ORDER BY clauses for the query
-		$where		= $this->_buildContentWhere();
-		$orderby	= $this->_buildContentOrderBy();
+		if (empty($config['filter_fields']))
+		{
+			$config['filter_fields'] = array(
+				'id', 'date',
+			);
+		}
 
-		$query = ' SELECT obj.* '
-			. ' FROM #__rwf_payment AS obj '
-			. $where
-			. $orderby
-		;
+		parent::__construct($config);
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * This method should only be called once per instantiation and is designed
+	 * to be called on the first call to the getState() method unless the model
+	 * configuration flag to ignore the request is set.
+	 *
+	 * Note. Calling getState in this method will result in recursion.
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		parent::populateState('date', 'desc');
+
+		$app = JFactory::getApplication();
+		$this->setState('submit_key', $app->input->getInt('key', ''));
+	}
+
+	/**
+	 * Build an SQL query to load the list data.
+	 *
+	 * @return  JDatabaseQuery
+	 */
+	protected function getListQuery()
+	{
+		$db	= $this->getDbo();
+
+		$query = $db->getQuery(true)
+			->select('*')
+			->from('#__rwf_payments');
+
+		$query->where('submit_key = ' . $db->quote($this->getState('submit_key', '')));
+
+		// Ordering
+		$orderList = $this->getState('list.ordering');
+		$directionList = $this->getState('list.direction');
+
+		$order = !empty($orderList) ? $orderList : 'f.formname';
+		$direction = !empty($directionList) ? $directionList : 'ASC';
+		$query->order($db->escape($order) . ' ' . $db->escape($direction));
 
 		return $query;
-	}
-
-	function _buildContentOrderBy()
-	{
-		$mainframe = JFactory::getApplication();
-		$option = JRequest::getVar('option');
-
-		$filter_order		= $mainframe->getUserStateFromRequest( $option.'.payments.filter_order',		'filter_order',		'obj.date',	'cmd' );
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( $option.'.payments.filter_order_Dir',	'filter_order_Dir',	'',				'word' );
-
-		if ($filter_order == 'obj.date'){
-			$orderby 	= ' ORDER BY obj.date DESC'.$filter_order_Dir;
-		} else {
-			$orderby 	= ' ORDER BY '.$filter_order.' '.$filter_order_Dir.' , obj.date DESC';
-		}
-
-		return $orderby;
-	}
-
-	function _buildContentWhere()
-	{
-		$mainframe = JFactory::getApplication();
-		$option = JRequest::getVar('option');
-
-		$where = array();
-		if ($this->_key) {
-			$where[] = ' submit_key = '. $this->_db->Quote($this->_key);
-		}
-
-		$where 		= ( count( $where ) ? ' WHERE '. implode( ' AND ', $where ) : '' );
-
-		return $where;
 	}
 
   /**

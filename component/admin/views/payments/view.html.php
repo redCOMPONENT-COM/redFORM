@@ -25,40 +25,76 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewPayments extends JViewLegacy {
+class RedformViewPayments extends RdfView
+{
+	/**
+	 * Execute and display a template script.
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  mixed  A string if successful, otherwise a JError object.
+	 */
+	public function display($tpl = null)
+	{
+		$model = $this->getModel('submitters');
 
-  function display($tpl = null)
-  {
-		$mainframe = JFactory::getApplication();
-		$option = JRequest::getVar('option');
+		$this->items = $model->getItems();
+		$this->state = $model->getState();
+		$this->pagination = $model->getPagination();
 
-		$user 		= & JFactory::getUser();
-		$document	= & JFactory::getDocument();
-  	$params   = JComponentHelper::getParams('com_redform');
+		parent::display($tpl);
+	}
 
-  	$rows       = $this->get('Data');
-  	$pagination = $this->get('Pagination');
+	/**
+	 * Get the view title.
+	 *
+	 * @return  string  The view title.
+	 */
+	public function getTitle()
+	{
+		return JText::_('COM_REDFORM_PAYMENTS_HISTORY');
+	}
 
-  	$lists = array();
+	/**
+	 * Get the toolbar to render.
+	 *
+	 * @return  RToolbar
+	 */
+	public function getToolbar()
+	{
+		$params = JComponentHelper::getParams('com_redform');
 
-  	/* Set variabels */
-  	$this->assignRef('rows',        $rows);
-  	$this->assignRef('pagination',  $pagination);
-  	$this->assignRef('lists',       $lists);
-    $this->assignRef('params',      $params);
-    $this->assignRef('key',         JRequest::getVar('submit_key'));
+		$canDoCore = RedformHelpersAcl::getActions();
+		$user = JFactory::getUser();
 
-  	JToolBarHelper::title(JText::_( 'COM_REDFORM_PAYMENTS_HISTORY' ), 'redform_submitters');
-  	JToolBarHelper::addNew();
-  	JToolBarHelper::editList();
-  	JToolBarHelper::deleteListX();
-		JToolBarHelper::custom('back', 'back', 'back', 'back', false);
+		$firstGroup = new RToolbarButtonGroup;
+		$secondGroup = new RToolbarButtonGroup;
+		$thirdGroup = new RToolbarButtonGroup;
 
-  	// set the menu
-  	RedformHelperAdmin::setMenu();
+		if ($canDoCore->get('core.edit'))
+		{
+			$edit = RToolbarBuilder::createNewButton('payment.new');
+			$edit = RToolbarBuilder::createEditButton('payment.edit');
+			$firstGroup->addButton($edit);
+		}
 
-  	/* Display the page */
-  	parent::display($tpl);
-  }
+		// Delete / Trash
+		if ($canDoCore->get('core.delete'))
+		{
+			$delete = RToolbarBuilder::createDeleteButton('payment.delete');
 
+			$secondGroup->addButton($delete);
+		}
+
+		// Options
+		$back = RToolbarBuilder::createCancelButton('payment.back');
+		$thirdGroup->addButton($back);
+
+		$toolbar = new RToolbar;
+		$toolbar->addGroup($firstGroup)
+			->addGroup($secondGroup)
+			->addGroup($thirdGroup);
+
+		return $toolbar;
+	}
 }
