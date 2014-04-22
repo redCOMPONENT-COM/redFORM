@@ -55,7 +55,7 @@ $saveOrder = $listOrder == 'ordering';
 				<th width="1%" class="nowrap center">
 					<?php echo JHtml::_('rsearchtools.sort', 'JSTATUS', 'f.published', $listDirn, $listOrder); ?>
 				</th>
-				<th class="nowrap hidden-phone">
+				<th class="nowrap">
 					<?php echo JHtml::_('rsearchtools.sort', 'JGLOBAL_TITLE', 'f.formname', $listDirn, $listOrder); ?>
 				</th>
 				<th width="18%" class="nowrap hidden-phone">
@@ -65,7 +65,7 @@ $saveOrder = $listOrder == 'ordering';
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_FORM_END_DATE', 'f.enddate', $listDirn, $listOrder); ?>
 				</th>
 				<th width="12%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_ACTIVE', 'f.formstarted', $listDirn, $listOrder); ?>
+					<?php echo Jtext::_('COM_REDFORM_ACTIVE'); ?>
 				</th>
 				<th width="18%" class="nowrap hidden-phone">
 					<?php echo JText::_('COM_REDFORM_SUBMITTERS'); ?>
@@ -101,13 +101,16 @@ $saveOrder = $listOrder == 'ordering';
 						</td>
 						<td>
 							<?php
-							$date = JFactory::getDate($item->startdate);
-							echo $date->toSql();
+							if (RdfHelper::isNonNullDate($item->startdate))
+							{
+								$date = JFactory::getDate($item->startdate);
+								echo $date->toSql();
+							}
 							?>
 						</td>
 						<td>
 							<?php
-							if ($item->formexpires)
+							if ($item->formexpires && RdfHelper::isNonNullDate($item->enddate))
 							{
 								$date = JFactory::getDate($item->enddate);
 								echo $date->toSql();
@@ -119,7 +122,9 @@ $saveOrder = $listOrder == 'ordering';
 								JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) :
 								JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
 						</td>
-						<td></td>
+						<td>
+							<?php echo JHtml::link('index.php?option=com_redform&view=submitters&filter[form_id]=' . $item->id, JText::_('COM_REDFORM_SUBMITTERS')); ?>
+						</td>
 						<td>
 							<?php echo '{redform}' . $item->id . '{/redform}'; ?>
 						</td>

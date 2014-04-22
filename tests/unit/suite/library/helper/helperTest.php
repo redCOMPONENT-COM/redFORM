@@ -58,4 +58,43 @@ class helperTest extends JoomlaTestCase
 		$resp = RdfHelper::extractEmails($text, $validate);
 		$this->assertTrue(count($expected) == count(array_intersect($expected, $resp)));
 	}
+
+	/**
+	 * Data provider
+	 *
+	 * @return array
+	 */
+	public function getTestIsNonNullDate()
+	{
+		return array(
+			array('dfdgfg', false),
+			array('2014-14-03', false),
+			array('2014-12-03', true),
+			array('2014-12-34', false),
+			array('1994-10-03 12:35', true),
+			array('1994-10-03 45:35', false),
+			array('0000-00-00 00:00:00', false),
+			array('0000-00-00 00:00', false),
+			array('0000-00-00', false),
+			array(null, false),
+			array(false, false),
+			array(0, false),
+			array(123, false),
+		);
+	}
+
+	/**
+	 * test isNonNullDate
+	 *
+	 * @param   string  $date      date to test
+	 * @param   bool    $expected  expected result
+	 *
+	 * @return void
+	 *
+	 * @dataProvider getTestIsNonNullDate
+	 */
+	public function testIsNonNullDate($date, $expected)
+	{
+		$this->assertEquals(RdfHelper::isNonNullDate($date), $expected);
+	}
 }

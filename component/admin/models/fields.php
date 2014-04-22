@@ -56,6 +56,8 @@ class RedformModelFields extends RModelList
 				'ordering', 'f.ordering',
 				'field_header', 'f.field_header',
 				'fieldtype', 'f.fieldtype',
+				'validate', 'f.validate',
+				'unique', 'f.unique',
 			);
 		}
 

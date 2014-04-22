@@ -51,7 +51,8 @@ class RedformModelForms extends RModelList
 			$config['filter_fields'] = array(
 				'id', 'f.id',
 				'formname', 'f.formname',
-				'published', 'f.published',
+				'startdate', 'f.startdate',
+				'enddate', 'f.enddate',
 			);
 		}
 

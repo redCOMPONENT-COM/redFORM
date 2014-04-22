@@ -57,4 +57,33 @@ class RdfHelper
 
 		return $result;
 	}
+
+	/**
+	 * Check if a date is valid and not null
+	 *
+	 * @param   string  $date  date string to check
+	 *
+	 * @return bool
+	 */
+	public static function isNonNullDate($date)
+	{
+		if (!$date)
+		{
+			return false;
+		}
+
+		if ($date == '0000-00-00 00:00:00'
+			|| $date == '0000-00-00 00:00'
+			|| $date == '0000-00-00')
+		{
+			return false;
+		}
+
+		if (!strtotime($date))
+		{
+			return false;
+		}
+
+		return true;
+	}
 }

@@ -44,7 +44,7 @@
 		<field
 				name="startdate"
 				type="calendar"
-				format="%d-%m-%Y  %H:%M:%S"
+				format="%Y-%m-%d  %H:%M:%S"
 				label="COM_REDFORM_FORM_START_DATE"
 				description="COM_REDFORM_FORM_START_DATE_TIP"
 				/>
@@ -60,7 +60,7 @@
 		<field
 				name="enddate"
 				type="calendar"
-				format="%d-%m-%Y  %H:%M:%S"
+                format="%Y-%m-%d  %H:%M:%S"
 				label="COM_REDFORM_FORM_END_DATE"
 				description="COM_REDFORM_FORM_END_DATE_TIP"
 				/>
