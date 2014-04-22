@@ -48,7 +48,7 @@ $logsClass = ($active === 'logs') ? 'active' : '';
 	</li>
 	<li>
 		<a class="<?php echo $logsClass ?>"
-		   href="<?php echo JRoute::_('index.php?option=com_redform&view=log') ?>">
+		   href="<?php echo JRoute::_('index.php?option=com_redform&view=logs') ?>">
 			<i class="icon-comments"></i>
 			<?php echo JText::_('COM_REDFORM_LOG_LIST_TITLE') ?>
 		</a>
