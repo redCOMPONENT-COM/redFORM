@@ -310,7 +310,7 @@ class RedformModelPayment extends JModel
 	function notifyPaymentReceived()
 	{
 		$res = $this->_notifyFormContact();
-		$res = ($this->_notifySubmitter() ? $res : false);
+//		$res = ($this->_notifySubmitter() ? $res : false);
 		return $res;
 	}
 
