@@ -400,6 +400,27 @@ abstract class RdfRfield extends JObject
 	}
 
 	/**
+	 * Force field data rather than pulling from db
+	 *
+	 * @param   mixed  $data  data as array or object
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 */
+	public function setData($data)
+	{
+		if (is_object($data))
+		{
+			$this->data = $data;
+		}
+		elseif (is_array($data))
+		{
+			$this->data = (object) $data;
+		}
+	}
+
+	/**
 	 * Get field parameters
 	 *
 	 * @return JRegistry

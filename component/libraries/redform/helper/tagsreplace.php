@@ -57,13 +57,10 @@ class RdfHelperTagsreplace
 
 		foreach ($alltags as $tag)
 		{
-			if ($tag[1] == 'formname')
+			if (method_exists($this, 'getTag' . ucfirst($tag[1])))
 			{
-				$text = str_replace($tag[0], $this->formdata->formname, $text);
-			}
-			elseif ($tag[1] == '[totalprice]')
-			{
-				$text = str_replace('[totalprice]', $this->answers->getPrice(), $text);
+				$replace = $this->{'getTag' . ucfirst($tag[1])}();
+				$text = str_replace($tag[0], $replace, $text);
 			}
 			else
 			{
@@ -105,5 +102,20 @@ class RdfHelperTagsreplace
 		}
 
 		return false;
+	}
+
+	private function getTagSubmitkey()
+	{
+		return $this->answers->getSubmitKey();
+	}
+
+	private function getTagFormname()
+	{
+		return $this->formdata->formname;
+	}
+
+	private function getTotalprice()
+	{
+		return $this->answers->getPrice();
 	}
 }

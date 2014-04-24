@@ -743,16 +743,16 @@ class RdfCoreSubmission
 	/**
 	 * Adds email from answers to mailing list
 	 *
-	 * @param   array  $RdfAnswers  answers
+	 * @param   RdfAnswers  $answers  answers
 	 *
 	 * @return bool
 	 */
-	protected function updateMailingList($RdfAnswers)
+	protected function updateMailingList(RdfAnswers $answers)
 	{
 		// Mailing lists management
 		// Get info from answers
-		$fullname  = $RdfAnswers->getFullname() ? $RdfAnswers->getFullname() : $RdfAnswers->getUsername();
-		$listnames = $RdfAnswers->getListNames();
+		$fullname  = $answers->getFullname() ? $answers->getFullname() : $answers->getUsername();
+		$listnames = $answers->getListNames();
 
 		JPluginHelper::importPlugin('redform_mailing');
 		$dispatcher = JDispatcher::getInstance();

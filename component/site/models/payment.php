@@ -331,8 +331,7 @@ class RedFormModelPayment extends JModelLegacy
 
 		$core = new RdfCore;
 		$answers = $core->getAnswers($this->_submit_key);
-		$answersArray = get_object_vars(reset($answers)->fields);
-		$replaceHelper = new RdfHelperTagsreplace($form, $answersArray);
+		$replaceHelper = new RdfHelperTagsreplace($form, reset($answers));
 
 		// set the email subject
 		$subject = (empty($form->submitterpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationsubject);
@@ -393,8 +392,7 @@ class RedFormModelPayment extends JModelLegacy
 
 			$core = new RdfCore;
 			$answers = $core->getAnswers($this->_submit_key);
-			$answersArray = get_object_vars(reset($answers)->fields);
-			$replaceHelper = new RdfHelperTagsreplace($form, $answersArray);
+			$replaceHelper = new RdfHelperTagsreplace($form, reset($answers));
 
 			// set the email subject and body
 			$subject = (empty($form->contactpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->contactpaymentnotificationsubject);

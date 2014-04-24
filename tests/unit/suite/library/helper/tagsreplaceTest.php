@@ -31,10 +31,19 @@ class tagsreplaceTest extends JoomlaTestCase
 		$formdata = new stdclass;
 		$formdata->formname = 'test form';
 
-		$answers = array(
-			'field_2' => 'julien',
-			'field_3' => 'julien@redweb.dk'
-		);
+		$name = new RdfRfieldFullname;
+		$name->setId(2);
+		$name->setValue('julien');
+		$name->setData(array('field' => 'text'));
+
+		$email = new RdfRfieldEmail;
+		$email->setId(3);
+		$email->setValue('julien@redweb.dk');
+		$email->setData(array('field' => 'email'));
+
+		$answers = new RdfAnswers;
+		$answers->addField($name);
+		$answers->addField($email);
 
 		return array(
 			'nothing' => array($formdata, $answers, 'a first test', 'a first test'),
