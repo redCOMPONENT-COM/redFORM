@@ -26,8 +26,10 @@ class RedformControllerRedform extends RedformController
 	public function save()
 	{
 		$app = JFactory::getApplication();
-		$model = $this->getModel('redform');
 
+		$formId = $app->input->getInt('form_id', 0);
+
+		$model = new RdfCoreSubmission($formId);
 		$result = $model->apisaveform();
 
 		JPluginHelper::importPlugin('redform');
@@ -44,7 +46,7 @@ class RedformControllerRedform extends RedformController
 			$this->redirect();
 		}
 
-		if ($url = $model->hasActivePayment($result->submit_key))
+		if ($url = $model->hasActivePayment())
 		{
 			$url = 'index.php?option=com_redform&controller=payment&task=select&key=' . $result->submit_key;
 			$this->setRedirect($url);

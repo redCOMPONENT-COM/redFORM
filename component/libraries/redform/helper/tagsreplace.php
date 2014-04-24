@@ -18,16 +18,23 @@ defined('_JEXEC') or die;
  */
 class RdfHelperTagsreplace
 {
+	/**
+	 * @var array|RdfAnswers
+	 */
 	private $answers;
+
+	/**
+	 * @var objects
+	 */
 	private $formdata;
 
 	/**
 	 * Contructor
 	 *
-	 * @param   object  $formdata  form data
-	 * @param   array   $answers   answers to form
+	 * @param   object     $formdata  form data
+	 * @param   RdfAnswers  $answers   answers to form
 	 */
-	public function __construct($formdata, $answers)
+	public function __construct($formdata, RdfAnswers $answers)
 	{
 		$this->formdata = $formdata;
 		$this->answers = $answers;
@@ -36,7 +43,8 @@ class RdfHelperTagsreplace
 	/**
 	 * Replaces tags in text
 	 *
-	 * @param   string  $text  text
+	 * @param   string  $text   text
+	 * @param   array   $extra  extra associative array for custom replacements
 	 *
 	 * @return string
 	 */
@@ -52,6 +60,10 @@ class RdfHelperTagsreplace
 			if ($tag[1] == 'formname')
 			{
 				$text = str_replace($tag[0], $this->formdata->formname, $text);
+			}
+			elseif ($tag[1] == '[totalprice]')
+			{
+				$text = str_replace('[totalprice]', $this->answers->getPrice(), $text);
 			}
 			else
 			{
@@ -84,9 +96,12 @@ class RdfHelperTagsreplace
 
 		$id = $match[1];
 
-		if (isset($this->answers['field_' . $id]))
+		foreach ($this->answers->getAnswers() as $field)
 		{
-			return $this->answers['field_' . $id];
+			if ($field['field_id'] == $id)
+			{
+				return $field['value'];
+			}
 		}
 
 		return false;

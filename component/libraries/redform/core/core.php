@@ -13,8 +13,6 @@ jimport('joomla.mail.helper');
 
 require_once(JPATH_SITE . '/components/com_redform/redform.defines.php');
 
-require_once(Rdf_PATH_SITE .'/models/redform.php');
-
 /**
  * redFORM API Core
  *
@@ -22,8 +20,8 @@ require_once(Rdf_PATH_SITE .'/models/redform.php');
  * @subpackage  Core
  * @since       2.5
  */
-class RdfCore extends JObject {
-
+class RdfCore extends JObject
+{
 	private $_form_id;
 
 	private $_sids;
@@ -55,7 +53,7 @@ class RdfCore extends JObject {
 	 *
 	 * @return RedformCore The  object.
 	 */
-	public static function &getInstance($form_id = 0)
+	public static function getInstance($form_id = 0)
 	{
 		static $instances;
 
@@ -66,7 +64,7 @@ class RdfCore extends JObject {
 
 		if (empty($instances[$form_id]))
 		{
-			$inst = new RdfCore;
+			$inst = new self;
 			$inst->setFormId($form_id);
 			$instances[$form_id] = $inst;
 		}
@@ -154,10 +152,8 @@ class RdfCore extends JObject {
 			$answers = null;
 		}
 
-		$model_redform = new RedformModelRedform;
-		$model_redform->setFormId($form_id);
-
-		$form   = $model_redform->getForm();
+		$model = $this->getFormModel($form_id);
+		$form   = $model->getForm();
 
 		$html = '<form action="' . JRoute::_('index.php?option=com_redform') . '" method="post" name="redform" class="form-validate ' . $form->classname . '" enctype="multipart/form-data">';
 		$html .= $this->getFormFields($form_id, $submit_key, $multiple, $options);
@@ -229,11 +225,9 @@ class RdfCore extends JObject {
 			$submit_key = null;
 		}
 
-		$model_redform = new RedformModelRedform;
-		$model_redform->setFormId($form_id);
-
-		$form   = $model_redform->getForm();
-		$fields = $model_redform->getFormFields();
+		$model = $this->getFormModel($form_id);
+		$form   = $model->getForm();
+		$fields = $model->getFormFields();
 
 		// Css
 		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/tooltip.css');
@@ -438,8 +432,7 @@ class RdfCore extends JObject {
 	 */
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
-		require_once RDF_PATH_SITE . '/models/redform.php';
-		$model = new RedformModelRedform;
+		$model = new RdfCoreSubmission($this->_form_id);
 
 		if (!$result = $model->apisaveform($integration_key, $options, $data))
 		{
@@ -621,8 +614,7 @@ class RdfCore extends JObject {
 
 		if (empty($this->_fields))
 		{
-			$model_redform = new RedformModelRedform;
-			$model_redform->setFormId($this->_form_id);
+			$model_redform = $this->getFormModel($this->_form_id);
 			$this->_fields = $model_redform->getFormFields();
 		}
 
@@ -645,8 +637,8 @@ class RdfCore extends JObject {
 
 		if (empty($this->_sids_answers))
 		{
-			$model_redform = new RedformModelRedform;
-			$this->_sids_answers = $model_redform->getSidsAnswers($this->_sids);
+			$model = new RdfCoreModelSubmission;
+			$this->_sids_answers = $model->getSidsAnswers($this->_sids);
 		}
 
 		return $this->_sids_answers;
@@ -800,28 +792,19 @@ class RdfCore extends JObject {
 	}
 
 	/**
-	 * return virtuemart form redirect
+	 * return form redirect
 	 *
 	 * @param   int  $form_id  form id
 	 *
-	 * @return string url
-	 *
-	 * @deprecrated ?
+	 * @return mixed false if not set, or string
 	 */
 	public function getFormRedirect($form_id)
 	{
-		$model_redform = new RedformModelRedform;
-		$model_redform->setFormId($form_id);
+		$model = $this->getFormModel($form_id);
 
+		$redirect = trim($model->getForm()->redirect);
 
-		$settings = $model_redform->getVmSettings();
-
-		if (!$settings->virtuemartactive)
-		{
-			return false;
-		}
-
-		return JRoute::_('index.php?page=shop.product_details&product_id=' . $settings->vmproductid . '&option=com_virtuemart&Itemid=' . $settings->vmitemid);
+		return $redirect ? $redirect : false;
 	}
 
 	/**
@@ -966,172 +949,20 @@ class RdfCore extends JObject {
 	 *
 	 * @return object or false if not found
 	 */
-	public function getForm($form_id)
+	public function getForm($form_id = null)
 	{
+		if (!$form_id)
+		{
+			$form_id = $this->_form_id;
+		}
+
 		if (!isset($this->_form) || $this->_form->id <> $form_id)
 		{
-			$model_redform = new RedformModelRedform;
-			$model_redform->setFormId($form_id);
-
-			$this->_form = $model_redform->getForm();
+			$model = $this->getFormModel($form_id);
+			$this->_form = $model->getForm();
 		}
 
 		return $this->_form;
-	}
-
-	/**
-	 * return conditional recipients for specified answers
-	 *
-	 * @param   object  $form     form
-	 * @param   object  $answers  answers
-	 *
-	 * @return array|boolean false if no answer
-	 */
-	public static function getConditionalRecipients($form, $answers)
-	{
-		if (!$form->cond_recipients)
-		{
-			return false;
-		}
-
-		$recipients = array();
-		$conds = explode("\n", $form->cond_recipients);
-
-		foreach ($conds as $c)
-		{
-			if ($res = self::_parseCondition($c, $answers))
-			{
-				$recipients[] = $res;
-			}
-		}
-
-		return $recipients;
-	}
-
-	/**
-	 * returns email if answers match the condition
-	 *
-	 * @param   string  $conditionline  condition
-	 * @param   object  $answers        answers
-	 *
-	 * @return string|boolean email or false
-	 */
-	protected static function _parseCondition($conditionline, $answers)
-	{
-		$parts = explode(";", $conditionline);
-
-		if (!count($parts))
-		{
-			return false;
-		}
-
-		// Cleanup
-		array_walk($parts, 'trim');
-
-		if (count($parts) < 5)
-		{
-			// Invalid condition...
-			RdfHelperLog::simpleLog('invalid condition formatting' . $conditionline);
-
-			return false;
-		}
-
-		// First should be the email address
-		if (!JMailHelper::isEmailAddress($parts[0]))
-		{
-			RdfHelperLog::simpleLog('invalid email in conditional recipient: ' . $parts[0]);
-
-			return false;
-		}
-
-		$email = $parts[0];
-
-		// Then the name of the recipient
-		if (!$parts[1])
-		{
-			RdfHelperLog::simpleLog('invalid name in conditional recipient: ' . $parts[0]);
-
-			return false;
-		}
-
-		$name = $parts[1];
-
-		// Then, we should get the field
-		$field_id = intval($parts[2]);
-		$answer = $answers->getFieldAnswer($field_id);
-
-		if ($answer === false)
-		{
-			RdfHelperLog::simpleLog('invalid field id for conditional recipient: ' . $parts[1]);
-
-			return false;
-		}
-
-		$value = $answer['value'];
-
-		$isvalid = false;
-
-		// Then, we should get the function
-		switch ($parts[3])
-		{
-			case 'between':
-				if (!isset($parts[5]))
-				{
-					RdfHelperLog::simpleLog('missing max value in between conditional recipient: ' . $conditionline);
-				}
-
-				if (is_numeric($value))
-				{
-					$value = floatval($value);
-					$min = floatval($parts[4]);
-					$max = floatval($parts[5]);
-					$isvalid = ($value >= $min && $value <= $max ? $email : false);
-				}
-				else
-				{
-					$isvalid = strcasecmp($value, $parts[4]) >= 0 && strcasecmp($value, $parts[5]) <= 0;
-				}
-
-				break;
-
-			case 'inferior':
-				if (is_numeric($value))
-				{
-					$value = floatval($value);
-					$max = floatval($parts[4]);
-					$isvalid = ($value <= $max ? $email : false);
-				}
-				else
-				{
-					$isvalid = strcasecmp($value, $parts[4]) <= 0;
-				}
-
-				break;
-
-			case 'superior':
-				if (is_numeric($value))
-				{
-					$value = floatval($value);
-					$min = floatval($parts[4]);
-					$isvalid = ($value >= $min ? $email : false);
-				}
-				else
-				{
-					$isvalid = strcasecmp($value, $parts[4]) >= 0;
-				}
-
-				break;
-
-			default:
-				RdfHelperLog::simpleLog('invalid email in conditional recipient: ' . $parts[0]);
-
-				return false;
-		}
-
-		if ($isvalid)
-		{
-			return array($email, $name);
-		}
 	}
 
 	/**
@@ -1164,9 +995,7 @@ class RdfCore extends JObject {
 
 		$fields = $this->prepareUserData($userData);
 
-		require_once Rdf_PATH_SITE . '/models/redform.php';
-		$model = new RedformModelRedform;
-		$model->setFormId($this->_form_id);
+		$model = new RdfCoreSubmission($this->_form_id);
 
 		if (!$result = $model->quicksubmit($fields, $integration, $options))
 		{
@@ -1226,18 +1055,9 @@ class RdfCore extends JObject {
 	 */
 	public static function getSubmissionPrice($submit_key)
 	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$model = new RdfCoreModelSubmission;
 
-		$query->select('s.id, s.submit_key, s.price, s.currency');
-		$query->from('#__rwf_submitters AS s');
-		$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
-		$query->where('s.submit_key = ' . $db->q($submit_key));
-
-		$db->setQuery($query);
-		$res = $db->loadObjectList('s.id');
-
-		return ($res);
+		return $model->getSubmissionPrice($submit_key);
 	}
 
 	/**
@@ -1336,5 +1156,25 @@ class RdfCore extends JObject {
 	protected function loadCheckScript()
 	{
 		JHtml::_('behavior.formvalidation');
+	}
+
+	/**
+	 * Return Form model
+	 *
+	 * @param   int  $formId  form id
+	 *
+	 * @return RdfCoreModelForm
+	 */
+	protected function getFormModel($formId)
+	{
+		static $instances = array();
+
+		if (!isset($instances[$formId]))
+		{
+			$model = new RdfCoreModelForm($formId);
+			$instances[$formId] = $model;
+		}
+
+		return $instances[$formId];
 	}
 }

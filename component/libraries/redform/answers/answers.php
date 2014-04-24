@@ -15,7 +15,7 @@
  *            Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-class rfanswers
+class RdfAnswers
 {
 	private $answerId = 0;
 
@@ -693,7 +693,7 @@ class rfanswers
 	 *
 	 * @param   int  $sid  submitter id
 	 *
-	 * @return rfanswers
+	 * @return RdfAnswers
 	 */
 	public function setSid($sid)
 	{
