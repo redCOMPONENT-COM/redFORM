@@ -1,5 +1,5 @@
-# extension name
-comp.name=redform
+# release export path
+package.dir=release
 
 # your local test site
 www.dir=/var/www/joomla

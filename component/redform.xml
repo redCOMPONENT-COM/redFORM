@@ -80,8 +80,8 @@
 			<folder>helpers</folder>
 			<folder>js</folder>
 			<folder>language</folder>
+			<folder>layouts</folder>
 			<folder>models</folder>
-			<folder>plugins</folder>
 			<folder>sql</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
@@ -93,5 +93,15 @@
 	<libraries>
 		<library name="redform"/>
 	</libraries>
+
+	<!-- Libraries to install -->
+	<libraries>
+		<library name="redform"/>
+	</libraries>
+
+    <!-- Plugins to install -->
+    <plugins>
+        <plugin name="redform" group="content"/>
+    </plugins>
 
 </extension>

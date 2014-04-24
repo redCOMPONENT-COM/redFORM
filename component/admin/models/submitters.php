@@ -118,14 +118,15 @@ class RedformModelSubmitters extends RModelList
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('s.submission_date, s.form_id, s.id AS sid, f.formname, s.price, s.currency, s.submit_key');
+		$query->select('s.submission_date, s.form_id, f.formname, s.price, s.currency, s.submit_key');
 		$query->select('s.integration, s.xref');
 		$query->select('f.formname');
 		$query->select('p.status, p.paid');
-		$query->select('u.*');
+		$query->select('a.*');
+		$query->select('s.id');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON s.form_id = f.id');
-		$query->join('INNER', '#__rwf_forms_' . $form_id . ' AS u ON s.answer_id = u.id');
+		$query->join('INNER', '#__rwf_forms_' . $form_id . ' AS a ON s.answer_id = a.id');
 		$query->join('LEFT', '(' . $subPayment . ') AS latest_payment ON latest_payment.submit_key = s.submit_key');
 		$query->join('LEFT', '#__rwf_payment AS p ON p.id = latest_payment.id');
 		$query->where("s.form_id = " . $form_id);
@@ -150,6 +151,11 @@ class RedformModelSubmitters extends RModelList
 		return $query;
 	}
 
+	/**
+	 * Get a default form id
+	 *
+	 * @return int
+	 */
 	protected function getDefaultFormId()
 	{
 		$db = JFactory::getDbo();
@@ -162,9 +168,16 @@ class RedformModelSubmitters extends RModelList
 		$db->setQuery($query);
 		$res = $db->loadResult();
 
-		return $res;
+		return $res ? $res : 0;
 	}
 
+	/**
+	 * Get form details
+	 *
+	 * @param   int  $id  form id
+	 *
+	 * @return bool|mixed
+	 */
 	public function getFormInfo($id = null)
 	{
 		if ($id == null)
@@ -185,6 +198,11 @@ class RedformModelSubmitters extends RModelList
 		}
 	}
 
+	/**
+	 * Return form fields
+	 *
+	 * @return mixed
+	 */
 	public function getFields()
 	{
 		$db = JFactory::getDBO();
@@ -209,79 +227,19 @@ class RedformModelSubmitters extends RModelList
 	}
 
 	/**
-	 * Deletes one or more submitters
+	 * Delete items
 	 *
-	 * @param array   id of submitters records to delete
-	 * @param boolean force deletion of integration rows
+	 * @param   mixed  $pks    id or array of ids of items to be deleted
+	 * @param   bool   $force  force delete (in case of integration)
+	 *
+	 * @return  boolean
 	 */
-	public function delete($cid, $force = false)
+	public function delete($pks = null, $force = false)
 	{
-		$mainframe = JFactory::getApplication();
-		$database = JFactory::getDBO();
-		JArrayHelper::toInteger($cid);
+		// Initialise variables.
+		$table = $this->getTable();
+		$table->delete($pks, $force);
 
-		if (!is_array($cid) || count($cid) < 1)
-		{
-			$mainframe->enqueueMessage(JText::_('COM_REDFORM_No_submitter_found_to_delete'));
-			return false;
-		}
-
-		if (count($cid))
-		{
-			$cids = ' s.id IN (' . implode(',', $cid) . ') ';
-
-			// first, check that there is no integration (xref is then > 0) among these 'submitter'
-			if (!$force)
-			{
-				$query = ' SELECT COUNT(*) FROM #__rwf_submitters AS s WHERE ' . $cids . ' AND CHAR_LENGTH(s.integration) > 0 ';
-				$database->setQuery($query);
-				$res = $database->loadResult();
-				if ($res)
-				{
-					$msg = JText::_('COM_REDFORM_CANNOT_DELETE_INTEGRATION_SUBMISSION');
-					$this->setError($msg);
-					JError::raiseWarning(0, $msg);
-					return false;
-				}
-			}
-
-			// first delete the answers
-			$query = ' DELETE a.* '
-				. ' FROM #__rwf_submitters AS s '
-				. ' INNER JOIN #__rwf_forms_' . JRequest::getInt('form_id') . ' AS a ON s.answer_id = a.id '
-				. ' WHERE ' . $cids;
-			$this->_db->setQuery($query);
-			$res = $this->_db->loadObjectList();
-
-			if (!$database->query())
-			{
-				$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_answers'));
-				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_answers') . ': ' . $database->getErrorMsg());
-				return false;
-			}
-
-			/* then delete the submitters */
-			$query = ' DELETE s.* FROM #__rwf_submitters AS s '
-				. ' WHERE ' . $cids
-				. '	AND s.form_id = ' . JRequest::getInt('form_id');
-			$database->setQuery($query);
-
-			if (!$database->query())
-			{
-				$mainframe->enqueueMessage(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_submitter'));
-				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_submitter') . ': ' . $database->getErrorMsg());
-				return false;
-			}
-
-			if (count($cid) > 1)
-			{
-				$mainframe->enqueueMessage(JText::_('COM_REDFORM_Submitters_have_been_deleted'));
-			}
-			else
-			{
-				$mainframe->enqueueMessage(JText::_('COM_REDFORM_Submitter_has_been_deleted'));
-			}
-		}
-		return JText::_('COM_REDFORM_Removal_succesfull');
+		return true;
 	}
 }

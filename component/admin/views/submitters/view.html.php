@@ -135,11 +135,11 @@ class RedformViewSubmitters extends RdfView
 		// Delete / Trash
 		if ($canDoCore->get('core.delete'))
 		{
-			$delete = RToolbarBuilder::createDeleteButton('submitter.delete');
+			$delete = RToolbarBuilder::createDeleteButton('submitters.delete');
 
 			if ($params->get('showintegration', false))
 			{
-				$delete = RToolbarBuilder::createDeleteButton('submitter.forcedelete');
+				$delete = RToolbarBuilder::createDeleteButton('submitters.forcedelete');
 			}
 
 			$secondGroup->addButton($delete);

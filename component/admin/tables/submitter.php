@@ -57,4 +57,154 @@ class RedformTableSubmitter extends RTable
 	public $price = null;
 
 	public $currency = null;
+
+	/**
+	 * Deletes this row in database (or if provided, the row of key $pk)
+	 *
+	 * @param   mixed  $pk     An optional primary key value to delete.  If not set the instance property value is used.
+	 * @param   bool   $force  force deletion, even if integration
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function delete($pk = null, $force = false)
+	{
+		// Before delete
+		if (!$force && $this->isIntegrationSubmission($pk))
+		{
+			$this->setError(JText::_('COM_REDFORM_CANNOT_DELETE_INTEGRATION_SUBMISSION'));
+
+			return false;
+		}
+
+		return parent::delete($pk);
+	}
+
+	/**
+	 * Called before delete().
+	 *
+	 * @param   mixed  $pk  an optional primary key value to delete.  If not set the instance property value is used.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	protected function beforeDelete($pk = null)
+	{
+		if (!parent::beforeDelete($pk))
+		{
+			return false;
+		}
+
+		return $this->doDeleteAnswers($pk);
+	}
+
+	/**
+	 * Delete answers associatied to submission
+	 *
+	 * @param   mixed  $pk  an optional primary key value to delete.  If not set the instance property value is used.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	private function doDeleteAnswers($pk = null)
+	{
+		$db = JFactory::getDbo();
+
+		$pks = $this->sanitizeInPk($pk);
+		$formId = $this->getAssociatedFormId($pks);
+
+		// Delete answers
+		$query = 'DELETE a FROM #__rwf_forms_' . $formId . ' AS a'
+			. ' INNER JOIN #__rwf_submitters AS s ON s.answer_id = a.id'
+			. ' WHERE s.id IN (' . $pks . ')';
+		$db->setQuery($query);
+
+		if (!$db->execute())
+		{
+			$msg = JText::_('COM_REDFORM_A_PROBLEM_OCCURED_WHEN_DELETING_THE_ANSWERS');
+			$this->setError($msg);
+			RdfHelperLog::simpleLog($msg . ': ' . $db->getError());
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Return true if one of the submission at least has integration set
+	 *
+	 * @param   array  $pks  int id of submissions
+	 *
+	 * @return bool
+	 */
+	protected function isIntegrationSubmission($pks = null)
+	{
+		$pks = $this->sanitizeInPk($pks);
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('count(*)')
+			->from('#__rwf_submitters AS s')
+			->where('s.id IN (' . $pks . ') ')
+			->where('CHAR_LENGTH(s.integration) > 0 ');
+
+		$db->setQuery($query);
+		$res = $db->loadResult();
+
+		return $res;
+	}
+
+	/**
+	 * Get sanitized pk(s) for 'IN' sql condition
+	 *
+	 * @param   mixed  $pk  array or int
+	 *
+	 * @return string
+	 *
+	 * @throws LogicException
+	 */
+	protected function sanitizeInPk($pk = null)
+	{
+		// Initialise variables.
+		$k = $this->_tbl_key;
+
+		// Received an array of ids?
+		if (is_array($pk))
+		{
+			// Sanitize input.
+			JArrayHelper::toInteger($pk);
+			$pk = RHelperArray::quote($pk);
+			$pk = implode(',', $pk);
+		}
+
+		$pk = (is_null($pk)) ? $this->$k : $pk;
+
+		// If no primary key is given, throw exception.
+		if ($pk === null)
+		{
+			throw new LogicException('id is required');
+		}
+
+		return $pk;
+	}
+
+	/**
+	 * Return form id associated to submission
+	 *
+	 * @param   int  $pk  submission ids
+	 *
+	 * @return int
+	 */
+	private function getAssociatedFormId($pk)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('form_id')
+			->from('#__rwf_submitters')
+			->where('id IN (' . $pk . ')');
+		$db->setQuery($query);
+
+		$formId = $db->loadResult();
+
+		return $formId;
+	}
 }

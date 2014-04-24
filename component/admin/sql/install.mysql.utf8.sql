@@ -1,11 +1,3 @@
-CREATE TABLE IF NOT EXISTS `#__rwf_configuration` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
-  `value` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `name` (`name`)
-) COMMENT='Configuration for redFORM';
-
 CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `id` int(11) NOT NULL auto_increment,
   `field` varchar(255) NOT NULL default '',
@@ -80,7 +72,6 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `currency` varchar(3) DEFAULT NULL,
   PRIMARY KEY  (`id`),
   KEY `form_id` (`form_id`),
-  KEY `event_id` (`xref`),
   KEY `answer_id` (`answer_id`)
 ) COMMENT='Submitters for redFORM';
 
@@ -96,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   `price` double NULL DEFAULT NULL,
   PRIMARY KEY  (`id`),
   KEY `field_id` (`field_id`)
-) COMMENT='Answers for redFORM';
+) COMMENT='Stores fields options';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -109,6 +100,3 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
   PRIMARY KEY (`id`),
   KEY `submit_key` (`submit_key`)
 ) COMMENT='logging gateway notifications';
-
-INSERT IGNORE INTO `#__rwf_configuration` (`id`, `name`, `value`) VALUES
-(1, 'phplist_path', 'lists')

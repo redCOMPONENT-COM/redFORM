@@ -3,10 +3,17 @@
 	<property file="build/build.properties" />
 
 	<!-- Default properties, set only if not already assigned in the build.properties file -->
+    <property name="comp.name" value="redform" />
 	<property name="dirs.root" value="." />
 	<property name="dirs.tmp" value="tmp" />
 	<property name="dirs.release" value="release" />
 	<property name="version" value="dev" />
+
+    <xmlproperty file="redCORE/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
+	<property
+			name="redCOREVersion"
+			value="${redCOREDetails.version}"
+			override="true"/>
 
 	<taskdef name="gitversion" classname="build.phingext.GitVersionTask" />
 	<taskdef name="gitdate" classname="build.phingext.GitDateTask" />
@@ -70,8 +77,35 @@
 			</filterchain>
 		</copy>
 
+        <!-- This is added just for extension installing purposes, in case it gets installed before redCORE -->
+        <echo msg="Copying redCORE LIBRARIES folder to component build directory..."/>
+        <copy todir="${dirs.tmp}/redCORE">
+            <fileset dir="redCORE">
+                <include name="**"/>
+                <exclude name=".*"/>
+                <exclude name=".travis/"/>
+                <exclude name="build.*"/>
+                <exclude name="*.md"/>
+            </fileset>
+        </copy>
+
 		<!-- Create the package -->
 		<tar basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
+
+        <!-- This is added just for extension installing purposes, in case it gets installed before redCORE -->
+        <echo msg="Copying redCORE LIBRARIES folder to component build directory..."/>
+        <copy todir="${dirs.tmp}/redCORE">
+            <fileset dir="redCORE">
+                <include name="**"/>
+                <exclude name=".*"/>
+                <exclude name=".travis/"/>
+                <exclude name="build.*"/>
+                <exclude name="*.md"/>
+            </fileset>
+        </copy>
+
+		<!-- Create the package -->
+		<tar basedir="${dirs.tmp}/redCORE" destfile="${dirs.release}/redCORE-${redCOREVersion}.tar.gz" includeemptydirs="true" compression="gzip" />
 
 		<!-- admin modules
 		<foreach param="dirname" absparam="absname" target="zipfolder">
@@ -260,7 +294,7 @@
 -->
         <!-- Plugins -->
         <copy todir="${www.dir}/plugins" overwrite="true">
-            <fileset dir="${dirs.root}/component/admin/plugins">
+            <fileset dir="${dirs.root}/component/plugins">
                 <include name="**" />
             </fileset>
 
