@@ -452,31 +452,6 @@ class RdfCore extends JObject {
 	}
 
 	/**
-	 * Loads price script
-	 *
-	 * @return void
-	 */
-	protected function jsPrice()
-	{
-		$params = JComponentHelper::getParams('com_redform');
-
-		$doc = JFactory::getDocument();
-		$doc->addScriptDeclaration('var totalpricestr = "' . JText::_('COM_REDFORM_Total_Price') . "\";\n");
-		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
-		$doc->addScript(JURI::root() . 'media/com_redform/js/form-price.js');
-	}
-
-	/**
-	 * Loads validation script
-	 *
-	 * @return void
-	 */
-	protected function JsCheck()
-	{
-		JHtml::_('behavior.formvalidation');
-	}
-
-	/**
 	 * adds extra fields from redmember to user object
 	 *
 	 * @param   object  &$user  object user
@@ -589,8 +564,7 @@ class RdfCore extends JObject {
 
 			if (is_array($reference))
 			{
-				$model_redform = new RedformModelRedform;
-				$answers = $model_redform->getSidsAnswers($reference);
+				$answers = $this->getSidsAnswers($reference);
 				$submit_key = $this->getSidSubmitKey(reset($reference));
 			}
 			elseif (!empty($reference))

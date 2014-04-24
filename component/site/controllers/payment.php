@@ -1,7 +1,7 @@
 <?php
 /**
- * @package    Redform.Admin
- * @copyright  Redform (C) 2008-2013 redCOMPONENT.com
+ * @package    Redform.Front
+ * @copyright  Redform (C) 2008-2014 redCOMPONENT.com
  * @license    GNU General Public License version 2 or later, see LICENSE.
  */
 
@@ -13,7 +13,7 @@ jimport('joomla.application.component.controller');
 /**
  * Redform Payments Controller
  *
- * @package  Redform.Admin
+ * @package  Redform.Front
  * @since    2.0
  */
 class RedformControllerPayment extends JControllerLegacy

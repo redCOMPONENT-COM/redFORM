@@ -29,9 +29,9 @@ require_once Rdf_PATH_SITE.'/classes/answers.php';
 
 /**
  */
-class RedformModelRedform extends JModelLegacy {
-
-	protected  $_form_id = 0;
+class RedformModelRedform extends JModelLegacy
+{
+	protected $_form_id = 0;
 
 	protected $_event = null;
 
@@ -45,20 +45,29 @@ class RedformModelRedform extends JModelLegacy {
 
 	protected $submit_key = null;
 
-	function __construct()
+	/**
+	 * Constructor
+	 *
+	 * @param   int  $form_id  form id
+	 */
+	public function __construct($form_id = null)
 	{
 		parent::__construct();
 
-		$this->setFormId(JRequest::getInt('form_id'));
+		if ($form_id)
+		{
+			$this->setFormId($form_id);
+		}
 	}
 
 	/**
 	 * Method to set the form identifier
 	 *
-	 * @access  public
-	 * @param int event identifier
+	 * @param   int  $id  event identifier
+	 *
+	 * @return void
 	 */
-	function setFormId($id)
+	public function setFormId($id)
 	{
 		// Set event id and wipe data
 		$this->_form_id = $id;
@@ -66,11 +75,23 @@ class RedformModelRedform extends JModelLegacy {
 		$this->_fields  = null;
 	}
 
+	/**
+	 * Set submit key
+	 *
+	 * @param   string  $key  submit key
+	 *
+	 * @return void
+	 */
 	public function setSubmitKey($key)
 	{
 		$this->submit_key = $key;
 	}
 
+	/**
+	 * Get submit key
+	 *
+	 * @return string
+	 */
 	public function getSubmitKey()
 	{
 		return $this->submit_key;
@@ -79,19 +100,21 @@ class RedformModelRedform extends JModelLegacy {
 	/**
 	 * returns form object
 	 *
-	 * @param int form id
+	 * @param   int  $id  form id
+	 *
 	 * @return object form
 	 */
-	function &getForm($id=0)
+	public function getForm($id = 0)
 	{
-		if ($id) {
+		if ($id)
+		{
 			$this->setFormId($id);
 		}
 
 		if (empty($this->_form))
 		{
 			/* Get the form details */
-			$query = 'SELECT * FROM #__rwf_forms WHERE id = '. $this->_db->Quote($this->_form_id);
+			$query = 'SELECT * FROM #__rwf_forms WHERE id = ' . $this->_db->Quote($this->_form_id);
 			$this->_db->setQuery($query, 0, 1);
 			$this->_form = $this->_db->loadObject();
 		}
@@ -100,11 +123,13 @@ class RedformModelRedform extends JModelLegacy {
 	}
 
 	/**
-	 * get the form fields name
+	 * get the form fields
 	 *
-	 * @param int $form_id
+	 * @param   int  $form_id  form id
+	 *
+	 * @return array RdfRfield
 	 */
-	function getfields($form_id = 0)
+	protected function getfields($form_id = 0)
 	{
 		if (!$form_id)
 		{
@@ -132,11 +157,17 @@ class RedformModelRedform extends JModelLegacy {
 		return $fields;
 	}
 
-	function getFormFields()
+	/**
+	 * get the form fields
+	 *
+	 * @return array RdfRfield
+	 */
+	public function getFormFields()
 	{
 		if (!$this->_form_id)
 		{
 			$this->setError(JText::_('COM_REDFORM_FORM_ID_MISSING'));
+
 			return false;
 		}
 
@@ -145,79 +176,44 @@ class RedformModelRedform extends JModelLegacy {
 
 	/**
 	 * Initialise a mailer object to start sending mails
+	 *
+	 * @return object
 	 */
 	private function Mailer()
 	{
-		$mainframe = & JFactory::getApplication();
+		$mainframe = JFactory::getApplication();
 		jimport('joomla.mail.helper');
+
 		/* Start the mailer object */
-		$mailer = &JFactory::getMailer();
+		$mailer = JFactory::getMailer();
 		$mailer->isHTML(true);
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
+
 		return $mailer;
-	}
-
-	/**
-	 * Get the VirtueMart settings
-	 */
-	public function getVmSettings()
-	{
-		$db = JFactory::getDBO();
-		$q = "SELECT virtuemartactive, vmproductid, vmitemid
-		FROM #__rwf_forms
-		WHERE id = ".JRequest::getInt('form_id');
-		$db->setQuery($q);
-		return $db->loadObject();
-	}
-
-	/**
-	 * Retrieve the product details
-	 */
-	public function getProductDetails() {
-		$db = JFactory::getDBO();
-		$q = "SELECT product_full_image, product_name FROM #__vm_product WHERE product_id = ".JRequest::getInt('productid');
-		$db->setQuery($q);
-		return $db->loadObject();
-	}
-
-	/**
-	 * returns event associated to xref
-	 *
-	 * @param int $xref
-	 * @return object
-	 */
-	function getEvent($xref)
-	{
-		$db = JFactory::getDBO();
-		$query = ' SELECT e.*, x.* '
-		. ' FROM #__redevent_event_venue_xref AS x '
-		. ' INNER JOIN #__redevent_events AS e ON e.id = x.eventid '
-		. ' WHERE x.id = '. $db->Quote((int) $xref)
-		;
-		$db->setQuery($query);
-		return $db->loadObject();
 	}
 
 	/**
 	 * Adds email from answers to mailing list
 	 *
-	 * @param rfanswers object
+	 * @param   array  $rfanswers  answers
+	 *
+	 * @return bool
 	 */
-	function updateMailingList($rfanswers)
+	protected function updateMailingList($rfanswers)
 	{
-		// mailing lists management
-		// get info from answers
+		// Mailing lists management
+		// Get info from answers
 		$fullname  = $rfanswers->getFullname() ? $rfanswers->getFullname() : $rfanswers->getUsername();
 		$listnames = $rfanswers->getListNames();
 
-		JPluginHelper::importPlugin( 'redform_mailing' );
-		$dispatcher =& JDispatcher::getInstance();
+		JPluginHelper::importPlugin('redform_mailing');
+		$dispatcher = JDispatcher::getInstance();
 
 		foreach ((array) $listnames as $field_id => $lists)
 		{
-			$subscriber = new stdclass();
+			$subscriber = new stdclass;
 			$subscriber->name  = empty($fullname) ? $lists['email'] : $fullname;
 			$subscriber->email = $lists['email'];
 
@@ -225,12 +221,22 @@ class RedformModelRedform extends JModelLegacy {
 
 			foreach ((array) $lists['lists'] as $mailinglistname)
 			{
-				$results = $dispatcher->trigger('subscribe', array($integration, $subscriber, $mailinglistname));
+				$dispatcher->trigger('subscribe', array($integration, $subscriber, $mailinglistname));
 			}
 		}
+
+		return true;
 	}
 
-	function notifysubmitter(rfanswers $answers, $form)
+	/**
+	 * Send notification to submitter
+	 *
+	 * @param   rfanswers  $answers  answers
+	 * @param   object     $form     form
+	 *
+	 * @return bool
+	 */
+	protected function notifysubmitter(rfanswers $answers, $form)
 	{
 		$emails = $answers->getSubmitterEmails();
 		$cond_recipients = RdfCore::getConditionalRecipients($form, $answers);
@@ -242,7 +248,7 @@ class RedformModelRedform extends JModelLegacy {
 			if ($cond_recipients)
 			{
 				$mailer->From = $cond_recipients[0][0];
-				$mailer->FromName =  $cond_recipients[0][1];
+				$mailer->FromName = $cond_recipients[0][1];
 				$mailer->ClearReplyTos();
 				$mailer->addReplyTo($cond_recipients[0]);
 			}
@@ -259,75 +265,49 @@ class RedformModelRedform extends JModelLegacy {
 				if (strstr($submission_body, '[answers]'))
 				{
 					$info = "<table>";
-					foreach ($answers->getAnswers() as $answer) {
+
+					foreach ($answers->getAnswers() as $answer)
+					{
 						$info .= "<tr>";
-						$info .= "<th>". $answer['field'] ."</th>";
-						if ($answer['type'] == 'file') {
-							$info .= "<td>". basename($answer['value']) ."</td>";
+						$info .= "<th>" . $answer['field'] . "</th>";
+
+						if ($answer['type'] == 'file')
+						{
+							$info .= "<td>" . basename($answer['value']) . "</td>";
 						}
-						else {
-							$info .= "<td>". $answer['value'] ."</td>";
+						else
+						{
+							$info .= "<td>" . $answer['value'] . "</td>";
 						}
+
 						$info .= "</tr>";
 					}
 
 					if ($p = $answers->getPrice())
 					{
-						$info .= '<tr><th>'.JText::_('COM_REDFORM_TOTAL_PRICE').'</th><td>';
+						$info .= '<tr><th>' . JText::_('COM_REDFORM_TOTAL_PRICE') . '</th><td>';
 						$info .= $p;
-						$info .= '</td></tr>'."\n";
+						$info .= '</td></tr>' . "\n";
 					}
 
 					$info .= "</table>";
 					$submission_body = str_replace('[answers]', $info, $submission_body);
 				}
-				$htmlmsg = '<html><head><title>Welcome</title></title></head><body>'. $submission_body .'</body></html>';
+
+				$htmlmsg = '<html><head><title>Welcome</title></title></head><body>' . $submission_body . '</body></html>';
 				$mailer->setBody($htmlmsg);
 				$mailer->setSubject($form->submissionsubject);
 
 				/* Send the mail */
-				if (!$mailer->Send()) {
-					JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter)');
-					RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (to submitter):'.$mailer->error);
+				if (!$mailer->Send())
+				{
+					JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter)');
+					RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter):' . $mailer->error);
 				}
 			}
 		}
-	}
 
-	function getFieldsValues()
-	{
-		$query = ' SELECT v.id, v.value, v.field_id, v.fieldtype '
-		. '      , f.field, f.validate, f.unique, f.tooltip '
-		. ' FROM #__rwf_values AS v '
-		. ' INNER JOIN #__rwf_fields AS f ON v.field_id = f.id '
-		. ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
-		. ' WHERE v.published = 1 AND f.published = 1 AND fo.published = 1 '
-		. '   AND fo.id = '.$this->_db->Quote($this->_form_id)
-		. ' ORDER BY f.ordering, v.ordering '
-		;
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObjectList();
-
-		return $res;
-	}
-
-	function getFieldsInfo($fields_ids)
-	{
-		$quoted = array();
-		foreach ($fields_ids as $id) {
-			$quoted[] = $this->_db->Quote($id);
-		}
-		$query = ' SELECT f.id, f.field, f.validate, f.unique, f.tooltip, f.form_id '
-		. ' FROM #__rwf_fields AS f '
-		. ' INNER JOIN #__rwf_forms AS fo ON fo.id = f.form_id '
-		. ' WHERE f.published = 1 AND fo.published = 1 '
-		. '   AND f.id IN ('.implode(',', $quoted) .')'
-		. ' ORDER BY f.ordering '
-		;
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObjectList();
-
-		return $res;
+		return true;
 	}
 
 	/**
@@ -344,7 +324,7 @@ class RedformModelRedform extends JModelLegacy {
 		$app = JFactory::getApplication();
 		$db = $this->_db;
 
-		$result = new stdclass(); // create a new class for this ?
+		$result = new stdclass;
 		$result->posts = array();
 
 		// Check the token
@@ -357,7 +337,7 @@ class RedformModelRedform extends JModelLegacy {
 
 			if (!isset($data['form_id']))
 			{
-				$data['form_id'] = $app->input->getInt('form_id');
+				$data['form_id'] = $app->input->getInt('form_id', 0);
 			}
 
 			if (!isset($data['submit_key']))
@@ -379,6 +359,7 @@ class RedformModelRedform extends JModelLegacy {
 		if (!isset($data[$token]))
 		{
 			$this->setError('Form integrity check failed');
+
 			return false;
 		}
 
@@ -405,7 +386,7 @@ class RedformModelRedform extends JModelLegacy {
 		/* Load the fields */
 		$fieldlist = $this->getfields($form->id);
 
-		// number of submitted active forms (min is 1)
+		// Number of submitted active forms (min is 1)
 		$totalforms = isset($data['nbactive']) ? $data['nbactive'] : 1;
 
 		$allanswers = array();
@@ -413,13 +394,13 @@ class RedformModelRedform extends JModelLegacy {
 		/* Loop through the different forms */
 		for ($signup = 1; $signup <= $totalforms; $signup++)
 		{
-			// new answers object
-			$answers = new rfanswers();
+			// New answers object
+			$answers = new rfanswers;
 			$answers->setFormId($form->id);
 
 			if (isset($data['submitter_id' . $signup]))
 			{
-				$answers->setSid(intval($data['submitter_id'.$signup]));
+				$answers->setSid(intval($data['submitter_id' . $signup]));
 			}
 
 			$answers->setFormId($data['form_id']);
@@ -431,7 +412,7 @@ class RedformModelRedform extends JModelLegacy {
 			{
 				if (is_array($options['baseprice']))
 				{
-					$answers->initPrice(isset($options['baseprice'][$signup-1]) ? $options['baseprice'][$signup-1] : 0);
+					$answers->initPrice(isset($options['baseprice'][$signup - 1]) ? $options['baseprice'][$signup - 1] : 0);
 				}
 				else
 				{
@@ -442,7 +423,7 @@ class RedformModelRedform extends JModelLegacy {
 			/* Create an array of values to store */
 			$postvalues = array();
 
-			// remove the _X parts, where X is the form (signup) number
+			// Remove the _X parts, where X is the form (signup) number
 			foreach ($data as $key => $value)
 			{
 				if ((strpos($key, 'field') === 0) && (strpos($key, '_' . $signup, 5) > 0))
@@ -472,6 +453,7 @@ class RedformModelRedform extends JModelLegacy {
 					catch (Exception $e)
 					{
 						$this->setError($e->getMessage());
+
 						return false;
 					}
 				}
@@ -479,6 +461,7 @@ class RedformModelRedform extends JModelLegacy {
 
 			$allanswers[] = $answers;
 		}
+
 		/* End multi-user signup */
 
 		$this->_answers = $allanswers;
@@ -548,7 +531,7 @@ class RedformModelRedform extends JModelLegacy {
 			else
 			{
 				// Delete session data
-				$app->setUserState('formdata'.$form->id, null);
+				$app->setUserState('formdata' . $form->id, null);
 				$result->posts[] = array('sid' => $res);
 			}
 
@@ -558,7 +541,7 @@ class RedformModelRedform extends JModelLegacy {
 			}
 		}
 
-		// send email to maintainers
+		// Send email to maintainers
 		$this->notifymaintainer($allanswers, $answers->isNew());
 
 		/* Send a submission mail to the submitters if set */
@@ -584,7 +567,7 @@ class RedformModelRedform extends JModelLegacy {
 	 */
 	public function quicksubmit($fields, $integration = null, $options = null)
 	{
-		$result = new stdclass();
+		$result = new stdclass;
 		$result->posts = array();
 
 		$submit_key = uniqid();
@@ -593,7 +576,7 @@ class RedformModelRedform extends JModelLegacy {
 		$form = $this->getForm();
 
 		// New answers object
-		$answers = new rfanswers();
+		$answers = new rfanswers;
 		$answers->setFormId($form->id);
 		$answers->setIntegration($integration);
 		$answers->setSubmitKey($submit_key);
@@ -618,7 +601,7 @@ class RedformModelRedform extends JModelLegacy {
 
 		$this->updateMailingList($answers);
 
-		// send email to maintainers
+		// Send email to maintainers
 		$this->notifymaintainer(array($answers), true);
 
 		/* Send a submission mail to the submitters if set */
@@ -634,42 +617,54 @@ class RedformModelRedform extends JModelLegacy {
 
 	/**
 	 * send email to form maintaineers or/and selected recipients
-	 * @param array $allanswers
+	 *
+	 * @param   array  $allanswers  answers
+	 * @param   bool   $new         is new ?
+	 *
+	 * @return bool
 	 */
-	function notifymaintainer($allanswers, $new = true)
+	public function notifymaintainer($allanswers, $new = true)
 	{
-		$mainframe = &JFactory::getApplication();
+		$mainframe = JFactory::getApplication();
 		$params = JComponentHelper::getParams('com_redform');
 		$form = $this->getForm();
 
 		/* Inform contact person if need */
-		// form recipients
+		// Form recipients
 		$recipients = $allanswers[0]->getRecipients();
 		$cond_recipients = RdfCore::getConditionalRecipients($form, $allanswers[0]);
+
 		if ($cond_recipients)
 		{
-			foreach ($cond_recipients as $c) {
+			foreach ($cond_recipients as $c)
+			{
 				$recipients[] = $c[0];
 			}
 		}
 
 		if ($form->contactpersoninform || !empty($recipients))
 		{
-			// init mailer
-			$mailer = &JFactory::getMailer();
+			// Init mailer
+			$mailer = JFactory::getMailer();
 			$mailer->isHTML(true);
+
 			if ($form->contactpersoninform)
 			{
-				if (strstr($form->contactpersonemail, ';')) {
+				if (strstr($form->contactpersonemail, ';'))
+				{
 					$addresses = explode(";", $form->contactpersonemail);
 				}
-				else {
+				else
+				{
 					$addresses = explode(",", $form->contactpersonemail);
 				}
+
 				foreach ($addresses as $a)
 				{
 					$a = trim($a);
-					if (JMailHelper::isEmailAddress($a)) {
+
+					if (JMailHelper::isEmailAddress($a))
+					{
 						$mailer->addRecipient($a);
 					}
 				}
@@ -677,44 +672,56 @@ class RedformModelRedform extends JModelLegacy {
 
 			if (!empty($recipients))
 			{
-				foreach ($recipients AS $r) {
-					$mailer->addRecipient($r);
-				}
-			}
-			if (!empty($xref_group_recipients))
-			{
-				foreach ($xref_group_recipients AS $r) {
+				foreach ($recipients AS $r)
+				{
 					$mailer->addRecipient($r);
 				}
 			}
 
-			// we put the submitter as the email 'from' and reply to.
-			$user = & JFactory::getUser();
+			if (!empty($xref_group_recipients))
+			{
+				foreach ($xref_group_recipients AS $r)
+				{
+					$mailer->addRecipient($r);
+				}
+			}
+
+			// We put the submitter as the email 'from' and reply to.
+			$user = JFactory::getUser();
+
 			if ($params->get('allow_email_aliasing', 1))
 			{
-				if ($user->get('id')) {
+				if ($user->get('id'))
+				{
 					$sender = array($user->email, $user->name);
 				}
-				else if ($allanswers[0]->getSubmitterEmails())
+				elseif ($allanswers[0]->getSubmitterEmails())
 				{
-					if ($allanswers[0]->getFullname()) {
+					if ($allanswers[0]->getFullname())
+					{
 						$sender = array(reset($allanswers[0]->getSubmitterEmails()), $allanswers[0]->getFullname());
 					}
-					else {
+					else
+					{
 						$sender = array(reset($allanswers[0]->getSubmitterEmails()), null);
 					}
 				}
-				else { // default to site settings
+				else
+				{
+					// Default to site settings
 					$sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
 				}
 			}
-			else { // default to site settings
+			else
+			{
+				// Default to site settings
 				$sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
 			}
+
 			$mailer->setSender($sender);
 			$mailer->addReplyTo($sender);
 
-			// set the email subject
+			// Set the email subject
 			$replaceHelper = new RdfHelperTagsreplace($form, $allanswers[0]->getAnswersByFieldId());
 
 			if (trim($form->contactpersonemailsubject))
@@ -734,10 +741,13 @@ class RedformModelRedform extends JModelLegacy {
 
 			// Mail body
 			$htmlmsg = '<html><head><title></title></title></head><body>';
-			if ($new) {
+
+			if ($new)
+			{
 				$htmlmsg .= JText::sprintf('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY', $form->formname);
 			}
-			else {
+			else
+			{
 				$htmlmsg .= JText::sprintf('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY', $form->formname);
 			}
 
@@ -767,58 +777,73 @@ class RedformModelRedform extends JModelLegacy {
 						{
 							case 'recipients':
 								break;
+
 							case 'email':
-								$htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
-								$htmlmsg .= '<a href="mailto:'.$answer['value'].'">'.$answer['value'].'</a>';
+								$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
+								$htmlmsg .= '<a href="mailto:' . $answer['value'] . '">' . $answer['value'] . '</a>';
 								$htmlmsg .= '&nbsp;';
-								$htmlmsg .= '</td></tr>'."\n";
+								$htmlmsg .= '</td></tr>' . "\n";
 								break;
+
 							case 'text':
 								$userinput = preg_replace($patterns, $replacements, $answer['value']);
-								$htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
-								if (strpos($answer['value'], 'http://') === 0) {
-									$htmlmsg .= '<a href="'.$answer['value'].'">'.$answer['value'].'</a>';
+								$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
+
+								if (strpos($answer['value'], 'http://') === 0)
+								{
+									$htmlmsg .= '<a href="' . $answer['value'] . '">' . $answer['value'] . '</a>';
 								}
-								else {
+								else
+								{
 									$htmlmsg .= $answer['value'];
 								}
+
 								$htmlmsg .= '&nbsp;';
-								$htmlmsg .= '</td></tr>'."\n";
+								$htmlmsg .= '</td></tr>' . "\n";
 								break;
+
 							case 'file':
 								$userinput = preg_replace($patterns, $replacements, $answer['value']);
-								$htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+								$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
 								$htmlmsg .= ($answer['value'] && file_exists($answer['value'])) ? basename($answer['value']) : '';
-								$htmlmsg .= '</td></tr>'."\n";
-								// attach to mail
-								if ($answer['value'] && file_exists($answer['value'])) {
+								$htmlmsg .= '</td></tr>' . "\n";
+
+								// Attach to mail
+								if ($answer['value'] && file_exists($answer['value']))
+								{
 									$mailer->addAttachment($answer['value']);
 								}
+
 								break;
+
 							default :
 								$userinput = preg_replace($patterns, $replacements, $answer['value']);
-								$htmlmsg .= '<tr><td>'.$answer['field'].'</td><td>';
+								$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
 								$htmlmsg .= str_replace('~~~', '<br />', $userinput);
 								$htmlmsg .= '&nbsp;';
-								$htmlmsg .= '</td></tr>'."\n";
+								$htmlmsg .= '</td></tr>' . "\n";
 								break;
 						}
 					}
+
 					if ($p = $answers->getPrice())
 					{
-						$htmlmsg .= '<tr><td>'.JText::_('COM_REDFORM_TOTAL_PRICE').'</td><td>';
+						$htmlmsg .= '<tr><td>' . JText::_('COM_REDFORM_TOTAL_PRICE') . '</td><td>';
 						$htmlmsg .= $p;
-						$htmlmsg .= '</td></tr>'."\n";
+						$htmlmsg .= '</td></tr>' . "\n";
 					}
+
 					$htmlmsg .= "</table><br />";
 				}
 			}
+
 			$htmlmsg .= '</body></html>';
 			$mailer->setBody($htmlmsg);
 
-			// send the mail
-			if (!$mailer->Send()) {
-				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND').' (contactpersoninform): '.$mailer->error);
+			// Send the mail
+			if (!$mailer->Send())
+			{
+				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (contactpersoninform): ' . $mailer->error);
 			}
 		}
 	}
@@ -826,12 +851,16 @@ class RedformModelRedform extends JModelLegacy {
 	/**
 	 * return answers of specified sids
 	 *
-	 * @param array int $sids
+	 * @param   array  $sids  submission ids
+	 *
 	 * @return array
 	 */
-	function getSidsAnswers($sids)
+	public function getSidsAnswers($sids)
 	{
-		if (empty($sids)) {
+		$db = $this->_db;
+
+		if (empty($sids))
+		{
 			return false;
 		}
 
@@ -841,82 +870,105 @@ class RedformModelRedform extends JModelLegacy {
 			{
 				$ids = $sids;
 			}
-			else {
+			else
+			{
 				JErrorRaiseWarning(0, JText::_('COM_REDFORM_WRONG_PARAMETERS_FOR_REDFORMCORE_GETSIDSANSWERS'));
+
 				return false;
 			}
 		}
-		else {
+		else
+		{
 			$ids = implode(',', $sids);
 		}
 
-		// we need the form_id...
-		$query = ' SELECT s.form_id '
-		. ' FROM #__rwf_submitters AS s '
-		. ' WHERE s.id IN ('.$ids.')'
-		;
-		$this->_db->setQuery($query, 0, 1);
-		$form_id = $this->_db->loadResult();
+		// Get associated form id
+		$query = $db->getQuery(true);
 
-		if (!$form_id) {
+		$query->select('form_id')
+			->from('#__rwf_submitters')
+			->where('id IN (' . $ids . ')');
+		$db->setQuery($query);
+		$form_id = $db->loadResult();
+
+		if (!$form_id)
+		{
 			Jerror::raiseWarning(0, JText::_('COM_REDFORM_No_submission_for_these_sids'));
+
 			return false;
 		}
 
-		$query = ' SELECT s.id as sid, f.*, s.price, p.paid, p.status '
-		. ' FROM #__rwf_forms_'.$form_id.' AS f '
-		. ' INNER JOIN #__rwf_submitters AS s on s.answer_id = f.id '
-		. ' LEFT JOIN #__rwf_payment AS p on s.submit_key = p.submit_key '
-		. ' WHERE s.id IN ('.$ids.')';
-		;
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObjectList('sid');
+		// Get data
+		$query = $db->getQuery(true)
+			->select('SELECT s.id as sid, f.*, s.price')
+			->from('#__rwf_forms_' . $form_id . ' AS f')
+			->join('INNER', '#__rwf_submitters AS s on s.answer_id = f.id')
+			->where('s.id IN (' . $ids . ')');
+		$db->setQuery($query);
+		$submissionsData = $db->loadObjectList('sid');
 
-		$answers = array();
-		foreach ($res as $k =>$r)
-		{
-			$answers[$k] = $r;
-		}
-		return $answers;
+		return $submissionsData;
 	}
 
-	function getRedirect()
+	/**
+	 * Return form redirect
+	 *
+	 * @return mixed
+	 */
+	public function getFormRedirect()
 	{
 		$form = $this->getForm();
 
-		if (!empty($form->redirect)) {
+		if (!empty($form->redirect))
+		{
 			return $form->redirect;
 		}
+
 		return false;
 	}
 
-	function getNotificationText()
+	/**
+	 * Return submission notification text
+	 *
+	 * @return mixed
+	 */
+	public function getNotificationText()
 	{
 		$form = $this->getForm();
 
-		if (empty($this->_answers)) {
+		if (empty($this->_answers))
+		{
 			return $form->notificationtext;
 		}
-		else {
+		else
+		{
 			return $this->_replaceTags($form->notificationtext, reset($this->_answers));
 		}
 	}
 
 	/**
-	 * return mailing list instegration name associated to field
+	 * return mailing list integration name associated to field
 	 *
-	 * @param   int   $field_id  field id
+	 * @param   int  $field_id  field id
 	 *
 	 * @return  string mailing list integrationname
 	 */
-	function getMailingList($field_id)
+	private function getMailingList($field_id)
 	{
 		$field = RdfRfieldFactory::getField($field_id);
 
 		return $field->getParam('mailinglist');
 	}
 
-	function _replaceTags($text, rfanswers $answers)
+	/**
+	 * Replace tags
+	 *
+	 * @param   string     $text     text
+	 * @param   rfanswers  $answers  answers to use for substitution
+	 *
+	 * @return mixed
+	 */
+	private function _replaceTags($text, rfanswers $answers)
 	{
 		// Price
 		if (strstr($text, '[totalprice]'))
@@ -925,13 +977,15 @@ class RedformModelRedform extends JModelLegacy {
 		}
 
 		$matches = array();
-		if (!preg_match_all('(\[answer_[0-9]+\])', $text, $matches)) {
+
+		if (!preg_match_all('(\[answer_[0-9]+\])', $text, $matches))
+		{
 			return $text;
 		}
 
 		foreach ($matches[0] as $tag)
 		{
-			// get field id from tag
+			// Get field id from tag
 			$id = substr($tag, 8, -1);
 
 			foreach ($answers->getAnswers() as $field)
@@ -947,23 +1001,29 @@ class RedformModelRedform extends JModelLegacy {
 		return $text;
 	}
 
-	function hasActivePayment($key)
+	/**
+	 * Return true if submission has associated price
+	 *
+	 * @param   string  $key  submit key
+	 *
+	 * @return bool
+	 */
+	public function hasActivePayment($key)
 	{
-		$query = ' SELECT s.price '
-		. ' FROM #__rwf_submitters AS s '
-		. ' INNER JOIN #__rwf_forms AS f ON f.id = s.form_id '
-		. ' LEFT JOIN #__rwf_payment AS p ON s.submit_key = p.submit_key AND p.paid = 1 '
-		. ' WHERE s.submit_key = ' . $this->_db->Quote($key)
-		. '   AND p.id IS NULL '
-		. '   AND f.activatepayment = 1 '
-		;
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadResult();
-		if (!$res) {
-			return false;
-		}
-		else {
-			return true;
-		}
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('s.price');
+		$query->from('#__rwf_submitters AS s');
+		$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
+		$query->join('LEFT', '#__rwf_payment AS p ON s.submit_key = p.submit_key AND p.paid = 1');
+		$query->where('s.submit_key = ' . $db->quote($key));
+		$query->where('p.id IS NULL');
+		$query->where('f.activatepayment = 1');
+
+		$db->setQuery($query);
+		$res = $db->loadResult();
+
+		return $res ? true : false;
 	}
 }
