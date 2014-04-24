@@ -428,8 +428,13 @@ class rfanswers
 		}
 
 		/* Prepare the submitter details */
-		$row = JTable::getInstance('Submitters', 'RedformTable');
-		$row->id = $this->sid;
+		$row = RTable::getInstance('Submitter', 'RedformTable');
+
+		if ($this->sid)
+		{
+			$row->load($this->sid);
+		}
+
 		$row->form_id = $this->formId;
 		$row->submit_key = $this->submitKey;
 		$row->answer_id = $this->answerId;

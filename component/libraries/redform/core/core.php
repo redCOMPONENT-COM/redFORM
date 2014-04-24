@@ -151,7 +151,7 @@ class RdfCore extends JObject {
 			$html .= '</div>';
 		}
 
-		$html .= '<input type="hidden" name="task" value="save" />';
+		$html .= '<input type="hidden" name="task" value="redform.save" />';
 		if ($answers && $answers[0]->sid > 0)
 		{
 			$html .= '<input type="hidden" name="submitter_id" value="'.$answers[0]->sid.'" />';
@@ -161,7 +161,6 @@ class RdfCore extends JObject {
 			$html .= '<input type="hidden" name="controller" value="submitters" />';
 		}
 
-		$html .= '<input type="hidden" name="controller" value="redform" />';
 		$html .= '<input type="hidden" name="referer" value="'.htmlspecialchars($uri->toString()).'" />';
 
 		$html .= '</form>';
@@ -290,20 +289,22 @@ class RdfCore extends JObject {
 		$initialActive = $answers ? count($answers) : 1;
 
 		/* Loop through here for as many forms there are */
-		for ($signup = 1; $signup <= $initialActive; $signup++)
+		for ($formIndex = 1; $formIndex <= $initialActive; $formIndex++)
 		{
-			if ($answers && $answers[($signup-1)]->sid)
+			$indexAnswers = $answers && isset($answers[($formIndex-1)]) ? $answers[($formIndex-1)] : false;
+
+			if ($indexAnswers)
 			{
-				$submitter_id = $answers[($signup-1)]->sid;
-				$html .= '<input type="hidden" name="submitter_id' . $signup . '" value="' . $submitter_id . '" />';
+				$submitter_id = $indexAnswers->sid;
+				$html .= '<input type="hidden" name="submitter_id' . $formIndex . '" value="' . $submitter_id . '" />';
 			}
 
 			/* Make a collapsable box */
-			$html .= '<div id="formfield' . $signup . '" class="formbox" style="display: ' . ($signup == 1 ? 'block' : 'none') . ';">';
+			$html .= '<div id="formfield' . $formIndex . '" class="formbox" style="display: ' . ($formIndex == 1 ? 'block' : 'none') . ';">';
 
 			if ($multi > 1)
 			{
-				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $signup) . '</legend>';
+				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
 			}
 
 			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price > 0)
@@ -320,95 +321,18 @@ class RdfCore extends JObject {
 					. '</div>';
 			}
 
-			if (isset($options['extrafields']) && count($options['extrafields']))
-			{
-				foreach ($options['extrafields'] as $field)
-				{
-					$html .= '<div class="fieldline' . (isset($field['class']) && !empty($field['class']) ? ' ' . $field['class'] : '' ) . '">';
-					$html .= '<div class="label">' . $field['label'] . '</div>';
-					$html .= '<div class="field">' . $field['field'] . '</div>';
-					$html .= '</div>';
-				}
-			}
-
-			foreach ($fields as $field)
-			{
-				if (!($app->isAdmin() || $field->published))
-				{
-					// Only display unpublished fields in backend form
-					continue;
-				}
-
-				// Init rfield
-				$rfield = RdfRfieldFactory::getField($field->id);
-				$rfield->setFormIndex($signup);
-				$rfield->setUser($user);
-				$cleanfield = 'field_' . $field->id;
-
-				// Set value if editing
-				if ($answers && isset($answers[($signup-1)]->fields->$cleanfield))
-				{
-					$value = $answers[($signup-1)]->fields->$cleanfield;
-					$rfield->setValue($value, true);
-				}
-
-				if (!$rfield->isHidden())
-				{
-					$html .= '<div class="fieldline type-' . $field->fieldtype . $field->getParam('class', '') . '">';
-				}
-
-				if (!$rfield->isHidden())
-				{
-					$element = "<div class=\"field\">";
-				}
-				else
-				{
-					$element = '';
-				}
-
-				if (!$rfield->isHidden() && $rfield->displayLabel())
-				{
-					$label = '<div class="label">' . $rfield->getLabel() . '</div>';
-				}
-				else
-				{
-					$label = '';
-				}
-
-				$element .= $rfield->getInput();
-
-				if ($rfield->isHidden())
-				{
-					$html .= $element;
-				}
-				else
-				{
-					$html .= $label . $element;
-					$html .= '</div>'; // Fieldtype div
-
-					if ($rfield->isRequired() || strlen($field->tooltip))
-					{
-						$html .= '<div class="fieldinfo">';
-
-						if ($rfield->isRequired())
-						{
-							$img = JHTML::image(JURI::root() . 'components/com_redform/assets/images/warning.png', JText::_('COM_REDFORM_Required'));
-							$html .= ' <span class="editlinktip hasTipField" title="' . JText::_('COM_REDFORM_Required') . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
-						}
-
-						if (strlen($field->tooltip) > 0)
-						{
-							$img = JHTML::image(JURI::root().'components/com_redform/assets/images/info.png', JText::_('COM_REDFORM_ToolTip'));
-							$html .= ' <span class="editlinktip hasTipField" title="' . htmlspecialchars($field->field) . '::' . htmlspecialchars($field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
-						}
-
-						$html .= '</div>';
-					}
-
-					$html .= '</div>'; // fieldline_ div
-				}
-
-			}
+			$html .= RLayoutHelper::render(
+				'rform.fields',
+				array(
+					'fields' => $fields,
+					'index' => $formIndex,
+					'user' => $user,
+					'options' => $options,
+					'answers' => $indexAnswers
+				),
+				'',
+				array('component' => 'com_redform')
+			);
 
 			if ($multi > 1)
 			{
