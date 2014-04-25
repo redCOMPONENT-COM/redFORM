@@ -24,4 +24,4 @@
 defined('_JEXEC') or die('Restricted access');
 
 // Register library prefix
-JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
+RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');

@@ -116,7 +116,7 @@ $listDirn = $this->state->get('list.direction');
 					<?php echo $this->escape($item->submit_key); ?>
 				</td>
 
-				<?php if ($this->params->get('showintegration', false)): ?>
+				<?php if ($this->integration && $this->params->get('showintegration', false)): ?>
 					<td>
 						<?php echo $this->escape($item->integration); ?></td>
 					</td>

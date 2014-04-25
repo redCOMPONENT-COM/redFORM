@@ -58,6 +58,20 @@ class RdfRfieldSelect extends RdfRfield
 	}
 
 	/**
+	 * Set field value from post data
+	 *
+	 * @param   string  $value  value
+	 *
+	 * @return string new value
+	 */
+	public function setValueFromDatabase($value)
+	{
+		$this->value = explode('~~~', $value);
+
+		return $this->value;
+	}
+
+	/**
 	 * Return price, possibly depending on current field value
 	 *
 	 * @return float

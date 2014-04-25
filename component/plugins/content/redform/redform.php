@@ -61,7 +61,7 @@ class plgContentRedform extends JPlugin {
 	 */
 	public function onContentPrepare($context,&$row, &$params, $page = 0)
 	{
-    return $this->_process($row, array());
+		return $this->_process($row, array());
 	}
 
 	protected function _process(&$row, $params = array())
@@ -71,12 +71,9 @@ class plgContentRedform extends JPlugin {
 			return false;
 		}
 
-		// Register library prefix
-		JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
-
 		$this->_rfcore = new RdfCore();
 
-    JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );
+		JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );
 
 		$this->_rwfparams = $params;
 

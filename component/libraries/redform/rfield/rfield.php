@@ -130,6 +130,9 @@ abstract class RdfRfield extends JObject
 			case 'field':
 				return $this->load()->field;
 
+			case 'redmember_field':
+				return $this->load()->redmember_field;
+
 			default:
 				$data = $this->load();
 				if (isset($data->{$name}))
@@ -281,6 +284,20 @@ abstract class RdfRfield extends JObject
 	 * @return string new value
 	 */
 	public function setValueFromPost($value)
+	{
+		$this->value = $value;
+
+		return $this->value;
+	}
+
+	/**
+	 * Set field value from post data
+	 *
+	 * @param   string  $value  value
+	 *
+	 * @return string new value
+	 */
+	public function setValueFromDatabase($value)
 	{
 		$this->value = $value;
 

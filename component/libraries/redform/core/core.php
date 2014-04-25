@@ -95,15 +95,21 @@ class RdfCore extends JObject
 	 *
 	 * @return void
 	 */
-	function setSids($ids)
+	public function setSids($ids, $resetCache = true)
 	{
 		JArrayHelper::toInteger($ids);
 
 		if ($ids !== $this->_sids)
 		{
 			$this->_sids = $ids;
-			$this->_answers = null;
-			$this->_sids_answers = null;
+
+			$submitKey = $this->getSidSubmitKey($ids[0]);
+			$this->setSubmitKey($submitKey);
+
+			if ($resetCache)
+			{
+				$this->resetCache();
+			}
 		}
 	}
 
@@ -114,13 +120,49 @@ class RdfCore extends JObject
 	 *
 	 * @return void
 	 */
-	function setSubmitKey($submit_key)
+	public function setSubmitKey($submit_key, $resetCache = true)
 	{
 		if ($this->_submit_key !== $submit_key)
 		{
 			$this->_submit_key = $submit_key;
-			$this->_sk_answers = null;
-			$this->_answers = null;
+
+			$sids = $this->getSids($submit_key);
+			$this->setSids($sids);
+
+			if ($resetCache)
+			{
+				$this->resetCache();
+			}
+		}
+	}
+
+	/**
+	 * Reset cached data
+	 *
+	 * @return void
+	 */
+	protected function resetCache()
+	{
+		$this->_sk_answers = null;
+		$this->_answers = null;
+	}
+
+	/**
+	 * Set reference to submit key / sids
+	 *
+	 * @param   mixed  $reference  string submit key or array of sid
+	 *
+	 * @return void
+	 */
+	public function setReference($reference)
+	{
+		if (is_array($reference))
+		{
+			$this->setSids($reference);
+		}
+		else
+		{
+			$this->setSubmitKey($reference);
 		}
 	}
 
@@ -139,17 +181,29 @@ class RdfCore extends JObject
 		$this->setFormId($form_id);
 		$uri = JFactory::getURI();
 
-		// Was this form already submitted before (and there was an error for example, or editing)
-		$answers    = $this->getAnswers($reference);
+		$this->setReference($reference);
+		$submit_key = $this->_submit_key;
 
-		if ($answers && $reference)
+		// Was this form already submitted before (and there was an error for example, or editing)
+		if ($this->_submit_key)
 		{
-			$submit_key = $answers[0]->submit_key;
+			$model = $this->getSubmissionModel($this->_submit_key);
+
+			if (is_array($reference))
+			 {
+				$answers = $model->getSubmission($reference);
+			}
+			else
+			{
+				$answers = $model->getSubmission();
+			}
+
+			$firstSub = $answers->getFirstSubmission();
 		}
 		else
 		{
-			$submit_key = null;
-			$answers = null;
+			$answers = false;
+			$firstSub = false;
 		}
 
 		$model = $this->getFormModel($form_id);
@@ -167,9 +221,9 @@ class RdfCore extends JObject
 
 		$html .= '<input type="hidden" name="task" value="redform.save" />';
 
-		if ($answers && $answers[0]->sid > 0)
+		if ($firstSub)
 		{
-			$html .= '<input type="hidden" name="submitter_id" value="' . $answers[0]->sid . '" />';
+			$html .= '<input type="hidden" name="submitter_id" value="' . $firstSub->sid . '" />';
 		}
 
 		if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add'))
@@ -213,16 +267,26 @@ class RdfCore extends JObject
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
 
-		// Was this form already submitted before (and there was an error for example, or editing)
-		$answers    = $this->getAnswers($reference);
+		$this->setReference($reference);
+		$submit_key = $this->_submit_key;
 
-		if ($answers && $reference)
+		// Was this form already submitted before (and there was an error for example, or editing)
+		if ($this->_submit_key)
 		{
-			$submit_key = $answers[0]->submit_key;
+			$model = $this->getSubmissionModel($this->_submit_key);
+
+			if (is_array($reference))
+			{
+				$answers = $model->getSubmission($reference);
+			}
+			else
+			{
+				$answers = $model->getSubmission();
+			}
 		}
 		else
 		{
-			$submit_key = null;
+			$answers = false;
 		}
 
 		$model = $this->getFormModel($form_id);
@@ -274,7 +338,7 @@ class RdfCore extends JObject
 		if ($answers)
 		{
 			// Set multi to number of answers...
-			$multi = count($answers);
+			$multi = count($answers->getSingleSubmissions());
 		}
 		else
 		{
@@ -290,19 +354,19 @@ class RdfCore extends JObject
 
 		if ($multi > 1)
 		{
-			if (empty($answers))
+			if (!$answers)
 			{
 				// Link to add signups
 				$html .= '<div class="add-instance">' . JText::_('COM_REDFORM_SIGN_UP_USER') . '</div>';
 			}
 		}
 
-		$initialActive = $answers ? count($answers) : 1;
+		$initialActive = $answers ? $multi : 1;
 
 		/* Loop through here for as many forms there are */
 		for ($formIndex = 1; $formIndex <= $initialActive; $formIndex++)
 		{
-			$indexAnswers = ($answers && isset($answers[($formIndex - 1)])) ? $answers[($formIndex - 1)] : false;
+			$indexAnswers = $answers ? $answers->getSingleSubmission($formIndex - 1) : false;
 
 			if ($indexAnswers)
 			{
@@ -570,10 +634,10 @@ class RdfCore extends JObject
 				$submit_key = null;
 
 				// Look for submit data in session
-				$answers = $app->getUserState('formdata'.$this->_form_id);
+				$answers = $app->getUserState('formdata' . $this->_form_id);
 
 				// Delete session data
-				$app->setUserState('formdata'.$this->_form_id, null);
+				$app->setUserState('formdata' . $this->_form_id, null);
 			}
 
 			if (!$answers)
@@ -585,10 +649,10 @@ class RdfCore extends JObject
 
 			foreach ($answers as $a)
 			{
-				$result = new RdfCoreFormAnswers;
-				$result->sid        = (isset($a->sid) ? $a->sid : null);
-				$result->submit_key = $submit_key;
-				$result->fields     = $a;
+				$result = new RdfAnswers;
+				$result->setSid(isset($a->sid) ? $a->sid : null);
+				$result->setSubmitKey($submit_key);
+				$result->setFields($a);
 				$results[] = $result;
 			}
 
@@ -721,48 +785,13 @@ class RdfCore extends JObject
 	 *
 	 * @return boolean
 	 */
-	protected function getFormStatus($form_id)
+	public function getFormStatus($form_id)
 	{
-		$db   = &JFactory::getDBO();
-		$user = &JFactory::getUser();
+		$model = $this->getFormModel($form_id);
 
-		$query = ' SELECT f.* '
-			. ' FROM #__rwf_forms AS f '
-			. ' WHERE id = ' . (int) $form_id;
-		$db->setQuery($query);
-		$form = $db->loadObject();
-
-		if (!$form->published)
+		if (!$model->getFormStatus())
 		{
-			$this->setError(JText::_('COM_REDFORM_STATUS_NOT_PUBLISHED'));
-
-			return false;
-		}
-
-		if (strtotime($form->startdate) > time())
-		{
-			$this->setError(JText::_('COM_REDFORM_STATUS_NOT_STARTED'));
-
-			return false;
-		}
-
-		if ($form->formexpires && strtotime($form->enddate) < time())
-		{
-			$this->setError(JText::_('COM_REDFORM_STATUS_EXPIRED'));
-
-			return false;
-		}
-
-		if ($form->access > 1 && !$user->get('id'))
-		{
-			$this->setError(JText::_('COM_REDFORM_STATUS_REGISTERED_ONLY'));
-
-			return false;
-		}
-
-		if ($form->access > max($user->getAuthorisedViewLevels()))
-		{
-			$this->setError(JText::_('COM_REDFORM_STATUS_SPECIAL_ONLY'));
+			$this->setError($model->getError());
 
 			return false;
 		}
@@ -1176,5 +1205,36 @@ class RdfCore extends JObject
 		}
 
 		return $instances[$formId];
+	}
+
+	/**
+	 * Return Submission model
+	 *
+	 * @param   string  $submitKey  submit key for submission
+	 *
+	 * @return RdfCoreModelSubmission
+	 */
+	protected function getSubmissionModel($submitKey = null)
+	{
+		static $instances = array();
+
+		if (is_null($submitKey) && $this->_submit_key)
+		{
+			$submitKey = $this->_submit_key;
+		}
+
+		if (!$submitKey)
+		{
+			return new RdfCoreModelSubmission;
+		}
+
+		if (!isset($instances[$submitKey]))
+		{
+			$model = new RdfCoreModelSubmission;
+			$model->setSubmitKey($submitKey);
+			$instances[$submitKey] = $model;
+		}
+
+		return $instances[$submitKey];
 	}
 }

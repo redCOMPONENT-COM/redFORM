@@ -37,7 +37,7 @@ RBootstrap::bootstrap();
 $jinput = JFactory::getApplication()->input;
 
 // Register library prefix
-JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
+RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
 // Require the base controller
 require_once (JPATH_COMPONENT . '/controller.php');

@@ -53,6 +53,40 @@ class RdfAnswers
 	}
 
 	/**
+	 * Magic method
+	 *
+	 * @param   string  $property  property name
+	 *
+	 * @return string
+	 *
+	 * @throws Exception
+	 */
+	public function __get($property)
+	{
+		switch ($property)
+		{
+			case 'sid':
+				return $this->getSid();
+
+			case 'submit_key':
+				return $this->getSubmitKey();
+
+			case 'fields':
+				return $this->fields;
+		}
+
+		$trace = debug_backtrace();
+		throw new Exception(
+			'Undefined property via __get(): ' . $property .
+			' in ' . $trace[0]['file'] .
+			' on line ' . $trace[0]['line'],
+			500
+		);
+
+		return null;
+	}
+
+	/**
 	 * Set form id
 	 *
 	 * @param   int  $id  form id
@@ -318,6 +352,18 @@ class RdfAnswers
 	}
 
 	/**
+	 * Add fields to answers (value must already be set)
+	 *
+	 * @param   array  $fields  RdfRfield fields
+	 *
+	 * @return void
+	 */
+	public function setFields($fields)
+	{
+		$this->fields = $fields;
+	}
+
+	/**
 	 * Save submission
 	 *
 	 * @return int submitter_id
@@ -559,23 +605,6 @@ class RdfAnswers
 	}
 
 	/**
-	 * Get just a one dimensional array of answers indexed by 'field_<field id>'
-	 *
-	 * @return array
-	 */
-	public function getAnswersByFieldId()
-	{
-		$answers = array();
-
-		foreach ($this->fields as $field)
-		{
-			$answers['field_' . $field->id] = $field->getValue();
-		}
-
-		return $answers;
-	}
-
-	/**
 	 * return answer for specified field
 	 *
 	 * @param   int  $field_id  field id
@@ -584,18 +613,11 @@ class RdfAnswers
 	 */
 	public function getFieldAnswer($field_id)
 	{
-		$answers = $this->getAnswers();
-
-		if (!$answers)
+		foreach ($this->fields as $field)
 		{
-			return false;
-		}
-
-		foreach ($answers as $a)
-		{
-			if ($field_id == $a['field_id'])
+			if ($field->id == $field_id)
 			{
-				return $a;
+				return $field->getValue();
 			}
 		}
 

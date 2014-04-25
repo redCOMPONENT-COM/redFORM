@@ -44,12 +44,11 @@ foreach ($fields as $field)
 	$rfield = RdfRfieldFactory::getField($field->id);
 	$rfield->setFormIndex($index);
 	$rfield->setUser($user);
-	$cleanfield = 'field_' . $field->id;
 
 	// Set value if editing
-	if ($answers && isset($answers->fields->{$cleanfield}))
+	if ($answers)
 	{
-		$value = $answers->fields->{$cleanfield};
+		$value = $answers->getFieldAnswer($field->id);
 		$rfield->setValue($value, true);
 	}
 

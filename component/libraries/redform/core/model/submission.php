@@ -18,66 +18,192 @@ defined('_JEXEC') or die;
  */
 class RdfCoreModelSubmission extends RModel
 {
+	protected $submitKey;
+
+	protected $submission;
+
+	protected $formModel;
+
+	protected $data;
+
 	/**
-	 * return answers of specified sids
+	 * Constructor
 	 *
-	 * @param   array  $sids  submission ids
-	 *
-	 * @return array
+	 * @param   array  $config  optional config
 	 */
-	public function getSidsAnswers($sids)
+	public function __construct($config = array())
 	{
-		$db = JFactory::getDbo();
+		parent::__construct($config);
 
-		if (empty($sids))
+		if ($config && isset($config['submitKey']))
 		{
-			return false;
+			$this->setSubmitKey($config['submitKey']);
 		}
+	}
 
-		if (!is_array($sids))
+	/**
+	 * Set submit key
+	 *
+	 * @param   string  $key  submit key to set
+	 */
+	public function setSubmitKey($key)
+	{
+		$this->submitKey = $key;
+	}
+
+	/**
+	 * Return full submission data, optionally only for specified sids
+	 *
+	 * @param   array  $sids  array of sid to restrict to
+	 *
+	 * @return RdfCoreFormSubmission
+	 */
+	public function getSubmission($sids = null)
+	{
+		if (!$this->submission)
 		{
-			if (is_int($sids))
+			$submission = new RdfCoreFormSubmission;
+			$submission->setSubmitKey($this->submitKey);
+
+			if (!$sids)
 			{
-				$ids = $sids;
+				$sids = $this->getSids($this->submitKey);
 			}
-			else
+
+			foreach ($sids as $sid)
 			{
-				JErrorRaiseWarning(0, JText::_('COM_REDFORM_WRONG_PARAMETERS_FOR_REDFORMCORE_GETSIDSANSWERS'));
-
-				return false;
+				$answers = $this->getSubSubmission($sid);
+				$submission->addSubSubmission($answers);
 			}
-		}
-		else
-		{
-			$ids = implode(',', $sids);
+
+			$this->submission = $submission;
 		}
 
-		// Get associated form id
-		$query = $db->getQuery(true);
+		return $this->submission;
+	}
 
-		$query->select('form_id')
-			->from('#__rwf_submitters')
-			->where('id IN (' . $ids . ')');
-		$db->setQuery($query);
-		$form_id = $db->loadResult();
+	/**
+	 * Return submission associated to single sid
+	 *
+	 * @param   int  $sid  submitter id
+	 *
+	 * @return RdfAnswers
+	 */
+	public function getSubSubmission($sid)
+	{
+		$db = $this->_db;
 
-		if (!$form_id)
-		{
-			Jerror::raiseWarning(0, JText::_('COM_REDFORM_No_submission_for_these_sids'));
-
-			return false;
-		}
+		$formId = $this->getFormId();
 
 		// Get data
 		$query = $db->getQuery(true)
 			->select('s.id as sid, f.*, s.price')
-			->from('#__rwf_forms_' . $form_id . ' AS f')
+			->from('#__rwf_forms_' . $formId . ' AS f')
 			->join('INNER', '#__rwf_submitters AS s on s.answer_id = f.id')
-			->where('s.id IN (' . $ids . ')');
+			->where('s.id = ' . (int) $sid);
 		$db->setQuery($query);
-		$submissionsData = $db->loadObjectList('sid');
+		$submissionsData = $db->loadObject();
 
-		return $submissionsData;
+		$fields = $this->getFormModel()->getFormFields();
+
+		$subSubmission = new RdfAnswers;
+		$subSubmission->setSubmitKey($this->submitKey);
+		$subSubmission->setSid($sid);
+		$subSubmission->setFormId($formId);
+
+		foreach ($fields as $field)
+		{
+			if (isset($submissionsData->{'field_' . $field->id}))
+			{
+				$field->setValueFromDatabase($submissionsData->{'field_' . $field->id});
+			}
+
+			$subSubmission->addField($field);
+		}
+
+		return $subSubmission;
+	}
+
+	/**
+	 * Get sids from submit key
+	 *
+	 * @param   string  $submitKey  submit key
+	 *
+	 * @return mixed
+	 */
+	public function getSids($submitKey)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('id');
+		$query->from('#__rwf_submitters');
+		$query->where('submit_key = ' . $db->quote($submitKey));
+
+		$db->setQuery($query);
+
+		return $db->loadColumn();
+	}
+
+	/**
+	 * Get submit key from sid
+	 *
+	 * @param   int  $sid  sid
+	 *
+	 * @return string
+	 */
+	public function getSidSubmitKey($sid)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('submit_key');
+		$query->from('#__rwf_submitters');
+		$query->where('id = ' . $db->quote($sid));
+
+		$db->setQuery($query);
+
+		return $db->loadResult();
+	}
+
+	/**
+	 * Get raw data from db
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		if (!$this->data)
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select('*');
+			$query->from('#__rwf_submitters');
+			$query->where('submit_key = ' . $db->quote($this->submitKey));
+
+			$db->setQuery($query);
+			$this->data = $db->loadObjectList();
+		}
+
+		return $this->data;
+	}
+
+	/**
+	 * Get form id
+	 *
+	 * @return mixed
+	 */
+	protected function getFormId()
+	{
+		$data = $this->getData();
+
+		if ($data && count($data))
+		{
+			return $data[0]->form_id;
+		}
+
+		return false;
 	}
 
 	/**
@@ -101,5 +227,20 @@ class RdfCoreModelSubmission extends RModel
 		$res = $db->loadObjectList('s.id');
 
 		return ($res);
+	}
+
+	/**
+	 * Return Form model
+	 *
+	 * @return RdfCoreModelForm
+	 */
+	protected function getFormModel()
+	{
+		if (!$this->formModel)
+		{
+			$this->formModel = new RdfCoreModelForm($this->getFormId());
+		}
+
+		return $this->formModel;
 	}
 }

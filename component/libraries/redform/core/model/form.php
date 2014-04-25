@@ -99,4 +99,60 @@ class RdfCoreModelForm extends RModel
 
 		return $fields;
 	}
+
+	/**
+	 * return form status
+	 *
+	 * @return boolean
+	 */
+	public function getFormStatus()
+	{
+		$form_id = $this->id;
+
+		$db   = JFactory::getDBO();
+		$user = JFactory::getUser();
+
+		$query = ' SELECT f.* '
+			. ' FROM #__rwf_forms AS f '
+			. ' WHERE id = ' . (int) $form_id;
+		$db->setQuery($query);
+		$form = $db->loadObject();
+
+		if (!$form->published)
+		{
+			$this->setError(JText::_('COM_REDFORM_STATUS_NOT_PUBLISHED'));
+
+			return false;
+		}
+
+		if (strtotime($form->startdate) > time())
+		{
+			$this->setError(JText::_('COM_REDFORM_STATUS_NOT_STARTED'));
+
+			return false;
+		}
+
+		if ($form->formexpires && strtotime($form->enddate) < time())
+		{
+			$this->setError(JText::_('COM_REDFORM_STATUS_EXPIRED'));
+
+			return false;
+		}
+
+		if ($form->access > 1 && !$user->get('id'))
+		{
+			$this->setError(JText::_('COM_REDFORM_STATUS_REGISTERED_ONLY'));
+
+			return false;
+		}
+
+		if ($form->access > max($user->getAuthorisedViewLevels()))
+		{
+			$this->setError(JText::_('COM_REDFORM_STATUS_SPECIAL_ONLY'));
+
+			return false;
+		}
+
+		return true;
+	}
 }
