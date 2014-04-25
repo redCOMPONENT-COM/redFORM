@@ -10,8 +10,7 @@
 require_once 'PHPUnit/Autoload.php';
 
 // Register library prefix
-JLoader::registerPrefix('R', JPATH_LIBRARIES . '/redcore');
-RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
 /**
  * Test class for tagsreplace.
