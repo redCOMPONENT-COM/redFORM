@@ -58,4 +58,17 @@ class RdfCoreFormSubmission
 	{
 		return $this->getSingleSubmission(0);
 	}
+
+	public function getSubmissionBySid($sid)
+	{
+		foreach ($this->sidSubmissions as $rdfanswers)
+		{
+			if ($rdfanswers->sid == $sid)
+			{
+				return $rdfanswers;
+			}
+		}
+
+		return false;
+	}
 }

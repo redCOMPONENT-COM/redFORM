@@ -89,7 +89,7 @@ class RdfCoreModelSubmission extends RModel
 	 *
 	 * @return RdfAnswers
 	 */
-	public function getSubSubmission($sid)
+	protected function getSubSubmission($sid)
 	{
 		$db = $this->_db;
 

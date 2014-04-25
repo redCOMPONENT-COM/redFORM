@@ -602,64 +602,31 @@ class RdfCore extends JObject
 	 *
 	 * @param   mixed  $reference  submit_key string or array int submitter ids
 	 *
-	 * @return array RdfCoreFormAnswers
+	 * @return array RdfCoreFormSubmission
 	 */
 	public function getAnswers($reference)
 	{
-		if (!$this->_answers)
+		$this->setReference($reference);
+
+		if ($this->_submit_key)
 		{
-			$app = JFactory::getApplication();
+			$model = $this->getSubmissionModel($this->_submit_key);
 
 			if (is_array($reference))
 			{
-				$this->setSids($reference);
+				$answers = $model->getSubmission($reference);
 			}
 			else
 			{
-				$this->setSubmitKey($reference);
+				$answers = $model->getSubmission();
 			}
-
-			if (is_array($reference))
-			{
-				$answers = $this->getSidsAnswers($reference);
-				$submit_key = $this->getSidSubmitKey(reset($reference));
-			}
-			elseif (!empty($reference))
-			{
-				$submit_key = $reference;
-				$answers = $this->getSubmitKeyAnswers($submit_key);
-			}
-			else
-			{
-				$submit_key = null;
-
-				// Look for submit data in session
-				$answers = $app->getUserState('formdata' . $this->_form_id);
-
-				// Delete session data
-				$app->setUserState('formdata' . $this->_form_id, null);
-			}
-
-			if (!$answers)
-			{
-				return false;
-			}
-
-			$results = array();
-
-			foreach ($answers as $a)
-			{
-				$result = new RdfAnswers;
-				$result->setSid(isset($a->sid) ? $a->sid : null);
-				$result->setSubmitKey($submit_key);
-				$result->setFields($a);
-				$results[] = $result;
-			}
-
-			$this->_answers = $results;
+		}
+		else
+		{
+			$answers = false;
 		}
 
-		return $this->_answers;
+		return $answers;
 	}
 
 	/**
@@ -686,99 +653,6 @@ class RdfCore extends JObject
 	}
 
 	/**
-	 * return raw records from form table indexed by sids
-	 *
-	 * @param   array  $sids  int sids
-	 *
-	 * @return array
-	 */
-	public function getSidsAnswers($sids)
-	{
-		if ($sids)
-		{
-			$this->setSids($sids);
-		}
-
-		if (empty($this->_sids_answers))
-		{
-			$model = new RdfCoreModelSubmission;
-			$this->_sids_answers = $model->getSidsAnswers($this->_sids);
-		}
-
-		return $this->_sids_answers;
-	}
-
-	/**
-	 * return fields with answers, indexed by sids
-	 *
-	 * @param   array  $sids  int sids
-	 *
-	 * @return array
-	 */
-	public function getSidsFieldsAnswers($sids)
-	{
-		if ($sids)
-		{
-			$this->setSids($sids);
-		}
-
-		if (!is_array($this->_sids) || empty($this->_sids))
-		{
-			return false;
-		}
-
-		$answers = $this->getSidsAnswers($this->_sids);
-		$form_id = $this->getSidForm($this->_sids[0]);
-		$fields  = $this->getFields($form_id);
-
-		if (!$form_id)
-		{
-			$this->setError(JText::_('COM_REDFORM_FORM_NOT_FOUND'));
-
-			return false;
-		}
-
-		$res = array();
-
-		foreach ($answers as $sid => $answer)
-		{
-			$f = array();
-
-			foreach ($fields as $field)
-			{
-				$prop = 'field_' . $field->id;
-				$field->setValue($answer->$prop);
-				$f[] = clone($field);
-			}
-
-			$res[$sid] = $f;
-		}
-
-		return $res;
-	}
-
-	/**
-	 * return form_id associated to submitter id
-	 *
-	 * @param   int  $sid  sid
-	 *
-	 * @return int
-	 */
-	protected function getSidForm($sid)
-	{
-		$db = &JFactory::getDBO();
-
-		$query = ' SELECT f.id '
-			. ' FROM #__rwf_forms AS f '
-			. ' INNER JOIN #__rwf_submitters AS s ON f.id = s.form_id '
-			. ' WHERE s.id = ' . $db->Quote($sid);
-		$db->setQuery($query);
-		$res = $db->loadResult();
-
-		return $res;
-	}
-
-	/**
 	 * return form status
 	 *
 	 * @param   int  $form_id  form id
@@ -797,27 +671,6 @@ class RdfCore extends JObject
 		}
 
 		return true;
-	}
-
-	/**
-	 * return values associated to a field
-	 *
-	 * @param   int  $field_id  field id
-	 *
-	 * @return array
-	 */
-	protected function getFieldValues($field_id)
-	{
-		$db = JFactory::getDBO();
-
-		$query = " SELECT v.id, v.value, v.field_id, v.price "
-			. " FROM #__rwf_values AS v "
-			. " WHERE v.published = 1 "
-			. " AND v.field_id = " . $field_id
-			. " ORDER BY v.ordering";
-		$db->setQuery($query);
-
-		return $db->loadObjectList();
 	}
 
 	/**
@@ -846,27 +699,18 @@ class RdfCore extends JObject
 	 */
 	public function getSubmissionContactEmail($reference, $requires_email = true)
 	{
-		if (!is_array($reference))
-		{
-			$sids = $this->getSids($reference);
-		}
-		else
-		{
-			$sids = $reference;
-		}
-
-		$answers = $this->getSidsFieldsAnswers($sids);
+		$answers = $this->getAnswers($reference);
 
 		$results = array();
 
-		foreach ((array) $answers as $sid => $fields)
+		foreach ((array) $answers as $rdfanwers)
 		{
 			$emails = array();
 			$fullnames = array();
 			$usernames = array();
 
 			// First look for email fields
-			foreach ((array) $fields as $f)
+			foreach ((array) $rdfanwers->fields as $f)
 			{
 				if ($f->fieldtype == 'email')
 				{
@@ -908,7 +752,7 @@ class RdfCore extends JObject
 				}
 			}
 
-			$results[$sid] = $result;
+			$results[$rdfanwers->sid] = $result;
 		}
 
 		return $results;
