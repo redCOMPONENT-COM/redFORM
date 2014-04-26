@@ -346,7 +346,8 @@ class RedFormModelPayment extends JModelLegacy
 
 		$emails = $core->getSubmissionContactEmail($this->_submit_key);
 
-		if (!$emails) {
+		if (!$emails)
+		{
 			return false;
 		}
 
@@ -357,9 +358,12 @@ class RedFormModelPayment extends JModelLegacy
 				$mailer->addRecipient($email['email']);
 			}
 		}
-		if (!$mailer->send()) {
+
+		if (!$mailer->send())
+		{
 			return false;
 		}
+
 		return true;
 	}
 
@@ -408,11 +412,12 @@ class RedFormModelPayment extends JModelLegacy
 			$mailer->setSubject($subject);
 			$mailer->setBody($body);
 
-			if ($mailer->send())
+			if (!$mailer->send())
 			{
-				return true;
+				return false;
 			}
 		}
+
 		return true;
 	}
 

@@ -51,7 +51,7 @@ class RdfCore extends JObject
 	 *
 	 * @param   int  $form_id  the form to use - Can be an integer or string - If string, it is converted to ID automatically.
 	 *
-	 * @return RedformCore The  object.
+	 * @return RdfCore The  object.
 	 */
 	public static function getInstance($form_id = 0)
 	{
@@ -602,7 +602,7 @@ class RdfCore extends JObject
 	 *
 	 * @param   mixed  $reference  submit_key string or array int submitter ids
 	 *
-	 * @return array RdfCoreFormSubmission
+	 * @return RdfCoreFormSubmission
 	 */
 	public function getAnswers($reference)
 	{
@@ -627,6 +627,20 @@ class RdfCore extends JObject
 		}
 
 		return $answers;
+	}
+
+	/**
+	 * returns RdfAnswers for sid
+	 *
+	 * @param   int  $sid  submitter id
+	 *
+	 * @return RdfAnswers
+	 */
+	public function getSidAnswers($sid)
+	{
+		$submission = $this->getAnswers(array($sid));
+
+		return $submission->getSubmissionBySid($sid);
 	}
 
 	/**
@@ -703,14 +717,14 @@ class RdfCore extends JObject
 
 		$results = array();
 
-		foreach ((array) $answers as $rdfanwers)
+		foreach ($answers->getSingleSubmissions() as $rdfanswers)
 		{
 			$emails = array();
 			$fullnames = array();
 			$usernames = array();
 
 			// First look for email fields
-			foreach ((array) $rdfanwers->fields as $f)
+			foreach ((array) $rdfanswers->fields as $f)
 			{
 				if ($f->fieldtype == 'email')
 				{
@@ -752,7 +766,7 @@ class RdfCore extends JObject
 				}
 			}
 
-			$results[$rdfanwers->sid] = $result;
+			$results[$rdfanswers->sid] = $result;
 		}
 
 		return $results;
