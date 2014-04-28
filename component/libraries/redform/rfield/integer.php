@@ -102,26 +102,6 @@ class RdfRfieldInteger extends RdfRfieldSelect
 		return $this->value;
 	}
 
-	public function getInput()
-	{
-		$selectProperties = $this->getSelectProperties();
-
-		$element = sprintf('<select %s>', $this->propertiesToString($selectProperties)) . "\n";
-
-		foreach ($this->getOptions() as $option)
-		{
-			$properties = $this->getOptionProperties($option);
-			$element .= sprintf("<option %s/>%s</option>\n",
-				$this->propertiesToString($properties),
-				$option->label
-			);
-		}
-
-		$element .= "</select>\n";
-
-		return $element;
-	}
-
 	/**
 	 * Get postfixed field name for form
 	 *
@@ -146,7 +126,7 @@ class RdfRfieldInteger extends RdfRfieldSelect
 	 *
 	 * @return array
 	 */
-	protected function getOptionProperties($option)
+	public function getOptionProperties($option)
 	{
 		$properties = array();
 		$properties['value'] = $option->value;
@@ -171,7 +151,7 @@ class RdfRfieldInteger extends RdfRfieldSelect
 	 *
 	 * @return mixed
 	 */
-	protected function getOptions()
+	public function getOptions()
 	{
 		if (!$this->options)
 		{

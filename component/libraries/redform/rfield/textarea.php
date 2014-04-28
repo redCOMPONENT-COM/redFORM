@@ -21,18 +21,6 @@ class RdfRfieldTextarea extends RdfRfieldTextfield
 	protected $type = 'textarea';
 
 	/**
-	 * Returns field Input
-	 *
-	 * @return string
-	 */
-	public function getInput()
-	{
-		$properties = $this->getInputProperties();
-
-		return sprintf('<textarea %s>%s</textarea>', $this->propertiesToString($properties), $this->getValue());
-	}
-
-	/**
 	 * Return input properties array
 	 *
 	 * @return array

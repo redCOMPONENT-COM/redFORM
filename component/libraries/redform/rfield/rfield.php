@@ -212,7 +212,17 @@ abstract class RdfRfield extends JObject
 	 *
 	 * @return string
 	 */
-	abstract public function getInput();
+	public function getInput()
+	{
+		$element = RLayoutHelper::render(
+			'rform.rfield.' . $this->type,
+			$this,
+			'',
+			array('client' => 0, 'component' => 'com_redform')
+		);
+
+		return $element;
+	}
 
 	/**
 	 * Returns field value

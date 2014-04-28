@@ -23,28 +23,6 @@ class RdfRfieldPrice extends RdfRfield
 	protected $hasOptions = true;
 
 	/**
-	 * Returns field Input
-	 *
-	 * @return string
-	 */
-	public function getInput()
-	{
-		$properties = $this->getInputProperties();
-		$options = $this->getOptions();
-
-		if (count($options))
-		{
-			$element = $this->getInputHidden(reset($options));
-		}
-		else
-		{
-			$element = $this->getInputText();
-		}
-
-		return $element;
-	}
-
-	/**
 	 * Return price, possibly depending on current field value
 	 *
 	 * @return float
@@ -63,25 +41,6 @@ class RdfRfieldPrice extends RdfRfield
 		}
 
 		return $price;
-	}
-
-	protected function getInputHidden($option)
-	{
-		$properties = $this->getInputProperties();
-		$properties['type'] = 'hidden';
-		$properties['value'] = $option->value;
-		$properties['readonly'] = 'readonly';
-
-		return sprintf('<input %s/> %s', $this->propertiesToString($properties),
-			$this->getCurrency() . ' ' . $option->value
-		);
-	}
-
-	protected function getInputText()
-	{
-		$properties = $this->getInputProperties();
-
-		return sprintf('<input %s/>', $this->propertiesToString($properties));
 	}
 
 	/**
@@ -140,7 +99,7 @@ class RdfRfieldPrice extends RdfRfield
 	 *
 	 * @return mixed
 	 */
-	protected function getCurrency()
+	public function getCurrency()
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);

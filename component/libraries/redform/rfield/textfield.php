@@ -21,18 +21,6 @@ class RdfRfieldTextfield extends RdfRfield
 	protected $type = 'textfield';
 
 	/**
-	 * Returns field Input
-	 *
-	 * @return string
-	 */
-	public function getInput()
-	{
-		$properties = $this->getInputProperties();
-
-		return sprintf('<input %s/>', $this->propertiesToString($properties));
-	}
-
-	/**
 	 * Return input properties array
 	 *
 	 * @return array

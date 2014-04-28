@@ -116,26 +116,6 @@ class RdfRfieldSelect extends RdfRfield
 		return $this->value;
 	}
 
-	public function getInput()
-	{
-		$selectProperties = $this->getSelectProperties();
-
-		$element = sprintf('<select %s>', $this->propertiesToString($selectProperties)) . "\n";
-
-		foreach ($this->getOptions() as $option)
-		{
-			$properties = $this->getOptionProperties($option);
-			$element .= sprintf("<option %s/>%s</option>\n",
-				$this->propertiesToString($properties),
-				$option->label
-			);
-		}
-
-		$element .= "</select>\n";
-
-		return $element;
-	}
-
 	/**
 	 * Get postfixed field name for form
 	 *
@@ -158,7 +138,7 @@ class RdfRfieldSelect extends RdfRfield
 	 *
 	 * @return array
 	 */
-	protected function getSelectProperties()
+	public function getSelectProperties()
 	{
 		$app = JFactory::getApplication();
 
@@ -199,7 +179,7 @@ class RdfRfieldSelect extends RdfRfield
 	 *
 	 * @return array
 	 */
-	protected function getOptionProperties($option)
+	public function getOptionProperties($option)
 	{
 		$properties = array();
 		$properties['value'] = $option->value;

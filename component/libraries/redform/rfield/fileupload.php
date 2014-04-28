@@ -117,6 +117,8 @@ class RdfRfieldFileupload extends RdfRfield
 			return '';
 		}
 
+		return parent::getInput();
+
 		return sprintf('<input %s/>', $this->propertiesToString($properties));
 	}
 

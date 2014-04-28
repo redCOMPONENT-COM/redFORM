@@ -19,17 +19,4 @@ defined('_JEXEC') or die;
 class RdfRfieldWysiwyg extends RdfRfieldTextfield
 {
 	protected $type = 'wysiwyg';
-
-	/**
-	 * Returns field Input
-	 *
-	 * @return string
-	 */
-	public function getInput()
-	{
-		$editor = JFactory::getEditor();
-		$element = $editor->display($this->getFormElementName(), $this->getValue(), '100%;', '200', '75', '20', false);
-
-		return $element;
-	}
 }

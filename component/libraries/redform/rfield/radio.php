@@ -47,24 +47,6 @@ class RdfRfieldRadio extends RdfRfield
 		return $price;
 	}
 
-	public function getInput()
-	{
-		$element = '<div class="fieldoptions">';
-
-		foreach ($this->getOptions() as $option)
-		{
-			$properties = $this->getInputProperties($option);
-			$element .= '<div class="fieldoption">';
-			$element .= sprintf('<input %s/>', $this->propertiesToString($properties));
-			$element .= ' ' . $option->label . "\n";
-			$element .= "</div>\n";
-		}
-
-		$element .= "</div>\n";
-
-		return $element;
-	}
-
 	/**
 	 * Return input properties array
 	 *
@@ -72,7 +54,7 @@ class RdfRfieldRadio extends RdfRfield
 	 *
 	 * @return array
 	 */
-	public function getInputProperties($option)
+	public function getOptionProperties($option)
 	{
 		$app = JFactory::getApplication();
 

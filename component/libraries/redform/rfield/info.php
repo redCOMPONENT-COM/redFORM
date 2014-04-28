@@ -26,23 +26,4 @@ class RdfRfieldInfo extends RdfRfield
 	 * @var bool
 	 */
 	protected $showLabel = false;
-
-	/**
-	 * Returns field Input
-	 *
-	 * @return string
-	 */
-	public function getInput()
-	{
-		$class = array('infofield');
-
-		if ($this->getParam('class'))
-		{
-			$class[] = $this->getParam('class');
-		}
-
-		$text = sprintf('<div class="%s">%s</div>', implode('', $class), $this->load()->default);
-
-		return $text;
-	}
 }

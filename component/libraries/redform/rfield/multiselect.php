@@ -37,7 +37,7 @@ class RdfRfieldMultiselect extends RdfRfieldSelect
 	 *
 	 * @return array
 	 */
-	protected function getSelectProperties()
+	public function getSelectProperties()
 	{
 		$properties = parent::getSelectProperties();
 		$properties['multiple'] = 'multiple';
