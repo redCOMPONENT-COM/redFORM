@@ -48,7 +48,7 @@ class JFormFieldRedformmailinglist extends JFormField
 
 		$index = 0;
 
-		foreach ($values as $v)
+		foreach ((array) $values as $v)
 		{
 			$html[] = $this->getInputLine($v, $index++);
 		}

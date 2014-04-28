@@ -125,7 +125,7 @@ class RdfRfieldFileupload extends RdfRfield
 	 *
 	 * @return array
 	 */
-	protected function getInputProperties()
+	public function getInputProperties()
 	{
 		$properties = array();
 		$properties['type'] = 'file';

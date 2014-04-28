@@ -69,19 +69,12 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	 */
 	public function getInput()
 	{
-		$properties = $this->getInputProperties();
-
-		$element = "<div class=\"emailfields\">";
-		$element .= "<div class=\"emailfield\">";
-		$element .= sprintf('<input %s/>', $this->propertiesToString($properties));
-		$element .= "</div>\n";
-
-		if ($newsletter = $this->getNewsletters())
-		{
-			$element .= $this->addNewslettersElements($newsletter);
-		}
-
-		$element .= "</div>\n";
+		$element = RLayoutHelper::render(
+			'rform.rfield.email',
+			$this,
+			'',
+			array('client' => 0, 'component' => 'com_redform')
+		);
 
 		return $element;
 	}
@@ -110,7 +103,7 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	 *
 	 * @return string
 	 */
-	protected function getFormListElementName()
+	public function getFormListElementName()
 	{
 		$name = 'field' . $this->id;
 
@@ -129,7 +122,7 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	 *
 	 * @return array
 	 */
-	protected function getInputProperties()
+	public function getInputProperties()
 	{
 		$properties = parent::getInputProperties();
 
@@ -162,43 +155,5 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 		}
 
 		return $this->value;
-	}
-
-	protected function getNewsletters()
-	{
-		return $this->getParam('listname');
-	}
-
-	protected function addNewslettersElements($newsletters)
-	{
-		$element = '';
-
-		if ($this->getParam('force_mailing_list', 0))
-		{
-			// Auto subscribe => use hidden field
-			foreach ($newsletters as $listname)
-			{
-				$element .= '<input type="hidden" name="' . $this->getFormListElementName() . '" value="' . $listname . '" />';
-			}
-		}
-		else
-		{
-			$element .= '<div class="newsletterfields">';
-			$element .= '<div id="signuptitle">' . JText::_('COM_REDFORM_SIGN_UP_MAILINGLIST') . '</div>';
-			$element .= '<div class="fieldemail_listnames">';
-
-			foreach ($newsletters AS $listkey => $listname)
-			{
-				$element .= '<div class="field_"' . $listkey . '">';
-				$element .= '<input type="checkbox" name="' . $this->getFormListElementName() . '" value="' . $listname . '" />';
-				$element .= $listname;
-				$element .= '</div>';
-			}
-
-			$element .= "</div>\n";
-			$element .= "</div>\n";
-		}
-
-		return $element;
 	}
 }

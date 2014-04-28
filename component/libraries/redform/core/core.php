@@ -406,7 +406,7 @@ class RdfCore extends JObject
 					'answers' => $indexAnswers
 				),
 				'',
-				array('component' => 'com_redform')
+				array('client' => 0, 'component' => 'com_redform')
 			);
 
 			if ($multi > 1)

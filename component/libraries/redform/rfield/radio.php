@@ -72,7 +72,7 @@ class RdfRfieldRadio extends RdfRfield
 	 *
 	 * @return array
 	 */
-	protected function getInputProperties($option)
+	public function getInputProperties($option)
 	{
 		$app = JFactory::getApplication();
 

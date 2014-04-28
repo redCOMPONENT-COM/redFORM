@@ -101,18 +101,14 @@ class RdfRfieldCheckbox extends RdfRfield
 
 	public function getInput()
 	{
-		$element = '<div class="fieldoptions">';
+		$this->getOptions();
 
-		foreach ($this->getOptions() as $option)
-		{
-			$properties = $this->getInputProperties($option);
-			$element .= '<div class="fieldoption">';
-			$element .= sprintf('<input %s/>', $this->propertiesToString($properties));
-			$element .= ' ' . $option->label . "\n";
-			$element .= "</div>\n";
-		}
-
-		$element .= "</div>\n";
+		$element = RLayoutHelper::render(
+			'rform.rfield.checkbox',
+			$this,
+			'',
+			array('client' => 0, 'component' => 'com_redform')
+		);
 
 		return $element;
 	}
@@ -124,7 +120,7 @@ class RdfRfieldCheckbox extends RdfRfield
 	 *
 	 * @return array
 	 */
-	protected function getInputProperties($option)
+	public function getOptionsProperties($option)
 	{
 		$app = JFactory::getApplication();
 

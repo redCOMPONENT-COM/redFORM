@@ -27,37 +27,11 @@ class RdfRfieldDate extends RdfRfield
 	 */
 	public function getInput()
 	{
-		$properties = $this->getInputProperties();
-
-		if (isset($properties['readonly']))
-		{
-			return $this->getReadonlyField($properties);
-		}
-		else
-		{
-			return $this->getDateField($properties);
-		}
-	}
-
-	protected function getReadonlyField($properties)
-	{
-		$properties['type'] = 'hidden';
-
-		return sprintf('<input %s/>%s', $this->propertiesToString($properties), $this->getValue());
-	}
-
-	protected function getDateField($properties)
-	{
-		$attribs = array();
-
-		if (isset($properties['class']))
-		{
-			$attribs['class'] = $properties['class'];
-		}
-
-		$element = JHTML::_('calendar', $this->getValue(), $properties['name'], $properties['id'],
-			$this->getParam('dateformat', '%Y-%m-%d'),
-			$attribs
+		$element = RLayoutHelper::render(
+			'rform.rfield.date',
+			$this,
+			'',
+			array('client' => 0, 'component' => 'com_redform')
 		);
 
 		return $element;
@@ -83,7 +57,7 @@ class RdfRfieldDate extends RdfRfield
 
 		if ($this->value && !strtotime($this->value))
 		{
-			// invalid
+			// Invalid
 			$val = null;
 		}
 
@@ -95,12 +69,11 @@ class RdfRfieldDate extends RdfRfield
 	 *
 	 * @return array
 	 */
-	protected function getInputProperties()
+	public function getInputProperties()
 	{
 		$app = JFactory::getApplication();
 
 		$properties = array();
-		$properties['type'] = 'text';
 		$properties['name'] = $this->getFormElementName();
 		$properties['id'] = $this->getFormElementId();
 
@@ -111,8 +84,7 @@ class RdfRfieldDate extends RdfRfield
 
 		$properties['value'] = $this->getValue();
 
-		$properties['size'] = $this->getParam('size', 25);
-		$properties['maxlength'] = $this->getParam('maxlength', 250);
+		$properties['dateformat'] = $this->getParam('dateformat', '%Y-%m-%d');
 
 		if ($this->load()->readonly && !$app->isAdmin())
 		{

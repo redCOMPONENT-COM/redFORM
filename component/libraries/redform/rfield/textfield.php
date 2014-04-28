@@ -37,7 +37,7 @@ class RdfRfieldTextfield extends RdfRfield
 	 *
 	 * @return array
 	 */
-	protected function getInputProperties()
+	public function getInputProperties()
 	{
 		$app = JFactory::getApplication();
 

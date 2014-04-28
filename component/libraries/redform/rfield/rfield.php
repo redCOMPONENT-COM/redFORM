@@ -126,6 +126,9 @@ abstract class RdfRfield extends JObject
 			case 'hasOptions':
 				return $this->hasOptions;
 
+			case 'options':
+				return $this->getOptions();
+
 			case 'name':
 			case 'field':
 				return $this->load()->field;
@@ -358,6 +361,28 @@ abstract class RdfRfield extends JObject
 	}
 
 	/**
+	 * Return input properties array
+	 *
+	 * @return array
+	 */
+	public function getInputProperties()
+	{
+		$app = JFactory::getApplication();
+
+		$properties = array();
+		$properties['type'] = 'text';
+		$properties['name'] = $this->getFormElementName();
+		$properties['id'] = $this->getFormElementId();
+
+		if ($class = trim($this->getParam('class')))
+		{
+			$properties['class'] = $class;
+		}
+
+		return $properties;
+	}
+
+	/**
 	 * Try to get a default value from integrations
 	 *
 	 * @return void
@@ -518,7 +543,7 @@ abstract class RdfRfield extends JObject
 	 *
 	 * @return string
 	 */
-	protected function propertiesToString($properties)
+	public function propertiesToString($properties)
 	{
 		$strings = array_map(array($this, 'mapProperties'), array_keys($properties), $properties);
 
