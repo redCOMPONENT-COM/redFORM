@@ -728,7 +728,7 @@ class RdfCore extends JObject
 			{
 				if ($f->fieldtype == 'email')
 				{
-					if ($f->getParam('notify', 1))
+					if ($f->getParam('notify', 1) && JMailHelper::isEmailAddress($f->getValue()))
 					{
 						// Set to receive notifications ?
 						$emails[] = $f->getValue();
