@@ -23,6 +23,16 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 jimport( 'joomla.plugin.plugin' );
 jimport( 'joomla.html.parameter' );
 
+$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
+
+if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+{
+	throw new Exception(JText::_('COM_REDITEM_REDCORE_INIT_FAILED'), 404);
+}
+
+// Bootstraps redCORE
+RBootstrap::bootstrap();
+
 // Register library prefix
 RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
