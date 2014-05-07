@@ -539,65 +539,6 @@ class RdfCore extends JObject
 	}
 
 	/**
-	 * get array of submission attached to submit_key
-	 *
-	 * @param   string  $submit_key  submit key
-	 *
-	 * @return array
-	 */
-	public function getSubmitKeyAnswers($submit_key = null)
-	{
-		if ($submit_key)
-		{
-			$this->setSubmitKey($submit_key);
-		}
-		elseif (!$this->_submit_key)
-		{
-			JError::raiseWarning(0, 'COM_REDFORM_CORE_MISSING_SUBMIT_KEY');
-
-			return false;
-		}
-
-		if (empty($this->_sk_answers))
-		{
-			$mainframe = &JFactory::getApplication();
-			$db = JFactory::getDBO();
-
-			// Get form id and answer id
-			$query = 'SELECT form_id, answer_id, submit_key, id '
-				. ' FROM #__rwf_submitters AS s '
-				. ' WHERE submit_key = ' . $db->Quote($this->_submit_key);
-			$db->setQuery($query);
-			$submitters = $db->loadObjectList();
-
-			if (empty($submitters))
-			{
-				$answers = $mainframe->getUserState($this->_submit_key);
-
-				if (!$answers)
-				{
-					return false;
-				}
-			}
-			else
-			{
-				$sids = array();
-
-				foreach ($submitters as $s)
-				{
-					$sids[] = $s->id;
-				}
-
-				$answers = $this->getSidsAnswers($sids);
-			}
-
-			$this->_sk_answers = $answers;
-		}
-
-		return $this->_sk_answers;
-	}
-
-	/**
 	 * returns an array of objects with properties sid, submit_key, form_id, fields
 	 *
 	 * @param   mixed  $reference  submit_key string or array int submitter ids
@@ -711,7 +652,7 @@ class RdfCore extends JObject
 	 *
 	 * @return array or false
 	 */
-	public function getSubmissionContactEmail($reference, $requires_email = true)
+	public function getSubmissionContactEmails($reference, $requires_email = true)
 	{
 		$answers = $this->getAnswers($reference);
 
@@ -773,6 +714,21 @@ class RdfCore extends JObject
 	}
 
 	/**
+	 * Get first possible email associated to submission
+	 *
+	 * @param   mixed  $reference       submit_key or array of sids
+	 * @param   bool   $requires_email  email required, returns false if no email field
+	 *
+	 * @return bool|mixed
+	 */
+	public function getSubmissionContactEmail($reference, $requires_email = true)
+	{
+		$all = $this->getSubmissionContactEmails($reference, $requires_email);
+
+		return count($all) ? current(current($all)) : false;
+	}
+
+	/**
 	* Get emails associted to sid
 	 *
 	* @param   int  $sid  sid
@@ -781,7 +737,7 @@ class RdfCore extends JObject
 	*/
 	public function getSidContactEmails($sid)
 	{
-		$res = $this->getSubmissionContactEmail(array($sid), $requires_email = true);
+		$res = $this->getSubmissionContactEmails(array($sid), $requires_email = true);
 
 		if ($res)
 		{

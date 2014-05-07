@@ -95,15 +95,16 @@ class PaymentPagseguro extends RdfPaymentHelper
 
 		// Get email and fullname from answers
 		$rfcore = new RdfCore;
-		$emails = $rfcore->getSubmissionContactEmail($submit_key);
+		$email = $rfcore->getSubmissionContactEmail($submit_key);
 
-		if ($emails)
+		if ($email)
 		{
-			$contact = reset(reset($emails));
-			$paymentRequest->setSenderEmail($contact['email']);
+			$paymentRequest->setSenderEmail($email['email']);
 
-			if (isset($contact['fullname']))
-			$paymentRequest->setSenderName($contact['fullname']);
+			if (isset($email['fullname']))
+			{
+				$paymentRequest->setSenderName($email['fullname']);
+			}
 		}
 
 		try
