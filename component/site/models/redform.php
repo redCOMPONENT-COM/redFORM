@@ -263,7 +263,7 @@ class RedformModelRedform extends JModel {
 					{
 						if (is_array($answer['value']))
 						{
-							$value = explode('<br>', $answer['value']);
+							$value = implode('<br>', $answer['value']);
 						}
 						else
 						{
