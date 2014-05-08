@@ -24,8 +24,18 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
+
+if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+{
+	throw new Exception(JText::_('COM_REDITEM_REDCORE_INIT_FAILED'), 404);
+}
+
+// Bootstraps redCORE
+RBootstrap::bootstrap();
+
 // Register library prefix
-JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+RLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
 
 // Require the base controller
 require_once (JPATH_COMPONENT . '/controller.php');

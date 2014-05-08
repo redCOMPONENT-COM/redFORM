@@ -26,8 +26,18 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_redform'))
 	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
+$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
+
+if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+{
+	throw new Exception(JText::_('COM_REDITEM_REDCORE_INIT_FAILED'), 404);
+}
+
+// Bootstraps redCORE
+RBootstrap::bootstrap();
+
 // Register library prefix
-JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+RLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
 
 // log helper class
 require_once (JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'helper.php');

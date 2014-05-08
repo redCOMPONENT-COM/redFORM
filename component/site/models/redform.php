@@ -259,14 +259,24 @@ class RedformModelRedform extends JModel {
 				if (strstr($submission_body, '[answers]'))
 				{
 					$info = "<table>";
-					foreach ($answers->getAnswers() as $answer) {
+					foreach ($answers->getAnswers() as $answer)
+					{
+						if (is_array($answer['value']))
+						{
+							$value = explode('<br>', $answer['value']);
+						}
+						else
+						{
+							$value = $answer['value'];
+						}
+
 						$info .= "<tr>";
 						$info .= "<th>". $answer['field'] ."</th>";
 						if ($answer['type'] == 'file') {
-							$info .= "<td>". basename($answer['value']) ."</td>";
+							$info .= "<td>". basename($value) ."</td>";
 						}
 						else {
-							$info .= "<td>". $answer['value'] ."</td>";
+							$info .= "<td>". $value ."</td>";
 						}
 						$info .= "</tr>";
 					}

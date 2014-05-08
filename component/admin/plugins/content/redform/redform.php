@@ -23,6 +23,18 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 jimport( 'joomla.plugin.plugin' );
 jimport( 'joomla.html.parameter' );
 
+$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
+
+if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+{
+	throw new Exception(JText::_('COM_REDITEM_REDCORE_INIT_FAILED'), 404);
+}
+
+// Bootstraps redCORE
+RBootstrap::bootstrap();
+
+RLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
+
 class plgContentRedform extends JPlugin {
 	/**
 	 * specific redform plugin parameters
@@ -63,17 +75,9 @@ class plgContentRedform extends JPlugin {
 
 	protected function _process(&$row, $params = array())
 	{
-		if (!file_exists(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'redform.core.php')) {
-			JError::raiseWarning(0, JText::_('COM_REDFORM_COMPONENT_REQUIRED_FOR_REDFORM_PLUGIN'));
-			return false;
-		}
-
-		// Register library prefix
-		JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
-
 		$this->_rfcore = new RedformCore();
 
-    JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );
+		JPlugin::loadLanguage( 'plg_content_redform', JPATH_ADMINISTRATOR );
 
 		$this->_rwfparams = $params;
 
