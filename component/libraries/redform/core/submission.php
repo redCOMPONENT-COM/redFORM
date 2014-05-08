@@ -550,11 +550,11 @@ class RdfCoreSubmission
 
 			if ($new)
 			{
-				$htmlmsg .= JText::sprintf('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY', $form->formname);
+				$htmlmsg .= $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY'));
 			}
 			else
 			{
-				$htmlmsg .= JText::sprintf('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY', $form->formname);
+				$htmlmsg .= $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY'));
 			}
 
 			/* Add user submitted data if set */
@@ -672,6 +672,7 @@ class RdfCoreSubmission
 		foreach ($emails as $submitter_email)
 		{
 			$mailer = JFactory::getMailer();
+			$mailer->isHTML(true);
 
 			if ($cond_recipients)
 			{
@@ -689,39 +690,6 @@ class RdfCoreSubmission
 				/* Mail submitter */
 				$submission_body = $form->submissionbody;
 				$submission_body = $this->replaceTags($submission_body, $answers);
-
-				if (strstr($submission_body, '[answers]'))
-				{
-					$info = "<table>";
-
-					foreach ($answers->getAnswers() as $answer)
-					{
-						$info .= "<tr>";
-						$info .= "<th>" . $answer['field'] . "</th>";
-
-						if ($answer['type'] == 'file')
-						{
-							$info .= "<td>" . basename($answer['value']) . "</td>";
-						}
-						else
-						{
-							$info .= "<td>" . $answer['value'] . "</td>";
-						}
-
-						$info .= "</tr>";
-					}
-
-					if ($p = $answers->getPrice())
-					{
-						$info .= '<tr><th>' . JText::_('COM_REDFORM_TOTAL_PRICE') . '</th><td>';
-						$info .= $p;
-						$info .= '</td></tr>' . "\n";
-					}
-
-					$info .= "</table>";
-					$submission_body = str_replace('[answers]', $info, $submission_body);
-				}
-
 				$htmlmsg = '<html><head><title>Welcome</title></title></head><body>' . $submission_body . '</body></html>';
 				$mailer->setBody($htmlmsg);
 

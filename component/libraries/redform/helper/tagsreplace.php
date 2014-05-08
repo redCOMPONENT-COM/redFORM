@@ -84,6 +84,13 @@ class RdfHelperTagsreplace
 		return $text;
 	}
 
+	/**
+	 * Replace answer_xx tag with it's field value
+	 *
+	 * @param   string  $tag  the tag to replace
+	 *
+	 * @return mixed
+	 */
 	private function getAnswerReplace($tag)
 	{
 		if (!preg_match('/^\[answer_([0-9]+)\]$/', $tag, $match))
@@ -104,18 +111,49 @@ class RdfHelperTagsreplace
 		return false;
 	}
 
+	/**
+	 * replace [submitkey] tag
+	 *
+	 * @return string
+	 */
 	private function getTagSubmitkey()
 	{
 		return $this->answers->getSubmitKey();
 	}
 
+	/**
+	 * replace [formname] tag
+	 *
+	 * @return string
+	 */
 	private function getTagFormname()
 	{
 		return $this->formdata->formname;
 	}
 
+	/**
+	 * replace [totalprice] tag
+	 *
+	 * @return string
+	 */
 	private function getTotalprice()
 	{
 		return $this->answers->getPrice();
+	}
+
+	/**
+	 * replace [answers] tag
+	 *
+	 * @return string
+	 */
+	private function getTagAnswers()
+	{
+		$text = RLayoutHelper::render('tag.answers',
+			$this->answers,
+			'',
+			array('client' => 0, 'component' => 'com_redform')
+		);
+
+		return $text;
 	}
 }
