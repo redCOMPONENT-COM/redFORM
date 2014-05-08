@@ -147,7 +147,7 @@ class RedformCore extends JObject {
 		/* Get the user details form */
 		if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add'))
 		{
-			$html .= '<div id="submit_button" style="display: block;" class="submitform'.$form->classname.'"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('COM_REDFORM_Submit').'" />';
+			$html .= '<div id="submit_button" style="display: block;" class="submitform'.$form->classname.'"><input type="submit" id="regularsubmit" name="submit" value="'.JText::_('COM_REDFORM_Submit').'" class="validate"/>';
 			$html .= '</div>';
 		}
 
