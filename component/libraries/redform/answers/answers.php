@@ -385,6 +385,11 @@ class RdfAnswers
 			throw new Exception('No field to save !');
 		}
 
+		if (!$this->validate())
+		{
+			return false;
+		}
+
 		if (!$this->sid)
 		{
 			$this->isnew = true;
@@ -469,6 +474,28 @@ class RdfAnswers
 		$this->setPrice();
 
 		return $this->sid;
+	}
+
+	/**
+	 * Fields validation
+	 *
+	 * @return bool
+	 */
+	protected function validate()
+	{
+		$mainframe = JFactory::getApplication();
+		$res = true;
+
+		foreach ($this->fields as $field)
+		{
+			if ($field->validate && !$field->getValue())
+			{
+				$mainframe->enqueueMessage(JText::sprintf('COM_REDFORM_FIELD_S_IS_REQUIRED', $field->name), 'notice');
+				$res = false;
+			}
+		}
+
+		return $res;
 	}
 
 	/**
