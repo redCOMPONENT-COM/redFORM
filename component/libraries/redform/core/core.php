@@ -190,7 +190,7 @@ class RdfCore extends JObject
 			$model = $this->getSubmissionModel($this->_submit_key);
 
 			if (is_array($reference))
-			 {
+			{
 				$answers = $model->getSubmission($reference);
 			}
 			else
@@ -231,7 +231,7 @@ class RdfCore extends JObject
 			$html .= '<input type="hidden" name="controller" value="submitters" />';
 		}
 
-		$html .= '<input type="hidden" name="referer" value="' . htmlspecialchars($uri->toString()) . '" />';
+		$html .= '<input type="hidden" name="referer" value="' . base64_encode($uri->toString()) . '" />';
 
 		$html .= '</form>';
 
@@ -266,6 +266,11 @@ class RdfCore extends JObject
 	{
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
+		$app = JFactory::getApplication();
+
+		$model = $this->getFormModel($form_id);
+		$form = $model->getForm();
+		$fields = $model->getFormFields();
 
 		$this->setReference($reference);
 		$submit_key = $this->_submit_key;
@@ -273,25 +278,28 @@ class RdfCore extends JObject
 		// Was this form already submitted before (and there was an error for example, or editing)
 		if ($this->_submit_key)
 		{
-			$model = $this->getSubmissionModel($this->_submit_key);
+			$modelSubmission = $this->getSubmissionModel($this->_submit_key);
 
 			if (is_array($reference))
 			{
-				$answers = $model->getSubmission($reference);
+				$answers = $modelSubmission->getSubmission($reference);
 			}
 			else
 			{
-				$answers = $model->getSubmission();
+				$answers = $modelSubmission->getSubmission();
 			}
+		}
+		elseif ($fromSession = $app->getUserState('formdata' . $form->id))
+		{
+			$answers = $model->getSubmissionFromSession($fromSession);
+
+			// Unset
+			$app->setUserState('formdata' . $form->id, null);
 		}
 		else
 		{
 			$answers = false;
 		}
-
-		$model = $this->getFormModel($form_id);
-		$form   = $model->getForm();
-		$fields = $model->getFormFields();
 
 		// Css
 		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/tooltip.css');

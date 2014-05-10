@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Core
  * @since       3.0
  */
-class RdfCoreSubmission
+class RdfCoreSubmission extends JObject
 {
 	protected $formId;
 
@@ -228,16 +228,6 @@ class RdfCoreSubmission
 
 			if (count($results) && $res == false)
 			{
-				// Save to session
-				$sessiondata = array();
-
-				foreach ($allanswers as $a)
-				{
-					$sessiondata[] = $a->toSession();
-				}
-
-				$app->setUserState($submit_key, $sessiondata);
-
 				$this->setError(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
 
 				return false;

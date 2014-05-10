@@ -155,4 +155,31 @@ class RdfCoreModelForm extends RModel
 
 		return true;
 	}
+
+	public function getSubmissionFromSession($fromSession)
+	{
+		$res = new RdfCoreFormSubmission;
+		$fields = $this->getFormFields();
+
+		foreach ($fromSession as $single)
+		{
+			$answers = new RdfAnswers;
+
+			foreach ($fields as $field)
+			{
+				$clone = clone($field);
+
+				if (isset($single->{'field_' . $field->id}))
+				{
+					$clone->setValue($single->{'field_' . $field->id});
+				}
+
+				$answers->addField($clone);
+			}
+
+			$res->addSubSubmission($answers);
+		}
+
+		return $res;
+	}
 }

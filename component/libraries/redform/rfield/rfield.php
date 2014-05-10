@@ -473,6 +473,25 @@ abstract class RdfRfield extends JObject
 	}
 
 	/**
+	 * Check that data is valid
+	 *
+	 * @return bool
+	 */
+	public function validate()
+	{
+		$data = $this->load();
+
+		if ($data->validate && !$this->getValue())
+		{
+			$this->setError(JText::sprintf('COM_REDFORM_FIELD_S_IS_REQUIRED', $data->name));
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get field parameters
 	 *
 	 * @return JRegistry

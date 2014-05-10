@@ -139,6 +139,28 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	}
 
 	/**
+	 * Check that data is valid
+	 *
+	 * @return bool
+	 */
+	public function validate()
+	{
+		if (!parent::validate())
+		{
+			return false;
+		}
+
+		if ($this->value && !JMailHelper::isEmailAddress($this->value))
+		{
+			$this->setError(JText::_('COM_REDFORM_INVALID_EMAIL_FORMAT'));
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Try to get a default value from integrations
 	 *
 	 * @return void

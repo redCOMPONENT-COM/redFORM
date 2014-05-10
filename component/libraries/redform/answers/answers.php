@@ -488,9 +488,9 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			if ($field->validate && !$field->getValue())
+			if (!$field->validate())
 			{
-				$mainframe->enqueueMessage(JText::sprintf('COM_REDFORM_FIELD_S_IS_REQUIRED', $field->name), 'notice');
+				$mainframe->enqueueMessage($field->getError(), 'notice');
 				$res = false;
 			}
 		}

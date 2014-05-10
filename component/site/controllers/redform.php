@@ -36,7 +36,8 @@ class RedformControllerRedform extends RedformController
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onAfterRedformSavedSubmission', array(&$result));
 
-		$referer = $app->input->get('referer');
+		$referer = $app->input->get('referer', '', 'base64');
+		$referer = $referer ? base64_decode($referer) : 'index.php';
 
 		if (!$result)
 		{
