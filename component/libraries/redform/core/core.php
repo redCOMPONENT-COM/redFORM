@@ -1007,9 +1007,6 @@ class RdfCore extends JObject
 	protected function loadCheckScript()
 	{
 		JHtml::_('behavior.formvalidation');
-		JText::script('JGLOBAL_VALIDATION_FORM_FAILED');
-
-		JFactory::getDocument()->addScript('media/com_redform/js/form-check.js');
 	}
 
 	/**
