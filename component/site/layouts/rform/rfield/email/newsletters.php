@@ -16,7 +16,9 @@ $newsletters = $data->getParam('listname');
 <?php if ($data->getParam('force_mailing_list', 0)): ?>
 
 	<?php foreach ($newsletters as $listname): ?>
-		<input type="hidden" name="<?php echo $data->getFormListElementName(); ?>" value="<?php echo $listname; ?>" />
+		<?php if ($listname): ?>
+			<input type="hidden" name="<?php echo $data->getFormListElementName(); ?>" value="<?php echo $listname; ?>" />
+		<?php endif; ?>
 	<?php endforeach; ?>
 
 <?php else: ?>
@@ -26,10 +28,12 @@ $newsletters = $data->getParam('listname');
 		<div class="fieldemail_listnames">
 
 			<?php foreach ($newsletters AS $listkey => $listname): ?>
-				<div class="nl_<?php echo $listkey; ?>">
-					<input type="checkbox" name="<?php echo $data->getFormListElementName(); ?>" value="<?php echo $listname; ?>" />
-					<?php echo $listname; ?>
-				</div>
+				<?php if ($listname): ?>
+					<div class="nl_<?php echo $listkey; ?>">
+						<input type="checkbox" name="<?php echo $data->getFormListElementName(); ?>" value="<?php echo $listname; ?>" />
+						<?php echo $listname; ?>
+					</div>
+				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>
 	</div>

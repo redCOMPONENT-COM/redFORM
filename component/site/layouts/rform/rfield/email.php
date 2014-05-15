@@ -12,13 +12,14 @@ defined('_JEXEC') or die;
 $data = $displayData;
 
 $properties = $data->getInputProperties();
+$lists = $data->getParam('listname');
 ?>
 <div class="emailfields">
 	<div class="emailfield">
 		<input <?php echo $data->propertiesToString($properties); ?> />
 	</div>
 
-	<?php if ($data->getParam('listname')): ?>
+	<?php if (count($lists) && $lists[0]): ?>
 		<?php echo $this->sublayout('newsletters', $displayData); ?>
 	<?php endif; ?>
 </div>
