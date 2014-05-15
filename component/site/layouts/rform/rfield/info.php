@@ -21,5 +21,5 @@ if ($data->getParam('class'))
 $class = implode(' ', $class);
 ?>
 <div class="<?php echo $class; ?>">
-	<?php echo $data->default; ?>
+	<?php echo $data->getParam('content'); ?>
 </div>

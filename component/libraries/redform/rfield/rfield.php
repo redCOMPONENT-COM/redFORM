@@ -111,9 +111,6 @@ abstract class RdfRfield extends JObject
 			case 'fieldtype':
 				return $this->type;
 
-			case 'default':
-				return $this->getParam('default');
-
 			case 'value':
 				return $this->getValue();
 
