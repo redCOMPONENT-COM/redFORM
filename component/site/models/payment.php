@@ -344,10 +344,11 @@ class RedformModelPayment extends JModel
 		$body = $replaceHelper->replace($body, array('[submitters]' => $link));
 		$mailer->setBody($body);
 
-		$emails = $core->getSubmissionContactEmail($this->_submit_key);
+		$emails = $core->getSubmissionContactEmail($this->_submit_key, true);
 
-		if (!$emails) {
-			return false;
+		if (!$emails)
+		{
+			return true;
 		}
 
 		foreach ((array) $emails as $sid)
@@ -357,7 +358,9 @@ class RedformModelPayment extends JModel
 				$mailer->addRecipient($email['email']);
 			}
 		}
-		if (!$mailer->send()) {
+
+		if (!$mailer->send())
+		{
 			return false;
 		}
 		return true;

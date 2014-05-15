@@ -219,7 +219,10 @@ class RedformControllerPayment extends JController
 				$dispatcher->trigger('onAfterPaymentVerified', array($submit_key));
 
 				// Built-in notifications
-				$model->notifyPaymentReceived();
+				if (!$model->notifyPaymentReceived())
+				{
+					$app->enqueueMessage($model->getError(), 'error');
+				}
 			}
 		}
 		else
