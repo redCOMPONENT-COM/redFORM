@@ -145,10 +145,10 @@ class RedformTableField extends RTable
 		$db = JFactory::getDbo();
 
 		// Delete associated field in form table
-		$q = "ALTER TABLE " . $db->quoteName('#__rwf_forms_' . $this->form_id) . " DROP " . $db->quoteName($this->field);
+		$q = "ALTER TABLE " . $db->quoteName('#__rwf_forms_' . $this->form_id) . " DROP " . $db->quoteName('field_' . $this->id);
 		$db->setQuery($q);
 
-		if (!$db->query())
+		if (!$db->execute())
 		{
 			throw new Exception(JText::_('COM_REDFORM_Cannot_remove_field_from_form_table') . ' ' . $db->getError());
 		}
@@ -159,8 +159,9 @@ class RedformTableField extends RTable
 		$query->delete();
 		$query->from('#__rwf_values');
 		$query->where('field_id = ' . $pk);
+		$db->setQuery($query);
 
-		if (!$db->query())
+		if (!$db->execute())
 		{
 			throw new Exception(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_field_values') . ' ' . $db->getError());
 		}
