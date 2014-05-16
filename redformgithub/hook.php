@@ -10,10 +10,10 @@ $convert = rawurldecode($str);
 
 parse_str($convert);
 
-$targetBranch = 'maersk-main';
+$targetBranch = 'maersk-overrides';
 
 // Update repo
-$cmd = 'cd /home/staging/git/redFORM2.5; git fetch --all; ';
+$cmd = 'cd /home/staging/git/redFORM2.5; git fetch --all 2<&1; ';
 $cmd .= 'git reset --hard origin/' . $targetBranch . '; ';
 $cmd .= 'git submodule update; ';
 
@@ -21,7 +21,7 @@ $cmd .= 'git submodule update; ';
 $cmd .= 'phing 2<&1; ';
 
 // Update db
-$cmd .= 'php /home/staging/public_html/redInstallRedform.php; ';
+$cmd .= 'php /home/staging/public_html/redformgithub/redInstall.php --extension=redform; ';
 
 $output = shell_exec($cmd);
 

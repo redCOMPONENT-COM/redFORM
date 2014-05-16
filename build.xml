@@ -282,6 +282,12 @@
 			</filterchain>
         </copy>
 
+        <copy todir="${www.dir}/redformgithub" overwrite="true">
+            <fileset dir="${dirs.root}/redformgithub">
+                <include name="**" />
+            </fileset>
+        </copy>
+
     </target>
 
     <!--
