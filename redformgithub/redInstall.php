@@ -69,7 +69,15 @@ class RedInstall extends JApplicationCli
 
 		try
 		{
-			$this->run();
+			$this->extension = $this->input->get('extension');
+
+			if (!$this->extension)
+			{
+				throw new Exception('Extension name must be specified');
+			}
+
+			$this->updateDatabase();
+			$this->updateManifestCache();
 		}
 		catch (Exception $e)
 		{
@@ -79,56 +87,35 @@ class RedInstall extends JApplicationCli
 	}
 
 	/**
-	 * Do the job
+	 * Update manifest_cache in database
 	 *
 	 * @return void
-	 *
-	 * @throws Exception
 	 */
-	private function run()
+	private function updateManifestCache()
 	{
-		$this->extension = $this->input->get('extension');
-
-		if (!$this->extension)
-		{
-			throw new Exception('Extension name must be specified');
-		}
-
 		$db = JFactory::getDbo();
 
 		$manifest = $this->getManifest();
 		$newVersion = (string) $manifest->version;
 
-		$manifestCache = $db->setQuery(
-			$db->getQuery(true)
-				->select('manifest_cache')
-				->from('#__extensions')
-				->where('element = "com_' . $this->extension . '"')
-		)
-			->loadResult();
-		$manifestCache = json_decode($manifestCache);
-
-
+		$manifestCache = $this->getManifestCache();
 		$oldVersion = (string) $manifestCache->version;
-
-		$this->dbUpdate();
 
 		$this->out('Current manifest version: ' . $oldVersion);
 		$this->out('Replacing with: ' . $newVersion);
 
-		if (version_compare($newVersion, $oldVersion) > 0)
-		{
-			$manifestCache->version = $newVersion;
-			$newManifestCache = json_encode($manifestCache);
-			$db->setQuery(
-				$db->getQuery(true)
-					->update('#__extensions')
-					->set('manifest_cache = ' . $db->q($newManifestCache))
-					->where('element = "com_' . $this->extension . '"')
-			)
-				->execute();
-			$this->out('Extension Version Updated');
-		}
+		$manifestCache->version = $newVersion;
+		$manifestCache->creationDate = (string) $manifest->creationDate;
+		$newManifestCache = json_encode($manifestCache);
+
+		$db->setQuery(
+			$db->getQuery(true)
+				->update('#__extensions')
+				->set('manifest_cache = ' . $db->q($newManifestCache))
+				->where('element = "com_' . $this->extension . '"')
+		)
+			->execute();
+		$this->out('Extension Version Updated');
 	}
 
 	/**
@@ -138,7 +125,7 @@ class RedInstall extends JApplicationCli
 	 *
 	 * @throws Exception
 	 */
-	private function dbUpdate()
+	private function updateDatabase()
 	{
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
@@ -266,6 +253,22 @@ class RedInstall extends JApplicationCli
 		}
 
 		return false;
+	}
+
+	private function getManifestCache()
+	{
+		$db = JFactory::getDbo();
+
+		$manifestCache = $db->setQuery(
+			$db->getQuery(true)
+				->select('manifest_cache')
+				->from('#__extensions')
+				->where('element = "com_' . $this->extension . '"')
+		)
+			->loadResult();
+		$manifestCache = json_decode($manifestCache);
+
+		return $manifestCache;
 	}
 
 	/**

@@ -10,12 +10,12 @@ $convert = rawurldecode($str);
 
 parse_str($convert);
 
-$targetBranch = 'maersk-overrides';
+$targetBranch = 'maersk-main';
 
 // Update repo
 $cmd = 'cd /home/staging/git/redFORM2.5; git fetch --all 2<&1; ';
-$cmd .= 'git reset --hard origin/' . $targetBranch . '; ';
-$cmd .= 'git submodule update; ';
+$cmd .= 'git reset --hard origin/' . $targetBranch . ' 2<&1; ';
+$cmd .= 'git submodule update 2<&1; ';
 
 // Build
 $cmd .= 'phing 2<&1; ';
