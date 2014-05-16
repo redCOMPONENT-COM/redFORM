@@ -76,18 +76,8 @@ class RedInstall extends JApplicationCli
 				throw new Exception('Extension name must be specified');
 			}
 
-			$installer = JInstaller::getInstance();
-			$path = $this->getManifestPath();
-
-			if (!$installer->install($path))
-			{
-				$this->out($installer->getError());
-			}
-
-			$this->out('installer went fine');
-
-			//$this->updateDatabase();
-			//$this->updateManifestCache();
+			$this->updateDatabase();
+			$this->updateManifestCache();
 		}
 		catch (Exception $e)
 		{
