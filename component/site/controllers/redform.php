@@ -49,7 +49,7 @@ class RedformControllerRedform extends RedformController
 
 		if ($url = $model->hasActivePayment())
 		{
-			$url = 'index.php?option=com_redform&controller=payment&task=select&key=' . $result->submit_key;
+			$url = 'index.php?option=com_redform&task=payment.select&key=' . $result->submit_key;
 			$this->setRedirect($url);
 			$this->redirect();
 		}

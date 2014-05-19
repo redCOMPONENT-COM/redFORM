@@ -141,7 +141,7 @@ class PaymentIdeal extends  RdfPaymentHelper
 		}
 
 		?>
-		<form method="post" action="<?php JRoute::_('index.php?option=com_redform&controller=payment');?>">
+		<form method="post" action="<?php JRoute::_('index.php?option=com_redform');?>">
 		<fieldset>
 		<legend><?php echo JText::_('iDeal Payment Gateway'); ?></legend>
 		<p><?php echo $request->title; ?></p>
@@ -154,7 +154,7 @@ class PaymentIdeal extends  RdfPaymentHelper
 		<input type="hidden" name="partner_id" value="<?php echo $this->params->get('partner_id'); ?>">
 		<input type="hidden" name="amount" value="<?php echo round($details->price*100); ?>">
 		<input type="hidden" name="description" value="<?php echo $request->title; ?>">
-		<input type="hidden" name="task" value="process">
+		<input type="hidden" name="task" value="payment.process">
 		<input type="hidden" name="key" value="<?php echo $request->key; ?>">
 		<input type="hidden" name="gw" value="ideal">
 
