@@ -19,7 +19,7 @@ $lists = $data->getParam('listname');
 		<input <?php echo $data->propertiesToString($properties); ?> />
 	</div>
 
-	<?php if (count($lists) && $lists[0]): ?>
+	<?php if (is_array($lists) && count($lists) && $lists[0]): ?>
 		<?php echo $this->sublayout('newsletters', $displayData); ?>
 	<?php endif; ?>
 </div>
