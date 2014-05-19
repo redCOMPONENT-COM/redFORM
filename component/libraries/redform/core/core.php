@@ -708,8 +708,8 @@ class RedformCore extends JObject {
 						}
 						elseif ($user->get($field->redmember_field))
 						{
-							// redmember uses unix timestamp
-							$val = strftime($field->parameters->get('dateformat','%Y-%m-%d'), $user->get($field->redmember_field));
+							// Redmember stores plain text dates as set in field
+							$val = $user->get($field->redmember_field);
 						}
 						else
 						{
