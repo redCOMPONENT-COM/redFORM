@@ -50,7 +50,7 @@ class RedformControllerPayment extends JControllerLegacy
 
 		if (count($options) == 1)
 		{
-			$this->setRedirect('index.php?option=com_redform&controller=payment&task=process&key=' . $key . '&gw=' . $options[0]->value . $lang_v);
+			$this->setRedirect('index.php?option=com_redform&task=payment.process&key=' . $key . '&gw=' . $options[0]->value . $lang_v);
 			$this->redirect();
 		}
 
