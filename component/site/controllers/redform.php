@@ -41,11 +41,15 @@ class RedformControllerRedform extends RedformController
 
 		if (!$result)
 		{
-			$msg = JText::_('COM_REDFORM_Sorry_there_was_a_problem_with_your_submission') . ': ' . $model->getError();
+			$msg = JText::_('COM_REDFORM_SORRY_THERE_WAS_A_PROBLEM_WITH_YOUR_SUBMISSION') . ': ' . $model->getError();
 
 			$this->setRedirect($referer, $msg, 'error');
 			$this->redirect();
 		}
+
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onAfterRedformSavedSubmission', array(&$result));
 
 		if ($url = $model->hasActivePayment())
 		{
