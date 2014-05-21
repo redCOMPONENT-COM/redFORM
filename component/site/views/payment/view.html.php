@@ -98,6 +98,9 @@ class RedformViewPayment extends JView {
 			case 'processing':
 				$text = $form->paymentprocessing;
 				break;
+			case 'failed':
+				$text = JText::_('COM_REDFORM_PAYMENT_FAILED');
+				break;
 		}
 
 		$this->assign('text',  $text);
