@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="redform_payment" method="upgrade">
-    <name>PLG_REDFORM_WORLDPAY</name>
+    <name>PLG_REDFORM_WORLDPAY2</name>
     <creationDate>##DATE##</creationDate>
     <author>redWEB Aps</author>
     <authorEmail>email@redweb.dk</authorEmail>
@@ -8,10 +8,10 @@
     <copyright>(C) 2008 - 2013 redCOMPONENT.com</copyright>
     <license>GNU/GPL</license>
     <version>##VERSION##</version>
-    <description>PLG_REDFORM_WORLDPAY_XML_DESC</description>
+    <description>PLG_REDFORM_WORLDPAY2_XML_DESC</description>
 
     <files>
-        <filename plugin="worldpay">worldpay.php</filename>
+        <filename plugin="worldpay2">worldpay2.php</filename>
         <folder>helpers</folder>
         <filename>index.html</filename>
         <folder>js</folder>
