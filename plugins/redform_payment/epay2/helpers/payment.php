@@ -252,7 +252,7 @@ class PaymentEpay2 extends  RDFPaymenthelper
 				    . ', '. $db->Quote($data)
 				    . ', '. $db->Quote($submit_key)
 				    . ', '. $db->Quote($status)
-				    . ', '. $db->Quote('epay')
+				    . ', '. $db->Quote('epay2')
 				    . ', '. $db->Quote($paid)
 				    . ') ';
     $db->setQuery($query);
