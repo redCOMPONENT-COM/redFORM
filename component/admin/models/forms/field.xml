@@ -55,6 +55,7 @@
 				type="radio"
 				label="COM_REDFORM_FORMS_XML_FIELD_REQUIRED"
 				description="COM_REDFORM_FORMS_XML_FIELD_REQUIRED_DESC"
+                class="btn-group"
 				default="0"
 				>
 			<option value="0">JNO</option>
@@ -65,6 +66,7 @@
 				type="radio"
 				label="COM_REDFORM_FORMS_XML_FIELD_UNIQUE"
 				description="COM_REDFORM_FORMS_XML_FIELD_UNIQUE_DESC"
+                class="btn-group"
 				default="0"
 				>
 			<option value="0">JNO</option>
@@ -75,6 +77,7 @@
 				type="radio"
 				label="COM_REDFORM_FORMS_XML_FIELD_READONLY"
 				description="COM_REDFORM_FORMS_XML_FIELD_READONLY_DESC"
+                class="btn-group"
 				default="0"
 				>
 			<option value="0">JNO</option>

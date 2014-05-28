@@ -11,12 +11,14 @@
             <field name="maxlength" type="text" default="250" label="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH"
                    description="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH_DESC"/>
             <field name="force_mailing_list" type="radio" default="0"
+                   class="btn-group"
                    label="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST"
                    description="COM_REDFORM_FIELD_EMAIL_PARAMS_FORCE_MAILING_LIST_DESC">
                 <option value="0">No</option>
                 <option value="1">Yes</option>
             </field>
             <field name="notify" type="radio" default="1" label="COM_REDFORM_FIELD_EMAIL_PARAMS_NOTIFY_LABEL"
+                   class="btn-group"
                    description="COM_REDFORM_FIELD_EMAIL_PARAMS_NOTIFY_DESC">
                 <option value="0">No</option>
                 <option value="1">Yes</option>
