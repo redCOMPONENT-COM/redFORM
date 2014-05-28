@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.7" type="plugin" group="redform_payment" method="upgrade">
+<extension version="2.5" type="plugin" group="redform_payment" method="upgrade">
   <name>PLG_REDFORM_QUICKPAY</name>
 	<creationDate>##DATE##</creationDate>
 	<author>redWEB Aps</author>
@@ -26,7 +26,7 @@
 					 description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
 					 rows="10"
 					  />
-			  
+
 		    <field name="quickpayid" type="text" default=""
 		           label="PLG_REDFORM_QUICKPAY_QUICKPAYID_LABEL"
 		           description="PLG_REDFORM_QUICKPAY_QUICKPAYID_DESC" />

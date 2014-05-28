@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.7" type="plugin" group="redform_mailing" method="upgrade">
+<extension version="2.5" type="plugin" group="redform_mailing" method="upgrade">
   <name>PLG_REDFORM_MAILING_ACYMAILING</name>
 	<creationDate>##DATE##</creationDate>
 	<author>redWEB Aps</author>
@@ -9,11 +9,11 @@
 	<license>GNU/GPL</license>
 	<version>##VERSION##</version>
   <description>PLG_REDFORM_MAILING_ACYMAILING_XML_DESCRIPTION</description>
-  
+
   <files>
     <filename plugin="acymailing">acymailing.php</filename>
     <filename>index.html</filename>
     <folder>language</folder>
   </files>
-  
+
 </extension>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.7" type="plugin" group="redform_captcha" method="upgrade">
+<extension version="2.5" type="plugin" group="redform_captcha" method="upgrade">
   <name>PLG_REDFORM_CAPTCHA_SIMPLEMATH</name>
 	<creationDate>##DATE##</creationDate>
 	<author>redWEB Aps</author>
@@ -9,13 +9,13 @@
 	<license>GNU/GPL</license>
 	<version>##VERSION##</version>
   <description>PLG_REDFORM_CAPTCHA_SIMPLEMATH_XML_DESCRIPTION</description>
-  
+
   <files>
     <filename plugin="simplemath">simplemath.php</filename>
     <filename>index.html</filename>
     <folder>language</folder>
   </files>
-  
+
   <config>
 	  <fields name="params">
 		  <fieldset name="extra" label="extra">

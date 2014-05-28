@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.7" type="plugin" group="redform_captcha" method="upgrade">
+<extension version="2.5" type="plugin" group="redform_captcha" method="upgrade">
   <name>PLG_REDFORM_CAPTCHA_RECAPTCHA</name>
 	<creationDate>##DATE##</creationDate>
 	<author>redWEB Aps</author>
@@ -9,14 +9,14 @@
 	<license>GNU/GPL</license>
 	<version>##VERSION##</version>
   <description>PLG_REDFORM_CAPTCHA_RECAPTCHA_XML_DESCRIPTION</description>
-  
+
   <files>
     <filename plugin="recaptcha">recaptcha.php</filename>
     <folder>recaptcha</folder>
     <filename>index.html</filename>
     <folder>language</folder>
   </files>
-  
+
   <config>
 	  <fields name="params">
 		  <fieldset name="extra" label="extra">
