@@ -28,13 +28,6 @@
 				maxlength="255"
 				/>
 		<field
-				name="form_id"
-				type="redformform"
-				label="COM_REDFORM_FORMS_XML_FIELD_FORM"
-				description="COM_REDFORM_FORMS_XML_FIELD_FORM_DESC"
-				required="true"
-				/>
-		<field
 				name="fieldtype"
 				type="redformfieldtype"
 				label="COM_REDFORM_FORMS_XML_FIELD_TYPE"
@@ -51,51 +44,12 @@
 				rows="5"
 				/>
 		<field
-				name="validate"
-				type="radio"
-				label="COM_REDFORM_FORMS_XML_FIELD_REQUIRED"
-				description="COM_REDFORM_FORMS_XML_FIELD_REQUIRED_DESC"
-                class="btn-group"
-				default="0"
-				>
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-		<field
-				name="unique"
-				type="radio"
-				label="COM_REDFORM_FORMS_XML_FIELD_UNIQUE"
-				description="COM_REDFORM_FORMS_XML_FIELD_UNIQUE_DESC"
-                class="btn-group"
-				default="0"
-				>
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-		<field
-				name="readonly"
-				type="radio"
-				label="COM_REDFORM_FORMS_XML_FIELD_READONLY"
-				description="COM_REDFORM_FORMS_XML_FIELD_READONLY_DESC"
-                class="btn-group"
-				default="0"
-				>
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-		<field
 				name="default"
 				type="textarea"
 				label="COM_REDFORM_FORMS_XML_FIELD_DEFAULT_VALUE"
 				description="COM_REDFORM_FORMS_XML_FIELD_DEFAULT_VALUE_DESC"
 				cols="80"
 				rows="5"
-				/>
-		<field
-				name="published"
-				type="rpublished"
-				label="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED"
-				description="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED_DEC"
 				/>
 		<field
 				name="redmember_field"

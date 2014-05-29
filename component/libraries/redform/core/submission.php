@@ -741,7 +741,7 @@ class RdfCoreSubmission extends JObject
 	 */
 	private function getMailingList($field_id)
 	{
-		$field = RdfRfieldFactory::getField($field_id);
+		$field = RdfRfieldFactory::getFormField($field_id);
 
 		return $field->getParam('mailinglist');
 	}

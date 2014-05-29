@@ -227,7 +227,7 @@ class RedformTableForm extends RTable
 		$query = $db->getQuery(true);
 
 		$query->delete();
-		$query->from('#__rwf_fields');
+		$query->from('#__rwf_form_field');
 		$query->where('form_id = ' . $pk);
 
 		$db->setQuery($query);

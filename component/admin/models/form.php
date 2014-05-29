@@ -195,7 +195,8 @@ class RedformModelForm extends RModelAdmin
 
 		$query->select('f.id AS value, f.field AS text');
 		$query->from('#__rwf_fields AS f');
-		$query->where('f.form_id = ' . (int) $id);
+		$query->join('INNER', '#__rwf_form_field AS ff ON ff.field_id = f.id');
+		$query->where('ff.form_id = ' . (int) $id);
 		$query->order('f.field');
 
 		$db->setQuery($query);

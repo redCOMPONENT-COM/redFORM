@@ -63,17 +63,6 @@ class RedformTableField extends RTable
 	 */
 	public $checked_out_time = null;
 
-
-	/**
-	 * @var int
-	 */
-	public $form_id = null;
-
-	/**
-	 * @var int
-	 */
-	public $ordering = null;
-
 	/**
 	 * @var int
 	 */
@@ -134,23 +123,25 @@ class RedformTableField extends RTable
 	 */
 	public function delete($pk = null)
 	{
-		// Load first
-		$this->load($pk);
+		// Check if associated to forms
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('id')->from('#__rwf_form_field')->where('field_id = ' . $this->id);
+
+		$db->setQuery($query);
+		$res = $db->loadResult();
+
+		if ($res)
+		{
+			$this->setError('COM_REDFORM_FIELD_DELETE_ERROR_USED_IN_FORMS');
+
+			return false;
+		}
 
 		if (!parent::delete($pk))
 		{
 			return false;
-		}
-
-		$db = JFactory::getDbo();
-
-		// Delete associated field in form table
-		$q = "ALTER TABLE " . $db->quoteName('#__rwf_forms_' . $this->form_id) . " DROP " . $db->quoteName('field_' . $this->id);
-		$db->setQuery($q);
-
-		if (!$db->execute())
-		{
-			throw new Exception(JText::_('COM_REDFORM_Cannot_remove_field_from_form_table') . ' ' . $db->getError());
 		}
 
 		// Delete associated values
@@ -164,158 +155,6 @@ class RedformTableField extends RTable
 		if (!$db->execute())
 		{
 			throw new Exception(JText::_('COM_REDFORM_A_problem_occured_when_deleting_the_field_values') . ' ' . $db->getError());
-		}
-
-		return true;
-	}
-
-	/**
-	 * Called before store().
-	 *
-	 * @param   boolean  $updateNulls  True to update null values as well.
-	 *
-	 * @return  boolean  True on success.
-	 */
-	protected function beforeStore($updateNulls = false)
-	{
-		if ($this->id)
-		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-
-			$query->select('*');
-			$query->from('#__rwf_fields');
-			$query->where('id = ' . $this->id);
-
-			$db->setQuery($query);
-			$this->beforeupdate = $db->loadObject();
-		}
-
-		return parent::beforeStore($updateNulls);
-	}
-
-	/**
-	 * Called after store().
-	 *
-	 * @param   boolean  $updateNulls  True to update null values as well.
-	 *
-	 * @return  boolean  True on success.
-	 */
-	protected function afterStore($updateNulls = false)
-	{
-		if (!$this->updateFieldTable($this, $this->beforeupdate))
-		{
-			return false;
-		}
-
-		return parent::beforeStore($updateNulls);
-	}
-
-	/**
-	 * update corresponding table column if needed
-	 *
-	 * @param   object  $row     field table record object with updated value
-	 * @param   object  $oldrow  previously recorded field table record object corresponding to current field id
-	 *
-	 * @return boolean true on success
-	 */
-	private function updateFieldTable($row, $oldrow)
-	{
-
-		$db = JFactory::getDBO();
-
-		/* column name for this field */
-		$field = 'field_' . $row->id;
-
-		/* Get columns from the active form */
-		$q = "SHOW COLUMNS FROM " . $db->quoteName($db->getPrefix() . 'rwf_forms_' . $row->form_id)
-			. " WHERE  " . $db->quoteName('Field') . " = " . $db->Quote($field);
-		$db->setQuery($q);
-		$result = $db->loadResult();
-
-		/* Check if the field already exists */
-		if (!$result)
-		{
-			/* Field doesn't exist, need to create it */
-			$q = ' ALTER TABLE ' . $db->quoteName('#__rwf_forms_' . $row->form_id)
-				. ' ADD ' . $db->quoteName($field) . ' TEXT NULL';
-			$db->setQuery($q);
-
-			if (!$db->execute())
-			{
-				$this->setError($db->getErrorMsg());
-
-				return false;
-			}
-		}
-
-		/* Check if the field moved form */
-		if ($oldrow->form_id && $row->form_id <> $oldrow->form_id)
-		{
-			$result = array();
-			/* Check if the column exists on the old table */
-			$q = "SHOW COLUMNS FROM " . $db->quoteName($db->getPrefix() . 'rwf_forms_' . $oldrow->form_id)
-				. " WHERE  " . $db->quoteName('Field') . " = " . $db->Quote($field);
-			$db->setQuery($q);
-			$db->execute();
-			$result = $db->loadResult();
-
-			/* Check if the field already exists */
-			if ($result)
-			{
-				/* Drop the old column */
-				$q = "ALTER TABLE " . $db->quoteName('#__rwf_forms_' . $oldrow->form_id)
-					. " DROP " . $db->quoteName($field);
-				$db->setQuery($q);
-
-				if (!$db->execute())
-				{
-					$this->setError(JText::_('COM_REDFORM_Cannot_remove_field_from_old_form') . ' ' . $db->getErrorMsg());
-
-					return false;
-				}
-			}
-		}
-
-		/* Get indexes from the active form */
-		$indexresult = null;
-		$q = "SHOW KEYS FROM " . $db->quoteName($db->getPrefix() . 'rwf_forms_' . $row->form_id)
-			. " WHERE key_name = " . $db->Quote($field);
-		$db->setQuery($q);
-		$db->execute();
-		$indexresult = $db->loadAssocList('Key_name');
-
-		/* Check if the field has to be unique */
-		$q = "ALTER TABLE " . $db->quoteName('#__rwf_forms_' . $row->form_id);
-
-		if ($row->unique && !isset($indexresult[$field]))
-		{
-			$q .= ' ADD UNIQUE (' . $db->quoteName($field) . ' (255))';
-			$db->setQuery($q);
-
-			if (!$db->execute())
-			{
-				$this->setError(JText::_('COM_REDFORM_Cannot_make_the_field_unique') . ' ' . $db->getErrorMsg());
-
-				/* Remove unique status */
-				$q = "UPDATE " . $db->quoteName('#__rwf_fields') . "
-					SET " . $db->quoteName('unique') . " = 0
-					WHERE id = " . $row->id;
-				$db->setQuery($q);
-				$db->execute();
-			}
-		}
-		elseif (isset($indexresult[$field]))
-		{
-			$q .= ' DROP INDEX' . $db->quoteName($field);
-			$db->setQuery($q);
-
-			if (!$db->execute())
-			{
-				$this->setError(JText::_('COM_REDFORM_Cannot_remove_the_field_unique_status') . ' ' . $db->getErrorMsg());
-
-				return false;
-			}
 		}
 
 		return true;

@@ -3,15 +3,9 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `field` varchar(255) NOT NULL default '',
   `field_header` varchar(255) NOT NULL default '',
   `fieldtype` varchar(30) NOT NULL default 'textfield',
-  `published` int(11) NOT NULL default '0',
   `checked_out` int(11) NOT NULL default '0',
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `form_id` int(11) default NULL,
-  `ordering` int(11) NOT NULL default '0',
   `redmember_field` varchar(20) NULL default NULL,
-  `validate` tinyint(1) NOT NULL DEFAULT '0',
-  `unique` tinyint(1) NOT NULL DEFAULT '0',
-  `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `default` varchar(255) default NULL,
   `tooltip` varchar(255) default NULL,
   `params` text default NULL,
@@ -40,9 +34,6 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `redirect` VARCHAR( 300 ) NULL DEFAULT NULL,
   `notificationtext` text NOT NULL,
   `formexpires` tinyint(1) NOT NULL default '1',
-  `virtuemartactive` tinyint(1) NOT NULL default '0',
-  `vmproductid` int(11) default NULL,
-  `vmitemid` int(4) NOT NULL default '1',
   `captchaactive` tinyint(1) NOT NULL default '0',
   `access` tinyint(3) NOT NULL default '0',
   `activatepayment` tinyint(2) NOT NULL DEFAULT '0',
@@ -55,9 +46,22 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `submitterpaymentnotificationsubject` text DEFAULT NULL,
   `submitterpaymentnotificationbody` text DEFAULT NULL,
   `cond_recipients` TEXT NULL DEFAULT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `vmproductid` (`vmproductid`)
+  PRIMARY KEY  (`id`)
 ) COMMENT='Forms for redFORM';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_form_field` (
+  `id` int(11) NOT NULL auto_increment,
+  `form_id` int(11) NOT NULL,
+  `field_id` int(11) NOT NULL,
+  `validate` tinyint(1) NOT NULL DEFAULT '0',
+  `published` int(11) NOT NULL default '0',
+  `unique` tinyint(1) NOT NULL DEFAULT '0',
+  `readonly` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `form_id` (`form_id`),
+  KEY `field_id` (`field_id`)
+) COMMENT='form field relation';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `id` int(11) NOT NULL auto_increment,

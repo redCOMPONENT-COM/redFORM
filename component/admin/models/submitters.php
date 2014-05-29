@@ -208,14 +208,15 @@ class RedformModelSubmitters extends RModelList
 		$db = JFactory::getDBO();
 		$form_id = $this->getState('filter.form_id');
 
-		$query = ' SELECT f.id, f.field '
+		$query = ' SELECT f.id AS field_id, f.field '
 			. '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
 			. ' FROM #__rwf_fields AS f '
+			. ' INNER JOIN #__rwf_form_field AS ff ON ff.field_id = f.id '
 			. ' WHERE f.fieldtype <> "info" ';
 
 		if ($form_id)
 		{
-			$query .= ' AND form_id = ' . $db->Quote($form_id);
+			$query .= ' AND ff.form_id = ' . $db->Quote($form_id);
 		}
 
 		$query .= "GROUP BY f.id

@@ -190,25 +190,30 @@ class plgContentRedform extends JPlugin {
 
 	protected function getFormFields($form_id)
 	{
-		$db = JFactory::getDBO();
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
 
-		$q = ' SELECT f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params '
-		   . ' FROM #__rwf_fields AS f '
-		   . ' WHERE f.published = 1 '
-		   . ' AND f.form_id = '.$form_id
-		   . ' ORDER BY f.ordering'
-		   ;
-		$db->setQuery($q);
+		$query->select('ff.id, f.field, ff.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params');
+		$query->from('#__rwf_fields AS f');
+		$query->join('INNER', '#__rwf_form_field AS ff ON ff.field_id = f.id');
+		$query->join('LEFT', '#__');
+		$query->where('ff.published = 1');
+		$query->where('ff.form_id = '. $form_id);
+		$query->order('ff.ordering');
+
+		$db->setQuery($query);
 		$fields = $db->loadObjectList();
 
 		foreach ($fields as $k => $field)
 		{
-			$paramsdefs = JPATH_ADMINISTRATOR . '/components/com_redform/models/field_'.$field->fieldtype.'.xml';
+			$paramsdefs = JPATH_ADMINISTRATOR . '/components/com_redform/models/field_' . $field->fieldtype . '.xml';
+
 			if (!empty($field->params) && file_exists($paramsdefs))
 			{
-				$fields[$k]->parameters = new JParameter( $field->params, $paramsdefs );
+				$fields[$k]->parameters = new JParameter($field->params, $paramsdefs);
 			}
-			else {
+			else
+			{
 				$fields[$k]->parameters = new JRegistry();
 			}
 		}

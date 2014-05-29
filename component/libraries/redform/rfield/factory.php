@@ -60,13 +60,13 @@ abstract class RdfRfieldFactory extends JObject
 	/**
 	 * Returns field associated to id
 	 *
-	 * @param   int  $id  field id
+	 * @param   int  $id  form field id
 	 *
 	 * @return RdfRfield
 	 *
 	 * @throws Exception
 	 */
-	public static function getField($id)
+	public static function getFormField($id)
 	{
 		static $fields = array();
 
@@ -108,20 +108,20 @@ abstract class RdfRfieldFactory extends JObject
 	/**
 	 * Return field type
 	 *
-	 * @param   int  $fieldId  field id
+	 * @param   int  $formfieldId  form field id
 	 *
 	 * @return string
 	 *
 	 * @throws Exception
 	 */
-	protected static function getType($fieldId)
+	protected static function getType($formfieldId)
 	{
-		$model = new RdfCoreModelField;
-		$data = $model->setId($fieldId)->getItem();
+		$model = new RdfCoreModelFormfield;
+		$data = $model->setId($formfieldId)->getItem();
 
 		if (!$data)
 		{
-			throw new Exception(JText::sprintf('field %d not found', $fieldId));
+			throw new Exception(JText::sprintf('form field %d not found', $formfieldId));
 		}
 
 		return $data->fieldtype;

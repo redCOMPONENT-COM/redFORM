@@ -520,11 +520,13 @@ abstract class RdfRfield extends JObject
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('f.id, f.field, f.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.readonly');
-			$query->select('f.form_id, f.default, f.published');
+			$query->select('f.field, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.default');
+			$query->select('ff.id, ff.field_id, ff.validate, ff.readonly');
+			$query->select('ff.form_id, ff.published');
 			$query->select('CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header');
-			$query->from('#__rwf_fields AS f');
-			$query->where('f.id = ' . $this->id);
+			$query->from('#__rwf_form_field AS ff');
+			$query->join('INNER', '#__rwf_fields AS f ON ff.field_id = f.id');
+			$query->where('ff.id = ' . $this->id);
 			$db->setQuery($query);
 			$this->data = $db->loadObject();
 
@@ -552,7 +554,7 @@ abstract class RdfRfield extends JObject
 			$query->select('id, value, label, field_id, price');
 			$query->from('#__rwf_values');
 			$query->where('published = 1');
-			$query->where('field_id = ' . $this->id);
+			$query->where('field_id = ' . $this->load()->field_id);
 			$query->order('ordering');
 
 			$db->setQuery($query);

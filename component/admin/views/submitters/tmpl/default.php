@@ -125,7 +125,7 @@ $listDirn = $this->state->get('list.direction');
 				<?php
 				foreach ($this->fields as $key => $field)
 				{
-					$fieldname = 'field_'. $field->id;
+					$fieldname = 'field_'. $field->field_id;
 
 					if (isset($item->{$fieldname}))
 					{

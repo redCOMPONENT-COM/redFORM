@@ -21,6 +21,46 @@ $tab = $input->getString('tab');
 $isNew = (int) $this->item->id <= 0;
 
 ?>
+<?php if ($this->item->id) :
+	$tableSortLink = 'index.php?option=com_redform&task=formfields.saveOrderAjax&tmpl=component';
+	JHTML::_('rsortablelist.main');
+	?>
+	<script type="text/javascript">
+		(function ($) {
+			$(document).ready(function () {
+				// Perform the ajax request
+				$.ajax({
+					url: 'index.php?option=com_redform&task=form.ajaxfields&view=form&id=<?php echo $this->item->id ?>',
+					beforeSend: function (xhr) {
+						$('.fields-content .spinner').show();
+					}
+				}).done(function (data) {
+					$('.fields-content .spinner').hide();
+					$('.fields-content').html(data);
+					$('select').chosen();
+					$('.chzn-search').hide();
+					$('.hasTooltip').tooltip({"animation": true, "html": true, "placement": "top",
+						"selector": false, "title": "", "trigger": "hover focus", "delay": 0, "container": false});
+
+					// Auto submit search fields after loading AJAX
+					$('.js-enter-submits').enterSubmits();
+
+					var sortableList = new $.JSortableList('#fieldList tbody','fieldsForm','asc' , '<?php echo $tableSortLink; ?>','','false');
+				});
+			});;
+		})(jQuery);
+	</script>
+	<?php if ($tab) : ?>
+		<script type="text/javascript">
+			jQuery(document).ready(function () {
+
+				// Show the corresponding tab
+				jQuery('#formTabs a[href="#<?php echo $tab ?>"]').tab('show');
+			});
+		</script>
+	<?php endif; ?>
+<?php endif; ?>
+
 <ul class="nav nav-tabs" id="formTabs">
 	<li class="active">
 		<a href="#details" data-toggle="tab">
@@ -37,78 +77,85 @@ $isNew = (int) $this->item->id <= 0;
 			<?php echo JText::_('COM_REDFORM_PAYMENT'); ?>
 		</a>
 	</li>
-</ul>
 
+	<?php if ($this->item->id) : ?>
+	<li>
+		<a href="#fields" data-toggle="tab">
+			<?php echo JText::_('COM_REDFORM_FIELDS'); ?>
+		</a>
+	</li>
+	<?php endif; ?>
+</ul>
 <form action="<?php echo $action; ?>" method="post" name="adminForm" id="adminForm"
       class="form-validate form-horizontal">
-	<div class="tab-content">
+<div class="tab-content">
 		<div class="tab-pane active" id="details">
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('formname'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('formname'); ?>
-					</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('formname'); ?>
 				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('formname'); ?>
+				</div>
+			</div>
 
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('showname'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('showname'); ?>
-					</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('showname'); ?>
 				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('showname'); ?>
+				</div>
+			</div>
 
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('access'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('access'); ?>
-					</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('access'); ?>
 				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('classname'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('classname'); ?>
-					</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('access'); ?>
 				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('startdate'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('startdate'); ?>
-					</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('classname'); ?>
 				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('formexpires'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('formexpires'); ?>
-					</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('classname'); ?>
 				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('enddate'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('enddate'); ?>
-					</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('startdate'); ?>
 				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('captchaactive'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('captchaactive'); ?>
-					</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('startdate'); ?>
 				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('formexpires'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('formexpires'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('enddate'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('enddate'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('captchaactive'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('captchaactive'); ?>
+				</div>
+			</div>
 		</div>
 
 		<div class="tab-pane" id="notification">
@@ -270,11 +317,24 @@ $isNew = (int) $this->item->id <= 0;
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- hidden fields -->
-	<input type="hidden" name="option" value="com_redform">
-	<input type="hidden" name="id" value="<?php echo $this->item->id; ?>">
-	<input type="hidden" name="task" value="">
-	<?php echo JHTML::_('form.token'); ?>
+		<!-- hidden fields -->
+		<input type="hidden" name="option" value="com_redform">
+		<input type="hidden" name="id" value="<?php echo $this->item->id; ?>">
+		<input type="hidden" name="task" value="">
+		<?php echo JHTML::_('form.token'); ?>
+
+	<?php if ($this->item->id) : ?>
+		<div id="fields" class="tab-pane">
+			<div class="container-fluid">
+				<div class="row-fluid fields-content">
+					<div class="spinner pagination-centered">
+						<?php echo JHtml::image('media/com_redform/images/ajax-loader.gif', '') ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	<?php endif; ?>
+</div>
+
 </form>

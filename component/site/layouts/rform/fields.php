@@ -41,7 +41,7 @@ foreach ($fields as $field)
 	}
 
 	// Init rfield
-	$rfield = RdfRfieldFactory::getField($field->id);
+	$rfield = RdfRfieldFactory::getFormField($field->id);
 	$rfield->setFormIndex($index);
 	$rfield->setUser($user);
 

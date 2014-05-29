@@ -400,7 +400,7 @@ class RdfAnswers
 
 		foreach ($this->fields as $v)
 		{
-			$fields[] = $db->quoteName('field_' . $v->id);
+			$fields[] = $db->quoteName('field_' . $v->field_id);
 			$values[] = $db->quote($v->getDatabaseValue());
 		}
 
@@ -678,9 +678,10 @@ class RdfAnswers
 
 		$query->select('f.id');
 		$query->from('#__rwf_fields AS f');
-		$query->where('f.form_id = ' . $db->quote($submitter->form_id));
-		$query->where('f.published = 1');
-		$query->order('ordering');
+		$query->join('INNER', '#__rwf_form_field AS ff ON ff.field_id = f.id');
+		$query->where('ff.form_id = ' . $db->quote($submitter->form_id));
+		$query->where('ff.published = 1');
+		$query->order('ff.ordering');
 
 		$db->setQuery($query);
 		$fieldIds = $db->loadColumn();
@@ -713,9 +714,9 @@ class RdfAnswers
 
 		foreach ($fieldIds as $fid)
 		{
-			$field = RdfRfieldFactory::getField($fid);
+			$field = RdfRfieldFactory::getFormField($fid);
 
-			$property = 'field_' . $fid;
+			$property = 'field_' . $field->field_id;
 
 			if (isset($answers->$property))
 			{
@@ -785,7 +786,7 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			$tablefield = 'field_' . $field->id;
+			$tablefield = 'field_' . $field->field_id;
 			$answers->$tablefield = $field->getValue();
 		}
 

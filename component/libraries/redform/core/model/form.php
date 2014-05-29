@@ -82,19 +82,19 @@ class RdfCoreModelForm extends RModel
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('id');
-		$query->from('#__rwf_fields');
-		$query->where('form_id = ' . $form_id);
-		$query->order('ordering');
+		$query->select('ff.id');
+		$query->from('#__rwf_form_field AS ff');
+		$query->where('ff.form_id = ' . $form_id);
+		$query->order('ff.ordering');
 
 		$db->setQuery($query);
 		$ids = $db->loadColumn();
 
 		$fields = array();
 
-		foreach ($ids as $fieldId)
+		foreach ($ids as $formfieldId)
 		{
-			$fields[] = RdfRfieldFactory::getField($fieldId);
+			$fields[] = RdfRfieldFactory::getFormField($formfieldId);
 		}
 
 		return $fields;
@@ -169,9 +169,9 @@ class RdfCoreModelForm extends RModel
 			{
 				$clone = clone($field);
 
-				if (isset($single->{'field_' . $field->id}))
+				if (isset($single->{'field_' . $field->field_id}))
 				{
-					$clone->setValue($single->{'field_' . $field->id});
+					$clone->setValue($single->{'field_' . $field->field_id});
 				}
 
 				$answers->addField($clone);

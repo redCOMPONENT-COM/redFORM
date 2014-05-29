@@ -18,4 +18,42 @@ defined('_JEXEC') or die;
  */
 class RedformControllerForm extends RdfControllerForm
 {
+	/**
+	 * Ajax call to get fields tab content.
+	 *
+	 * @return  void
+	 */
+	public function ajaxfields()
+	{
+		$app = JFactory::getApplication();
+		$input = $app->input;
+
+		$formId = $input->getInt('id');
+
+		if ($formId)
+		{
+			$model = RModelAdmin::getInstance('Formfields', 'RedformModel');
+			$model->setState('filter.form_id', $formId);
+
+			$formName = 'fieldsForm';
+			$pagination = $model->getPagination();
+			$pagination->set('formName', $formName);
+
+			echo RLayoutHelper::render('form.formfields', array(
+					'state' => $model->getState(),
+					'items' => $model->getItems(),
+					'pagination' => $pagination,
+					'filter_form' => $model->getForm(),
+					'activeFilters' => $model->getActiveFilters(),
+					'formName' => $formName,
+					'showToolbar' => true,
+					'action' => 'index.php?option=com_redform&view=form&model=formfields',
+					'return' => base64_encode('index.php?option=com_redform&view=form&layout=edit&id='
+						. $formId . '&tab=fields&from_form=1')
+				)
+			);
+		}
+
+		$app->close();
+	}
 }

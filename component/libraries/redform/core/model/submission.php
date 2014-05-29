@@ -113,9 +113,9 @@ class RdfCoreModelSubmission extends RModel
 
 		foreach ($fields as $field)
 		{
-			if (isset($submissionsData->{'field_' . $field->id}))
+			if (isset($submissionsData->{'field_' . $field->field_id}))
 			{
-				$field->setValueFromDatabase($submissionsData->{'field_' . $field->id});
+				$field->setValueFromDatabase($submissionsData->{'field_' . $field->field_id});
 			}
 
 			$subSubmission->addField($field);

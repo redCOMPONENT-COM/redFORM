@@ -44,7 +44,7 @@ class RedformViewSubmitters extends RViewCsv
 
 		foreach ($fields as $field)
 		{
-			$columns['field_' . $field->id] = $field->field_header;
+			$columns['field_' . $field->field_id] = $field->field_header;
 		}
 
 		if ($this->formInfo->activatepayment)

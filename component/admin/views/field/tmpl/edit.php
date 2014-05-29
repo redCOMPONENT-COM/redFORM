@@ -124,46 +124,10 @@ if ($this->item->hasOptions && $this->item->id)
 
 			<div class="control-group">
 				<div class="control-label">
-					<?php echo $this->form->getLabel('validate'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('validate'); ?>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('unique'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('unique'); ?>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('readonly'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('readonly'); ?>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<div class="control-label">
 					<?php echo $this->form->getLabel('default'); ?>
 				</div>
 				<div class="controls">
 					<?php echo $this->form->getInput('default'); ?>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('published'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('published'); ?>
 				</div>
 			</div>
 

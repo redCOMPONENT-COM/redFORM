@@ -76,20 +76,6 @@ if ($saveOrder)
 				<th width="18%" class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Type', 'f.fieldtype', $listDirn, $listOrder); ?>
 				</th>
-				<?php if ($search == ''): ?>
-					<th width="20" class="nowrap">
-						<?php echo JHTML::_('rsearchtools.sort', 'COM_REDFORM_ORDERING', 'f.ordering', $listDirn, $listOrder); ?>
-					</th>
-				<?php endif; ?>
-				<th width="12%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Required', 'f.validate', $listDirn, $listOrder); ?>
-				</th>
-				<th width="12%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Unique', 'f.unique', $listDirn, $listOrder); ?>
-				</th>
-				<th width="12%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Form', 'fo.formname', $listDirn, $listOrder); ?>
-				</th>
 				<th width="1%" class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_ID', 'f.id', $listDirn, $listOrder); ?>
 				</th>
@@ -126,28 +112,6 @@ if ($saveOrder)
 						</td>
 						<td>
 							<?php echo $this->escape($item->fieldtype); ?>
-						</td>
-						<?php if ($search == ''): ?>
-							<td class="order nowrap center">
-						<span class="sortable-handler hasTooltip <?php echo ($saveOrder) ? '' : 'inactive' ;?>"
-						      title="<?php echo ($saveOrder) ? '' :JText::_('COM_REDITEM_ORDERING_DISABLED');?>">
-							<i class="icon-move"></i>
-						</span>
-								<input type="text" style="display:none" name="order[]" value="<?php echo $orderkey + 1;?>" class="text-area-order" />
-							</td>
-						<?php endif; ?>
-						<td>
-							<?php echo $item->validate ?
-								JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) :
-								JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
-						</td>
-						<td>
-							<?php echo $item->unique ?
-								JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) :
-								JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
-						</td>
-						<td>
-							<?php echo $this->escape($item->formname); ?>
 						</td>
 						<td>
 							<?php echo $item->id; ?>

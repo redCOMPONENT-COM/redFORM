@@ -14,12 +14,12 @@ $data = $displayData;
 $formName = $data['formName'];
 ?>
 <h2>
-	<?php echo JText::_('COM_REDFORM_FIELDS_LABEL'); ?>
+	<?php echo JText::_('COM_REDFORM_FORMFIELDS_LABEL'); ?>
 </h2>
 <div class="row-fluid">
 	<div class="btn-toolbar">
 		<div class="btn-group">
-			<button class="btn btn-success" onclick="Joomla.submitform('field.add',
+			<button class="btn btn-success" onclick="Joomla.submitform('formfield.add',
 				document.getElementById('<?php echo $formName; ?>'))" href="#">
 				<i class="icon-file-text-alt"></i>
 				<?php echo JText::_('JTOOLBAR_NEW') ?>
@@ -27,14 +27,28 @@ $formName = $data['formName'];
 
 			<button class="btn"
 			        onclick="if (document.<?php echo $formName; ?>.boxchecked.value==0){alert('Please first make a selection from the list');}
-				        else{ Joomla.submitform('field.edit', document.getElementById('<?php echo $formName; ?>'))}"
+				        else{ Joomla.submitform('formfield.edit', document.getElementById('<?php echo $formName; ?>'))}"
 			        href="#">
 				<i class="icon-edit"></i>
 				<?php echo JText::_('JTOOLBAR_EDIT') ?>
 			</button>
+			<button class="btn"
+			        onclick="if (document.<?php echo $formName; ?>.boxchecked.value==0){alert('Please first make a selection from the list');}
+				        else{ Joomla.submitform('formfields.publish', document.getElementById('<?php echo $formName; ?>'))}"
+			        href="#">
+				<i class="icon-plus-sign"></i>
+				<?php echo JText::_('JTOOLBAR_PUBLISH') ?>
+			</button>
+			<button class="btn"
+			        onclick="if (document.<?php echo $formName; ?>.boxchecked.value==0){alert('Please first make a selection from the list');}
+				        else{ Joomla.submitform('formfields.unpublish', document.getElementById('<?php echo $formName; ?>'))}"
+			        href="#">
+				<i class="icon-minus-sign"></i>
+				<?php echo JText::_('JTOOLBAR_UNPUBLISH') ?>
+			</button>
 			<button class="btn btn-danger"
 			        onclick="if (document.<?php echo $formName; ?>.boxchecked.value==0){alert('Please first make a selection from the list');}
-				        else{ Joomla.submitform('fields.delete', document.getElementById('<?php echo $formName; ?>'))}"
+				        else{ Joomla.submitform('formfields.delete', document.getElementById('<?php echo $formName; ?>'))}"
 			        href="#">
 				<i class="icon-remove-sign"></i>
 				<?php echo JText::_('JTOOLBAR_DELETE') ?>
