@@ -199,41 +199,29 @@ class RdfCore extends JObject
 			}
 
 			$firstSub = $answers->getFirstSubmission();
+			$sid = $firstSub->sid;
 		}
 		else
 		{
-			$answers = false;
-			$firstSub = false;
+			$sid = null;
 		}
 
 		$model = $this->getFormModel($form_id);
 		$form   = $model->getForm();
 
-		$html = '<form action="' . JRoute::_('index.php?option=com_redform') . '" method="post" name="redform" class="form-validate ' . $form->classname . '" enctype="multipart/form-data">';
-		$html .= $this->getFormFields($form_id, $submit_key, $multiple, $options);
+		$fieldsHtml = $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
-		/* Get the user details form */
-		if (!$answers && !JRequest::getVar('redform_edit') &&  !JRequest::getVar('redform_add'))
-		{
-			$html .= '<div id="submit_button" style="display: block;" class="submitform' . $form->classname . '"><input type="submit" id="regularsubmit" name="submit" value="' . JText::_('COM_REDFORM_Submit') . '" />';
-			$html .= '</div>';
-		}
-
-		$html .= '<input type="hidden" name="task" value="redform.save" />';
-
-		if ($firstSub)
-		{
-			$html .= '<input type="hidden" name="submitter_id" value="' . $firstSub->sid . '" />';
-		}
-
-		if (JRequest::getVar('redform_edit') || JRequest::getVar('redform_add'))
-		{
-			$html .= '<input type="hidden" name="controller" value="submitters" />';
-		}
-
-		$html .= '<input type="hidden" name="referer" value="' . base64_encode($uri->toString()) . '" />';
-
-		$html .= '</form>';
+		$html = RdfHelperLayout::render(
+			'rform.form',
+			array(
+				'form' => $form,
+				'fieldsHtml' => $fieldsHtml,
+				'sid' => $sid,
+				'referer64' => base64_encode($uri->toString()),
+			),
+			'',
+			array('client' => 0, 'component' => 'com_redform')
+		);
 
 		// Analytics
 		if (RdfHelperAnalytics::isEnabled())
@@ -325,11 +313,6 @@ class RdfCore extends JObject
 			$this->loadMultipleFormScript();
 		}
 
-		if ($form->show_js_price)
-		{
-			$this->loadPriceScript();
-		}
-
 		// Redmember integration: pull extra fields
 		if ($user->get('id') && file_exists(JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php'))
 		{
@@ -404,7 +387,7 @@ class RdfCore extends JObject
 					. '</div>';
 			}
 
-			$html .= RLayoutHelper::render(
+			$html .= RdfHelperLayout::render(
 				'rform.fields',
 				array(
 					'fields' => $fields,
@@ -420,6 +403,18 @@ class RdfCore extends JObject
 			if ($multi > 1)
 			{
 				$html .= '</fieldset>';
+			}
+
+			if ($form->show_js_price || 1)
+			{
+				$this->loadPriceScript();
+
+				$html .= RdfHelperLayout::render(
+					'rform.totalprice',
+					null,
+					'',
+					array('client' => 0, 'component' => 'com_redform')
+				);
 			}
 
 			if (isset($this->_rwfparams['uid']))

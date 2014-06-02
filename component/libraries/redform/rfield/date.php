@@ -27,7 +27,7 @@ class RdfRfieldDate extends RdfRfield
 	 */
 	public function getInput()
 	{
-		$element = RLayoutHelper::render(
+		$element = RdfHelperLayout::render(
 			'rform.rfield.date',
 			$this,
 			'',

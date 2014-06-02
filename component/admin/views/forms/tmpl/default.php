@@ -20,7 +20,7 @@ $saveOrder = $listOrder == 'ordering';
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
 	<?php
-	echo RLayoutHelper::render(
+	echo RdfHelperLayout::render(
 		'searchtools.default',
 		array(
 			'view' => $this,

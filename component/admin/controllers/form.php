@@ -39,7 +39,7 @@ class RedformControllerForm extends RdfControllerForm
 			$pagination = $model->getPagination();
 			$pagination->set('formName', $formName);
 
-			echo RLayoutHelper::render('form.formfields', array(
+			echo RdfHelperLayout::render('form.formfields', array(
 					'state' => $model->getState(),
 					'items' => $model->getItems(),
 					'pagination' => $pagination,

@@ -133,6 +133,10 @@ abstract class RdfRfield extends JObject
 			case 'redmember_field':
 				return $this->load()->redmember_field;
 
+			case 'required':
+			case 'validate':
+				return $this->load()->validate;
+
 			default:
 				$data = $this->load();
 				if (isset($data->{$name}))
@@ -201,7 +205,14 @@ abstract class RdfRfield extends JObject
 	{
 		$data = $this->load();
 
-		return '<label for="' . $this->getFormElementName() . '">' . $data->field . '</label>';
+		$label = RdfHelperLayout::render(
+			'rform.rfield.label',
+			$this,
+			'',
+			array('client' => 0, 'component' => 'com_redform')
+		);
+
+		return $label;
 	}
 
 	/**
@@ -211,7 +222,7 @@ abstract class RdfRfield extends JObject
 	 */
 	public function getInput()
 	{
-		$element = RLayoutHelper::render(
+		$element = RdfHelperLayout::render(
 			'rform.rfield.' . $this->type,
 			$this,
 			'',

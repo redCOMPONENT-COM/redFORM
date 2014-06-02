@@ -103,7 +103,7 @@ class RdfRfieldCheckbox extends RdfRfield
 	{
 		$this->getOptions();
 
-		$element = RLayoutHelper::render(
+		$element = RdfHelperLayout::render(
 			'rform.rfield.checkbox',
 			$this,
 			'',

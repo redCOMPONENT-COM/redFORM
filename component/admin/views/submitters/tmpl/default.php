@@ -20,7 +20,7 @@ $listDirn = $this->state->get('list.direction');
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
 	<?php
-	echo RLayoutHelper::render(
+	echo RdfHelperLayout::render(
 		'submitters.searchtools.default',
 		array(
 			'view' => $this,

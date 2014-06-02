@@ -63,6 +63,6 @@ class JFormFieldRedformconditionalrecipients extends JFormFieldTextarea
 
 		$this->textarea = parent::getInput();
 
-		return RLayoutHelper::render('fields.redformconditionalrecipients', $this);
+		return RdfHelperLayout::render('fields.redformconditionalrecipients', $this);
 	}
 }

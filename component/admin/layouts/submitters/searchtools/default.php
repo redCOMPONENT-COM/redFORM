@@ -33,14 +33,14 @@ RHtml::_('rsearchtools.form', $formSelector, $data['options']);
 <div class="js-stools clearfix">
 	<div class="clearfix">
 		<div class="js-stools-container-bar">
-			<?php echo RLayoutHelper::render('searchtools.default.bar', $data); ?>
+			<?php echo RdfHelperLayout::render('searchtools.default.bar', $data); ?>
 		</div>
 		<div class="js-stools-container-list hidden-phone hidden-tablet">
-			<?php echo RLayoutHelper::render('searchtools.default.list', $data); ?>
+			<?php echo RdfHelperLayout::render('searchtools.default.list', $data); ?>
 		</div>
 	</div>
 	<!-- Filters div -->
 	<div class="js-stools-container-filters hidden-phone clearfix">
-		<?php echo RLayoutHelper::render('submitters.searchtools.default.filters', $data); ?>
+		<?php echo RdfHelperLayout::render('submitters.searchtools.default.filters', $data); ?>
 	</div>
 </div>

@@ -74,17 +74,9 @@ var redformPrice = {
 		}
 
 		// set the price
-		if (price) {
-			var currency = form.getElement('[name=currency]').get('value');
-			var roundedPrice = Math.round(price*100)/100;
+		var currency = form.getElement('[name=currency]').get('value');
+		var roundedPrice = Math.round(price*100)/100;
 
-			// insert total right after last div.redform-form
-			var el = new Element('div', {id : 'totalprice', 'class' : "fieldline"})
-				.set('html',
-					'<div class="label">' + Joomla.JText._("COM_REDFORM_Total_Price") + '</div>'
-						+ '<div class="field">' +currency + ' <span>' + roundedPrice + '</span></div>'
-				)
-			el.inject(form.getElements('div.formbox').getLast(), 'after');
-		}
+		form.getElement(".totalprice").set('html', currency + ' <span>' + roundedPrice + '</span>');
 	}
 }

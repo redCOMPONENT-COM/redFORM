@@ -148,7 +148,7 @@ class RdfHelperTagsreplace
 	 */
 	private function getTagAnswers()
 	{
-		$text = RLayoutHelper::render('tag.answers',
+		$text = RdfHelperLayout::render('tag.answers',
 			$this->answers,
 			'',
 			array('client' => 0, 'component' => 'com_redform')
