@@ -57,7 +57,7 @@
 				tr.find('[name^=option-label]').val(data.label);
 				tr.find('[name^=option-price]').val(data.price);
 				tr.find('[name^=order]').attr('name', 'order[]').val(data.ordering);
-				tr.find('td.buttons .save-option').text(Joomla.JText._("COM_REDFORM_JS_FIELD_VALUES_SAVE")).removeClass('btn-success').addClass('btn-primary');
+				tr.find('td.buttons .save-option').text(Joomla.JText._("COM_REDFORM_JS_FIELD_VALUES_SAVE")).removeClass('btn-success').removeClass('btn-warning').addClass('btn-primary');
 
 				var btnremove = $('<button/>', {
 					'type' : 'button',

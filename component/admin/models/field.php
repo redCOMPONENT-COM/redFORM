@@ -133,7 +133,7 @@ class RedformModelField extends RModelAdmin
 	 */
 	public function saveValue($data)
 	{
-		$row = $this->getTable('Values', 'RedformTable');
+		$row = $this->getTable('Value', 'RedformTable');
 		$row->bind($data);
 
 		if (!$data['id'])
