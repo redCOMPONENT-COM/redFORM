@@ -29,6 +29,11 @@ class RedformViewForm extends RdfView
 	protected $item;
 
 	/**
+	 * @var  boolean
+	 */
+	protected $displaySidebar = false;
+
+	/**
 	 * Display method
 	 *
 	 * @param   string  $tpl  The template name
@@ -56,7 +61,7 @@ class RedformViewForm extends RdfView
 	public function getTitle()
 	{
 		$isNew = (int) $this->item->id <= 0;
-		$title = JText::_('COM_REDFORM_FORM_TITLE');
+		$title = JText::_('COM_REDFORM_FORM_TITLE') . ($isNew ? '' : ' - ' . $this->item->formname);
 		$state = $isNew ? JText::_('JNEW') : JText::_('COM_REDFORM_EDIT');
 
 		return $title . ' <small>' . $state . '</small>';

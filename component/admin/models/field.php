@@ -228,7 +228,7 @@ class RedformModelField extends RModelAdmin
 			{
 				/* Load the table */
 				$valuerow = $this->getTable('Value', 'RedformTable');
-				$valuerow->bind($r);
+				$valuerow->bind(get_object_vars($r));
 				$valuerow->id = null;
 				$valuerow->field_id = $row->id;
 
