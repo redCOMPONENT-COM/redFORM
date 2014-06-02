@@ -184,58 +184,58 @@ class RedformModelField extends RModelAdmin
 	}
 
 	/**
-	 * copy fields to specified form
+	 * copy fields
 	 *
-	 * @param array $field_ids
-	 * @param int $form_id
+	 * @param   array  $field_ids  field ids
+	 *
 	 * @return boolean true on success
 	 */
-	public function copy($field_ids, $form_id)
+	public function copy($field_ids)
 	{
 		foreach($field_ids as $field_id)
 		{
-			$row = $this->getTable('Fields', 'RedformTable');
-			/* Check field order */
+			$row = $this->getTable('Field', 'RedformTable');
 			$row->load($field_id);
 			$row->id = null;
-			$row->form_id = $form_id;
-
-			$row->ordering = $row->getNextOrder('form_id = '.$row->form_id);
+			$row->field = Jtext::_('COM_REDFORM_COPY_OF') . ' ' . $row->field;
 
 			/* pre-save checks */
-			if (!$row->check()) {
+			if (!$row->check())
+			{
 				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_checking_the_field_data'), 'error');
+
 				return false;
 			}
 
 			/* save the changes */
-			if (!$row->store()) {
+			if (!$row->store())
+			{
 				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_field_data'), 'error');
+
 				return false;
 			}
 
-			/* Add field to form table */
-			$this->AddFieldTable($row, null);
+			// Copy associated values
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true)
+				->select('*')->from('#__rwf_values')->where('field_id = ' . $field_id);
 
-			// copy associated values
-			$query = ' SELECT * '
-			. ' FROM #__rwf_values '
-			. ' WHERE field_id = ' . $field_id
-			;
-			$this->_db->setQuery($query);
-			$res = $this->_db->loadObjectList();
+			$db->setQuery($query);
+			$res = $db->loadObjectList();
 
-			foreach($res as $r)
+			foreach ($res as $r)
 			{
 				/* Load the table */
-				$valuerow = $this->getTable('Values', 'RedformTable');
+				$valuerow = $this->getTable('Value', 'RedformTable');
 				$valuerow->bind($r);
 				$valuerow->id = null;
 				$valuerow->field_id = $row->id;
 
 				/* save the changes */
-				if (!$valuerow->store()) {
-					$this->setError(JText::_('COM_REDFORM_There_was_a_problem_copying_field_options').' '.$row->getError(), 'error');
+				if (!$valuerow->store())
+				{
+					$this->setError(JText::_('COM_REDFORM_There_was_a_problem_copying_field_options') . ' ' . $row->getError(), 'error');
+
 					return false;
 				}
 			}

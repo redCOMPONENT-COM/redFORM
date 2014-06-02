@@ -102,28 +102,22 @@ class RedformViewFields extends RdfView
 
 		$firstGroup = new RToolbarButtonGroup;
 		$secondGroup = new RToolbarButtonGroup;
+		$thirdGroup = new RToolbarButtonGroup;
 
 		// Add / edit
 		if ($canDoCore->get('core.create'))
 		{
 			$new = RToolbarBuilder::createNewButton('field.add');
 			$firstGroup->addButton($new);
+
+			$copy = RToolbarBuilder::createCopyButton('fields.copy');
+			$firstGroup->addButton($copy);
 		}
 
 		if ($canDoCore->get('core.edit'))
 		{
 			$edit = RToolbarBuilder::createEditButton('field.edit');
 			$firstGroup->addButton($edit);
-		}
-
-		// Publish / Unpublish
-		if ($canDoCore->get('core.edit.state'))
-		{
-			$publish = RToolbarBuilder::createPublishButton('fields.publish');
-			$unpublish = RToolbarBuilder::createUnpublishButton('fields.unpublish');
-
-			$firstGroup->addButton($publish)
-				->addButton($unpublish);
 		}
 
 		// Delete / Trash
@@ -136,13 +130,14 @@ class RedformViewFields extends RdfView
 		// Options
 		if ($canDoCore->get('core.manage'))
 		{
-			$options = RToolbarBuilder::createOptionsButton('com_redform');
-			$secondGroup->addButton($options);
+			$options = RToolbarBuilder::createRedcoreOptionsButton('com_redform');
+			$thirdGroup->addButton($options);
 		}
 
 		$toolbar = new RToolbar;
 		$toolbar->addGroup($firstGroup)
-			->addGroup($secondGroup);
+			->addGroup($secondGroup)
+			->addGroup($thirdGroup);
 
 		return $toolbar;
 	}
