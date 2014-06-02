@@ -91,12 +91,16 @@ class RedformViewForms extends RdfView
 
 		$firstGroup = new RToolbarButtonGroup;
 		$secondGroup = new RToolbarButtonGroup;
+		$thirdGroup = new RToolbarButtonGroup;
 
 		// Add / edit
 		if ($canDoCore->get('core.create'))
 		{
 			$new = RToolbarBuilder::createNewButton('form.add');
 			$firstGroup->addButton($new);
+
+			$copy = RToolbarBuilder::createCopyButton('forms.copy');
+			$firstGroup->addButton($copy);
 		}
 
 		if ($canDoCore->get('core.edit'))
@@ -122,9 +126,17 @@ class RedformViewForms extends RdfView
 			$secondGroup->addButton($delete);
 		}
 
+		// Options
+		if ($canDoCore->get('core.manage'))
+		{
+			$options = RToolbarBuilder::createRedcoreOptionsButton('com_redform');
+			$thirdGroup->addButton($options);
+		}
+
 		$toolbar = new RToolbar;
 		$toolbar->addGroup($firstGroup)
-			->addGroup($secondGroup);
+			->addGroup($secondGroup)
+			->addGroup($thirdGroup);
 
 		return $toolbar;
 	}

@@ -118,57 +118,49 @@ class RedformModelForm extends RModelAdmin
 	 * @param   array  $cids  id(s) of form(s) to clone
 	 *
 	 * @return bool
+	 *
+	 * @throws Exception
 	 */
-	function copy($cids = array())
+	public function copy($cids = array())
 	{
 		foreach ($cids as $cid)
 		{
 			// Get the form
-			$form = $this->getTable('redform', 'RedformTable');
+			$form = $this->getTable('Form', 'RedformTable');
 			$form->load($cid);
-
-			// Get associated fields
-			$fields = $form->getFormFields();
 
 			// Copy the form
 			$form->id = null;
 			$form->formname = JText::_('COM_REDFORM_Copy_of') . ' ' . $form->formname;
-			$form->store();
+
+			if (!$form->store())
+			{
+				throw new Exception('Failed copying form');
+			}
 
 			/* Add form table */
 			$this->AddFormTable($form->id);
+
+			// Get associated fields
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true)->select('id')->from('#__rwf_form_field')->where('form_id = ' . $cid);
+			$db->setQuery($query);
+			$fields = $db->loadColumn();
 
 			// Now copy the fields
 			foreach ($fields as $field_id)
 			{
 				// Fetch field
-				$field = $this->getTable('fields', 'RedformTable');
+				$field = $this->getTable('Formfield', 'RedformTable');
 				$field->load($field_id);
 
-				// Get associated values
-				$values = $field->getValues();
-
-				// Copy the form
+				// Copy the field
 				$field->id = null;
 				$field->form_id = $form->id;
 
-				$fieldmodel = JModel::getInstance('field', 'RedformModel');
-				$newfield = $fieldmodel->store($field->getProperties());
-
-				// Copy associated values
-				foreach ($values as $v)
+				if (!$field->store())
 				{
-					// Get value
-					$value = $this->getTable('values', 'RedformTable');
-					$value->load($v);
-
-					$value->id = null;
-					$value->field_id = $newfield->id;
-					$valuemodel = JModel::getInstance('value', 'RedformModel');
-					$data = $value->getProperties();
-					$data['form_id'] = $form->id;
-					unset($data['ordering']);
-					$valuemodel->store($data);
+					throw new Exception('Failed copying fields');
 				}
 			}
 		}

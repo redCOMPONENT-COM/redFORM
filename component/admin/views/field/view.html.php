@@ -56,7 +56,7 @@ class RedformViewField extends RdfView
 	public function getTitle()
 	{
 		$isNew = (int) $this->item->id <= 0;
-		$title = JText::_('COM_REDFORM_FIELD_TITLE');
+		$title = JText::_('COM_REDFORM_FIELD_TITLE') . ($isNew ? '' : ' - ' . $this->item->field);
 		$state = $isNew ? JText::_('JNEW') : JText::_('COM_REDFORM_EDIT');
 
 		return $title . ' <small>' . $state . '</small>';

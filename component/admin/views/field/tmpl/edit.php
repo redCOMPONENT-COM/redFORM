@@ -25,7 +25,7 @@ if ($this->item->hasOptions && $this->item->id)
 {
 	JText::script('COM_REDFORM_JS_FIELD_VALUES_SAVE');
 	JText::script('COM_REDFORM_JS_FIELD_VALUES_DELETE');
-	JFactory::getDocument()->addScript(JURI::root() . 'media/com_redform/js/field-values.js');
+	RHelperAsset::load('field-values.js', 'com_redform');
 
 	$tableSortLink = 'index.php?option=com_redform&task=values.saveOrderAjax&tmpl=component';
 	JHTML::_('rsortablelist.sortable', 'valuesTable', 'optionsForm', 'asc', $tableSortLink, true, true);
