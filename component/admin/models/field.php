@@ -85,7 +85,8 @@ class RedformModelField extends RModelAdmin
 
 	/**
 	 * returns redmember fields as options
-	 * @return aray
+	 *
+	 * @return array
 	 */
 	public function getRedmemberFieldsOptions()
 	{
@@ -192,7 +193,7 @@ class RedformModelField extends RModelAdmin
 	 */
 	public function copy($field_ids)
 	{
-		foreach($field_ids as $field_id)
+		foreach ($field_ids as $field_id)
 		{
 			$row = $this->getTable('Field', 'RedformTable');
 			$row->load($field_id);

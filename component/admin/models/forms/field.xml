@@ -53,11 +53,12 @@
 				/>
 		<field
 				name="redmember_field"
-				type="rdfredmemberfield"
+				type="redformrmfield"
 				label="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD"
 				description="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_DESC"
-				maxlength="255"
-				/>
+				>
+            <option value=""></option>
+        </field>
 		<field
 				name="params"
 				type="hidden"
