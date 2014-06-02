@@ -64,9 +64,6 @@ if ($saveOrder)
 					<input type="checkbox" name="checkall-toggle" value=""
 					       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
 				</th>
-				<th width="1%" class="nowrap center">
-					<?php echo JHtml::_('rsearchtools.sort', 'JSTATUS', 'f.published', $listDirn, $listOrder); ?>
-				</th>
 				<th class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Field', 'f.field', $listDirn, $listOrder); ?>
 				</th>
@@ -94,9 +91,6 @@ if ($saveOrder)
 						<td><?php echo $this->pagination->getRowOffset($i); ?></td>
 						<td>
 							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
-						</td>
-						<td>
-							<?php echo JHtml::_('rgrid.published', $item->published, $i, 'fields.', $canChange, 'cb'); ?>
 						</td>
 						<td>
 							<?php if ($item->checked_out) : ?>

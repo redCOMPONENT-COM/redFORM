@@ -41,6 +41,11 @@ class JFormFieldRedformRmField extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
+		if (!REDMEMBER_INTEGRATION)
+		{
+			return false;
+		}
+
 		$options = array();
 
 		// Filter by state

@@ -9,8 +9,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `default` varchar(255) default NULL,
   `tooltip` varchar(255) default NULL,
   `params` text default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `form_id` (`form_id`)
+  PRIMARY KEY  (`id`)
 ) COMMENT='Fields for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_forms` (

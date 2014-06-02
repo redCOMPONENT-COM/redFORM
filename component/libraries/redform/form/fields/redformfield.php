@@ -79,16 +79,6 @@ class JFormFieldRedformField extends JFormFieldList
 				->from($db->qn('#__rwf_fields', 'a'))
 				->order('a.field ASC');
 
-			// Filter by state
-			if (is_numeric($state))
-			{
-				$query->where('a.published = ' . $db->quote($state));
-			}
-			else
-			{
-				$query->where('a.published IN (0,1)');
-			}
-
 			$db->setQuery($query);
 
 			$result = $db->loadObjectList();

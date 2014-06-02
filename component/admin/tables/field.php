@@ -45,7 +45,6 @@ class RedformTableField extends RTable
 	 */
 	public $fieldtype = 'textfield';
 
-
 	/**
 	 * @var int published state
 	 */
@@ -62,21 +61,6 @@ class RedformTableField extends RTable
 	 * @var string
 	 */
 	public $checked_out_time = null;
-
-	/**
-	 * @var int
-	 */
-	public $validate = null;
-
-	/**
-	 * @var int
-	 */
-	public $unique = null;
-
-	/**
-	 * @var int
-	 */
-	public $readonly = 0;
 
 	/**
 	 * @var string The default value for a field

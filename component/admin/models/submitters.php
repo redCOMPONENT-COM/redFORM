@@ -119,7 +119,7 @@ class RedformModelSubmitters extends RModelList
 		$query = $db->getQuery(true);
 
 		$query->select('s.submission_date, s.form_id, f.formname, s.price, s.currency, s.submit_key');
-		$query->select('s.integration, s.xref');
+		$query->select('s.integration');
 		$query->select('f.formname');
 		$query->select('p.status, p.paid');
 		$query->select('a.*');
@@ -220,7 +220,7 @@ class RedformModelSubmitters extends RModelList
 		}
 
 		$query .= "GROUP BY f.id
-				ORDER BY f.ordering ";
+				ORDER BY ff.ordering ";
 
 		$db->setQuery($query);
 
