@@ -98,6 +98,9 @@ class RedformViewForms extends RdfView
 		{
 			$new = RToolbarBuilder::createNewButton('form.add');
 			$firstGroup->addButton($new);
+
+			$copy = RToolbarBuilder::createCopyButton('forms.copy');
+			$firstGroup->addButton($copy);
 		}
 
 		if ($canDoCore->get('core.edit'))
