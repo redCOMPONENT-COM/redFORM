@@ -69,12 +69,30 @@ class RedformModelField extends RModelAdmin
 	 * @param   array  $data  The form data.
 	 *
 	 * @return  boolean  True on success.
+	 *
+	 * @throws Exception
 	 */
 	public function save($data)
 	{
 		if (!parent::save($data))
 		{
 			return false;
+		}
+
+		// Check if there is a form id, if so assigned a form field
+		if (isset($data['form_id']) && $data['form_id'])
+		{
+			$formfield = $this->getTable('Formfield', 'RedformTable');
+
+			$data = array(
+				'field_id' => $this->getState($this->getName() . '.id'),
+				'form_id' => (int) $data['form_id']
+			);
+
+			if (!$formfield->save($data))
+			{
+				throw new Exception($formfield->getError());
+			}
 		}
 
 		// Clear the cache

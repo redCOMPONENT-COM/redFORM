@@ -95,6 +95,7 @@ if ($this->item->hasOptions && $this->item->id)
 				</div>
 			</div>
 
+			<?php if (!$this->item->id): ?>
 			<div class="control-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('form_id'); ?>
@@ -103,6 +104,7 @@ if ($this->item->hasOptions && $this->item->id)
 					<?php echo $this->form->getInput('form_id'); ?>
 				</div>
 			</div>
+			<?php endif; ?>
 
 			<div class="control-group">
 				<div class="control-label">
