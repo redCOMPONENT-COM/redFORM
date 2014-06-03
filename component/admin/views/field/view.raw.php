@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -25,12 +25,12 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewField extends JView {
+class RedformViewField extends JViewLegacy {
 	/**
 	 * redFORM view display method
 	 * @return void
 	 **/
-	function display($tpl = null) 
+	function display($tpl = null)
 	{
 		if ($this->getLayout() == 'values') {
 			return $this->_displayValues($tpl);
@@ -41,7 +41,7 @@ class RedformViewField extends JView {
 	 * display values as json
 	 * @return void
 	 **/
-	function _displayValues($tpl = null) 
+	function _displayValues($tpl = null)
 	{
 		$values = $this->get('Values');
 		echo json_encode($values);

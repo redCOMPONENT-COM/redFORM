@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -20,32 +20,30 @@
  */
 
 /**
- */ 
+ */
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-// Require the base controller
-require_once (JPATH_COMPONENT.DS.'controller.php');
-require_once (JPATH_COMPONENT_SITE.DS.'redform.core.php');
-require_once (JPATH_COMPONENT_SITE.DS.'helpers'.DS.'log.php');
+$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
 
-// Require specific controller if requested
-if($controller = JRequest::getWord('controller')) {
-	$path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
-	if (file_exists($path)) {
-		require_once $path;
-	} else {
-		$controller = '';
-	}
+if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+{
+	throw new Exception(JText::_('COM_REDITEM_REDCORE_INIT_FAILED'), 404);
 }
 
-// Create the controller
-$classname	= 'RedformController'.ucfirst($controller);
-$controller = new $classname( );
+// Bootstraps redCORE
+RBootstrap::bootstrap();
 
-// Perform the Request task
-$controller->execute(JRequest::getCmd('task'));
+$jinput = JFactory::getApplication()->input;
 
-// Redirect if set by the controller
+// Register library prefix
+RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
+
+// Require the base controller
+require_once (JPATH_COMPONENT . '/controller.php');
+require_once (JPATH_COMPONENT . '/redform.defines.php');
+
+// Execute the controller
+$controller = JControllerLegacy::getInstance('redform');
+$controller->execute($jinput->get('task'));
 $controller->redirect();
-?>

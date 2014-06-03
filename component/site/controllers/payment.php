@@ -1,7 +1,7 @@
 <?php
 /**
- * @package    Redform.Admin
- * @copyright  Redform (C) 2008-2013 redCOMPONENT.com
+ * @package    Redform.Front
+ * @copyright  Redform (C) 2008-2014 redCOMPONENT.com
  * @license    GNU General Public License version 2 or later, see LICENSE.
  */
 
@@ -13,10 +13,10 @@ jimport('joomla.application.component.controller');
 /**
  * Redform Payments Controller
  *
- * @package  Redform.Admin
+ * @package  Redform.Front
  * @since    2.0
  */
-class RedformControllerPayment extends JController
+class RedformControllerPayment extends JControllerLegacy
 {
 	/**
 	 * Method to display the view
@@ -50,7 +50,7 @@ class RedformControllerPayment extends JController
 
 		if (count($options) == 1)
 		{
-			$this->setRedirect('index.php?option=com_redform&controller=payment&task=process&key=' . $key . '&gw=' . $options[0]->value . $lang_v);
+			$this->setRedirect('index.php?option=com_redform&task=payment.process&key=' . $key . '&gw=' . $options[0]->value . $lang_v);
 			$this->redirect();
 		}
 
@@ -129,7 +129,7 @@ class RedformControllerPayment extends JController
 		}
 
 		// Analytics for default landing page
-		if (redFORMHelperAnalytics::isEnabled())
+		if (RdfHelperAnalytics::isEnabled())
 		{
 			$payement = $model->getPaymentDetails($submit_key);
 
@@ -139,7 +139,7 @@ class RedformControllerPayment extends JController
 			$trans->affiliation = $payement->form;
 			$trans->revenue = $model->getPrice();
 
-			redFORMHelperAnalytics::addTrans($trans);
+			RdfHelperAnalytics::addTrans($trans);
 
 			// Add submitters as items
 			foreach ($submitters as $s)
@@ -150,10 +150,11 @@ class RedformControllerPayment extends JController
 				$item->sku = 'submitter' . $s->id;
 				$item->category = '';
 				$item->price = $s->price;
-				redFORMHelperAnalytics::addItem($item);
+				$item->currency = $s->currency;
+				RdfHelperAnalytics::addItem($item);
 			}
 
-			redFORMHelperAnalytics::trackTrans();
+			RdfHelperAnalytics::trackTrans();
 		}
 
 		$app->input->set('view', 'payment');
@@ -168,7 +169,7 @@ class RedformControllerPayment extends JController
 	 *
 	 * @return void
 	 */
-	public function paymentcancelled()
+	public function cancelled()
 	{
 		$app = JFactory::getApplication();
 
@@ -189,11 +190,11 @@ class RedformControllerPayment extends JController
 		$submit_key = $app->input->get('key');
 		$gw = $app->input->get('gw', '');
 
-		RedformHelperLog::simpleLog('PAYMENT NOTIFICATION RECEIVED' . ': ' . $gw);
+		RdfHelperLog::simpleLog('PAYMENT NOTIFICATION RECEIVED' . ': ' . $gw);
 
 		if (empty($gw))
 		{
-			RedformHelperLog::simpleLog('PAYMENT NOTIFICATION MISSING GATEWAY' . ': ' . $gw);
+			RdfHelperLog::simpleLog('PAYMENT NOTIFICATION MISSING GATEWAY' . ': ' . $gw);
 
 			throw new Exception('PAYMENT NOTIFICATION MISSING GATEWAY' . ': ' . $gw, 404);
 		}
@@ -218,7 +219,10 @@ class RedformControllerPayment extends JController
 				$dispatcher->trigger('onAfterPaymentVerified', array($submit_key));
 
 				// Built-in notifications
-				$model->notifyPaymentReceived();
+				if (!$model->notifyPaymentReceived())
+				{
+					$app->enqueueMessage($model->getError(), 'error');
+				}
 			}
 		}
 		else

@@ -25,7 +25,7 @@ jimport( 'joomla.application.component.view');
 
 /**
  */
-class RedformViewPayment extends JView {
+class RedformViewPayment extends JViewLegacy {
 
 	function display($tpl = null)
 	{
@@ -42,6 +42,8 @@ class RedformViewPayment extends JView {
 	{
 		$uri 		    = &JFactory::getURI();
 		$document   = &JFactory::getDocument();
+
+		$uri->delVar('task');
 
 		$submit_key = JRequest::getVar('key',    '');
 		$source     = JRequest::getVar('source', '');
@@ -70,14 +72,14 @@ class RedformViewPayment extends JView {
 		$this->assign('currency',  $currency);
 
 		// Analytics
-		if (redFORMHelperAnalytics::isEnabled())
+		if (RdfHelperAnalytics::isEnabled())
 		{
 			$event = new stdclass;
 			$event->category = 'payement';
 			$event->action = 'display';
 			$event->label = "display payment form {$submit_key}";
 			$event->value = null;
-			redFORMHelperAnalytics::trackEvent($event);
+			RdfHelperAnalytics::trackEvent($event);
 		}
 
 		parent::display($tpl);

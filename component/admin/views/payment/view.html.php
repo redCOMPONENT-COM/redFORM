@@ -1,80 +1,94 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+/**
+ * @package     Redform.Backend
+ * @subpackage  Views
+ *
+ * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
-
-jimport( 'joomla.application.component.view');
+defined('_JEXEC') or die;
 
 /**
- * HTML View class for the redform component
+ * Payment View
  *
- * @static
- * @package		redform
- * @since 2.0
+ * @package     Redform.Backend
+ * @subpackage  Views
+ * @since       1.0
  */
-class RedformViewPayment extends JView
+class RedformViewPayment extends RdfView
 {
-	function display($tpl = null)
+	/**
+	 * @var  JForm
+	 */
+	protected $form;
+
+	/**
+	 * @var  object
+	 */
+	protected $item;
+
+	/**
+	 * Display method
+	 *
+	 * @param   string  $tpl  The template name
+	 *
+	 * @return  void
+	 */
+	public function display($tpl = null)
 	{
-		$mainframe = JFactory::getApplication();
+		$this->form	= $this->get('Form');
+		$this->item	= $this->get('Item');
 
-		$object	=& $this->get('data');
+		parent::display($tpl);
+	}
+	/**
+	 * Get the view title.
+	 *
+	 * @return  string  The view title.
+	 */
+	public function getTitle()
+	{
+		$isNew = (int) $this->item->id <= 0;
+		$title = JText::_('COM_REDFORM_PAYMENT_TITLE');
+		$state = $isNew ? JText::_('JNEW') : JText::_('COM_REDFORM_EDIT');
 
-		if (empty($object->gateway) && $this->getLayout() == 'form') {
-			$this->_displayForm($tpl);
-			return;
+		return $title . ' <small>' . $state . '</small>';
+	}
+
+	/**
+	 * Get the toolbar to render.
+	 *
+	 * @return  RToolbar
+	 */
+	public function getToolbar()
+	{
+		$group = new RToolbarButtonGroup;
+		$canDoCore = RedformHelpersAcl::getActions();
+
+		if ($canDoCore->get('core.edit') || $canDoCore->get('core.edit.own'))
+		{
+			$save = RToolbarBuilder::createSaveButton('payment.apply');
+			$saveAndClose = RToolbarBuilder::createSaveAndCloseButton('payment.save');
+
+			$group->addButton($save)
+				->addButton($saveAndClose);
 		}
 
-		JToolBarHelper::title( JText::_('COM_REDFORM_Payment_history' ) );
-		JToolBarHelper::back();
+		if (empty($this->item->id))
+		{
+			$cancel = RToolbarBuilder::createCancelButton('payment.cancel');
+		}
+		else
+		{
+			$cancel = RToolbarBuilder::createCloseButton('payment.cancel');
+		}
 
-		//get the object
-		$object =& $this->get('data');
-		
-		$this->assignRef('object',		$object);
-		
-		parent::display($tpl);
-	}
+		$group->addButton($cancel);
 
-	function _displayForm($tpl)
-	{
-		$mainframe = JFactory::getApplication();
-		$option = JRequest::getVar('option');
-		
-		$db		=& JFactory::getDBO();
-		$uri 	=& JFactory::getURI();
-		$user 	=& JFactory::getUser();
-		$model	=& $this->getModel();
-		
-    $document = & JFactory::getDocument();
+		$toolbar = new RToolbar;
+		$toolbar->addGroup($group);
 
-		$lists = array();
-		//get the project
-		$object	=& $this->get('data');
-		$isNew  = ($object->id < 1);
-		 
-		$this->assignRef('lists',      $lists);
-		$this->assignRef('object',     $object);
-		$this->assignRef('submit_key', JRequest::getVar('submit_key'));
-
-		parent::display($tpl);
+		return $toolbar;
 	}
 }
-?>

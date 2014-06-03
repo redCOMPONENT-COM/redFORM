@@ -23,9 +23,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-require_once (JPATH_SITE.'/components/com_redform/classes/paymenthelper.class.php');
-
-class PaymentIridium extends RDFPaymenthelper
+class PaymentIridium extends RdfPaymentHelper
 {
 	protected $gateway = 'iridium';
 
@@ -54,8 +52,8 @@ class PaymentIridium extends RDFPaymenthelper
 
 		$req_params = array(
 			'MerchantID' => $this->params->get('merchantid'),
-			'Amount' => round($details->price*100, 2 ),
-			'CurrencyCode' => RedformHelperLogCurrency::getIsoNumber($currency),
+			'Amount' => round($details->price*100),
+			'CurrencyCode' => RHelperCurrency::getIsoNumber($currency),
 			'EchoAVSCheckResult'  => 'true',
 			'EchoCV2CheckResult'  => 'true',
 			'EchoThreeDSecureAuthenticationCheckResult'  => 'true',
@@ -135,6 +133,8 @@ class PaymentIridium extends RDFPaymenthelper
 		<input type="submit" value="<?php echo JText::_('PLG_REDFORM_IRIDIUM_FORM_OPEN_PAYMENT_WINDOW'); ?>" />
 		</form>
 		<?php
+
+		return true;
 	}
 
 	/**
@@ -149,14 +149,14 @@ class PaymentIridium extends RDFPaymenthelper
 
     $submit_key = JRequest::getvar('key');
     JRequest::setVar('submit_key', $submit_key);
-    RedformHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_IRIDIUM_NOTIFICATION_RECEIVED', $submit_key));
+    RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_IRIDIUM_NOTIFICATION_RECEIVED', $submit_key));
 
     // it was successull, get the details
     $resp = array();
     $resp[] = 'tid:'.JRequest::getVar('CrossReference');
     $resp[] = 'orderid:'.JRequest::getVar('OrderID');
     $resp[] = 'amount:'.JRequest::getVar('Amount');
-    $resp[] = 'cur:'.RedformHelperLogCurrency::getIsoCode(JRequest::getVar('CurrencyCode'));
+    $resp[] = 'cur:' . RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'));
     $resp[] = 'date:'.JRequest::getVar('TransactionDateTime');
     $resp = implode("\n  ", $resp);
 
@@ -217,7 +217,7 @@ class PaymentIridium extends RDFPaymenthelper
 		if (strcmp($HashDigest, JRequest::getVar('HashDigest')))
 		{
 			$error = JText::sprintf('PLG_REDFORM_IRIDIUM_HASHDIGEST_MISMATCH', $submit_key);
-			throw new PaymentException($error);
+			throw new RedformPaymentException($error);
 		}
 
 		// hash match, record result
@@ -244,31 +244,31 @@ class PaymentIridium extends RDFPaymenthelper
 			}
 	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_KEY_S_REASON_S_MESSAGE_M'
 			                       , $submit_key, $reason, JRequest::getVar('Message'));
-			throw new PaymentException($error);
+			throw new RedformPaymentException($error);
 	    }
 
 	    $details = $this->_getSubmission($submit_key);
 
 	    $currency = $details->currency;
-	    if (strcasecmp($currency, RedformHelperLogCurrency::getIsoCode(JRequest::getVar('CurrencyCode')))) {
+	    if (strcasecmp($currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode')))) {
 	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_CURRENCY_MISMATCH_EXPECTED_S_RECEIVED_S',
-			                        $submit_key, $currency, RedformHelperLogCurrency::getIsoCode(JRequest::getVar('CurrencyCode')));
-			throw new PaymentException($error);
+			                        $submit_key, $currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode')));
+			throw new RedformPaymentException($error);
 	    }
 
-	    if (round($details->price*100, 2 ) != JRequest::getVar('Amount')) {
+	    if (round($details->price*100) != JRequest::getVar('Amount')) {
 	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PRICE_MISMATCH_EXPECTED_S_RECEIVED_S',
 			         $submit_key, $details->price*100, JRequest::getVar('Amount'));
-			throw new PaymentException($error);
+			throw new RedformPaymentException($error);
 		}
 		else {
 			$paid = 1;
 	    }
 	    $this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
 	}
-	catch (PaymentException $e) // just easier for debugging...
+	catch (RedformPaymentException $e) // just easier for debugging...
 	{
-		RedformHelperLog::simpleLog($e->getMessage());
+		RdfHelperLog::simpleLog($e->getMessage());
 		$this->writeTransaction($submit_key, $e->getMessage().$resp, 'FAIL', 0);
 		return false;
 	}

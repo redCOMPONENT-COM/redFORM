@@ -32,17 +32,19 @@ jimport('joomla.application.component.model');
  * @subpackage redform
  * @since		0.9
  */
-class RedFormModelPayment extends JModel
+class RedFormModelPayment extends JModelLegacy
 {
-	var $_gateways = null;
+	protected $_gateways = null;
 
-	var $_submit_key = null;
+	protected $_submit_key = null;
 
-	var $_form = null;
+	protected $_form = null;
 
-	var $_submitters = null;
+	protected $_submitters = null;
 
-	var $_gatewayhelper = null;
+	protected $_gatewayhelper = null;
+
+	protected $paymentsDetails = array();
 
 	function __construct($config)
 	{
@@ -66,10 +68,13 @@ class RedFormModelPayment extends JModel
 	{
 		if (empty($this->_gateways))
 		{
-			JPluginHelper::importPlugin( 'redform_payment' );
+			$details = $this->getPaymentDetails();
+
+			JPluginHelper::importPlugin('redform_payment');
 			$dispatcher = JDispatcher::getInstance();
+
 			$gateways = array();
-			$results = $dispatcher->trigger('onGetGateway', array(&$gateways));
+			$results = $dispatcher->trigger('onGetGateway', array(&$gateways, $details));
 			$this->_gateways = $gateways;
 		}
 
@@ -82,26 +87,30 @@ class RedFormModelPayment extends JModel
 	 */
 	function getGatewayOptions()
 	{
+		$details = $this->getPaymentDetails();
+
 		$gw = $this->getGateways();
 
 		$options = array();
+
 		foreach ($gw as $g)
 		{
-			if (isset($g['label'])) {
+			if (isset($g['label']))
+			{
 				$label = $g['label'];
 			}
-			else {
+			else
+			{
 				$label = $g['name'];
 			}
+
 			$options[] = JHTML::_('select.option', $g['name'], $label);
 		}
 
-		$details = $this->getPaymentDetails();
-
 		// Filter gateways through plugins
-		JPluginHelper::importPlugin( 'redform_payment' );
+		JPluginHelper::importPlugin('redform_payment');
 		$dispatcher = JDispatcher::getInstance();
-		$results = $dispatcher->trigger('onFilterGateways', array(&$options, $details));
+		$dispatcher->trigger('onFilterGateways', array(&$options, $details));
 
 		return $options;
 	}
@@ -120,7 +129,7 @@ class RedFormModelPayment extends JModel
 		$query = ' SELECT price FROM #__rwf_submitters WHERE submit_key = '. $this->_db->Quote($this->_submit_key)
 		            ;
 		$this->_db->setQuery($query);
-		$res = $this->_db->loadResultArray();
+		$res = $this->_db->loadColumn();
 		$total = 0.0;
 		foreach ($res as $p) {
 			$total += $p;
@@ -134,9 +143,17 @@ class RedFormModelPayment extends JModel
 	 */
 	function getCurrency()
 	{
-		$form = $this->getForm();
+		if (empty($this->_submit_key))
+		{
+			throw new LogicException(JText::_('COM_REDFORM_Missing_key'), 500);
+			return false;
+		}
 
-		return $form->currency;
+		$query = ' SELECT currency FROM #__rwf_submitters WHERE submit_key = '. $this->_db->Quote($this->_submit_key)
+		;
+		$this->_db->setQuery($query);
+
+		return $this->_db->loadResult();
 	}
 
 	/**
@@ -153,7 +170,7 @@ class RedFormModelPayment extends JModel
 				return $g['helper'];
 			}
 		}
-		RedformHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND'.': '.$name);
+		RdfHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND'.': '.$name);
 
 		return false;
 	}
@@ -213,37 +230,56 @@ class RedFormModelPayment extends JModel
 			$key = $this->_submit_key;
 		}
 
-		$submitters = $this->getSubmitters();
-		if (!count($submitters))
+		if (!isset($this->paymentsDetails[$key]))
 		{
-			return false;
-		}
-		$asub = current($submitters);
-		$form = $this->getForm();
+			$submitters = $this->getSubmitters();
 
-		$obj = new stdclass;
-		$obj->integration = $asub->integration;
-		$obj->form        = $form->formname ;
-		$obj->form_id     = $form->id;
-		$obj->key         = $key;
-		switch ($asub->integration)
-		{
-			case 'redevent':
-				$event = $this->getEventAttendee($key);
-				$obj->title = JText::_('COM_REDFORM_Event_registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
-				$obj->uniqueid = $event->uniqueid;
-				break;
-			default:
-				if (JRequest::getVar('paymenttitle')) {
-					$obj->title = JRequest::getVar('paymenttitle');
-				}
-				else {
-					$obj->title = JText::_('COM_REDFORM_Form_submission').': '.$form->formname;
-				}
-				$obj->uniqueid = $key;
-				break;
+			if (!count($submitters))
+			{
+				return false;
+			}
+
+			$asub = current($submitters);
+			$form = $this->getForm();
+
+			if (!$asub->currency)
+			{
+				throw new Exception('Currency must be set in submission for payment - Please contact system administrator', 500);
+			}
+
+			$obj = new stdclass;
+			$obj->integration = $asub->integration;
+			$obj->form        = $form->formname ;
+			$obj->form_id     = $form->id;
+			$obj->key         = $key;
+			$obj->currency    = $asub->currency;
+
+			switch ($asub->integration)
+			{
+				case 'redevent':
+					$event = $this->getEventAttendee($key);
+
+					$obj->title = JText::_('COM_REDFORM_Event_registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
+					$obj->uniqueid = $event->uniqueid;
+					break;
+
+				default:
+					if (JFactory::getApplication()->input->get('paymenttitle'))
+					{
+						$obj->title = JFactory::getApplication()->input->get('paymenttitle');
+					}
+					else
+					{
+						$obj->title = JText::_('COM_REDFORM_Form_submission').': '.$form->formname;
+					}
+
+					$obj->uniqueid = $key;
+					break;
+			}
+			$this->paymentsDetails[$key] = $obj;
 		}
-		return $obj;
+
+		return $this->paymentsDetails[$key];
 	}
 
 	function getEventAttendee($key)
@@ -258,9 +294,12 @@ class RedFormModelPayment extends JModel
 		              ;
 		$this->_db->setQuery($query, 0, 1);
 		$res = $this->_db->loadObject();
-		if ($res) {
-			$res->uniqueid = $res->course_code.'-'.$res->xref.'-'.$res->attendee_id;
+
+		if ($res)
+		{
+			$res->uniqueid = $res->course_code . '-' . $res->xref . '-' . $res->attendee_id;
 		}
+
 		return $res;
 	}
 
@@ -280,26 +319,36 @@ class RedFormModelPayment extends JModel
 	 */
 	function _notifySubmitter()
 	{
-		$mainframe = &JFactory::getApplication();
-		$mailer = &JFactory::getMailer();
+		$mainframe = JFactory::getApplication();
+		$mailer = JFactory::getMailer();
+
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
 		$mailer->IsHTML(true);
 
 		$form = $this->getForm();
+
+		$core = new RdfCore;
+		$answers = $core->getAnswers($this->_submit_key);
+		$first = $answers->getFirstSubmission();
+		$replaceHelper = new RdfHelperTagsreplace($form, $first);
+
 		// set the email subject
 		$subject = (empty($form->submitterpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationsubject);
+		$subject = $replaceHelper->replace($subject);
+		$mailer->setSubject($subject);
+
 		$body    = (empty($form->submitterpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->submitterpaymentnotificationbody);
-		$mailer->setSubject(JText::sprintf($subject, $form->formname));
 		$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
-		$mailer->setBody(JText::sprintf($body, $form->formname, $link));
+		$body = $replaceHelper->replace($body, array('[submitters]' => $link));
+		$mailer->setBody($body);
 
-		$core = new RedFormCore();
-		$emails = $core->getSubmissionContactEmail($this->_submit_key);
+		$emails = $core->getSubmissionContactEmail($this->_submit_key, true);
 
-		if (!$emails) {
-			return false;
+		if (!$emails)
+		{
+			return true;
 		}
 
 		foreach ((array) $emails as $sid)
@@ -309,9 +358,12 @@ class RedFormModelPayment extends JModel
 				$mailer->addRecipient($email['email']);
 			}
 		}
-		if (!$mailer->send()) {
+
+		if (!$mailer->send())
+		{
 			return false;
 		}
+
 		return true;
 	}
 
@@ -320,41 +372,52 @@ class RedFormModelPayment extends JModel
 	 */
 	function _notifyFormContact()
 	{
-		$mainframe = &JFactory::getApplication();
-		$mailer = &JFactory::getMailer();
+		$mainframe = JFactory::getApplication();
+		$mailer = JFactory::getMailer();
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
 		$mailer->IsHTML(true);
 
 		$form = $this->getForm();
+
 		if ($form->contactpersoninform)
 		{
-			if (strstr($form->contactpersonemail, ';')) {
-				$addresses = explode(";", $form->contactpersonemail);
-			}
-			else {
-				$addresses = explode(",", $form->contactpersonemail);
-			}
-			foreach ($addresses as $a)
+			$addresses = RdfHelper::extractEmails($form->contactpersonemail, true);
+
+			if (!$addresses)
 			{
-				$a = trim($a);
-				if (JMailHelper::isEmailAddress($a)) {
-					$mailer->addRecipient($a);
-				}
-			}
-			// set the email subject and body
-			$subject = (empty($form->contactpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->contactpaymentnotificationsubject);
-			$body    = (empty($form->contactpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_DEFAULT') : $form->contactpaymentnotificationbody);
-
-			$mailer->setSubject(JText::sprintf($subject, $form->formname));
-			$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
-			$mailer->setBody(JText::sprintf($body, $form->formname, $link));
-
-			if ($mailer->send()) {
 				return true;
 			}
+
+			foreach ($addresses as $a)
+			{
+				$mailer->addRecipient($a);
+			}
+
+			$core = new RdfCore;
+			$answers = $core->getAnswers($this->_submit_key);
+			$first = $answers->getFirstSubmission();
+			$replaceHelper = new RdfHelperTagsreplace($form, $first);
+
+			// set the email subject and body
+			$subject = (empty($form->contactpaymentnotificationsubject) ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_SUBJECT_DEFAULT') : $form->contactpaymentnotificationsubject);
+			$subject = $replaceHelper->replace($subject);
+
+			$body    = (empty($form->contactpaymentnotificationbody)    ? JText::_('COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_DEFAULT') : $form->contactpaymentnotificationbody);
+
+			$link = JRoute::_(JURI::root().'administrator/index.php?option=com_redform&view=submitters&form_id='.$form->id);
+			$body = $replaceHelper->replace($body, array('[submitters]' => $link));
+
+			$mailer->setSubject($subject);
+			$mailer->setBody($body);
+
+			if (!$mailer->send())
+			{
+				return false;
+			}
 		}
+
 		return true;
 	}
 

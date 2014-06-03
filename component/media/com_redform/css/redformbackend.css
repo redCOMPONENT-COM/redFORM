@@ -1,0 +1,110 @@
+/* Icon files 16px */
+.icon-16-redform_fields {
+   background-image: url(../../../../media/com_redform/redform_quest_16.png);
+}
+.icon-16-redform_values {
+   background-image: url(../../../../media/com_redform/redform_answers_16.png);
+}
+
+.icon-16-redform_redform, .icon-16-redform_16, .icon-16-redform_config {
+   background-image: url(../../../../media/com_redform/redform_redform_16.png);
+}
+.icon-16-redform_plus {
+   background-image: url(../../../../media/com_redform/redform_plus_16.png);
+}
+.icon-16-redform_details {
+   background-image: url(../../../../media/com_redform/redform_details_16.png);
+}
+.icon-16-redform_submitters {
+   background-image: url(../../../../media/com_redform/redform_contes_16.png);
+}
+
+/* Icon files 32px */
+.icon-32-redform_fields {
+   background-image: url(../../../../media/com_redform/redform_quest_32.png);
+}
+.icon-32-redform_values {
+   background-image: url(../../../../media/com_redform/redform_answers_32.png);
+}
+.icon-32-redform_redform, .icon-32-redform_config {
+   background-image: url(../../../../media/com_redform/redform_red_32.png);
+}
+.icon-32-redform_plus {
+   background-image: url(../../../../media/com_redform/redform_plus_32.png);
+}
+.icon-32-redform_details {
+   background-image: url(../../../../media/com_redform/redform_details_32.png);
+}
+.icon-32-redform_submitters {
+   background-image: url(../../../../media/com_redform/redform_contes_32.png);
+}
+
+/* Icon files 48px */
+.icon-48-redform_fields {
+   background-image: url(../../../../media/com_redform/redform_quest_48.png);
+}
+.icon-48-redform_values {
+   background-image: url(../../../../media/com_redform/redform_answers_48.png);
+}
+.icon-48-redform_redform, .icon-48-redform_config {
+   background-image: url(../../../../media/com_redform/redform_red_48.png);
+}
+.icon-48-redform_plus {
+   background-image: url(../../../../media/com_redform/redform_plus_48.png);
+}
+.icon-48-redform_details {
+   background-image: url(../../../../media/com_redform/redform_details_48.png);
+}
+.icon-48-redform_submitters {
+   background-image: url(../../../../media/com_redform/redform_contes_48.png);
+}
+
+/* Layout formatting */
+#formname, #submittername {
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.6em;
+	color: #CFCFCF;
+}
+
+table.adminform tr.row1 label.radiobtn, 
+table.adminform tr.row0 label.radiobtn,
+#trpublished label.radiobtn,
+table.admintable label.radiobtn
+{
+	clear: none;
+	float: left;
+	margin: 3px 0 0 5px;
+	min-width: 45px;
+}
+.upactive{
+	height:13px;
+	width:13px;
+	background-image: url(../../../templates/bluestork/images/admin/uparrow.png);
+	background-repeat:no;
+	float: left;
+	cursor:pointer;
+}
+.downactive{
+	height:13px;
+	width:13px;
+	background-image: url(../../../templates/bluestork/images/admin/downarrow.png);
+	background-repeat:no;
+	float: left;
+	cursor:pointer;
+}
+
+
+div#cond_recipients_ui {
+	padding: 10px 0;
+}
+
+div#cond_recipients_ui label {
+    margin-right: 5px;
+}
+
+div#cond_recipients_ui input.error,
+div#cond_recipients_ui select.error {
+	border: 1px solid red;
+	background-color: pink;
+}

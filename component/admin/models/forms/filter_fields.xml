@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter" addfieldpath="/libraries/redform/form/fields">
+        <field
+                name="search_fields"
+                type="text"
+                label="COM_REDCORE_FILTER_SEARCH_DESC"
+                placeholder="JSEARCH_FILTER"
+                class="js-enter-submits"
+                />
+        <field
+                name="form_id"
+                type="redformform"
+                class="chosen"
+                default=""
+                label="COM_REDFORM_FILTER_FORM"
+                description="COM_REDFORM_FILTER_FORM_DESC"
+                onchange="this.form.submit();"
+                >
+            <option value="">COM_REDFORM_FIELD_SELECT_FORM</option>
+        </field>
+        <field
+                name="fieldtype"
+                type="redformfieldtype"
+                class="chosen"
+                default=""
+                label="COM_REDFORM_FILTER_FIELDTYPE"
+                onchange="this.form.submit();"
+                >
+            <option value="">COM_REDFORM_FIELD_SELECT_FIELDTYPE</option>
+        </field>
+    </fields>
+    <fields name="list">
+        <field
+                name="field_limit"
+                type="rlimitbox"
+                class="inputbox input-mini chzn"
+                default="25"
+                label="JGLOBAL_ORDERING_LIST_LIMIT"
+                description="JGLOBAL_ORDERING_LIST_LIMIT_DESC"
+                onchange="this.form.submit();"
+                />
+    </fields>
+</form>

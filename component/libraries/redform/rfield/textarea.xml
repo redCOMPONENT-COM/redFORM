@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="params">
+		<fieldset name="extra" label="extra">
+			<field name="placeholder" type="text" default="" label="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_LABEL" description="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_DESC"/>
+    <field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS" description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
+    <field name="cols" type="text" default="25" label="COM_REDFORM_FIELD_TEXTAREA_PARAMS_COLS" description="COM_REDFORM_FIELD_TEXTAREA_PARAMS_COLS_DESC"/>
+    <field name="rows" type="text" default="6" label="COM_REDFORM_FIELD_TEXTAREA_PARAMS_ROWS" description="COM_REDFORM_FIELD_TEXTAREA_PARAMS_ROWS_DESC"/>
+	</fieldset></fields>
+</form>

@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -25,41 +25,78 @@ jimport( 'joomla.application.component.view' );
 /**
  * redFORM View
  */
-class RedformViewPayments extends JView {
-	
-  function display($tpl = null) 
-  {
-		$mainframe = JFactory::getApplication();
-		$option = JRequest::getVar('option');
-		
-		$user 		= & JFactory::getUser();
-		$document	= & JFactory::getDocument();		
-  	$params   = JComponentHelper::getParams('com_redform');
-  	
-  	$rows       = $this->get('Data');
-  	$pagination = $this->get('Pagination');
-  	
-  	$lists = array();
+class RedformViewPayments extends RdfView
+{
+	/**
+	 * Execute and display a template script.
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  mixed  A string if successful, otherwise a JError object.
+	 */
+	public function display($tpl = null)
+	{
+		$model = $this->getModel();
 
-  	/* Set variabels */
-  	$this->assignRef('rows',        $rows);
-  	$this->assignRef('pagination',  $pagination);
-  	$this->assignRef('lists',       $lists);
-    $this->assignRef('params',      $params);
-    $this->assignRef('key',         JRequest::getVar('submit_key'));
+		$this->items = $model->getItems();
+		$this->state = $model->getState();
+		$this->pagination = $model->getPagination();
 
-  	JToolBarHelper::title(JText::_( 'COM_REDFORM_PAYMENTS_HISTORY' ), 'redform_submitters');
-  	JToolBarHelper::addNew();
-  	JToolBarHelper::editListX();
-  	JToolBarHelper::deleteListX();
-		JToolBarHelper::custom('back', 'back', 'back', 'back', false);
-  	  	
-  	// set the menu
-  	RedformHelper::setMenu();
+		parent::display($tpl);
+	}
 
-  	/* Display the page */
-  	parent::display($tpl);
-  }
-  
+	/**
+	 * Get the view title.
+	 *
+	 * @return  string  The view title.
+	 */
+	public function getTitle()
+	{
+		return JText::_('COM_REDFORM_PAYMENTS_HISTORY');
+	}
+
+	/**
+	 * Get the toolbar to render.
+	 *
+	 * @return  RToolbar
+	 */
+	public function getToolbar()
+	{
+		$params = JComponentHelper::getParams('com_redform');
+
+		$canDoCore = RedformHelpersAcl::getActions();
+		$user = JFactory::getUser();
+
+		$firstGroup = new RToolbarButtonGroup;
+		$secondGroup = new RToolbarButtonGroup;
+		$thirdGroup = new RToolbarButtonGroup;
+
+		if ($canDoCore->get('core.edit'))
+		{
+			$new = RToolbarBuilder::createNewButton('payment.add');
+			$firstGroup->addButton($new);
+
+			$edit = RToolbarBuilder::createEditButton('payment.edit');
+			$firstGroup->addButton($edit);
+		}
+
+		// Delete / Trash
+		if ($canDoCore->get('core.delete'))
+		{
+			$delete = RToolbarBuilder::createDeleteButton('payments.delete');
+
+			$secondGroup->addButton($delete);
+		}
+
+		// Options
+		$back = RToolbarBuilder::createStandardButton('payments.back', JText::_('COM_REDFORM_BACK'), 'btn btn-default', 'icon-eject', false);
+		$thirdGroup->addButton($back);
+
+		$toolbar = new RToolbar;
+		$toolbar->addGroup($firstGroup)
+			->addGroup($secondGroup)
+			->addGroup($thirdGroup);
+
+		return $toolbar;
+	}
 }
-?>

@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Tracks" default="site" basedir=".">
+<project name="redFORM" default="site" basedir=".">
 	<property file="build/build.properties" />
 
 	<!-- Default properties, set only if not already assigned in the build.properties file -->
+    <property name="comp.name" value="redform" />
 	<property name="dirs.root" value="." />
 	<property name="dirs.tmp" value="tmp" />
 	<property name="dirs.release" value="release" />
 	<property name="version" value="dev" />
+
+    <xmlproperty file="redCORE/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
+	<property
+			name="redCOREVersion"
+			value="${redCOREDetails.version}"
+			override="true"/>
 
 	<taskdef name="gitversion" classname="build.phingext.GitVersionTask" />
 	<taskdef name="gitdate" classname="build.phingext.GitDateTask" />
@@ -41,8 +48,8 @@
 		<if>
 			<equals arg1="${version}" arg2="dev" />
 			<then>
-				<gitversion workingcopy="${dirs.root}" propertyname="git.lastrevision" />
-				<gitdate workingcopy="${dirs.root}" propertyname="git.timestamp" />
+				<gitversion propertyname="git.lastrevision" />
+				<gitdate propertyname="git.timestamp" />
 				<!--<property name="version" value="rev${git.lastrevision}" override="true" />-->
 				<property name="version" value="${git.lastrevision}" override="true" />
 			</then>
@@ -56,7 +63,7 @@
 	-->
 
 	<target name="release" description="Installation Package for Joomla! 1.6+"
-		depends="new-release,setup-properties">
+		depends="setup-properties, new-release">
 
 		<copy todir="${dirs.tmp}/component" >
 			<fileset dir="${dirs.root}/component">
@@ -70,8 +77,21 @@
 			</filterchain>
 		</copy>
 
+        <!-- This is added just for extension installing purposes, in case it gets installed before redCORE -->
+        <echo msg="Copying redCORE LIBRARIES folder to component build directory..."/>
+        <copy todir="${dirs.tmp}/component/redCORE">
+            <fileset dir="redCORE">
+                <include name="**"/>
+                <exclude name=".*"/>
+                <exclude name=".travis/"/>
+                <exclude name="build.*"/>
+                <exclude name="*.md"/>
+            </fileset>
+        </copy>
+
 		<!-- Create the package -->
 		<tar basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
+        <zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.zip" includeemptydirs="true" />
 
 		<!-- admin modules
 		<foreach param="dirname" absparam="absname" target="zipfolder">
@@ -138,6 +158,7 @@
 		<mkdir dir="${dirs.release}/${myp}" />
 		<!-- Create the package -->
 		<tar basedir="${dirs.tmp}/${dirname}" destfile="${dirs.release}/${myp}/${dirname}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
+        <zip basedir="${dirs.tmp}/${dirname}" destfile="${dirs.release}/${myp}/${dirname}-${version}.zip" includeemptydirs="true"/>
 	</target>
 
 	<!--
@@ -147,6 +168,9 @@
 	-->
 
 	<target name="site" description="Copies files to a existing joomla site" depends="setup-properties">
+        <delete dir="${www.dir}/administrator/components/com_${comp.name}" quiet="yes" includeemptydirs="false" />
+        <delete dir="${www.dir}/components/com_${comp.name}" quiet="yes" includeemptydirs="false" />
+
         <echo message="Copying administrator component..." />
 
         <!-- Manifest & install script -->
@@ -191,6 +215,13 @@
                 <include name="**" />
             </fileset>
         </copy>
+
+		<!-- Libraries -->
+		<copy todir="${www.dir}/libraries" overwrite="true">
+			<fileset dir="${dirs.root}/component/libraries">
+				<include name="**"/>
+			</fileset>
+		</copy>
 
         <!-- Component included Modules - Site
         <copy todir="${www.dir}/modules" overwrite="true">
@@ -250,7 +281,7 @@
 -->
         <!-- Plugins -->
         <copy todir="${www.dir}/plugins" overwrite="true">
-            <fileset dir="${dirs.root}/component/admin/plugins">
+            <fileset dir="${dirs.root}/component/plugins">
                 <include name="**" />
             </fileset>
 
@@ -275,5 +306,27 @@
 			</filterchain>
         </copy>
 
+    </target>
+
+    <!--
+    ====================================================================================================
+    Tasks - Copy to test site
+    ====================================================================================================
+    -->
+    <target name="unit-test" description="Copy to test site"
+            depends="setup-test, site">
+        <phpunit configuration="tests/unit/phpunit.xml"
+                 printsummary="true">
+            <batchtest>
+                <fileset dir="tests/unit/suite">
+                    <include name="**/*Test.php"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
+    </target>
+
+    <target name="setup-test" description="Init to copy to test site"
+            depends="setup-properties">
+        <property name="www.dir" value="${www.dirtest}" override="true"/>
     </target>
 </project>

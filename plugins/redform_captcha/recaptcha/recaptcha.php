@@ -1,6 +1,6 @@
 <?php
 /**
-* @version    $Id$ 
+* @version    $Id$
 * @package    Xxxx
 * @copyright  Copyright (C) 2008 Julien Vonthron. All rights reserved.
 * @license    GNU/GPL, see LICENSE.php
@@ -13,29 +13,29 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
- 
+
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
 class plgRedform_captchaRecaptcha extends JPlugin {
- 
-	public function plgRedform_captchaRecaptcha(&$subject, $config = array()) 
+
+	public function plgRedform_captchaRecaptcha(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
 	}
-	
+
 	public function onGetCaptchaField(&$text)
 	{
-		require_once('recaptcha'.DS.'recaptchalib.php');
+		require_once('recaptcha/recaptchalib.php');
 		$publickey = $this->params->get('public_key');
 	  $text = plgRedformRecaptchaHelper::recaptcha_get_html($publickey, null, false, $this->params);
 	  return true;
 	}
-	
+
 	public function onCheckCaptcha(&$result)
 	{
-		require_once('recaptcha'.DS.'recaptchalib.php');
+		require_once('recaptcha/recaptchalib.php');
 		$privatekey = $this->params->get('private_key');
 	  $resp = plgRedformRecaptchaHelper::recaptcha_check_answer ($privatekey,
 	                                $_SERVER["REMOTE_ADDR"],

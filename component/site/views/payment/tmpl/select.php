@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ defined('_JEXEC') or die('Restricted access');
 	</table>
 </fieldset>
 
-<input type="hidden" name="task" value="process"/>
+<input type="hidden" name="task" value="payment.process"/>
 <input type="hidden" name="key" value="<?php echo $this->key; ?>"/>
 <input type="hidden" name="source" value="<?php echo $this->source; ?>"/>
 </form>

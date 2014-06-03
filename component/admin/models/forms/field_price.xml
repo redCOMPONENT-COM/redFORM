@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<form>
-	<fields name="params">
-		<fieldset name="extra" label="extra">
-    <field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS" description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
-    <field name="size" type="text" default="25" label="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE" description="COM_REDFORM_FIELD_TEXT_PARAMS_SIZE_DESC"/>
-    <field name="maxlength" type="text" default="250" label="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH" description="COM_REDFORM_FIELD_TEXT_PARAMS_MAXLENGTH_DESC"/>
-	</fieldset></fields>
-</form>

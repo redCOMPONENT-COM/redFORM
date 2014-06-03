@@ -1,153 +1,126 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+/**
+ * @package     Redform.Backend
+ * @subpackage  Views
+ *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
-if ($this->countforms == 0) {
-	echo JText::_('COM_REDFORM_No_forms_found');
+defined('_JEXEC') or die;
+
+JHtml::_('rbootstrap.tooltip');
+JHtml::_('rjquery.chosen', 'select');
+
+$action = JRoute::_('index.php?option=com_redform&view=fields');
+$listOrder = $this->state->get('list.ordering');
+$listDirn = $this->state->get('list.direction');
+$saveOrder = ($listOrder == 'f.ordering' && strtolower($listDirn) == 'asc');
+$search = $this->state->get('filter.search');
+$ordering = ($listOrder == 'f.ordering');
+
+if ($saveOrder)
+{
+	$tableSortLink = 'index.php?option=com_redform&task=fields.saveOrderAjax&tmpl=component';
+	JHTML::_('rsortablelist.sortable', 'fieldList', 'adminForm', strtolower($listDirn), $tableSortLink, true, true);
 }
-else { ?>
-<form action="index.php" method="post" name="adminForm" id="adminForm">
-	<table>
-      <tr>
-         <td align="left" width="100%">
-            <?php echo JText::_('COM_REDFORM_Filter'); ?>:
-			<?php echo $this->lists['form_id']; ?>
-         </td>
-      </tr>
-    </table>
-	<table class="adminlist">
-		<thead>
-		<tr>
-			<th width="20">
-			<?php echo JText::_('#'); ?>
-			</th>
-			<th width="20">
-			<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $this->fields ); ?>);" />
-			</th>
-			<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDEVENT_Field', 'field', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-			<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDEVENT_FIELD_HEADER', 'field_header', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-			<th class="title"><?php echo JHTML::_('grid.sort', 'COM_REDEVENT_Type', 'fieldtype', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-			<th class="title"><?php echo JText::_('COM_REDFORM_Required'); ?></th>
-			<th class="title"><?php echo JText::_('COM_REDFORM_Unique'); ?></th>
-			<th class="title"><?php echo JText::_('COM_REDFORM_Form'); ?></th>
-			<th width="10%">
-				<?php echo JHTML::_('grid.sort', 'COM_REDFORM_Ordering', 'ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
-				<?php echo JHTML::_('grid.order',  $this->fields ); ?>
-			</th>
-			<th width="5%"><?php echo JText::_('COM_REDFORM_Published'); ?></th>
-			<th width="5%"><?php echo JHTML::_('grid.sort', 'COM_REDFORM_ID', 'id', $this->lists['order_Dir'], $this->lists['order'] ); ?></th>
-		</tr>
-		</thead>
-		<tbody>
-		<?php
-		$k = 0;
-		for ($i=0, $n=count( $this->fields ); $i < $n; $i++) {
-			$row = $this->fields[$i];
-			
-			JFilterOutput::objectHTMLSafe($row);
-			$link 	= 'index.php?option=com_redform&task=edit&controller=fields&hidemainmenu=1&cid[]='. $row->id;
-			
-			$checked = JHTML::_('grid.checkedout',  $row, $i);
-			$my  = JFactory::getUser();
-			?>
-			<tr class="<?php echo 'row'. $k; ?>">
-				<td align="center">
-				<?php echo $this->pagination->getRowOffset($i); ?>
-				</td>
-				<td>
-				<?php echo $checked; ?>
-				</td>
-				<td>
-				<?php
-				if ( $row->checked_out && ( $row->checked_out != $my->id ) ) {
-					?>
-					<?php echo $row->field; ?>
-					&nbsp;[ <i><?php echo JText::_('COM_REDFORM_Checked_Out'); ?></i> ]
-					<?php
-				} else {
-					?>
-					<a href="<?php echo $link; ?>" title="<?php echo JText::_('COM_REDFORM_Edit_field'); ?>">
-					<?php echo $row->field; ?>
-					</a>
-					<?php
-				}
-				?>
-				</td>
-				<td>
-					<?php echo $row->field_header;	?>
-				</td>
-				<td>
-					<?php echo $row->fieldtype;	?>
-				</td>
-				<td>
-					<?php 
-					if ($row->validate) echo JText::_('JYES');
-					else echo JText::_('JNO');
-					?>
-				</td>
-				<td>
-					<?php 
-					if ($row->unique) echo JText::_('JYES');
-					else echo JText::_('JNO');
-					?>
-				</td>
-				<td>
-					<?php echo $row->formname; ?>
-				</td>
-				<td class="order">
-					<?php if ($this->lists['order'] == 'ordering'): ?>
-	          <span><?php echo $this->pagination->orderUpIcon( $i, true, 'orderup', 'Move Up', $row->ordering ); ?></span>
-	  
-	          <span><?php echo $this->pagination->orderDownIcon( $i, $n, true, 'orderdown', 'Move Down', $row->ordering );?></span>
-	  
-	          <?php $disabled = $row->ordering ?  '' : '"disabled=disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="text_area" style="text-align: center" />
-					<?php else : ?>
-						<?php echo $row->ordering; ?>
-					<?php endif; ?>
-				</td>
-				<td width="10%" align="center">
-					<?php echo JHtml::_('jgrid.published', $row->published, $i); ?>
-				</td>
-				<td><?php echo $row->id; ?></td>
+?>
+<form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
+
+	<?php
+	echo RdfHelperLayout::render(
+		'searchtools.default',
+		array(
+			'view' => $this,
+			'options' => array(
+				'filterButton' => true,
+				'filtersHidden' => false,
+				'searchField' => 'search_fields',
+				'searchFieldSelector' => '#filter_search_fields',
+				'limitFieldSelector' => '#list_field_limit',
+				'activeOrder' => $listOrder,
+				'activeDirection' => $listDirn
+			)
+		)
+	);
+	?>
+
+	<hr/>
+	<?php if (empty($this->items)) : ?>
+		<div class="alert alert-info">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="pagination-centered">
+				<h3><?php echo JText::_('COM_REDFORM_NOTHING_TO_DISPLAY') ?></h3>
+			</div>
+		</div>
+	<?php else : ?>
+		<table class="table table-striped table-hover" id="fieldList">
+			<thead>
+			<tr>
+				<th width="10" align="center">
+					<?php echo '#'; ?>
+				</th>
+				<th width="1%" class="hidden-phone">
+					<input type="checkbox" name="checkall-toggle" value=""
+					       title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
+				</th>
+				<th class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Field', 'f.field', $listDirn, $listOrder); ?>
+				</th>
+				<th width="18%" class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_FIELD_HEADER', 'f.field_header', $listDirn, $listOrder); ?>
+				</th>
+				<th width="18%" class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Type', 'f.fieldtype', $listDirn, $listOrder); ?>
+				</th>
+				<th width="1%" class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_ID', 'f.id', $listDirn, $listOrder); ?>
+				</th>
 			</tr>
-			<?php
-			$k = 1 - $k;
-		}
-		?>		
-		</tbody>
-		<tfoot>
-		<tr>
-            <td colspan="11"><?php echo $this->pagination->getListFooter(); ?></td>
-         </tr>
-		</tfoot>
+			</thead>
+			<?php if ($this->items): ?>
+				<tbody>
+				<?php foreach ($this->items as $i => $item): ?>
+					<?php
+					$canChange = 1;
+					$canEdit = 1;
+					$canCheckin = 1;
+					$orderkey = array_search($item->id, $this->ordering[0]);
+					?>
+					<tr>
+						<td><?php echo $this->pagination->getRowOffset($i); ?></td>
+						<td>
+							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+						</td>
+						<td>
+							<?php if ($item->checked_out) : ?>
+								<?php echo JHtml::_('rgrid.checkedout', $i, $item->checked_out,
+									$item->checked_out_time, 'forms.', $canCheckin); ?>
+							<?php endif; ?>
+							<a href="<?php echo JRoute::_('index.php?option=com_redform&task=field.edit&id=' . $item->id); ?>">
+								<?php echo $this->escape($item->field); ?>
+							</a>
+						</td>
+						<td>
+							<?php echo $this->escape($item->field_header); ?>
+						</td>
+						<td>
+							<?php echo $this->escape($item->fieldtype); ?>
+						</td>
+						<td>
+							<?php echo $item->id; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+			<?php endif; ?>
 		</table>
-		
-	<?php //Load the batch processing form. ?>
-	<?php echo $this->loadTemplate('batch'); ?>
-	
-	<input type="hidden" name="option" value="com_redform" />
-	<input type="hidden" name="task" value="" />
-	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="controller" value="fields" />
-  <input type="hidden" name="view" value="fields" />
-	<input type="hidden" name="filter_order" value="<?php echo $this->lists['order']; ?>" />
-	<input type="hidden" name="filter_order_Dir" value="" />
+		<?php echo $this->pagination->getPaginationLinks(null, array('showLimitBox' => false)); ?>
+	<?php endif; ?>
+
+	<div>
+		<input type="hidden" name="task" value="">
+		<input type="hidden" name="boxchecked" value="0">
+		<?php echo JHtml::_('form.token'); ?>
+	</div>
 </form>
-<?php } ?>

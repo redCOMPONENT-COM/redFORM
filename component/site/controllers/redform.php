@@ -1,20 +1,8 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package    Redform.Front
+ * @copyright  Redform (C) 2008-2014 redCOMPONENT.com
+ * @license    GNU General Public License version 2 or later, see LICENSE.
  */
 
 // Check to ensure this file is included in Joomla!
@@ -24,81 +12,53 @@ jimport('joomla.application.component.controller');
 
 /**
  * Redform Controller
+ *
+ * @package  Redform.Front
+ * @since    2.5
 */
-class RedformControllerRedform extends RedformController {
-
-	/**
-	 * Method to display the view
-	 *
-	 * @access   public
-	 */
-	function __construct()
-	{
-		parent::__construct();
-	}
-
-	public function redeventvm()
-	{
-		/* Set a default view if none exists */
-		JRequest::setVar('view', 'redform' );
-		JRequest::setVar('layout', 'redform' );
-
-		$view =& $this->getView('redform', 'html');
-		$model =& $this->getModel('redform');
-		$view->setModel($model, true);
-		$view->display();
-		//    parent::display();
-	}
-
-
-	/**
-	 * Method to show a weblinks view
-	 *
-	 * @access	public
-	 */
-	public function redform()
-	{
-		/* Set a default view if none exists */
-		JRequest::setVar('view', 'redform' );
-		JRequest::setVar('layout', 'redform' );
-
-		$view = $this->getView('redform', 'html');
-		$view->display();
-		//		parent::display();
-	}
-
+class RedformControllerRedform extends RedformController
+{
 	/**
 	 * save the posted form data.
 	 *
+	 * @return void
 	 */
-	function save()
+	public function save()
 	{
-		$mainframe = Jfactory::getApplication();
-		$model = $this->getModel('redform');
+		$app = JFactory::getApplication();
 
+		$formId = $app->input->getInt('form_id', 0);
+
+		$model = new RdfCoreSubmission($formId);
 		$result = $model->apisaveform();
 
-		$referer = JRequest::getVar('referer');
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onAfterRedformSavedSubmission', array(&$result));
+
+		$referer = $app->input->get('referer', '', 'base64');
+		$referer = $referer ? base64_decode($referer) : 'index.php';
 
 		if (!$result)
 		{
-			if (!JRequest::getBool('ALREADY_ENTERED'))
-			{
-				$msg = JText::_('COM_REDFORM_Sorry_there_was_a_problem_with_your_submission') .': '. $model->getError();
-			}
+			$msg = JText::_('COM_REDFORM_SORRY_THERE_WAS_A_PROBLEM_WITH_YOUR_SUBMISSION') . ': ' . $model->getError();
 
 			$this->setRedirect($referer, $msg, 'error');
 			$this->redirect();
 		}
 
-		if ($url = $model->hasActivePayment($result->submit_key))
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onAfterRedformSavedSubmission', array(&$result));
+
+		if ($url = $model->hasActivePayment())
 		{
-			$url = 'index.php?option=com_redform&controller=payment&task=select&key='.$result->submit_key;
+			$url = 'index.php?option=com_redform&task=payment.select&key=' . $result->submit_key;
 			$this->setRedirect($url);
 			$this->redirect();
 		}
 
-		if ($url = $model->getRedirect())
+		if ($url = $model->getFormRedirect())
 		{
 			$this->setRedirect($url);
 			$this->redirect();

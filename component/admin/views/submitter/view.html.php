@@ -1,70 +1,94 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+/**
+ * @package     Redform.Backend
+ * @subpackage  Views
+ *
+ * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
-
-jimport( 'joomla.application.component.view' );
+defined('_JEXEC') or die;
 
 /**
- * redFORM View
+ * Submitter View
+ *
+ * @package     Redform.Backend
+ * @subpackage  Views
+ * @since       1.0
  */
-class RedformViewSubmitter extends JView {
-	
-  function display($tpl = null) 
-  {
-  	$document = &JFactory::getDocument();
-  	JHTML::_('behavior.mootools');
-  	
-  	$js = <<<EOF
-			Joomla.submitform = function(pressbutton, form){
-				if (pressbutton) {
-					document.redform.task.value=pressbutton;
-				}
-				if (typeof document.redform.onsubmit == "function") {
-					document.redform.onsubmit();
-				}
-				document.redform.submit();
-			}
-EOF;
+class RedformViewSubmitter extends RdfView
+{
+	/**
+	 * @var  object
+	 */
+	protected $item;
 
-  	$document->addScriptDeclaration($js);
-  	
-  	$submitter = & $this->get('Data');
-  	if ($submitter) 
-  	{
-	  	JRequest::setVar('answers', array($submitter));
-	  	JRequest::setVar('submit_key', $submitter->submit_key);
-	  	JRequest::setVar('xref', $submitter->xref);
-	  	JRequest::setVar('submitter_id', $submitter->id);
-  	}
-  	JRequest::setVar('redform_edit', true);
-  	
-  	$this->assignRef('submitter', $submitter);
-  	$this->assignRef('form_id',   JRequest::getVar('form_id'));
-  	
-  	JToolBarHelper::title(JText::_('COM_REDFORM_EDIT_SUBMITTER' ), 'redform_submitters');
-  	JToolBarHelper::save();
-  	JToolBarHelper::cancel();
-        
-  	/* Display the page */
-  	parent::display($tpl);
-  }
+	/**
+	 * @var  boolean
+	 */
+	protected $displaySidebar = false;
+
+	/**
+	 * Display method
+	 *
+	 * @param   string  $tpl  The template name
+	 *
+	 * @return  void
+	 */
+	public function display($tpl = null)
+	{
+		$this->item	= $this->get('Item');
+
+		parent::display($tpl);
+	}
+
+	/**
+	 * Get the view title.
+	 *
+	 * @return  string  The view title.
+	 */
+	public function getTitle()
+	{
+		$isNew = (int) $this->item->id <= 0;
+		$title = JText::_('COM_REDFORM_SUBMITTER_TITLE');
+		$state = $isNew ? JText::_('JNEW') : JText::_('COM_REDFORM_EDIT');
+
+		return $title . ' <small>' . $state . '</small>';
+	}
+
+	/**
+	 * Get the toolbar to render.
+	 *
+	 * @return  RToolbar
+	 */
+	public function getToolbar()
+	{
+		$group = new RToolbarButtonGroup;
+		$canDoCore = RedformHelpersAcl::getActions();
+
+		if ($canDoCore->get('core.edit') || $canDoCore->get('core.edit.own'))
+		{
+			$save = RToolbarBuilder::createSaveButton('submitter.apply');
+			$saveAndClose = RToolbarBuilder::createSaveAndCloseButton('submitter.save');
+
+			$group->addButton($save)
+				->addButton($saveAndClose);
+		}
+
+		if (empty($this->item->id))
+		{
+			$cancel = RToolbarBuilder::createCancelButton('submitter.cancel');
+		}
+		else
+		{
+			$cancel = RToolbarBuilder::createCloseButton('submitter.cancel');
+		}
+
+		$group->addButton($cancel);
+
+		$toolbar = new RToolbar;
+		$toolbar->addGroup($group);
+
+		return $toolbar;
+	}
 }
-?>

@@ -1,133 +1,109 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+/**
+ * @package     Redform.Backend
+ * @subpackage  Views
+ *
+ * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-/* No direct access */
-defined('_JEXEC') or die('Restricted access');
-
-jimport( 'joomla.application.component.view' );
+defined('_JEXEC') or die;
 
 /**
- * redFORM View
+ * Form View
+ *
+ * @package     Redform.Backend
+ * @subpackage  Views
+ * @since       1.0
  */
-class RedformViewForm extends JView {
-	
+class RedformViewForm extends RdfView
+{
 	/**
-	 * redFORM view display method
-	 * @return void
-	 **/
-	function display($tpl = null) 
+	 * @var  JForm
+	 */
+	protected $form;
+
+	/**
+	 * @var  object
+	 */
+	protected $item;
+
+	/**
+	 * @var  boolean
+	 */
+	protected $displaySidebar = false;
+
+	/**
+	 * Display method
+	 *
+	 * @param   string  $tpl  The template name
+	 *
+	 * @return  void
+	 */
+	public function display($tpl = null)
 	{
-		$mainframe = &JFactory::getApplication();
-		$document	= & JFactory::getDocument();
-		JHTML::_('behavior.mootools'); 
-    $document->addScript('components/com_redform/js/conditionalrecipients.js');
-    $document->addScriptDeclaration(
-    	 'var emailrequired = "'.JText::_('COM_REDFORM_MISSING_OR_INVALID_EMAIL')."\";\n"
-    	.'var namerequired = "'.JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_REQUIRED')."\";\n"
-    	.'var missingparameter = "'.JText::_('COM_REDFORM_CONDITIONAL_RECIPIENT_MISSING_PARAMETER')."\";\n"
-    );
-		
-		$this->setLayout('editform');
-		
-		$row = $this->get('Data');
+		$this->form	= $this->get('Form');
+		$this->item	= $this->get('Item');
 
-		/* Get the show name option */
-		$lists['showname']= JHTML::_('select.booleanlist',  'showname', 'class="inputbox"', $row->showname);
+		Jtext::script('COM_REDFORM_MISSING_OR_INVALID_EMAIL');
+		Jtext::script('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_REQUIRED');
+		Jtext::script('COM_REDFORM_CONDITIONAL_RECIPIENT_MISSING_PARAMETER');
+		Jtext::script('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_REQUIRED');
 
-		/* Get the published option */
-		$lists['published']= JHTML::_('select.booleanlist',  'published', 'class="inputbox"', $row->published);
-
-		/* Get the access level option */
-		$lists['access'] = JHTML::_('list.accesslevel',  $row );
-
-		/* Get the contactperson info option */
-		$lists['contactpersoninform']= JHTML::_('select.booleanlist',  'contactpersoninform', 'class="inputbox"', $row->contactpersoninform);
-
-		/* Get the contactperson post option */
-		$lists['contactpersonfullpost']= JHTML::_('select.booleanlist',  'contactpersonfullpost', 'class="inputbox"', $row->contactpersonfullpost);
-
-		/* Get the submitter info option */
-		$lists['submitterinform']= JHTML::_('select.booleanlist',  'submitterinform', 'class="inputbox"', $row->submitterinform);
-
-		/* Get the notification option */
-		$lists['submitnotification']= JHTML::_('select.booleanlist',  'submitnotification', 'class="inputbox"', $row->submitnotification);
-
-		/* Get the form expires option */
-		$lists['formexpires']= JHTML::_('select.booleanlist',  'formexpires', 'class="inputbox"', $row->formexpires);
-
-		/* Get the form expires option */
-		$lists['captchaactive']= JHTML::_('select.booleanlist',  'captchaactive', 'class="inputbox"', $row->captchaactive);
-
-		/* Get the VirtueMart option */
-		$lists['virtuemartactive']= JHTML::_('select.booleanlist',  'virtuemartactive', 'class="inputbox"', $row->virtuemartactive);
-
-		/* Check if VirtueMart is installed */
-		$vmok = $this->get('VmInstalled');
-
-		if ($vmok) {
-			/* Get the VirtueMart products */
-			$products = $this->get('VmProducts');
-			$lists['vmproductid'] = JHTML::_('select.genericlist', $products, 'vmproductid', 'class="inputbox"', 'product_id', 'product_name', $row->vmproductid);
-		}
-		else $lists['vmproductid'] = '';
-
-		/* Get the payment active option */
-		$lists['paymentactive']= JHTML::_('select.booleanlist',  'activatepayment', 'class="inputbox"', $row->activatepayment);
-		/* Get the show js price option */
-		$lists['show_js_price']= JHTML::_('select.booleanlist',  'show_js_price', 'class="inputbox"', $row->show_js_price);
-		
-		// currencies
-		require_once(JPATH_COMPONENT_SITE.DS.'helpers'.DS.'currency.php');
-		$options = array(JHTML::_('select.option', '', JText::_('COM_REDFORM_Select_currency')));
-		$options = array_merge($options, RedformHelperLogCurrency::getCurrencyOptions());
-		$lists['currency'] = JHTML::_('select.genericlist', $options, 'currency', 'class="inputbox"', 'value', 'text', $row->currency);
-		
-		// for conditional recipients
-		$options = array(
-		  JHTML::_('select.option', 'between', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_BETWEEN')),
-		  JHTML::_('select.option', 'inferior', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_inferior')),
-		  JHTML::_('select.option', 'superior', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_superior')),		  
-		);
-		$lists['cr_function'] = JHTML::_('select.genericlist', $options, 'cr_function', 'class="inputbox"');
-		
-		$options = $this->get('fieldsoptions');
-		$lists['cr_field'] = JHTML::_('select.genericlist', $options, 'cr_field', 'class="inputbox"');
-				
-		/* Set variabels */
-		$this->assignRef('row', $row);
-		$this->assignRef('lists', $lists);
-
-		/* Get the toolbar */
-		switch (JRequest::getCmd('task')) {
-			case 'add':
-				JToolBarHelper::title(JText::_('COM_REDFORM_Add_Form' ), 'redform_plus');
-				break;
-			default:
-				JToolBarHelper::title(JText::_('COM_REDFORM_Edit_Form' ), 'redform_plus');
-				break;
-		}
-		JToolBarHelper::save();
-		JToolBarHelper::apply();
-		JToolBarHelper::cancel();
-
-		/* Display the page */
 		parent::display($tpl);
 	}
+
+	/**
+	 * Get the view title.
+	 *
+	 * @return  string  The view title.
+	 */
+	public function getTitle()
+	{
+		$isNew = (int) $this->item->id <= 0;
+		$title = JText::_('COM_REDFORM_FORM_TITLE') . ($isNew ? '' : ' - ' . $this->item->formname);
+		$state = $isNew ? JText::_('JNEW') : JText::_('COM_REDFORM_EDIT');
+
+		return $title . ' <small>' . $state . '</small>';
+	}
+
+	/**
+	 * Get the toolbar to render.
+	 *
+	 * @return  RToolbar
+	 */
+	public function getToolbar()
+	{
+		$group = new RToolbarButtonGroup;
+		$canDoCore = RedformHelpersAcl::getActions();
+
+		if ($canDoCore->get('core.edit') || $canDoCore->get('core.edit.own'))
+		{
+			$save = RToolbarBuilder::createSaveButton('form.apply');
+			$saveAndClose = RToolbarBuilder::createSaveAndCloseButton('form.save');
+
+			$group->addButton($save)
+				->addButton($saveAndClose);
+
+			$saveAndNew = RToolbarBuilder::createSaveAndNewButton('form.save2new');
+
+			$group->addButton($saveAndNew);
+		}
+
+		if (empty($this->item->id))
+		{
+			$cancel = RToolbarBuilder::createCancelButton('form.cancel');
+		}
+		else
+		{
+			$cancel = RToolbarBuilder::createCloseButton('form.cancel');
+		}
+
+		$group->addButton($cancel);
+
+		$toolbar = new RToolbar;
+		$toolbar->addGroup($group);
+
+		return $toolbar;
+	}
 }
-?>

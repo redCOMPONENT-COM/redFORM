@@ -11,8 +11,8 @@
  */
 
 // Load the custom initialisation file if it exists.
-if (file_exists('config.php')) {
-	include 'config.php';
+if (file_exists(__DIR__ . '/config.php')) {
+	include __DIR__ . '/config.php';
 }
 $config = new JTestConfig;
 

@@ -1,6 +1,6 @@
 <?php
-/** 
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved. 
+/**
+ * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
  * @license GNU/GPL, see LICENSE.php
  * redFORM can be downloaded from www.redcomponent.com
  * redFORM is free software; you can redistribute it and/or
@@ -27,41 +27,22 @@ jimport('joomla.application.component.controller');
 /**
  * Front-end Controller
  */
-class RedformController extends JController
+class RedformController extends JControllerLegacy
 {
 	/**
 	 * Method to show a weblinks view
 	 *
 	 * @access	public
 	 */
-	function display() {
+	function display()
+	{
 		// Set a default view if none exists
-		if ( ! JRequest::getCmd( 'view' ) ) {
-			JRequest::setVar('view', 'redform' );
-			JRequest::setVar('layout', 'redform' );
+		if (!JRequest::getCmd('view'))
+		{
+			JRequest::setVar('view', 'redform');
+			JRequest::setVar('layout', 'redform');
 		}
+
 		return;
-		parent::display();
-	}
-	
-  /**
-   * loads the js file for redform price, making it possible to use JText
-   */
-	function jsprice()
-	{
-		header('Content-type: text/javascript');
-  	require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'assets'.DS.'js'.DS.'formprice.js');
-  	die();
-	}
-	
-  /**
-   * loads the js file for redform form validation, making it possible to use JText 
-   */
-	function jscheck()
-	{
-		header('Content-type: text/javascript');
-  	require_once(JPATH_SITE.DS.'components'.DS.'com_redform'.DS.'assets'.DS.'js'.DS.'formcheck.js');
-  	die();
 	}
 }
-?>
