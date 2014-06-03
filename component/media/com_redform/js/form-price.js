@@ -69,14 +69,19 @@ var redformPrice = {
 			price = Math.max(price, 0);
 		}
 
-		if (form.getElement("#totalprice")) {
-			form.getElement("#totalprice").remove();
+		if (form.getElement(".totalprice"))
+		{
+			// set the price
+			var text = '';
+
+			if (form.getElement('[name=currency]')) {
+				text = form.getElement('[name=currency]').get('value');
+			}
+
+			var roundedPrice = Math.round(price*100)/100;
+			text += ' <span>' + roundedPrice + '</span>';
+
+			form.getElement(".totalprice").set('html', text);
 		}
-
-		// set the price
-		var currency = form.getElement('[name=currency]').get('value');
-		var roundedPrice = Math.round(price*100)/100;
-
-		form.getElement(".totalprice").set('html', currency + ' <span>' + roundedPrice + '</span>');
 	}
 }
