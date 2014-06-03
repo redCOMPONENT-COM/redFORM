@@ -122,14 +122,18 @@ class RedformModelSubmitters extends RModelList
 		$query->select('s.integration');
 		$query->select('f.formname');
 		$query->select('p.status, p.paid');
-		$query->select('a.*');
 		$query->select('s.id');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON s.form_id = f.id');
-		$query->join('INNER', '#__rwf_forms_' . $form_id . ' AS a ON s.answer_id = a.id');
 		$query->join('LEFT', '(' . $subPayment . ') AS latest_payment ON latest_payment.submit_key = s.submit_key');
 		$query->join('LEFT', '#__rwf_payment AS p ON p.id = latest_payment.id');
 		$query->where("s.form_id = " . $form_id);
+
+		if ($form_id)
+		{
+			$query->select('a.*');
+			$query->join('INNER', '#__rwf_forms_' . $form_id . ' AS a ON s.answer_id = a.id');
+		}
 
 		if ($from = $this->getState('filter.from'))
 		{
