@@ -94,11 +94,6 @@
 		<library name="redform"/>
 	</libraries>
 
-	<!-- Libraries to install -->
-	<libraries>
-		<library name="redform"/>
-	</libraries>
-
     <!-- Plugins to install -->
     <plugins>
         <plugin name="redform" group="content"/>

@@ -79,7 +79,7 @@
 
         <!-- This is added just for extension installing purposes, in case it gets installed before redCORE -->
         <echo msg="Copying redCORE LIBRARIES folder to component build directory..."/>
-        <copy todir="${dirs.tmp}/redCORE">
+        <copy todir="${dirs.tmp}/component/redCORE">
             <fileset dir="redCORE">
                 <include name="**"/>
                 <exclude name=".*"/>
@@ -91,21 +91,7 @@
 
 		<!-- Create the package -->
 		<tar basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
-
-        <!-- This is added just for extension installing purposes, in case it gets installed before redCORE -->
-        <echo msg="Copying redCORE LIBRARIES folder to component build directory..."/>
-        <copy todir="${dirs.tmp}/redCORE">
-            <fileset dir="redCORE">
-                <include name="**"/>
-                <exclude name=".*"/>
-                <exclude name=".travis/"/>
-                <exclude name="build.*"/>
-                <exclude name="*.md"/>
-            </fileset>
-        </copy>
-
-		<!-- Create the package -->
-		<tar basedir="${dirs.tmp}/redCORE" destfile="${dirs.release}/redCORE-${redCOREVersion}.tar.gz" includeemptydirs="true" compression="gzip" />
+        <zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.zip" includeemptydirs="true" />
 
 		<!-- admin modules
 		<foreach param="dirname" absparam="absname" target="zipfolder">
@@ -172,6 +158,7 @@
 		<mkdir dir="${dirs.release}/${myp}" />
 		<!-- Create the package -->
 		<tar basedir="${dirs.tmp}/${dirname}" destfile="${dirs.release}/${myp}/${dirname}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
+        <zip basedir="${dirs.tmp}/${dirname}" destfile="${dirs.release}/${myp}/${dirname}-${version}.zip" includeemptydirs="true"/>
 	</target>
 
 	<!--

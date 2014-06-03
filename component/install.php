@@ -40,19 +40,4 @@ if (!class_exists('Com_RedcoreInstallerScript'))
  */
 class Com_RedformInstallerScript extends Com_RedcoreInstallerScript
 {
-	/**
-	 * Method to run after an install/update/uninstall method
-	 *
-	 * @param   object  $type    type of change (install, update or discover_install)
-	 * @param   object  $parent  class calling this method
-	 *
-	 * @return  boolean
-	 */
-	public function postflight($type, $parent)
-	{
-		// Execute the postflight tasks from the manifest
-		$this->postFlightFromManifest($type, $parent);
-
-		return true;
-	}
 }
