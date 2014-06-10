@@ -62,6 +62,7 @@ class PaymentWorldpay extends RdfPaymentHelper
 			return false;
 		}
 
+		JHtml::_('behavior.framework');
 		$document = JFactory::getDocument();
 		$document->addScript(JURI::root() . "plugins/redform_payment/worldpay/js/script.js");
 
