@@ -62,6 +62,9 @@ class PaymentWorldpay extends RdfPaymentHelper
 			return false;
 		}
 
+		$document = JFactory::getDocument();
+		$document->addScript(JURI::root() . "plugins/redform_payment/worldpay/js/script.js");
+
 		$details = $this->_getSubmission($request->key);
 		$submit_key = $request->key;
 		$currency = $details->currency;
@@ -145,6 +148,7 @@ class PaymentWorldpay extends RdfPaymentHelper
 		{
 			$req_params['HashDigest'] = sha1($hashstring);
 		}
+
 		?>
 		<h3><?php echo JText::_('PLG_REDFORM_WORLDPAY_FORM_TITLE'); ?></h3>
 		<form action="https://mms.cardsaveonlinepayments.com/Pages/PublicPages/PaymentForm.aspx" method="post" id="worldpayForm">
