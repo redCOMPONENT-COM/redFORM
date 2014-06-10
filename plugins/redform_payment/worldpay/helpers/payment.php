@@ -147,7 +147,7 @@ class PaymentWorldpay extends RdfPaymentHelper
 		}
 		?>
 		<h3><?php echo JText::_('PLG_REDFORM_WORLDPAY_FORM_TITLE'); ?></h3>
-		<form action="https://mms.cardsaveonlinepayments.com/Pages/PublicPages/PaymentForm.aspx" method="post">
+		<form action="https://mms.cardsaveonlinepayments.com/Pages/PublicPages/PaymentForm.aspx" method="post" id="worldpayForm">
 
 			<p><?php echo $request->title; ?></p>
 
