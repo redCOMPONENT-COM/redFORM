@@ -75,7 +75,7 @@ class PaymentEpay2 extends RDFPaymenthelper
 			<input type="hidden" name="accepturl" value="<?php echo $this->getUrl('notify', $submit_key); ?>">
 			<input type="hidden" name="declineurl" value="<?php echo $this->getUrl('decline', $submit_key); ?>">
 			<input type="hidden" name="ordertext" value="<?php echo $request->title; ?>">
-			<input type="hidden" name="description" value="<?php echo $request->title; ?>">
+			<input type="hidden" name="description" value="<?php echo $request->adminDesc; ?>">
 			<input type="hidden" name="group" value="<?php echo $this->params->get('EPAY_GROUP'); ?>">
 			<input type="hidden" name="instant" value="<?php echo $this->params->get('EPAY_INSTANT_CAPTURE'); ?>">
 			<input type="hidden" name="language" value="<?php echo $this->params->get('EPAY_LANGUAGE') ?>">

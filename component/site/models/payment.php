@@ -232,6 +232,9 @@ class RedformModelPayment extends JModel
 
 		if (!isset($this->paymentsDetails[$key]))
 		{
+			JPluginHelper::importPlugin('redform_integration');
+			$dispatcher = JDispatcher::getInstance();
+
 			$submitters = $this->getSubmitters();
 
 			if (!count($submitters))
@@ -254,28 +257,32 @@ class RedformModelPayment extends JModel
 			$obj->key         = $key;
 			$obj->currency    = $asub->currency;
 
-			switch ($asub->integration)
+			// More fields with integration
+			$paymentDetailFields = null;
+			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($asub->integration, $key, &$paymentDetailFields));
+
+			if (!$paymentDetailFields)
 			{
-				case 'redevent':
-					$event = $this->getEventAttendee($key);
+				$paymentDetailFields = new stdClass;
 
-					$obj->title = JText::_('COM_REDFORM_Event_registration').': '.$event->title.' @ '.$event->venue. ', '. strftime('%x', strtotime($event->dates)).' '.($event->times && $event->times != '00:00:00' ? $event->times : '');
-					$obj->uniqueid = $event->uniqueid;
-					break;
+				if (JFactory::getApplication()->input->get('paymenttitle'))
+				{
+					$paymentDetailFields->title = JFactory::getApplication()->input->get('paymenttitle');
+				}
+				else
+				{
+					$paymentDetailFields->title = JText::_('COM_REDFORM_Form_submission').': '.$form->formname;
+				}
 
-				default:
-					if (JFactory::getApplication()->input->get('paymenttitle'))
-					{
-						$obj->title = JFactory::getApplication()->input->get('paymenttitle');
-					}
-					else
-					{
-						$obj->title = JText::_('COM_REDFORM_Form_submission').': '.$form->formname;
-					}
-
-					$obj->uniqueid = $key;
-					break;
+				$paymentDetailFields->adminDesc = $paymentDetailFields->title;
+				$paymentDetailFields->uniqueid = $key;
 			}
+
+			// Map
+			$obj->title = $paymentDetailFields->title;
+			$obj->adminDesc = $paymentDetailFields->adminDesc;
+			$obj->uniqueid = $paymentDetailFields->uniqueid;
+
 			$this->paymentsDetails[$key] = $obj;
 		}
 
