@@ -25,7 +25,7 @@ abstract class RdfRfield extends JObject
 	protected $type;
 
 	/**
-	 * Field id
+	 * Form field id
 	 * @var int
 	 */
 	protected $id = 0;
@@ -107,6 +107,9 @@ abstract class RdfRfield extends JObject
 		{
 			case 'id':
 				return $this->getId();
+
+			case 'fieldId':
+				return $this->load()->field_id;
 
 			case 'fieldtype':
 				return $this->type;
