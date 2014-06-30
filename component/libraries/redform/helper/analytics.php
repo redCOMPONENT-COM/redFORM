@@ -93,7 +93,9 @@ JS;
 		  	ga('require', 'ecommerce', 'ecommerce.js');
 			ga('ecommerce:addTransaction', {
 			'id' : '{$trans->id}',           // transaction ID - required
-			'affiliation' : '{$trans->affiliation}'  // affiliation or store name
+			'affiliation' : '{$trans->affiliation}',  // affiliation or store name
+			'revenue' : '{$trans->revenue}',          // total - required
+  			'currency': '{$trans->currency}'  // local currency code.
 			});
 JS;
 
@@ -260,6 +262,7 @@ JS;
 		$trans->id = $submit_key;
 		$trans->affiliation = isset($options['affiliate']) ? $options['affiliate'] : $payment->form;
 		$trans->revenue = $model->getPrice();
+		$trans->currency = $model->getCurrency();
 
 		$js = self::addTrans($trans);
 
