@@ -93,8 +93,7 @@ JS;
 		  	ga('require', 'ecommerce', 'ecommerce.js');
 			ga('ecommerce:addTransaction', {
 			'id' : '{$trans->id}',           // transaction ID - required
-			'affiliation' : '{$trans->affiliation}',  // affiliation or store name
-			'revenue' : '{$trans->revenue}'          // total - required
+			'affiliation' : '{$trans->affiliation}'  // affiliation or store name
 			});
 JS;
 
