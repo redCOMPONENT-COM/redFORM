@@ -344,20 +344,14 @@ class RedFormModelPayment extends JModelLegacy
 		$body = $replaceHelper->replace($body, array('[submitters]' => $link));
 		$mailer->setBody($body);
 
-		$emails = $core->getSubmissionContactEmail($this->_submit_key, true);
+		$contact = $core->getSubmissionContactEmail($this->_submit_key, true);
 
-		if (!$emails)
+		if (!$contact)
 		{
 			return true;
 		}
 
-		foreach ((array) $emails as $sid)
-		{
-			foreach ((array) $sid as $email)
-			{
-				$mailer->addRecipient($email['email']);
-			}
-		}
+		$mailer->addRecipient($contact['email']);
 
 		if (!$mailer->send())
 		{

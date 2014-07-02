@@ -30,11 +30,17 @@ jimport('joomla.application.component.controller');
 class RedformController extends JControllerLegacy
 {
 	/**
-	 * Method to show a weblinks view
+	 * Typical view method for MVC based architecture
 	 *
-	 * @access	public
+	 * This function is provide as a default implementation, in most cases
+	 * you will need to override it in your own controllers.
+	 *
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 *
+	 * @return  JController  A JController object to support chaining.
 	 */
-	function display()
+	public function display($cachable = false, $urlparams = false)
 	{
 		// Set a default view if none exists
 		if (!JRequest::getCmd('view'))
@@ -43,6 +49,6 @@ class RedformController extends JControllerLegacy
 			JRequest::setVar('layout', 'redform');
 		}
 
-		return;
+		return parent::display($cachable, $urlparams);
 	}
 }

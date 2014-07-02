@@ -40,8 +40,8 @@ class RedformViewPayment extends JViewLegacy {
 
 	function _displaySelect($tpl = null)
 	{
-		$uri 		    = &JFactory::getURI();
-		$document   = &JFactory::getDocument();
+		$uri = JFactory::getURI();
+		$document = JFactory::getDocument();
 
 		$uri->delVar('task');
 
@@ -87,7 +87,7 @@ class RedformViewPayment extends JViewLegacy {
 
 	function _displayFinal($tpl = null)
 	{
-		$document   = &JFactory::getDocument();
+		$document   = JFactory::getDocument();
 		$document->setTitle($document->getTitle().' - '.JText::_('COM_REDFORM'));
 
 		$form = $this->get('form');
