@@ -72,6 +72,7 @@
 
 		<!-- Create the package -->
 		<tar basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
+		<zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.zip" includeemptydirs="true" />
 
 		<!-- admin modules
 		<foreach param="dirname" absparam="absname" target="zipfolder">
@@ -138,6 +139,7 @@
 		<mkdir dir="${dirs.release}/${myp}" />
 		<!-- Create the package -->
 		<tar basedir="${dirs.tmp}/${dirname}" destfile="${dirs.release}/${myp}/${dirname}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
+		<zip basedir="${dirs.tmp}/${dirname}" destfile="${dirs.release}/${myp}/${dirname}-${version}.zip" includeemptydirs="true" />
 	</target>
 
 	<!--
@@ -292,7 +294,8 @@
     <target name="unit-test" description="Copy to test site"
             depends="setup-test, site">
         <phpunit configuration="tests/unit/phpunit.xml"
-                 printsummary="true">
+                 printsummary="true"
+                 pharlocation="/usr/local/bin/phpunit">
             <batchtest>
                 <fileset dir="tests/unit/suite">
                     <include name="**/*Test.php"/>
