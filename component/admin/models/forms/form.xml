@@ -22,7 +22,6 @@
 				type="radio"
 				label="COM_REDFORM_FORM_SHOW_NAME"
 				description="COM_REDFORM_FORM_SHOW_NAME_TIP"
-                class="btn-group"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -54,7 +53,6 @@
 				type="radio"
 				label="COM_REDFORM_FORM_EXPIRES"
 				description="COM_REDFORM_FORM_EXPIRES_TIP"
-                class="btn-group"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -71,7 +69,6 @@
 				type="radio"
 				label="COM_REDFORM_CAPTCHA_ACTIVE"
 				description="COM_REDFORM_CAPTCHA_ACTIVE_TIP"
-                class="btn-group"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -84,7 +81,6 @@
 				type="radio"
 				label="COM_REDFORM_FORM_NOTIFICATION"
 				description="COM_REDFORM_FORM_NOTIFICATION_TIP"
-                class="btn-group"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -108,7 +104,6 @@
 				type="radio"
 				label="COM_REDFORM_NOTIFY_CONTACTPERSON"
 				description="COM_REDFORM_NOTIFY_CONTACTPERSON_TIP"
-                class="btn-group"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -125,7 +120,6 @@
 				type="radio"
 				label="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS"
 				description="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS_TIP"
-                class="btn-group"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -135,7 +129,6 @@
 				type="radio"
 				label="COM_REDFORM_NOTIFY_SUBMITTER"
 				description="COM_REDFORM_NOTIFY_SUBMITTER_TIP"
-                class="btn-group"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -170,7 +163,6 @@
 				type="radio"
 				label="COM_REDFORM_PAYMENTACTIVE"
 				description="COM_REDFORM_PAYMENTACTIVE_TIP"
-                class="btn-group"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -180,7 +172,6 @@
 				type="radio"
 				label="COM_REDFORM_FORM_SHOW_JS_PRICE_LABEL"
 				description="COM_REDFORM_FORM_SHOW_JS_PRICE_TIP"
-                class="btn-group"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
