@@ -11,6 +11,7 @@
 	<version>##VERSION##</version>
     <description>redFORM library</description>
     <files>
+        <folder>analytics</folder>
         <folder>form</folder>
 		<folder>core</folder>
         <folder>helper</folder>

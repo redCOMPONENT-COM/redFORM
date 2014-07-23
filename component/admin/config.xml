@@ -9,13 +9,13 @@
 		<field name="allow_email_aliasing" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING" description="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING_DESC">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
-		</field> 	
+		</field>
 		<field name="upload_path" type="text" default="images/redform" label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL" description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
 		<field name="allow_negative_total" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL" description="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL_DESC">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</field>
-		
+
 		<field type="spacer" hr="true" />
 		<field name="enable_ga" type="radio" default="0" label="COM_REDFORM_SETTINGS_ENABLE_GOOGLE_ANALYTICS" description="COM_REDFORM_SETTINGS_ENABLE_GOOGLE_ANALYTICS_DESC">
 			<option value="0">JDisabled</option>
@@ -25,11 +25,9 @@
 			<option value="0">COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE_UA</option>
 			<option value="1">COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE_CLASSIC</option>
 		</field>
-		<!-- 
 		<field name="ga_code" type="text" default="UA-1111111-22" label="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE" description="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE_DESC"/>
-		 -->
 	</fieldset>
-		
+
 	<fieldset	name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"
 		description="JCONFIG_PERMISSIONS_DESC">

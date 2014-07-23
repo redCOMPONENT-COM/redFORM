@@ -29,6 +29,7 @@ JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
 
 // Require the base controller
 require_once (JPATH_COMPONENT.DS.'controller.php');
+require_once (JPATH_COMPONENT . '/redform.defines.php');
 require_once (JPATH_COMPONENT_SITE.DS.'helpers'.DS.'log.php');
 
 // Require specific controller if requested

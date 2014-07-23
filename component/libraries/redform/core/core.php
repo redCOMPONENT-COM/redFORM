@@ -1051,6 +1051,11 @@ class RedformCore extends JObject {
 			$html .= '<input type="hidden" name="currency" value="' . $currency . '" />';
 		}
 
+		if (RedformHelperAnalytics::isEnabled())
+		{
+			$html .= RedformHelperAnalytics::addGuaClientIdHiddenField();
+		}
+
 		$html .= '</div>'; // div #redform
 
 		return $html;

@@ -19,6 +19,8 @@
 
 defined('_JEXEC') or die('Restricted access');
 
+require_once JPATH_SITE . '/components/com_redform/models/payment.php';
+
 /**
  * Helper class
  *
@@ -250,8 +252,6 @@ JS;
 	 */
 	public static function recordTrans($submit_key, array $options = array())
 	{
-		require_once JPATH_SITE . '/components/com_redform/models/payment.php';
-
 		$model = JModel::getInstance('payment', 'RedformModel');
 		$model->setSubmitKey($submit_key);
 		$submitters = $model->getSubmitters();
@@ -284,9 +284,81 @@ JS;
 			$js .= self::addItem($item);
 		}
 
-		// push transaction to server
+		// Push transaction to server
 		$js .= self::trackTrans();
 
 		return $js;
+	}
+
+	/**
+	 * full transaction tracking with measurement protocol
+	 *
+	 * @param   String  $submit_key  submit key to add transaction for
+	 * @param   Array   $options     optional parameters for tracking
+	 *
+	 * @return string js code
+	 */
+	public static function recordTransMeasurementProtocol($submit_key, array $options = array())
+	{
+		$input = JFactory::getApplication()->input;
+
+		if (isset($options['clientId']))
+		{
+			$clientId = $options['clientId'];
+		}
+		else
+		{
+			$clientId = $input->get('GuaClientId', null);
+		}
+
+		$client = new RedformAnalyticsMeasurementprotocolClient(array('clientId' => $clientId));
+
+		$model = JModel::getInstance('payment', 'RedformModel');
+		$model->setSubmitKey($submit_key);
+		$submitters = $model->getSubmitters();
+		$payment   = $model->getPaymentDetails($submit_key);
+
+		$transactionId = $submit_key;
+
+		$transaction = new RedformAnalyticsTransaction;
+		$transaction->setTransactionId($transactionId);
+		$transaction->setAffiliation(isset($options['affiliate']) ? $options['affiliate'] : $payment->form);
+		$transaction->setRevenue($model->getPrice());
+		$transaction->setCurrency($model->getCurrency());
+		$transaction->hit($client);
+
+		$productname = isset($options['productname']) ? $options['productname'] : null;
+		$sku         = isset($options['sku']) ? $options['sku'] : null;
+		$category    = isset($options['category']) ? $options['category'] : null;
+
+		// Add submitters as items
+		foreach ($submitters as $s)
+		{
+			$item = new RedformAnalyticsItem;
+			$item->setTransactionId($transactionId);
+			$item->setName($productname ? $productname : 'submitter' . $s->id);
+			$item->setSku($sku ? $sku : 'submitter' . $s->id);
+			$item->setCategory($category ? $category : '');
+			$item->setPrice($s->price);
+			$item->setCurrency($s->currency);
+			$item->hit($client);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get hidden field form containing google analytics anonymous cid
+	 *
+	 * @return string
+	 */
+	public static function addGuaClientIdHiddenField()
+	{
+		JHtml::_('behavior.framework');
+		JFactory::getDocument()->addScript('/media/com_redform/js/addGuaField.js');
+
+		$html = '<input name="GuaClientId" id="GuaClientId" type="hidden" value=""/>';
+
+		return $html;
 	}
 }
