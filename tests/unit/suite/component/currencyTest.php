@@ -6,10 +6,8 @@
  * @copyright Copyright (C) 2005 - 2012 Open Source Matters. All rights reserved.
  * @license   GNU General Public License
  */
-//require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Autoload.php';
 
-require_once (BASEPATH.DS.'component'.DS.'site'.DS.'helpers'.DS.'currency.php');
+require_once (JPATH_BASE . '/components/com_redform/helpers/currency.php');
 
 /**
  * Test class for currency.

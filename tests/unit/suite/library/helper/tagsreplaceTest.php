@@ -6,8 +6,6 @@
  * @copyright Copyright (C) 2005 - 2012 Open Source Matters. All rights reserved.
  * @license   GNU General Public License
  */
-//require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Autoload.php';
 
 // Register library prefix
 JLoader::registerPrefix('Redform', JPATH_LIBRARIES . '/redform');
