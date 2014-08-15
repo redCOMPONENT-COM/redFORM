@@ -124,35 +124,35 @@ class rfanswers
 		switch ($field->fieldtype)
 		{
 			case 'textarea':
-				$answer = is_array($postedvalue) ? $postedvalue['textarea'] : $postedvalue;
+				$answer = isset($postedvalue['textarea']) ? $postedvalue['textarea'] : $postedvalue;
 				break;
 
 			case 'date':
 				// Get date
-				$answer = is_array($postedvalue) ? $postedvalue['date'] : $postedvalue;
+				$answer = isset($postedvalue['date']) ? $postedvalue['date'] : $postedvalue;
 				if ($answer && !strtotime($answer))
 				{
-					throw new Exception(JText::_('COM_REDFORM_INVALID_DATE_FORMAT'));
+					//throw new Exception(JText::_('COM_REDFORM_INVALID_DATE_FORMAT'));
 				}
 				break;
 
 			case 'wysiwyg':
-				$answer = is_array($postedvalue) ? $postedvalue['wysiwyg'] : $postedvalue;
+				$answer = isset($postedvalue['wysiwyg']) ? $postedvalue['wysiwyg'] : $postedvalue;
 				break;
 
 			case 'fullname':
-				$answer = is_array($postedvalue) ? $postedvalue['fullname'][0] : $postedvalue;
+				$answer = isset($postedvalue['fullname']) ? $postedvalue['fullname'][0] : $postedvalue;
 				$this->_fullname = $answer;
 				break;
 
 			case 'username':
-				$answer = is_array($postedvalue) ? $postedvalue['username'][0] : $postedvalue;
+				$answer = isset($postedvalue['username']) ? $postedvalue['username'][0] : $postedvalue;
 				$this->_username = $answer;
 				break;
 
 			case 'email':
 				// TODO: store submitter email and listnames
-				if (is_array($postedvalue))
+				if (isset($postedvalue['email']))
 				{
 					$answer = $postedvalue['email'][0];
 
@@ -174,15 +174,15 @@ class rfanswers
 				break;
 
 			case 'textfield':
-				$answer = is_array($postedvalue) ? $postedvalue['text'][0] : $postedvalue;
+				$answer = isset($postedvalue['text']) ? $postedvalue['text'][0] : $postedvalue;
 				break;
 
 			case 'hidden':
-				$answer = is_array($postedvalue) ? $postedvalue['hidden'][0] : $postedvalue;
+				$answer = isset($postedvalue['hidden']) ? $postedvalue['hidden'][0] : $postedvalue;
 				break;
 
 			case 'select':
-				$answer = is_array($postedvalue) ? $postedvalue['select'][0] : $postedvalue;
+				$answer = isset($postedvalue['select']) ? $postedvalue['select'][0] : $postedvalue;
 
 				foreach ($field->values as $v)
 				{
@@ -194,7 +194,7 @@ class rfanswers
 				break;
 
 			case 'checkbox':
-				$options = is_array($postedvalue) ? $postedvalue['checkbox'] : $postedvalue;
+				$options = isset($postedvalue['checkbox']) ? $postedvalue['checkbox'] : $postedvalue;
 				$submittervalues = array();
 
 				foreach ($options as $key => $submitteranswer)
@@ -214,7 +214,7 @@ class rfanswers
 				break;
 
 			case 'multiselect':
-				$options = is_array($postedvalue) ? $postedvalue['multiselect'] : $postedvalue;
+				$options = isset($postedvalue['multiselect']) ? $postedvalue['multiselect'] : $postedvalue;
 				$submittervalues = array();
 
 				foreach ($options as $key => $submitteranswer)
@@ -234,7 +234,7 @@ class rfanswers
 				break;
 
 			case 'recipients':
-				$options = is_array($postedvalue) ? $postedvalue['recipients'] : $postedvalue;
+				$options = isset($postedvalue['recipients']) ? $postedvalue['recipients'] : $postedvalue;
 				$submittervalues = array();
 
 				foreach ($options as $key => $submitteranswer)
@@ -254,7 +254,7 @@ class rfanswers
 				break;
 
 			case 'radio':
-				$value = is_array($postedvalue) ? $postedvalue['radio'][0] : $postedvalue;
+				$value = isset($postedvalue['radio']) ? $postedvalue['radio'][0] : $postedvalue;
 
 				/* Get the real value from the database */
 				$q = "SELECT value, price
@@ -274,7 +274,7 @@ class rfanswers
 				}
 				else
 				{
-					$answer = is_array($postedvalue) ? $postedvalue['price'][0] : $postedvalue;
+					$answer = isset($postedvalue['price']) ? $postedvalue['price'][0] : $postedvalue;
 				}
 				$this->_price += $answer;
 				break;

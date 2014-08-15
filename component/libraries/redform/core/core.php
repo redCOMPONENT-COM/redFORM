@@ -1750,41 +1750,38 @@ class RedformCore extends JObject {
 
 			if ($rmField = $field->redmember_field)
 			{
-				$data[$key][$field->fieldtype] = $userData->{$rmField};
+				$data[$key] = $userData->{$rmField};
 				continue;
 			}
 
 			switch ($field->fieldtype)
 			{
 				case 'fullname':
-					$data[$key]['fullname'][] = $userData->name;
+					$data[$key] = $userData->name;
 					break;
 
 				case 'username':
-					$data[$key]['username'][] = $userData->username;
+					$data[$key] = $userData->username;
 					break;
 
 				case 'email':
-					$data[$key]['email'][] = $userData->email;
+					$data[$key] = $userData->email;
 					break;
 
 				case 'textarea':
 				case 'date':
 				case 'wysiwyg':
-					$data[$key][$field->fieldtype] = $field->default;
-					break;
-
-				case 'text':
+				case 'textfield':
 				case 'hidden':
 				case 'select':
-					$data[$key][$field->fieldtype][] = $field->default;
+					$data[$key] = $field->default;
 					break;
 
 				case 'checkbox':
 				case 'multiselect':
 				case 'recipients':
 				case 'radio':
-					$data[$key][$field->fieldtype] = explode("\n", $field->default);
+					$data[$key] = explode("\n", $field->default);
 					break;
 
 				case 'price':
@@ -1796,7 +1793,7 @@ class RedformCore extends JObject {
 					{
 						$value = $field->default;
 					}
-					$data[$key][$field->fieldtype][] = $value;
+					$data[$key] = $value;
 					break;
 
 
@@ -1808,7 +1805,7 @@ class RedformCore extends JObject {
 
 		return $data;
 	}
-	
+
 	/**
 	 * Return submission(s) price(s) associated to a submit_key
 	 *

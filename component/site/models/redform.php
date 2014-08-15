@@ -683,6 +683,7 @@ class RedformModelRedform extends JModel {
 					}
 				}
 			}
+
 			$allanswers[] = $answers;
 		}
 		/* End multi-user signup */
