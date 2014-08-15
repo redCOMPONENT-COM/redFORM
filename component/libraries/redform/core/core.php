@@ -1718,16 +1718,21 @@ class RedformCore extends JObject {
 	 */
 	protected function getUserData($user_id)
 	{
-		// for now, just get data from native joomla users
-		return JFactory::getUser($user_id);
+		if (RedformHelper::redmemberIntegration())
+		{
+			return RedmemberLib::getUserData($user_id);
+		}
+		else
+		{
+			return JFactory::getUser($user_id);
+		}
 	}
 
 	/**
 	 * prepares data for saving
 	 *
-	 * @param   int     $xref      session id
-	 * @param   object  $form      form data
-	 * @param   object  $userData  user data
+	 * @param   object  $userData    user data
+	 * @param   int     $form_index  form data
 	 *
 	 * @return array
 	 */
@@ -1743,9 +1748,10 @@ class RedformCore extends JObject {
 		{
 			$key   = 'field' . $field->id . '_' . $form_index;
 
-			if ($field->redmember_field)
+			if ($rmField = $field->redmember_field)
 			{
-				// waiting for redmember coding !
+				$data[$key][$field->fieldtype] = $userData->{$rmField};
+				continue;
 			}
 
 			switch ($field->fieldtype)
@@ -1802,7 +1808,7 @@ class RedformCore extends JObject {
 
 		return $data;
 	}
-
+	
 	/**
 	 * Return submission(s) price(s) associated to a submit_key
 	 *

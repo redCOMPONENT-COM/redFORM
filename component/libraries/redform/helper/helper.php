@@ -57,4 +57,14 @@ class RedformHelper
 
 		return $result;
 	}
+
+	/**
+	 * Check if redMEMBER is installed
+	 *
+	 * @return bool
+	 */
+	public static function redmemberIntegration()
+	{
+		return file_exists(JPATH_ROOT . '/components/com_redmember');
+	}
 }
