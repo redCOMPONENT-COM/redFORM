@@ -70,6 +70,7 @@ class PaymentEpay extends RdfPaymentHelper
 			'accepturl' => $this->getUrl('notify', $submit_key),
 			'cancelurl' => $this->getUrl('cancel', $submit_key),
 			'ordertext' => $request->title,
+			'ordertext' => $request->adminDesc,
 			'group' => $this->params->get('group'),
 			'description' => $request->title,
 			'opacity' => 50,
