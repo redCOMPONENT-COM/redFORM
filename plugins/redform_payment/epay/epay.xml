@@ -1,230 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.5" type="plugin" group="redform_payment" method="upgrade">
-	<name>PLG_REDFORM_PAYMENT_EPAY</name>
-	<creationDate>##DATE##</creationDate>
-	<author>redWEB Aps</author>
-	<authorEmail>email@redweb.dk</authorEmail>
-	<authorUrl>www.redcomponent.com</authorUrl>
-	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
-	<license>GNU/GPL</license>
-	<version>##VERSION##</version>
-	<description>PLG_REDFORM_PAYMENT_EPAY_XML_DESCRIPTION</description>
+<extension version="2.5" type="plugin" group="redform_payment" method="upgrade">
+    <name>PLG_REDFORM_PAYMENT_EPAY</name>
+    <creationDate>##DATE##</creationDate>
+    <author>redWEB Aps</author>
+    <authorEmail>email@redweb.dk</authorEmail>
+    <authorUrl>www.redcomponent.com</authorUrl>
+    <copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
+    <license>GNU/GPL</license>
+    <version>##VERSION##</version>
+    <description>PLG_REDFORM_PAYMENT_EPAY_XML_DESCRIPTION</description>
 
-	<files>
-		<filename plugin="epay">epay.php</filename>
-		<folder>helpers</folder>
-        <folder>js</folder>
-		<filename>index.html</filename>
-		<folder>language</folder>
-	</files>
+    <files>
+        <filename plugin="epay">epay.php</filename>
+        <folder>helpers</folder>
+        <filename>index.html</filename>
+        <folder>language</folder>
+    </files>
 
-	<config>
-		<fields name="params">
-			<fieldset name="general" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_GENERAL">
+    <config>
+        <fields name="params">
+            <fieldset name="general" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_GENERAL">
 
-				<field name="allowed_currencies" type="textarea"
-					   label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
-					   description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
-					   rows="10"
-						/>
+                <field name="allowed_currencies" type="textarea"
+                       label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
+                       description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
+                       rows="10"
+                        />
 
-				<field name="EPAY_MERCHANTNUMBER" type="text" default="" label="EPAY_CFG_PAYMENT_MERCHANTNUMBER"
-					   description="EPAY_CFG_PAYMENT_MERCHANTNUMBER_EXPLAIN"/>
+                <field name="EPAY_MERCHANTNUMBER" type="text" default=""
+                       label="PLG_REDFORM_PAYMENT_EPAY_MERCHANTNUMBER"
+                       description="PLG_REDFORM_PAYMENT_EPAY_MERCHANTNUMBER_DESC"
+                       required="1"/>
 
-				<field name="EPAY_VERIFIED_STATUS" type="list" default="0" label="EPAY_CFG_PAYMENT_STATUS_SUCCESS"
-					   description="EPAY_CFG_PAYMENT_STATUS_SUCCESS_EXPLAIN">
-					<option value="0">epay_verified_status_success</option>
-				</field>
+                <field name="paymentcollection" type="list" default="0"
+                       label="PLG_REDFORM_PAYMENT_EPAY_PAYMENTCOLLECTION"
+                       description="PLG_REDFORM_PAYMENT_EPAY_PAYMENTCOLLECTION_DESC">
+                    <option value="0">PLG_REDFORM_PAYMENT_EPAY_PAYMENTCOLLECTION_CUSTOMERCHOICE</option>
+                    <option value="1">PLG_REDFORM_PAYMENT_EPAY_PAYMENTCOLLECTION_PAYMENTCARDS</option>
+                    <option value="2">PLG_REDFORM_PAYMENT_EPAY_PAYMENTCOLLECTION_HOMEBANKING</option>
+                    <option value="3">PLG_REDFORM_PAYMENT_EPAY_PAYMENTCOLLECTION_INVOICE</option>
+                    <option value="4">PLG_REDFORM_PAYMENT_EPAY_PAYMENTCOLLECTION_MOBILE</option>
+                    <option value="5">PLG_REDFORM_PAYMENT_EPAY_PAYMENTCOLLECTION_OTHER</option>
+                </field>
 
-				<field name="EPAY_INVALID_STATUS" type="list" default="0" label="EPAY_CFG_PAYMENT_STATUS_FAILED"
-					   description="EPAY_CFG_PAYMENT_STATUS_FAILED_EXPLAIN">
-					<option value="0">epay_invalid_status_fail</option>
-				</field>
+                <field name="lockpaymentcollection" type="radio" default="0"
+                       label="PLG_REDFORM_PAYMENT_EPAY_LOCKPAYMENTCOLLECTION"
+                       description="PLG_REDFORM_PAYMENT_EPAY_LOCKPAYMENTCOLLECTION_DESC">
+                    <option value="0">PLG_REDFORM_PAYMENT_EPAY_DISABLED</option>
+                    <option value="1">PLG_REDFORM_PAYMENT_EPAY_ENABLED</option>
+                </field>
 
-                <field name="PLG_REDFORM_EPAY_REDIRECT_TEXT" type="text"
-                       label="PLG_REDFORM_EPAY_REDIRECT_TEXT_LABEL"
-                       description="PLG_REDFORM_EPAY_REDIRECT_TEXT_DESC"
-                       default="You should be redirected to the payment window now. If not, click the button below."/>
+                <field name="paymenttype" type="list"
+                       multiple="true"
+                       label="PLG_REDFORM_PAYMENT_EPAY_PAYMENTTYPE"
+                       description="PLG_REDFORM_PAYMENT_EPAY_PAYMENTTYPE_DESC">
+                    <option value="1">Dankort/VISA Dankort</option>
+                    <option value="2">eDankort</option>
+                    <option value="3">VISA / VISA Electron</option>
+                    <option value="4">Mastercard</option>
+                    <option value="6">JCB</option>
+                    <option value="7">Maestro</option>
+                    <option value="8">Diners Club</option>
+                    <option value="9">American Express</option>
+                    <option value="11">Forbrugsforeningen</option>
+                    <option value="12">Nordea e-betaling</option>
+                    <option value="13">Danske Netbetalinger</option>
+                    <option value="14">PayPal</option>
+                    <option value="17">Klarna</option>
+                    <option value="18">SveaWebPay</option>
+                    <option value="23">ViaBill</option>
+                    <option value="24">NemPay</option>
+                </field>
 
-				<field type="spacer" name="test" label="testlbl" default="EPAY_CFG_EPAY_CARDTYPES"/>
+                <field name="language" type="list" default="0" label="PLG_REDFORM_PAYMENT_EPAY_LANGUAGE"
+                       description="PLG_REDFORM_PAYMENT_EPAY_LANGUAGE_DESC">
+                    <option value="0">Auto Detect</option>
+                    <option value="1">Danish</option>
+                    <option value="2">English</option>
+                    <option value="3">Swedish</option>
+                    <option value="4">Norwegian</option>
+                    <option value="5">Greenlandic</option>
+                    <option value="6">Icelandic</option>
+                    <option value="7">German</option>
+                    <option value="8">Finnish</option>
+                    <option value="9">Spanish</option>
+                    <option value="10">French</option>
+                    <option value="11">Polish</option>
+                    <option value="12">Italian</option>
+                    <option value="13">Dutch</option>
+                </field>
 
-				<field name="EPAY_CARDTYPES_0" type="radio" default="0" label="EPAY_ALL"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_1" type="radio" default="0" label="DANKORT"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_2" type="radio" default="0" label="VISA DANKORT"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_3" type="radio" default="0" label="VISA ELECTRON"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_4" type="radio" default="0" label="MASTERCARD (DK)"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_5" type="radio" default="0" label="MASTERCARD"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_6" type="radio" default="0" label="VISA ELECTRON (DK)"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_7" type="radio" default="0" label="JCB"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_8" type="radio" default="0" label="DINERS (DK)"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_9" type="radio" default="0" label="MAESTRO (DK)"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_10" type="radio" default="0" label="AMERICAN EXPRESS (DK)"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_12" type="radio" default="0" label="DINERS"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_13" type="radio" default="0" label="JCB Secure (3D-Secure)"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_14" type="radio" default="0" label="AMERICAN EXPRESS"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_15" type="radio" default="0" label="MAESTRO"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_16" type="radio" default="0" label="FORBRUGSFORENINGEN"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_17" type="radio" default="0" label="EWIRE"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_18" type="radio" default="0" label="VISA"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_19" type="radio" default="0" label="IKANO"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_21" type="radio" default="0" label="NORDEA"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
-				<field name="EPAY_CARDTYPES_22" type="radio" default="0" label="DANSKE BANK"
-					   description="EPAY_CFG_EPAY_CARDTYPES_EXPLAIN">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
-				</field>
+                <field name="instantcapture" type="radio" default="0" label="PLG_REDFORM_PAYMENT_EPAY_INSTANT_CAPTURE"
+                       description="PLG_REDFORM_PAYMENT_EPAY_INSTANT_CAPTURE_DESC">
+                    <option value="0">PLG_REDFORM_PAYMENT_EPAY_DISABLED</option>
+                    <option value="1">PLG_REDFORM_PAYMENT_EPAY_ENABLED</option>
+                </field>
 
-				<field type="spacer"/>
+                <field name="group" type="text" default="" label="PLG_REDFORM_PAYMENT_EPAY_GROUP"
+                       description="PLG_REDFORM_PAYMENT_EPAY_GROUP_DESC"/>
 
-				<field name="EPAY_LANGUAGE" type="list" default="2" label="EPAY_CFG_EPAY_LANGUAGE"
-					   description="EPAY_CFG_EPAY_LANGUAGE_EXPLAIN">
-					<option value="1">Danish</option>
-					<option value="2">English</option>
-					<option value="3">Swedish</option>
-					<option value="4">Norwegian</option>
-					<option value="5">Greenland</option>
-					<option value="6">Icelandic</option>
-					<option value="7">German</option>
-				</field>
+                <field name="md5" type="list" default="0" label="PLG_REDFORM_PAYMENT_EPAY_MD5" description="PLG_REDFORM_PAYMENT_EPAY_MD5_DESC">
+                    <option value="0">PLG_REDFORM_PAYMENT_EPAY_DISABLED</option>
+                    <option value="1">PLG_REDFORM_PAYMENT_EPAY_ENABLED</option>
+                </field>
 
-				<field name="EPAY_INSTANT_CAPTURE" type="list" default="0" label="EPAY_CFG_EPAY_INSTANT_CAPTURE"
-					   description="EPAY_CFG_EPAY_INSTANT_CAPTURE_EXPLAIN">
-					<option value="0">Disabled</option>
-					<option value="1">Enabled</option>
-				</field>
+                <field name="EPAY_MD5_KEY" type="text" default="" label="PLG_REDFORM_PAYMENT_EPAY_MD5_KEY"
+                       description="PLG_REDFORM_PAYMENT_EPAY_MD5_KEY_DESC"/>
 
-				<field name="EPAY_GROUP" type="text" default="" label="EPAY_CFG_EPAY_GROUP"
-					   description="EPAY_CFG_EPAY_GROUP_EXPLAIN"/>
+                <field name="windowstate" type="list" default="1" label="PLG_REDFORM_PAYMENT_EPAY_WINDOWSTATE"
+                       description="PLG_REDFORM_PAYMENT_EPAY_WINDOWSTATE_DESC">
+                    <option value="1">Overlay</option>
+                    <option value="2">Iframe</option>
+                    <option value="3">Full screen</option>
+                    <option value="4">Integrated payment form</option>
+                </field>
+            </fieldset>
 
-				<field name="MD5" type="list" default="0" label="MD5" description="EPAY_CFG_EPAY_MD5_TYPE_EXPLAIN">
-					<option value="0">Disabled</option>
-					<option value="1">EPAY_CFG_EPAY_MD5_TYPE_1</option>
-					<option value="2">EPAY_CFG_EPAY_MD5_TYPE_2</option>
-				</field>
-				<field name="EPAY_MD5_KEY" type="text" default="" label="EPAY_CFG_EPAY_MD5_KEY"
-					   description="EPAY_CFG_EPAY_MD5_KEY_EXPLAIN"/>
+            <fieldset name="extra" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_EXTRA">
 
-				<field name="EPAY_AUTH_SMS" type="text" default="" label="EPAY_CFG_EPAY_AUTHSMS"
-					   description="EPAY_CFG_EPAY_AUTHSMS_EXPLAIN"/>
-				<field name="EPAY_AUTH_MAIL" type="text" default="" label="EPAY_CFG_EPAY_AUTHEMAIL"
-					   description="EPAY_CFG_EPAY_AUTHEMAIL_EXPLAIN"/>
+                <field name="gatewaylabel" type="text" default="" label="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL"
+                       description="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL_DESC"/>
 
-				<field name="EPAY_WINDOW_STATE" type="list" default="1" label="EPAY_CFG_EPAY_WINDOWSTATE"
-					   description="">
-					<!--<option value="1">EPAY_CFG_EPAY_WINDOWSTATE_1</option>-->
-					<option value="2">EPAY_CFG_EPAY_WINDOWSTATE_2</option>
-				</field>
-
-				<field name="EPAY_3DSECURE" type="list" default="0" label="EPAY_CFG_EPAY_3DSECURE"
-					   description="EPAY_CFG_EPAY_3DSECURE">
-					<option value="1">EPAY_CFG_EPAY_3DSECURE_1</option>
-					<option value="2">EPAY_CFG_EPAY_3DSECURE_2</option>
-					<option value="3">EPAY_CFG_EPAY_3DSECURE_3</option>
-				</field>
-
-				<field name="EPAY_CALLBACK" type="list" default="0" label="EPAY_CFG_EPAY_CALLBACK"
-					   description="EPAY_CFG_EPAY_CALLBACK_EXPLAIN">
-					<option value="0">EPAY_CFG_EPAY_CALLBACK_0</option>
-					<option value="1">EPAY_CFG_EPAY_CALLBACK_1</option>
-				</field>
-
-				<field name="EPAY_ADDFEE" type="list" default="0" label="EPAY_CFG_EPAY_ADDFEE"
-					   description="EPAY_CFG_EPAY_ADDFEE_EXPLAIN">
-					<option value="0">EPAY_CFG_EPAY_ADDFEE_0</option>
-					<option value="1">EPAY_CFG_EPAY_ADDFEE_1</option>
-				</field>
-			</fieldset>
-
-			<fieldset name="extra" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_EXTRA">
-
-				<field name="gatewaylabel" type="text" default="" label="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL"
-					   description="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL_DESC"/>
-
-                <field name="gatewaybackendlabel" type="text" default="" label="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL"
+                <field name="gatewaybackendlabel" type="text" default=""
+                       label="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL"
                        description="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL_DESC"/>
 
-			</fieldset>
-		</fields>
-	</config>
+            </fieldset>
+        </fields>
+    </config>
 
 </extension>

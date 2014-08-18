@@ -25,7 +25,7 @@ defined('_JEXEC') or die('Restricted access');
 // Import dependency
 require_once JPATH_SITE . '/components/com_redform/classes/paymentplugin.php';
 
-class plgRedform_PaymentEpay2 extends RDFPaymentPlugin
+class plgRedform_PaymentEpay2 extends RdfPaymentPlugin
 {
 	protected $gateway = 'epay2';
 }
