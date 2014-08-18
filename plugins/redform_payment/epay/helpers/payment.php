@@ -100,7 +100,17 @@ class PaymentEpay extends RdfPaymentHelper
 				}
 				?>
 			});
+			<?php if ($this->params->get('windowstate') != '1'): ?>
 			paymentwindow.append('payment-div');
+			<?php endif; ?>
+			paymentwindow.on('close', function(){
+				alert("<?php echo JText::_('PLG_REDFORM_PAYMENT_EPAY_PAYMENT_WAS_CANCELLED'); ?>");
+				window.location = "<?php echo $this->getUrl('cancel', $submit_key); ?>";
+			});
+			paymentwindow.on('declined', function(){
+				alert("<?php echo JText::_('PLG_REDFORM_PAYMENT_EPAY_PAYMENT_WAS_DECLINED'); ?>");
+				window.location = "<?php echo $this->getUrl('decline', $submit_key); ?>";
+			});
 			paymentwindow.open();
 		</script>
 		<?php
