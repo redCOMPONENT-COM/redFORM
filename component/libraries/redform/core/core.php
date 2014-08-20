@@ -366,7 +366,7 @@ class RdfCore extends JObject
 			}
 
 			/* Make a collapsable box */
-			$html .= '<div id="formfield' . $formIndex . '" class="formbox" style="display: ' . ($formIndex == 1 ? 'block' : 'none') . ';">';
+			$html .= '<div class="formbox">';
 
 			if ($multi > 1)
 			{
