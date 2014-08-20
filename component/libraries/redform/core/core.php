@@ -319,7 +319,7 @@ class RdfCore extends JObject
 			$this->getRedmemberfields($user);
 		}
 
-		$html = '<div class="redform-form' . $form->classname . '">';
+		$html = '<div class="redform-form ' . $form->classname . '">';
 
 		if ($form->showname)
 		{
