@@ -139,18 +139,21 @@ class RedFormModelPayment extends JModelLegacy
 
 	/**
 	 * return currency of form associated to this payment
-	 * @return unknown_type
+	 *
+	 * @return string
+	 *
+	 * @throws LogicException
 	 */
-	function getCurrency()
+	public function getCurrency()
 	{
 		if (empty($this->_submit_key))
 		{
 			throw new LogicException(JText::_('COM_REDFORM_Missing_key'), 500);
+
 			return false;
 		}
 
-		$query = ' SELECT currency FROM #__rwf_submitters WHERE submit_key = '. $this->_db->Quote($this->_submit_key)
-		;
+		$query = 'SELECT currency FROM #__rwf_submitters WHERE submit_key = ' . $this->_db->Quote($this->_submit_key);
 		$this->_db->setQuery($query);
 
 		return $this->_db->loadResult();

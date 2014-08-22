@@ -138,6 +138,7 @@ class RedformControllerPayment extends JControllerLegacy
 			$trans->id = $submit_key;
 			$trans->affiliation = $payement->form;
 			$trans->revenue = $model->getPrice();
+			$trans->currency = $payement->currency;
 
 			RdfHelperAnalytics::addTrans($trans);
 
