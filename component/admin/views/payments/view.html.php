@@ -88,7 +88,6 @@ class RedformViewPayments extends RdfView
 			$secondGroup->addButton($delete);
 		}
 
-		// Options
 		$back = RToolbarBuilder::createStandardButton('payments.back', JText::_('COM_REDFORM_BACK'), 'btn btn-default', 'icon-eject', false);
 		$thirdGroup->addButton($back);
 

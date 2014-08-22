@@ -82,13 +82,6 @@ class RedformViewLogs extends RdfView
 			$firstGroup->addButton($options);
 		}
 
-		// Options
-		if ($canDoCore->get('core.manage'))
-		{
-			$options = RToolbarBuilder::createOptionsButton('com_redform');
-			$secondGroup->addButton($options);
-		}
-
 		$toolbar = new RToolbar;
 		$toolbar->addGroup($firstGroup)
 			->addGroup($secondGroup);
