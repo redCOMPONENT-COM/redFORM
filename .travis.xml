@@ -6,15 +6,11 @@
     <target name="travis" description="Generate codestyle report using PHP_CodeSniffer for output on Travis-CI">
 
         <property name="phpcs-ignore"
-                  value="${basedir}/.travis,
-                  ${basedir}/tests,
-                  {basedir}/media,
-                  ${basedir}/redCORE,
-                  ${basedir}/component/admin/views/*/tmpl/*,
-                  ${basedir}/component/admin/layouts,
-                  ${basedir}/component/admin/plugins/*,
-                  ${basedir}/plugins/*"
+                  value="${basedir}/.travis,${basedir}/tests,${basedir}/media,${basedir}/redCORE,${basedir}/component/admin/views/*/tmpl/*,${basedir}/component/admin/layouts,${basedir}/plugins/,${basedir}/build,${basedir}/component/site/layouts"
                 />
+        <!--<property name="phpcs-ignore"-->
+                  <!--value="${basedir}/.travis,${basedir}/tests,${basedir}/media,${basedir}/redCORE,${basedir}/component/admin/views/*/tmpl/*,$(basedir}/component/admin/layouts,${basedir}/component/admin/plugins/*,${basedir}/plugins/*"-->
+                <!--/>-->
 
         <exec executable="phpcs" passthru="true">
             <arg line="-p" />
