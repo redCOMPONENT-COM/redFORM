@@ -92,13 +92,13 @@ foreach ($fields as $field)
 
 			if ($rfield->isRequired())
 			{
-				$img = JHTML::image(JURI::root() . 'components/com_redform/assets/images/warning.png', JText::_('COM_REDFORM_Required'));
+				$img = JHTML::image(JURI::root() . 'media/com_redform/images/warning.png', JText::_('COM_REDFORM_Required'));
 				$html .= ' <span class="editlinktip hasTipField" title="' . JText::_('COM_REDFORM_Required') . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 			}
 
 			if (strlen($field->tooltip) > 0)
 			{
-				$img = JHTML::image(JURI::root().'components/com_redform/assets/images/info.png', JText::_('COM_REDFORM_ToolTip'));
+				$img = JHTML::image(JURI::root().'media/com_redform/images/info.png', JText::_('COM_REDFORM_ToolTip'));
 				$html .= ' <span class="editlinktip hasTipField" title="' . htmlspecialchars($field->field) . '::' . htmlspecialchars($field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 			}
 

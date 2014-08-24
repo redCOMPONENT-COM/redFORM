@@ -41,7 +41,6 @@
 		<filename>redform.php</filename>
 		<filename>redform.core.php</filename>
 		<filename>redform.defines.php</filename>
-		<folder>assets</folder>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
 		<folder>language</folder>
