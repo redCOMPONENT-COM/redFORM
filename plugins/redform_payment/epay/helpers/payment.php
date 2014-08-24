@@ -3,21 +3,7 @@
  * @package     Redform
  * @subpackage  Payment.epay
  * @copyright   Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license     GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
+ * @license     GNU/GPL, see LICENSE
  */
 
 defined('_JEXEC') or die('Restricted access');
@@ -137,7 +123,10 @@ class PaymentEpay extends RdfPaymentHelper
 		{
 			// Payment was refused
 			RdfHelperLog::simpleLog('EPAY NOTIFICATION PAYMENT REFUSED' . ' for ' . $submit_key);
-			$this->writeTransaction($submit_key, JRequest::getVar('error') . ': ' . JRequest::getVar('errortext'), $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+			$this->writeTransaction(
+				$submit_key, JRequest::getVar('error') . ': ' . JRequest::getVar('errortext'),
+				$this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0
+			);
 
 			return 0;
 		}
@@ -172,6 +161,7 @@ class PaymentEpay extends RdfPaymentHelper
 		{
 			RdfHelperLog::simpleLog('EPAY NOTIFICATION CURRENCY MISMATCH' . ' for ' . $submit_key);
 			$this->writeTransaction($submit_key, 'EPAY NOTIFICATION CURRENCY MISMATCH' . "\n" . $resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+
 			return false;
 		}
 

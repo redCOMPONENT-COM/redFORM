@@ -65,10 +65,10 @@ class plgRedform_mailingJnews extends JPlugin
 			return false;
 		}
 
- 		if (!JComponentHelper::isEnabled('com_jnews'))
-	    {
- 			return false;
- 		}
+		if (!JComponentHelper::isEnabled('com_jnews'))
+		{
+			return false;
+		}
 
 		$mainframe = JFactory::getApplication();
 
