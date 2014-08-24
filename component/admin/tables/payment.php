@@ -26,19 +26,25 @@ class RedformTablePayment extends RTable
 	protected $_tableName = 'rwf_payment';
 
 	/** @var int Primary key */
-	var $id = null;
+	public $id = null;
+
 	/** @var int Unique key that identifies single registrations */
-	var $submit_key = null;
+	public $submit_key = null;
+
 	/** @var string date */
-	var $date = null;
+	public $date = null;
+
 	/** @var string gateway */
-	var $gateway = null;
+	public $gateway = null;
+
 	/** @var string status */
-	var $status = null;
+	public $status = null;
+
 	/** @var string information */
-	var $data = null;
+	public $data = null;
+
 	/** @var int paid */
-	var $paid = 0;
+	public $paid = 0;
 
 	/**
 	 * Checks that the object is valid and able to be stored.

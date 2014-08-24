@@ -290,8 +290,8 @@ class RdfCore extends JObject
 		}
 
 		// Css
-		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/tooltip.css');
-		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/redform.css');
+		$document->addStyleSheet(JURI::base() . 'media/com_redform/css/tooltip.css');
+		$document->addStyleSheet(JURI::base() . 'media/com_redform/css/redform.css');
 
 		if (isset($options['currency']) && $options['currency'])
 		{

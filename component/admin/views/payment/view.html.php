@@ -42,6 +42,7 @@ class RedformViewPayment extends RdfView
 
 		parent::display($tpl);
 	}
+
 	/**
 	 * Get the view title.
 	 *

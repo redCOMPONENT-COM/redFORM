@@ -45,18 +45,15 @@ class RedformTableValue extends RTable
 	 */
 	public $published = null;
 
-
 	/**
 	 * @var int id of user having checked out the item
 	 */
 	public $checked_out = null;
 
-
 	/**
 	 * @var string
 	 */
 	public $checked_out_time = null;
-
 
 	/**
 	 * @var int
