@@ -1,116 +1,148 @@
 <?php
 /**
- * @version 1.0 $Id$
- * @package Joomla
- * @subpackage redFORM
- * @copyright redFORM (C) 2008 redCOMPONENT.com / EventList (C) 2005 - 2008 Christoph Lukes
- * @license GNU/GPL, see LICENSE.php
- * redEVENT is based on EventList made by Christoph Lukes from schlu.net
- * redEVENT can be downloaded from www.redcomponent.com
- * redEVENT is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redEVENT is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redEVENT; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.plugins
+ * @subpackage  mailing
+ *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-// no direct access
-defined( '_JEXEC' ) or die( 'Restricted access' );
+defined('_JEXEC') or die( 'Restricted access');
 
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
-class plgRedform_mailingAcymailing extends JPlugin {
-
-	public function plgRedform_mailingAcymailing(&$subject, $config = array())
+/**
+ * Class plgRedform_mailingAcymailing
+ *
+ * @package     Redform.plugins
+ * @subpackage  mailing
+ * @since       2.5
+ */
+class plgRedform_mailingAcymailing extends JPlugin
+{
+	/**
+	 * Constructor
+	 *
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
+	 *                             Recognized key values include 'name', 'group', 'params', 'language'
+	 *                             (this list is not meant to be comprehensive).
+	 */
+	public function __construct(&$subject, $config = array())
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
 	}
 
-	function getIntegrationName(&$names)
+	/**
+	 * Add to integration names
+	 *
+	 * @param   array  &$names  names to add to
+	 *
+	 * @return bool
+	 */
+	public function getIntegrationName(&$names)
 	{
 		$names[] = 'acymailing';
+
 		return true;
 	}
 
-	function subscribe($integration, $subscriber, $listname)
+	/**
+	 * Subscribe to list
+	 *
+	 * @param   string  $integration  integration name
+	 * @param   JUser   $subscriber   subscriber
+	 * @param   object  $listname     list name
+	 *
+	 * @return bool
+	 */
+	public function subscribe($integration, $subscriber, $listname)
 	{
 		$app = JFactory::getApplication();
 
-		if (strtolower($integration) != 'acymailing') {
+		if (strtolower($integration) != 'acymailing')
+		{
 			return true;
 		}
 
-		$db = &JFactory::getDBO();
- 		$fullname        = $subscriber->name;
- 		$submitter_email = $subscriber->email;
+		$db = JFactory::getDBO();
+		$fullname        = $subscriber->name;
+		$submitter_email = $subscriber->email;
 
- 		$lists = $this->getLists();
+		$lists = $this->getLists();
 
- 		$listid = 0;
- 		foreach ($lists as $l)
- 		{
- 			if ($l->name == $listname) {
- 				$listid = $l->listid;
- 				break;
- 			}
- 		}
- 		if (!$listid) {
- 			$app->enqueueMessage(JText::_('PLG_REDFORM_MAILING_ACYMAILING_LIST_NOT_FOUND'), 'error');
- 			return false;
- 		}
+		$listid = 0;
 
- 		// first, add user to acymailing
- 		$myUser = new stdclass();
+		foreach ($lists as $l)
+		{
+			if ($l->name == $listname)
+			{
+				$listid = $l->listid;
+				break;
+			}
+		}
+
+		if (!$listid)
+		{
+			$app->enqueueMessage(JText::_('PLG_REDFORM_MAILING_ACYMAILING_LIST_NOT_FOUND'), 'error');
+
+			return false;
+		}
+
+		// First, add user to acymailing
+		$myUser = new stdclass;
 		$myUser->email = $subscriber->email;
 		$myUser->name  = $subscriber->name;
 
 		$subscriberClass = acymailing::get('class.subscriber');
 
-		$subid = $subscriberClass->save($myUser); //this function will return you the ID of the user inserted in the AcyMailing table
+		// This function will return you the ID of the user inserted in the AcyMailing table
+		$subid = $subscriberClass->save($myUser);
 
-		// then add to the mailing list
- 		$subscribe = array($listid);
- 		$memberid  = $subid;
+		// Then add to the mailing list
+		$subscribe = array($listid);
+		$memberid  = $subid;
 
- 		$newSubscription = array();
- 		if (!empty($subscribe))
- 		{
- 			foreach ($subscribe as $listId)
- 			{
- 				$newList = null;
- 				$newList['status'] = 1;
- 				$newSubscription[$listId] = $newList;
- 			}
- 		}
+		$newSubscription = array();
 
- 		if (empty($newSubscription)) return; //there is nothing to do...
+		if (!empty($subscribe))
+		{
+			foreach ($subscribe as $listId)
+			{
+				$newList = null;
+				$newList['status'] = 1;
+				$newSubscription[$listId] = $newList;
+			}
+		}
 
- 		$subscriberClass->saveSubscription($subid,$newSubscription);
+		if (empty($newSubscription))
+		{
+			// There is nothing to do...
+			return;
+		}
 
- 		return true;
+		$subscriberClass->saveSubscription($subid, $newSubscription);
+
+		return true;
 	}
 
-	function getLists()
+	/**
+	 * Get lists
+	 *
+	 * @return mixed
+	 */
+	public function getLists()
 	{
-		$app = & JFactory::getApplication();
-		if(!include_once(rtrim(JPATH_ADMINISTRATOR, '/') . '/components/com_acymailing/helpers/helper.php'))
-		{
- 			$app->enqueueMessage(JText::_('PLG_REDFORM_MAILING_ACYMAILING_NOT_FOUND'), 'error');
- 			return false;
-		}
+		$app = JFactory::getApplication();
+
+		include_once JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php';
 
 		$listClass = acymailing::get('class.list');
 
 		$allLists = $listClass->getLists();
+
 		return $allLists;
 	}
 }
