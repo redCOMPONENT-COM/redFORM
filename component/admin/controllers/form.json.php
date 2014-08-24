@@ -18,13 +18,18 @@ defined('_JEXEC') or die;
  */
 class RedformControllerForm extends RdfControllerForm
 {
+	/**
+	 * Get fields
+	 *
+	 * @return void
+	 */
 	public function getFields()
 	{
 		$app = JFactory::getApplication();
 
 		$form_id = $app->input->getInt('id', 0);
 		$model = $this->getModel();
-		$res = $model->getFieldsOptions('id');
+		$res = $model->getFieldsOptions($form_id);
 
 		echo json_encode($res);
 

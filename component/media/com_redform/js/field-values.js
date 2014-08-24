@@ -100,7 +100,7 @@
 		function removeOption(event) {
 			var element = $(event.currentTarget);
 			$.ajax({
-				url: 'index.php?option=com_redform&task=field.removeValue&format=json&view=field&id=' + fieldId,
+				url: 'index.php?option=com_redform&task=field.removeOption&format=json&view=field&id=' + fieldId,
 				data: {'optionId' : element.attr('optionId')},
 				type : 'POST',
 				dataType: 'json',
