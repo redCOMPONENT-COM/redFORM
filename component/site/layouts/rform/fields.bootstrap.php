@@ -66,7 +66,7 @@ foreach ($fields as $field)
 		$html .= '<div class="control-label">' . $rfield->getLabel() . '</div>';
 	}
 
-	$html .= '<div class="controls">' . $rfield->getInput() .'</div>';
+	$html .= '<div class="controls">' . $rfield->getInput() . '</div>';
 
 
 	$html .= '</div>';

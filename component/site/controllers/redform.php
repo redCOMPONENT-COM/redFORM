@@ -15,7 +15,7 @@ jimport('joomla.application.component.controller');
  *
  * @package  Redform.Front
  * @since    2.5
-*/
+ */
 class RedformControllerRedform extends RedformController
 {
 	/**

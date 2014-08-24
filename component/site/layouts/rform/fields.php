@@ -84,7 +84,9 @@ foreach ($fields as $field)
 	else
 	{
 		$html .= $label . $element;
-		$html .= '</div>'; // Fieldtype div
+
+		// Fieldtype div
+		$html .= '</div>';
 
 		if ($rfield->isRequired() || strlen($field->tooltip))
 		{
@@ -98,14 +100,15 @@ foreach ($fields as $field)
 
 			if (strlen($field->tooltip) > 0)
 			{
-				$img = JHTML::image(JURI::root().'media/com_redform/images/info.png', JText::_('COM_REDFORM_ToolTip'));
+				$img = JHTML::image(JURI::root() . 'media/com_redform/images/info.png', JText::_('COM_REDFORM_ToolTip'));
 				$html .= ' <span class="editlinktip hasTipField" title="' . htmlspecialchars($field->field) . '::' . htmlspecialchars($field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 			}
 
 			$html .= '</div>';
 		}
 
-		$html .= '</div>'; // fieldline_ div
+		// Fieldline_ div
+		$html .= '</div>';
 	}
 }
 
