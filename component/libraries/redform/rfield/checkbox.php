@@ -99,6 +99,11 @@ class RdfRfieldCheckbox extends RdfRfield
 		return $this->value;
 	}
 
+	/**
+	 * Returns field Input
+	 *
+	 * @return string
+	 */
 	public function getInput()
 	{
 		$this->getOptions();

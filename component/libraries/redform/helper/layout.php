@@ -7,6 +7,13 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+/**
+ * Class RdfHelperLayout
+ *
+ * @package     Redform.Libraries
+ * @subpackage  Helper
+ * @since       3.0
+ */
 class RdfHelperLayout extends RLayoutHelper
 {
 	/**
