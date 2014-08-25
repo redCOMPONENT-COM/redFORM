@@ -4,6 +4,3 @@
 [submodule ".travis/coding-standards/Joomla"]
 	path = .travis/coding-standards/Joomla
 	url = git@github.com:joomla/coding-standards.git
-[submodule ".travis/phpcs/Joomla"]
-	path = .travis/phpcs/Joomla
-	url = git@github.com:joomla/coding-standards.git
