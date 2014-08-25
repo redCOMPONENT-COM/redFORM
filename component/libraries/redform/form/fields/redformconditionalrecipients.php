@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Redcore
+ * @package     Redform.Library
  * @subpackage  Fields
  *
  * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
@@ -12,9 +12,9 @@ defined('JPATH_REDCORE') or die;
 JFormHelper::loadFieldClass('textarea');
 
 /**
- * Text field.
+ * conditional recipients field.
  *
- * @package     Redcore
+ * @package     Redform.Library
  * @subpackage  Fields
  * @since       1.0
  */

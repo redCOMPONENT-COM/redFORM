@@ -142,8 +142,11 @@ abstract class RdfRfield extends JObject
 
 			default:
 				$data = $this->load();
+
 				if (isset($data->{$name}))
-				return $data->{$name};
+				{
+					return $data->{$name};
+				}
 		}
 
 		$trace = debug_backtrace();
@@ -151,7 +154,9 @@ abstract class RdfRfield extends JObject
 			'Undefined property via __get(): ' . $name .
 			' in ' . $trace[0]['file'] .
 			' on line ' . $trace[0]['line'],
-			500);
+			500
+		);
+
 		return null;
 	}
 

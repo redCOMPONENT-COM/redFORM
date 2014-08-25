@@ -1,9 +1,28 @@
 <?php
-// No direct access
-defined('_JEXEC') or die;
+/**
+ * @package     Redform.Backend
+ * @subpackage  Falang
+ *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
+ */
 
-class translationRwf_valueformFilter extends translationFilter
+defined('_JEXEC') or die();
+
+/**
+ * redFORM Falang filter
+ *
+ * @package     Redform.Backend
+ * @subpackage  Falang
+ * @since       3.0
+ */
+class TranslationRwf_valueformFilter extends translationFilter
 {
+	/**
+	 * Constructor
+	 *
+	 * @param   object  $contentElement  content
+	 */
 	public function __construct($contentElement)
 	{
 		$this->filterNullValue = "-1";
@@ -38,7 +57,7 @@ class translationRwf_valueformFilter extends translationFilter
 
 		$db = JFactory::getDbo();
 
-		//since joomla 3.0 filter_value can be '' too not only filterNullValue
+		// Since joomla 3.0 filter_value can be '' too not only filterNullValue
 		if (isset($this->filter_value) && strlen($this->filter_value) > 0 && $this->filter_value != $this->filterNullValue)
 		{
 			$query->join('INNER', '#__rwf_fields AS rwff ON rwff.id = c.field_id');
@@ -48,9 +67,17 @@ class translationRwf_valueformFilter extends translationFilter
 		return $query;
 	}
 
-	function _createfilterHTML()
+	/**
+	 * Create html
+	 *
+	 * @return array|string
+	 */
+	protected function _createfilterHTML()
 	{
-		if (!$this->filterField) return "";
+		if (!$this->filterField)
+		{
+			return "";
+		}
 
 		$allCategoryOptions = array();
 
@@ -69,6 +96,7 @@ class translationRwf_valueformFilter extends translationFilter
 		{
 			$allOptions[-1] = JHTML::_('select.option', '-1', JText::_('JALL'));
 		}
+
 		$options = array_merge($allOptions, $options);
 
 		$field = array();
@@ -80,17 +108,18 @@ class translationRwf_valueformFilter extends translationFilter
 			$field["name"] = 'rwf_valueform_filter_value';
 			$field["type"] = 'rwf_valueform';
 			$field["options"] = $options;
-			$field["html"] = JHTML::_('select.genericlist', $options, 'rwf_form_valuefilter_value', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->filter_value);
+			$field["html"] = JHTML::_('select.genericlist', $options, 'rwf_form_valuefilter_value',
+				'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->filter_value
+			);
 		}
 		else
 		{
 			$field["title"] = 'Form';
-			$field["html"] = JHTML::_('select.genericlist', $options, 'rwf_valueform_filter_value', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->filter_value);
+			$field["html"] = JHTML::_('select.genericlist', $options, 'rwf_valueform_filter_value',
+				'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->filter_value
+			);
 		}
 
 		return $field;
-
 	}
-
-
 }

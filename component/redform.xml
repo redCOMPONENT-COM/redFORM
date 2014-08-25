@@ -39,9 +39,7 @@
 		<filename>controller.php</filename>
 		<filename>index.html</filename>
 		<filename>redform.php</filename>
-		<filename>redform.core.php</filename>
 		<filename>redform.defines.php</filename>
-		<folder>assets</folder>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
 		<folder>language</folder>
@@ -75,10 +73,8 @@
 			<filename>redform.php</filename>
 			<filename>config.xml</filename>
 			<folder>controllers</folder>
-			<folder>css</folder>
 			<folder>falang</folder>
 			<folder>helpers</folder>
-			<folder>js</folder>
 			<folder>language</folder>
 			<folder>layouts</folder>
 			<folder>models</folder>

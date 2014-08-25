@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     redform.Backend
+ * @package     Redform.Backend
  * @subpackage  Tables
  *
  * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.

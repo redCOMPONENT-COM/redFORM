@@ -22,6 +22,11 @@ class RdfRfieldHidden extends RdfRfieldTextfield
 
 	protected $hidden = true;
 
+	/**
+	 * Return input properties array
+	 *
+	 * @return array
+	 */
 	public function getInputProperties()
 	{
 		$properties = parent::getInputProperties();

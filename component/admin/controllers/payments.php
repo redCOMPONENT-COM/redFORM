@@ -18,6 +18,11 @@ defined('_JEXEC') or die;
  */
 class RedformControllerPayments extends RControllerAdmin
 {
+	/**
+	 * Back function
+	 *
+	 * @return void
+	 */
 	public function back()
 	{
 		// Redirect to the list screen

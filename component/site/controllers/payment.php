@@ -44,6 +44,7 @@ class RedformControllerPayment extends JControllerLegacy
 		{
 			$lang_v = "&lang=" . $app->input->get('lang');
 		}
+
 		$model = $this->getModel('payment');
 		$model->setSubmitKey($key);
 		$options = $model->getGatewayOptions();

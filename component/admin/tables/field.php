@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     redform.Backend
+ * @package     Redform.Backend
  * @subpackage  Tables
  *
  * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
@@ -10,11 +10,11 @@
 defined('_JEXEC') or die;
 
 /**
- * Currency table.
+ * Fields table.
  *
- * @package     Redshopb.Backend
+ * @package     Redform.Backend
  * @subpackage  Tables
- * @since       1.0
+ * @since       1.5
  */
 class RedformTableField extends RTable
 {
@@ -50,12 +50,10 @@ class RedformTableField extends RTable
 	 */
 	public $published = null;
 
-
 	/**
 	 * @var int id of user having checked out the item
 	 */
 	public $checked_out = null;
-
 
 	/**
 	 * @var string
