@@ -9,6 +9,8 @@
                   value="${basedir}/.travis,${basedir}/tests,${basedir}/media,${basedir}/redCORE,${basedir}/component/admin/views/*/tmpl/*,${basedir}/component/admin/layouts,${basedir}/plugins/,${basedir}/build,${basedir}/component/site/layouts"
                 />
 
+        <echo msg="phpcs verification, ignoring ${phpcs-ignore}"/>
+
         <exec executable="phpcs" passthru="true">
             <arg line="-p" />
             <arg line="-w" />
