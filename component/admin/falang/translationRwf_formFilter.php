@@ -16,7 +16,7 @@ defined('_JEXEC') or die();
  * @subpackage  Falang
  * @since       3.0
  */
-class translationRwf_formFilter extends translationFilter
+class TranslationRwf_formFilter extends translationFilter
 {
 	/**
 	 * Constructor

@@ -29,7 +29,7 @@ RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
  * @package  Redform.plugins
  * @since    2.5
  */
-class plgContentRedform extends JPlugin
+class PlgContentRedform extends JPlugin
 {
 	/**
 	 * specific redform plugin parameters

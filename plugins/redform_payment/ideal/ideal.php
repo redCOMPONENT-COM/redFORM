@@ -18,7 +18,7 @@ RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
  * @subpackage  payment
  * @since       2.5
  */
-class plgRedform_PaymentIdeal extends RdfPaymentPlugin
+class PlgRedform_PaymentIdeal extends RdfPaymentPlugin
 {
 	protected $gateway = 'ideal';
 }

@@ -18,7 +18,7 @@ jimport('joomla.plugin.plugin');
  * @package  Redform.plugins
  * @since    2.5
  */
-class plgRedform_captchaSimplemath extends JPlugin
+class PlgRedform_captchaSimplemath extends JPlugin
 {
 	/**
 	 * Constructor

@@ -23,18 +23,26 @@ require REPO_BASE . '/vendor/autoload.php';
 // Welcome message
 fwrite(STDOUT, "\033[32;1mInitializing PHP_CodeSniffer checks.\033[0m\n");
 
+// Files
+$files = array(
+	REPO_BASE . '/component',
+//	REPO_BASE . '/plugins'
+);
+
 // Ignored files
 $ignored = array(
 	REPO_BASE . '/component/admin/views/*/tmpl/*',
+	REPO_BASE . '/component/admin/falang',
 	REPO_BASE . '/component/admin/layouts/*',
 	REPO_BASE . '/component/admin/tables/*',
 	REPO_BASE . '/component/site/views/*/tmpl/*',
-	REPO_BASE . '/component/site/layouts/*'
+	REPO_BASE . '/component/site/layouts/*',
+	REPO_BASE . '/component/media'
 );
 
 // Build the options for the sniffer
 $options = array(
-	'files'        => array(REPO_BASE . '/component'),
+	'files'        => $files,
 	'standard'     => array(__DIR__ . '/coding-standards/Joomla'),
 	'ignored'      => $ignored,
 	'showProgress' => true
