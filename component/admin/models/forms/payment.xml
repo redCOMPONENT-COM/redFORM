@@ -45,7 +45,6 @@
                 type="radio"
                 label="COM_REDFORM_Paid"
                 description="COM_REDFORM_Paid"
-                class="btn-group"
                 default="0"
                 >
             <option value="0">JNo</option>

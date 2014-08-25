@@ -1,4 +1,4 @@
-@charset "UTF-8"; 
+@charset "UTF-8";
 
 /* Tooltips */
 .redformtip-tip {
@@ -8,7 +8,7 @@
    padding: 5px;
    max-width: 200px;
 }
- 
+
 .redformtip-title {
    padding: 0;
    margin: 0;
@@ -19,7 +19,7 @@
    padding-bottom: 5px;
    background: url(../images/selector-arrow.png) no-repeat;
 }
- 
+
 .redformtip-text {
    font-size: 100%;
    margin: 0;

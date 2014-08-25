@@ -37,7 +37,7 @@ class RedformControllerSubmitter extends RdfControllerForm
 		if (!$result)
 		{
 			$msg = JText::_('COM_REDEVENT_REGISTRATION_REDFORM_SAVE_FAILED');
-			$this->setError($msg.' - '.$rfcore->getError());
+			$this->setError($msg . ' - ' . $rfcore->getError());
 
 			// Redirect to the list screen
 			$this->setRedirect(

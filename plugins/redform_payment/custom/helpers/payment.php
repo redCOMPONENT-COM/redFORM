@@ -1,31 +1,20 @@
 <?php
 /**
- * @copyright Copyright (C) 2008-2013 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.plugins
+ * @subpackage  payment
  *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-/**
- */
-// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 /**
- * @package  RED.redform
- * @since    2.5
+ * Custom payment helper
+ *
+ * @package     Redform.plugins
+ * @subpackage  payment
+ * @since       2.5
  */
 class PaymentCustom extends  RdfPaymentHelper
 {
@@ -48,9 +37,13 @@ class PaymentCustom extends  RdfPaymentHelper
 	}
 
 	/**
-	 * sends the payment request associated to submit_key to the payment service
+	 * Display or redirect to the payment page for the gateway
 	 *
-	 * @param   string  $submit_key
+	 * @param   object  $request     payment request object
+	 * @param   string  $return_url  return url for redirection
+	 * @param   string  $cancel_url  cancel url for redirection
+	 *
+	 * @return true on success
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{

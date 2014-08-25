@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 ?>
-<div class="control-group">
+<div class="control-group priceline">
 	<div class="control-label"><?php echo JText::_("COM_REDFORM_Total_Price"); ?></div>
 	<div class="controls totalprice"></div>
 </div>

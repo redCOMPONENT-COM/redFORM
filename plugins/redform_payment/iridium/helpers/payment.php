@@ -1,44 +1,47 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.plugins
+ * @subpackage  payment
  *
+ * @copyright   Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-/**
- */
-// no direct access
 defined('_JEXEC') or die('Restricted access');
 
+/**
+ * Ideal payment helper
+ *
+ * @package     Redform.plugins
+ * @subpackage  payment
+ * @since       2.5
+ */
 class PaymentIridium extends RdfPaymentHelper
 {
 	protected $gateway = 'iridium';
 
 	/**
-	 * sends the payment request associated to submit_key to the payment service
-	 * @param string $submit_key
+	 * Display or redirect to the payment page for the gateway
+	 *
+	 * @param   object  $request     payment request object
+	 * @param   string  $return_url  return url for redirection
+	 * @param   string  $cancel_url  cancel url for redirection
+	 *
+	 * @return true on success
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
-		if (!$this->params->get('merchantid')) {
+		if (!$this->params->get('merchantid'))
+		{
 			echo JText::_('PLG_REDFORM_IRIDIUM_MISSING_MERCHANTID');
+
 			return false;
 		}
-		if (!$this->params->get('password')) {
+
+		if (!$this->params->get('password'))
+		{
 			echo JText::_('PLG_REDFORM_IRIDIUM_MISSING_PASSWORD');
+
 			return false;
 		}
 
@@ -52,7 +55,7 @@ class PaymentIridium extends RdfPaymentHelper
 
 		$req_params = array(
 			'MerchantID' => $this->params->get('merchantid'),
-			'Amount' => round($details->price*100),
+			'Amount' => round($details->price * 100),
 			'CurrencyCode' => RHelperCurrency::getIsoNumber($currency),
 			'EchoAVSCheckResult'  => 'true',
 			'EchoCV2CheckResult'  => 'true',
@@ -83,9 +86,9 @@ class PaymentIridium extends RdfPaymentHelper
 			'EchoCV2CheckResult'  => $req_params['EchoCV2CheckResult'],
 			'EchoThreeDSecureAuthenticationCheckResult'  => $req_params['EchoThreeDSecureAuthenticationCheckResult'],
 			'EchoCardType'  => $req_params['EchoCardType'],
-// 			'AVSOverridePolicy'  => '',
-// 			'CV2OverridePolicy'  => '',
-// 			'ThreeDSecureOverridePolicy'  => '',
+/* 			'AVSOverridePolicy'  => '',
+			'CV2OverridePolicy'  => '',
+			'ThreeDSecureOverridePolicy'  => '',*/
 			'OrderID'       => $req_params['OrderID'],
 			'TransactionType'     => $req_params['TransactionType'],
 			'TransactionDateTime' => $req_params['TransactionDateTime'],
@@ -112,15 +115,22 @@ class PaymentIridium extends RdfPaymentHelper
 			'CountryMandatory' => $req_params['CountryMandatory'],
 			'ResultDeliveryMethod'  => $req_params['ResultDeliveryMethod'],
 		);
+
 		$hashstring = array();
-		foreach ($hashdigest as $key => $val) {
-			$hashstring[] = $key.'='.$val;
+
+		foreach ($hashdigest as $key => $val)
+		{
+			$hashstring[] = $key . '=' . $val;
 		}
+
 		$hashstring = implode('&', $hashstring);
-		if ($this->params->get('hashmethod', 'sha1') == 'md5') {
+
+		if ($this->params->get('hashmethod', 'sha1') == 'md5')
+		{
 			$req_params['HashDigest'] = md5($hashstring);
 		}
-		else {
+		else
+		{
 			$req_params['HashDigest'] = sha1($hashstring);
 		}
 		?>
@@ -139,144 +149,163 @@ class PaymentIridium extends RdfPaymentHelper
 
 	/**
 	 * handle the recpetion of notification
+	 *
 	 * @return bool paid status
 	 */
-  public function notify()
-  {
-    $mainframe = &JFactory::getApplication();
-    $db = & JFactory::getDBO();
-    $paid = 0;
-
-    $submit_key = JRequest::getvar('key');
-    JRequest::setVar('submit_key', $submit_key);
-    RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_IRIDIUM_NOTIFICATION_RECEIVED', $submit_key));
-
-    // it was successull, get the details
-    $resp = array();
-    $resp[] = 'tid:'.JRequest::getVar('CrossReference');
-    $resp[] = 'orderid:'.JRequest::getVar('OrderID');
-    $resp[] = 'amount:'.JRequest::getVar('Amount');
-    $resp[] = 'cur:' . RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'));
-    $resp[] = 'date:'.JRequest::getVar('TransactionDateTime');
-    $resp = implode("\n  ", $resp);
-
-    // calculate hassdigest
-	$hash_vars = array(
-		'PreSharedKey'  => $this->params->get('presharedkey'),
-		'MerchantID'    => $_REQUEST['MerchantID'],
-		'Password'      => $this->params->get('password'),
-		'StatusCode'    => $_REQUEST['StatusCode'],
-		'Message'    => $_REQUEST['Message'],
-		'PreviousStatusCode'    => $_REQUEST['PreviousStatusCode'],
-		'PreviousMessage'    => $_REQUEST['PreviousMessage'],
-		'CrossReference'    => $_REQUEST['CrossReference'],
-		'AddressNumericCheckResult'    => $_REQUEST['AddressNumericCheckResult'],
-		'PostCodeCheckResult'    => $_REQUEST['PostCodeCheckResult'],
-		'CV2CheckResult'    => $_REQUEST['CV2CheckResult'],
-		'ThreeDSecureCheckResult'    => $_REQUEST['ThreeDSecureCheckResult'],
-		'CardType'    => $_REQUEST['CardType'],
-		'CardClass'    => $_REQUEST['CardClass'],
-		'CardIssuer'    => $_REQUEST['CardIssuer'],
-		'CardIssuerCountryCode'    => $_REQUEST['CardIssuerCountryCode'],
-		'Amount'        => $_REQUEST['Amount'],
-		'CurrencyCode'        => $_REQUEST['CurrencyCode'],
-		'OrderID'        => $_REQUEST['OrderID'],
-		'TransactionType'        => $_REQUEST['TransactionType'],
-		'TransactionDateTime'        => $_REQUEST['TransactionDateTime'],
-		'OrderDescription'        => $_REQUEST['OrderDescription'],
-		'CustomerName'        => $_REQUEST['CustomerName'],
-		'Address1'        => $_REQUEST['Address1'],
-		'Address2'        => $_REQUEST['Address2'],
-		'Address3'        => $_REQUEST['Address3'],
-		'Address4'        => $_REQUEST['Address4'],
-		'City'        => $_REQUEST['City'],
-		'State'        => $_REQUEST['State'],
-		'PostCode'        => $_REQUEST['PostCode'],
-		'CountryCode'        => $_REQUEST['CountryCode'],
-    );
-	if (isset($_REQUEST['EmailAddress'])) {
-		$hash_vars['EmailAddress'] = JRequest::getVar('EmailAddress');
-	}
-	if (isset($_REQUEST['PhoneNumber'])) {
-		$hash_vars['PhoneNumber'] = JRequest::getVar('PhoneNumber');
-	}
-	$hashstring = array();
-	foreach ($hash_vars as $key => $val) {
-		$hashstring[] = $key.'='.$val;
-	}
-	$hashstring = implode('&', $hashstring);
-	if ($this->params->get('hashmethod', 'sha1') == 'md5') {
-		$HashDigest = md5($hashstring);
-	}
-	else {
-		$HashDigest = sha1($hashstring);
-	}
-
-	try
+	public function notify()
 	{
-		if (strcmp($HashDigest, JRequest::getVar('HashDigest')))
+		$mainframe = JFactory::getApplication();
+		$db = JFactory::getDBO();
+		$paid = 0;
+
+		$submit_key = JRequest::getvar('key');
+		JRequest::setVar('submit_key', $submit_key);
+		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_IRIDIUM_NOTIFICATION_RECEIVED', $submit_key));
+
+		// It was successful, get the details
+		$resp = array();
+		$resp[] = 'tid:' . JRequest::getVar('CrossReference');
+		$resp[] = 'orderid:' . JRequest::getVar('OrderID');
+		$resp[] = 'amount:' . JRequest::getVar('Amount');
+		$resp[] = 'cur:' . RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'));
+		$resp[] = 'date:' . JRequest::getVar('TransactionDateTime');
+		$resp = implode("\n  ", $resp);
+
+		// Calculate hashdigest
+		$hash_vars = array(
+			'PreSharedKey' => $this->params->get('presharedkey'),
+			'MerchantID' => $_REQUEST['MerchantID'],
+			'Password' => $this->params->get('password'),
+			'StatusCode' => $_REQUEST['StatusCode'],
+			'Message' => $_REQUEST['Message'],
+			'PreviousStatusCode' => $_REQUEST['PreviousStatusCode'],
+			'PreviousMessage' => $_REQUEST['PreviousMessage'],
+			'CrossReference' => $_REQUEST['CrossReference'],
+			'AddressNumericCheckResult' => $_REQUEST['AddressNumericCheckResult'],
+			'PostCodeCheckResult' => $_REQUEST['PostCodeCheckResult'],
+			'CV2CheckResult' => $_REQUEST['CV2CheckResult'],
+			'ThreeDSecureCheckResult' => $_REQUEST['ThreeDSecureCheckResult'],
+			'CardType' => $_REQUEST['CardType'],
+			'CardClass' => $_REQUEST['CardClass'],
+			'CardIssuer' => $_REQUEST['CardIssuer'],
+			'CardIssuerCountryCode' => $_REQUEST['CardIssuerCountryCode'],
+			'Amount' => $_REQUEST['Amount'],
+			'CurrencyCode' => $_REQUEST['CurrencyCode'],
+			'OrderID' => $_REQUEST['OrderID'],
+			'TransactionType' => $_REQUEST['TransactionType'],
+			'TransactionDateTime' => $_REQUEST['TransactionDateTime'],
+			'OrderDescription' => $_REQUEST['OrderDescription'],
+			'CustomerName' => $_REQUEST['CustomerName'],
+			'Address1' => $_REQUEST['Address1'],
+			'Address2' => $_REQUEST['Address2'],
+			'Address3' => $_REQUEST['Address3'],
+			'Address4' => $_REQUEST['Address4'],
+			'City' => $_REQUEST['City'],
+			'State' => $_REQUEST['State'],
+			'PostCode' => $_REQUEST['PostCode'],
+			'CountryCode' => $_REQUEST['CountryCode'],
+		);
+
+		if (isset($_REQUEST['EmailAddress']))
 		{
-			$error = JText::sprintf('PLG_REDFORM_IRIDIUM_HASHDIGEST_MISMATCH', $submit_key);
-			throw new RedformPaymentException($error);
+			$hash_vars['EmailAddress'] = JRequest::getVar('EmailAddress');
 		}
 
-		// hash match, record result
-		if (!JRequest::getVar('StatusCode') == 0)
+		if (isset($_REQUEST['PhoneNumber']))
 		{
-			// payment was refused
-			switch (JRequest::getVar('StatusCode')) {
-				case 4:
-					$reason = JText::_('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_CARD_REFERRED');
-					break;
-				case 5:
-					$reason = JText::_('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_CARD_DECLINED');
-					break;
-				case 20:
-					$reason = JText::_('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_DUPLICATE_TRANSACTION');
-					break;
-				case 30:
-					$reason = JText::_('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_EXCEPTION');
-					break;
+			$hash_vars['PhoneNumber'] = JRequest::getVar('PhoneNumber');
+		}
 
-				default:
-					$reason = JText::sprintf('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_UNKOWN_CODE', JRequest::getVar('StatusCode'));
-					break;
+		$hashstring = array();
+
+		foreach ($hash_vars as $key => $val)
+		{
+			$hashstring[] = $key . '=' . $val;
+		}
+
+		$hashstring = implode('&', $hashstring);
+
+		if ($this->params->get('hashmethod', 'sha1') == 'md5')
+		{
+			$HashDigest = md5($hashstring);
+		}
+		else
+		{
+			$HashDigest = sha1($hashstring);
+		}
+
+		try
+		{
+			if (strcmp($HashDigest, JRequest::getVar('HashDigest')))
+			{
+				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_HASHDIGEST_MISMATCH', $submit_key);
+				throw new RedformPaymentException($error);
 			}
-	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_KEY_S_REASON_S_MESSAGE_M'
-			                       , $submit_key, $reason, JRequest::getVar('Message'));
-			throw new RedformPaymentException($error);
-	    }
 
-	    $details = $this->_getSubmission($submit_key);
+			// Hash match, record result
+			if (!JRequest::getVar('StatusCode') == 0)
+			{
+				// Payment was refused
+				switch (JRequest::getVar('StatusCode'))
+				{
+					case 4:
+						$reason = JText::_('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_CARD_REFERRED');
+						break;
+					case 5:
+						$reason = JText::_('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_CARD_DECLINED');
+						break;
+					case 20:
+						$reason = JText::_('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_DUPLICATE_TRANSACTION');
+						break;
+					case 30:
+						$reason = JText::_('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_EXCEPTION');
+						break;
 
-	    $currency = $details->currency;
-	    if (strcasecmp($currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode')))) {
-	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_CURRENCY_MISMATCH_EXPECTED_S_RECEIVED_S',
-			                        $submit_key, $currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode')));
-			throw new RedformPaymentException($error);
-	    }
+					default:
+						$reason = JText::sprintf('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_UNKOWN_CODE', JRequest::getVar('StatusCode'));
+						break;
+				}
 
-	    if (round($details->price*100) != JRequest::getVar('Amount')) {
-	    	$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PRICE_MISMATCH_EXPECTED_S_RECEIVED_S',
-			         $submit_key, $details->price*100, JRequest::getVar('Amount'));
-			throw new RedformPaymentException($error);
+				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_KEY_S_REASON_S_MESSAGE_M',
+					$submit_key, $reason, JRequest::getVar('Message')
+				);
+				throw new RedformPaymentException($error);
+			}
+
+			$details = $this->_getSubmission($submit_key);
+
+			$currency = $details->currency;
+
+			if (strcasecmp($currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'))))
+			{
+				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_CURRENCY_MISMATCH_EXPECTED_S_RECEIVED_S',
+					$submit_key, $currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'))
+				);
+				throw new RedformPaymentException($error);
+			}
+
+			if (round($details->price * 100) != JRequest::getVar('Amount'))
+			{
+				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PRICE_MISMATCH_EXPECTED_S_RECEIVED_S',
+					$submit_key, $details->price * 100, JRequest::getVar('Amount')
+				);
+				throw new RedformPaymentException($error);
+			}
+			else
+			{
+				$paid = 1;
+			}
+
+			$this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
 		}
-		else {
-			$paid = 1;
-	    }
-	    $this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
-	}
-	catch (RedformPaymentException $e) // just easier for debugging...
-	{
-		RdfHelperLog::simpleLog($e->getMessage());
-		$this->writeTransaction($submit_key, $e->getMessage().$resp, 'FAIL', 0);
-		return false;
-	}
-    return $paid;
-  }
+		catch (RedformPaymentException $e)
+		{
+			RdfHelperLog::simpleLog($e->getMessage());
+			$this->writeTransaction($submit_key, $e->getMessage() . $resp, 'FAIL', 0);
 
-//   public function getUrl($state, $submit_key)
-//   {
-//   	return JURI::root();
-//   }
+			return false;
+		}
+
+		return $paid;
+	}
 }
