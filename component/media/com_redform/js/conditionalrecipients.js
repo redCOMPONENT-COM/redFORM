@@ -11,10 +11,11 @@
 		if (formid) {
 			$.getJSON('index.php?option=com_redform&task=form.getFields&format=json&id=' + formid)
 				.done(function (data) {
-					data.each(function() {
-						var opt = '<option value="' + $(this).value + '">' + $(this).text + '</option>';
+					$.each(data, function(key, val) {
+						var opt = '<option value="' + val.value + '">' + val.text + '</option>';
 						$('#cr_field').append(opt);
 					});
+					$('#cr_field').trigger("chosen:updated");
 				});
 		}
 		else {
@@ -25,12 +26,13 @@
 			var span = $("#cr_params");
 			span.empty();
 			if ($(this).val() == 'between') {
-				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param" size="10">');
+				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param" size="10" placeholder="Min">');
 				span.append(' ');
-				span.append('<input type="text" name="cr_param2" id="cr_param2" class="cr_param" size="10">');
+				span.append('<input type="text" name="cr_param2" id="cr_param2" class="cr_param" size="10" placeholder="Max">');
 			}
 			if ($(this).val() == 'superior' || $(this).val() == 'inferior') {
-				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param" size="10">');
+				var placeholder = $(this).val() == 'superior' ? 'Min' : 'Max';
+				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param" size="10" placeholder="' + placeholder + '">');
 			}
 		}).change();
 
@@ -78,8 +80,8 @@
 				return false;
 			}
 
-			$('[id*="cond_recipients"]').val($('[id*="cond_recipients"]').val() + line + "\n");
-
+			var currentText = $('textarea#jform_cond_recipients').val();
+			$('textarea#jform_cond_recipients').val(currentText + line + "\n");
 		});
 	});
 
