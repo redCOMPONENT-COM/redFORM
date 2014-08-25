@@ -7,8 +7,6 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-require_once 'PHPUnit/Autoload.php';
-
 // Register library prefix
 JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
@@ -65,27 +63,5 @@ class RfieldFactoryTest extends JoomlaTestCase
 			$instance = RdfRfieldFactory::getFieldType($type);
 			$this->assertInstanceOf('RdfRfield' . ucfirst($type), $instance);
 		}
-	}
-
-	/**
-	 * Test getField
-	 *
-	 * @return void
-	 */
-	public function testGetField()
-	{
-		$id = '123';
-		$type = 'textfield';
-
-		$class = $this->getMockClass(
-			'RdfRfieldFactory',          /* name of class to mock     */
-			array('getType') /* list of methods to mock   */
-		);
-
-		$class::staticExpects($this->once())
-			->method('getType')
-			->will($this->returnValue('textfield'));
-
-		$this->assertInstanceOf('RdfRfield' . ucfirst($type), $class::getField($id));
 	}
 }

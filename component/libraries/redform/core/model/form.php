@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  *
  * @package     Redform.Libraries
  * @subpackage  Core.Model
- * @since 3.0
+ * @since       3.0
  */
 class RdfCoreModelForm extends RModel
 {
@@ -57,6 +57,11 @@ class RdfCoreModelForm extends RModel
 		$this->id = $id;
 	}
 
+	/**
+	 * Get form data
+	 *
+	 * @return mixed|object
+	 */
 	public function getForm()
 	{
 		if (!$this->form)
@@ -156,6 +161,13 @@ class RdfCoreModelForm extends RModel
 		return true;
 	}
 
+	/**
+	 * Get submission associated to data saved to session
+	 *
+	 * @param   object  $fromSession  session object
+	 *
+	 * @return RdfCoreFormSubmission
+	 */
 	public function getSubmissionFromSession($fromSession)
 	{
 		$res = new RdfCoreFormSubmission;
@@ -167,7 +179,7 @@ class RdfCoreModelForm extends RModel
 
 			foreach ($fields as $field)
 			{
-				$clone = clone($field);
+				$clone = clone $field;
 
 				if (isset($single->{'field_' . $field->field_id}))
 				{

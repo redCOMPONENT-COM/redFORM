@@ -46,7 +46,6 @@ class RedformModelSubmitters extends RModelList
 	 */
 	public function __construct($config = array())
 	{
-
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
@@ -95,9 +94,9 @@ class RedformModelSubmitters extends RModelList
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
-		$id	.= ':'.$this->getState('filter.form_id');
-		$id	.= ':'.$this->getState('filter.from');
-		$id	.= ':'.$this->getState('filter.to');
+		$id .= ':' . $this->getState('filter.form_id');
+		$id .= ':' . $this->getState('filter.from');
+		$id .= ':' . $this->getState('filter.to');
 
 		return parent::getStoreId($id);
 	}

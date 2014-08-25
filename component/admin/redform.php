@@ -26,10 +26,7 @@ if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore
 // Bootstraps redCORE
 RBootstrap::bootstrap();
 
-// log helper class
-require_once (JPATH_COMPONENT_ADMINISTRATOR .'/helpers/helper.php');
-
-require_once (JPATH_COMPONENT_SITE .'/redform.defines.php');
+require_once JPATH_COMPONENT_SITE . '/redform.defines.php';
 
 // Redmember integration
 if (file_exists(JPATH_ROOT . '/components/com_redmember'))

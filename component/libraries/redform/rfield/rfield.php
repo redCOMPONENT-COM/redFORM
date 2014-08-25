@@ -25,7 +25,7 @@ abstract class RdfRfield extends JObject
 	protected $type;
 
 	/**
-	 * Field id
+	 * Form field id
 	 * @var int
 	 */
 	protected $id = 0;
@@ -108,6 +108,9 @@ abstract class RdfRfield extends JObject
 			case 'id':
 				return $this->getId();
 
+			case 'fieldId':
+				return $this->load()->field_id;
+
 			case 'fieldtype':
 				return $this->type;
 
@@ -139,8 +142,11 @@ abstract class RdfRfield extends JObject
 
 			default:
 				$data = $this->load();
+
 				if (isset($data->{$name}))
-				return $data->{$name};
+				{
+					return $data->{$name};
+				}
 		}
 
 		$trace = debug_backtrace();
@@ -148,7 +154,9 @@ abstract class RdfRfield extends JObject
 			'Undefined property via __get(): ' . $name .
 			' in ' . $trace[0]['file'] .
 			' on line ' . $trace[0]['line'],
-			500);
+			500
+		);
+
 		return null;
 	}
 

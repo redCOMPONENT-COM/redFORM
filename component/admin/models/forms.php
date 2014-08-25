@@ -121,24 +121,4 @@ class RedformModelForms extends RModelList
 
 		return $query;
 	}
-
-	/**
-	 * Adds a table if it doesn't exist yet
-	 */
-	private function AddFormTable($formid)
-	{
-		$db = JFactory::getDBO();
-		/* construct form name */
-		$q = "SHOW TABLES LIKE ".$db->Quote($db->getPrefix().'rwf_forms_'.$formid);
-		$db->setQuery($q);
-		$result = $db->loadResultArray();
-		if (count($result) == 0) {
-			/* Table doesn't exist, need to create it */
-			$q = "CREATE TABLE ".$db->nameQuote('#__rwf_forms_'.$formid)." (";
-			$q .= $db->nameQuote('id')." INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ";
-			$q .= ") COMMENT = ".$db->Quote('redFORMS Form '.$formid);
-			$db->setQuery($q);
-			if (!$db->query()) JError::raiseWarning('error', $db->getErrorMsg());
-		}
-	}
 }

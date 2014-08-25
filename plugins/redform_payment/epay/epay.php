@@ -25,6 +25,13 @@ defined('_JEXEC') or die('Restricted access');
 // Register library prefix
 RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
+/**
+ * Epay payment plugin
+ *
+ * @package     Redform.plugins
+ * @subpackage  payment
+ * @since       2.5
+ */
 class plgRedform_PaymentEpay extends RdfPaymentPlugin
 {
 	protected $gateway = 'epay';

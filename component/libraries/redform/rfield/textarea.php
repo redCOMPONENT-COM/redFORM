@@ -38,8 +38,8 @@ class RdfRfieldTextarea extends RdfRfieldTextfield
 			$properties['class'] = $class;
 		}
 
-		$properties['cols'] =  $this->getParam('cols', 25);
-		$properties['rows'] =  $this->getParam('rows', 6);
+		$properties['cols'] = $this->getParam('cols', 25);
+		$properties['rows'] = $this->getParam('rows', 6);
 
 		if ($this->load()->readonly && !$app->isAdmin())
 		{

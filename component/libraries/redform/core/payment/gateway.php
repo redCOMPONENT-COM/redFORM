@@ -16,8 +16,8 @@ defined('_JEXEC') or die;
  * @subpackage  Helper
  * @since       2.5
  */
-class RdfCorePaymentGateway {
-
+class RdfCorePaymentGateway
+{
 	protected $gateways;
 
 	protected $config;

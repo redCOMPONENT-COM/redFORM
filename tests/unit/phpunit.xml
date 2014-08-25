@@ -1,13 +1,13 @@
 <phpunit
-	bootstrap="bootstrap.php"
-	colors="false"
-	stopOnFailure="false"
-	testdox="true"
-	verbose="true"
-	backupStaticAttributes="false"
-	backupGlobals="false">
-	<testsuite name="AllTests">
-		<directory>suite</directory>
-	</testsuite>
+    bootstrap="/opt/www/jl25_test/redunittests/unit/bootstrap.php"
+    colors="false"
+    stopOnFailure="false"
+    testdox="true"
+    verbose="true"
+    backupStaticAttributes="false"
+    backupGlobals="false">
+    <testsuite name="Redform">
+        <directory>/opt/www/jl25_test/redunittests/unit/suite/redform</directory>
+    </testsuite>
 
 </phpunit>

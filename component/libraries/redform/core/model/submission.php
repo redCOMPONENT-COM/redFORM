@@ -45,10 +45,14 @@ class RdfCoreModelSubmission extends RModel
 	 * Set submit key
 	 *
 	 * @param   string  $key  submit key to set
+	 *
+	 * @return object
 	 */
 	public function setSubmitKey($key)
 	{
 		$this->submitKey = $key;
+
+		return $this;
 	}
 
 	/**

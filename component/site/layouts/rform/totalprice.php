@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 ?>
-<div class="fieldline">
+<div class="fieldline priceline">
 	<div class="label"><?php echo JText::_("COM_REDFORM_Total_Price"); ?></div>
 	<div class="field totalprice"></div>
 </div>

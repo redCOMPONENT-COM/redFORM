@@ -1,0 +1,12 @@
+{
+	"name"       : "redCOMPONENT-COM/redFORM2.5",
+	"description": "redFORM extension",
+	"license"    : "GPL-2.0+",
+	"require"    : {
+		"php": ">=5.3.10"
+	},
+	"require-dev": {
+		"squizlabs/php_codesniffer": "1.*",
+		"phpmd/phpmd": "*"
+	}
+}

@@ -31,7 +31,7 @@ class RdfHelperTagsreplace
 	/**
 	 * Contructor
 	 *
-	 * @param   object     $formdata  form data
+	 * @param   object      $formdata  form data
 	 * @param   RdfAnswers  $answers   answers to form
 	 */
 	public function __construct($formdata, RdfAnswers $answers)

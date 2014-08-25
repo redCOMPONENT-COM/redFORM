@@ -7,8 +7,6 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-require_once 'PHPUnit/Autoload.php';
-
 // Register library prefix
 JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 

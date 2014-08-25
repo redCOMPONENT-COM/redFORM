@@ -47,7 +47,7 @@ class RdfCoreSubmission extends JObject
 	 *
 	 * @return void
 	 */
-	function setSubmitKey($submit_key)
+	public function setSubmitKey($submit_key)
 	{
 		$this->submitKey = $submit_key;
 	}
@@ -189,7 +189,7 @@ class RdfCoreSubmission extends JObject
 					/* Get the answers */
 					try
 					{
-						$clone = clone($field);
+						$clone = clone $field;
 						$answers->addPostAnswer($clone, $postvalues['field' . $clone->id]);
 					}
 					catch (Exception $e)
@@ -650,7 +650,7 @@ class RdfCoreSubmission extends JObject
 	 * Send notification to submitter
 	 *
 	 * @param   RdfAnswers  $answers  answers
-	 * @param   object     $form     form
+	 * @param   object      $form     form
 	 *
 	 * @return bool
 	 */
@@ -761,7 +761,7 @@ class RdfCoreSubmission extends JObject
 	/**
 	 * Replace tags
 	 *
-	 * @param   string     $text     text
+	 * @param   string      $text     text
 	 * @param   RdfAnswers  $answers  answers to use for substitution
 	 *
 	 * @return mixed

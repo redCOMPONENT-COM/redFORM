@@ -1,64 +1,81 @@
 <?php
 /**
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package    Redform.Site
  *
+ * @copyright  Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license    GNU General Public License version 2 or later, see LICENSE.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die;
 
-jimport( 'joomla.application.component.view');
+jimport('joomla.application.component.view');
+
 
 /**
+ * Front-end view for payment
+ *
+ * @package  Redform.Site
+ * @since    1.5
  */
-class RedformViewPayment extends JViewLegacy {
-
-	function display($tpl = null)
+class RedformViewPayment extends JViewLegacy
+{
+	/**
+	 * Execute and display a template script.
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  mixed  A string if successful, otherwise a JError object.
+	 */
+	public function display($tpl = null)
 	{
-		if ($this->getLayout() == 'select') {
+		if ($this->getLayout() == 'select')
+		{
 			return $this->_displaySelect($tpl);
 		}
-		if ($this->getLayout() == 'final') {
+
+		if ($this->getLayout() == 'final')
+		{
 			return $this->_displayFinal($tpl);
 		}
+
 		parent::display($tpl);
 	}
 
-	function _displaySelect($tpl = null)
+	/**
+	 * Display select layout
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  mixed  A string if successful, otherwise a JError object.
+	 */
+	private function _displaySelect($tpl = null)
 	{
-		$uri 		    = &JFactory::getURI();
-		$document   = &JFactory::getDocument();
+		$uri = JFactory::getURI();
+		$document = JFactory::getDocument();
 
 		$uri->delVar('task');
 
 		$submit_key = JRequest::getVar('key',    '');
 		$source     = JRequest::getVar('source', '');
-		if (empty($submit_key)) {
+
+		if (empty($submit_key))
+		{
 			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_KEY');
+
 			return;
 		}
 
-		$document->setTitle($document->getTitle().' - '.JText::_('COM_REDFORM'));
+		$document->setTitle($document->getTitle() . ' - ' . JText::_('COM_REDFORM'));
 
 		$gwoptions = $this->get('GatewayOptions');
-		if (!count($gwoptions)) {
+
+		if (!count($gwoptions))
+		{
 			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_GATEWAY');
+
 			return;
 		}
+
 		$lists['gwselect'] = JHTML::_('select.genericlist', $gwoptions, 'gw');
 
 		$price    = $this->get('Price');
@@ -85,13 +102,21 @@ class RedformViewPayment extends JViewLegacy {
 		parent::display($tpl);
 	}
 
-	function _displayFinal($tpl = null)
+	/**
+	 * Display final layout
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  mixed  A string if successful, otherwise a JError object.
+	 */
+	private function _displayFinal($tpl = null)
 	{
-		$document   = &JFactory::getDocument();
-		$document->setTitle($document->getTitle().' - '.JText::_('COM_REDFORM'));
+		$document   = JFactory::getDocument();
+		$document->setTitle($document->getTitle() . ' - ' . JText::_('COM_REDFORM'));
 
 		$form = $this->get('form');
 		$text = '';
+
 		switch (JRequest::getVar('state'))
 		{
 			case 'accepted':
