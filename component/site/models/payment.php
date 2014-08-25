@@ -131,7 +131,7 @@ class RedFormModelPayment extends JModelLegacy
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('public')
+		$query->select('price')
 			->from('#__rwf_submitters')
 			->where('submit_key = ' . $db->quote($this->submitKey));
 

@@ -65,13 +65,6 @@ class PlgContentRedform extends JPlugin
 	 */
 	protected function _process(&$row, $params = array())
 	{
-		if (!file_exists(JPATH_SITE . '/components/com_redform/redform.core.php'))
-		{
-			JError::raiseWarning(0, JText::_('COM_REDFORM_COMPONENT_REQUIRED_FOR_REDFORM_PLUGIN'));
-
-			return false;
-		}
-
 		$this->rfcore = new RdfCore;
 
 		JPlugin::loadLanguage('plg_content_redform', JPATH_ADMINISTRATOR);
