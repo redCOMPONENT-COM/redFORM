@@ -8,7 +8,7 @@
 	<copyright>(c) 2008 - 2011 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
 	<version>##VERSION##</version>
-	<redcore version="1.0" />
+	<redcore version="1.2.0" />
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
 	<!-- Runs on install/uninstall/update -->
@@ -67,11 +67,10 @@
 		<!-- Core files admin -->
 		<files folder="admin">
 			<filename>access.xml</filename>
-			<filename>changelog.txt</filename>
-			<filename>controller.php</filename>
-			<filename>LICENSE.php</filename>
-			<filename>redform.php</filename>
-			<filename>config.xml</filename>
+            <filename>config.xml</filename>
+            <filename>controller.php</filename>
+            <filename>LICENSE</filename>
+            <filename>redform.php</filename>
 			<folder>controllers</folder>
 			<folder>falang</folder>
 			<folder>helpers</folder>
