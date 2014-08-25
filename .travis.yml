@@ -1,0 +1,10 @@
+language: php
+php:
+- 5.4
+script:
+- php .travis/phppec.php component/ plugins/ # Parse error checker
+- php .travis/phpcs.php # Code Sniffer Checker
+- php .travis/phpmd.php # Mess detector Checker
+notifications:
+  slack:
+    secure: YBFWndJiQlZNauhSmmk6qpXwukFta4aKyko9wKiPRszUisUY+gWo+Lot0oe/nss9ZaK3NHT1c2yvpcsPy/aFYGJR10/sSHq+nqon6FMQMHGFPrug26dtgWOIu0KUcByQdU5w3kqjhjXMj9rlZR+WegnyulScYbufAOp/CD2fqCU=
