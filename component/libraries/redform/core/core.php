@@ -127,7 +127,11 @@ class RdfCore extends JObject
 			$this->submitKey = $submit_key;
 
 			$sids = $this->getSids($submit_key);
-			$this->setSids($sids);
+
+			if ($sids)
+			{
+				$this->setSids($sids);
+			}
 
 			if ($resetCache)
 			{

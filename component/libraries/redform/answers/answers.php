@@ -364,6 +364,16 @@ class RdfAnswers
 	}
 
 	/**
+	 * Get fields
+	 *
+	 * @return void
+	 */
+	public function getFields()
+	{
+		return $this->fields;
+	}
+
+	/**
 	 * Save submission
 	 *
 	 * @return int submitter_id
