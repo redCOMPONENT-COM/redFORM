@@ -90,7 +90,6 @@
         </copy>
 
 		<!-- Create the package -->
-		<tar basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
         <zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.zip" includeemptydirs="true" />
 
 		<!-- admin modules
@@ -128,6 +127,12 @@
 			</fileset>
 		</foreach>
 
+        <!-- global zip -->
+        <zip destfile="${dirs.release}/redform-all-unzip-first-${version}.zip">
+            <fileset dir="${dirs.release}">
+            </fileset>
+        </zip>
+
 		<delete dir="${dirs.tmp}" quiet="yes" includeemptydirs="false" />
 	</target>
 
@@ -157,7 +162,6 @@
 		</copy>
 		<mkdir dir="${dirs.release}/${myp}" />
 		<!-- Create the package -->
-		<tar basedir="${dirs.tmp}/${dirname}" destfile="${dirs.release}/${myp}/${dirname}-${version}.tar.gz" includeemptydirs="true" compression="gzip" />
 		<zip basedir="${dirs.tmp}/${dirname}" destfile="${dirs.release}/${myp}/${dirname}-${version}.zip" includeemptydirs="true" />
 	</target>
 
