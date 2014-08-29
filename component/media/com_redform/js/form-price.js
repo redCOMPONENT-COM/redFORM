@@ -9,6 +9,8 @@ var redformPrice;
 
 	redformPrice = function(formbox) {
 
+		var form = formbox.parents('form').first();
+
 		function updatePrice() {
 			var price = calcPrice();
 			displayPrice(price);
@@ -78,7 +80,7 @@ var redformPrice;
 			// set the price
 			var text = '';
 
-			var currencyField = formbox.parents('form').find('[name=currency]');
+			var currencyField = form.find('input[name="currency"]');
 
 			if (currencyField && currencyField.val()) {
 				text = currencyField.val();
@@ -91,16 +93,22 @@ var redformPrice;
 			line.show();
 		}
 
-		formbox.find(':input').change(function() {
-			updatePrice();
-		})
+		return {
+			init : function() {
+				formbox.find(':input').change(function() {
+					updatePrice();
+				})
+			},
 
-		updatePrice();
+			updatePrice : updatePrice
+		}
 	};
 
 	$(function(){
 		$("div.redform-form .formbox").each(function() {
-			redformPrice($(this));
+			var updater = redformPrice($(this));
+			updater.init();
+			updater.updatePrice();
 		});
 	});
 })(jQuery);
