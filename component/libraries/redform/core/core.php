@@ -372,20 +372,6 @@ class RdfCore extends JObject
 				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
 			}
 
-			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price > 0)
-			{
-				$html .= '<div class="eventprice" price="' . $options['eventdetails']->course_price . '">'
-					. JText::_('COM_REDFORM_Registration_price') . ': ' . $currency . ' ' . $options['eventdetails']->course_price
-					. '</div>';
-			}
-
-			if ($form->activatepayment && isset($options['booking']) && $options['booking']->course_price > 0)
-			{
-				$html .= '<div class="bookingprice" price="' . $options['booking']->course_price . '">'
-					. JText::_('COM_REDFORM_Registration_price') . ': ' . $currency . ' ' . $options['booking']->course_price
-					. '</div>';
-			}
-
 			$html .= RdfHelperLayout::render(
 				'rform.fields',
 				array(
