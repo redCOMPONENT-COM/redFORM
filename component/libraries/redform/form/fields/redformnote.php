@@ -1,21 +1,20 @@
 <?php
 /**
- * @package     Joomla.Platform
- * @subpackage  Form
+ * @package     Redform.Library
+ * @subpackage  Fields
  *
- * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE
+ * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
 defined('JPATH_PLATFORM') or die;
 
 /**
- * Form Field class for the Joomla Platform.
- * Provides spacer markup to be used in form layouts.
+ * Redform note field
  *
- * @package     Joomla.Platform
- * @subpackage  Form
- * @since       11.1
+ * @package     Redform.Library
+ * @subpackage  Fields
+ * @since       2.5
  */
 class JFormFieldRedformNote extends JFormField
 {

@@ -40,7 +40,6 @@ class RedformModelPayment extends RModelAdmin
 		return $item;
 	}
 
-
 	/**
 	 * Method to auto-populate the model state.
 	 *

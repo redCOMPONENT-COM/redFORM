@@ -1,33 +1,20 @@
 <?php
 /**
- * @version 1.0 $Id: view.html.php 165 2009-06-01 16:37:38Z julien $
- * @copyright Copyright (C) 2008 redCOMPONENT.com. All rights reserved.
- * @license GNU/GPL, see LICENSE.php
- * redFORM can be downloaded from www.redcomponent.com
- * redFORM is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
-
- * redFORM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with redFORM; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * @package     Redform.Backend
+ * @subpackage  Views
+ *
+ * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-defined( '_JEXEC' ) or die( 'Restricted access' );
-
-jimport( 'joomla.application.component.view');
+defined('_JEXEC') or die;
 
 /**
- * View class for the redevent log
+ * Logs View
  *
- * @package Joomla
- * @subpackage EventList
- * @since 0.9
+ * @package     Redform.Backend
+ * @subpackage  Views
+ * @since       1.0
  */
 class RedformViewLogs extends RdfView
 {
@@ -41,6 +28,13 @@ class RedformViewLogs extends RdfView
 	 */
 	public $stoolsOptions = array();
 
+	/**
+	 * display
+	 *
+	 * @param   string  $tpl  template
+	 *
+	 * @return mixed|void
+	 */
 	public function display($tpl = null)
 	{
 		// Get data from the model
@@ -80,13 +74,6 @@ class RedformViewLogs extends RdfView
 		{
 			$options = RToolbarBuilder::createStandardButton('clearlog', 'COM_REDFORM_LOG_LIST_CLEAR_LOG', 'btn-danger', 'icon-remove-sign', false);
 			$firstGroup->addButton($options);
-		}
-
-		// Options
-		if ($canDoCore->get('core.manage'))
-		{
-			$options = RToolbarBuilder::createOptionsButton('com_redform');
-			$secondGroup->addButton($options);
 		}
 
 		$toolbar = new RToolbar;

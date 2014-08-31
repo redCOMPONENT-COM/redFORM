@@ -7,6 +7,13 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+/**
+ * Class RdfHelperLayout
+ *
+ * @package     Redform.Libraries
+ * @subpackage  Helper
+ * @since       3.0
+ */
 class RdfHelperLayout extends RLayoutHelper
 {
 	/**
@@ -30,7 +37,8 @@ class RdfHelperLayout extends RLayoutHelper
 
 		if (!isset($options['suffixes']))
 		{
-			if (JComponentHelper::getParams('com_redform')->get('form_layout') == 'bootstrap' || JFactory::getApplication()->isAdmin())
+			if (JComponentHelper::getParams('com_redform')->get('form_layout') == 'bootstrap'
+				|| (JFactory::getApplication()->isAdmin() && JFactory::getApplication()->input->get('options') == 'com_redform'))
 			{
 				$options['suffixes'] = array('bootstrap');
 			}

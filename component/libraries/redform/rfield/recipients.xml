@@ -7,7 +7,6 @@
             <field name="size" type="text" default="5" label="COM_REDFORM_FIELD_MULTISELECT_PARAMS_SIZE"
                    description="COM_REDFORM_FIELD_MULTISELECT_PARAMS_SIZE_DESC"/>
             <field name="multiple" type="radio" default="1" label="COM_REDFORM_FIELD_RECIPIENTS_PARAMS_MULTIPLE"
-                   class="btn-group"
                    description="COM_REDFORM_FIELD_RECIPIENTS_PARAMS_MULTIPLE_DESC">
                 <option value="0">No</option>
                 <option value="1">Yes</option>

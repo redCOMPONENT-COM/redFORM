@@ -18,6 +18,13 @@ defined('_JEXEC') or die;
  */
 class RdfHelperRoute
 {
+	/**
+	 * Route to payment
+	 *
+	 * @param   string  $submit_key  submit keys
+	 *
+	 * @return string
+	 */
 	public static function getPaymentRoute($submit_key)
 	{
 		$parts = array( "option" => "com_redform",
@@ -29,6 +36,14 @@ class RdfHelperRoute
 		return self::buildUrl($parts);
 	}
 
+	/**
+	 * Route to payment process
+	 *
+	 * @param   string  $submit_key  submit keys
+	 * @param   string  $gateway     gateway name
+	 *
+	 * @return string
+	 */
 	public static function getPaymentProcessRoute($submit_key, $gateway)
 	{
 		$parts = array( "option" => "com_redform",

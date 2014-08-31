@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Redcore
+ * @package     Redform.Library
  * @subpackage  Fields
  *
  * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
@@ -12,9 +12,9 @@ defined('JPATH_REDCORE') or die;
 JFormHelper::loadFieldClass('textarea');
 
 /**
- * Text field.
+ * conditional recipients field.
  *
- * @package     Redcore
+ * @package     Redform.Library
  * @subpackage  Fields
  * @since       1.0
  */
@@ -50,11 +50,11 @@ class JFormFieldRedformconditionalrecipients extends JFormFieldTextarea
 		);
 
 		$this->fields['email'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL'),
-			'field' => '<input type="text" name="cr_email" id="cr_email"/>'
+			'field' => '<input type="text" name="cr_email" id="cr_email" placeholder="' . JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL') . '"/>'
 		);
 
 		$this->fields['name'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL'),
-			'field' => '<input type="text" name="cr_name" id="cr_name"/>'
+			'field' => '<input type="text" name="cr_name" id="cr_name" placeholder="' . JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL') . '"/>'
 		);
 
 		$this->fields['field'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_LABEL'),

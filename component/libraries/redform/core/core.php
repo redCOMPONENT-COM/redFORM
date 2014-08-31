@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.mail.helper');
 
-require_once(JPATH_SITE . '/components/com_redform/redform.defines.php');
+require_once JPATH_SITE . '/components/com_redform/redform.defines.php';
 
 /**
  * redFORM API Core
@@ -22,17 +22,15 @@ require_once(JPATH_SITE . '/components/com_redform/redform.defines.php');
  */
 class RdfCore extends JObject
 {
-	private $_form_id;
+	private $formId;
 
-	private $_sids;
+	private $sids;
 
-	private $_submit_key;
+	private $submitKey;
 
-	private $_answers;
+	private $answers;
 
-	private $_sk_answers;
-
-	private $_fields;
+	private $fields;
 
 	/**
 	 * constructor
@@ -81,17 +79,18 @@ class RdfCore extends JObject
 	 */
 	public function setFormId($id)
 	{
-		if ($this->_form_id !== $id)
+		if ($this->formId !== $id)
 		{
-			$this->_form_id = intval($id);
-			$this->_fields = null;
+			$this->formId = intval($id);
+			$this->fields = null;
 		}
 	}
 
 	/**
 	 * Set associated sids
 	 *
-	 * @param   array  $ids  submission ids
+	 * @param   array  $ids         submission ids
+	 * @param   bool   $resetCache  reset cached data
 	 *
 	 * @return void
 	 */
@@ -99,9 +98,9 @@ class RdfCore extends JObject
 	{
 		JArrayHelper::toInteger($ids);
 
-		if ($ids !== $this->_sids)
+		if ($ids !== $this->sids)
 		{
-			$this->_sids = $ids;
+			$this->sids = $ids;
 
 			$submitKey = $this->getSidSubmitKey($ids[0]);
 			$this->setSubmitKey($submitKey);
@@ -117,17 +116,22 @@ class RdfCore extends JObject
 	 * Set submit key
 	 *
 	 * @param   string  $submit_key  submit key
+	 * @param   bool    $resetCache  reset cached data
 	 *
 	 * @return void
 	 */
 	public function setSubmitKey($submit_key, $resetCache = true)
 	{
-		if ($this->_submit_key !== $submit_key)
+		if ($this->submitKey !== $submit_key)
 		{
-			$this->_submit_key = $submit_key;
+			$this->submitKey = $submit_key;
 
 			$sids = $this->getSids($submit_key);
-			$this->setSids($sids);
+
+			if ($sids)
+			{
+				$this->setSids($sids);
+			}
 
 			if ($resetCache)
 			{
@@ -143,8 +147,7 @@ class RdfCore extends JObject
 	 */
 	protected function resetCache()
 	{
-		$this->_sk_answers = null;
-		$this->_answers = null;
+		$this->answers = null;
 	}
 
 	/**
@@ -176,18 +179,18 @@ class RdfCore extends JObject
 	 *
 	 * @return string html
 	 */
-	function displayForm($form_id, $reference = null, $multiple = 1, $options = array())
+	public function displayForm($form_id, $reference = null, $multiple = 1, $options = array())
 	{
 		$this->setFormId($form_id);
 		$uri = JFactory::getURI();
 
 		$this->setReference($reference);
-		$submit_key = $this->_submit_key;
+		$submit_key = $this->submitKey;
 
 		// Was this form already submitted before (and there was an error for example, or editing)
-		if ($this->_submit_key)
+		if ($this->submitKey)
 		{
-			$model = $this->getSubmissionModel($this->_submit_key);
+			$model = $this->getSubmissionModel($this->submitKey);
 
 			if (is_array($reference))
 			{
@@ -261,12 +264,12 @@ class RdfCore extends JObject
 		$fields = $model->getFormFields();
 
 		$this->setReference($reference);
-		$submit_key = $this->_submit_key;
+		$submit_key = $this->submitKey;
 
 		// Was this form already submitted before (and there was an error for example, or editing)
-		if ($this->_submit_key)
+		if ($this->submitKey)
 		{
-			$modelSubmission = $this->getSubmissionModel($this->_submit_key);
+			$modelSubmission = $this->getSubmissionModel($this->submitKey);
 
 			if (is_array($reference))
 			{
@@ -290,8 +293,8 @@ class RdfCore extends JObject
 		}
 
 		// Css
-		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/tooltip.css');
-		$document->addStyleSheet(JURI::base() . 'components/com_redform/assets/css/redform.css');
+		$document->addStyleSheet(JURI::base() . 'media/com_redform/css/tooltip.css');
+		$document->addStyleSheet(JURI::base() . 'media/com_redform/css/redform.css');
 
 		if (isset($options['currency']) && $options['currency'])
 		{
@@ -319,7 +322,7 @@ class RdfCore extends JObject
 			$this->getRedmemberfields($user);
 		}
 
-		$html = '<div class="redform-form' . $form->classname . '">';
+		$html = '<div class="redform-form ' . $form->classname . '">';
 
 		if ($form->showname)
 		{
@@ -366,25 +369,11 @@ class RdfCore extends JObject
 			}
 
 			/* Make a collapsable box */
-			$html .= '<div id="formfield' . $formIndex . '" class="formbox" style="display: ' . ($formIndex == 1 ? 'block' : 'none') . ';">';
+			$html .= '<div class="formbox">';
 
 			if ($multi > 1)
 			{
 				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
-			}
-
-			if ($form->activatepayment && isset($options['eventdetails']) && $options['eventdetails']->course_price > 0)
-			{
-				$html .= '<div class="eventprice" price="' . $options['eventdetails']->course_price . '">'
-					. JText::_('COM_REDFORM_Registration_price') . ': ' . $currency . ' ' . $options['eventdetails']->course_price
-					. '</div>';
-			}
-
-			if ($form->activatepayment && isset($options['booking']) && $options['booking']->course_price > 0)
-			{
-				$html .= '<div class="bookingprice" price="' . $options['booking']->course_price . '">'
-					. JText::_('COM_REDFORM_Registration_price') . ': ' . $currency . ' ' . $options['booking']->course_price
-					. '</div>';
 			}
 
 			$html .= RdfHelperLayout::render(
@@ -491,7 +480,8 @@ class RdfCore extends JObject
 	/**
 	 * saves submitted form data
 	 *
-	 * @param   string  $integration_key  key, unique key for the 3rd party (allows to prevent deletions from within redform itself for 3rd party, and to find out which submission belongs to which 3rd party...)
+	 * @param   string  $integration_key  unique key for the 3rd party (allows to prevent deletions from within redform itself for 3rd party,
+	 *                                    and to find out which submission belongs to which 3rd party...)
 	 * @param   array   $options          options for registration
 	 * @param   array   $data             data if empty, the $_POST variable is used
 	 *
@@ -499,7 +489,7 @@ class RdfCore extends JObject
 	 */
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
-		$model = new RdfCoreSubmission($this->_form_id);
+		$model = new RdfCoreSubmission($this->formId);
 
 		if (!$result = $model->apisaveform($integration_key, $options, $data))
 		{
@@ -552,9 +542,9 @@ class RdfCore extends JObject
 	{
 		$this->setReference($reference);
 
-		if ($this->_submit_key)
+		if ($this->submitKey)
 		{
-			$model = $this->getSubmissionModel($this->_submit_key);
+			$model = $this->getSubmissionModel($this->submitKey);
 
 			if (is_array($reference))
 			{
@@ -601,13 +591,13 @@ class RdfCore extends JObject
 			$this->setFormId($form_id);
 		}
 
-		if (empty($this->_fields))
+		if (empty($this->fields))
 		{
-			$model_redform = $this->getFormModel($this->_form_id);
-			$this->_fields = $model_redform->getFormFields();
+			$model_redform = $this->getFormModel($this->formId);
+			$this->fields = $model_redform->getFormFields();
 		}
 
-		return $this->_fields;
+		return $this->fields;
 	}
 
 	/**
@@ -732,12 +722,12 @@ class RdfCore extends JObject
 	}
 
 	/**
-	* Get emails associted to sid
+	 * Get emails associted to sid
 	 *
-	* @param   int  $sid  sid
+	 * @param   int  $sid  sid
 	 *
-	* @return array or false
-	*/
+	 * @return array or false
+	 */
 	public function getSidContactEmails($sid)
 	{
 		$res = $this->getSubmissionContactEmails(array($sid), $requires_email = true);
@@ -799,7 +789,7 @@ class RdfCore extends JObject
 	{
 		if (!$form_id)
 		{
-			$form_id = $this->_form_id;
+			$form_id = $this->formId;
 		}
 
 		if (!isset($this->_form) || $this->_form->id <> $form_id)
@@ -829,7 +819,7 @@ class RdfCore extends JObject
 			return false;
 		}
 
-		if (!$this->_form_id)
+		if (!$this->formId)
 		{
 			$this->setError('form id not set');
 
@@ -841,7 +831,7 @@ class RdfCore extends JObject
 
 		$fields = $this->prepareUserData($userData);
 
-		$model = new RdfCoreSubmission($this->_form_id);
+		$model = new RdfCoreSubmission($this->formId);
 
 		if (!$result = $model->quicksubmit($fields, $integration, $options))
 		{
@@ -1035,9 +1025,9 @@ class RdfCore extends JObject
 	{
 		static $instances = array();
 
-		if (is_null($submitKey) && $this->_submit_key)
+		if (is_null($submitKey) && $this->submitKey)
 		{
-			$submitKey = $this->_submit_key;
+			$submitKey = $this->submitKey;
 		}
 
 		if (!$submitKey)

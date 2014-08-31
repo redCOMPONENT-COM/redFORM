@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5" method="upgrade">
-	<name>redFORM</name>
+	<name>COM_REDFORM</name>
 	<creationDate>##DATE##</creationDate>
 	<author>Redweb.dk</author>
 	<authorEmail>email@redweb.dk</authorEmail>
@@ -8,7 +8,7 @@
 	<copyright>(c) 2008 - 2011 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
 	<version>##VERSION##</version>
-	<redcore version="1.0" />
+	<redcore version="1.2.0" />
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
 	<!-- Runs on install/uninstall/update -->
@@ -39,9 +39,7 @@
 		<filename>controller.php</filename>
 		<filename>index.html</filename>
 		<filename>redform.php</filename>
-		<filename>redform.core.php</filename>
 		<filename>redform.defines.php</filename>
-		<folder>assets</folder>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
 		<folder>language</folder>
@@ -59,26 +57,23 @@
 
 	<administration>
 		<!-- Menu entries -->
-		<menu img="../media/com_redform/redform_red_16.png" view="forms">COM_redFORM</menu>
+		<menu img="../media/com_redform/images/redform_red_16.png" view="forms">COM_redFORM</menu>
 		<submenu>
-			<menu img="../media/com_redform/redform_red_16.png" view="forms">COM_redFORM_FORMS</menu>
-			<menu img="../media/com_redform/redform_quest_16.png" view="fields">COM_redFORM_Fields</menu>
-			<menu img="../media/com_redform/redform_contes_16.png" view="submitters">COM_redFORM_Submitters</menu>
+			<menu img="../media/com_redform/images/redform_red_16.png" view="forms">COM_redFORM_FORMS</menu>
+			<menu img="../media/com_redform/images/redform_quest_16.png" view="fields">COM_redFORM_Fields</menu>
+			<menu img="../media/com_redform/images/redform_contes_16.png" view="submitters">COM_redFORM_Submitters</menu>
 		</submenu>
 
 		<!-- Core files admin -->
 		<files folder="admin">
 			<filename>access.xml</filename>
-			<filename>changelog.txt</filename>
-			<filename>controller.php</filename>
-			<filename>LICENSE.php</filename>
-			<filename>redform.php</filename>
-			<filename>config.xml</filename>
+            <filename>config.xml</filename>
+            <filename>controller.php</filename>
+            <filename>LICENSE</filename>
+            <filename>redform.php</filename>
 			<folder>controllers</folder>
-			<folder>css</folder>
 			<folder>falang</folder>
 			<folder>helpers</folder>
-			<folder>js</folder>
 			<folder>language</folder>
 			<folder>layouts</folder>
 			<folder>models</folder>

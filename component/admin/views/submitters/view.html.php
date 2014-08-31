@@ -145,13 +145,6 @@ class RedformViewSubmitters extends RdfView
 			$secondGroup->addButton($delete);
 		}
 
-		// Options
-		if ($canDoCore->get('core.manage'))
-		{
-			$options = RToolbarBuilder::createOptionsButton('com_redform');
-			$thirdGroup->addButton($options);
-		}
-
 		$toolbar = new RToolbar;
 		$toolbar->addGroup($firstGroup)
 			->addGroup($secondGroup)

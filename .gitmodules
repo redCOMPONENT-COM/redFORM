@@ -1,3 +1,6 @@
 [submodule "redCORE"]
 	path = redCORE
 	url = git@github.com:redCOMPONENT-COM/redCORE.git
+[submodule ".travis/coding-standards/Joomla"]
+	path = .travis/coding-standards/Joomla
+	url = https://github.com/joomla/coding-standards.git

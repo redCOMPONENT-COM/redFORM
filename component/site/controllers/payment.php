@@ -44,6 +44,7 @@ class RedformControllerPayment extends JControllerLegacy
 		{
 			$lang_v = "&lang=" . $app->input->get('lang');
 		}
+
 		$model = $this->getModel('payment');
 		$model->setSubmitKey($key);
 		$options = $model->getGatewayOptions();
@@ -138,6 +139,7 @@ class RedformControllerPayment extends JControllerLegacy
 			$trans->id = $submit_key;
 			$trans->affiliation = $payement->form;
 			$trans->revenue = $model->getPrice();
+			$trans->currency = $payement->currency;
 
 			RdfHelperAnalytics::addTrans($trans);
 

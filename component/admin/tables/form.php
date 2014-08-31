@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     redform.Backend
+ * @package     Redform.Backend
  * @subpackage  Tables
  *
  * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  *
  * @package     Redform.Backend
  * @subpackage  Tables
- * @since       1.0
+ * @since       1.5
  */
 class RedformTableForm extends RTable
 {

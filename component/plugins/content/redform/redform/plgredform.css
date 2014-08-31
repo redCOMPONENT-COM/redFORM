@@ -5,60 +5,60 @@
 }
 
 .formbox {
-	clear:both;
-}	
-	
- .fieldline {
-	padding: 3px 0;
-	clear:both;
+ clear: both;
 }
 
- .fieldline div {
-	float:left;
-	text-align:left;
+.fieldline {
+ padding: 3px 0;
+ clear: both;
 }
 
- .fieldline div.fieldoption {
-	float:none;
-	text-align:left;
+.fieldline div {
+ float: left;
+ text-align: left;
 }
 
- .fieldline div.label {
-	width:150px;
+.fieldline div.fieldoption {
+ float: none;
+ text-align: left;
 }
 
- div#totalprice {
-	clear:both;
+.fieldline div.label {
+ width: 150px;
 }
 
- div#submit_button, div#confirmbutton {
- clear:both;
+div#totalprice {
+ clear: both;
 }
 
- .fieldline div.fieldemail div {
+div#submit_button, div#confirmbutton {
+ clear: both;
+}
+
+.fieldline div.fieldemail div {
  float: none;
 }
 
- div.fieldinfo {
+div.fieldinfo {
   padding-left: 4px;
 }
 
 label.emptyfield {
-	color:red;
-	font-weight:bold;
+ color: red;
+ font-weight: bold;
 }
 
 input.emptyfield {
-	border:1px solid red;
-	background-color:pink;
+ border: 1px solid red;
+ background-color: pink;
 }
 
 select.emptyfield {
-	border:1px solid red;
-	background-color:pink;
+ border: 1px solid red;
+ background-color: pink;
 }
 
 textarea.emptyfield {
-	border:1px solid red;
-	background-color:pink;
+ border: 1px solid red;
+ background-color: pink;
 }

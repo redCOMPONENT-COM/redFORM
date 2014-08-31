@@ -38,6 +38,11 @@ class RedformControllerField extends RdfControllerForm
 		JFactory::getApplication()->close();
 	}
 
+	/**
+	 * Save an option
+	 *
+	 * @return void
+	 */
 	public function saveOption()
 	{
 		$app = JFactory::getApplication();
@@ -80,7 +85,12 @@ class RedformControllerField extends RdfControllerForm
 		$app->close();
 	}
 
-	public function removeValue()
+	/**
+	 * Remove a value
+	 *
+	 * @return void
+	 */
+	public function removeOption()
 	{
 		$app = JFactory::getApplication();
 

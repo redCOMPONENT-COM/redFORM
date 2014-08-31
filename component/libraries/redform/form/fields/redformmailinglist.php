@@ -86,7 +86,8 @@ class JFormFieldRedformmailinglist extends JFormField
 			. $class . $size . $disabled . $readonly . $onchange . $maxLength . '/>';
 
 		$html[] = '<button type="button" class="add-ml btn btn-sm">' . JText::_('COM_REDFORM_FIELD_REDFORMMAILINGLIST_BUTTON_ADD') . '</button>';
-		$html[] = '<button type="button" class="remove-ml btn btn-sm' . ($index ? '' : ' hide') .  '">' . JText::_('COM_REDFORM_FIELD_REDFORMMAILINGLIST_BUTTON_REMOVE') . '</button>';
+		$html[] = '<button type="button" class="remove-ml btn btn-sm' . ($index ? '' : ' hide') . '">'
+			. JText::_('COM_REDFORM_FIELD_REDFORMMAILINGLIST_BUTTON_REMOVE') . '</button>';
 
 		$html[] = '</div>';
 

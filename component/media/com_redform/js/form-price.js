@@ -2,86 +2,113 @@
  * @copyright Copyright (C) 2014 redCOMPONENT.com. All rights reserved.
  * @license GNU General Public License version 2 or later; see LICENSE.txt
  */
+// Export var
+var redformPrice;
 
-window.addEvent('domready', function(){
-	/**
-	 * dynamic form price calculation
-	 */
-	document.getElements("div.redform-form").each(redformPrice.bindElements, redformPrice);
-});
+(function($){
 
-var redformPrice = {
+	redformPrice = function(formbox) {
 
-	bindElements : function(el) {
-		el.getElements('input, select').addEvent('change', function() {
-			this.updatePrice(el);
-		}.bind(this));
-		this.updatePrice(el);
-	},
+		var form = formbox.parents('form').first();
 
-	updatePrice : function(el) {
-		// get the instance of redform corresponding to the field that triggered the 'change'
-
-		if (el.get('tag') != 'form') {
-			var form = el.getParent('form');
-		}
-		else {
-			var form = el;
+		function updatePrice() {
+			var price = calcPrice();
+			displayPrice(price);
 		}
 
-		var price = 0.0;
-		form.getElements("input.rfprice").each(function(element) {
-			var p = document.id(element).get('value');
-			if (p) {
-				price += parseFloat(p);
-			}
-		});
+		function calcPrice () {
+			var price = 0.0;
 
-		form.getElements(":checked").each(function(element) { // works for select list too
-			var p = document.id(element).get('price');
-			if (p) {
-				price += parseFloat(p);
-			}
-		});
+			formbox.find("input.rfprice").each(function() {
+				var p = $(this).val();
+				if (p) {
+					price += parseFloat(p);
+				}
+			});
 
-		form.getElements(".eventprice").each(function(element) {
-			var p = document.id(element).get('price');
-			if (p) {
-				price += parseFloat(p);
-			}
-		});
+			formbox.find(":checked").each(function() { // works for select list too
+				var p = $(this).attr('price');
+				if (p) {
+					price += parseFloat(p);
+				}
+			});
 
-		form.getElements(".fixedprice").each(function(element) {
-			var p = document.id(element).get('price');
-			if (p) {
-				price += parseFloat(p);
-			}
-		});
+			formbox.find(".eventprice").each(function() {
+				var p = $(this).attr('price');
+				if (p) {
+					price += parseFloat(p);
+				}
+			});
 
-		form.getElements(".bookingprice").each(function(element) {
-			var p = document.id(element).get('price');
-			if (p) {
-				price += parseFloat(p);
-			}
-		});
+			formbox.find(".fixedprice").each(function() {
+				var p = $(this).attr('price');
+				if (p) {
+					price += parseFloat(p);
+				}
+			});
 
-		if (round_negative_price) {
-			price = Math.max(price, 0);
+			formbox.find(".bookingprice").each(function(element) {
+				var p = $(this).attr('price');
+				if (p) {
+					price += parseFloat(p);
+				}
+			});
+
+			if (round_negative_price) {
+				price = Math.max(price, 0);
+			}
+
+			return price;
 		}
 
-		if (form.getElement(".totalprice"))
-		{
+		function displayPrice(price) {
+			var totalElement = formbox.find(".totalprice");
+			var line = formbox.find('.priceline');
+
+			if (!totalElement)
+			{
+				return;
+			}
+
+			line.hide();
+
+			if (!(price > 0))
+			{
+				return;
+			}
+
 			// set the price
 			var text = '';
 
-			if (form.getElement('[name=currency]')) {
-				text = form.getElement('[name=currency]').get('value');
+			var currencyField = form.find('input[name="currency"]');
+
+			if (currencyField && currencyField.val()) {
+				text = currencyField.val();
 			}
 
 			var roundedPrice = Math.round(price*100)/100;
 			text += ' <span>' + roundedPrice + '</span>';
 
-			form.getElement(".totalprice").set('html', text);
+			formbox.find(".totalprice").html(text);
+			line.show();
 		}
-	}
-}
+
+		return {
+			init : function() {
+				formbox.find(':input').change(function() {
+					updatePrice();
+				})
+			},
+
+			updatePrice : updatePrice
+		}
+	};
+
+	$(function(){
+		$("div.redform-form .formbox").each(function() {
+			var updater = redformPrice($(this));
+			updater.init();
+			updater.updatePrice();
+		});
+	});
+})(jQuery);

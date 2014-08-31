@@ -165,7 +165,7 @@ class RdfRfieldInteger extends RdfRfieldSelect
 
 			while ($current <= $max)
 			{
-				$obj = new stdClass();
+				$obj = new stdClass;
 				$obj->label = $current;
 				$obj->value = $current;
 				$obj->price = $current * $price;
