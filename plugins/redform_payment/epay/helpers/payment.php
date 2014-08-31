@@ -55,10 +55,9 @@ class PaymentEpay extends RdfPaymentHelper
 			'callbackurl' => $this->getUrl('notify', $submit_key),
 			'accepturl' => $this->getUrl('notify', $submit_key),
 			'cancelurl' => $this->getUrl('cancel', $submit_key),
-			'ordertext' => $request->title,
-			'ordertext' => $request->adminDesc,
+			'ordertext' => $request->title, // Shown in the payment window + receipt
 			'group' => $this->params->get('group'),
-			'description' => $request->title,
+			'description' => $request->adminDesc, // This description can be seen in the ePay administration
 			'opacity' => 50,
 		);
 
