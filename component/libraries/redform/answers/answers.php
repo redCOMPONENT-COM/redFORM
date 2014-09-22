@@ -366,7 +366,7 @@ class RdfAnswers
 	/**
 	 * Get fields
 	 *
-	 * @return void
+	 * @return RdfRfield
 	 */
 	public function getFields()
 	{
