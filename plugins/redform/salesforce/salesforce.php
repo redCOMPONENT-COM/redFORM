@@ -50,6 +50,11 @@ class plgRedformSalesforce extends JPlugin
 	 */
 	public function onAfterRedformSavedSubmission($result)
 	{
+		if (!$result || !$result->submit_key)
+		{
+			return;
+		}
+
 		$this->answers = array();
 		$this->submitKey = $result->submit_key;
 
@@ -83,15 +88,22 @@ class plgRedformSalesforce extends JPlugin
 		$inputs['oid'] = $this->params->get('oid');
 		$inputs['retURL'] = $this->params->get('retURL');
 
+		$formHasMapping = false;
+
 		foreach ($submission->getFields() AS $field)
 		{
 			if ($name = $this->mappedName($field))
 			{
+				$formHasMapping = true;
 				$inputs[$name] = $field->getValueAsString();
 			}
 		}
 
-		$this->postForm($inputs);
+		// Only post if there is something to post...
+		if ($formHasMapping)
+		{
+			$this->postForm($inputs);
+		}
 	}
 
 	/**
