@@ -121,7 +121,6 @@ class RedformModelSubmitters extends RModelList
 		$query->select('s.integration');
 		$query->select('f.formname');
 		$query->select('p.status, p.paid');
-		$query->select('s.id');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON s.form_id = f.id');
 		$query->join('LEFT', '(' . $subPayment . ') AS latest_payment ON latest_payment.submit_key = s.submit_key');
@@ -150,6 +149,9 @@ class RedformModelSubmitters extends RModelList
 		$orderCol = $this->state->get('list.ordering', 's.submission_date');
 		$orderDirn = $this->state->get('list.direction', 'desc');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+
+		// To make sure submitter id will indeed be the 'id'
+		$query->select('s.id');
 
 		return $query;
 	}
