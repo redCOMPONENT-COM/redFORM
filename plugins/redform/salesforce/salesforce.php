@@ -88,6 +88,16 @@ class plgRedformSalesforce extends JPlugin
 		$inputs['oid'] = $this->params->get('oid');
 		$inputs['retURL'] = $this->params->get('retURL');
 
+		if ($this->params->get('debug', 0))
+		{
+			$inputs['debug'] = 1;
+		}
+
+		if ($this->params->get('debugEmail'))
+		{
+			$inputs['debugEmail'] = $this->params->get('debugEmail');
+		}
+
 		$formHasMapping = false;
 
 		foreach ($submission->getFields() AS $field)
@@ -117,12 +127,16 @@ class plgRedformSalesforce extends JPlugin
 	 */
 	private function postForm($inputs)
 	{
+		$inputs = http_build_query($inputs);
+
 		$ch = curl_init();
 		$url = "https://www.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8";
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $inputs);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$resp = curl_exec($ch);
 
 		if (curl_exec($ch) === false)
 		{
