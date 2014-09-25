@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="redform" method="upgrade">
+    <name>PLG_REDFORM_SALESFORCE</name>
+    <creationDate>##DATE##</creationDate>
+    <author>redWEB Aps</author>
+    <authorEmail>email@redweb.dk</authorEmail>
+    <authorUrl>www.redcomponent.com</authorUrl>
+    <copyright>(C) 2014 redCOMPONENT.com</copyright>
+    <license>GNU/GPL</license>
+    <version>##VERSION##</version>
+    <description>PLG_REDFORM_SALESFORCE_XML_DESC</description>
+
+    <files>
+        <filename plugin="salesforce">salesforce.php</filename>
+        <folder>language</folder>
+    </files>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="basic">
+
+                <field name="oid" type="text" default=""
+                       label="PLG_REDFORM_SALESFORCE_OID"
+                       description="PLG_REDFORM_SALESFORCE_OID_DESC"/>
+
+                <field name="retURL" type="text" default=""
+                       label="PLG_REDFORM_SALESFORCE_RETURL"
+                       description="PLG_REDFORM_SALESFORCE_RETURL_DESC"/>
+
+                 <field name="mapping" type="textarea"
+                        label="PLG_REDFORM_SALESFORCE_MAPPING"
+                        description="PLG_REDFORM_SALESFORCE_MAPPING_DESC"
+                        rows="20"/>
+
+                <field name="debug" type="radio" default="0"
+                       label="PLG_REDFORM_SALESFORCE_DEBUG"
+                       description="PLG_REDFORM_SALESFORCE_DEBUG_DESC">
+                    <option value="0">JNo</option>
+                    <option value="1">JYes</option>
+                </field>
+
+                <field name="debugEmail" type="text" default=""
+                       label="PLG_REDFORM_SALESFORCE_DEBUG_EMAIL"
+                       description="PLG_REDFORM_SALESFORCE_DEBUG_EMAIL_DESC"/>
+
+            </fieldset>
+        </fields>
+    </config>
+
+</extension>
