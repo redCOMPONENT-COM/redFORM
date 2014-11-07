@@ -19,5 +19,7 @@
         <folder>payment</folder>
         <folder>rfield</folder>
         <folder>view</folder>
+        <filename>bootstrap.php</filename>
+        <filename>redform.xml</filename>
     </files>
 </extension>
