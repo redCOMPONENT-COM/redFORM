@@ -99,7 +99,7 @@ class RdfCoreSubmission extends JObject
 
 		if (!isset($data[$token]))
 		{
-			$this->setError('Form integrity check failed' );
+			$this->setError('Form integrity check failed');
 
 			return false;
 		}

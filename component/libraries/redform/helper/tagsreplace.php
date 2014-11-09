@@ -157,6 +157,11 @@ class RdfHelperTagsreplace
 		return $text;
 	}
 
+	/**
+	 * replaces [confirmemail]
+	 *
+	 * @return string
+	 */
 	private function getTagConfirmlink()
 	{
 		$url = JURI::root() . 'index.php?option=com_redform&task=redform.confirm&key=' . $this->answers->getSubmitKey();
