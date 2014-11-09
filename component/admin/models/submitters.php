@@ -52,6 +52,8 @@ class RedformModelSubmitters extends RModelList
 				'id', 's.id',
 				'form_id', 's.form_id',
 				'date', 's.date',
+				'submission_date', 's.submission_date',
+				'confirmed_date', 's.confirmed_date',
 			);
 		}
 
@@ -117,7 +119,7 @@ class RedformModelSubmitters extends RModelList
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('s.submission_date, s.form_id, f.formname, s.price, s.currency, s.submit_key');
+		$query->select('s.submission_date, s.form_id, f.formname, s.price, s.currency, s.submit_key, s.confirmed_date');
 		$query->select('s.integration');
 		$query->select('f.formname');
 		$query->select('p.status, p.paid');
@@ -143,6 +145,20 @@ class RedformModelSubmitters extends RModelList
 		{
 			$date = JFactory::getDate($to)->toSql();
 			$query->where('s.submission_date <= ' . $db->quote($date));
+		}
+
+		$confirmed = $this->getState('filter.confirmed');
+
+		if (is_numeric($confirmed))
+		{
+			if ($confirmed)
+			{
+				$query->where('s.confirmed_date > 0');
+			}
+			else
+			{
+				$query->where('s.confirmed_date = 0');
+			}
 		}
 
 		// Add the list ordering clause.

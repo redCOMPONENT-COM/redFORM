@@ -156,4 +156,11 @@ class RdfHelperTagsreplace
 
 		return $text;
 	}
+
+	private function getTagConfirmlink()
+	{
+		$url = JURI::root() . 'index.php?option=com_redform&task=redform.confirm&key=' . $this->answers->getSubmitKey();
+
+		return JRoute::_($url);
+	}
 }
