@@ -68,4 +68,27 @@ class RedformControllerRedform extends RedformController
 			echo $model->getNotificationText();
 		}
 	}
+
+	/**
+	 * Confirm submission by email
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 */
+	public function confirm()
+	{
+		$input = JFactory::getApplication()->input;
+		$key = $input->get('key');
+		$model = $this->getModel('Confirm');
+
+		if (!$model->confirm($key))
+		{
+			throw new Exception('Key not found', 403);
+		}
+
+		$input->set('view', 'confirm');
+
+		parent::display();
+	}
 }
