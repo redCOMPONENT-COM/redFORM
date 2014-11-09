@@ -255,6 +255,8 @@ class RdfCore extends JObject
 	 */
 	public function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
 	{
+		JHtml::_('behavior.keepalive');
+
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
 		$app = JFactory::getApplication();
@@ -464,7 +466,7 @@ class RdfCore extends JObject
 		$html .= '<input type="hidden" name="nbactive" value="' . $initialActive . '" />';
 		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
 		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';
-		$html .= '<input type="hidden" name="' . JSession::getFormToken() . '" value="' . $uniq . '" />';
+		$html .= '<input type="hidden" name="' . self::getToken() . '" value="' . $uniq . '" />';
 
 		if ($currency)
 		{
@@ -1043,5 +1045,32 @@ class RdfCore extends JObject
 		}
 
 		return $instances[$submitKey];
+	}
+
+	/**
+	 * Get form token
+	 *
+	 * @param   bool  $forcenew  force new token
+	 *
+	 * @return string
+	 */
+	public static function getToken($forcenew = false)
+	{
+		$user = JFactory::getUser();
+		$session = JFactory::getSession();
+
+		if (!$session->has('redformtoken') || $forcenew)
+		{
+			$token = $session->getToken($forcenew);
+			$session->set('redformtoken', $token);
+		}
+		else
+		{
+			$token = $session->get('redformtoken');
+		}
+
+		$hash = JApplication::getHash($user->get('id', 0) . $token);
+
+		return $hash;
 	}
 }

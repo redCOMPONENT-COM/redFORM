@@ -69,7 +69,7 @@ class RdfCoreSubmission extends JObject
 		$result->posts = array();
 
 		// Check the token
-		$token = JSession::getFormToken();
+		$token = RdfCore::getToken();
 
 		// Get data from post if not specified
 		if (!$data)
@@ -99,7 +99,7 @@ class RdfCoreSubmission extends JObject
 
 		if (!isset($data[$token]))
 		{
-			$this->setError('Form integrity check failed');
+			$this->setError('Form integrity check failed' );
 
 			return false;
 		}
