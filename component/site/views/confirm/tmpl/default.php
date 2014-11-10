@@ -7,5 +7,16 @@
  */
 
 defined('_JEXEC') or die('Restricted access');
+
 ?>
-<?php echo JText::_('COM_REDFORM_VIEW_COMFIRM_SUBMISSION_CONFIRMED');
+<div class="redform-confirm">
+	<?php if ($this->updated): ?>
+		<div class="alert alert-success">
+			<?php echo JText::_('COM_REDFORM_VIEW_COMFIRM_SUBMISSION_CONFIRMED'); ?>
+		</div>
+	<?php else: ?>
+		<div class="alert alert-error">
+			<?php echo JText::_('COM_REDFORM_VIEW_COMFIRM_SUBMISSION_CONFIRMED_FAILED'); ?>
+		</div>
+	<?php endif; ?>
+</div>

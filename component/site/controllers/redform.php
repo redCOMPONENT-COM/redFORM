@@ -80,14 +80,12 @@ class RedformControllerRedform extends RedformController
 	{
 		$input = JFactory::getApplication()->input;
 		$key = $input->get('key');
-		$model = $this->getModel('Confirm');
 
-		if (!$model->confirm($key))
-		{
-			throw new Exception('Key not found', 403);
-		}
+		$model = $this->getModel('Confirm');
+		$model->confirm($key);
 
 		$input->set('view', 'confirm');
+		$input->set('updatedIds', $model->getState('updatedIds'));
 
 		parent::display();
 	}

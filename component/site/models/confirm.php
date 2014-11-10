@@ -48,6 +48,8 @@ class RedformModelConfirm extends RModel
 		$this->_db->setQuery($query);
 		$this->_db->execute();
 
+		$this->setState('updatedIds', $ids);
+
 		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onSubmissionConfirmed', array($ids));

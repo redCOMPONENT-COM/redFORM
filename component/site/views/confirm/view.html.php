@@ -28,6 +28,8 @@ class RedformViewConfirm extends RViewSite
 	 */
 	public function display($tpl = null)
 	{
+		$this->updated = JFactory::getApplication()->input->getState('updatedIds');
+
 		return parent::display($tpl);
 	}
 }
