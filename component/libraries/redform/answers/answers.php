@@ -99,6 +99,16 @@ class RdfAnswers
 	}
 
 	/**
+	 * get form id
+	 *
+	 * @return int
+	 */
+	public function getFormId()
+	{
+		return $this->formId;
+	}
+
+	/**
 	 * Set answer id
 	 *
 	 * @param   int  $id  id
