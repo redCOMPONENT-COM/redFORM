@@ -2,8 +2,10 @@
 <form>
 	<fields name="params">
 		<fieldset name="extra" label="extra">
-    <field name="valuemethod" type="list" default="constant" 
-           label="COM_REDFORM_FIELD_HIDDEN_PARAMS_VALUEMETHOD" 
+            <field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS"
+                   description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
+    <field name="valuemethod" type="list" default="constant"
+           label="COM_REDFORM_FIELD_HIDDEN_PARAMS_VALUEMETHOD"
            description="COM_REDFORM_FIELD_HIDDEN_PARAMS_VALUEMETHOD_DESC">
     	<option value="constant">COM_REDFORM_FIELD_HIDDEN_PARAMS_VALUEMETHOD_CONSTANT</option>
     	<option value="jrequest">COM_REDFORM_FIELD_HIDDEN_PARAMS_VALUEMETHOD_JREQUEST</option>
@@ -12,10 +14,10 @@
 		<field name="jrequestvar" type="text"
 		       label="COM_REDFORM_FIELD_HIDDEN_PARAMS_VALUEMETHOD_JREQUEST_VARNAME"
 		       description="COM_REDFORM_FIELD_HIDDEN_PARAMS_VALUEMETHOD_JREQUEST_VARNAME_DESC"
-		       /> 
+		       />
 		<field name="phpeval" type="textarea" cols="50" rows="10"
 		       label="COM_REDFORM_FIELD_HIDDEN_PARAMS_VALUEMETHOD_PHPEVEL_CODE"
 		       description="COM_REDFORM_FIELD_HIDDEN_PARAMS_VALUEMETHOD_PHPEVEL_CODE_DESC"
-		       /> 
+		       />
 	</fieldset></fields>
 </form>
