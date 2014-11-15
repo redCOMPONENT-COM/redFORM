@@ -30,10 +30,18 @@
 					rates = '["5894"]';
 			}
 
+			if (form.find('input[value=new].gasel-elec-radio').attr('checked')) {
+				form.find('.type-textfieldnewCustomerMeasurementPointElectricity').show();
+			}
+			else {
+				form.find('.type-textfieldnewCustomerMeasurementPointElectricity').hide();
+			}
+
 			form.find('input[name=rategroups]').val(rates);
 		};
 
 		form.find('input.esGas, input.gasel-elec-radio').click(updateRategroups);
+		updateRategroups();
 	}
 
 })(jQuery);
