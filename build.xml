@@ -227,6 +227,12 @@
 			</fileset>
 		</copy>
 
+        <copy todir="${www.dir}/templates/protostar/" overwrite="true">
+            <fileset dir="${dirs.root}/override">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
         <!-- Component included Modules - Site
         <copy todir="${www.dir}/modules" overwrite="true">
             <fileset dir="${dirs.root}/component/admin/extras/modules/site">
