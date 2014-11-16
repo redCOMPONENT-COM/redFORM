@@ -71,6 +71,34 @@
 			}
 		});
 
+		$('.gasel-street').autocomplete({
+			serviceUrl: (function(){
+				var updateUrl = "index.php?option=com_ajax&plugin=gaselkmd&format=json&function=street";
+				var zip = form.find('.gasel-zip');
+
+				if (zip && zip.val()) {
+					updateUrl = updateUrl + '&zip=' + zip.val();
+				}
+
+				return updateUrl;
+			}),
+			paramName: 'street',
+			minChars: 2,
+			transformResult: function(jsonresp){
+				var response = JSON.parse(jsonresp);
+
+				if (!response.data[0]) {
+					return;
+				}
+
+				return {
+					suggestions: $.map(response.data[0], function(dataItem) {
+						return {value: dataItem.navn, data: dataItem};
+					})
+				};
+			}
+		});
+
 		form.find('input.esGas, input.gasel-elec-radio').click(updateRategroups);
 		updateRategroups();
 	}

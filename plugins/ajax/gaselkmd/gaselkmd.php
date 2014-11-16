@@ -65,4 +65,40 @@ class plgAjaxGaselkmd extends JPlugin
 
 		return $data;
 	}
+
+	/**
+	 * Get and return postcodes
+	 *
+	 * @return array
+	 *
+	 * @throws RuntimeException
+	 */
+	private function street()
+	{
+		$code = JFactory::getApplication()->input->getInt('zip', 0);
+		$street = JFactory::getApplication()->input->get('street');
+
+		if (!$code || !$street)
+		{
+			return;
+		}
+
+		$ch = curl_init();
+		$url = "http://geo.oiorest.dk/vejnavne.json?postnr=" . $code . "&vejnavn=" . urlencode($street) . "*";
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
+		curl_setopt($ch, CURLOPT_POST, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$json = curl_exec($ch);
+
+		if (curl_exec($ch) === false)
+		{
+			throw new RuntimeException('Curl error: ' . curl_error($ch));
+		}
+
+		$data = json_decode($json);
+
+		return $data;
+	}
 }
