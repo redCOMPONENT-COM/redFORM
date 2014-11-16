@@ -90,7 +90,11 @@ class plgRedformGaselkmd extends JPlugin
 			return;
 		}
 
-		$inputs = array();
+		$inputs = array(
+			'event' => 'Order',
+			'confirmimmediately' => 'true',
+			'receipturl' => 'http://gasel.dk/tak-for-din-bestilling'
+		);
 
 		$formHasMapping = false;
 
@@ -131,7 +135,7 @@ class plgRedformGaselkmd extends JPlugin
 		}
 
 		$ch = curl_init();
-		$url = "https://minforsyningplugin.kmd.dk/ButtonOrderRategroupsElectricityAndGasRedirect.aspx";
+		$url = "https://minforsyningplugin.kmd.dk//esButtonOrderRategroupsElectricityAndGasPlugin.plugin";
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $inputs);
@@ -139,7 +143,7 @@ class plgRedformGaselkmd extends JPlugin
 
 		$resp = curl_exec($ch);
 
-		if (curl_exec($ch) === false)
+		if ($resp === false)
 		{
 			throw new RuntimeException('Curl error: ' . curl_error($ch));
 		}
