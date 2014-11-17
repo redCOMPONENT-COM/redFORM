@@ -67,7 +67,7 @@
 				}
 			}
 
-			form.find('input[name=rategroups]').val(rates);
+			form.find('input.kmd-rategroups').val(rates);
 		};
 
 		$('.kmd-zip').autocomplete({
@@ -77,12 +77,12 @@
 			transformResult: function(jsonresp){
 				var response = JSON.parse(jsonresp);
 
-				if (!response.data[0]) {
+				if (!response[0]) {
 					return;
 				}
 
 				return {
-					suggestions: $.map(response.data[0], function(dataItem) {
+					suggestions: $.map(response[0], function(dataItem) {
 						return {value: dataItem.nr, data: dataItem};
 					})
 				};
@@ -113,12 +113,12 @@
 			transformResult: function(jsonresp){
 				var response = JSON.parse(jsonresp);
 
-				if (!response.data[0]) {
+				if (!response[0]) {
 					return;
 				}
 
 				return {
-					suggestions: $.map(response.data[0], function(dataItem) {
+					suggestions: $.map(response[0], function(dataItem) {
 						return {value: dataItem.navn, data: dataItem};
 					})
 				};
