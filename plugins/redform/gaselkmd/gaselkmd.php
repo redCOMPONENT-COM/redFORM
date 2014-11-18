@@ -93,7 +93,9 @@ class plgRedformGaselkmd extends JPlugin
 		$inputs = array(
 			'event' => 'Order',
 			'confirmimmediately' => 'true',
-			'receipturl' => 'http://gasel.dk/tak-for-din-bestilling'
+			'receipturl' => 'http://gasel.dk/tak-for-din-bestilling',
+			'plantnumber' => 920,
+			'utilitynumber' => 25
 		);
 
 		$formHasMapping = false;
