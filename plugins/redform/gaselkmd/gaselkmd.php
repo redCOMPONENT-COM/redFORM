@@ -132,7 +132,10 @@ class plgRedformGaselkmd extends JPlugin
 
 		$url = "https://minforsyningplugin.kmd.dk//esButtonOrderRategroupsElectricityAndGasPlugin.plugin?" . $inputs;
 
-		RdfHelperLog::simpleLog('gasel kmd sync: ' . $url);
+		if ($this->params->get('log', 0))
+		{
+			RdfHelperLog::simpleLog('gasel kmd sync: ' . $url);
+		}
 
 		if ($this->params->get('debug', 0))
 		{

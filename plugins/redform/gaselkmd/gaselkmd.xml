@@ -35,6 +35,13 @@
                     <option value="1">JYes</option>
                 </field>
 
+                <field name="log" type="radio" default="0"
+                       label="PLG_REDFORM_GASELKMD_LOG"
+                       description="PLG_REDFORM_GASELKMD_LOG_DESC">
+                    <option value="0">JNo</option>
+                    <option value="1">JYes</option>
+                </field>
+
             </fieldset>
         </fields>
     </config>
