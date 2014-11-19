@@ -94,8 +94,9 @@ class plgRedformGaselkmd extends JPlugin
 			'event' => 'Order',
 			'confirmimmediately' => 'true',
 			'receipturl' => 'http://gasel.dk/tak-for-din-bestilling',
+			'confirmorderurl' => '',
 			'plantnumber' => 920,
-			'utilitynumber' => 25
+			'utilitynumber' => 0
 		);
 
 		$formHasMapping = false;
@@ -129,18 +130,23 @@ class plgRedformGaselkmd extends JPlugin
 	{
 		$inputs = http_build_query($inputs);
 
+		$url = "https://minforsyningplugin.kmd.dk//esButtonOrderRategroupsElectricityAndGasPlugin.plugin?" . $inputs;
+
 		if ($this->params->get('debug', 0))
 		{
-			RdfHelperLog::simpleLog('gasel kmd sync: ' . print_r($inputs, true));
+			RdfHelperLog::simpleLog('gasel kmd sync: ' . $url);
 
 			return;
 		}
 
+		$ckfile = tempnam("/tmp", "CURLCOOKIE");
+
 		$ch = curl_init();
-		$url = "https://minforsyningplugin.kmd.dk//esButtonOrderRategroupsElectricityAndGasPlugin.plugin";
+		curl_setopt ($ch, CURLOPT_COOKIEJAR, $ckfile);
+
+		$this->initKmdOrder($ch);
+
 		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $inputs);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 		$resp = curl_exec($ch);
@@ -151,6 +157,30 @@ class plgRedformGaselkmd extends JPlugin
 		}
 
 		curl_close($ch);
+	}
+
+	/**
+	 * Init kmd plugin. seems required for the order to complete next
+	 *
+	 * @param   int  $ch  curl handle
+	 *
+	 * @return void
+	 *
+	 * @throws RuntimeException
+	 */
+	private function initKmdOrder($ch)
+	{
+		$url = 'https://minforsyningplugin.kmd.dk/esButtonOrderRategroupsElectricityAndGasPlugin.plugin?event=Init&buttontext=Bestil&cssclass=button+black&plantnumber=920&utilitynumber=0&usebootstrap=false';
+
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$resp = curl_exec($ch);
+
+		if ($resp === false)
+		{
+			throw new RuntimeException('Curl error: ' . curl_error($ch));
+		}
 	}
 
 	/**
