@@ -26,6 +26,8 @@ class RdfAnswers
 
 	private $formId = 0;
 
+	private $form;
+
 	private $submitter_email = array();
 
 	private $listnames = array();
@@ -495,6 +497,88 @@ class RdfAnswers
 		$this->setPrice();
 
 		return $this->sid;
+	}
+
+	/**
+	 * Send notification to submitter
+	 *
+	 * @return bool
+	 */
+	public function sendSubmitterNotification()
+	{
+		$emails = $this->getSubmitterEmails();
+		$form = $this->getForm();
+		$cond_recipients = RdfHelperConditionalrecipients::getRecipients($form, $this);
+
+		foreach ($emails as $submitter_email)
+		{
+			$mailer = JFactory::getMailer();
+			$mailer->isHTML(true);
+
+			if ($cond_recipients)
+			{
+				$mailer->From = $cond_recipients[0][0];
+				$mailer->FromName = $cond_recipients[0][1];
+				$mailer->ClearReplyTos();
+				$mailer->addReplyTo($cond_recipients[0]);
+			}
+
+			if (JMailHelper::isEmailAddress($submitter_email))
+			{
+				/* Add the email address */
+				$mailer->AddAddress($submitter_email);
+
+				/* Mail submitter */
+				$submission_body = $form->submissionbody;
+				$submission_body = $this->replaceTags($submission_body);
+				$htmlmsg = '<html><head><title>Welcome</title></title></head><body>' . $submission_body . '</body></html>';
+				$mailer->setBody($htmlmsg);
+
+				$subject = $this->replaceTags($form->submissionsubject);
+				$mailer->setSubject($subject);
+
+				/* Send the mail */
+				if (!$mailer->Send())
+				{
+					JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter)');
+					RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter):' . $mailer->error);
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get form data from table
+	 *
+	 * @return mixed|object|string
+	 */
+	protected function getForm()
+	{
+		if (!$this->form)
+		{
+			$model = new RdfCoreModelForm($this->formId);
+			$this->form = $model->getForm();
+		}
+
+		return $this->form;
+	}
+
+	/**
+	 * Replace tags
+	 *
+	 * @param   string      $text     text
+	 *
+	 * @return mixed
+	 */
+	public function replaceTags($text)
+	{
+		$form = $this->getForm();
+		$replacer = new RdfHelperTagsreplace($form, $this);
+		$text = $replacer->replace($text);
+
+		return $text;
 	}
 
 	/**

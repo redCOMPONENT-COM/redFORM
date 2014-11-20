@@ -76,10 +76,19 @@ class RedformModelSubmitters extends RModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$formId = $this->getUserStateFromRequest($this->context . '.filter.formId', 'filter.form_id', $this->getDefaultFormId(), 'int');
-		$this->setState('filter.form_id', $formId);
-
 		parent::populateState('s.id', 'desc');
+
+		// Receive & set filters
+		if ($filters = JFactory::getApplication()->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array'))
+		{
+			foreach ($filters as $name => $value)
+			{
+				if ($name == 'form_id')
+				{
+					$this->setState('filter.' . $name, $value ? $value : $this->getDefaultFormId());
+				}
+			}
+		}
 	}
 
 	/**
@@ -208,7 +217,12 @@ class RedformModelSubmitters extends RModelList
 
 		if ($id)
 		{
-			$query = ' SELECT id, formname, activatepayment, currency FROM #__rwf_forms WHERE id = ' . $this->_db->Quote($id);
+			$query = $this->_db->getQuery(true);
+
+			$query->select('id, formname, activatepayment, currency, enable_confirmation')
+				->from('#__rwf_forms')
+				->where('id = ' . $this->_db->Quote($id));
+
 			$this->_db->setQuery($query);
 
 			return $this->_db->loadObject();

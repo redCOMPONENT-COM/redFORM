@@ -32,6 +32,31 @@ class RedformControllerSubmitters extends RControllerAdmin
 	}
 
 	/**
+	 * Send the notification email again
+	 *
+	 * @return void
+	 */
+	public function resendNotification()
+	{
+		// Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+
+		$rfcore = new RdfCore;
+
+		foreach ($cid as $sid)
+		{
+			$answers = $rfcore->getSidAnswers($sid);
+			$answers->sendSubmitterNotification();
+		}
+
+		// Set redirect
+		$this->setRedirect($this->getRedirectToListRoute());
+	}
+
+	/**
 	 * Removes an item.
 	 *
 	 * @return  void

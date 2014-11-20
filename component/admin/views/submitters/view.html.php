@@ -118,18 +118,21 @@ class RedformViewSubmitters extends RdfView
 		$secondGroup = new RToolbarButtonGroup;
 		$thirdGroup = new RToolbarButtonGroup;
 
-		if ($this->formInfo)
-		{
-			$csvlink = 'index.php?option=com_redform&task=submitters&format=csv'
-				. ($this->integration ? '&integration=' . $this->integration : '');
-			$csvexport = RToolbarBuilder::createCsvButton();
-			$firstGroup->addButton($csvexport);
-		}
+		$csvexport = RToolbarBuilder::createCsvButton();
+		$firstGroup->addButton($csvexport);
 
 		if ($canDoCore->get('core.edit'))
 		{
 			$edit = RToolbarBuilder::createEditButton('submitter.edit');
 			$firstGroup->addButton($edit);
+
+			$button = RToolbarBuilder::createStandardButton(
+				'submitters.resendnotification',
+				JText::_('COM_REDFORM_SUBMITTER_RESEND_NOTIFICATION_EMAIL'),
+				'',
+				'icon-envelope'
+			);
+			$firstGroup->addButton($button);
 		}
 
 		// Delete / Trash

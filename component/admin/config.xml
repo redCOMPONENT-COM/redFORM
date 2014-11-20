@@ -6,10 +6,6 @@
 			<option value="0">JNo</option>
 			<option value="1">JYes</option>
 		</field>
-        <field name="showconfirmedcolumn" type="radio" default="0" label="COM_REDFORM_SHOW_CONFIRM_COLUMN" description="COM_REDFORM_SHOW_CONFIRM_COLUMN_DESC">
-            <option value="0">JNo</option>
-            <option value="1">JYes</option>
-        </field>
 		<field name="allow_email_aliasing" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING" description="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING_DESC">
 			<option value="0">JNo</option>
 			<option value="1">JYes</option>
