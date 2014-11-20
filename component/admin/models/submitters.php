@@ -128,7 +128,8 @@ class RedformModelSubmitters extends RModelList
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('s.submission_date, s.form_id, f.formname, s.price, s.currency, s.submit_key, s.confirmed_date');
+		$query->select('s.submission_date, s.form_id, f.formname, s.price, s.currency, s.submit_key');
+		$query->select('s.confirmed_date, s.confirmed_ip');
 		$query->select('s.integration');
 		$query->select('f.formname');
 		$query->select('p.status, p.paid');

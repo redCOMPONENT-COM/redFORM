@@ -43,6 +43,7 @@ class RedformModelConfirm extends RModel
 
 		$query->update('#__rwf_submitters')
 			->set('confirmed_date = ' . $this->_db->quote($date))
+			->set('confirmed_ip = ' . $this->_db->quote(getenv('REMOTE_ADDR')))
 			->where('submit_key = ' . $this->_db->quote($key));
 
 		$this->_db->setQuery($query);

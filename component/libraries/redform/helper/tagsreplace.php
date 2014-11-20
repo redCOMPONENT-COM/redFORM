@@ -91,7 +91,7 @@ class RdfHelperTagsreplace
 	 *
 	 * @return mixed
 	 */
-	private function getAnswerReplace($tag)
+	private function  getAnswerReplace($tag)
 	{
 		if (!preg_match('/^\[answer_([0-9]+)\]$/', $tag, $match))
 		{

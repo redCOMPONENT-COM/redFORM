@@ -445,19 +445,19 @@ class RdfAnswers
 		{
 			$submitter = $this->getSubmitter($this->sid);
 
-			$q = "UPDATE " . $db->quoteName('#__rwf_forms_' . $this->formId);
-			$set = array();
+			$query = $db->getQuery(true);
+
+			$query->update($db->quoteName('#__rwf_forms_' . $this->formId))
+				->where('id = ' . $submitter->answer_id);
 
 			foreach ($fields as $ukey => $col)
 			{
-				$set[] = $col . " = " . $values[$ukey];
+				$query->set($col . " = " . $values[$ukey]);
 			}
 
-			$q .= ' SET ' . implode(', ', $set);
-			$q .= " WHERE ID = " . $submitter->answer_id;
-			$db->setQuery($q);
+			$db->setQuery($query);
 
-			if (!$db->query())
+			if (!$db->execute())
 			{
 				JError::raiseError(0, JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'));
 				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_update_answers') . ' ' . $db->getErrorMsg());
@@ -465,13 +465,15 @@ class RdfAnswers
 		}
 		else
 		{
-			/* Construct the query */
-			$q = "INSERT INTO " . $db->quoteName('#__rwf_forms_' . $this->formId) . "
-            (" . implode(', ', $fields) . ")
-            VALUES (" . implode(', ', $values) . ")";
-			$db->setQuery($q);
+			$query = $db->getQuery(true);
 
-			if (!$db->query())
+			$query->insert($db->quoteName('#__rwf_forms_' . $this->formId))
+				->columns(implode(', ', $fields))
+				->values(implode(', ', $values));
+
+			$db->setQuery($query);
+
+			if (!$db->execute())
 			{
 				/* We cannot save the answers, do not continue */
 				if (stristr($db->getError(), 'duplicate entry'))
@@ -666,6 +668,10 @@ class RdfAnswers
 		if ($this->sid)
 		{
 			$row->load($this->sid);
+		}
+		else
+		{
+			$row->submission_ip = getenv('REMOTE_ADDR');
 		}
 
 		$row->form_id = $this->formId;
