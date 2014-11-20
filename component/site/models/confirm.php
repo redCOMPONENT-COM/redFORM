@@ -56,4 +56,29 @@ class RedformModelConfirm extends RModel
 
 		return true;
 	}
+
+	/**
+	 * Send notification for updated ids
+	 *
+	 * @return bool
+	 */
+	public function sendNotification()
+	{
+		$sids = $this->getState('updatedIds');
+
+		if (!$sids)
+		{
+			return true;
+		}
+
+		$rfcore = new RdfCore;
+
+		foreach ($sids AS $sid)
+		{
+			$answers = $rfcore->getSidAnswers($sid);
+			$answers->sendConfirmationNotification();
+		}
+
+		return true;
+	}
 }

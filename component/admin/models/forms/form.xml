@@ -144,6 +144,14 @@
             <option value="1">JYES</option>
         </field>
         <field
+                name="confirmation_notification_recipients"
+                type="text"
+                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_RECIPIENTS_LABEL"
+                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_RECIPIENTS_DESC"
+                maxlength="255"
+                size="100"
+                />
+        <field
                 name="confirmation_contactperson_subject"
                 type="text"
                 label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_SUBJECT_LABEL"

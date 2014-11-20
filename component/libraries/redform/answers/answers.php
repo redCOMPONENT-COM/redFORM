@@ -550,6 +550,48 @@ class RdfAnswers
 	}
 
 	/**
+	 * Send confirmation notification
+	 *
+	 * @return bool
+	 */
+	public function sendConfirmationNotification()
+	{
+		$form = $this->getForm();
+		$addresses = preg_split('/[,;\s]+/', $form->confirmation_notification_recipients);
+		$addresses = array_filter($addresses, array('JMailHelper', 'isEmailAddress'));
+
+		if (!count($addresses))
+		{
+			return true;
+		}
+
+		$mailer = JFactory::getMailer();
+		$mailer->isHTML(true);
+
+		foreach ($addresses as $address)
+		{
+			$mailer->AddAddress($address);
+		}
+
+		$body = $form->confirmation_contactperson_body;
+		$body = $this->replaceTags($body);
+		$htmlmsg = '<html><head><title>Welcome</title></title></head><body>' . $body . '</body></html>';
+		$mailer->setBody($htmlmsg);
+
+		$subject = $this->replaceTags($form->confirmation_contactperson_subject);
+		$mailer->setSubject($subject);
+
+		/* Send the mail */
+		if (!$mailer->Send())
+		{
+			JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (confirmation notification)');
+			RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (confirmation notification):' . $mailer->error);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get form data from table
 	 *
 	 * @return mixed|object|string

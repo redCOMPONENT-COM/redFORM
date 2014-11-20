@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `submitnotification` tinyint(1) NOT NULL default '0',
   `enable_confirmation` tinyint(1) NOT NULL DEFAULT '0',
   `enable_confirmation_notification` tinyint(1) NOT NULL DEFAULT '0',
+  `confirmation_notification_recipients` text default NULL,
   `confirmation_contactperson_subject` varchar(255) default NULL,
   `confirmation_contactperson_body` text DEFAULT NULL,
   `redirect` VARCHAR( 300 ) NULL DEFAULT NULL,

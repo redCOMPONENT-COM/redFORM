@@ -267,6 +267,14 @@ $isNew = (int) $this->item->id <= 0;
 			</div>
 			<div class="control-group">
 				<div class="control-label">
+					<?php echo $this->form->getLabel('confirmation_notification_recipients'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('confirmation_notification_recipients'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
 					<?php echo $this->form->getLabel('confirmation_contactperson_subject'); ?>
 				</div>
 				<div class="controls">

@@ -82,7 +82,11 @@ class RedformControllerRedform extends RedformController
 		$key = $input->get('key');
 
 		$model = $this->getModel('Confirm');
-		$model->confirm($key);
+
+		if ($model->confirm($key))
+		{
+			$model->sendNotification();
+		}
 
 		$input->set('view', 'confirm');
 		$input->set('updatedIds', $model->getState('updatedIds'));
