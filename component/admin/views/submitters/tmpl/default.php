@@ -59,7 +59,7 @@ $listDirn = $this->state->get('list.direction');
 			<th class="nowrap hidden-phone">
 				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Submission_date', 's.submission_date', $listDirn, $listOrder); ?>
 			</th>
-			<?php if ($this->params->get('showconfirmedcolumn')): ?>
+			<?php if ($this->formInfo->enable_confirmation): ?>
 				<th class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_confirmed_HEADER', 's.confirmed_date', $listDirn, $listOrder); ?>
 				</th>
@@ -115,10 +115,10 @@ $listDirn = $this->state->get('list.direction');
 					</a>
 				</td>
 
-				<?php if ($this->params->get('showconfirmedcolumn')): ?>
+				<?php if ($this->formInfo->enable_confirmation): ?>
 				<td>
 					<?php if (RdfHelper::isNonNullDate($item->confirmed_date)): ?>
-						<i class="icon-ok hasTip" title="<?php echo $this->escape($item->submission_date); ?>"/>
+						<i class="icon-ok hasTip" title="<?php echo $this->escape($item->confirmed_date . ' ' . $item->confirmed_ip); ?>"/>
 					<?php endif; ?>
 				</td>
 				<?php endif; ?>

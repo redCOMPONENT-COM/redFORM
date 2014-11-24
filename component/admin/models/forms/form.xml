@@ -124,6 +124,49 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
+
+        <field
+                name="enable_confirmation"
+                type="radio"
+                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_LABEL"
+                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_DESC"
+                >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="enable_confirmation_notification"
+                type="radio"
+                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_LABEL"
+                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_DESC"
+                >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="confirmation_notification_recipients"
+                type="text"
+                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_RECIPIENTS_LABEL"
+                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_RECIPIENTS_DESC"
+                maxlength="255"
+                size="100"
+                />
+        <field
+                name="confirmation_contactperson_subject"
+                type="text"
+                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_SUBJECT_LABEL"
+                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_SUBJECT_DESC"
+                maxlength="255"
+                size="100"
+                />
+        <field
+                name="confirmation_contactperson_body"
+                type="editor"
+                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
+                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
+                filter="safehtml"
+                />
+
 		<field
 				name="submitterinform"
 				type="radio"

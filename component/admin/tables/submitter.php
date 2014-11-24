@@ -34,8 +34,17 @@ class RedformTableSubmitter extends RTable
 	/** @var string Date and time form was submitted */
 	public $submission_date = null;
 
+	/** @var string ip with which form was submitted */
+	public $submission_ip;
+
+	/** @var string Date and time form was confirmed */
+	public $confirmed_date;
+
+	/** @var string ip with which form was confirmed */
+	public $confirmed_ip;
+
 	/** @var string integration key */
-	public $integration 	= null;
+	public $integration = null;
 
 	/** @var int The cross reference ID of the redEVENT event/venue/date */
 	public $xref = null;

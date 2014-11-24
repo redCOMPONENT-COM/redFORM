@@ -26,6 +26,8 @@ class RdfAnswers
 
 	private $formId = 0;
 
+	private $form;
+
 	private $submitter_email = array();
 
 	private $listnames = array();
@@ -443,19 +445,19 @@ class RdfAnswers
 		{
 			$submitter = $this->getSubmitter($this->sid);
 
-			$q = "UPDATE " . $db->quoteName('#__rwf_forms_' . $this->formId);
-			$set = array();
+			$query = $db->getQuery(true);
+
+			$query->update($db->quoteName('#__rwf_forms_' . $this->formId))
+				->where('id = ' . $submitter->answer_id);
 
 			foreach ($fields as $ukey => $col)
 			{
-				$set[] = $col . " = " . $values[$ukey];
+				$query->set($col . " = " . $values[$ukey]);
 			}
 
-			$q .= ' SET ' . implode(', ', $set);
-			$q .= " WHERE ID = " . $submitter->answer_id;
-			$db->setQuery($q);
+			$db->setQuery($query);
 
-			if (!$db->query())
+			if (!$db->execute())
 			{
 				JError::raiseError(0, JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'));
 				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_update_answers') . ' ' . $db->getErrorMsg());
@@ -463,13 +465,15 @@ class RdfAnswers
 		}
 		else
 		{
-			/* Construct the query */
-			$q = "INSERT INTO " . $db->quoteName('#__rwf_forms_' . $this->formId) . "
-            (" . implode(', ', $fields) . ")
-            VALUES (" . implode(', ', $values) . ")";
-			$db->setQuery($q);
+			$query = $db->getQuery(true);
 
-			if (!$db->query())
+			$query->insert($db->quoteName('#__rwf_forms_' . $this->formId))
+				->columns(implode(', ', $fields))
+				->values(implode(', ', $values));
+
+			$db->setQuery($query);
+
+			if (!$db->execute())
 			{
 				/* We cannot save the answers, do not continue */
 				if (stristr($db->getError(), 'duplicate entry'))
@@ -495,6 +499,130 @@ class RdfAnswers
 		$this->setPrice();
 
 		return $this->sid;
+	}
+
+	/**
+	 * Send notification to submitter
+	 *
+	 * @return bool
+	 */
+	public function sendSubmitterNotification()
+	{
+		$emails = $this->getSubmitterEmails();
+		$form = $this->getForm();
+		$cond_recipients = RdfHelperConditionalrecipients::getRecipients($form, $this);
+
+		foreach ($emails as $submitter_email)
+		{
+			$mailer = JFactory::getMailer();
+			$mailer->isHTML(true);
+
+			if ($cond_recipients)
+			{
+				$mailer->From = $cond_recipients[0][0];
+				$mailer->FromName = $cond_recipients[0][1];
+				$mailer->ClearReplyTos();
+				$mailer->addReplyTo($cond_recipients[0]);
+			}
+
+			if (JMailHelper::isEmailAddress($submitter_email))
+			{
+				/* Add the email address */
+				$mailer->AddAddress($submitter_email);
+
+				/* Mail submitter */
+				$submission_body = $form->submissionbody;
+				$submission_body = $this->replaceTags($submission_body);
+				$htmlmsg = '<html><head><title>Welcome</title></title></head><body>' . $submission_body . '</body></html>';
+				$mailer->setBody($htmlmsg);
+
+				$subject = $this->replaceTags($form->submissionsubject);
+				$mailer->setSubject($subject);
+
+				/* Send the mail */
+				if (!$mailer->Send())
+				{
+					JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter)');
+					RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter):' . $mailer->error);
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Send confirmation notification
+	 *
+	 * @return bool
+	 */
+	public function sendConfirmationNotification()
+	{
+		$form = $this->getForm();
+		$addresses = preg_split('/[,;\s]+/', $form->confirmation_notification_recipients);
+		$addresses = array_filter($addresses, array('JMailHelper', 'isEmailAddress'));
+
+		if (!count($addresses))
+		{
+			return true;
+		}
+
+		$mailer = JFactory::getMailer();
+		$mailer->isHTML(true);
+
+		foreach ($addresses as $address)
+		{
+			$mailer->AddAddress($address);
+		}
+
+		$body = $form->confirmation_contactperson_body;
+		$body = $this->replaceTags($body);
+		$htmlmsg = '<html><head><title>Welcome</title></title></head><body>' . $body . '</body></html>';
+		$mailer->setBody($htmlmsg);
+
+		$subject = $this->replaceTags($form->confirmation_contactperson_subject);
+		$mailer->setSubject($subject);
+
+		/* Send the mail */
+		if (!$mailer->Send())
+		{
+			JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (confirmation notification)');
+			RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (confirmation notification):' . $mailer->error);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get form data from table
+	 *
+	 * @return mixed|object|string
+	 */
+	protected function getForm()
+	{
+		if (!$this->form)
+		{
+			$model = new RdfCoreModelForm($this->formId);
+			$this->form = $model->getForm();
+		}
+
+		return $this->form;
+	}
+
+	/**
+	 * Replace tags
+	 *
+	 * @param   string      $text     text
+	 *
+	 * @return mixed
+	 */
+	public function replaceTags($text)
+	{
+		$form = $this->getForm();
+		$replacer = new RdfHelperTagsreplace($form, $this);
+		$text = $replacer->replace($text);
+
+		return $text;
 	}
 
 	/**
@@ -540,6 +668,10 @@ class RdfAnswers
 		if ($this->sid)
 		{
 			$row->load($this->sid);
+		}
+		else
+		{
+			$row->submission_ip = getenv('REMOTE_ADDR');
 		}
 
 		$row->form_id = $this->formId;

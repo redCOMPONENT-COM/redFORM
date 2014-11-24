@@ -43,6 +43,7 @@ class RedformModelConfirm extends RModel
 
 		$query->update('#__rwf_submitters')
 			->set('confirmed_date = ' . $this->_db->quote($date))
+			->set('confirmed_ip = ' . $this->_db->quote(getenv('REMOTE_ADDR')))
 			->where('submit_key = ' . $this->_db->quote($key));
 
 		$this->_db->setQuery($query);
@@ -53,6 +54,31 @@ class RedformModelConfirm extends RModel
 		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onSubmissionConfirmed', array($ids));
+
+		return true;
+	}
+
+	/**
+	 * Send notification for updated ids
+	 *
+	 * @return bool
+	 */
+	public function sendNotification()
+	{
+		$sids = $this->getState('updatedIds');
+
+		if (!$sids)
+		{
+			return true;
+		}
+
+		$rfcore = new RdfCore;
+
+		foreach ($sids AS $sid)
+		{
+			$answers = $rfcore->getSidAnswers($sid);
+			$answers->sendConfirmationNotification();
+		}
 
 		return true;
 	}

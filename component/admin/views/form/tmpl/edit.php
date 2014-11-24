@@ -73,6 +73,11 @@ $isNew = (int) $this->item->id <= 0;
 		</a>
 	</li>
 	<li>
+		<a href="#confirmation" data-toggle="tab">
+			<?php echo JText::_('COM_REDFORM_FORM_TAB_CONFIRMATION'); ?>
+		</a>
+	</li>
+	<li>
 		<a href="#payment" data-toggle="tab">
 			<?php echo JText::_('COM_REDFORM_PAYMENT'); ?>
 		</a>
@@ -239,6 +244,49 @@ $isNew = (int) $this->item->id <= 0;
 					<div class="controls">
 						<?php echo $this->form->getInput('cond_recipients'); ?>
 					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="tab-pane" id="confirmation">
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('enable_confirmation'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('enable_confirmation'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('enable_confirmation_notification'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('enable_confirmation_notification'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('confirmation_notification_recipients'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('confirmation_notification_recipients'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('confirmation_contactperson_subject'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('confirmation_contactperson_subject'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('confirmation_contactperson_body'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('confirmation_contactperson_body'); ?>
 				</div>
 			</div>
 		</div>
