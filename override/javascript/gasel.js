@@ -71,7 +71,7 @@
 		};
 
 		$('.kmd-zip').autocomplete({
-			serviceUrl: "http://geo.oiorest.dk/postnumre.json",
+			serviceUrl: "https://geo.oiorest.dk/postnumre.json",
 			dataType: 'jsonp',
 			paramName: 'q',
 			minChars: 1,
@@ -94,7 +94,7 @@
 
 		$('.kmd-street').autocomplete({
 			serviceUrl: function(query) {
-				var url = "http://geo.oiorest.dk/vejnavne.json";
+				var url = "https://geo.oiorest.dk/vejnavne.json";
 
 				var zip = form.find('.kmd-zip');
 
