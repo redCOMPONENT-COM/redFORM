@@ -71,18 +71,13 @@
 		};
 
 		$('.kmd-zip').autocomplete({
-			serviceUrl: "index.php?option=com_ajax&plugin=gaselkmd&format=json&function=postcode",
+			serviceUrl: "http://geo.oiorest.dk/postnumre.json",
+			dataType: 'jsonp',
 			paramName: 'q',
 			minChars: 1,
 			transformResult: function(jsonresp){
-				var response = JSON.parse(jsonresp);
-
-				if (!response[0]) {
-					return;
-				}
-
 				return {
-					suggestions: $.map(response[0], function(dataItem) {
+					suggestions: $.map(jsonresp, function(dataItem) {
 						return {value: dataItem.nr, data: dataItem};
 					})
 				};
@@ -98,27 +93,23 @@
 		});
 
 		$('.kmd-street').autocomplete({
-			serviceUrl: (function(){
-				var updateUrl = "index.php?option=com_ajax&plugin=gaselkmd&format=json&function=street";
+			serviceUrl: function(query) {
+				var url = "http://geo.oiorest.dk/vejnavne.json";
+
 				var zip = form.find('.kmd-zip');
 
 				if (zip && zip.val()) {
-					updateUrl = updateUrl + '&zip=' + zip.val();
+					url = url + '?postnr=' + zip.val();
 				}
 
-				return updateUrl;
-			}),
-			paramName: 'street',
+				return url;
+			},
+			dataType: 'jsonp',
+			paramName: 'vejnavn',
 			minChars: 2,
 			transformResult: function(jsonresp){
-				var response = JSON.parse(jsonresp);
-
-				if (!response[0]) {
-					return;
-				}
-
 				return {
-					suggestions: $.map(response[0], function(dataItem) {
+					suggestions: $.map(jsonresp, function(dataItem) {
 						return {value: dataItem.navn, data: dataItem};
 					})
 				};
