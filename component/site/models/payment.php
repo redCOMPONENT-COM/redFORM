@@ -356,7 +356,7 @@ class RedFormModelPayment extends JModelLegacy
 	private function _notifySubmitter()
 	{
 		$mainframe = JFactory::getApplication();
-		$mailer = JFactory::getMailer();
+		$mailer = RdfHelper::getMailer();
 
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
@@ -410,7 +410,7 @@ class RedFormModelPayment extends JModelLegacy
 	private function _notifyFormContact()
 	{
 		$mainframe = JFactory::getApplication();
-		$mailer = JFactory::getMailer();
+		$mailer = RdfHelper::getMailer();
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));

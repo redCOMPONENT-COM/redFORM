@@ -33,6 +33,22 @@
 		<field name="ga_code" type="text" default="UA-1111111-22" label="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE" description="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE_DESC"/>
 		 -->
 	</fieldset>
+    <fieldset name="dkim" label="COM_REDFORM_SETTINGS_DKIM" description="COM_REDFORM_SETTINGS_DKIM_DESCRIPTION">
+        <field name="dkim_enable" type="radio" default="0" label="COM_REDFORM_SETTINGS_DKIM_ENABLE_LABEL" description="COM_REDFORM_SETTINGS_DKIM_ENABLE_DESC">
+            <option value="0">JNo</option>
+            <option value="1">JYes</option>
+        </field>
+        <field name="dkim_selector"
+               type="text"  label="COM_REDFORM_SETTINGS_DKIM_SELECTOR_LABEL" description="COM_REDFORM_SETTINGS_DKIM_SELECTOR_DESC" />
+        <field name="dkim_identity"
+               type="text"  label="COM_REDFORM_SETTINGS_DKIM_IDENTITY_LABEL" description="COM_REDFORM_SETTINGS_DKIM_IDENTITY_DESC" />
+        <field name="dkim_passphrase"
+               type="text"  label="COM_REDFORM_SETTINGS_DKIM_PASSPHRASE_LABEL" description="COM_REDFORM_SETTINGS_DKIM_PASSPHRASE_DESC" />
+        <field name="dkim_domain"
+               type="text"  label="COM_REDFORM_SETTINGS_DKIM_DOMAIN_LABEL" description="COM_REDFORM_SETTINGS_DKIM_DOMAIN_DESC" />
+        <field name="dkim_private"
+               type="text"  label="COM_REDFORM_SETTINGS_DKIM_PRIVATE_LABEL" description="COM_REDFORM_SETTINGS_DKIM_PRIVATE_DESC" />
+    </fieldset>
 
 	<fieldset	name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"
