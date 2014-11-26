@@ -515,7 +515,6 @@ class RdfAnswers
 		foreach ($emails as $submitter_email)
 		{
 			$mailer = JFactory::getMailer();
-			$mailer->isHTML(true);
 
 			if ($cond_recipients)
 			{
@@ -530,14 +529,14 @@ class RdfAnswers
 				/* Add the email address */
 				$mailer->AddAddress($submitter_email);
 
+				$subject = $this->replaceTags($form->submissionsubject);
+				$mailer->setSubject($subject);
+
 				/* Mail submitter */
 				$submission_body = $form->submissionbody;
 				$submission_body = $this->replaceTags($submission_body);
-				$htmlmsg = '<html><head><title>Welcome</title></title></head><body>' . $submission_body . '</body></html>';
-				$mailer->setBody($htmlmsg);
-
-				$subject = $this->replaceTags($form->submissionsubject);
-				$mailer->setSubject($subject);
+				$htmlmsg = RdfHelper::wrapMailHtmlBody($submission_body, $subject);
+				$mailer->MsgHTML($htmlmsg);
 
 				/* Send the mail */
 				if (!$mailer->Send())
@@ -568,20 +567,19 @@ class RdfAnswers
 		}
 
 		$mailer = JFactory::getMailer();
-		$mailer->isHTML(true);
 
 		foreach ($addresses as $address)
 		{
 			$mailer->AddAddress($address);
 		}
 
-		$body = $form->confirmation_contactperson_body;
-		$body = $this->replaceTags($body);
-		$htmlmsg = '<html><head><title>Welcome</title></title></head><body>' . $body . '</body></html>';
-		$mailer->setBody($htmlmsg);
-
 		$subject = $this->replaceTags($form->confirmation_contactperson_subject);
 		$mailer->setSubject($subject);
+
+		$body = $form->confirmation_contactperson_body;
+		$body = $this->replaceTags($body);
+		$htmlmsg = RdfHelper::wrapMailHtmlBody($body, $subject);
+		$mailer->MsgHTML($htmlmsg);
 
 		/* Send the mail */
 		if (!$mailer->Send())

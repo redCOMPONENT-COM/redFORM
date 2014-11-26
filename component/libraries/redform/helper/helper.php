@@ -86,4 +86,21 @@ class RdfHelper
 
 		return true;
 	}
+
+	/**
+	 * Wrap email content in proper html
+	 *
+	 * @param   string  $body     content of body tag
+	 * @param   string  $subject  subject of the email
+	 *
+	 * @return string
+	 */
+	public static function wrapMailHtmlBody($body, $subject)
+	{
+		return RdfHelperLayout::render('email.bodywrapper',
+			array('body' => $body, 'subject' => $subject),
+			'',
+			array('client' => 0, 'component' => 'com_redform')
+		);
+	}
 }
