@@ -514,7 +514,7 @@ class RdfAnswers
 
 		foreach ($emails as $submitter_email)
 		{
-			$mailer = JFactory::getMailer();
+			$mailer = RdfHelper::getMailer();
 
 			if ($cond_recipients)
 			{
@@ -566,7 +566,7 @@ class RdfAnswers
 			return true;
 		}
 
-		$mailer = JFactory::getMailer();
+		$mailer = RdfHelper::getMailer();
 
 		foreach ($addresses as $address)
 		{

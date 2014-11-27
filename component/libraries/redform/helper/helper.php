@@ -88,6 +88,52 @@ class RdfHelper
 	}
 
 	/**
+	 * Return mailer
+	 *
+	 * @return JMail
+	 */
+	public static function getMailer()
+	{
+		$mailer = JFactory::getMailer();
+		$params = JComponentHelper::getParams('com_redform');
+
+		if ($encoding = $params->get('email_encoding', ''))
+		{
+			$mailer->Encoding = $encoding;
+		}
+
+		if ($params->get('dkim_enable', 0))
+		{
+			if ($params->get('dkim_selector'))
+			{
+				$mailer->DKIM_selector = $params->get('dkim_selector');
+			}
+
+			if ($params->get('dkim_identity'))
+			{
+				$mailer->DKIM_identity = $params->get('dkim_identity');
+			}
+
+			if ($params->get('dkim_passphrase'))
+			{
+				$mailer->DKIM_passphrase = $params->get('dkim_passphrase');
+			}
+
+			if ($params->get('dkim_domain'))
+			{
+				$mailer->DKIM_domain = $params->get('dkim_domain');
+			}
+
+			if ($params->get('dkim_private'))
+			{
+				$mailer->DKIM_private = $params->get('dkim_private');
+			}
+		}
+
+		return $mailer;
+	}
+
+	/**
 	 * Wrap email content in proper html
 	 *
 	 * @param   string  $body     content of body tag

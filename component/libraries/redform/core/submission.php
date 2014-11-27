@@ -441,7 +441,7 @@ class RdfCoreSubmission extends JObject
 		if ($form->contactpersoninform || !empty($recipients))
 		{
 			// Init mailer
-			$mailer = JFactory::getMailer();
+			$mailer = RdfHelper::getMailer();
 
 			if ($form->contactpersoninform)
 			{
