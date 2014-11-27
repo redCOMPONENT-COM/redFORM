@@ -97,6 +97,11 @@ class RdfHelper
 		$mailer = JFactory::getMailer();
 		$params = JComponentHelper::getParams('com_redform');
 
+		if ($encoding = $params->get('email_encoding', ''))
+		{
+			$mailer->Encoding = $encoding;
+		}
+
 		if ($params->get('dkim_enable', 0))
 		{
 			if ($params->get('dkim_selector'))
