@@ -5,7 +5,7 @@
 
 	$(document).ready(function() {
 		$('input[type=checkbox].kmd-gas, input[type=checkbox].kmd-elec').each(function(){
-			gaselecform(this);
+			setGasElecForm(this);
 		});
 	});
 
@@ -13,7 +13,7 @@
 		return value.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 	}
 
-	var gaselecform = function(element) {
+	var setGasElecForm = function(element) {
 		var form = $(element.form);
 		var isGas = $(element).hasClass('kmd-gas');
 
@@ -70,7 +70,7 @@
 			form.find('input.kmd-rategroups').val(rates);
 		};
 
-		$('.kmd-zip').autocomplete({
+		form.find('.kmd-zip').autocomplete({
 			serviceUrl: "https://geo.oiorest.dk/postnumre.json",
 			dataType: 'jsonp',
 			paramName: 'q',
@@ -92,7 +92,7 @@
 			}
 		});
 
-		$('.kmd-street').autocomplete({
+		form.find('.kmd-street').autocomplete({
 			serviceUrl: function(query) {
 				var url = "https://geo.oiorest.dk/vejnavne.json";
 
