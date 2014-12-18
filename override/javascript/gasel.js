@@ -99,7 +99,14 @@
 				var zip = form.find('.kmd-zip');
 
 				if (zip && zip.val()) {
-					url = url + '?postnr=' + zip.val();
+					var range = zip.val().split("-");
+
+					if (range.length > 1) {
+						url = url + '?frapostnr=' + range[0] + '&tilpostnr=' + range[1];
+					}
+					else {
+						url = url + '?postnr=' + range[0];
+					}
 				}
 
 				return url;
