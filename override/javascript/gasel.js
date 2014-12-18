@@ -88,7 +88,7 @@
 				return suggestion.value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>') + ' ' + suggestion.data.navn;
 			},
 			onSelect : function(suggestion) {
-				form.find('.kmd-city').val(suggestion.data.navn);
+				$('.kmd-city').val(suggestion.data.navn);
 			}
 		});
 
@@ -96,7 +96,7 @@
 			serviceUrl: function(query) {
 				var url = "https://geo.oiorest.dk/vejnavne.json";
 
-				var zip = form.find('.kmd-zip');
+				var zip = $('.kmd-zip');
 
 				if (zip && zip.val()) {
 					var range = zip.val().split("-");
@@ -122,19 +122,19 @@
 				};
 			},
 			onSelect : function(suggestion) {
-				var streetcodeElement = form.find('.kmd-streetcode');
+				var streetcodeElement = $('.kmd-streetcode');
 				if (streetcodeElement) {
 					streetcodeElement.val(suggestion.data.kode);
 				}
 
-				var municipalityNumberElement = form.find('.kmd-municipalitynumber');
+				var municipalityNumberElement = $('.kmd-municipalitynumber');
 				if (municipalityNumberElement) {
 					municipalityNumberElement.val(suggestion.data.kommune.kode);
 				}
 			}
 		});
 
-		form.find('input.kmd-gas, input.kmd-elec, input.kmd-gas-radio, input.kmd-elec-radio').click(updateRategroups);
+		$('input.kmd-gas, input.kmd-elec, input.kmd-gas-radio, input.kmd-elec-radio').click(updateRategroups);
 		updateRategroups();
 	}
 
