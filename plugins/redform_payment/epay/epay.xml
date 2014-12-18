@@ -114,6 +114,9 @@
                     <option value="3">Full screen</option>
                     <option value="4">Integrated payment form</option>
                 </field>
+
+	            <field name="extrafee" type="text" label="PLG_REDFORM_PAYMENT_EPAY_EXTRAFEE"
+	                   description="PLG_REDFORM_PAYMENT_EPAY_EXTRAFEE_DESC" />
             </fieldset>
 
             <fieldset name="extra" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_EXTRA">

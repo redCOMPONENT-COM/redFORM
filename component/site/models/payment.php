@@ -356,12 +356,11 @@ class RedFormModelPayment extends JModelLegacy
 	private function _notifySubmitter()
 	{
 		$mainframe = JFactory::getApplication();
-		$mailer = JFactory::getMailer();
+		$mailer = RdfHelper::getMailer();
 
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
-		$mailer->IsHTML(true);
 
 		$form = $this->getForm();
 
@@ -382,7 +381,9 @@ class RedFormModelPayment extends JModelLegacy
 			: $form->submitterpaymentnotificationbody);
 		$link = JRoute::_(JURI::root() . 'administrator/index.php?option=com_redform&view=submitters&form_id=' . $form->id);
 		$body = $replaceHelper->replace($body, array('[submitters]' => $link));
-		$mailer->setBody($body);
+
+		$body = RdfHelper::wrapMailHtmlBody($body, $subject);
+		$mailer->MsgHTML($body);
 
 		$contact = $core->getSubmissionContactEmail($this->submitKey, true);
 
@@ -409,11 +410,10 @@ class RedFormModelPayment extends JModelLegacy
 	private function _notifyFormContact()
 	{
 		$mainframe = JFactory::getApplication();
-		$mailer = JFactory::getMailer();
+		$mailer = RdfHelper::getMailer();
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
-		$mailer->IsHTML(true);
 
 		$form = $this->getForm();
 
@@ -448,9 +448,10 @@ class RedFormModelPayment extends JModelLegacy
 
 			$link = JRoute::_(JURI::root() . 'administrator/index.php?option=com_redform&view=submitters&form_id=' . $form->id);
 			$body = $replaceHelper->replace($body, array('[submitters]' => $link));
+			$body = RdfHelper::wrapMailHtmlBody($body, $subject);
 
 			$mailer->setSubject($subject);
-			$mailer->setBody($body);
+			$mailer->MsgHTML($body);
 
 			if (!$mailer->send())
 			{

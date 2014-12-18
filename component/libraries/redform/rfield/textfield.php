@@ -39,7 +39,7 @@ class RdfRfieldTextfield extends RdfRfield
 			$properties['class'] = $class;
 		}
 
-		$properties['value'] = $this->getValue();
+		$properties['value'] = $this->getValue() ? $this->getValue() : $this->default;
 
 		$properties['size'] = $this->getParam('size', 25);
 		$properties['maxlength'] = $this->getParam('maxlength', 250);

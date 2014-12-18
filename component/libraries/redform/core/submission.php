@@ -441,8 +441,7 @@ class RdfCoreSubmission extends JObject
 		if ($form->contactpersoninform || !empty($recipients))
 		{
 			// Init mailer
-			$mailer = JFactory::getMailer();
-			$mailer->isHTML(true);
+			$mailer = RdfHelper::getMailer();
 
 			if ($form->contactpersoninform)
 			{
@@ -536,15 +535,13 @@ class RdfCoreSubmission extends JObject
 			$mailer->setSubject($subject);
 
 			// Mail body
-			$htmlmsg = '<html><head><title></title></title></head><body>';
-
 			if ($new)
 			{
-				$htmlmsg .= $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY'));
+				$htmlmsg = $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY'));
 			}
 			else
 			{
-				$htmlmsg .= $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY'));
+				$htmlmsg = $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY'));
 			}
 
 			/* Add user submitted data if set */
@@ -633,8 +630,8 @@ class RdfCoreSubmission extends JObject
 				}
 			}
 
-			$htmlmsg .= '</body></html>';
-			$mailer->setBody($htmlmsg);
+			RdfHelper::wrapMailHtmlBody($htmlmsg, $subject);
+			$mailer->MsgHTML($htmlmsg);
 
 			// Send the mail
 			if (!$mailer->Send())

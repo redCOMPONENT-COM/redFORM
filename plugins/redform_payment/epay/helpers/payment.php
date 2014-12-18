@@ -42,10 +42,12 @@ class PaymentEpay extends RdfPaymentHelper
 
 		$currency = RHelperCurrency::getIsoNumber($details->currency);
 
+		$price = $this->getPrice($details);
+
 		$params = array(
 			'merchantnumber' => $this->params->get('EPAY_MERCHANTNUMBER'),
 			'currency' => $currency,
-			'amount' => round($details->price * 100),
+			'amount' => round($price * 100),
 			'orderid' => $request->uniqueid,
 			'windowstate' => $this->params->get('windowstate'),
 			'paymentcollection' => $this->params->get('paymentcollection'),
@@ -141,10 +143,11 @@ class PaymentEpay extends RdfPaymentHelper
 		$resp = implode("\n", $resp);
 
 		$details = $this->_getSubmission($submit_key);
+		$price = $this->getPrice($details);
 
 		$currency = RHelperCurrency::getIsoNumber($details->currency);
 
-		if (round($details->price * 100) != JRequest::getVar('amount'))
+		if (round($price * 100) != JRequest::getVar('amount'))
 		{
 			RdfHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH' . ' for ' . $submit_key);
 			$this->writeTransaction($submit_key, 'EPAY NOTIFICATION PRICE MISMATCH' . "\n" . $resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
@@ -222,5 +225,30 @@ class PaymentEpay extends RdfPaymentHelper
 		}
 
 		return $uri;
+	}
+
+	/**
+	 * get price, checking for extra fee
+	 *
+	 * @param   object  $details  details
+	 *
+	 * @return float
+	 */
+	private function getPrice($details)
+	{
+		if ((float) $this->params->get('extrafee'))
+		{
+			$extraPercentage = (float) $this->params->get('extrafee');
+			$price = $details->price * (1 + $extraPercentage / 100);
+
+			// Trim to precision
+			$price = round($price, RHelperCurrency::getPrecision($details->currency));
+		}
+		else
+		{
+			$price = $details->price;
+		}
+
+		return $price;
 	}
 }
