@@ -137,9 +137,10 @@
 	</target>
 
 	<target name="zipplugins">
-	    <echo msg="handling plugins group ${pdirname}" />
+		<echo msg="handling plugins group ${pdirname}" />
 		<foreach param="dirname" absparam="absname" target="zipfolder">
-			<property name="myp" value="plugins/${pdirname}" />
+			<property name="myp" value="plugins" />
+			<property name="prefix" value="plg_${pdirname}_" />
 			<fileset dir="${pabsname}">
 				<type type="dir"/>
 				<depth max="0" min="0" />
@@ -147,9 +148,22 @@
 		</foreach>
 	</target>
 
+	<target name="zipplugins">
+		<echo msg="handling plugins group ${pdirname}" />
+		<foreach param="dirname" absparam="absname" target="zipfolder">
+			<property name="myp" value="plugins" />
+			<property name="prefix" value="plg_${pdirname}_" />
+			<fileset dir="${pabsname}">
+				<type type="dir"/>
+				<depth max="0" min="0" />
+			</fileset>
+		</foreach>
+	</target>
+
+
 	<target name="zipfolder">
-	    <echo msg="packaging ${dirname} ${absname}" />
-		<copy todir="${dirs.tmp}/${myp}" >
+		<echo msg="packaging ${dirname} ${absname}" />
+		<copy todir="${dirs.tmp}/${myp}/${prefix}${dirname}" >
 			<fileset dir="${absname}">
 				<include name="**" />
 			</fileset>
@@ -162,7 +176,7 @@
 		</copy>
 		<mkdir dir="${dirs.release}/${myp}" />
 		<!-- Create the package -->
-		<zip basedir="${dirs.tmp}/${myp}" destfile="${dirs.release}/${myp}/${dirname}-${version}.zip" includeemptydirs="true" />
+		<zip basedir="${dirs.tmp}/${myp}/${prefix}${dirname}" destfile="${dirs.release}/${myp}/${prefix}${dirname}-${version}.zip" includeemptydirs="true" />
 	</target>
 
 	<!--
