@@ -61,9 +61,17 @@
 	Tasks - Joomla! packages
 	====================================================================================================
 	-->
+	<target name="copyredcore">
+		<phing phingfile="${dirs.root}/redCORE/redcore_copy_mandatory.xml"
+		       target="copyframework"
+		       haltonfailure="true">
+			<property name="redcoretargetdir" value="${dirs.tmp}/component/redCORE" />
+			<property name="redcorepath" value="${dirs.root}/redCORE" />
+		</phing>
+	</target>
 
-	<target name="release" description="Installation Package for Joomla! 1.6+"
-		depends="setup-properties, new-release">
+	<target name="release" description="Installation Package for Joomla!"
+		depends="setup-properties, new-release, copyredcore">
 
 		<copy todir="${dirs.tmp}/component" >
 			<fileset dir="${dirs.root}/component">
