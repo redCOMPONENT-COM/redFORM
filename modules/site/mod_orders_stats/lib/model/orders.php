@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 /**
- * mod_orders_stats model
+ * Orders model
  *
  * @since  1.0
  */
@@ -18,6 +18,11 @@ class ModordersstatsLibModelOrders extends RModel
 {
 	private $params;
 
+	/**
+	 * Constructor
+	 *
+	 * @param   array  $params  params
+	 */
 	public function __construct($params)
 	{
 		parent::__construct();
@@ -25,6 +30,13 @@ class ModordersstatsLibModelOrders extends RModel
 		$this->params = $params;
 	}
 
+	/**
+	 * Get orders
+	 *
+	 * @param   int  $formId  form id
+	 *
+	 * @return array
+	 */
 	public function getOrders($formId)
 	{
 		$orders = array();
@@ -39,6 +51,13 @@ class ModordersstatsLibModelOrders extends RModel
 		return $orders;
 	}
 
+	/**
+	 * Get submissions from db
+	 *
+	 * @param   int  $formId  form id
+	 *
+	 * @return mixed
+	 */
 	private function getSubmissions($formId)
 	{
 		$model = RModel::getAdminInstance('Submitters', array('ignore_request' => true), 'com_redform');
@@ -50,6 +69,13 @@ class ModordersstatsLibModelOrders extends RModel
 		return $model->getItems();
 	}
 
+	/**
+	 * Map submission to order
+	 *
+	 * @param   object  $submission  data
+	 *
+	 * @return ModordersstatsLibOrder
+	 */
 	private function mapSubmission($submission)
 	{
 		$order = new ModordersstatsLibOrder;
@@ -62,6 +88,10 @@ class ModordersstatsLibModelOrders extends RModel
 		}
 
 		if ($company = $this->mapField('companyFields', $submission))
+		{
+			$order->company = $company;
+		}
+		elseif ($company = $this->getCompany($order->salesPerson))
 		{
 			$order->company = $company;
 		}
@@ -87,6 +117,14 @@ class ModordersstatsLibModelOrders extends RModel
 		return $order;
 	}
 
+	/**
+	 * Map form fields to order
+	 *
+	 * @param   string  $name        field name
+	 * @param   object  $submission  submission data
+	 *
+	 * @return string
+	 */
 	private function mapField($name, $submission)
 	{
 		$fieldIds = $this->params->get($name);
@@ -107,5 +145,66 @@ class ModordersstatsLibModelOrders extends RModel
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get company name from user group name
+	 *
+	 * @param   string  $userFullname  user name
+	 *
+	 * @return mixed
+	 */
+	private function getCompany($userFullname)
+	{
+		if ($id = $this->getUserId($userFullname))
+		{
+			$groupsIds = JUserHelper::getUserGroups($id);
+			$companyGroups = $this->params->get('companyGroups');
+			$found = array_intersect($groupsIds, $companyGroups);
+
+			if ($found && count($found))
+			{
+				return $this->getGroupName($found[0]);
+			}
+		}
+	}
+
+
+	/**
+	 * Returns userid if a user exists
+	 *
+	 * @param   string  $userFullname  The name to search on.
+	 *
+	 * @return  integer  The user id or 0 if not found.
+	 */
+	private function getUserId($userFullname)
+	{
+		$db = $this->_db;
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName('id'));
+		$query->from($db->quoteName('#__users'));
+		$query->where($db->quoteName('name') . ' = ' . $db->quote($userFullname));
+		$db->setQuery($query, 0, 1);
+
+		return $db->loadResult();
+	}
+
+	/**
+	 * return usergroup name
+	 *
+	 * @param   int  $id  id
+	 *
+	 * @return mixed
+	 */
+	private function getGroupName($id)
+	{
+		$db = $this->_db;
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName('title'));
+		$query->from($db->quoteName('#__usergroups'));
+		$query->where($db->quoteName('id') . ' = ' . $db->quote($id));
+		$db->setQuery($query, 0, 1);
+
+		return $db->loadResult();
 	}
 }

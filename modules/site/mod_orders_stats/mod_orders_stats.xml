@@ -15,10 +15,10 @@
 	<description>MOD_ORDERS_STATS_XML_DESCRIPTION</description>
 
 	<files>
-		<filename module="mod_order_stats">mod_orders_stats.php</filename>
-		<filename>mod_orders_stats.css</filename>
+		<filename module="mod_orders_stats">mod_orders_stats.php</filename>
 		<folder>language</folder>
 		<folder>lib</folder>
+		<folder>media</folder>
 		<folder>tmpl</folder>
 	</files>
 
@@ -44,6 +44,13 @@
 				       multiple="1"
 				       label="MOD_ORDERS_STATS_XML_COMPANY_FIELDS_LABEL"
 				       description="MOD_ORDERS_STATS_XML_COMPANY_FIELDS_DESC">
+				</field>
+
+				<field name="companyGroups"
+				       type="usergroup"
+				       multiple="1"
+				       label="MOD_ORDERS_STATS_XML_COMPANY_GROUPS_LABEL"
+				       description="MOD_ORDERS_STATS_XML_COMPANY_GROUPS_DESC">
 				</field>
 
 				<field name="elFields"

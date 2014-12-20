@@ -109,15 +109,16 @@
 		  </fileset>
 		</foreach>
 		-->
-		<!-- site modules
+		<!-- site modules -->
 		<foreach param="dirname" absparam="absname" target="zipfolder">
 			<property name="myp" value="modules/site" />
+			<property name="prefix" value="" />
 		  	<fileset dir="${dirs.root}/modules/site">
 		  	<type type="dir"/>
 	        <depth max="0" min="0" />
 		  </fileset>
 		</foreach>
-		-->
+
 		<!-- languages -->
 		<foreach param="dirname" absparam="absname" target="zipfolder">
 			<property name="myp" value="language" />
