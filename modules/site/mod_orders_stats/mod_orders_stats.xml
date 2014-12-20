@@ -17,8 +17,8 @@
 	<files>
 		<filename module="mod_order_stats">mod_orders_stats.php</filename>
 		<filename>mod_orders_stats.css</filename>
-		<filename>helper.php</filename>
 		<folder>language</folder>
+		<folder>lib</folder>
 		<folder>tmpl</folder>
 	</files>
 
@@ -30,6 +30,34 @@
 				       multiple="1"
 					label="MOD_ORDERS_STATS_XML_FORMS_LABEL"
 					description="MOD_ORDERS_STATS_XML_FORMS_DESC">
+				</field>
+
+				<field name="nameFields"
+				       type="redformfield"
+				       multiple="1"
+				       label="MOD_ORDERS_STATS_XML_NAME_FIELDS_LABEL"
+				       description="MOD_ORDERS_STATS_XML_NAME_FIELDS_DESC">
+				</field>
+
+				<field name="companyFields"
+				       type="redformfield"
+				       multiple="1"
+				       label="MOD_ORDERS_STATS_XML_COMPANY_FIELDS_LABEL"
+				       description="MOD_ORDERS_STATS_XML_COMPANY_FIELDS_DESC">
+				</field>
+
+				<field name="elFields"
+				       type="redformfield"
+				       multiple="1"
+				       label="MOD_ORDERS_STATS_XML_ELECTRICITY_FIELDS_LABEL"
+				       description="MOD_ORDERS_STATS_XML_ELECTRICITY_FIELDS_DESC">
+				</field>
+
+				<field name="gasFields"
+				       type="redformfield"
+				       multiple="1"
+				       label="MOD_ORDERS_STATS_XML_GAS_FIELDS_LABEL"
+				       description="MOD_ORDERS_STATS_XML_GAS_FIELDS_DESC">
 				</field>
 			</fieldset>
 

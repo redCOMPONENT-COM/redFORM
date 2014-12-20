@@ -21,13 +21,15 @@ include_once $redcoreLoader;
 
 RBootstrap::bootstrap();
 
-require_once __DIR__ . '/helper.php';
+RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
+RLoader::registerPrefix('Redform', JPATH_ADMINISTRATOR . '/components/com_redform');
+RLoader::registerPrefix('Modordersstats', __DIR__);
 
 // Prepare for cache
 $cacheparams = new stdClass;
 $cacheparams->cachemode = 'static';
-$cacheparams->class = 'ModOrdersStatsHelper';
-$cacheparams->method = 'getList';
+$cacheparams->class = 'ModordersstatsLibHelper';
+$cacheparams->method = 'getData';
 $cacheparams->methodparams = $params;
 
 $items = JModuleHelper::moduleCache($module, $params, $cacheparams);
