@@ -9,7 +9,15 @@
 
 defined('_JEXEC') or die;
 
+$doc = JFactory::getDocument();
+$doc->addScript("https://www.google.com/jsapi");
+$doc->addScript(JURI::base() . 'modules/mod_orders_stats/media/js/mod_orders_stats.js');
+$doc->addStyleSheet(JURI::base() . 'modules/mod_orders_stats/media/css/mod_orders_stats.css');
 ?>
+<script type="text/javascript">
+	var companySales = <?php echo json_encode($items->companySales); ?>;
+</script>
+
 <div role="tabpanel">
 	<!-- Nav tabs -->
 	<ul class="nav nav-tabs" role="tablist">

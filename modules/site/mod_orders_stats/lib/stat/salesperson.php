@@ -19,22 +19,22 @@ class ModordersstatsLibStatSalesperson
 	/**
 	 * @var string sales person
 	 */
-	private $name;
+	public $name;
 
 	/**
 	 * @var string company
 	 */
-	private $company;
+	public $company;
 
 	/**
 	 * @var int electricity sales
 	 */
-	private $elec = 0;
+	public $elec = 0;
 
 	/**
 	 * @var int gas sales
 	 */
-	private $gas = 0;
+	public $gas = 0;
 
 	public function __construct($name, $company)
 	{

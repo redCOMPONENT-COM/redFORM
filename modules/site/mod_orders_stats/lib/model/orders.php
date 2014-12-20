@@ -63,17 +63,25 @@ class ModordersstatsLibModelOrders extends RModel
 
 		if ($company = $this->mapField('companyFields', $submission))
 		{
-			$order->company = $name;
+			$order->company = $company;
 		}
 
-		if ($hasElec = $this->mapField('elFields', $submission))
+		if ($val = $this->mapField('elFields', $submission))
 		{
-			$order->hasElec = $hasElec;
+			// Checkbox or radio depending on form
+			if ($val == 1 || $val == 'new')
+			{
+				$order->hasElec = 1;
+			}
 		}
 
-		if ($hasGas = $this->mapField('gasFields', $submission))
+		if ($val = $this->mapField('gasFields', $submission))
 		{
-			$order->hasGas = $hasGas;
+			// Checkbox or radio depending on form
+			if ($val == 1 || $val == 'new')
+			{
+				$order->hasGas = 1;
+			}
 		}
 
 		return $order;
