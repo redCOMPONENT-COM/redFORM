@@ -37,6 +37,11 @@ class ModordersstatsLibStats
 
 	private function getTopSales()
 	{
+		if (!$this->orders)
+		{
+			return array();
+		}
+
 		$grouped = array();
 
 		foreach ($this->orders as $order)
@@ -57,6 +62,11 @@ class ModordersstatsLibStats
 
 	private function getCompanySales()
 	{
+		if (!$this->orders)
+		{
+			return array();
+		}
+
 		$grouped = array();
 
 		foreach ($this->orders as $order)

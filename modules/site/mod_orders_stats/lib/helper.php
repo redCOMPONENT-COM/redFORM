@@ -35,15 +35,9 @@ class ModordersstatsLibHelper
 			return false;
 		}
 
-
 		foreach ($formIds as $formId)
 		{
 			$orders = array_merge($orders, $model->getOrders($formId));
-		}
-
-		if (!count($orders))
-		{
-			return false;
 		}
 
 		$model = new ModordersstatsLibStats($orders);
