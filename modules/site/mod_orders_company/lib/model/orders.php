@@ -14,11 +14,9 @@ defined('_JEXEC') or die;
  *
  * @since  1.0
  */
-class ModordersstatsLibModelOrders extends RModel
+class ModorderscompanyLibModelOrders extends RModel
 {
 	private $params;
-
-	private $company;
 
 	/**
 	 * Constructor
@@ -35,15 +33,12 @@ class ModordersstatsLibModelOrders extends RModel
 	/**
 	 * Get orders
 	 *
-	 * @param   int     $formId   form id
-	 * @param   string  $company  company
+	 * @param   int  $formId  form id
 	 *
 	 * @return array
 	 */
-	public function getOrders($formId, $company)
+	public function getOrders($formId)
 	{
-		$this->company = $company;
-
 		$orders = array();
 
 		$submissions = $this->getSubmissions($formId);
@@ -68,8 +63,8 @@ class ModordersstatsLibModelOrders extends RModel
 		$model = RModel::getAdminInstance('Submitters', array('ignore_request' => true), 'com_redform');
 		$model->setState('filter.form_id', $formId);
 		$model->setState('filter.confirmed', 1);
-		$model->setState('filter.from', date('Y-m-d 00:00:00', time()));
-		$model->setState('filter.to', date('Y-m-d 23:59:59', time()));
+		$model->setState('filter.from', date('Y-m-1 00:00:00', time()));
+		$model->setState('filter.to', date('Y-m-t 23:59:59', time()));
 		$model->setState('limit', 0);
 
 		return $model->getItems();
@@ -80,19 +75,13 @@ class ModordersstatsLibModelOrders extends RModel
 	 *
 	 * @param   object  $submission  data
 	 *
-	 * @return ModordersstatsLibOrder
+	 * @return ModorderscompanyLibOrder
 	 */
 	private function mapSubmission($submission)
 	{
-		$order = new ModordersstatsLibOrder;
-		$order->company = $this->company;
+		$order = new ModorderscompanyLibOrder;
 
 		$order->date = $submission->submission_date;
-
-		if ($name = $this->mapField('nameFields', $submission))
-		{
-			$order->salesPerson = $name;
-		}
 
 		if ($val = $this->mapField('elFields', $submission))
 		{
