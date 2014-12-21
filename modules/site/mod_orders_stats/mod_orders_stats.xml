@@ -26,8 +26,9 @@
 		<fields name="params">
 			<fieldset name="basic" addfieldpath="/libraries/redform/form/fields">
 				<field name="formIds"
-				       type="redformform"
-				       multiple="1"
+				       type="textarea"
+				       cols="30"
+				       rows="15"
 					label="MOD_ORDERS_STATS_XML_FORMS_LABEL"
 					description="MOD_ORDERS_STATS_XML_FORMS_DESC">
 				</field>

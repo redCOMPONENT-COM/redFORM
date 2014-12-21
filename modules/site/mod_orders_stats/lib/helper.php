@@ -26,7 +26,7 @@ class ModordersstatsLibHelper
 	public static function getData($params)
 	{
 		$model = new ModordersstatsLibModelOrders($params);
-		$formIds = $params->get('formIds');
+		$formIds = explode("\n", $params->get('formIds'));
 
 		$orders = array();
 
@@ -35,9 +35,16 @@ class ModordersstatsLibHelper
 			return false;
 		}
 
-		foreach ($formIds as $formId)
+		foreach ($formIds as $line)
 		{
-			$orders = array_merge($orders, $model->getOrders($formId));
+			$parts = explode(";", $line);
+
+			if (!count($parts) == 2)
+			{
+				continue;
+			}
+
+			$orders = array_merge($orders, $model->getOrders((int) $parts[0], $parts[1]));
 		}
 
 		$model = new ModordersstatsLibStats($orders);

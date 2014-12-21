@@ -18,6 +18,8 @@ class ModordersstatsLibModelOrders extends RModel
 {
 	private $params;
 
+	private $company;
+
 	/**
 	 * Constructor
 	 *
@@ -33,12 +35,15 @@ class ModordersstatsLibModelOrders extends RModel
 	/**
 	 * Get orders
 	 *
-	 * @param   int  $formId  form id
+	 * @param   int     $formId   form id
+	 * @param   string  $company  company
 	 *
 	 * @return array
 	 */
-	public function getOrders($formId)
+	public function getOrders($formId, $company)
 	{
+		$this->company = $company;
+
 		$orders = array();
 
 		$submissions = $this->getSubmissions($formId);
@@ -79,21 +84,13 @@ class ModordersstatsLibModelOrders extends RModel
 	private function mapSubmission($submission)
 	{
 		$order = new ModordersstatsLibOrder;
+		$order->company = $this->company;
 
 		$order->date = $submission->submission_date;
 
 		if ($name = $this->mapField('nameFields', $submission))
 		{
 			$order->salesPerson = $name;
-		}
-
-		if ($company = $this->mapField('companyFields', $submission))
-		{
-			$order->company = $company;
-		}
-		elseif ($company = $this->getCompany($order->salesPerson))
-		{
-			$order->company = $company;
 		}
 
 		if ($val = $this->mapField('elFields', $submission))
@@ -145,66 +142,5 @@ class ModordersstatsLibModelOrders extends RModel
 		}
 
 		return false;
-	}
-
-	/**
-	 * Get company name from user group name
-	 *
-	 * @param   string  $userFullname  user name
-	 *
-	 * @return mixed
-	 */
-	private function getCompany($userFullname)
-	{
-		if ($id = $this->getUserId($userFullname))
-		{
-			$groupsIds = JUserHelper::getUserGroups($id);
-			$companyGroups = $this->params->get('companyGroups');
-			$found = array_intersect($groupsIds, $companyGroups);
-
-			if ($found && count($found))
-			{
-				return $this->getGroupName($found[0]);
-			}
-		}
-	}
-
-
-	/**
-	 * Returns userid if a user exists
-	 *
-	 * @param   string  $userFullname  The name to search on.
-	 *
-	 * @return  integer  The user id or 0 if not found.
-	 */
-	private function getUserId($userFullname)
-	{
-		$db = $this->_db;
-		$query = $db->getQuery(true);
-		$query->select($db->quoteName('id'));
-		$query->from($db->quoteName('#__users'));
-		$query->where($db->quoteName('name') . ' = ' . $db->quote($userFullname));
-		$db->setQuery($query, 0, 1);
-
-		return $db->loadResult();
-	}
-
-	/**
-	 * return usergroup name
-	 *
-	 * @param   int  $id  id
-	 *
-	 * @return mixed
-	 */
-	private function getGroupName($id)
-	{
-		$db = $this->_db;
-		$query = $db->getQuery(true);
-		$query->select($db->quoteName('title'));
-		$query->from($db->quoteName('#__usergroups'));
-		$query->where($db->quoteName('id') . ' = ' . $db->quote($id));
-		$db->setQuery($query, 0, 1);
-
-		return $db->loadResult();
 	}
 }
