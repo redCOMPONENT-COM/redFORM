@@ -18,7 +18,7 @@ google.setOnLoadCallback(function() {
 		}
 
 		var data = google.visualization.arrayToDataTable(rows);
-		var chart = new google.visualization.LineChart(document.getElementById('error_month_div'));
+		var chart = new google.visualization.LineChart(document.getElementById('error_month_div' + rand));
 		chart.draw(data);
 	}
 
@@ -36,7 +36,7 @@ google.setOnLoadCallback(function() {
 		}
 
 		var data = google.visualization.arrayToDataTable(rows);
-		var chart = new google.visualization.LineChart(document.getElementById('error_year_div'));
+		var chart = new google.visualization.LineChart(document.getElementById('error_year_div' + rand));
 		chart.draw(data);
 	}
 });

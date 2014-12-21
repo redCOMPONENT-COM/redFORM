@@ -25,6 +25,7 @@ $rand = uniqid();
 <script type="text/javascript">
 	var monthStats = <?php echo json_encode($items['month']); ?>;
 	var yearStats = <?php echo json_encode($items['year']); ?>;
+	var rand = '<?php echo $rand; ?>';
 </script>
 
 <div role="tabpanel">
@@ -71,10 +72,10 @@ $rand = uniqid();
 			</table>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="area1tab2<?php echo $rand; ?>">
-			<div id="error_month_div" style="width: 500px; height: 200px;"></div>
+			<div id="error_month_div<?php echo $rand; ?>" style="width: 500px; height: 200px;"></div>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="area1tab3<?php echo $rand; ?>">
-			<div id="error_year_div" style="width: 500px; height: 200px;"></div>
+			<div id="error_year_div<?php echo $rand; ?>" style="width: 500px; height: 200px;"></div>
 		</div>
 	</div>
 </div>

@@ -78,9 +78,9 @@ class ModordersreportsLibHelper
 		$errors = 0;
 		$reports = 0;
 
-		$lastDay = date("t");
+		$today = date("d");
 
-		for ($i = 1; $i < $lastDay + 1; $i++)
+		for ($i = 1; $i <= $today; $i++)
 		{
 			$stat = new ModordersreportsLibStatDayofthemonth;
 			$stat->day = $i;
@@ -108,7 +108,7 @@ class ModordersreportsLibHelper
 		$results = array();
 
 		// Init
-		for ($i = 1; $i < 13; $i++)
+		for ($i = 1; $i <= date('m'); $i++)
 		{
 			$yearStats[$i] = array();
 		}
