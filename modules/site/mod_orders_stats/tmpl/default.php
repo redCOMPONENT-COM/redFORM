@@ -92,7 +92,7 @@ $rand = uniqid();
 			</table>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="area1tab3<?php echo $rand; ?>">
-			<div id="sales_div"></div>
+			<div id="sales_graph"></div>
 		</div>
 	</div>
 </div>
