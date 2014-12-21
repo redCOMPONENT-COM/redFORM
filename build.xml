@@ -109,15 +109,16 @@
 		  </fileset>
 		</foreach>
 		-->
-		<!-- site modules
+		<!-- site modules -->
 		<foreach param="dirname" absparam="absname" target="zipfolder">
 			<property name="myp" value="modules/site" />
+			<property name="prefix" value="" />
 		  	<fileset dir="${dirs.root}/modules/site">
 		  	<type type="dir"/>
 	        <depth max="0" min="0" />
 		  </fileset>
 		</foreach>
-		-->
+
 		<!-- languages -->
 		<foreach param="dirname" absparam="absname" target="zipfolder">
 			<property name="myp" value="language" />
@@ -255,9 +256,9 @@
             </fileset>
         </copy>
 
-        <!-- Component included Modules - Site
+        <!-- Component included Modules - Site -->
         <copy todir="${www.dir}/modules" overwrite="true">
-            <fileset dir="${dirs.root}/component/admin/extras/modules/site">
+            <fileset dir="${dirs.root}/modules/site">
                 <include name="**" />
             </fileset>
 
@@ -268,7 +269,7 @@
 				</replacetokens>
 			</filterchain>
         </copy>
- -->
+
         <!-- Component included Modules - Admin
         <copy todir="${www.dir}/administrator/modules" overwrite="true">
             <fileset dir="${dirs.root}/component/admin/extras/modules/admin">
