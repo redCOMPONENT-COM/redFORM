@@ -45,7 +45,7 @@
 			}
 			else {
 				if (form.find('.kmd-elec').attr('checked')) {
-					if (form.find('input[value=new].kmd-elec-gas').attr('checked')) {
+					if (form.find('input[value=new].kmd-gas-radio').attr('checked')) {
 						rates = '["5899", "5896"]';
 					}
 					else if (form.find('input[value=already].kmd-gas-radio').attr('checked')) {
