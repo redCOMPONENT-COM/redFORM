@@ -60,7 +60,7 @@ class ModorderscompanyLibStats
 
 			foreach ($this->orders as $order)
 			{
-				$dayNumber = date("d", strtotime($order->date));
+				$dayNumber = (int) date("j", strtotime($order->date));
 
 				if (!isset($days[$dayNumber]))
 				{
@@ -73,7 +73,7 @@ class ModorderscompanyLibStats
 			$elec = 0;
 			$gas = 0;
 			$monthStats = array();
-			$today = date('d');
+			$today = (int) date('j');
 
 			for ($i = 1; $i <= $today; $i++)
 			{
