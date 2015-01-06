@@ -57,7 +57,7 @@ class ModordersstatsLibStats
 
 		usort($grouped, array($this, 'sortTop'));
 
-		return $grouped;
+		return array_slice($grouped, 0, 3);
 	}
 
 	private function getCompanySales()
