@@ -70,7 +70,7 @@ class ModordersreportsLibHelper
 		{
 			if ($this->isThisMonth(strtotime($date->date)))
 			{
-				$monthStats[date("d", strtotime($date->date))] = $date;
+				$monthStats[(int) date("j", strtotime($date->date))] = $date;
 			}
 		}
 
@@ -78,7 +78,7 @@ class ModordersreportsLibHelper
 		$errors = 0;
 		$reports = 0;
 
-		$today = date("d");
+		$today = (int) date("j");
 
 		for ($i = 1; $i <= $today; $i++)
 		{
