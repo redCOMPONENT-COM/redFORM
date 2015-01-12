@@ -43,6 +43,9 @@ class RedformTableSubmitter extends RTable
 	/** @var string ip with which form was confirmed */
 	public $confirmed_ip;
 
+	/** @var string type of confirmation (email, sms, etc...) */
+	public $confirmed_type = 'email';
+
 	/** @var string integration key */
 	public $integration = null;
 
@@ -119,6 +122,7 @@ class RedformTableSubmitter extends RTable
 		$pks = $this->sanitizeInPk($pk);
 		$formId = $this->getAssociatedFormId($pks);
 
+		//@TODO: convert to JDatabaseQuery
 		// Delete answers
 		$query = 'DELETE a FROM #__rwf_forms_' . $formId . ' AS a'
 			. ' INNER JOIN #__rwf_submitters AS s ON s.answer_id = a.id'

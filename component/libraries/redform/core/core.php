@@ -1073,4 +1073,33 @@ class RdfCore extends JObject
 
 		return $hash;
 	}
+
+	/**
+	 * Delete submissions
+	 *
+	 * @param   mixed  $pk  id or array of id of submitters to delete
+	 *
+	 * @return void
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	public function deleteSubmission($pk)
+	{
+		if (!$pk)
+		{
+			throw new InvalidArgumentException('Missing sids for deletion');
+		}
+
+		if ($pk && !is_array($pk))
+		{
+			$pk = array($pk);
+		}
+
+		JArrayHelper::toInteger($pk);
+
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_redform/tables');
+		$table = JTable::getInstance('Submitter', 'RedformTable');
+
+		$table->delete($pk, true);
+	}
 }

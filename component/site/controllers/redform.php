@@ -70,26 +70,56 @@ class RedformControllerRedform extends RedformController
 	}
 
 	/**
-	 * Confirm submission by email
+	 * Confirm submission
 	 *
 	 * @return void
-	 *
-	 * @throws Exception
 	 */
 	public function confirm()
 	{
 		$input = JFactory::getApplication()->input;
+		$type = $input->get('type');
+
+		// If no type, then it's regular email confirmation
+		if (!$type)
+		{
+			return $this->emailConfirm();
+		}
+
+		// Else it should be handled by plugins
+		$updatedIds = array();
+
+		JPluginHelper::importPlugin('redform_confirm');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onConfirm', array($type, &$updatedIds));
+
+		$input->set('view', 'confirm');
+		$input->set('updatedIds', $updatedIds);
+
+		parent::display();
+	}
+
+	/**
+	 * Confirm submission by email
+	 *
+	 * @return void
+	 */
+	private function emailConfirm()
+	{
+		$input = JFactory::getApplication()->input;
 		$key = $input->get('key');
 
-		$model = $this->getModel('Confirm');
-
-		if ($model->confirm($key))
+		if ($key)
 		{
-			$model->sendNotification();
+			$model = $this->getModel('Confirm');
+
+			if ($model->confirm($key))
+			{
+				$model->sendNotification();
+				$input->set('updatedIds', $model->getState('updatedIds'));
+			}
 		}
 
 		$input->set('view', 'confirm');
-		$input->set('updatedIds', $model->getState('updatedIds'));
 
 		parent::display();
 	}
