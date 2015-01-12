@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="redform" method="upgrade">
+    <name>PLG_REDFORM_SMSGATEWAYDK</name>
+    <creationDate>##DATE##</creationDate>
+    <author>redWEB Aps</author>
+    <authorEmail>email@redweb.dk</authorEmail>
+    <authorUrl>www.redcomponent.com</authorUrl>
+    <copyright>(C) 2014 redCOMPONENT.com</copyright>
+    <license>GNU/GPL</license>
+    <version>##VERSION##</version>
+    <description>PLG_REDFORM_SMSGATEWAYDK_XML_DESC</description>
+
+    <files>
+        <filename plugin="smsgatewaydk">smsgatewaydk.php</filename>
+        <folder>language</folder>
+    </files>
+
+    <config addfieldpath="libraries/redform/form/fields">
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="forms" type="redformform" multiple="1"
+                       label="PLG_REDFORM_SMSGATEWAYDK_SELECT_FORMS"
+                       desc="PLG_REDFORM_SMSGATEWAYDK_SELECT_FORMS_DESC" />
+                <field name="phoneFieldIds" type="redformfield" multiple="1"
+                       label="PLG_REDFORM_SMSGATEWAYDK_SELECT_PHONE_FIELDS"
+                       desc="PLG_REDFORM_SMSGATEWAYDK_SELECT_PHONE_FIELDS_DESC" />
+                <field name="username" type="text"
+                       label="PLG_REDFORM_SMSGATEWAYDK_USERNAME"
+                       desc="PLG_REDFORM_SMSGATEWAYDK_USERNAME_DESC" />
+                <field name="password" type="text"
+                       label="PLG_REDFORM_SMSGATEWAYDK_PASSWORD"
+                       desc="PLG_REDFORM_SMSGATEWAYDK_PASSWORD_DESC" />
+                <field name="from" type="text"
+                       label="PLG_REDFORM_SMSGATEWAYDK_FROM"
+                       desc="PLG_REDFORM_SMSGATEWAYDK_FROM_DESC" />
+                <field name="notification" type="textarea"
+                       label="PLG_REDFORM_SMSGATEWAYDK_NOTIFICATION_MESSAGE"
+                       desc="PLG_REDFORM_SMSGATEWAYDK_NOTIFICATION_MESSAGE_DESC" />
+                <field name="confirmation" type="textarea"
+                       label="PLG_REDFORM_SMSGATEWAYDKATION_MESSAGE"
+                       desc="PLG_REDFORM_SMSGATEWAYDKATION_MESSAGE_DESC" />
+                <field name="error" type="textarea"
+                       label="PLG_REDFORM_SMSGATEWAYDK_ERROR_MESSAGE"
+                       desc="PLG_REDFORM_SMSGATEWAYDK_ERROR_MESSAGE_DESC" />
+            </fieldset>
+        </fields>
+    </config>
+</extension>
