@@ -88,7 +88,7 @@ class RedformControllerRedform extends RedformController
 		// Else it should be handled by plugins
 		$updatedIds = array();
 
-		JPluginHelper::importPlugin('redform_confirm');
+		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onConfirm', array($type, &$updatedIds));
 
