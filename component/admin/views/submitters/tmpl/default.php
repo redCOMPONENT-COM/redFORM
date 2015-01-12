@@ -118,7 +118,9 @@ $listDirn = $this->state->get('list.direction');
 				<?php if ($this->formInfo->enable_confirmation): ?>
 				<td>
 					<?php if (RdfHelper::isNonNullDate($item->confirmed_date)): ?>
-						<i class="icon-ok hasTip" title="<?php echo $this->escape($item->confirmed_date . ' ' . $item->confirmed_ip); ?>"/>
+						<i class="icon-ok hasTip" title="<?php
+						echo $this->escape(JText::sprintf('COM_REDFORM_COMFIRMATION_INFO', $item->confirmed_date, $item->confirmed_type, $item->confirmed_ip));
+						?>"/>
 					<?php endif; ?>
 				</td>
 				<?php endif; ?>

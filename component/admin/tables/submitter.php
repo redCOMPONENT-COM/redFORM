@@ -43,6 +43,9 @@ class RedformTableSubmitter extends RTable
 	/** @var string ip with which form was confirmed */
 	public $confirmed_ip;
 
+	/** @var string type of confirmation (email, sms, etc...) */
+	public $confirmed_type = 'email';
+
 	/** @var string integration key */
 	public $integration = null;
 
