@@ -190,6 +190,12 @@
 				description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY_TIP"
                 filter="safehtml"
 				/>
+        <field
+                name="submissionattachment"
+                type="rmedia"
+                label="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_ATTACHEMENT"
+                description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_ATTACHEMENT_TIP"
+                />
 		<field
 				name="cond_recipients"
 				type="redformconditionalrecipients"
