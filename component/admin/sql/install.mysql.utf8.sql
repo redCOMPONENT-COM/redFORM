@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `checked_out_time` datetime default '0000-00-00 00:00:00',
   `submissionsubject` varchar(255) NOT NULL default '',
   `submissionbody` text NOT NULL,
+  `submissionattachment` VARCHAR(255)  NULL DEFAULT NULL,
   `showname` int(1) NOT NULL default '0',
   `classname` varchar(45) default NULL,
   `contactpersoninform` tinyint(1) NOT NULL default '0',

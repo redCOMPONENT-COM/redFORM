@@ -538,6 +538,13 @@ class RdfAnswers
 				$htmlmsg = RdfHelper::wrapMailHtmlBody($submission_body, $subject);
 				$mailer->MsgHTML($htmlmsg);
 
+				// Attachment
+//				echo '<pre>'; echo print_r(JPATH_SITE . '/' . $form->submissionattachment, true); echo '</pre>'; exit;
+				if ($form->submissionattachment && file_exists(JPATH_SITE . '/' . $form->submissionattachment))
+				{
+					$mailer->addAttachment(JPATH_SITE . '/' . $form->submissionattachment);
+				}
+
 				/* Send the mail */
 				if (!$mailer->Send())
 				{
