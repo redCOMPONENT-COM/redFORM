@@ -185,6 +185,11 @@ class plgRedformSmsgatewaydk extends JPlugin
 			throw new InvalidArgumentException('Invalid phone number: ' . $phoneNumber);
 		}
 
+		if (strlen($cleaned) == 8)
+		{
+			$cleaned = '45' + $cleaned;
+		}
+
 		return $cleaned;
 	}
 
