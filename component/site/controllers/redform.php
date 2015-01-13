@@ -32,10 +32,6 @@ class RedformControllerRedform extends RedformController
 		$model = new RdfCoreSubmission($formId);
 		$result = $model->apisaveform();
 
-		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
-		$dispatcher->trigger('onAfterRedformSavedSubmission', array(&$result));
-
 		$referer = $app->input->get('referer', '', 'base64');
 		$referer = $referer ? base64_decode($referer) : 'index.php';
 
