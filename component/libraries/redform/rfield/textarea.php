@@ -63,6 +63,8 @@ class RdfRfieldTextarea extends RdfRfieldTextfield
 			$properties['placeholder'] = addslashes($placeholder);
 		}
 
+		$properties['value'] = $this->getValue() ? $this->getValue() : $this->default;
+
 		return $properties;
 	}
 }

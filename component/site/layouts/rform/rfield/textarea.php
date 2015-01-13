@@ -13,4 +13,4 @@ $data = $displayData;
 
 $properties = $data->getInputProperties();
 ?>
-<textarea <?php echo $data->propertiesToString($properties); ?>><?php echo $data->value; ?></textarea>
+<textarea <?php echo $data->propertiesToString($properties); ?>><?php echo $properties['value']; ?></textarea>
