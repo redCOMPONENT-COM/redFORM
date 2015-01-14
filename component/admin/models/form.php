@@ -196,4 +196,66 @@ class RedformModelForm extends RModelAdmin
 
 		return $res;
 	}
+
+	/**
+	 * Special case for attachment file upload
+	 *
+	 * @param   JForm   $form   The form to validate against.
+	 * @param   array   $data   The data to validate.
+	 * @param   string  $group  The name of the field group to validate.
+	 *
+	 * @return  mixed  Array of filtered data if valid, false otherwise.
+	 */
+	public function validate($form, $data, $group = null)
+	{
+		$files  = JFactory::getApplication()->input->files->get('jform');
+
+		if (isset($files['submissionattachmentnew']) && $files['submissionattachmentnew']['size'])
+		{
+			$fileName = $this->uploadAttachment($files['submissionattachmentnew']);
+			$data['submissionattachment'] = $fileName;
+		}
+
+		return parent::validate($form, $data, $group);
+	}
+
+	/**
+	 * Upload attachment
+	 *
+	 * @param   array  $filePostData  file post data
+	 *
+	 * @return string file name
+	 *
+	 * @throws RuntimeException
+	 */
+	private function uploadAttachment($filePostData)
+	{
+		/* Check if the folder exists */
+		jimport('joomla.filesystem.folder');
+		jimport('joomla.filesystem.file');
+
+		$folder = JPATH_SITE . '/images/redform/notificationattachments';
+
+		if (!JFolder::exists($folder))
+		{
+			if (!JFolder::create($folder))
+			{
+				throw new RuntimeException(JText::_('COM_REDFORM_CANNOT_CREATE_FOLDER') . ': ' . $folder);
+			}
+		}
+
+		$src_file = $filePostData['tmp_name'];
+
+		/* Start processing uploaded file */
+		if (is_uploaded_file($src_file))
+		{
+			if (!move_uploaded_file($src_file, $folder . '/' . $filePostData['name']))
+			{
+				throw new RuntimeException(JText::_('COM_REDFORM_CANNOT_UPLOAD_FILE'));
+			}
+		}
+
+		return $filePostData['name'];
+	}
+
 }

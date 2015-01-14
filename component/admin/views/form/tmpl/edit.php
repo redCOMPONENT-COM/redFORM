@@ -247,6 +247,14 @@ $isNew = (int) $this->item->id <= 0;
 				</div>
 				<div class="control-group">
 					<div class="control-label">
+						<?php echo $this->form->getLabel('submissionattachmentnew'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('submissionattachmentnew'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
 						<?php echo $this->form->getLabel('cond_recipients'); ?>
 					</div>
 					<div class="controls">

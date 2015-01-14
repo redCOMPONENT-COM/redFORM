@@ -539,10 +539,9 @@ class RdfAnswers
 				$mailer->MsgHTML($htmlmsg);
 
 				// Attachment
-//				echo '<pre>'; echo print_r(JPATH_SITE . '/' . $form->submissionattachment, true); echo '</pre>'; exit;
-				if ($form->submissionattachment && file_exists(JPATH_SITE . '/' . $form->submissionattachment))
+				if ($form->submissionattachment && file_exists(JPATH_SITE . '/images/redform/notificationattachments/' . $form->submissionattachment))
 				{
-					$mailer->addAttachment(JPATH_SITE . '/' . $form->submissionattachment);
+					$mailer->addAttachment(JPATH_SITE . '/images/redform/notificationattachments/' . $form->submissionattachment);
 				}
 
 				/* Send the mail */
