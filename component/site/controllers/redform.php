@@ -88,6 +88,13 @@ class RedformControllerRedform extends RedformController
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onConfirm', array($type, &$updatedIds));
 
+		if (count($updatedIds))
+		{
+			$model = $this->getModel('Confirm');
+			$model->setState('updatedIds', $updatedIds);
+			$model->sendNotification();
+		}
+
 		$input->set('view', 'confirm');
 		$input->set('updatedIds', $updatedIds);
 
