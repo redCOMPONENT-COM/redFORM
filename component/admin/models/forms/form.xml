@@ -192,7 +192,7 @@
 				/>
         <field
                 name="submissionattachment"
-                type="rmedia"
+                type="file"
                 label="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_ATTACHEMENT"
                 description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_ATTACHEMENT_TIP"
                 />
