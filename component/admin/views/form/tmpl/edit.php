@@ -92,7 +92,7 @@ $isNew = (int) $this->item->id <= 0;
 	<?php endif; ?>
 </ul>
 <form action="<?php echo $action; ?>" method="post" name="adminForm" id="adminForm"
-      class="form-validate form-horizontal">
+      class="form-validate form-horizontal" enctype="multipart/form-data">
 <div class="tab-content">
 		<div class="tab-pane active" id="details">
 			<div class="control-group">

@@ -24,6 +24,22 @@ class plgRedformSmsgatewaydk extends JPlugin
 	private $answers;
 
 	/**
+	 * Constructor
+	 *
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An optional associative array of configuration settings.
+	 *                             Recognized key values include 'name', 'group', 'params', 'language'
+	 *                             (this list is not meant to be comprehensive).
+	 *
+	 * @since   2.0
+	 */
+	public function __construct(&$subject, $config = array())
+	{
+		parent::__construct($subject, $config);
+		$this->loadLanguage();
+	}
+
+	/**
 	 * Send notification by email on submission
 	 *
 	 * @param   object  $formSubmission  form submission result
@@ -57,17 +73,27 @@ class plgRedformSmsgatewaydk extends JPlugin
 		}
 
 		$input = JFactory::getApplication()->input;
-		$message = $input->get('TEXT');
-		$phoneNumber = $input->get('MOBILE');
+		$message = $input->get('text');
+		$phoneNumber = $input->get('mobile');
+		RdfHelperLog::simpleLog('received message on smsgatewaydk (mobile: ' . $phoneNumber . '):' . $message);
 
-		if (!preg_match('/^([0-9]+)[\s]*OK/', $message, $matches))
+		if (!preg_match('/([0-9]+)[\s]*ok/i', $message, $matches))
 		{
+			RdfHelperLog::simpleLog('Smsgatewaydk error: incorrect format');
 			$this->sendMessage($phoneNumber, $this->params->get('error'));
 
 			return;
 		}
 
 		$sid = $matches[1];
+
+		if ($this->isConfirmed($sid))
+		{
+			$this->sendMessage($phoneNumber, JText::_('PLG_REDFORM_SMSGATEWAYDK_ERROR_ALREADY_CONFIRMED'));
+
+			return;
+		}
+
 		$this->confirmSid($sid);
 		$this->sendMessage($phoneNumber, $this->params->get('confirmation'));
 
@@ -86,6 +112,7 @@ class plgRedformSmsgatewaydk extends JPlugin
 		$db = JFactory::getDbo();
 		$date = JFactory::getDate()->toSql();
 
+
 		$query = $db->getQuery(true);
 
 		$query->update('#__rwf_submitters')
@@ -101,6 +128,28 @@ class plgRedformSmsgatewaydk extends JPlugin
 		$dispatcher->trigger('onSubmissionConfirmed', array(array($sid)));
 
 		return true;
+	}
+
+	/**
+	 * Check if sid already confirmed
+	 *
+	 * @param   int  $sid  submitter id
+	 *
+	 * @return boolean
+	 */
+	private function isConfirmed($sid)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('id')
+			->from('#__rwf_submitters')
+			->where('confirmed_date = 0')
+			->where('id = ' . $db->quote($sid));
+
+		$db->setQuery($query);
+
+		return $db->loadResult() == $sid ? false : true;
 	}
 
 	/**
@@ -187,7 +236,7 @@ class plgRedformSmsgatewaydk extends JPlugin
 
 		if (strlen($cleaned) == 8)
 		{
-			$cleaned = '45' + $cleaned;
+			$cleaned = '45' . $cleaned;
 		}
 
 		return $cleaned;
