@@ -112,7 +112,6 @@ class plgRedformSmsgatewaydk extends JPlugin
 		$db = JFactory::getDbo();
 		$date = JFactory::getDate()->toSql();
 
-
 		$query = $db->getQuery(true);
 
 		$query->update('#__rwf_submitters')
