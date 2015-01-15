@@ -264,6 +264,7 @@ class plgRedformSmsgatewaydk extends JPlugin
 		$str .= "&to=" . $phoneNumber;
 		$str .= "&from=" . $this->params->get('from');
 		$str .= "&message=" . urlencode($message);
+		$str .= "&charset=UTF-8";
 
 		if (file_get_contents($url1))
 		{
