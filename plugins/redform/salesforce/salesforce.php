@@ -136,8 +136,6 @@ class plgRedformSalesforce extends JPlugin
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $inputs);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		$resp = curl_exec($ch);
-
 		if (curl_exec($ch) === false)
 		{
 			throw new RuntimeException('Curl error: ' . curl_error($ch));
