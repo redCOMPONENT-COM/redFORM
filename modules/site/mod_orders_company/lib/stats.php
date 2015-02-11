@@ -95,18 +95,18 @@ class ModorderscompanyLibStats
 					}
 				}
 
-				$stat->elec = $elec;
-				$stat->gas = $gas;
-
 				if (isset($cancelled['elec'][$i - 1]))
 				{
-					$stat->elec -= $cancelled['elec'][$i - 1];
+					$elec -= $cancelled['elec'][$i - 1];
 				}
 
 				if (isset($cancelled['gas'][$i - 1]))
 				{
-					$stat->gas -= $cancelled['gas'][$i - 1];
+					$gas -= $cancelled['gas'][$i - 1];
 				}
+
+				$stat->elec = $elec;
+				$stat->gas = $gas;
 
 				$monthStats[] = $stat;
 			}
