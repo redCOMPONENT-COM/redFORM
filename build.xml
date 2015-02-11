@@ -3,13 +3,13 @@
 	<property file="build/build.properties" />
 
 	<!-- Default properties, set only if not already assigned in the build.properties file -->
-    <property name="comp.name" value="redform" />
+	<property name="comp.name" value="redform" />
 	<property name="dirs.root" value="." />
 	<property name="dirs.tmp" value="tmp" />
 	<property name="dirs.release" value="release" />
 	<property name="version" value="dev" />
 
-    <xmlproperty file="redCORE/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
+	<xmlproperty file="redCORE/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
 	<property
 			name="redCOREVersion"
 			value="${redCOREDetails.version}"
@@ -85,20 +85,8 @@
 			</filterchain>
 		</copy>
 
-        <!-- This is added just for extension installing purposes, in case it gets installed before redCORE -->
-        <echo msg="Copying redCORE LIBRARIES folder to component build directory..."/>
-        <copy todir="${dirs.tmp}/component/redCORE">
-            <fileset dir="redCORE">
-                <include name="**"/>
-                <exclude name=".*"/>
-                <exclude name=".travis/"/>
-                <exclude name="build.*"/>
-                <exclude name="*.md"/>
-            </fileset>
-        </copy>
-
 		<!-- Create the package -->
-        <zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.zip" includeemptydirs="true" />
+		<zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.zip" includeemptydirs="true" />
 
 		<!-- admin modules
 		<foreach param="dirname" absparam="absname" target="zipfolder">
@@ -118,6 +106,7 @@
 		  </fileset>
 		</foreach>
 		-->
+
 		<!-- languages -->
 		<foreach param="dirname" absparam="absname" target="zipfolder">
 			<property name="myp" value="language" />
@@ -135,11 +124,11 @@
 			</fileset>
 		</foreach>
 
-        <!-- global zip -->
-        <zip destfile="${dirs.release}/redform-all-unzip-first-${version}.zip">
-            <fileset dir="${dirs.release}">
-            </fileset>
-        </zip>
+		<!-- global zip -->
+		<zip destfile="${dirs.release}/redform-all-unzip-first-${version}.zip">
+			<fileset dir="${dirs.release}">
+			</fileset>
+		</zip>
 
 		<delete dir="${dirs.tmp}" quiet="yes" includeemptydirs="false" />
 	</target>
@@ -199,48 +188,48 @@
 
         <echo message="Copying administrator component..." />
 
-        <!-- Manifest & install script -->
-        <echo message="Copying manifest..." />
-        <copy file="${dirs.root}/component/${comp.name}.xml"
-            tofile="${www.dir}/administrator/components/com_${comp.name}/${comp.name}.xml" overwrite="true">
-            <!-- trick to replace extension folders in the manifest-->
-            <filterchain>
-        	  <replaceregexp>
-        		<regexp pattern="folder=&quot;admin&quot;" replace="folder=&quot;administrator/components/com_${comp.name}&quot;"/>
-        	  </replaceregexp>
-          	  <replaceregexp>
-          		<regexp pattern="folder=&quot;site&quot;" replace="folder=&quot;components/com_${comp.name}&quot;"/>
-          	  </replaceregexp>
+		<!-- Manifest & install script -->
+		<echo message="Copying manifest..." />
+		<copy file="${dirs.root}/component/${comp.name}.xml"
+			tofile="${www.dir}/administrator/components/com_${comp.name}/${comp.name}.xml" overwrite="true">
+			<!-- trick to replace extension folders in the manifest-->
+			<filterchain>
+			  <replaceregexp>
+				<regexp pattern="folder=&quot;admin&quot;" replace="folder=&quot;administrator/components/com_${comp.name}&quot;"/>
+			  </replaceregexp>
+			  <replaceregexp>
+				<regexp pattern="folder=&quot;site&quot;" replace="folder=&quot;components/com_${comp.name}&quot;"/>
+			  </replaceregexp>
 				<replacetokens begintoken="##" endtoken="##">
 					<token key="DATE" value="${build.date}" />
 					<token key="VERSION" value="${version}" />
 				</replacetokens>
-            </filterchain>
-        </copy>
-        <copy file="${dirs.root}/component/install.php"
-            tofile="${www.dir}/administrator/components/com_${comp.name}/install.php" overwrite="true" />
+			</filterchain>
+		</copy>
+		<copy file="${dirs.root}/component/install.php"
+			tofile="${www.dir}/administrator/components/com_${comp.name}/install.php" overwrite="true" />
 
-        <!-- Backend component -->
-        <copy todir="${www.dir}/administrator/components/com_${comp.name}" overwrite="true">
-            <fileset dir="${dirs.root}/component/admin">
-                <include name="**" />
-                <!-- Exclude the manifest to avoid overwriting the previously copied -->
-                <exclude name="${comp.name}.xml" />
-            </fileset>
-        </copy>
+		<!-- Backend component -->
+		<copy todir="${www.dir}/administrator/components/com_${comp.name}" overwrite="true">
+			<fileset dir="${dirs.root}/component/admin">
+				<include name="**" />
+				<!-- Exclude the manifest to avoid overwriting the previously copied -->
+				<exclude name="${comp.name}.xml" />
+			</fileset>
+		</copy>
 
-        <!-- Frontend component -->
-        <echo message="Copying frontend component..." />
-        <copy todir="${www.dir}/components/com_${comp.name}" overwrite="true">
-            <fileset dir="${dirs.root}/component/site" />
-        </copy>
+		<!-- Frontend component -->
+		<echo message="Copying frontend component..." />
+		<copy todir="${www.dir}/components/com_${comp.name}" overwrite="true">
+			<fileset dir="${dirs.root}/component/site" />
+		</copy>
 
-        <!-- Media -->
-        <copy todir="${www.dir}/media" overwrite="true">
-            <fileset dir="${dirs.root}/component/media">
-                <include name="**" />
-            </fileset>
-        </copy>
+		<!-- Media -->
+		<copy todir="${www.dir}/media" overwrite="true">
+			<fileset dir="${dirs.root}/component/media">
+				<include name="**" />
+			</fileset>
+		</copy>
 
 		<!-- Libraries -->
 		<copy todir="${www.dir}/libraries" overwrite="true">
@@ -249,11 +238,11 @@
 			</fileset>
 		</copy>
 
-        <!-- Component included Modules - Site
-        <copy todir="${www.dir}/modules" overwrite="true">
-            <fileset dir="${dirs.root}/component/admin/extras/modules/site">
-                <include name="**" />
-            </fileset>
+		<!-- Component included Modules - Site
+		<copy todir="${www.dir}/modules" overwrite="true">
+			<fileset dir="${dirs.root}/component/admin/extras/modules/site">
+				<include name="**" />
+			</fileset>
 
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
@@ -263,11 +252,11 @@
 			</filterchain>
         </copy>
  -->
-        <!-- Component included Modules - Admin
-        <copy todir="${www.dir}/administrator/modules" overwrite="true">
-            <fileset dir="${dirs.root}/component/admin/extras/modules/admin">
-                <include name="**" />
-            </fileset>
+		<!-- Component included Modules - Admin
+		<copy todir="${www.dir}/administrator/modules" overwrite="true">
+			<fileset dir="${dirs.root}/component/admin/extras/modules/admin">
+				<include name="**" />
+			</fileset>
 
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
@@ -277,11 +266,11 @@
 			</filterchain>
         </copy>
  -->
-        <!-- Modules - Site
-        <copy todir="${www.dir}/modules" overwrite="true">
-            <fileset dir="${dirs.root}/modules/site">
-                <include name="**" />
-            </fileset>
+		<!-- Modules - Site
+		<copy todir="${www.dir}/modules" overwrite="true">
+			<fileset dir="${dirs.root}/modules/site">
+				<include name="**" />
+			</fileset>
 
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
@@ -291,11 +280,11 @@
 			</filterchain>
         </copy>
 -->
-        <!-- Modules - Admin
-        <copy todir="${www.dir}/administrator/modules" overwrite="true">
-            <fileset dir="${dirs.root}/modules/admin">
-                <include name="**" />
-            </fileset>
+		<!-- Modules - Admin
+		<copy todir="${www.dir}/administrator/modules" overwrite="true">
+			<fileset dir="${dirs.root}/modules/admin">
+				<include name="**" />
+			</fileset>
 
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
@@ -305,11 +294,11 @@
 			</filterchain>
         </copy>
 -->
-        <!-- Plugins -->
-        <copy todir="${www.dir}/plugins" overwrite="true">
-            <fileset dir="${dirs.root}/component/plugins">
-                <include name="**" />
-            </fileset>
+		<!-- Plugins -->
+		<copy todir="${www.dir}/plugins" overwrite="true">
+			<fileset dir="${dirs.root}/component/plugins">
+				<include name="**" />
+			</fileset>
 
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
@@ -319,10 +308,10 @@
 			</filterchain>
         </copy>
 
-        <copy todir="${www.dir}/plugins" overwrite="true">
-            <fileset dir="${dirs.root}/plugins">
-                <include name="**" />
-            </fileset>
+		<copy todir="${www.dir}/plugins" overwrite="true">
+			<fileset dir="${dirs.root}/plugins">
+				<include name="**" />
+			</fileset>
 
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
@@ -339,21 +328,21 @@
     Tasks - Copy to test site
     ====================================================================================================
     -->
-    <target name="unit-test" description="Copy to test site"
-            depends="setup-test, site">
-        <phpunit configuration="tests/unit/phpunit.xml"
-                 printsummary="true"
-                 pharlocation="/usr/local/bin/phpunit">
-            <batchtest>
-                <fileset dir="tests/unit/suite">
-                    <include name="**/*Test.php"/>
-                </fileset>
-            </batchtest>
-        </phpunit>
-    </target>
+	<target name="unit-test" description="Copy to test site"
+			depends="setup-test, site">
+		<phpunit configuration="tests/unit/phpunit.xml"
+				 printsummary="true"
+				 pharlocation="/usr/local/bin/phpunit">
+			<batchtest>
+				<fileset dir="tests/unit/suite">
+					<include name="**/*Test.php"/>
+				</fileset>
+			</batchtest>
+		</phpunit>
+	</target>
 
-    <target name="setup-test" description="Init to copy to test site"
-            depends="setup-properties">
-        <property name="www.dir" value="${www.dirtest}" override="true"/>
-    </target>
+	<target name="setup-test" description="Init to copy to test site"
+			depends="setup-properties">
+		<property name="www.dir" value="${www.dirtest}" override="true"/>
+	</target>
 </project>
