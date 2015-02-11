@@ -23,14 +23,19 @@ class ModorderscompanyLibStats
 
 	private $monthStats;
 
-	public function __construct($orders)
+	/**
+	 * @var JRegistry
+	 */
+	private $params;
+
+	public function __construct($orders, JRegistry $params)
 	{
 		$this->orders = $orders;
+		$this->params = $params;
 	}
 
 	public function getStats()
 	{
-
 		return array(
 			'today' => $this->todayStat(),
 			'month' => $this->monthStats()
@@ -57,6 +62,7 @@ class ModorderscompanyLibStats
 		if (!$this->monthStats)
 		{
 			$days = array();
+			$cancelled = $this->getCancelled();
 
 			foreach ($this->orders as $order)
 			{
@@ -92,6 +98,16 @@ class ModorderscompanyLibStats
 				$stat->elec = $elec;
 				$stat->gas = $gas;
 
+				if (isset($cancelled['elec'][$i - 1]))
+				{
+					$stat->elec -= $cancelled['elec'][$i - 1];
+				}
+
+				if (isset($cancelled['gas'][$i - 1]))
+				{
+					$stat->gas -= $cancelled['gas'][$i - 1];
+				}
+
 				$monthStats[] = $stat;
 			}
 
@@ -111,5 +127,21 @@ class ModorderscompanyLibStats
 	private function isToday($order)
 	{
 		return date("Y-m-d") == date("Y-m-d", strtotime($order->date));
+	}
+
+	/**
+	 * Return cancellations per day
+	 *
+	 * @return array
+	 */
+	private function getCancelled()
+	{
+		$cancelledElec = explode(",", $this->params->get('cancelledElec'));
+		JArrayHelper::toInteger($cancelledElec);
+
+		$cancelledGas = explode(",", $this->params->get('cancelledGas'));
+		JArrayHelper::toInteger($cancelledGas);
+
+		return array('elec' => $cancelledElec, 'gas' => $cancelledGas);
 	}
 }

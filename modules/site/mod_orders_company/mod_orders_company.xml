@@ -45,11 +45,23 @@
 				       description="Mod_orders_company_XML_ELECTRICITY_FIELDS_DESC">
 				</field>
 
+				<field name="cancelledElec"
+					   type="textarea"
+					   label="Mod_orders_company_XML_cancelledElec_LABEL"
+					   description="Mod_orders_company_XML_cancelledElec_DESC">
+				</field>
+
 				<field name="gasFields"
 				       type="redformfield"
 				       multiple="1"
 				       label="Mod_orders_company_XML_GAS_FIELDS_LABEL"
 				       description="Mod_orders_company_XML_GAS_FIELDS_DESC">
+				</field>
+
+				<field name="cancelledGas"
+					   type="textarea"
+					   label="Mod_orders_company_XML_cancelledGas_LABEL"
+					   description="Mod_orders_company_XML_cancelledGas_DESC">
 				</field>
 			</fieldset>
 

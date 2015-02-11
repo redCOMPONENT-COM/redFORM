@@ -40,7 +40,7 @@ class ModorderscompanyLibHelper
 			$orders = array_merge($orders, $model->getOrders($formId));
 		}
 
-		$model = new ModorderscompanyLibStats($orders);
+		$model = new ModorderscompanyLibStats($orders, $params);
 		$stats = $model->getStats();
 
 		return $stats;
