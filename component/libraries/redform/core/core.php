@@ -211,7 +211,6 @@ class RdfCore extends JObject
 
 		$model = $this->getFormModel($form_id);
 		$form   = $model->getForm();
-
 		$fieldsHtml = $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
 		$html = RdfHelperLayout::render(
@@ -313,7 +312,7 @@ class RdfCore extends JObject
 
 		$this->loadCheckScript();
 
-		if ($multi)
+		if ($multi > 1)
 		{
 			$this->loadMultipleFormScript();
 		}
@@ -968,7 +967,7 @@ class RdfCore extends JObject
 	{
 		JText::script('COM_REDFORM_MAX_SIGNUP_REACHED');
 		JText::script('COM_REDFORM_FIELDSET_SIGNUP_NB');
-		JFactory::getDocument()->addScript(JURI::root() . '/media/com_redform/js/form-multiple.js');
+		RHelperAsset::load('form-multiple.js', 'com_redform');
 	}
 
 	/**

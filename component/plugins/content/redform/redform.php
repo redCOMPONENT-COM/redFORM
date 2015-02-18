@@ -41,7 +41,8 @@ class PlgContentRedform extends JPlugin
 	private $rfcore = null;
 
 	/**
-	 * onContentPrepare trigger
+	 * onContentPrepare trigger.
+	 * looks for tags in the form {redform}1{/redform}, or {redform}2,3{/redform} (3 times form 2)
 	 *
 	 * @param   string  $context  The context of the content being passed to the plugin.
 	 * @param   object  &$row     The article object.  Note $article->text is also available
@@ -52,38 +53,20 @@ class PlgContentRedform extends JPlugin
 	 */
 	public function onContentPrepare($context,&$row, &$params, $page = 0)
 	{
-		return $this->_process($row, array());
-	}
-
-	/**
-	 * Do the job
-	 *
-	 * @param   object  &$row    data
-	 * @param   array   $params  options
-	 *
-	 * @return bool
-	 */
-	protected function _process(&$row, $params = array())
-	{
 		$this->rfcore = new RdfCore;
 
 		JPlugin::loadLanguage('plg_content_redform', JPATH_ADMINISTRATOR);
 
 		$this->rwfparams = $params;
 
-		/* Regex to find categorypage references */
 		$regex = "#{redform}(.*?){/redform}#s";
 
-		if (preg_match($regex, $row->text, $matches))
+		if (preg_match_all($regex, $row->text, $matches))
 		{
-			// Hook up other red components
-			if (isset($row->competitionid))
+			foreach ($matches[1] as $k => $match)
 			{
-				JRequest::setVar('redcompetition', $row);
+				$row->text = str_replace($matches[0][$k], $this->buildForm($match), $row->text);
 			}
-
-			/* Execute the code */
-			$row->text = preg_replace_callback($regex, array($this, 'FormPage'), $row->text);
 		}
 
 		return true;
@@ -92,58 +75,46 @@ class PlgContentRedform extends JPlugin
 	/**
 	 * Create the forms
 	 *
-	 * $matches[0] = form ID
-	 * $matches[1] = Number of sign ups
+	 * $match = form ID(, multiple count)
 	 *
-	 * @param   array  $matches  matches
+	 * @param   string  $match  match
 	 *
 	 * @return string
 	 */
-	protected function FormPage ($matches)
+	protected function buildForm($match)
 	{
 		/* Load the language file as Joomla doesn't do it */
 		$language = JFactory::getLanguage();
 		$language->load('plg_content_redform');
 
-		if (!isset($matches[1]))
+		$parts = explode(',', $match);
+
+		/* Get the form details */
+		$form = $this->getForm($parts[0]);
+		$check = $this->checkFormIsActive($form);
+
+		if (!($check === true))
 		{
-			return false;
+			return $check;
 		}
-		else
+
+		/* Check if the user is allowed to access the form */
+		$user = JFactory::getUser();
+
+		if (!in_array($form->access, $user->getAuthorisedViewLevels()))
 		{
-			/* Reset matches result */
-			$matches = explode(',', $matches[1]);
-
-			/* Get the form details */
-			$form = $this->getForm($matches[0]);
-			$check = $this->_checkFormActive($form);
-
-			if (!($check === true))
-			{
-				return $check;
-			}
-
-			/* Check if the user is allowed to access the form */
-			$user = JFactory::getUser();
-
-			if (!in_array($form->access, $user->getAuthorisedViewLevels()))
-			{
-				return JText::_('COM_REDFORM_LOGIN_REQUIRED');
-			}
-
-			/* Check if the number of sign ups is set, otherwise default to 1 */
-			if (!isset($matches[1]))
-			{
-				$matches[1] = 1;
-			}
-
-			if (!isset($form->id))
-			{
-				return JText::_('COM_REDFORM_No_active_form_found');
-			}
-
-			return $this->getFormHtml($form, $matches[1]);
+			return JText::_('PLG_CONTENT_REDFORM_FORM_DISPLAY_NOT_ALLOWED');
 		}
+
+		/* Check if the number of sign ups is set, otherwise default to 1 */
+		$multiple = isset($parts[1]) ? $parts[1] : 1;
+
+		if (!isset($form->id))
+		{
+			return JText::_('COM_REDFORM_No_active_form_found');
+		}
+
+		return $this->rfcore->displayForm($form->id, null, $multiple);
 	}
 
 	/**
@@ -158,10 +129,10 @@ class PlgContentRedform extends JPlugin
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('f.*');
-		$query->from('#__rwf_forms AS f');
-		$query->where('f.id = ' . $db->Quote($form_id));
-		$query->where('published = 1');
+		$query->select('id, access, published')
+			->select('startdate, formexpires, enddate')
+			->from('#__rwf_forms')
+			->where('id = ' . $db->Quote($form_id));
 
 		$db->setQuery($query);
 
@@ -175,91 +146,21 @@ class PlgContentRedform extends JPlugin
 	 *
 	 * @return true if active, error message if not
 	 */
-	protected function _checkFormActive($form)
+	protected function checkFormIsActive($form)
 	{
-		if (strtotime($form->startdate) > time())
+		if (!$form->published)
 		{
-			return JText::_('COM_REDFORM_FORM_NOT_STARTED');
+			return JText::_('PLG_CONTENT_REDFORMFORM_NOT_PUBLISHED');
+		}
+		elseif (strtotime($form->startdate) > time())
+		{
+			return JText::_('PLG_CONTENT_REDFORM_FORM_NOT_STARTED');
 		}
 		elseif ($form->formexpires && strtotime($form->enddate) < time())
 		{
-			return JText::_('COM_REDFORM_FORM_EXPIRED');
+			return JText::_('PLG_CONTENT_REDFORM_FORM_EXPIRED');
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get form fields
-	 *
-	 * @param   int  $form_id  for id
-	 *
-	 * @return mixed
-	 */
-	protected function getFormFields($form_id)
-	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('ff.id, f.field, ff.validate, f.tooltip, f.redmember_field, f.fieldtype, f.params');
-		$query->from('#__rwf_fields AS f');
-		$query->join('INNER', '#__rwf_form_field AS ff ON ff.field_id = f.id');
-		$query->join('LEFT', '#__');
-		$query->where('ff.published = 1');
-		$query->where('ff.form_id = ' . $form_id);
-		$query->order('ff.ordering');
-
-		$db->setQuery($query);
-		$fields = $db->loadObjectList();
-
-		foreach ($fields as $k => $field)
-		{
-			$paramsdefs = JPATH_ADMINISTRATOR . '/components/com_redform/models/field_' . $field->fieldtype . '.xml';
-
-			if (!empty($field->params) && file_exists($paramsdefs))
-			{
-				$fields[$k]->parameters = new JParameter($field->params, $paramsdefs);
-			}
-			else
-			{
-				$fields[$k]->parameters = new JRegistry;
-			}
-		}
-
-		return $fields;
-	}
-
-	/**
-	 * Get form values for field
-	 *
-	 * @param   int  $field_id  field id
-	 *
-	 * @return mixed
-	 */
-	protected function getFormValues($field_id)
-	{
-		$db = JFactory::getDBO();
-
-		$q = "SELECT q.id, value, field_id, price
-			FROM #__rwf_values q
-			WHERE published = 1
-			AND q.field_id = " . $field_id . "
-			ORDER BY ordering";
-		$db->setQuery($q);
-
-		return $db->loadObjectList();
-	}
-
-	/**
-	 * Get form html
-	 *
-	 * @param   object  $form   form data
-	 * @param   int     $multi  number of instances
-	 *
-	 * @return mixed
-	 */
-	protected function getFormHtml($form, $multi=1)
-	{
-		return $this->rfcore->displayForm($form->id, null, $multi);
 	}
 }
