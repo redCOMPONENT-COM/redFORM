@@ -49,6 +49,17 @@ class RdfBootstrap
 
 			// Make available the form rules
 			JFormHelper::addRulePath(JPATH_LIBRARIES . '/redform/form/rules');
+
+			if (file_exists(JPATH_LIBRARIES . '/redmember/library.php'))
+			{
+				include_once JPATH_LIBRARIES . '/redmember/library.php';
+
+				define('REDFORM_REDMEMBER_INTEGRATION', true);
+			}
+			else
+			{
+				define('REDFORM_REDMEMBER_INTEGRATION', false);
+			}
 		}
 	}
 }

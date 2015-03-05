@@ -318,7 +318,7 @@ class RdfCore extends JObject
 		}
 
 		// Redmember integration: pull extra fields
-		if ($user->get('id') && file_exists(JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php'))
+		if ($user->get('id') && REDFORM_REDMEMBER_INTEGRATION)
 		{
 			$this->getRedmemberfields($user);
 		}
@@ -511,22 +511,16 @@ class RdfCore extends JObject
 	 */
 	protected function getRedmemberfields(&$user)
 	{
-		$path = JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php';
-
-		if (!file_exists($path))
+		if (!REDFORM_REDMEMBER_INTEGRATION)
 		{
 			return $user;
 		}
 
-		require_once $path;
+		$rmFieldsValues = RedmemberHelperRMUser::getData($user->id);
 
-		$all = RedmemberLib::getUserData($user->id);
-
-		$fields = get_object_vars($all);
-
-		foreach ($fields as $key => $value)
+		foreach ($rmFieldsValues as $rmField)
 		{
-			$user->{$key} = $value;
+			$user->{$rmField->fieldcode} = $rmField->value;
 		}
 
 		return $user;
