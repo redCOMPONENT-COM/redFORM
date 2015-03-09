@@ -90,7 +90,7 @@
 				type="editor"
 				label="COM_REDFORM_FORM_END_DATE"
 				description="COM_REDFORM_FORM_END_DATE_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 		<field
 				name="redirect"
@@ -164,7 +164,7 @@
                 type="editor"
                 label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
                 description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
-                filter="safehtml"
+                filter="raw"
                 />
 
 		<field
@@ -188,7 +188,7 @@
 				type="editor"
 				label="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY"
 				description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 		<field
 				name="cond_recipients"
@@ -232,14 +232,14 @@
 				type="editor"
 				label="COM_REDFORM_PAYMENTPROCESSING"
 				description="COM_REDFORM_PAYMENTPROCESSING_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 		<field
 				name="paymentaccepted"
 				type="editor"
 				label="COM_REDFORM_PAYMENTACCEPTED"
 				description="COM_REDFORM_PAYMENTACCEPTED_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 		<field
 				name="contactpaymentnotificationsubject"
@@ -253,7 +253,7 @@
 				type="editor"
 				label="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY"
 				description="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 		<field
 				name="submitterpaymentnotificationsubject"
@@ -267,7 +267,7 @@
 				type="editor"
 				label="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY"
 				description="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 	</fieldset>
 </form>
