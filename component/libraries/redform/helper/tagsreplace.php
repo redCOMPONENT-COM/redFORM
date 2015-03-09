@@ -29,15 +29,24 @@ class RdfHelperTagsreplace
 	private $formdata;
 
 	/**
+	 * Glue to use for imploding fields array value
+	 *
+	 * @var string
+	 */
+	private $glue;
+
+	/**
 	 * Contructor
 	 *
 	 * @param   object      $formdata  form data
 	 * @param   RdfAnswers  $answers   answers to form
+	 * @param   string      $glue      Glue to use for imploding fields array value
 	 */
-	public function __construct($formdata, RdfAnswers $answers)
+	public function __construct($formdata, RdfAnswers $answers, $glue = ',')
 	{
 		$this->formdata = $formdata;
 		$this->answers = $answers;
+		$this->glue = $glue;
 	}
 
 	/**
@@ -104,7 +113,14 @@ class RdfHelperTagsreplace
 		{
 			if ($field['field_id'] == $id)
 			{
-				return $field['value'];
+				if (is_array($field['value']))
+				{
+					return implode($this->glue, $field['value']);
+				}
+				else
+				{
+					return $field['value'];
+				}
 			}
 		}
 
