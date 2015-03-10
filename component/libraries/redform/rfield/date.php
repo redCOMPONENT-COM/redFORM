@@ -42,7 +42,7 @@ class RdfRfieldDate extends RdfRfield
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		$format = $this->getParam('dateformat', '%Y-%m-%d');
 

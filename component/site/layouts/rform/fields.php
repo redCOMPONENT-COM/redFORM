@@ -46,11 +46,8 @@ foreach ($fields as $field)
 	$rfield->setUser($user);
 
 	// Set value if editing
-	if ($answers)
-	{
-		$value = $answers->getFieldAnswer($field->id);
-		$rfield->setValue($value, true);
-	}
+	$value = $answers ? $answers->getFieldAnswer($field->id) : null;
+	$rfield->setValue($value, true);
 
 	if (!$rfield->isHidden())
 	{

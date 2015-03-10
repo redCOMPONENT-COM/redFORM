@@ -165,7 +165,7 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		if ($this->formIndex == 1 && $this->user && $this->user->email)
 		{
