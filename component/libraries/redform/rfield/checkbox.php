@@ -84,7 +84,7 @@ class RdfRfieldCheckbox extends RdfRfield
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		if ($this->load()->redmember_field)
 		{

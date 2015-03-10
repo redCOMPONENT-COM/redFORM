@@ -40,7 +40,7 @@ class RdfRfieldHidden extends RdfRfieldTextfield
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		$app = JFactory::getApplication();
 

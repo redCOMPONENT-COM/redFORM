@@ -59,9 +59,9 @@
 				cols="80"
 				rows="5"
 				/>
-		<field
+		<field addfieldpath="/libraries/redmember/form/fields"
 				name="redmember_field"
-				type="redformrmfield"
+				type="rmfieldlist"
 				label="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD"
 				description="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_DESC"
 				>

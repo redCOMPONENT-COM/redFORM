@@ -87,7 +87,7 @@ class RdfRfieldInteger extends RdfRfieldSelect
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		if ($this->load()->redmember_field)
 		{
