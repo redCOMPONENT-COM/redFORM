@@ -407,7 +407,7 @@ class RdfCoreSubmission extends JObject
 		}
 		else
 		{
-			return $this->replaceTags($form->notificationtext, reset($this->answers));
+			return $this->replaceTags($form->notificationtext, reset($this->answers), '<br>');
 		}
 	}
 
@@ -720,13 +720,14 @@ class RdfCoreSubmission extends JObject
 	 *
 	 * @param   string      $text     text
 	 * @param   RdfAnswers  $answers  answers to use for substitution
+	 * @param   string      $glue     Glue to use for imploding fields array value
 	 *
 	 * @return mixed
 	 */
-	private function replaceTags($text, RdfAnswers $answers)
+	private function replaceTags($text, RdfAnswers $answers, $glue = ',')
 	{
 		$form = $this->getForm();
-		$replacer = new RdfHelperTagsreplace($form, $answers);
+		$replacer = new RdfHelperTagsreplace($form, $answers, $glue);
 		$text = $replacer->replace($text);
 
 		return $text;
