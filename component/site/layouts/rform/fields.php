@@ -46,8 +46,15 @@ foreach ($fields as $field)
 	$rfield->setUser($user);
 
 	// Set value if editing
-	$value = $answers ? $answers->getFieldAnswer($field->id) : null;
-	$rfield->setValue($value, true);
+	if ($answers)
+	{
+		$value = $answers->getFieldAnswer($field->id);
+		$rfield->setValue($value, true);
+	}
+	else
+	{
+		$rfield->lookupDefaultValue();
+	}
 
 	if (!$rfield->isHidden())
 	{
