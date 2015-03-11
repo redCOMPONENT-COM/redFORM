@@ -976,7 +976,7 @@ class RdfCore extends JObject
 		JText::script('COM_REDFORM_Total_Price');
 		$doc = JFactory::getDocument();
 		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
-		$doc->addScript(JURI::root() . 'media/com_redform/js/form-price.js');
+		RHelperAsset::load('form-price.js', 'com_redform');
 	}
 
 	/**
