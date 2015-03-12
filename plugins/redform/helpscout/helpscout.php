@@ -80,7 +80,6 @@ class plgRedformHelpscout extends JPlugin
 		}
 		catch (Exception $e)
 		{
-			exit($e->getMessage());
 			$app = JFactory::getApplication();
 			$app->enqueueMessage('Helpscout: ' . $e->getMessage(), 'error');
 		}

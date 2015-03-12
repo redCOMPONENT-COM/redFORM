@@ -1,15 +1,16 @@
 <config>
+	<!-- one form tag per redform form... -->
 	<form>
 		<!-- form id from redform -->
 		<id>1</id>
 		<!-- mailbox id, get it from helpscout dashboard manage > mailboxes -->
-		<mailboxId>12346</mailboxId>		
+		<mailboxId>12346</mailboxId>
 		<!-- field id from redform -->
-		<emailFieldId>3</emailFieldId>	
+		<emailFieldId>3</emailFieldId>
 		<!-- field id from redform -->
-		<subjectFieldId>1</subjectFieldId>	
+		<subjectFieldId>1</subjectFieldId>
 		<!-- field id from redform -->
-		<bodyFieldId>13</bodyFieldId>	
+		<bodyFieldId>13</bodyFieldId>
 		<!-- tags to associate to conversation, optional -->
 		<tags>
 			<tag>tag1</tag>
