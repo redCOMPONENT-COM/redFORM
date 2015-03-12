@@ -41,7 +41,7 @@ class JFormFieldRedformRmField extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		if (!REDMEMBER_INTEGRATION)
+		if (!REDFORM_REDMEMBER_INTEGRATION)
 		{
 			return false;
 		}
