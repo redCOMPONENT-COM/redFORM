@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="redform_payment" method="upgrade">
+    <name>PLG_REDFORM_PAYMENT_STRIPE</name>
+    <creationDate>##DATE##</creationDate>
+    <author>redWEB Aps</author>
+    <authorEmail>email@redweb.dk</authorEmail>
+    <authorUrl>www.redcomponent.com</authorUrl>
+    <copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
+    <license>GNU/GPL</license>
+    <version>##VERSION##</version>
+    <description>PLG_REDFORM_PAYMENT_STRIPE_XML_DESCRIPTION</description>
+
+    <files>
+        <filename plugin="stripe">stripe.php</filename>
+        <folder>helpers</folder>
+        <filename>index.html</filename>
+        <folder>language</folder>
+		<folder>layouts</folder>
+		<folder>lib</folder>
+    </files>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+
+                <field name="allowed_currencies" type="textarea"
+                       label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
+                       description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
+                       rows="10"
+                        />
+
+                <field name="secretKey" type="text" default=""
+                       label="PLG_REDFORM_PAYMENT_STRIPE_secretKey"
+                       description="PLG_REDFORM_PAYMENT_STRIPE_secretKey_DESC"
+                       required="1"/>
+
+				<field name="publishableKey" type="text" default=""
+					   label="PLG_REDFORM_PAYMENT_STRIPE_publishableKey"
+					   description="PLG_REDFORM_PAYMENT_STRIPE_publishableKey_DESC"
+					   required="1"/>
+
+				<field name="paymentHeader" type="text" default=""
+					   label="PLG_REDFORM_PAYMENT_STRIPE_paymentHeader"
+					   description="PLG_REDFORM_PAYMENT_STRIPE_paymentHeader_DESC"
+					   required="0"/>
+
+				<field name="imagePath" type="text" default=""
+					   label="PLG_REDFORM_PAYMENT_STRIPE_imagePath"
+					   description="PLG_REDFORM_PAYMENT_STRIPE_imagePath_DESC"
+					   required="0"/>
+            </fieldset>
+
+            <fieldset name="extra" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_EXTRA">
+
+                <field name="gatewaylabel" type="text" default="" label="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL"
+                       description="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL_DESC"/>
+
+                <field name="gatewaybackendlabel" type="text" default=""
+                       label="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL"
+                       description="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL_DESC"/>
+
+            </fieldset>
+        </fields>
+    </config>
+
+</extension>

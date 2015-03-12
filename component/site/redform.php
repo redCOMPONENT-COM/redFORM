@@ -8,20 +8,19 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
+$redformLoader = JPATH_LIBRARIES . '/redform/bootstrap.php';
 
-if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+if (!file_exists($redformLoader))
 {
-	throw new Exception(JText::_('COM_REDITEM_REDCORE_INIT_FAILED'), 404);
+	throw new Exception(JText::_('COM_REDFORM_LIB_INIT_FAILED'), 404);
 }
 
-// Bootstraps redCORE
-RBootstrap::bootstrap();
+include_once $redformLoader;
+
+// Bootstraps redFORM
+RdfBootstrap::bootstrap();
 
 $jinput = JFactory::getApplication()->input;
-
-// Register library prefix
-RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
 // Require the base controller
 require_once JPATH_COMPONENT . '/controller.php';
