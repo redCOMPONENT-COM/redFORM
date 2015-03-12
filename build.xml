@@ -328,10 +328,10 @@
     Tasks - Copy to test site
     ====================================================================================================
     -->
-	<target name="unit-test" description="Copy to test site"
-			depends="setup-test, site">
+	<target name="unit-test" description="Run test suite"
+			depends="unit-test-prepare">
 		<phpunit configuration="tests/unit/phpunit.xml"
-				 printsummary="true"
+				 printsummary="true" haltonfailure="true" haltonerror="true"
 				 pharlocation="/usr/local/bin/phpunit">
 			<batchtest>
 				<fileset dir="tests/unit/suite">
@@ -341,8 +341,19 @@
 		</phpunit>
 	</target>
 
+	<target name="unit-test-prepare" description="Copy to test site"
+			depends="setup-test, site">
+	</target>
+
 	<target name="setup-test" description="Init to copy to test site"
 			depends="setup-properties">
 		<property name="www.dir" value="${www.dirtest}" override="true"/>
+
+		<!-- Test -->
+		<copy todir="${www.dir}/redunittests/unit/suite/redform" overwrite="true">
+			<fileset dir="tests/unit/suite">
+				<include name="**" />
+			</fileset>
+		</copy>
 	</target>
 </project>
