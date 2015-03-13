@@ -7,10 +7,16 @@
 		<mailboxId>12346</mailboxId>
 		<!-- field id from redform -->
 		<emailFieldId>3</emailFieldId>
-		<!-- field id from redform -->
+		<!-- field id from redform / You can use <subject>Bla bla</subject> tag for a fixed subject -->
 		<subjectFieldId>1</subjectFieldId>
-		<!-- field id from redform -->
+		<!-- field id from redform / You can use <body>Bla bla</body> tag for a fixed body -->
 		<bodyFieldId>13</bodyFieldId>
+		<!-- field id from redform, optional -->
+		<firstNameFieldId>15</firstNameFieldId>
+		<!-- field id from redform, optional -->
+		<lastnameFieldId>15</lastnameFieldId>
+		<!-- field id from redform, optional -->
+		<organizationFieldId>15</organizationFieldId>
 		<!-- tags to associate to conversation, optional -->
 		<tags>
 			<tag>tag1</tag>

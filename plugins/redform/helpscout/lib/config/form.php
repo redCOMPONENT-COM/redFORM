@@ -56,22 +56,10 @@ class PlghsConfigForm
 	 * @param   RdfAnswers  $submission  submission
 	 *
 	 * @return mixed
-	 *
-	 * @throws InvalidArgumentException
 	 */
 	public function getSubmissionEmail(RdfAnswers $submission)
 	{
-		$fieldId = (int) $this->xml->emailFieldId;
-
-		foreach ($submission->getFields() AS $field)
-		{
-			if ($field->fieldId == $fieldId)
-			{
-				return $field->getValueAsString();
-			}
-		}
-
-		throw new InvalidArgumentException('Email field not found');
+		return $this->getXmlConfigTagSubmissionFieldValue('emailFieldId', $submission, true);
 	}
 
 	/**
@@ -80,22 +68,15 @@ class PlghsConfigForm
 	 * @param   RdfAnswers  $submission  submission
 	 *
 	 * @return mixed
-	 *
-	 * @throws InvalidArgumentException
 	 */
 	public function getSubmissionSubject(RdfAnswers $submission)
 	{
-		$fieldId = (int) $this->xml->subjectFieldId;
-
-		foreach ($submission->getFields() AS $field)
+		if (isset($this->xml->subject))
 		{
-			if ($field->fieldId == $fieldId)
-			{
-				return $field->getValueAsString();
-			}
+			return (string) $this->xml->subject;
 		}
 
-		throw new InvalidArgumentException('subject field not found');
+		return $this->getXmlConfigTagSubmissionFieldValue('subjectFieldId', $submission, true);
 	}
 
 	/**
@@ -104,22 +85,51 @@ class PlghsConfigForm
 	 * @param   RdfAnswers  $submission  submission
 	 *
 	 * @return mixed
-	 *
-	 * @throws InvalidArgumentException
 	 */
 	public function getSubmissionBody(RdfAnswers $submission)
 	{
-		$fieldId = (int) $this->xml->bodyFieldId;
-
-		foreach ($submission->getFields() AS $field)
+		if (isset($this->xml->body))
 		{
-			if ($field->fieldId == $fieldId)
-			{
-				return $field->getValueAsString();
-			}
+			return (string) $this->xml->body;
 		}
 
-		throw new InvalidArgumentException('body field not found');
+		return $this->getXmlConfigTagSubmissionFieldValue('bodyFieldId', $submission, true);
+	}
+
+	/**
+	 * Return posted firstname
+	 *
+	 * @param   RdfAnswers  $submission  submission
+	 *
+	 * @return mixed
+	 */
+	public function getSubmissionFirstname(RdfAnswers $submission)
+	{
+		return $this->getXmlConfigTagSubmissionFieldValue('firstNameFieldId', $submission);
+	}
+
+	/**
+	 * Return posted lastname
+	 *
+	 * @param   RdfAnswers  $submission  submission
+	 *
+	 * @return mixed
+	 */
+	public function getSubmissionLastname(RdfAnswers $submission)
+	{
+		return $this->getXmlConfigTagSubmissionFieldValue('lastnameFieldId', $submission);
+	}
+
+	/**
+	 * Return posted Organization
+	 *
+	 * @param   RdfAnswers  $submission  submission
+	 *
+	 * @return mixed
+	 */
+	public function getSubmissionOrganization(RdfAnswers $submission)
+	{
+		return $this->getXmlConfigTagSubmissionFieldValue('organizationFieldId', $submission);
 	}
 
 	/**
@@ -183,6 +193,47 @@ class PlghsConfigForm
 			}
 
 			return $res;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Return field value from submission
+	 *
+	 * @param   string      $xmlFieldIdTag  field id xml tag
+	 * @param   RdfAnswers  $submission     answers
+	 * @param   bool        $required       is it required
+	 *
+	 * @return string|bool
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	private function getXmlConfigTagSubmissionFieldValue($xmlFieldIdTag, $submission, $required = false)
+	{
+		if (!isset($this->xml->{$xmlFieldIdTag}) && $required)
+		{
+			if ($required)
+			{
+				throw new InvalidArgumentException($xmlFieldIdTag . ' tag not found in config xml');
+			}
+
+			return false;
+		}
+
+		$fieldId = (int) $this->xml->{$xmlFieldIdTag};
+
+		foreach ($submission->getFields() AS $field)
+		{
+			if ($field->fieldId == $fieldId)
+			{
+				return $field->getValueAsString();
+			}
+		}
+
+		if ($required)
+		{
+			throw new InvalidArgumentException($xmlFieldIdTag . ' matching field not found in submission');
 		}
 
 		return false;

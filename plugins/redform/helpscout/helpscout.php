@@ -101,71 +101,8 @@ class plgRedformHelpscout extends JPlugin
 			return;
 		}
 
-		$mailboxId = $formConfig->getMailboxId();
-
-		$email = $formConfig->getSubmissionEmail($submission);
-
-		if (!JMailHelper::isEmailAddress($email))
-		{
-			return;
-		}
-
-		$subject = $formConfig->getSubmissionSubject($submission);
-		$body = $formConfig->getSubmissionBody($submission);
-
-		$customer = $this->getCustomer($email);
-
-		$customerRef = new \HelpScout\model\ref\CustomerRef;
-		$customerRef->setId($customer->getId());
-		$customerRef->setEmail($email);
-
-		$mailbox = new \HelpScout\model\ref\MailboxRef;
-		$mailbox->setId($mailboxId);
-
-		$conversation = new \HelpScout\model\Conversation;
-		$conversation->setSubject($subject);
-		$conversation->setMailbox($mailbox);
-		$conversation->setCustomer($customerRef);
-		$conversation->setType("email");
-
-		// A conversation must have at least one thread
-		$thread = new \HelpScout\model\thread\Customer;
-		$thread->setType("customer");
-		$thread->setBody($body);
-		$thread->setStatus("active");
-
-		// Create by: required
-		$createdBy = new \HelpScout\model\ref\PersonRef;
-		$createdBy->setId($customer->getId());
-		$createdBy->setType("customer");
-		$thread->setCreatedBy($createdBy);
-
-		if ($assignTo = $formConfig->getAssignedTo())
-		{
-			$assignedTo = new \HelpScout\model\ref\PersonRef;
-			$assignedTo->setId($assignTo);
-			$assignedTo->setType("user");
-			$thread->setAssignedTo($assignedTo);
-		}
-
-		if ($ccList = $formConfig->getCclist())
-		{
-			$thread->setCcList($ccList);
-		}
-
-		if ($bccList = $formConfig->getBcclist())
-		{
-			$thread->setBccList($bccList);
-		}
-
-		if ($tags = $formConfig->getTags())
-		{
-			$conversation->setTags($tags);
-		}
-
-		$conversation->setThreads(array($thread));
-		$conversation->setCreatedBy($createdBy);
-		$this->getClient()->createConversation($conversation);
+		$conversation = new PlghsConversation($formConfig, $submission, $this->getClient());
+		$conversation->send();
 	}
 
 	/**
@@ -191,12 +128,24 @@ class plgRedformHelpscout extends JPlugin
 	{
 		if (!$this->config)
 		{
-			if (!file_exists($this->params->get('configPath')))
+			$relPath = trim($this->params->get('configPath'));
+
+			if (!$relPath)
 			{
-				throw new InvalidArgumentException('Config file not found');
+				throw new InvalidArgumentException('Config file path not defined');
 			}
 
-			$data = file_get_contents($this->params->get('configPath'));
+			if (substr($relPath, 0, 1) !== "/")
+			{
+				$relPath = "/" . $relPath;
+			}
+
+			if (!file_exists(JPATH_SITE . $relPath))
+			{
+				throw new InvalidArgumentException('Config file not found: ' . JPATH_SITE . $relPath);
+			}
+
+			$data = file_get_contents(JPATH_SITE . $relPath);
 
 			$xml = new SimpleXMLElement($data);
 
@@ -210,58 +159,6 @@ class plgRedformHelpscout extends JPlugin
 		}
 
 		return $this->config;
-	}
-
-	/**
-	 * Return api client
-	 *
-	 * @return ApiClient
-	 */
-	private function getClient()
-	{
-		if (!$this->client)
-		{
-			if (!$key = $this->params->get('apiKey'))
-			{
-				throw new InvalidArgumentException('Missing api key');
-			}
-
-			$this->client = ApiClient::getInstance();
-			$this->client->setKey($key);
-		}
-
-		return $this->client;
-	}
-
-	/**
-	 * Return Customer
-	 *
-	 * @param   string  $email  email
-	 *
-	 * @return \HelpScout\model\ref\CustomerRef
-	 */
-	private function getCustomer($email)
-	{
-		$client = $this->getClient();
-		$customers = $client->searchCustomersByEmail($email);
-
-		if ($customers->getCount())
-		{
-			$items = $customers->getItems();
-
-			return $items[0];
-		}
-		else
-		{
-			$customer = new \HelpScout\model\Customer;
-			$emailObj = new \HelpScout\model\customer\EmailEntry;
-			$emailObj->setValue($email);
-
-			$customer->setEmails(array($emailObj));
-			$client->createCustomer($customer);
-
-			return $customer;
-		}
 	}
 
 	/**
@@ -292,5 +189,26 @@ class plgRedformHelpscout extends JPlugin
 		}
 
 		return $this->redFormCore;
+	}
+
+	/**
+	 * Return api client
+	 *
+	 * @return ApiClient
+	 */
+	private function getClient()
+	{
+		if (!$this->client)
+		{
+			if (!$key = $this->params->get('apiKey'))
+			{
+				throw new InvalidArgumentException('Missing api key');
+			}
+
+			$this->client = ApiClient::getInstance();
+			$this->client->setKey($key);
+		}
+
+		return $this->client;
 	}
 }
