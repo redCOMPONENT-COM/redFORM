@@ -12,6 +12,8 @@ defined('_JEXEC') or die( 'Restricted access');
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
+include_once 'vendor/autoload.php';
+
 /**
  * Class plgRedform_captchaRecaptcha
  *
