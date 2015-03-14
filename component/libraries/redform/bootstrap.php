@@ -41,6 +41,12 @@ class RdfBootstrap
 			// Bootstraps redCORE
 			RBootstrap::bootstrap();
 
+			// For Joomla! 2.5 compatibility we load bootstrap2
+			if (version_compare(JVERSION, '3.0', '<') && JFactory::getApplication()->input->get('view') == 'config')
+			{
+				RHtmlMedia::setFramework('bootstrap2');
+			}
+
 			// Register library prefix
 			RLoader::registerPrefix('Rdf', __DIR__);
 
