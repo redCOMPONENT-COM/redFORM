@@ -40,6 +40,7 @@ build.properties
 # Composer
 composer.lock
 /vendor
+vendor
 
 # Test related files
 /tests/system/servers/configdef.php

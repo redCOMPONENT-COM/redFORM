@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="redform_captcha" method="upgrade">
-  <name>PLG_REDFORM_CAPTCHA_RECAPTCHA</name>
+	<name>PLG_REDFORM_CAPTCHA_RECAPTCHA</name>
 	<creationDate>##DATE##</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
@@ -8,27 +8,26 @@
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
 	<version>##VERSION##</version>
-  <description>PLG_REDFORM_CAPTCHA_RECAPTCHA_XML_DESCRIPTION</description>
+	<description>PLG_REDFORM_CAPTCHA_RECAPTCHA_XML_DESCRIPTION</description>
 
-  <files>
-    <filename plugin="recaptcha">recaptcha.php</filename>
-    <folder>recaptcha</folder>
-    <filename>index.html</filename>
-    <folder>language</folder>
-  </files>
+	<files>
+		<filename plugin="recaptcha">recaptcha.php</filename>
+		<folder>recaptcha</folder>
+		<filename>index.html</filename>
+		<folder>language</folder>
+		<folder>vendor</folder>
+	</files>
 
-  <config>
-	  <fields name="params">
-		  <fieldset name="extra" label="extra">
-			  	<field name="public_key" type="text" default="" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_DESC" />
-			  	<field name="private_key" type="text" default="" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_DESC" />
-			    <field name="theme" type="list" default="red" label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME" description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC">
-				      <option value="red">red</option>
-				      <option value="white">white</option>
-				      <option value="blackglass">blackglass</option>
-				      <option value="clean">clean</option>
-			    </field>
-		  </fieldset>
-	  </fields>
-  </config>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="public_key" type="text" default=""
+					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY"
+					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_DESC" />
+				<field name="private_key" type="text" default=""
+					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY"
+					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_DESC" />
+			</fieldset>
+		</fields>
+	</config>
 </extension>
