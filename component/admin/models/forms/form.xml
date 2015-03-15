@@ -88,8 +88,8 @@
 		<field
 				name="notificationtext"
 				type="editor"
-				label="COM_REDFORM_FORM_END_DATE"
-				description="COM_REDFORM_FORM_END_DATE_TIP"
+				label="COM_REDFORM_FORM_POST_SUBMISSION_TEXT"
+				description="COM_REDFORM_FORM_POST_SUBMISSION_TEXT_TIP"
                 filter="raw"
 				/>
 		<field

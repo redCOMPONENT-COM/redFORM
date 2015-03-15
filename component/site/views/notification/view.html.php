@@ -17,7 +17,7 @@ jimport('joomla.application.component.view');
  * @package  Redform.Site
  * @since    1.5
  */
-class RedformViewConfirm extends RViewSite
+class RedformViewNotification extends RViewSite
 {
 	/**
 	 * Execute and display a template script.
@@ -28,7 +28,7 @@ class RedformViewConfirm extends RViewSite
 	 */
 	public function display($tpl = null)
 	{
-		$this->updated = JFactory::getApplication()->input->getState('updatedIds');
+		$this->notification = $this->get('Notification');
 
 		return parent::display($tpl);
 	}

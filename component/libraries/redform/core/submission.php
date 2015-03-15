@@ -393,25 +393,6 @@ class RdfCoreSubmission extends JObject
 	}
 
 	/**
-	 * Return submission notification text
-	 *
-	 * @return mixed
-	 */
-	public function getNotificationText()
-	{
-		$form = $this->getForm();
-
-		if (empty($this->answers))
-		{
-			return $form->notificationtext;
-		}
-		else
-		{
-			return $this->replaceTags($form->notificationtext, reset($this->answers), '<br>');
-		}
-	}
-
-	/**
 	 * send email to form maintaineers or/and selected recipients
 	 *
 	 * @param   array  $allanswers  answers
