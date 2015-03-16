@@ -582,10 +582,10 @@ class rfanswers
 			$fieldParams = new JRegistry($field->params);
 			$value = $this->_values[$k];
 
-			if ($field->validate && !$value)
-			{
-				$errors[] = $field->field . ': ' . JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED');
-			}
+//			if ($field->validate && !$value)
+//			{
+//				$errors[] = $field->field . ': ' . JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED');
+//			}
 
 			$regex = $fieldParams->get('regexformat');
 
