@@ -42,16 +42,35 @@ function CheckSubmit(form)
 				if (!fullresult) {
 					msg += getLabel(check_element).get('text')+': '+"<?php echo JText::_('COM_REDFORM_please_enter_a_name'); ?>\n";
 				}
+
 				if (result) result = fullresult;
 			}
 
 			/* Text field */
-			if (check_element.name.indexOf("[text]") != -1 && check_element.className.match("required")) {
-				var textresult = CheckFill(check_element);
-				if (!textresult) {
-						msg += getLabel(check_element).get('text')+': '+"<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+			if (check_element.name.indexOf("[text]") != -1) {
+				textresult = true;
+				if (check_element.className.match("required")) {
+					textresult = CheckFill(check_element);
+					if (!textresult) {
+						msg += getLabel(check_element).get('text') + ': ' + "<?php echo JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED'); ?>\n";
+					}
 				}
-				if (result) result = textresult;
+
+				var regex = document.id(check_element).getProperty('regex');
+				var value = document.id(check_element).get('value');
+
+				if (regex && value.length)
+				{
+					var regexP = new RegExp(regex);
+
+					textresult = value.match(regexP) ? true : false;
+
+					if (!textresult) {
+						msg += getLabel(check_element).get('text') + ': ' + document.id(check_element).getProperty('regex_info') +"\n";
+					}
+				}
+
+				result = result ? textresult : result;
 			}
 
 			/* Textarea field */

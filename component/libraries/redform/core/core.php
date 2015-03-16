@@ -143,7 +143,7 @@ class RedformCore extends JObject {
 
 		$form   = $model_redform->getForm();
 
-		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" class="'.$form->classname.'" enctype="multipart/form-data" onsubmit="return CheckSubmit();">';
+		$html = '<form action="'.JRoute::_('index.php?option=com_redform').'" method="post" name="redform" class="'.$form->classname.'" enctype="multipart/form-data" onsubmit="return CheckSubmit(this);">';
 		$html .= $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
 		/* Get the user details form */
@@ -628,7 +628,13 @@ class RedformCore extends JObject {
 
 						if ($placeholder = $field->parameters->get('placeholder'))
 						{
-							$element .= 'placeholder="' . addslashes($placeholder) . '"';
+							$element .= ' placeholder="' . addslashes($placeholder) . '"';
+						}
+
+						if ($regex = $field->parameters->get('regexformat'))
+						{
+							$element .= ' regex="' . addslashes($regex) . '"';
+							$element .= ' regex_info="' . addslashes($field->parameters->get('regexformat_desc')) . '"';
 						}
 
 						$element .= ' value="';

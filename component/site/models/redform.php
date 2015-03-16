@@ -113,7 +113,7 @@ class RedformModelRedform extends JModel {
 		$db = & $this->_db;
 
 		/* Load the fields */
-		$q = "SELECT id, field, fieldtype, ordering, published, params
+		$q = "SELECT id, field, fieldtype, ordering, published, params, validate
 		FROM ".$db->nameQuote('#__rwf_fields')."
 		WHERE form_id = ".$form_id."
 		ORDER BY ordering";
@@ -744,19 +744,18 @@ class RedformModelRedform extends JModel {
 		// Else save to db !
 		foreach ($allanswers as $answers)
 		{
-			$res = $answers->savedata($postvalues);
-
-			if (!$res)
+			try
 			{
-				$this->setError(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED'));
-
-				return false;
-			}
-			else
-			{
+				$res = $answers->savedata($postvalues);
 				// Delete session data
 				$app->setUserState('formdata'.$form->id, null);
 				$result->posts[] = array('sid' => $res);
+			}
+			catch (InvalidArgumentException $e)
+			{
+				$this->setError(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED') . '<br>' . $e->getMessage());
+
+				return false;
 			}
 
 			if ($answers->isNew())

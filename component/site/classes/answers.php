@@ -465,6 +465,8 @@ class rfanswers
 	 */
 	function savedata($params = array())
 	{
+		$this->checkData();
+
 		$mainframe = Jfactory::getApplication();
 		$db = & JFactory::getDBO();
 
@@ -564,6 +566,39 @@ class rfanswers
 		$this->_sid = $sid;
 		$this->setPrice();
 		return $sid;
+	}
+
+	/**
+	 * Check data is valid
+	 *
+	 * return void
+	 */
+	private function checkData()
+	{
+		$errors = array();
+
+		foreach ($this->_fields as $k => $field)
+		{
+			$fieldParams = new JRegistry($field->params);
+			$value = $this->_values[$k];
+
+			if ($field->validate && !$value)
+			{
+				$errors[] = $field->field . ': ' . JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED');
+			}
+
+			$regex = $fieldParams->get('regexformat');
+
+			if ($value && $regex && !preg_match("/" . $regex . "/", $value))
+			{
+				$errors[] = $field->field . ': ' . $fieldParams->get('regexformat_desc');
+			}
+		}
+
+		if (count($errors))
+		{
+			throw new InvalidArgumentException(implode('<br>', $errors));
+		}
 	}
 
 	function updateSubmitter($params = array())
