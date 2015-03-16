@@ -586,13 +586,13 @@ class rfanswers
 //			{
 //				$errors[] = $field->field . ': ' . JText::_('COM_REDFORM_JS_CHECK_FIELD_REQUIRED');
 //			}
-
-			$regex = $fieldParams->get('regexformat');
-
-			if ($value && $regex && !preg_match("/" . $regex . "/", $value))
-			{
-				$errors[] = $field->field . ': ' . $fieldParams->get('regexformat_desc');
-			}
+//
+//			$regex = $fieldParams->get('regexformat');
+//
+//			if ($value && $regex && !preg_match("/" . $regex . "/", $value))
+//			{
+//				$errors[] = $field->field . ': ' . $fieldParams->get('regexformat_desc');
+//			}
 		}
 
 		if (count($errors))
