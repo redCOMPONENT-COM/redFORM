@@ -1710,6 +1710,17 @@ class RedformCore extends JObject {
 
 		$data = $this->prepareUserData($userData);
 
+		// TODO: Really need to rethink that interface !
+		if (isset($options['submit_key']))
+		{
+			$data['submit_key'] = $options['submit_key'];
+		}
+
+		if (isset($options['sid']))
+		{
+			$data['submitter_id1'] = $options['sid'];
+		}
+
 		return $this->saveAnswers($integration, $options, $data);
 	}
 
