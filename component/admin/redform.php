@@ -28,6 +28,8 @@ include_once $redformLoader;
 // Bootstraps redFORM
 RdfBootstrap::bootstrap();
 
+RHtmlMedia::setFramework('bootstrap3');
+
 require_once JPATH_COMPONENT_SITE . '/redform.defines.php';
 
 // Register backend prefix

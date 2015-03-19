@@ -39,30 +39,24 @@ class JFormFieldRedformconditionalrecipients extends JFormFieldTextarea
 	 */
 	protected function getInput()
 	{
+		JText::script('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_MIN');
+		JText::script('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_MAX');
+		JText::script('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_EQUAL');
+		JText::script('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_REGEX');
+
 		// Comparison functions
-		$options = array(
+		$functionsOptions = array(
 			JHTML::_('select.option', 'between', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_BETWEEN')),
 			JHTML::_('select.option', 'inferior', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_inferior')),
 			JHTML::_('select.option', 'superior', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_superior')),
-		);
-		$this->fields['functions'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_LABEL'),
-			'field' => JHTML::_('select.genericlist', $options, 'cr_function', 'class="inputbox"')
-		);
-
-		$this->fields['email'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL'),
-			'field' => '<input type="text" name="cr_email" id="cr_email" placeholder="' . JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL') . '"/>'
+			JHTML::_('select.option', 'equal', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_EQUAL')),
+			JHTML::_('select.option', 'regex', JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_REGEX')),
 		);
 
-		$this->fields['name'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL'),
-			'field' => '<input type="text" name="cr_name" id="cr_name" placeholder="' . JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL') . '"/>'
-		);
+		$textarea = parent::getInput();
 
-		$this->fields['field'] = array('label' => JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_LABEL'),
-			'field' => '<select name="cr_field" id="cr_field"></select>'
-		);
+		$data = array('textarea' => $textarea, 'functionsOptions' => $functionsOptions);
 
-		$this->textarea = parent::getInput();
-
-		return RdfHelperLayout::render('fields.redformconditionalrecipients', $this);
+		return RdfHelperLayout::render('fields.redformconditionalrecipients', $data);
 	}
 }

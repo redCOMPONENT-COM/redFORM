@@ -20,6 +20,7 @@
 		<field
 				name="showname"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_FORM_SHOW_NAME"
 				description="COM_REDFORM_FORM_SHOW_NAME_TIP"
 				>
@@ -51,6 +52,7 @@
 		<field
 				name="formexpires"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_FORM_EXPIRES"
 				description="COM_REDFORM_FORM_EXPIRES_TIP"
 				>
@@ -67,6 +69,7 @@
 		<field
 				name="captchaactive"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_CAPTCHA_ACTIVE"
 				description="COM_REDFORM_CAPTCHA_ACTIVE_TIP"
 				>
@@ -79,6 +82,7 @@
 		<field
 				name="submitnotification"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_FORM_NOTIFICATION"
 				description="COM_REDFORM_FORM_NOTIFICATION_TIP"
 				>
@@ -102,6 +106,7 @@
 		<field
 				name="contactpersoninform"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_NOTIFY_CONTACTPERSON"
 				description="COM_REDFORM_NOTIFY_CONTACTPERSON_TIP"
 				>
@@ -111,6 +116,7 @@
 		<field
 				name="contactpersonemail"
 				type="text"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_CONTACTPERSON_EMAIL"
 				description="COM_REDFORM_CONTACTPERSON_EMAIL_TIP"
 				maxlength="255"
@@ -118,6 +124,7 @@
 		<field
 				name="contactpersonfullpost"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS"
 				description="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS_TIP"
 				>
@@ -128,6 +135,7 @@
         <field
                 name="enable_confirmation"
                 type="radio"
+				class="btn-group btn-group-yesno"
                 label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_LABEL"
                 description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_DESC"
                 >
@@ -137,6 +145,7 @@
         <field
                 name="enable_confirmation_notification"
                 type="radio"
+				class="btn-group btn-group-yesno"
                 label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_LABEL"
                 description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_DESC"
                 >
@@ -170,6 +179,7 @@
 		<field
 				name="submitterinform"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_NOTIFY_SUBMITTER"
 				description="COM_REDFORM_NOTIFY_SUBMITTER_TIP"
 				>
@@ -194,8 +204,8 @@
 				name="cond_recipients"
 				type="redformconditionalrecipients"
 				label="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS"
+				class="form-control"
 				description="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS_TIP"
-				cols="50"
 				rows="10"
 				/>
 	</fieldset>
@@ -204,6 +214,7 @@
 		<field
 				name="activatepayment"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_PAYMENTACTIVE"
 				description="COM_REDFORM_PAYMENTACTIVE_TIP"
 				>
@@ -213,6 +224,7 @@
 		<field
 				name="show_js_price"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_FORM_SHOW_JS_PRICE_LABEL"
 				description="COM_REDFORM_FORM_SHOW_JS_PRICE_TIP"
 				>

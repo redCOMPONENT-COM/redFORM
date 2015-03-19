@@ -15,7 +15,7 @@
 						var opt = '<option value="' + val.value + '">' + val.text + '</option>';
 						$('#cr_field').append(opt);
 					});
-					$('#cr_field').trigger("chosen:updated");
+					$('#cr_field').trigger("liszt:updated");
 				});
 		}
 		else {
@@ -26,13 +26,25 @@
 			var span = $("#cr_params");
 			span.empty();
 			if ($(this).val() == 'between') {
-				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param" size="10" placeholder="Min">');
+				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param form-control" size="10" placeholder="' +
+				Joomla.JText._('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_MIN')
+				+ '">');
 				span.append(' ');
-				span.append('<input type="text" name="cr_param2" id="cr_param2" class="cr_param" size="10" placeholder="Max">');
+				span.append('<input type="text" name="cr_param2" id="cr_param2" class="cr_param form-control" size="10" placeholder="' +
+				Joomla.JText._('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_MAX')
+				+ '">');
 			}
-			if ($(this).val() == 'superior' || $(this).val() == 'inferior') {
-				var placeholder = $(this).val() == 'superior' ? 'Min' : 'Max';
-				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param" size="10" placeholder="' + placeholder + '">');
+			else if ($(this).val() == 'superior' || $(this).val() == 'inferior') {
+				var placeholder = $(this).val() == 'superior' ? Joomla.JText._('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_MIN') : Joomla.JText._('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_MAX');
+				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param form-control" size="10" placeholder="' + placeholder + '">');
+			}
+			else if ($(this).val() == 'equal') {
+				var placeholder = Joomla.JText._('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_EQUAL');
+				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param form-control" size="10" placeholder="' + placeholder + '">');
+			}
+			else if ($(this).val() == 'regex') {
+				var placeholder = Joomla.JText._('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_REGEX');
+				span.append('<input type="text" name="cr_param1" id="cr_param1" class="cr_param form-control" size="10" placeholder="' + placeholder + '">');
 			}
 		}).change();
 
@@ -45,19 +57,19 @@
 
 			if (!rfConditionalRecipient.checkEmail($('#cr_email').val())) {
 				alert(Joomla.JText._('COM_REDFORM_MISSING_OR_INVALID_EMAIL'));
-				$('#cr_email').addClass('error');
+				$('#cr_email').parents('.form-group').addClass('has-error');
 				return false;
 			}
 
 			if (!$('#cr_name').val()) {
 				alert(Joomla.JText._('COM_REDFORM_CONDITIONAL_RECIPIENTS_FROMNAME_REQUIRED'));
-				$('#cr_name').addClass('error');
+				$('#cr_name').parents('.form-group').addClass('has-error');
 				return false;
 			}
 
 			if (!$('#cr_field').val()) {
 				alert(Joomla.JText._('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_REQUIRED'));
-				$('#cr_field').addClass('error');
+				$('#cr_field').parents('.form-group').addClass('has-error');
 				return false;
 			}
 
@@ -77,6 +89,7 @@
 			});
 			if (!check) {
 				alert(Joomla.JText._('COM_REDFORM_CONDITIONAL_RECIPIENT_MISSING_PARAMETER'));
+				$('#cr_params').addClass('has-error');
 				return false;
 			}
 
