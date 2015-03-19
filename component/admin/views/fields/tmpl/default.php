@@ -95,7 +95,7 @@ if ($saveOrder)
 						<td>
 							<?php if ($item->checked_out) : ?>
 								<?php echo JHtml::_('rgrid.checkedout', $i, $item->checked_out,
-									$item->checked_out_time, 'forms.', $canCheckin); ?>
+									$item->checked_out_time, 'fields.', $canCheckin); ?>
 							<?php endif; ?>
 							<a href="<?php echo JRoute::_('index.php?option=com_redform&task=field.edit&id=' . $item->id); ?>">
 								<?php echo $this->escape($item->field); ?>
