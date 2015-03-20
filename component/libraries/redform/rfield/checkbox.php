@@ -145,18 +145,6 @@ class RdfRfieldCheckbox extends RdfRfield
 			$properties['readonly'] = 'readonly';
 		}
 
-		if ($this->load()->validate)
-		{
-			if ($properties['class'])
-			{
-				$properties['class'] .= ' required';
-			}
-			else
-			{
-				$properties['class'] = ' required';
-			}
-		}
-
 		$value = $this->getValue();
 
 		if ($value && in_array($option->value, $value))

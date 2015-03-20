@@ -12,10 +12,12 @@ defined('_JEXEC') or die;
 $data = $displayData;
 ?>
 <div class="fieldoptions">
-	<?php foreach ($data->options as $option): ?>
-		<?php $properties = $data->getOptionsProperties($option); ?>
-		<div class="fieldoption">
-			<input <?php echo $data->propertiesToString($properties); ?>/> <?php echo $option->label; ?>
-		</div>
-	<?php endforeach; ?>
+	<fieldset class="checkboxes<?php echo $data->required ? ' required' : ''; ?>">
+		<?php foreach ($data->options as $option): ?>
+			<?php $properties = $data->getOptionsProperties($option); ?>
+			<div class="fieldoption">
+				<input <?php echo $data->propertiesToString($properties); ?>/> <?php echo $option->label; ?>
+			</div>
+		<?php endforeach; ?>
+	</fieldset>
 </div>
