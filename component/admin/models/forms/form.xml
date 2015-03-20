@@ -15,6 +15,7 @@
 				label="COM_REDFORM_FORM_NAME"
 				description="COM_REDFORM_FORM_NAME_TIP"
 				required="true"
+				size="80"
 				maxlength="255"
 				/>
 		<field
@@ -204,9 +205,9 @@
 				name="cond_recipients"
 				type="redformconditionalrecipients"
 				label="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS"
-				class="form-control"
 				description="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS_TIP"
 				rows="10"
+				cols="50"
 				/>
 	</fieldset>
 
@@ -236,6 +237,7 @@
 				type="rcurrency"
 				label="COM_REDFORM_PAYMENTCURRENCY"
 				description="COM_REDFORM_PAYMENTCURRENCY_TIP"
+				class="form-control"
 				>
 			<option value="">COM_REDFORM_SELECT_CURRENCY</option>
 		</field>

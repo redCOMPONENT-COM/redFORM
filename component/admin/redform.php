@@ -28,7 +28,8 @@ include_once $redformLoader;
 // Bootstraps redFORM
 RdfBootstrap::bootstrap();
 
-RHtmlMedia::setFramework('bootstrap3');
+// Forcing boostrap2 screws up things on 3.x for some reason
+// RHtmlMedia::setFramework('bootstrap2');
 
 require_once JPATH_COMPONENT_SITE . '/redform.defines.php';
 

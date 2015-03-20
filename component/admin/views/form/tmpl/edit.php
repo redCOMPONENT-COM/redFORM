@@ -95,7 +95,7 @@ $isNew = (int) $this->item->id <= 0;
       class="form-validate form-horizontal">
 <div class="tab-content">
 		<div class="tab-pane active" id="details">
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('formname'); ?>
 				</div>
@@ -104,7 +104,7 @@ $isNew = (int) $this->item->id <= 0;
 				</div>
 			</div>
 
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('showname'); ?>
 				</div>
@@ -113,7 +113,7 @@ $isNew = (int) $this->item->id <= 0;
 				</div>
 			</div>
 
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('access'); ?>
 				</div>
@@ -121,7 +121,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('access'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('classname'); ?>
 				</div>
@@ -129,7 +129,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('classname'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('startdate'); ?>
 				</div>
@@ -137,7 +137,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('startdate'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('formexpires'); ?>
 				</div>
@@ -145,7 +145,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('formexpires'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('enddate'); ?>
 				</div>
@@ -153,7 +153,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('enddate'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('captchaactive'); ?>
 				</div>
@@ -165,7 +165,7 @@ $isNew = (int) $this->item->id <= 0;
 
 		<div class="tab-pane" id="notification">
 			<div class="row-fluid notification-content">
-				<div class="control-group">
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('submitnotification'); ?>
 					</div>
@@ -173,7 +173,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getInput('submitnotification'); ?>
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('notificationtext'); ?>
 					</div>
@@ -181,7 +181,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getInput('notificationtext'); ?>
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('redirect'); ?>
 					</div>
@@ -189,7 +189,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getInput('redirect'); ?>
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('contactpersoninform'); ?>
 					</div>
@@ -197,7 +197,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getInput('contactpersoninform'); ?>
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('contactpersonemail'); ?>
 					</div>
@@ -205,7 +205,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getInput('contactpersonemail'); ?>
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('contactpersonfullpost'); ?>
 					</div>
@@ -213,7 +213,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getInput('contactpersonfullpost'); ?>
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('submitterinform'); ?>
 					</div>
@@ -221,7 +221,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getInput('submitterinform'); ?>
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('submissionsubject'); ?>
 					</div>
@@ -229,7 +229,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getInput('submissionsubject'); ?>
 					</div>
 				</div>
-				<div class="control-group">
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('submissionbody'); ?>
 					</div>
@@ -237,7 +237,8 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getInput('submissionbody'); ?>
 					</div>
 				</div>
-				<div class="control-group">
+				<hr/>
+				<div class="form-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('cond_recipients'); ?>
 					</div>
@@ -249,7 +250,7 @@ $isNew = (int) $this->item->id <= 0;
 		</div>
 
 		<div class="tab-pane" id="confirmation">
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('enable_confirmation'); ?>
 				</div>
@@ -257,7 +258,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('enable_confirmation'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('enable_confirmation_notification'); ?>
 				</div>
@@ -265,7 +266,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('enable_confirmation_notification'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('confirmation_notification_recipients'); ?>
 				</div>
@@ -273,7 +274,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('confirmation_notification_recipients'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('confirmation_contactperson_subject'); ?>
 				</div>
@@ -281,7 +282,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('confirmation_contactperson_subject'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('confirmation_contactperson_body'); ?>
 				</div>
@@ -292,7 +293,7 @@ $isNew = (int) $this->item->id <= 0;
 		</div>
 
 		<div class="tab-pane" id="payment">
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('activatepayment'); ?>
 				</div>
@@ -300,7 +301,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('activatepayment'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('show_js_price'); ?>
 				</div>
@@ -308,7 +309,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('show_js_price'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('currency'); ?>
 				</div>
@@ -316,7 +317,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('currency'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('paymentprocessing'); ?>
 				</div>
@@ -324,7 +325,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('paymentprocessing'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('paymentaccepted'); ?>
 				</div>
@@ -332,7 +333,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('paymentaccepted'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('contactpaymentnotificationsubject'); ?>
 				</div>
@@ -340,7 +341,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('contactpaymentnotificationsubject'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('contactpaymentnotificationbody'); ?>
 				</div>
@@ -348,7 +349,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('contactpaymentnotificationbody'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('submitterpaymentnotificationsubject'); ?>
 				</div>
@@ -356,7 +357,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('submitterpaymentnotificationsubject'); ?>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('submitterpaymentnotificationbody'); ?>
 				</div>
