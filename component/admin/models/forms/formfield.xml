@@ -55,7 +55,7 @@
                 name="published"
                 type="rpublished"
                 label="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED"
-                description="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED_DEC"
+                description="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED_DESC"
                 />
         <field
                 name="form_id"
