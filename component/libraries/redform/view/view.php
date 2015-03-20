@@ -88,6 +88,8 @@ abstract class RdfView extends RViewAdmin
 			'active' => strtolower($this->_name)
 		);
 
+		RHelperAsset::load('redformbackend.css');
+
 		// For Joomla! 2.5 compatibility we load bootstrap3 css adapter
 		if (version_compare(JVERSION, '3.0', '<'))
 		{

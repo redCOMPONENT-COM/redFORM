@@ -161,6 +161,27 @@ Class RdfHelperConditionalrecipients
 
 				break;
 
+			case 'equal':
+				if (is_numeric($value))
+				{
+					$value = floatval($value);
+					$expected = floatval($parts[4]);
+					$isvalid = ($value == $expected ? $email : false);
+				}
+				else
+				{
+					$isvalid = strcasecmp($value, $parts[4]) === 0;
+				}
+
+				break;
+
+			case 'regex':
+				$regex = $parts[4];
+				$isvalid = preg_match($regex, $value) ? true : false;
+
+				break;
+
+
 			default:
 				RdfHelperLog::simpleLog('invalid email in conditional recipient: ' . $parts[0]);
 

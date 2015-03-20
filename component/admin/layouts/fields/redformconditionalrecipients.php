@@ -15,7 +15,7 @@ RHelperAsset::load('conditionalrecipients.js', 'com_redform');
 <div id="cond_recipients_ui">
 	<div class="row">
 		<div class="span5 form-horizontal">
-			<div class="form-group">
+			<div class="control-group">
 				<div class="control-label">
 					<label for="cr_email">
 						<?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_EMAIL_LABEL'); ?>
@@ -27,7 +27,7 @@ RHelperAsset::load('conditionalrecipients.js', 'com_redform');
 				</div>
 			</div>
 
-			<div class="form-group">
+			<div class="control-group">
 				<div class="control-label">
 					<label for="cr_name">
 						<?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_NAME_LABEL'); ?>
@@ -39,7 +39,7 @@ RHelperAsset::load('conditionalrecipients.js', 'com_redform');
 				</div>
 			</div>
 
-			<div class="form-group">
+			<div class="control-group">
 				<div class="control-label">
 					<label for="cr_field">
 						<?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FIELD_LABEL'); ?>
@@ -50,7 +50,7 @@ RHelperAsset::load('conditionalrecipients.js', 'com_redform');
 				</div>
 			</div>
 
-			<div class="form-group">
+			<div class="control-group">
 				<div class="control-label">
 					<label for="cr_function">
 						<?php echo JText::_('COM_REDFORM_CONDITIONAL_RECIPIENTS_FUNCTION_LABEL'); ?>
