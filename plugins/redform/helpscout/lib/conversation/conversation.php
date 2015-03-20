@@ -118,6 +118,11 @@ class PlghsConversation
 			$conversation->setTags($tags);
 		}
 
+		if ($attachments = $this->getAttachments())
+		{
+			$thread->setAttachments($attachments);
+		}
+
 		$conversation->setThreads(array($thread));
 		$conversation->setCreatedBy($createdBy);
 		$this->getClient()->createConversation($conversation);
@@ -198,10 +203,40 @@ class PlghsConversation
 	/**
 	 * Return api client
 	 *
-	 * @return ApiClient
+	 * @return \HelpScout\ApiClient
 	 */
 	private function getClient()
 	{
 		return $this->client;
+	}
+
+	private function getAttachments()
+	{
+		if (!$attachments = $this->config->getAttachments($this->submission))
+		{
+			return false;
+		}
+
+		$res = array();
+
+		foreach ($attachments as $path)
+		{
+			$filename = basename($path);
+			$filename = substr($filename, strpos($filename, "_") + 1);
+
+			$fileinfo = new finfo(FILEINFO_MIME);
+			$mime = $fileinfo->file($path);
+
+			$attachment = new \HelpScout\model\Attachment;
+			$attachment->setFileName($filename);
+			$attachment->setMimeType($mime);
+			$attachment->setData(file_get_contents($path));
+
+			$this->getClient()->createAttachment($attachment);
+
+			$res[] = $attachment;
+		}
+
+		return $res;
 	}
 }

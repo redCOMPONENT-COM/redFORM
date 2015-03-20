@@ -199,6 +199,41 @@ class PlghsConfigForm
 	}
 
 	/**
+	 * Return attachements absolute paths
+	 *
+	 * @param   RdfAnswers  $submission  submission
+	 *
+	 * @return mixed
+	 */
+	public function getAttachments(RdfAnswers $submission)
+	{
+		if (isset($this->xml->attachments) && count($this->xml->attachments->fieldId))
+		{
+			$res = array();
+
+			foreach ($this->xml->attachments->fieldId as $fieldId)
+			{
+				$fieldId = (int) $fieldId;
+
+				foreach ($submission->getFields() AS $field)
+				{
+					if ($field->fieldId == $fieldId)
+					{
+						if ($path = $field->getValueAsString())
+						{
+							$res[] = $path;
+						}
+					}
+				}
+			}
+
+			return $res;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Return field value from submission
 	 *
 	 * @param   string      $xmlFieldIdTag  field id xml tag

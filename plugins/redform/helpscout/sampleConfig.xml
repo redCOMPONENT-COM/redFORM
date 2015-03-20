@@ -17,6 +17,11 @@
 		<lastnameFieldId>15</lastnameFieldId>
 		<!-- field id from redform, optional -->
 		<organizationFieldId>15</organizationFieldId>
+		<!-- field ids from redform, optional -->
+		<attachments>
+			<fieldId>17</fieldId>
+			<fieldId>18</fieldId>
+		</attachments>
 		<!-- tags to associate to conversation, optional -->
 		<tags>
 			<tag>tag1</tag>
