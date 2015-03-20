@@ -97,6 +97,7 @@ Class RdfHelperConditionalrecipients
 
 		// Then, we should get the field
 		$field_id = intval($parts[2]);
+
 		$answer = $answers->getFieldAnswer($field_id);
 
 		if ($answer === false)

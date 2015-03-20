@@ -17,82 +17,110 @@ JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
  * @subpackage  Library
  * @since       2.5
  */
-class helperTest extends JoomlaTestCase
+class conditionalrecipientTest extends JoomlaTestCase
 {
 	/**
 	 * Data provider
 	 *
 	 * @return array
 	 */
-	public function getTestExtractEmailsData()
+	public function getTestGetRecipientsData()
 	{
+		return array_merge(
+			$this->getTestGetRecipientsDataInt(),
+			$this->getTestGetRecipientsDataString()
+		);
+	}
+
+	private function getTestGetRecipientsDataInt()
+	{
+		$form = new stdClass;
+		$form->cond_recipients = <<<TXT
+sup@test.com;sup;1;superior;5;
+errorsup@test.com;errorsup;1;superior;15;
+inf@test.com;inf;1;inferior;15;
+errorinf@test.com;errorinf;1;inferior;2;
+between@test.com;between;1;between;5;15;
+errorbetween@test.com;errorbetween;1;between;15;25;
+equal@test.com;equal;1;equal;12;
+errorequal@test.com;errorequal;1;equal;13;
+TXT;
+
+		// Create a stub for the SomeClass class.
+		$answers = $this->getMockBuilder('RdfAnswers')
+			->getMock();
+
+		$map = array(
+			array(1, array('value' => '12')),
+		);
+
+		// Configure the stub.
+		$answers->method('getFieldAnswer')
+			->will($this->returnValueMap($map));
+
 		return array(
-			'nothing' => array('', false, array()),
-			'nothing 2' => array('', true, array()),
-			'just one' => array('mine@anemail.com', true, array('mine@anemail.com')),
-			'just one with , delimiter' => array('mine@anemail.com, ', true, array('mine@anemail.com')),
-			'just one with ; delimiter' => array('mine@anemail.com , ', true, array('mine@anemail.com')),
-			'just one with ; delimiter' => array('mine@anemail.com; ', true, array('mine@anemail.com')),
-			'just one with ; delimiter' => array('mine@anemail.com ; ', true, array('mine@anemail.com')),
-			'several with , delimiter' => array('mine@anemail.com , another@anot.the ', true, array('mine@anemail.com', 'another@anot.the')),
-			'several with ; delimiter' => array('mine@anemail.com ; another@anot.the ;', true, array('mine@anemail.com', 'another@anot.the')),
-			'several with ; delimiter and wrong one' => array('mine@anemail.com ; asds12; another@anot.the ;', true, array('mine@anemail.com', 'another@anot.the')),
+			'int' => array($form, $answers, array(
+				array('sup@test.com', 'sup'),
+				array('inf@test.com', 'inf'),
+				array('between@test.com', 'between'),
+				array('equal@test.com', 'equal'),
+			))
+		);
+	}
+
+	private function getTestGetRecipientsDataString()
+	{
+		$form = new stdClass;
+		$form->cond_recipients = <<<TXT
+sup@test.com;sup;1;superior;abc;
+errorsup@test.com;errorsup;1;superior;jkl;
+inf@test.com;inf;1;inferior;jkl;
+errorinf@test.com;errorinf;1;inferior;abc;
+between@test.com;between;1;between;abc;jkl;
+errorbetween@test.com;errorbetween;1;between;jkl;tuv;
+equal@test.com;equal;1;equal;defi;
+errorequal@test.com;errorequal;1;equal;defis;
+regex@test.com;regex;1;regex;/d[a-z]+i/;
+errorregex@test.com;errorregex;1;regex;/d[0-9]+i/;
+TXT;
+
+		// Create a stub for the SomeClass class.
+		$answers = $this->getMockBuilder('RdfAnswers')
+			->getMock();
+
+		$map = array(
+			array(1, array('value' => 'defi'))
+		);
+
+		// Configure the stub.
+		$answers->method('getFieldAnswer')
+			->will($this->returnValueMap($map));
+
+		return array(
+			'string' => array($form, $answers, array(
+				array('sup@test.com', 'sup'),
+				array('inf@test.com', 'inf'),
+				array('between@test.com', 'between'),
+				array('equal@test.com', 'equal'),
+				array('regex@test.com', 'regex'),
+			))
 		);
 	}
 
 	/**
-	 * test get extractEmails function
+	 * test get getRecipients function
 	 *
-	 * @param   string  $text      text
-	 * @param   bool    $validate  validate emails
-	 * @param   mixed   $expected  expected text
-	 *
-	 * @return void
-	 *
-	 * @dataProvider getTestExtractEmailsData
-	 */
-	public function testExtractEmails($text, $validate, $expected)
-	{
-		$resp = RdfHelper::extractEmails($text, $validate);
-		$this->assertTrue(count($expected) == count(array_intersect($expected, $resp)));
-	}
-
-	/**
-	 * Data provider
-	 *
-	 * @return array
-	 */
-	public function getTestIsNonNullDate()
-	{
-		return array(
-			array('dfdgfg', false),
-			array('2014-14-03', false),
-			array('2014-12-03', true),
-			array('2014-12-34', false),
-			array('1994-10-03 12:35', true),
-			array('1994-10-03 45:35', false),
-			array('0000-00-00 00:00:00', false),
-			array('0000-00-00 00:00', false),
-			array('0000-00-00', false),
-			array(null, false),
-			array(false, false),
-			array(0, false),
-			array(123, false),
-		);
-	}
-
-	/**
-	 * test isNonNullDate
-	 *
-	 * @param   string  $date      date to test
-	 * @param   bool    $expected  expected result
+	 * @param   object  $form      form data
+	 * @param   object  $answers   answers
+	 * @param   mixed   $expected  expected recipients
 	 *
 	 * @return void
 	 *
-	 * @dataProvider getTestIsNonNullDate
+	 * @dataProvider getTestGetRecipientsData
 	 */
-	public function testIsNonNullDate($date, $expected)
+	public function testGetRecipients($form, $answers, $expected)
 	{
-		$this->assertEquals(RdfHelper::isNonNullDate($date), $expected);
+		$recipients = RdfHelperConditionalrecipients::getRecipients($form, $answers);
+		$this->assertEquals($recipients, $expected);
 	}
 }
