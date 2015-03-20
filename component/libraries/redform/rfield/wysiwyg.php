@@ -19,4 +19,15 @@ defined('_JEXEC') or die;
 class RdfRfieldWysiwyg extends RdfRfieldTextfield
 {
 	protected $type = 'wysiwyg';
+
+	public function getValueFromPost($signup)
+	{
+		$input = JFactory::getApplication()->input;
+
+		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
+
+		$this->value = $input->get($postName, '', $this->getParam('filtering', 'string'));
+
+		return $this->value;
+	}
 }

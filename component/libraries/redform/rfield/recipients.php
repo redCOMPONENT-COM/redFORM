@@ -19,4 +19,15 @@ defined('_JEXEC') or die;
 class RdfRfieldRecipients extends RdfRfieldSelect
 {
 	protected $type = 'recipients';
+
+	public function getValueFromPost($signup)
+	{
+		$input = JFactory::getApplication()->input;
+
+		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
+
+		$this->value = $input->get($postName, '', 'array');
+
+		return $this->value;
+	}
 }

@@ -306,15 +306,19 @@ abstract class RdfRfield extends JObject
 	}
 
 	/**
-	 * Set field value from post data
+	 * Get and set the value from post data, using appropriate filtering
 	 *
-	 * @param   string  $value  value
+	 * @param   int  $signup  form instance number for the field
 	 *
-	 * @return string new value
+	 * @return mixed
 	 */
-	public function setValueFromPost($value)
+	public function getValueFromPost($signup)
 	{
-		$this->value = $value;
+		$input = JFactory::getApplication()->input;
+
+		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
+
+		$this->value = $input->getString($postName, '');
 
 		return $this->value;
 	}

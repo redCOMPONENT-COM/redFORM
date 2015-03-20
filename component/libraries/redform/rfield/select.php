@@ -40,22 +40,18 @@ class RdfRfieldSelect extends RdfRfield
 		return parent::setValue($value, $lookup);
 	}
 
-	/**
-	 * Set field value from post data
-	 *
-	 * @param   string  $value  value
-	 *
-	 * @return string new value
-	 */
-	public function setValueFromPost($value)
+	public function getValueFromPost($signup)
 	{
+		$value = parent::getValueFromPost($signup);
+
 		if ($value && !is_array($value))
 		{
-			$value = array($value);
+			$this->value = array($value);
 		}
 
-		return parent::setValueFromPost($value);
+		return $this->value;
 	}
+
 
 	/**
 	 * Set field value from post data

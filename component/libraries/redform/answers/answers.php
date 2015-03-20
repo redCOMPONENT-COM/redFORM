@@ -336,22 +336,6 @@ class RdfAnswers
 	}
 
 	/**
-	 * Add post answer for field
-	 *
-	 * @param   RdfRfield  $field        field
-	 * @param   mixed      $postedvalue  posted data
-	 *
-	 * @return mixed hte value
-	 */
-	public function addPostAnswer($field, $postedvalue)
-	{
-		$value = $field->setValueFromPost($postedvalue);
-		$this->fields[] = $field;
-
-		return $value;
-	}
-
-	/**
 	 * Add field to answers (value must already be set)
 	 *
 	 * @param   RdfRfield  $field  field

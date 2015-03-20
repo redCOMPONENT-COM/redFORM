@@ -95,4 +95,15 @@ class RdfRfieldRadio extends RdfRfield
 
 		return $properties;
 	}
+
+	public function getValueFromPost($signup)
+	{
+		$input = JFactory::getApplication()->input;
+
+		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
+
+		$this->value = $input->get($postName, '', 'array');
+
+		return $this->value;
+	}
 }

@@ -20,83 +20,37 @@ class RdfRfieldFileupload extends RdfRfield
 {
 	protected $type = 'fileupload';
 
-	/**
-	 * Set field value from post data
-	 *
-	 * @param   string  $value  value
-	 *
-	 * @return string new value
-	 */
-	public function setValueFromPost($value)
+	public function getValueFromPost($signup)
 	{
-		/* Check if the folder exists */
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
-
-		$params = JComponentHelper::getParams('com_redform');
-
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('f.formname');
-		$query->from('#__rwf_forms AS f');
-		$query->where('f.id = ' . $db->Quote($this->load()->form_id));
-		$db->setQuery($query);
-		$formname = $db->loadResult();
-
-		$filepath = JPATH_SITE . '/' . $params->get('upload_path', 'images/redform');
-		$folder = JFile::makeSafe(str_replace(' ', '', $formname));
-
-		$fullpath = $filepath . '/' . $folder;
-
-		if (!JFolder::exists($fullpath))
+		if (!$fullpath = $this->getStoragePath())
 		{
-			if (!JFolder::create($fullpath))
+			return false;
+		}
+
+		$input = JFactory::getApplication()->input;
+
+		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
+
+		$upload = $input->files->get($postName, array(), 'array');
+
+		$src_file = $upload['tmp_name'];
+
+		// Make sure we have a unique name for file
+		$dest_filename = uniqid() . '_' . basename($upload['name']);
+
+		/* Start processing uploaded file */
+		if (is_uploaded_file($src_file))
+		{
+			if (move_uploaded_file($src_file, $fullpath . '/' . $dest_filename))
 			{
-				JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_CREATE_FOLDER') . ': ' . $fullpath);
+				$this->value = $fullpath . '/' . $dest_filename;
+			}
+			else
+			{
+				JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_UPLOAD_FILE'));
 
 				return false;
 			}
-		}
-
-		clearstatcache();
-
-		$src_file = $value['tmp_name'];
-
-		// Make sure we have a unique name for file
-		$dest_filename = uniqid() . '_' . basename($value['name']);
-
-		if (JFolder::exists($fullpath))
-		{
-			/* Start processing uploaded file */
-			if (is_uploaded_file($src_file))
-			{
-				if (JFolder::exists($fullpath) && is_writable($fullpath))
-				{
-					if (move_uploaded_file($src_file, $fullpath . '/' . $dest_filename))
-					{
-						$this->value = $fullpath . '/' . $dest_filename;
-					}
-					else
-					{
-						JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_UPLOAD_FILE'));
-
-						return false;
-					}
-				}
-				else
-				{
-					JError::raiseWarning(0, JText::_('COM_REDFORM_FOLDER_DOES_NOT_EXIST'));
-
-					return false;
-				}
-			}
-		}
-		else
-		{
-			JError::raiseWarning(0, JText::_('COM_REDFORM_FOLDER_DOES_NOT_EXIST'));
-
-			return false;
 		}
 
 		return $this->value;
@@ -147,4 +101,49 @@ class RdfRfieldFileupload extends RdfRfield
 
 		return $properties;
 	}
+
+	private function getStoragePath()
+	{
+		/* Check if the folder exists */
+		jimport('joomla.filesystem.folder');
+		jimport('joomla.filesystem.file');
+
+		$params = JComponentHelper::getParams('com_redform');
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('f.formname');
+		$query->from('#__rwf_forms AS f');
+		$query->where('f.id = ' . $db->Quote($this->load()->form_id));
+		$db->setQuery($query);
+		$formname = $db->loadResult();
+
+		$filepath = JPATH_SITE . '/' . $params->get('upload_path', 'images/redform');
+		$folder = JFile::makeSafe(str_replace(' ', '', $formname));
+
+		$fullpath = $filepath . '/' . $folder;
+
+		if (!JFolder::exists($fullpath))
+		{
+			if (!JFolder::create($fullpath))
+			{
+				JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_CREATE_FOLDER') . ': ' . $fullpath);
+
+				return false;
+			}
+		}
+
+		if (!is_writable($fullpath))
+		{
+			JError::raiseWarning(0, JText::_('COM_REDFORM_PATH_NOT_WRITABLE') . ': ' . $fullpath);
+
+			return false;
+		}
+
+		clearstatcache();
+
+		return $fullpath;
+	}
+
 }
