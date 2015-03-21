@@ -315,10 +315,7 @@ abstract class RdfRfield extends JObject
 	public function getValueFromPost($signup)
 	{
 		$input = JFactory::getApplication()->input;
-
-		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
-
-		$this->value = $input->getString($postName, '');
+		$this->value = $input->getString($this->getPostName($signup), '');
 
 		return $this->value;
 	}
@@ -612,5 +609,17 @@ abstract class RdfRfield extends JObject
 	protected function mapProperties($property, $value)
 	{
 		return $property . '="' . $value . '"';
+	}
+
+	/**
+	 * Return field form name with signup offset
+	 *
+	 * @param   int  $signup  signup id
+	 *
+	 * @return string
+	 */
+	protected function getPostName($signup)
+	{
+		return 'field' . $this->load()->id . '_' . (int) $signup;
 	}
 }

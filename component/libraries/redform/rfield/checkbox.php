@@ -167,6 +167,13 @@ class RdfRfieldCheckbox extends RdfRfield
 		return $name;
 	}
 
+	/**
+	 * Get and set the value from post data, using appropriate filtering
+	 *
+	 * @param   int  $signup  form instance number for the field
+	 *
+	 * @return mixed
+	 */
 	public function getValueFromPost($signup)
 	{
 		$input = JFactory::getApplication()->input;

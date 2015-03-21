@@ -129,9 +129,13 @@ class RdfCoreSubmission extends JObject
 			$answers = new RdfAnswers;
 			$answers->setFormId($form->id);
 
-			if (isset($data['submitter_id' . $signup]))
+			$submitterId = isset($data['submitter_id' . $signup])
+				? (int) $data['submitter_id' . $signup]
+				: $app->input->getInt('submitter_id' . $signup, 0);
+
+			if ($submitterId)
 			{
-				$answers->setSid(intval($data['submitter_id' . $signup]));
+				$answers->setSid($submitterId);
 			}
 
 			$answers->setFormId($data['form_id']);

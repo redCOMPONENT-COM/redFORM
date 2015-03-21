@@ -20,58 +20,25 @@ class RdfRfieldFileupload extends RdfRfield
 {
 	protected $type = 'fileupload';
 
+	/**
+	 * Get and set the value from post data, using appropriate filtering
+	 *
+	 * @param   int  $signup  form instance number for the field
+	 *
+	 * @return mixed
+	 */
 	public function getValueFromPost($signup)
 	{
-		if (!$fullpath = $this->getStoragePath())
+		if ($value = $this->getFileUpload($signup))
 		{
-			return false;
+			return $value;
 		}
 
+		// No upload, look for a previous value
 		$input = JFactory::getApplication()->input;
-
-		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
-
-		$upload = $input->files->get($postName, array(), 'array');
-
-		$src_file = $upload['tmp_name'];
-
-		// Make sure we have a unique name for file
-		$dest_filename = uniqid() . '_' . basename($upload['name']);
-
-		/* Start processing uploaded file */
-		if (is_uploaded_file($src_file))
-		{
-			if (move_uploaded_file($src_file, $fullpath . '/' . $dest_filename))
-			{
-				$this->value = $fullpath . '/' . $dest_filename;
-			}
-			else
-			{
-				JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_UPLOAD_FILE'));
-
-				return false;
-			}
-		}
+		$this->value = $input->getString($this->getPostName($signup) . '_prev', '');
 
 		return $this->value;
-	}
-
-	/**
-	 * Returns field Input
-	 *
-	 * @return string
-	 */
-	public function getInput()
-	{
-		$properties = $this->getInputProperties();
-
-		if ($this->getValue())
-		{
-			// Not re-uploading on edit form
-			return '';
-		}
-
-		return parent::getInput();
 	}
 
 	/**
@@ -102,6 +69,55 @@ class RdfRfieldFileupload extends RdfRfield
 		return $properties;
 	}
 
+	/**
+	 * Check if there was a file uploaded
+	 *
+	 * @param   int  $signup  signup id
+	 *
+	 * @return bool|string
+	 */
+	private function getFileUpload($signup)
+	{
+		if (!$fullpath = $this->getStoragePath())
+		{
+			return false;
+		}
+
+		$input = JFactory::getApplication()->input;
+
+		if (!$upload = $input->files->get($this->getPostName($signup), array(), 'array'))
+		{
+			return false;
+		}
+
+		$src_file = $upload['tmp_name'];
+
+		// Make sure we have a unique name for file
+		$dest_filename = uniqid() . '_' . basename($upload['name']);
+
+		/* Start processing uploaded file */
+		if (is_uploaded_file($src_file))
+		{
+			if (move_uploaded_file($src_file, $fullpath . '/' . $dest_filename))
+			{
+				$this->value = $fullpath . '/' . $dest_filename;
+			}
+			else
+			{
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_REDFORM_CANNOT_UPLOAD_FILE'), 'error');
+
+				return false;
+			}
+		}
+
+		return $this->value;
+	}
+
+	/**
+	 * Return path to storage folder, create if necessary
+	 *
+	 * @return bool|string
+	 */
 	private function getStoragePath()
 	{
 		/* Check if the folder exists */
@@ -128,7 +144,7 @@ class RdfRfieldFileupload extends RdfRfield
 		{
 			if (!JFolder::create($fullpath))
 			{
-				JError::raiseWarning(0, JText::_('COM_REDFORM_CANNOT_CREATE_FOLDER') . ': ' . $fullpath);
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_REDFORM_CANNOT_CREATE_FOLDER') . ': ' . $fullpath, 'error');
 
 				return false;
 			}
@@ -136,7 +152,7 @@ class RdfRfieldFileupload extends RdfRfield
 
 		if (!is_writable($fullpath))
 		{
-			JError::raiseWarning(0, JText::_('COM_REDFORM_PATH_NOT_WRITABLE') . ': ' . $fullpath);
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_REDFORM_PATH_NOT_WRITABLE') . ': ' . $fullpath, 'error');
 
 			return false;
 		}
@@ -145,5 +161,4 @@ class RdfRfieldFileupload extends RdfRfield
 
 		return $fullpath;
 	}
-
 }
