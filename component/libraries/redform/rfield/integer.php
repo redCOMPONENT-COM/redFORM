@@ -41,23 +41,6 @@ class RdfRfieldInteger extends RdfRfieldSelect
 	}
 
 	/**
-	 * Set field value from post data
-	 *
-	 * @param   string  $value  value
-	 *
-	 * @return string new value
-	 */
-	public function setValueFromPost($value)
-	{
-		if ($value && !is_array($value))
-		{
-			$value = array($value);
-		}
-
-		return parent::setValueFromPost($value);
-	}
-
-	/**
 	 * Return price, possibly depending on current field value
 	 *
 	 * @return float

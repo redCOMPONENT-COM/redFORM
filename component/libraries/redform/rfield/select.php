@@ -41,21 +41,24 @@ class RdfRfieldSelect extends RdfRfield
 	}
 
 	/**
-	 * Set field value from post data
+	 * Get and set the value from post data, using appropriate filtering
 	 *
-	 * @param   string  $value  value
+	 * @param   int  $signup  form instance number for the field
 	 *
-	 * @return string new value
+	 * @return mixed
 	 */
-	public function setValueFromPost($value)
+	public function getValueFromPost($signup)
 	{
+		$value = parent::getValueFromPost($signup);
+
 		if ($value && !is_array($value))
 		{
-			$value = array($value);
+			$this->value = array($value);
 		}
 
-		return parent::setValueFromPost($value);
+		return $this->value;
 	}
+
 
 	/**
 	 * Set field value from post data

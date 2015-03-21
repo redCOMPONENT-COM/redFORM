@@ -306,15 +306,16 @@ abstract class RdfRfield extends JObject
 	}
 
 	/**
-	 * Set field value from post data
+	 * Get and set the value from post data, using appropriate filtering
 	 *
-	 * @param   string  $value  value
+	 * @param   int  $signup  form instance number for the field
 	 *
-	 * @return string new value
+	 * @return mixed
 	 */
-	public function setValueFromPost($value)
+	public function getValueFromPost($signup)
 	{
-		$this->value = $value;
+		$input = JFactory::getApplication()->input;
+		$this->value = $input->getString($this->getPostName($signup), '');
 
 		return $this->value;
 	}
@@ -608,5 +609,17 @@ abstract class RdfRfield extends JObject
 	protected function mapProperties($property, $value)
 	{
 		return $property . '="' . $value . '"';
+	}
+
+	/**
+	 * Return field form name with signup offset
+	 *
+	 * @param   int  $signup  signup id
+	 *
+	 * @return string
+	 */
+	protected function getPostName($signup)
+	{
+		return 'field' . $this->load()->id . '_' . (int) $signup;
 	}
 }

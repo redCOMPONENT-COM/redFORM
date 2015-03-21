@@ -57,11 +57,11 @@ class RdfCoreSubmission extends JObject
 	 *
 	 * @param   string  $integration_key  integration key
 	 * @param   array   $options          options: skip_captcha, ...
-	 * @param   array   $data             form data, leave null to use posted data
+	 * @param   array   $formData         form data, leave null to use posted data
 	 *
 	 * @return boolean|stdclass
 	 */
-	public function apisaveform($integration_key = '', $options = array(), $data = null)
+	public function apisaveform($integration_key = '', $options = array(), $formData = null)
 	{
 		$app = JFactory::getApplication();
 
@@ -72,29 +72,18 @@ class RdfCoreSubmission extends JObject
 		$token = RdfCore::getToken();
 
 		// Get data from post if not specified
-		if (!$data)
+		if (!$formData)
 		{
-			$data = array_merge(JRequest::get('post'), JRequest::get('files'));
-
-			if (!isset($data['form_id']))
-			{
-				$data['form_id'] = $app->input->getInt('form_id', 0);
-			}
-
-			if (!isset($data['submit_key']))
-			{
-				$data['submit_key'] = $app->input->getCmd('submit_key', false);
-			}
-
-			if (!isset($data['nbactive']))
-			{
-				$data['nbactive'] = $app->input->getInt('nbactive', 1);
-			}
-
-			if (!isset($data['currency']))
-			{
-				$data['currency'] = $app->input->getCmd('currency', '');
-			}
+			$data = array();
+			$data['form_id'] = $app->input->getInt('form_id', 0);
+			$data['submit_key'] = $app->input->getCmd('submit_key', false);
+			$data['nbactive'] = $app->input->getInt('nbactive', 1);
+			$data['currency'] = $app->input->getCmd('currency', '');
+			$data[$token] = $app->input->getCmd($token, '');
+		}
+		else
+		{
+			$data = $formData;
 		}
 
 		if (!isset($data[$token]))
@@ -140,9 +129,13 @@ class RdfCoreSubmission extends JObject
 			$answers = new RdfAnswers;
 			$answers->setFormId($form->id);
 
-			if (isset($data['submitter_id' . $signup]))
+			$submitterId = isset($data['submitter_id' . $signup])
+				? (int) $data['submitter_id' . $signup]
+				: $app->input->getInt('submitter_id' . $signup, 0);
+
+			if ($submitterId)
 			{
-				$answers->setSid(intval($data['submitter_id' . $signup]));
+				$answers->setSid($submitterId);
 			}
 
 			$answers->setFormId($data['form_id']);
@@ -165,39 +158,46 @@ class RdfCoreSubmission extends JObject
 			/* Create an array of values to store */
 			$postvalues = array();
 
-			// Remove the _X parts, where X is the form (signup) number
-			foreach ($data as $key => $value)
+			if ($formData)
 			{
-				if ((strpos($key, 'field') === 0) && (strpos($key, '_' . $signup, 5) > 0))
+				// Remove the _X parts, where X is the form (signup) number
+				foreach ($formData as $key => $value)
 				{
-					$postvalues[str_replace('_' . $signup, '', $key)] = $value;
-				}
-				else
-				{
-					$postvalues[$key] = $value;
+					if ((strpos($key, 'field') === 0) && (strpos($key, '_' . $signup, 5) > 0))
+					{
+						$postvalues[str_replace('_' . $signup, '', $key)] = $value;
+					}
+					else
+					{
+						$postvalues[$key] = $value;
+					}
 				}
 			}
-
-			/* Get the raw form data */
-			$postvalues['rawformdata'] = serialize($data);
 
 			/* Build up field list */
 			foreach ($fieldlist as $field)
 			{
-				if (isset($postvalues['field' . $field->id]))
-				{
-					/* Get the answers */
-					try
-					{
-						$clone = clone $field;
-						$answers->addPostAnswer($clone, $postvalues['field' . $clone->id]);
-					}
-					catch (Exception $e)
-					{
-						$this->setError($e->getMessage());
+				$clone = clone $field;
 
-						return false;
+				/* Get the answers */
+				try
+				{
+					if (isset($postvalues['field' . $field->id]))
+					{
+						$clone->setValue($postvalues['field' . $clone->id]);
+						$answers->addField($clone);
 					}
+					else
+					{
+						$clone->getValueFromPost($signup);
+						$answers->addField($clone);
+					}
+				}
+				catch (Exception $e)
+				{
+					$this->setError($e->getMessage());
+
+					return false;
 				}
 			}
 
