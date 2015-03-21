@@ -13,7 +13,7 @@ $data = $displayData;
 
 $properties = $data->getInputProperties();
 
-RHelperAsset::load('fileupload.js');
+RHelperAsset::load('fileupload.js', 'com_redform');
 ?>
 <?php if ($data->getValue()) :?>
 	<div class="current_file">

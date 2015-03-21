@@ -75,6 +75,8 @@ class RdfRfieldFileupload extends RdfRfield
 	 * @param   int  $signup  signup id
 	 *
 	 * @return bool|string
+	 *
+	 * @throws RuntimeException
 	 */
 	private function getFileUpload($signup)
 	{
@@ -88,6 +90,17 @@ class RdfRfieldFileupload extends RdfRfield
 		if (!$upload = $input->files->get($this->getPostName($signup), array(), 'array'))
 		{
 			return false;
+		}
+
+		$maxSizeB = $this->getParam('maxsize', 1000000);
+
+		if ($upload['size'] > $maxSizeB)
+		{
+			throw new RuntimeException(
+				JText::sprintf('COM_REDFORM_ERROR_FILEUPLOAD_SIZE_S_BIGGER_THAN_MAXSIZE_S',
+					$this->formatSizeUnits($upload['size']), $this->formatSizeUnits($maxSizeB)
+				)
+			);
 		}
 
 		$src_file = $upload['tmp_name'];
@@ -104,9 +117,7 @@ class RdfRfieldFileupload extends RdfRfield
 			}
 			else
 			{
-				JFactory::getApplication()->enqueueMessage(JText::_('COM_REDFORM_CANNOT_UPLOAD_FILE'), 'error');
-
-				return false;
+				throw new RuntimeException(JText::_('COM_REDFORM_CANNOT_UPLOAD_FILE'));
 			}
 		}
 
@@ -117,6 +128,8 @@ class RdfRfieldFileupload extends RdfRfield
 	 * Return path to storage folder, create if necessary
 	 *
 	 * @return bool|string
+	 *
+	 * @throws RuntimeException
 	 */
 	private function getStoragePath()
 	{
@@ -144,21 +157,57 @@ class RdfRfieldFileupload extends RdfRfield
 		{
 			if (!JFolder::create($fullpath))
 			{
-				JFactory::getApplication()->enqueueMessage(JText::_('COM_REDFORM_CANNOT_CREATE_FOLDER') . ': ' . $fullpath, 'error');
-
-				return false;
+				throw new RuntimeException(JText::_('COM_REDFORM_CANNOT_CREATE_FOLDER') . ': ' . $fullpath);
 			}
 		}
 
 		if (!is_writable($fullpath))
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('COM_REDFORM_PATH_NOT_WRITABLE') . ': ' . $fullpath, 'error');
-
-			return false;
+			throw new RuntimeException(JText::_('COM_REDFORM_PATH_NOT_WRITABLE') . ': ' . $fullpath);
 		}
 
 		clearstatcache();
 
 		return $fullpath;
+	}
+
+	#
+
+	/**
+	 * Human readable file sizes
+	 * Snippet from PHP Share: http://www.phpshare.org
+	 *
+	 * @param   int  bytes  size in bytes
+	 *
+	 * @return string
+	 */
+	private function formatSizeUnits($bytes)
+	{
+		if ($bytes >= 1073741824)
+		{
+			$bytes = number_format($bytes / 1073741824, 2) . ' GB';
+		}
+		elseif ($bytes >= 1048576)
+		{
+			$bytes = number_format($bytes / 1048576, 2) . ' MB';
+		}
+		elseif ($bytes >= 1024)
+		{
+			$bytes = number_format($bytes / 1024, 2) . ' KB';
+		}
+		elseif ($bytes > 1)
+		{
+			$bytes = $bytes . ' bytes';
+		}
+		elseif ($bytes == 1)
+		{
+			$bytes = $bytes . ' byte';
+		}
+		else
+		{
+			$bytes = '0 bytes';
+		}
+
+		return $bytes;
 	}
 }
