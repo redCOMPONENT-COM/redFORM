@@ -2,12 +2,11 @@
 <form>
 	<fields name="params">
 		<fieldset name="extra" label="extra">
-			<field name="filtering" type="list" default="html"
+			<field name="filtering" type="list" default="system"
 				   label="COM_REDFORM_FIELD_WYSIWYG_PARAMS_FILTERING"
 				   description="COM_REDFORM_FIELD_WYSIWYG_PARAMS_FILTERING">
-				<option value="string">string</option>
-				<option value="html">html</option>
-				<option value="raw">raw</option>
+				<option value="system">COM_REDFORM_FIELD_WYSIWYG_PARAMS_FILTERING_SYSTEM</option>
+				<option value="raw">COM_REDFORM_FIELD_WYSIWYG_PARAMS_FILTERING_RAW</option>
 			</field>
 			<field name="class" type="text" default="" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS"
 				   description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>

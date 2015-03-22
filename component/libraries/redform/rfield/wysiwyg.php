@@ -29,11 +29,18 @@ class RdfRfieldWysiwyg extends RdfRfieldTextfield
 	 */
 	public function getValueFromPost($signup)
 	{
-		$input = JFactory::getApplication()->input;
-
 		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
 
-		$this->value = $input->get($postName, '', $this->getParam('filtering', 'string'));
+		$text = isset($_REQUEST[$postName]) ? $_REQUEST[$postName] : '';
+
+		if ($this->getParam('filtering', 'system') == 'raw')
+		{
+			$this->value = $text;
+		}
+		else
+		{
+			$this->value = JComponentHelper::filterText($text);
+		}
 
 		return $this->value;
 	}
