@@ -500,7 +500,7 @@ abstract class RdfRfield extends JObject
 
 		if ($data->validate && !$this->getValue())
 		{
-			$this->setError(JText::sprintf('COM_REDFORM_FIELD_S_IS_REQUIRED', $data->name));
+			$this->setError(JText::sprintf('COM_REDFORM_FIELD_S_IS_REQUIRED', $this->name));
 
 			return false;
 		}

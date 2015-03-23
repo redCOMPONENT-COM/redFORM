@@ -619,10 +619,14 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			if (!$field->validate())
+			if ($field->published)
 			{
-				$mainframe->enqueueMessage($field->getError(), 'notice');
-				$res = false;
+				if (!$field->validate())
+				{
+					// TODO: an exception should bubble up from here, this is too high level
+					$mainframe->enqueueMessage($field->getError(), 'notice');
+					$res = false;
+				}
 			}
 		}
 
