@@ -594,7 +594,7 @@ class RdfAnswers
 	/**
 	 * Replace tags
 	 *
-	 * @param   string      $text     text
+	 * @param   string   $text     text
 	 *
 	 * @return mixed
 	 */
@@ -756,6 +756,8 @@ class RdfAnswers
 	/**
 	 * Return shortened answers form
 	 *
+	 * @deprecated kept for backwards compatibility with replacer of [answer_<id>]
+	 *
 	 * @return array
 	 */
 	public function getAnswers()
@@ -765,6 +767,23 @@ class RdfAnswers
 		foreach ($this->fields as $field)
 		{
 			$answers[] = array('field' => $field->field, 'field_id' => $field->id, 'value' => $field->getValue(), 'type' => $field->fieldtype);
+		}
+
+		return $answers;
+	}
+
+	/**
+	 * Return shortened answers form
+	 *
+	 * @return array
+	 */
+	public function getFieldsValues()
+	{
+		$answers = array();
+
+		foreach ($this->fields as $field)
+		{
+			$answers[] = array('field' => $field->field, 'field_id' => $field->field_id, 'value' => $field->getValue(), 'type' => $field->fieldtype);
 		}
 
 		return $answers;

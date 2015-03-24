@@ -73,7 +73,7 @@ class RdfHelperTagsreplace
 			}
 			else
 			{
-				$replace = $this->getAnswerReplace($tag[0]);
+				$replace = $this->getFieldReplace($tag[0]);
 
 				if ($replace !== false)
 				{
@@ -91,6 +91,42 @@ class RdfHelperTagsreplace
 		}
 
 		return $text;
+	}
+
+	/**
+	 * Replace field_xx tag with it's field value
+	 *
+	 * @param   string  $tag  the tag to replace
+	 *
+	 * @return mixed
+	 */
+	private function getFieldReplace($tag)
+	{
+		if (preg_match('/^\[field_([0-9]+)\]$/', $tag, $match))
+		{
+			$id = $match[1];
+		}
+		else
+		{
+			return $this->getAnswerReplace($tag);
+		}
+
+		foreach ($this->answers->getFieldsValues() as $field)
+		{
+			if ($field['field_id'] === $id)
+			{
+				if (is_array($field['value']))
+				{
+					return implode($this->glue, $field['value']);
+				}
+				else
+				{
+					return $field['value'];
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
