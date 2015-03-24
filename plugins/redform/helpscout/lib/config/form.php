@@ -73,7 +73,7 @@ class PlghsConfigForm
 	{
 		if (isset($this->xml->subject))
 		{
-			return (string) $this->xml->subject;
+			return $submission->replaceTags((string) $this->xml->subject);
 		}
 
 		return $this->getXmlConfigTagSubmissionFieldValue('subjectFieldId', $submission, true);
@@ -90,7 +90,7 @@ class PlghsConfigForm
 	{
 		if (isset($this->xml->body))
 		{
-			return (string) $this->xml->body;
+			return $submission->replaceTags((string) $this->xml->body);
 		}
 
 		return $this->getXmlConfigTagSubmissionFieldValue('bodyFieldId', $submission, true);
