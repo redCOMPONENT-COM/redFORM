@@ -188,9 +188,9 @@ class RdfHelperTagsreplace
 	 *
 	 * @return string
 	 */
-	private function getTotalprice()
+	private function getTagTotalprice()
 	{
-		return $this->answers->getPrice();
+		return $this->answers->getCurrency() . ' ' . $this->answers->getPrice();
 	}
 
 	/**
