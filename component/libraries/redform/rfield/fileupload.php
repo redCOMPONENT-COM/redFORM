@@ -171,13 +171,11 @@ class RdfRfieldFileupload extends RdfRfield
 		return $fullpath;
 	}
 
-	#
-
 	/**
 	 * Human readable file sizes
 	 * Snippet from PHP Share: http://www.phpshare.org
 	 *
-	 * @param   int  bytes  size in bytes
+	 * @param   int  $bytes  size in bytes
 	 *
 	 * @return string
 	 */

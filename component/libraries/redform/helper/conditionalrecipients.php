@@ -182,7 +182,6 @@ Class RdfHelperConditionalrecipients
 
 				break;
 
-
 			default:
 				RdfHelperLog::simpleLog('invalid email in conditional recipient: ' . $parts[0]);
 

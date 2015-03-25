@@ -59,7 +59,6 @@ class RdfRfieldSelect extends RdfRfield
 		return $this->value;
 	}
 
-
 	/**
 	 * Set field value from post data
 	 *

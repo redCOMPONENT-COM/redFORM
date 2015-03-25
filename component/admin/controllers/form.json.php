@@ -27,9 +27,9 @@ class RedformControllerForm extends RdfControllerForm
 	{
 		$app = JFactory::getApplication();
 
-		$form_id = $app->input->getInt('id', 0);
+		$formId = $app->input->getInt('id', 0);
 		$model = $this->getModel();
-		$res = $model->getFieldsOptions($form_id);
+		$res = $model->getFieldsOptions($formId);
 
 		echo json_encode($res);
 
