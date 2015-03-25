@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="redform" method="upgrade">
+	<name>PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL</name>
+	<creationDate>##DATE##</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2014 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>##VERSION##</version>
+	<description>PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_XML_DESC</description>
+
+	<files>
+		<filename plugin="gaselsecondaryconfirmemail">gaselsecondaryconfirmemail.php</filename>
+		<folder>language</folder>
+	</files>
+
+	<config>
+		<fields name="params" addfieldpath="/libraries/redform/form/fields">
+			<fieldset name="basic" label="basic">
+
+				<field name="emailIds" type="redformfield" default="" multiple="1"
+					   label="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_EMAILIDS"
+					   description="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_EMAILIDS_DESC"/>
+
+				<field name="subject" type="text"
+					   label="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_SUBJECT"
+					   description="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_SUBJECT_DESC"/>
+
+				<field name="body" type="editor"
+					   label="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_BODY"
+					   description="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_BODY_DESC"/>
+
+			</fieldset>
+		</fields>
+	</config>
+
+</extension>
