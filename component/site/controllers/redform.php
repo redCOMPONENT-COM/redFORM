@@ -57,12 +57,13 @@ class RedformControllerRedform extends RedformController
 		if ($url = $model->getFormRedirect())
 		{
 			$this->setRedirect($url);
-			$this->redirect();
 		}
 		else
 		{
-			echo $model->getNotificationText();
+			echo $this->setRedirect('index.php?option=com_redform&view=notification&submitKey=' . $result->submit_key);
 		}
+
+		$this->redirect();
 	}
 
 	/**

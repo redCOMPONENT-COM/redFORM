@@ -15,11 +15,13 @@
 				label="COM_REDFORM_FORM_NAME"
 				description="COM_REDFORM_FORM_NAME_TIP"
 				required="true"
+				size="80"
 				maxlength="255"
 				/>
 		<field
 				name="showname"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_FORM_SHOW_NAME"
 				description="COM_REDFORM_FORM_SHOW_NAME_TIP"
 				>
@@ -51,6 +53,7 @@
 		<field
 				name="formexpires"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_FORM_EXPIRES"
 				description="COM_REDFORM_FORM_EXPIRES_TIP"
 				>
@@ -67,6 +70,7 @@
 		<field
 				name="captchaactive"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_CAPTCHA_ACTIVE"
 				description="COM_REDFORM_CAPTCHA_ACTIVE_TIP"
 				>
@@ -79,6 +83,7 @@
 		<field
 				name="submitnotification"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_FORM_NOTIFICATION"
 				description="COM_REDFORM_FORM_NOTIFICATION_TIP"
 				>
@@ -88,9 +93,9 @@
 		<field
 				name="notificationtext"
 				type="editor"
-				label="COM_REDFORM_FORM_END_DATE"
-				description="COM_REDFORM_FORM_END_DATE_TIP"
-                filter="safehtml"
+				label="COM_REDFORM_FORM_POST_SUBMISSION_TEXT"
+				description="COM_REDFORM_FORM_POST_SUBMISSION_TEXT_TIP"
+                filter="raw"
 				/>
 		<field
 				name="redirect"
@@ -102,6 +107,7 @@
 		<field
 				name="contactpersoninform"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_NOTIFY_CONTACTPERSON"
 				description="COM_REDFORM_NOTIFY_CONTACTPERSON_TIP"
 				>
@@ -111,6 +117,7 @@
 		<field
 				name="contactpersonemail"
 				type="text"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_CONTACTPERSON_EMAIL"
 				description="COM_REDFORM_CONTACTPERSON_EMAIL_TIP"
 				maxlength="255"
@@ -118,6 +125,7 @@
 		<field
 				name="contactpersonfullpost"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS"
 				description="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS_TIP"
 				>
@@ -128,6 +136,7 @@
         <field
                 name="enable_confirmation"
                 type="radio"
+				class="btn-group btn-group-yesno"
                 label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_LABEL"
                 description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_DESC"
                 >
@@ -137,6 +146,7 @@
         <field
                 name="enable_confirmation_notification"
                 type="radio"
+				class="btn-group btn-group-yesno"
                 label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_LABEL"
                 description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_DESC"
                 >
@@ -164,12 +174,13 @@
                 type="editor"
                 label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
                 description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
-                filter="safehtml"
+                filter="raw"
                 />
 
 		<field
 				name="submitterinform"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_NOTIFY_SUBMITTER"
 				description="COM_REDFORM_NOTIFY_SUBMITTER_TIP"
 				>
@@ -188,7 +199,7 @@
 				type="editor"
 				label="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY"
 				description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
         <field
                 name="submissionattachment"
@@ -210,8 +221,8 @@
 				type="redformconditionalrecipients"
 				label="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS"
 				description="COM_REDFORM_NOTIFY_CONDITIONAL_RECIPIENTS_TIP"
-				cols="50"
 				rows="10"
+				cols="50"
 				/>
 	</fieldset>
 
@@ -219,6 +230,7 @@
 		<field
 				name="activatepayment"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_PAYMENTACTIVE"
 				description="COM_REDFORM_PAYMENTACTIVE_TIP"
 				>
@@ -228,6 +240,7 @@
 		<field
 				name="show_js_price"
 				type="radio"
+				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_FORM_SHOW_JS_PRICE_LABEL"
 				description="COM_REDFORM_FORM_SHOW_JS_PRICE_TIP"
 				>
@@ -239,6 +252,7 @@
 				type="rcurrency"
 				label="COM_REDFORM_PAYMENTCURRENCY"
 				description="COM_REDFORM_PAYMENTCURRENCY_TIP"
+				class="form-control"
 				>
 			<option value="">COM_REDFORM_SELECT_CURRENCY</option>
 		</field>
@@ -247,14 +261,14 @@
 				type="editor"
 				label="COM_REDFORM_PAYMENTPROCESSING"
 				description="COM_REDFORM_PAYMENTPROCESSING_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 		<field
 				name="paymentaccepted"
 				type="editor"
 				label="COM_REDFORM_PAYMENTACCEPTED"
 				description="COM_REDFORM_PAYMENTACCEPTED_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 		<field
 				name="contactpaymentnotificationsubject"
@@ -268,7 +282,7 @@
 				type="editor"
 				label="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY"
 				description="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 		<field
 				name="submitterpaymentnotificationsubject"
@@ -282,7 +296,7 @@
 				type="editor"
 				label="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY"
 				description="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_TIP"
-                filter="safehtml"
+                filter="raw"
 				/>
 	</fieldset>
 </form>

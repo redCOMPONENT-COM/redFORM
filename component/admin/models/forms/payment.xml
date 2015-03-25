@@ -43,6 +43,7 @@
         <field
                 name="paid"
                 type="radio"
+				class="btn-group btn-group-yesno"
                 label="COM_REDFORM_Paid"
                 description="COM_REDFORM_Paid"
                 default="0"

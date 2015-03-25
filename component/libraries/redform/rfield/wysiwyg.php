@@ -19,4 +19,29 @@ defined('_JEXEC') or die;
 class RdfRfieldWysiwyg extends RdfRfieldTextfield
 {
 	protected $type = 'wysiwyg';
+
+	/**
+	 * Get and set the value from post data, using appropriate filtering
+	 *
+	 * @param   int  $signup  form instance number for the field
+	 *
+	 * @return mixed
+	 */
+	public function getValueFromPost($signup)
+	{
+		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
+
+		$text = isset($_REQUEST[$postName]) ? $_REQUEST[$postName] : '';
+
+		if ($this->getParam('filtering', 'system') == 'raw')
+		{
+			$this->value = $text;
+		}
+		else
+		{
+			$this->value = JComponentHelper::filterText($text);
+		}
+
+		return $this->value;
+	}
 }

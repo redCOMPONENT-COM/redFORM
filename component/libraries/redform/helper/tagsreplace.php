@@ -29,15 +29,24 @@ class RdfHelperTagsreplace
 	private $formdata;
 
 	/**
+	 * Glue to use for imploding fields array value
+	 *
+	 * @var string
+	 */
+	private $glue;
+
+	/**
 	 * Contructor
 	 *
 	 * @param   object      $formdata  form data
 	 * @param   RdfAnswers  $answers   answers to form
+	 * @param   string      $glue      Glue to use for imploding fields array value
 	 */
-	public function __construct($formdata, RdfAnswers $answers)
+	public function __construct($formdata, RdfAnswers $answers, $glue = ',')
 	{
 		$this->formdata = $formdata;
 		$this->answers = $answers;
+		$this->glue = $glue;
 	}
 
 	/**
@@ -64,7 +73,7 @@ class RdfHelperTagsreplace
 			}
 			else
 			{
-				$replace = $this->getAnswerReplace($tag[0]);
+				$replace = $this->getFieldReplace($tag[0]);
 
 				if ($replace !== false)
 				{
@@ -82,6 +91,42 @@ class RdfHelperTagsreplace
 		}
 
 		return $text;
+	}
+
+	/**
+	 * Replace field_xx tag with it's field value
+	 *
+	 * @param   string  $tag  the tag to replace
+	 *
+	 * @return mixed
+	 */
+	private function getFieldReplace($tag)
+	{
+		if (preg_match('/^\[field_([0-9]+)\]$/', $tag, $match))
+		{
+			$id = $match[1];
+		}
+		else
+		{
+			return $this->getAnswerReplace($tag);
+		}
+
+		foreach ($this->answers->getFieldsValues() as $field)
+		{
+			if ($field['field_id'] === $id)
+			{
+				if (is_array($field['value']))
+				{
+					return implode($this->glue, $field['value']);
+				}
+				else
+				{
+					return $field['value'];
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -104,7 +149,14 @@ class RdfHelperTagsreplace
 		{
 			if ($field['field_id'] == $id)
 			{
-				return $field['value'];
+				if (is_array($field['value']))
+				{
+					return implode($this->glue, $field['value']);
+				}
+				else
+				{
+					return $field['value'];
+				}
 			}
 		}
 

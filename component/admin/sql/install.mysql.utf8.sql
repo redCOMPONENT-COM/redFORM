@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `submission_ip` VARCHAR(50) NOT NULL,
   `confirmed_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `confirmed_ip` VARCHAR(50) NOT NULL,
-  `confirmed_type` VARCHAR(50)  NULL DEFAULT 'email'
+  `confirmed_type` VARCHAR(50)  NULL DEFAULT 'email',
   `integration` VARCHAR(30) NULL DEFAULT NULL,
   `answer_id` int(11) NOT NULL default '0',
   `submitternewsletter` int(11) NOT NULL default '0',

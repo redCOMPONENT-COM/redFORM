@@ -95,4 +95,22 @@ class RdfRfieldRadio extends RdfRfield
 
 		return $properties;
 	}
+
+	/**
+	 * Get and set the value from post data, using appropriate filtering
+	 *
+	 * @param   int  $signup  form instance number for the field
+	 *
+	 * @return mixed
+	 */
+	public function getValueFromPost($signup)
+	{
+		$input = JFactory::getApplication()->input;
+
+		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
+
+		$this->value = $input->get($postName, '', 'array');
+
+		return $this->value;
+	}
 }

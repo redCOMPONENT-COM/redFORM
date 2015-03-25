@@ -51,6 +51,10 @@ foreach ($fields as $field)
 		$value = $answers->getFieldAnswer($field->id);
 		$rfield->setValue($value, true);
 	}
+	else
+	{
+		$rfield->lookupDefaultValue();
+	}
 
 	if (!$rfield->isHidden())
 	{

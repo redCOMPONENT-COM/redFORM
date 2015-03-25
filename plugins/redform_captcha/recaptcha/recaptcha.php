@@ -12,6 +12,8 @@ defined('_JEXEC') or die( 'Restricted access');
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
+include_once 'vendor/autoload.php';
+
 /**
  * Class plgRedform_captchaRecaptcha
  *
@@ -43,9 +45,10 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	 */
 	public function onGetCaptchaField(&$text)
 	{
-		require_once 'recaptcha/recaptchalib.php';
+		JFactory::getDocument()->addScript('https://www.google.com/recaptcha/api.js', null, true, true);
+
 		$publickey = $this->params->get('public_key');
-		$text = plgRedformRecaptchaHelper::recaptcha_get_html($publickey, null, false, $this->params);
+		$text = '<div class="g-recaptcha" data-sitekey="' . $publickey . '"></div>';
 
 		return true;
 	}
@@ -59,15 +62,14 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	 */
 	public function onCheckCaptcha(&$result)
 	{
-		require_once 'recaptcha/recaptchalib.php';
+		require_once 'vendor/autoload.php';
 		$privatekey = $this->params->get('private_key');
-		$resp = plgRedformRecaptchaHelper::recaptcha_check_answer(
-			$privatekey,
-			$_SERVER["REMOTE_ADDR"],
-			$_POST["recaptcha_challenge_field"],
-			$_POST["recaptcha_response_field"]
-		);
-		$result = $resp->is_valid;
+		$gRecaptchaResponse = JFactory::getApplication()->input->get('g-recaptcha-response');
+
+		$recaptcha = new \ReCaptcha\ReCaptcha($privatekey);
+		$resp = $recaptcha->verify($gRecaptchaResponse, $_SERVER["REMOTE_ADDR"]);
+
+		$result = $resp->isSuccess();
 
 		return true;
 	}

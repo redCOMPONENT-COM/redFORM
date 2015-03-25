@@ -211,7 +211,6 @@ class RdfCore extends JObject
 
 		$model = $this->getFormModel($form_id);
 		$form   = $model->getForm();
-
 		$fieldsHtml = $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
 		$html = RdfHelperLayout::render(
@@ -313,13 +312,13 @@ class RdfCore extends JObject
 
 		$this->loadCheckScript();
 
-		if ($multi)
+		if ($multi > 1)
 		{
 			$this->loadMultipleFormScript();
 		}
 
 		// Redmember integration: pull extra fields
-		if ($user->get('id') && file_exists(JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php'))
+		if ($user->get('id') && REDFORM_REDMEMBER_INTEGRATION)
 		{
 			$this->getRedmemberfields($user);
 		}
@@ -512,22 +511,16 @@ class RdfCore extends JObject
 	 */
 	protected function getRedmemberfields(&$user)
 	{
-		$path = JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php';
-
-		if (!file_exists($path))
+		if (!REDFORM_REDMEMBER_INTEGRATION)
 		{
 			return $user;
 		}
 
-		require_once $path;
+		$rmFieldsValues = RedmemberHelperRMUser::getData($user->id);
 
-		$all = RedmemberLib::getUserData($user->id);
-
-		$fields = get_object_vars($all);
-
-		foreach ($fields as $key => $value)
+		foreach ($rmFieldsValues as $rmField)
 		{
-			$user->{$key} = $value;
+			$user->{$rmField->fieldcode} = $rmField->value;
 		}
 
 		return $user;
@@ -968,7 +961,7 @@ class RdfCore extends JObject
 	{
 		JText::script('COM_REDFORM_MAX_SIGNUP_REACHED');
 		JText::script('COM_REDFORM_FIELDSET_SIGNUP_NB');
-		JFactory::getDocument()->addScript(JURI::root() . '/media/com_redform/js/form-multiple.js');
+		RHelperAsset::load('form-multiple.js', 'com_redform');
 	}
 
 	/**
@@ -983,7 +976,7 @@ class RdfCore extends JObject
 		JText::script('COM_REDFORM_Total_Price');
 		$doc = JFactory::getDocument();
 		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
-		$doc->addScript(JURI::root() . 'media/com_redform/js/form-price.js');
+		RHelperAsset::load('form-price.js', 'com_redform');
 	}
 
 	/**

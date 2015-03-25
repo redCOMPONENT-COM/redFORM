@@ -31,6 +31,7 @@ $isNew = (int) $this->item->id <= 0;
 				// Perform the ajax request
 				$.ajax({
 					url: 'index.php?option=com_redform&task=form.ajaxfields&view=form&id=<?php echo $this->item->id ?>',
+					cache: false,
 					beforeSend: function (xhr) {
 						$('.fields-content .spinner').show();
 					}

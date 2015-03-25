@@ -33,7 +33,7 @@ class JFormFieldRedformmailinglist extends JFormField
 	 */
 	protected function getInput()
 	{
-		JFactory::getDocument()->addScript(JURI::root() . '/media/com_redform/js/redformmailinglist.js');
+		RHelperAsset::load('redformmailinglist.js', 'com_redform');
 
 		if ($this->value && !is_array($this->value))
 		{

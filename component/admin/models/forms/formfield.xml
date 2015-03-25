@@ -21,6 +21,7 @@
         <field
                 name="validate"
                 type="radio"
+				class="btn-group btn-group-yesno"
                 label="COM_REDFORM_FORMS_XML_FIELD_REQUIRED"
                 description="COM_REDFORM_FORMS_XML_FIELD_REQUIRED_DESC"
                 default="0"
@@ -31,6 +32,7 @@
         <field
                 name="unique"
                 type="radio"
+				class="btn-group btn-group-yesno"
                 label="COM_REDFORM_FORMS_XML_FIELD_UNIQUE"
                 description="COM_REDFORM_FORMS_XML_FIELD_UNIQUE_DESC"
                 default="0"
@@ -41,6 +43,7 @@
         <field
                 name="readonly"
                 type="radio"
+				class="btn-group btn-group-yesno"
                 label="COM_REDFORM_FORMS_XML_FIELD_READONLY"
                 description="COM_REDFORM_FORMS_XML_FIELD_READONLY_DESC"
                 default="0"
@@ -52,7 +55,7 @@
                 name="published"
                 type="rpublished"
                 label="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED"
-                description="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED_DEC"
+                description="COM_REDFORM_FORMS_XML_FIELD_PUBLISHED_DESC"
                 />
         <field
                 name="form_id"

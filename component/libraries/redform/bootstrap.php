@@ -41,6 +41,12 @@ class RdfBootstrap
 			// Bootstraps redCORE
 			RBootstrap::bootstrap();
 
+			// For Joomla! 2.5 compatibility we load bootstrap2
+			if (version_compare(JVERSION, '3.0', '<') && JFactory::getApplication()->input->get('view') == 'config')
+			{
+				RHtmlMedia::setFramework('bootstrap2');
+			}
+
 			// Register library prefix
 			RLoader::registerPrefix('Rdf', __DIR__);
 
@@ -49,6 +55,17 @@ class RdfBootstrap
 
 			// Make available the form rules
 			JFormHelper::addRulePath(JPATH_LIBRARIES . '/redform/form/rules');
+
+			if (file_exists(JPATH_LIBRARIES . '/redmember/library.php'))
+			{
+				include_once JPATH_LIBRARIES . '/redmember/library.php';
+
+				define('REDFORM_REDMEMBER_INTEGRATION', true);
+			}
+			else
+			{
+				define('REDFORM_REDMEMBER_INTEGRATION', false);
+			}
 		}
 	}
 }

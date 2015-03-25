@@ -336,22 +336,6 @@ class RdfAnswers
 	}
 
 	/**
-	 * Add post answer for field
-	 *
-	 * @param   RdfRfield  $field        field
-	 * @param   mixed      $postedvalue  posted data
-	 *
-	 * @return mixed hte value
-	 */
-	public function addPostAnswer($field, $postedvalue)
-	{
-		$value = $field->setValueFromPost($postedvalue);
-		$this->fields[] = $field;
-
-		return $value;
-	}
-
-	/**
 	 * Add field to answers (value must already be set)
 	 *
 	 * @param   RdfRfield  $field  field
@@ -616,7 +600,7 @@ class RdfAnswers
 	/**
 	 * Replace tags
 	 *
-	 * @param   string      $text     text
+	 * @param   string   $text     text
 	 *
 	 * @return mixed
 	 */
@@ -641,10 +625,14 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			if (!$field->validate())
+			if ($field->published)
 			{
-				$mainframe->enqueueMessage($field->getError(), 'notice');
-				$res = false;
+				if (!$field->validate())
+				{
+					// TODO: an exception should bubble up from here, this is too high level
+					$mainframe->enqueueMessage($field->getError(), 'notice');
+					$res = false;
+				}
 			}
 		}
 
@@ -774,6 +762,8 @@ class RdfAnswers
 	/**
 	 * Return shortened answers form
 	 *
+	 * @deprecated kept for backwards compatibility with replacer of [answer_<id>]
+	 *
 	 * @return array
 	 */
 	public function getAnswers()
@@ -783,6 +773,23 @@ class RdfAnswers
 		foreach ($this->fields as $field)
 		{
 			$answers[] = array('field' => $field->field, 'field_id' => $field->id, 'value' => $field->getValue(), 'type' => $field->fieldtype);
+		}
+
+		return $answers;
+	}
+
+	/**
+	 * Return shortened answers form
+	 *
+	 * @return array
+	 */
+	public function getFieldsValues()
+	{
+		$answers = array();
+
+		foreach ($this->fields as $field)
+		{
+			$answers[] = array('field' => $field->field, 'field_id' => $field->field_id, 'value' => $field->getValue(), 'type' => $field->fieldtype);
 		}
 
 		return $answers;

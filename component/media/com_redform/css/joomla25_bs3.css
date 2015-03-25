@@ -1,0 +1,27 @@
+/* to adapt joomla 2,5 to boostrap3 */
+
+.form-group {
+    clear: both;
+    margin-bottom: 10px;
+}
+
+.redcore form select,
+/*.redcore form textarea,*/
+.redcore form input[type="text"],
+.redcore form input[type="password"],
+.redcore form input[type="datetime"],
+.redcore form input[type="datetime-local"],
+.redcore form input[type="date"],
+.redcore form input[type="month"],
+.redcore form input[type="time"],
+.redcore form input[type="week"],
+.redcore form input[type="number"],
+.redcore form input[type="email"],
+.redcore form input[type="url"],
+.redcore form input[type="search"],
+.redcore form input[type="tel"],
+.redcore form input[type="color"],
+.redcore form .uneditable-input {
+    line-height: 20px;
+    height: 20px;
+}

@@ -16,33 +16,25 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_redform'))
 	return false;
 }
 
-$redcoreLoader = JPATH_LIBRARIES . '/redcore/bootstrap.php';
+$redformLoader = JPATH_LIBRARIES . '/redform/bootstrap.php';
 
-if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore'))
+if (!file_exists($redformLoader))
 {
-	throw new Exception(JText::_('COM_REDITEM_REDCORE_INIT_FAILED'), 404);
+	throw new Exception(JText::_('COM_REDFORM_LIB_INIT_FAILED'), 404);
 }
 
-// Bootstraps redCORE
-RBootstrap::bootstrap();
+include_once $redformLoader;
+
+// Bootstraps redFORM
+RdfBootstrap::bootstrap();
+
+// Forcing boostrap2 screws up things on 3.x for some reason
+//RHtmlMedia::setFramework('bootstrap2');
 
 require_once JPATH_COMPONENT_SITE . '/redform.defines.php';
 
-// Redmember integration
-if (file_exists(JPATH_ROOT . '/components/com_redmember'))
-{
-	define('REDMEMBER_INTEGRATION', true);
-}
-else
-{
-	define('REDMEMBER_INTEGRATION', false);
-}
-
 // Register backend prefix
 RLoader::registerPrefix('Redform', __DIR__);
-
-// Register library prefix
-RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
 // Make available the fields
 JFormHelper::addFieldPath(JPATH_LIBRARIES . '/redform/form/fields');
