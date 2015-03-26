@@ -149,4 +149,29 @@ class RdfHelper
 			array('client' => 0, 'component' => 'com_redform')
 		);
 	}
+
+	/**
+	 * Formats a price according to settings
+	 *
+	 * @param   float   $price         price
+	 * @param   string  $currencyCode  iso3 currency code
+	 * @param   string  $format        sprintf format, with 1st argument the currency, 2nd the value
+	 *
+	 * @return string
+	 */
+	public static function formatPrice($price, $currencyCode, $format = "%1s %2s")
+	{
+		$params = JFactory::getApplication()->getParams('com_redform');
+
+		return sprintf(
+			$format,
+			$currencyCode,
+			number_format(
+				$price,
+				RHelperCurrency::getPrecision($currencyCode),
+				$params->get('decimalseparator', '.'),
+				$params->get('thousandseparator', ' ')
+			)
+		);
+	}
 }

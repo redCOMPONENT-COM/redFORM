@@ -190,7 +190,7 @@ class RdfHelperTagsreplace
 	 */
 	private function getTagTotalprice()
 	{
-		return $this->answers->getCurrency() . ' ' . $this->answers->getPrice();
+		return RdfHelper::formatPrice($this->answers->getPrice(), $this->answers->getCurrency());
 	}
 
 	/**
