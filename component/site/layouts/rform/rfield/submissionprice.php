@@ -20,4 +20,4 @@ $params = JFactory::getApplication()->getParams('com_redform');
 $doc = JFactory::getDocument();
 $doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");;
 ?>
-<span class="totalprice" decimal="<?php echo $data->getParam('decimalseparator', '.'); ?>" thousands="<?php echo $data->getParam('thousandseparator', ''); ?>"></span>
+<span class="totalprice"></span>

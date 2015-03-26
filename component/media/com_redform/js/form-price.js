@@ -63,8 +63,6 @@ var redformPrice;
 
 		function displayPrice(price) {
 			var totalElement = formbox.find(".totalprice");
-			var decSeparator = $(totalElement).attr('decimal');
-			var thSeparator = $(totalElement).attr('thousands');
 
 			if (!totalElement)
 			{
@@ -76,7 +74,9 @@ var redformPrice;
 
 			var currencyField = form.find('input[name="currency"]');
 			var currency = (currencyField && currencyField.val()) ? currencyField.val() : '';
-			var precision = currencyField ? $(currencyField).prop('precision') : 2;
+			var precision = currencyField ? $(currencyField).attr('precision') : 2;
+			var decSeparator = currencyField ? $(currencyField).attr('decimal') : '.';
+			var thSeparator = currencyField ? $(currencyField).attr('thousands') : ' ';
 
 			var roundedPrice = accounting.formatMoney(price, {symbol: currency, precision: precision, thousand: thSeparator, decimal: decSeparator, format: '%s %v'});
 

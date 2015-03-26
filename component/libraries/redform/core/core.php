@@ -457,7 +457,14 @@ class RdfCore extends JObject
 
 		if ($currency)
 		{
-			$html .= '<input type="hidden" name="currency" value="' . $currency . '" precision="' . RHelperCurrency::getPrecision($currency) . '" />';
+			$html .= '<input
+				type="hidden"
+				name="currency"
+				value="' . $currency . '"
+				precision="' . RHelperCurrency::getPrecision($currency) . '"
+				decimal="' . $app->getParams('com_redform')->get('decimalseparator', '.') . '"
+				thousands="' . $app->getParams('com_redform')->get('thousandseparator', ' ') . '"
+			/>';
 		}
 
 		// End div #redform
