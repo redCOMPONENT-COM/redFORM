@@ -395,18 +395,6 @@ class RdfCore extends JObject
 				$html .= '</fieldset>';
 			}
 
-			if ($form->show_js_price)
-			{
-				$this->loadPriceScript();
-
-				$html .= RdfHelperLayout::render(
-					'rform.totalprice',
-					null,
-					'',
-					array('client' => 0, 'component' => 'com_redform')
-				);
-			}
-
 			if (isset($this->_rwfparams['uid']))
 			{
 				$html .= '<div>' . JText::_('COM_REDFORM_JOOMLA_USER') . ': '
@@ -469,7 +457,7 @@ class RdfCore extends JObject
 
 		if ($currency)
 		{
-			$html .= '<input type="hidden" name="currency" value="' . $currency . '" />';
+			$html .= '<input type="hidden" name="currency" value="' . $currency . '" precision="' . RHelperCurrency::getPrecision($currency) . '" />';
 		}
 
 		// End div #redform

@@ -16,7 +16,7 @@ var redformPrice;
 			displayPrice(price);
 		}
 
-		function calcPrice () {
+		function calcPrice() {
 			var price = 0.0;
 
 			formbox.find("input.rfprice").each(function() {
@@ -63,16 +63,10 @@ var redformPrice;
 
 		function displayPrice(price) {
 			var totalElement = formbox.find(".totalprice");
-			var line = formbox.find('.priceline');
+			var decSeparator = $(totalElement).attr('decimal');
+			var thSeparator = $(totalElement).attr('thousands');
 
 			if (!totalElement)
-			{
-				return;
-			}
-
-			line.hide();
-
-			if (!(price > 0))
 			{
 				return;
 			}
@@ -81,16 +75,14 @@ var redformPrice;
 			var text = '';
 
 			var currencyField = form.find('input[name="currency"]');
+			var currency = (currencyField && currencyField.val()) ? currencyField.val() : '';
+			var precision = currencyField ? $(currencyField).prop('precision') : 2;
 
-			if (currencyField && currencyField.val()) {
-				text = currencyField.val();
-			}
+			var roundedPrice = accounting.formatMoney(price, {symbol: currency, precision: precision, thousand: thSeparator, decimal: decSeparator, format: '%s %v'});
 
-			var roundedPrice = Math.round(price*100)/100;
 			text += ' <span>' + roundedPrice + '</span>';
 
 			formbox.find(".totalprice").html(text);
-			line.show();
 		}
 
 		return {
