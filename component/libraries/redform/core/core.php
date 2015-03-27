@@ -462,8 +462,8 @@ class RdfCore extends JObject
 				name="currency"
 				value="' . $currency . '"
 				precision="' . RHelperCurrency::getPrecision($currency) . '"
-				decimal="' . $app->getParams('com_redform')->get('decimalseparator', '.') . '"
-				thousands="' . $app->getParams('com_redform')->get('thousandseparator', ' ') . '"
+				decimal="' . JComponentHelper::getParams('com_redform')->get('decimalseparator', '.') . '"
+				thousands="' . JComponentHelper::getParams('com_redform')->get('thousandseparator', ' ') . '"
 			/>';
 		}
 
