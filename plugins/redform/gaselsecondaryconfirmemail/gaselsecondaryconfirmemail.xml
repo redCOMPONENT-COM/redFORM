@@ -23,14 +23,6 @@
 					   label="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_EMAILIDS"
 					   description="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_EMAILIDS_DESC"/>
 
-				<field name="subject" type="text"
-					   label="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_SUBJECT"
-					   description="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_SUBJECT_DESC"/>
-
-				<field name="body" type="editor"
-					   label="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_BODY"
-					   description="PLG_REDFORM_GASELSECONDARYCONFIRMEMAIL_BODY_DESC"/>
-
 			</fieldset>
 		</fields>
 	</config>

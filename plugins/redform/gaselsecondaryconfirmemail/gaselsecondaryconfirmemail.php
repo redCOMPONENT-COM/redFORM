@@ -29,6 +29,11 @@ class plgRedformGaselsecondaryconfirmemail extends JPlugin
 	private $answers;
 
 	/**
+	 * @var RdfCore
+	 */
+	private $redFormCore;
+
+	/**
 	 * constructor
 	 *
 	 * @param   object  $subject  subject
@@ -95,10 +100,13 @@ class plgRedformGaselsecondaryconfirmemail extends JPlugin
 			$mailer->AddAddress($address);
 		}
 
-		$subject = $submission->replaceTags($this->params->get('subject'));
+		$rdfCore = $this->getRedFormCore();
+		$form = $rdfCore->getForm($submission->getFormId());
+
+		$subject = $submission->replaceTags($form->confirmation_contactperson_subject);
 		$mailer->setSubject($subject);
 
-		$body = $submission->replaceTags($this->params->get('body'));
+		$body = $submission->replaceTags($form->confirmation_contactperson_body);
 		$htmlmsg = RdfHelper::wrapMailHtmlBody($body, $subject);
 		$mailer->MsgHTML($htmlmsg);
 
@@ -147,11 +155,25 @@ class plgRedformGaselsecondaryconfirmemail extends JPlugin
 	{
 		if (!$this->answers)
 		{
-			$rdfCore = new RdfCore;
+			$rdfCore = $this->getRedFormCore();
 			$this->answers = $rdfCore->getAnswers($this->sids);
 		}
 
 		return $this->answers;
 	}
 
+	/**
+	 * Get redformcore
+	 *
+	 * @return RdfCore
+	 */
+	private function getRedFormCore()
+	{
+		if (!$this->redFormCore)
+		{
+			$this->redFormCore = new RdfCore;
+		}
+
+		return $this->redFormCore;
+	}
 }
