@@ -255,6 +255,7 @@ class RdfCore extends JObject
 	public function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
 	{
 		JHtml::_('behavior.keepalive');
+		RHelperAsset::load('redform-validate.js', 'com_redform');
 
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
