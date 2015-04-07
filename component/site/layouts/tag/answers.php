@@ -12,23 +12,10 @@ defined('_JEXEC') or die;
 $answers = $displayData;
 ?>
 <table>
-	<?php foreach ($answers->getAnswers() as $answer):
-		if (is_array($answer['value']))
-		{
-			$value = implode('<br>', $answer['value']);
-		}
-		elseif ($answer['type'] == 'file')
-		{
-			$value = basename($answer['value']);
-		}
-		else
-		{
-			$value = $answer['value'];
-		}
-	?>
+	<?php foreach ($answers->getFields() as $field): ?>
 	<tr>
-		<th><?php echo $answer['field']; ?></th>
-		<td><?php echo $value; ?></td>
+		<th><?php echo $field->field; ?></th>
+		<td><?php echo $field->getValueAsString('<br/>'); ?></td>
 	</tr>
 	<?php endforeach; ?>
 

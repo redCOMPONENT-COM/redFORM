@@ -269,15 +269,17 @@ abstract class RdfRfield extends JObject
 
 	/**
 	 * Returns field value ready to be printed.
-	 * Array values will be separated with ~~~
+	 * Array values will be separated with separator (default '~~~')
+	 *
+	 * @param   string  $separator  separator
 	 *
 	 * @return string
 	 */
-	public function getValueAsString()
+	public function getValueAsString($separator = '~~~')
 	{
 		if (is_array($this->value))
 		{
-			return implode('~~~', $this->value);
+			return implode($separator, $this->value);
 		}
 		else
 		{

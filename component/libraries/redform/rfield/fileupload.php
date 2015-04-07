@@ -70,6 +70,20 @@ class RdfRfieldFileupload extends RdfRfield
 	}
 
 	/**
+	 * Returns field value ready to be printed.
+	 * Array values will be separated with separator (default '~~~')
+	 *
+	 * @param   string  $separator  separator
+	 *
+	 * @return string
+	 */
+	public function getValueAsString($separator = '~~~')
+	{
+		return $this->value ? basename($this->value) : $this->value;
+	}
+
+
+	/**
 	 * Check if there was a file uploaded
 	 *
 	 * @param   int  $signup  signup id

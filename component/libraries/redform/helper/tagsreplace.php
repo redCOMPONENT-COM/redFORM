@@ -111,18 +111,11 @@ class RdfHelperTagsreplace
 			return $this->getAnswerReplace($tag);
 		}
 
-		foreach ($this->answers->getFieldsValues() as $field)
+		foreach ($this->answers->getFields() as $field)
 		{
-			if ($field['field_id'] === $id)
+			if ($field->field_id === $id)
 			{
-				if (is_array($field['value']))
-				{
-					return implode($this->glue, $field['value']);
-				}
-				else
-				{
-					return $field['value'];
-				}
+				return $field->getValueAsString($this->glue);
 			}
 		}
 
@@ -145,18 +138,13 @@ class RdfHelperTagsreplace
 
 		$id = $match[1];
 
-		foreach ($this->answers->getAnswers() as $field)
+//		echo '<pre>'; echo print_r($id, true); echo '</pre>';// exit;
+//		echo '<pre>'; echo print_r($this->answers->getFields(), true); echo '</pre>'; exit;
+		foreach ($this->answers->getFields() as $field)
 		{
-			if ($field['field_id'] == $id)
+			if ($field->id == $id)
 			{
-				if (is_array($field['value']))
-				{
-					return implode($this->glue, $field['value']);
-				}
-				else
-				{
-					return $field['value'];
-				}
+				return $field->getValueAsString($this->glue);
 			}
 		}
 
