@@ -138,8 +138,6 @@ class RdfHelperTagsreplace
 
 		$id = $match[1];
 
-//		echo '<pre>'; echo print_r($id, true); echo '</pre>';// exit;
-//		echo '<pre>'; echo print_r($this->answers->getFields(), true); echo '</pre>'; exit;
 		foreach ($this->answers->getFields() as $field)
 		{
 			if ($field->id == $id)
