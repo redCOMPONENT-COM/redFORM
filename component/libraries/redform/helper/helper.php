@@ -161,7 +161,7 @@ class RdfHelper
 	 */
 	public static function formatPrice($price, $currencyCode, $format = "%1s %2s")
 	{
-		$params = JFactory::getApplication()->getParams('com_redform');
+		$params = JComponentHelper::getParams('com_redform');
 
 		return sprintf(
 			$format,
