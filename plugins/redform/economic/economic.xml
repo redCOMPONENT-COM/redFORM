@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="redform" method="upgrade">
+	<name>PLG_REDFORM_ECONOMIC_XML_NAME</name>
+	<creationDate>##DATE##</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2015 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>##VERSION##</version>
+	<description>PLG_REDFORM_ECONOMIC_XML_DESC</description>
+
+	<files>
+		<folder>language</folder>
+		<folder>lib</folder>
+		<filename plugin="economic">economic.php</filename>
+	</files>
+
+	<config>
+		<fields name="params">
+			<fieldset name="basic" label="basic">
+
+				<field name="economic_agreement_number" type="text" default="" label="PLG_REDFORM_ECONOMIC_AGREEMENT_NUMBER_LBL"
+					   description="PLG_REDFORM_ECONOMIC_DESC_ECONOMIC_AGREEMENT_NUMBER_LBL"/>
+				<field name="economic_username" type="text" default="" label="PLG_REDFORM_ECONOMIC_USERNAME_LBL"
+					   description="PLG_REDFORM_ECONOMIC_DESC_ECONOMIC_USERNAME_LBL"/>
+				<field name="economic_password" type="password" default="" label="PLG_REDFORM_ECONOMIC_PASSWORD_LBL"
+					   description="PLG_REDFORM_ECONOMIC_DESC_ECONOMIC_PASSWORD_LBL"/>
+				<field name="economic_template" type="text" default="" label="PLG_REDFORM_ECONOMIC_TEMPLATE_COLLECTION_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_TEMPLATE_COLLECTION_DESC"/>
+				<field name="economic_vat_account" type="text" default="" label="PLG_REDFORM_ECONOMIC_VAT_ACCOUNT_ID_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_VAT_ACCOUNT_ID_DESC"/>
+				<field name="economic_no_vat_account" type="text" default="" label="PLG_REDFORM_ECONOMIC_NOVAT_ACCOUNT_ID_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_NOVAT_ACCOUNT_ID_DESC"/>
+				<field name="economic_contra_account" type="text" default="1200" label="PLG_REDFORM_ECONOMIC_CONTRA_ACCOUNT_ID_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_CONTRA_ACCOUNT_ID_DESC"/>
+				<field name="economic_payment_cashbook_id" type="text" default="2" label="PLG_REDFORM_ECONOMIC_CASHBOOK_ID_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_CASHBOOK_ID_DESC"/>
+				<field name="economic_debtor_group" type="text" default="" label="PLG_REDFORM_ECONOMIC_DEBTOR_GROUP_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_DEBTOR_GROUP_LABEL_DESC"/>
+				<field name="economic_creditor_group" type="text" default="" label="PLG_REDFORM_ECONOMIC_CREDITOR_GROUP_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_CREDITOR_GROUP_LABEL_DESC"/>
+				<field name="economic_default_currency" type="text" default="EUR" label="PLG_REDFORM_ECONOMIC_DEFAULT_CURRENCY_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_DEFAULT_CURRENCY_DESC"/>
+
+			</fieldset>
+		</fields>
+	</config>
+
+</extension>
