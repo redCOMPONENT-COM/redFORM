@@ -96,6 +96,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   `field_id` int(11) default NULL,
   `ordering` int(11) NOT NULL default '0',
   `price` double NULL DEFAULT NULL,
+  `vat` double NULL DEFAULT NULL,
+  `sku` varchar(255),
   PRIMARY KEY  (`id`),
   KEY `field_id` (`field_id`)
 ) COMMENT='Stores fields options';
