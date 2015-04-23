@@ -1,64 +1,64 @@
 @charset "UTF-8";
 
 #signedusers {
- padding: 0 4px;
+	padding: 0 4px;
 }
 
 .formbox {
- clear: both;
+	clear: both;
 }
 
 .fieldline {
- padding: 3px 0;
- clear: both;
+	padding: 3px 0;
+	clear: both;
 }
 
 .fieldline div {
- float: left;
- text-align: left;
+	float: left;
+	text-align: left;
 }
 
 .fieldline div.fieldoption {
- float: none;
- text-align: left;
+	float: none;
+	text-align: left;
 }
 
 .fieldline div.label {
- width: 150px;
+	width: 150px;
 }
 
 div#totalprice {
- clear: both;
+	clear: both;
 }
 
 div#submit_button, div#confirmbutton {
- clear: both;
+	clear: both;
 }
 
 .fieldline div.fieldemail div {
- float: none;
+	float: none;
 }
 
 div.fieldinfo {
-  padding-left: 4px;
+	padding-left: 4px;
 }
 
 label.emptyfield {
- color: red;
- font-weight: bold;
+	color: red;
+	font-weight: bold;
 }
 
 input.emptyfield {
- border: 1px solid red;
- background-color: pink;
+	border: 1px solid red;
+	background-color: pink;
 }
 
 select.emptyfield {
- border: 1px solid red;
- background-color: pink;
+	border: 1px solid red;
+	background-color: pink;
 }
 
 textarea.emptyfield {
- border: 1px solid red;
- background-color: pink;
+	border: 1px solid red;
+	background-color: pink;
 }

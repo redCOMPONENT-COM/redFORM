@@ -156,11 +156,6 @@ class RedformTableForm extends RTable
 	public $activatepayment = 0;
 
 	/**
-	 * @var  int
-	 */
-	public $show_js_price = 1;
-
-	/**
 	 * @var  string
 	 */
 	public $currency;

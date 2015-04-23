@@ -600,7 +600,7 @@ class RdfAnswers
 	/**
 	 * Replace tags
 	 *
-	 * @param   string   $text     text
+	 * @param   string  $text  text
 	 *
 	 * @return mixed
 	 */

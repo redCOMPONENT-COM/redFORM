@@ -102,8 +102,10 @@ class RdfCoreModelSubmission extends RModel
 		// Get data
 		$query = $db->getQuery(true)
 			->select('s.id as sid, f.*, s.price')
+			->select('CASE WHEN (s.currency) THEN s.currency ELSE fo.currency END as currency')
 			->from('#__rwf_forms_' . $formId . ' AS f')
 			->join('INNER', '#__rwf_submitters AS s on s.answer_id = f.id')
+			->join('INNER', '#__rwf_forms AS fo on fo.id = s.form_id')
 			->where('s.id = ' . (int) $sid);
 		$db->setQuery($query);
 		$submissionsData = $db->loadObject();
@@ -114,6 +116,7 @@ class RdfCoreModelSubmission extends RModel
 		$subSubmission->setSubmitKey($this->submitKey);
 		$subSubmission->setSid($sid);
 		$subSubmission->setFormId($formId);
+		$subSubmission->setCurrency($submissionsData->currency);
 
 		foreach ($fields as $field)
 		{

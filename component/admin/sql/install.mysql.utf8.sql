@@ -42,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `captchaactive` tinyint(1) NOT NULL default '0',
   `access` tinyint(3) NOT NULL default '0',
   `activatepayment` tinyint(2) NOT NULL DEFAULT '0',
-  `show_js_price` tinyint(2) NOT NULL DEFAULT '1',
   `currency` varchar(3) DEFAULT NULL,
   `paymentprocessing` text DEFAULT NULL,
   `paymentaccepted` text DEFAULT NULL,

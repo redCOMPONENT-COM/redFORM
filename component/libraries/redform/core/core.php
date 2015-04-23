@@ -255,6 +255,7 @@ class RdfCore extends JObject
 	public function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
 	{
 		JHtml::_('behavior.keepalive');
+		RHelperAsset::load('redform-validate.js', 'com_redform');
 
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
@@ -395,18 +396,6 @@ class RdfCore extends JObject
 				$html .= '</fieldset>';
 			}
 
-			if ($form->show_js_price)
-			{
-				$this->loadPriceScript();
-
-				$html .= RdfHelperLayout::render(
-					'rform.totalprice',
-					null,
-					'',
-					array('client' => 0, 'component' => 'com_redform')
-				);
-			}
-
 			if (isset($this->_rwfparams['uid']))
 			{
 				$html .= '<div>' . JText::_('COM_REDFORM_JOOMLA_USER') . ': '
@@ -469,7 +458,14 @@ class RdfCore extends JObject
 
 		if ($currency)
 		{
-			$html .= '<input type="hidden" name="currency" value="' . $currency . '" />';
+			$html .= '<input
+				type="hidden"
+				name="currency"
+				value="' . $currency . '"
+				precision="' . RHelperCurrency::getPrecision($currency) . '"
+				decimal="' . JComponentHelper::getParams('com_redform')->get('decimalseparator', '.') . '"
+				thousands="' . JComponentHelper::getParams('com_redform')->get('thousandseparator', ' ') . '"
+			/>';
 		}
 
 		// End div #redform

@@ -31,6 +31,18 @@
 				label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL"
 				description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
 
+		<field name="decimalseparator"
+			   type="text"
+			   default="."
+			   label="COM_REDFORM_SETTINGS_PRICEFORMAT_DECIMALSEPARATOR"
+			   description="COM_REDFORM_SETTINGS_PRICEFORMAT_DECIMALSEPARATOR_DESC"/>
+
+		<field name="thousandseparator"
+			   type="text"
+			   default=" "
+			   label="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR"
+			   description="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR_DESC"/>
+
 		<field
 				name="allow_negative_total"
 				type="radio"

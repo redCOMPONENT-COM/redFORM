@@ -27,8 +27,8 @@ $listDirn = $this->state->get('list.direction');
 			'options' => array(
 				'filterButton' => true,
 				'filtersHidden' => false,
-				'searchField' => 'search_fields',
-				'searchFieldSelector' => '#filter_search_fields',
+				'searchField' => 'search_submitters',
+				'searchFieldSelector' => '#filter_search_submitters',
 				'limitFieldSelector' => '#list_field_limit',
 				'activeOrder' => $listOrder,
 				'activeDirection' => $listDirn
@@ -162,7 +162,7 @@ $listDirn = $this->state->get('list.direction');
 				?>
 
 				<?php if ($this->formInfo->activatepayment): ?>
-					<td class="submitters-price"><?php echo $item->price ? $item->currency . ' ' . $item->price : ''; ?></td>
+					<td class="submitters-price"><?php echo $item->price ? RdfHelper::formatPrice($item->price, $item->currency) : ''; ?></td>
 					<td class="price <?php echo ($item->paid ? 'paid' : 'unpaid'); ?>">
 						<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit_key='.$item->submit_key), JText::_('COM_REDFORM_history')); ?>
 						<?php if (!$item->paid): ?>
