@@ -40,6 +40,13 @@ class RedformModelSubmitters extends RModelList
 	protected $limitstartField = 'auto';
 
 	/**
+	 * form fields
+	 *
+	 * @var array
+	 */
+	protected $fields;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
@@ -171,6 +178,27 @@ class RedformModelSubmitters extends RModelList
 			}
 		}
 
+		// Filter search
+		$search = $this->getState('filter.search_submitters');
+
+		if (!empty($search))
+		{
+			$search = $db->quote('%' . $db->escape($search, true) . '%');
+
+			$lookup = array();
+			$lookup[] = 's.submit_key LIKE ' . $search;
+
+			if ($fields = $this->getFields())
+			{
+				foreach ($this->getFields() as $field)
+				{
+					$lookup[] = 'a.field_' . $field->field_id . ' LIKE ' . $search;
+				}
+			}
+
+			$query->where('(' . implode(' OR ', $lookup) . ')');
+		}
+
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 's.submission_date');
 		$orderDirn = $this->state->get('list.direction', 'desc');
@@ -241,26 +269,29 @@ class RedformModelSubmitters extends RModelList
 	 */
 	public function getFields()
 	{
-		$db = JFactory::getDBO();
-		$form_id = $this->getState('filter.form_id');
-
-		$query = ' SELECT f.id AS field_id, f.field '
-			. '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
-			. ' FROM #__rwf_fields AS f '
-			. ' INNER JOIN #__rwf_form_field AS ff ON ff.field_id = f.id '
-			. ' WHERE f.fieldtype <> "info" ';
-
-		if ($form_id)
+		if (!$this->fields)
 		{
-			$query .= ' AND ff.form_id = ' . $db->Quote($form_id);
+			$form_id = $this->getState('filter.form_id');
+			$query = $this->_db->getQuery(true);
+
+			$query->select('f.id AS field_id, f.field')
+				->select('CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header')
+				->from('#__rwf_fields AS f')
+				->join('INNER', '#__rwf_form_field AS ff ON ff.field_id = f.id')
+				->where('f.fieldtype <> "info"')
+				->group('f.id')
+				->order('ff.ordering');
+
+			if ($form_id)
+			{
+				$query->where('ff.form_id = ' . $this->_db->Quote($form_id));
+			}
+
+			$this->_db->setQuery($query);
+			$this->fields = $this->_db->loadObjectList();
 		}
 
-		$query .= "GROUP BY f.id
-				ORDER BY ff.ordering ";
-
-		$db->setQuery($query);
-
-		return $db->loadObjectList();
+		return $this->fields;
 	}
 
 	/**
