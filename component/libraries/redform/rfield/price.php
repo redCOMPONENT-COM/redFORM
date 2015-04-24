@@ -33,7 +33,8 @@ class RdfRfieldPrice extends RdfRfield
 
 		if (count($options))
 		{
-			$price = reset($options)->value;
+			$option = reset($options);
+			$price = $option->value;
 		}
 		else
 		{

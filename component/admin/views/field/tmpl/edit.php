@@ -184,9 +184,6 @@ if ($this->item->hasOptions && $this->item->id)
 							<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_HEADER_PRICE'); ?>
 						</th>
 						<th class="nowrap center">
-							<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_HEADER_VAT'); ?>
-						</th>
-						<th class="nowrap center">
 							<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_HEADER_SKU'); ?>
 						</th>
 						<th class="nowrap center">
@@ -211,9 +208,6 @@ if ($this->item->hasOptions && $this->item->id)
 							</td>
 							<td>
 								<input type="text" name="option-price[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_PRICE'); ?>"/>
-							</td>
-							<td>
-								<input type="text" name="option-vat[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_VAT'); ?>"/>
 							</td>
 							<td>
 								<input type="text" name="option-sku[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_SKU'); ?>"/>

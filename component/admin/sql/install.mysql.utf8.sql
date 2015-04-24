@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `rawformdata` text NOT NULL,
   `submit_key` varchar(45) NOT NULL,
   `price` double NULL DEFAULT NULL,
+  `vat` double NULL DEFAULT NULL,
   `currency` varchar(3) DEFAULT NULL,
   PRIMARY KEY  (`id`),
   KEY `form_id` (`form_id`),
@@ -96,7 +97,6 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   `field_id` int(11) default NULL,
   `ordering` int(11) NOT NULL default '0',
   `price` double NULL DEFAULT NULL,
-  `vat` double NULL DEFAULT NULL,
   `sku` varchar(255),
   PRIMARY KEY  (`id`),
   KEY `field_id` (`field_id`)

@@ -58,8 +58,6 @@ class RedformControllerField extends RdfControllerForm
 
 		$prices = $app->input->get('option-price', array(0), 'array');
 
-		$vat = $app->input->get('option-vat', array(0), 'array');
-
 		$sku = $app->input->get('option-sku', array(0), 'array');
 		JArrayHelper::toString($sku);
 
@@ -70,7 +68,6 @@ class RedformControllerField extends RdfControllerForm
 			'value' => $values[0],
 			'label' => $labels[0],
 			'price' => (float) $prices[0],
-			'vat' => (float) $vat[0],
 			'sku' => $sku[0],
 			'field_id' => $fieldId
 		);

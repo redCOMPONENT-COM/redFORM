@@ -140,6 +140,7 @@ class RdfRfieldInteger extends RdfRfieldSelect
 		{
 			$min = (int) $this->getParam('minvalue');
 			$max = (int) $this->getParam('maxvalue');
+			$vat = (int) $this->getParam('vat');
 			$step = (int) $this->getParam('step', 1) > 0 ? (int) $this->getParam('step', 1) : 1;
 			$price = floatval($this->getParam('baseprice'));
 

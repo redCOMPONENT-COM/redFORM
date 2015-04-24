@@ -1,4 +1,2 @@
-ALTER TABLE `#__rwf_values`
-	ADD `vat` double NULL DEFAULT NULL,
-	ADD `sku` varchar(255)
-	;
+ALTER TABLE `#__rwf_submitters` ADD `vat` double NULL DEFAULT NULL;
+ALTER TABLE `#__rwf_values` ADD `sku` varchar(255);

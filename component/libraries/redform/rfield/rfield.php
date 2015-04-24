@@ -390,6 +390,23 @@ abstract class RdfRfield extends JObject
 	}
 
 	/**
+	 * Return vat, possibly depending on current field value
+	 *
+	 * @return float
+	 */
+	public function getVat()
+	{
+		$vatRate = (float) $this->getParam('vat');
+
+		if ($price = $this->getPrice() && is_numeric($vatRate))
+		{
+			return $price * $vatRate / 100;
+		}
+
+		return 0;
+	}
+
+	/**
 	 * Return input properties array
 	 *
 	 * @return array
