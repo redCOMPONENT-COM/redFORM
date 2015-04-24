@@ -225,7 +225,7 @@ class RdfCoreModelSubmission extends RModel
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('s.id, s.submit_key, s.price, s.currency');
+		$query->select('s.id, s.submit_key, s.price, s.vat, s.currency');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
 		$query->where('s.submit_key = ' . $db->q($submit_key));

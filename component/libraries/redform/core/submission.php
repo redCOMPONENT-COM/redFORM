@@ -147,11 +147,14 @@ class RdfCoreSubmission extends JObject
 			{
 				if (is_array($options['baseprice']))
 				{
-					$answers->initPrice(isset($options['baseprice'][$signup - 1]) ? $options['baseprice'][$signup - 1] : 0);
+					$answers->initPrice(
+						isset($options['baseprice'][$signup - 1]) ? $options['baseprice'][$signup - 1] : 0,
+						isset($options['basevat'][$signup - 1]) ? $options['basevat'][$signup - 1] : 0
+					);
 				}
 				else
 				{
-					$answers->initPrice($options['baseprice']);
+					$answers->initPrice($options['baseprice'], isset($options['basevat']) ? $options['basevat'] : 0);
 				}
 			}
 
@@ -315,7 +318,7 @@ class RdfCoreSubmission extends JObject
 
 		if (isset($options['baseprice']))
 		{
-			$answers->initPrice($options['baseprice']);
+			$answers->initPrice($options['baseprice'], isset($options['basevat']) ? $options['basevat'] : 0);
 		}
 
 		if (isset($options['currency']))
@@ -604,6 +607,13 @@ class RdfCoreSubmission extends JObject
 					{
 						$htmlmsg .= '<tr><td>' . JText::_('COM_REDFORM_TOTAL_PRICE') . '</td><td>';
 						$htmlmsg .= $p;
+						$htmlmsg .= '</td></tr>' . "\n";
+					}
+
+					if ($v = $answers->getVat())
+					{
+						$htmlmsg .= '<tr><td>' . JText::_('COM_REDFORM_VAT') . '</td><td>';
+						$htmlmsg .= $v;
 						$htmlmsg .= '</td></tr>' . "\n";
 					}
 

@@ -68,6 +68,8 @@ class RedformTableSubmitter extends RTable
 
 	public $price = null;
 
+	public $vat = null;
+
 	public $currency = null;
 
 	/**

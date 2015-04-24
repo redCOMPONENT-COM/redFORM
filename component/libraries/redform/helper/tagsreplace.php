@@ -176,6 +176,26 @@ class RdfHelperTagsreplace
 	 */
 	private function getTagTotalprice()
 	{
+		return RdfHelper::formatPrice($this->answers->getPrice() + $this->answers->getVat(), $this->answers->getCurrency());
+	}
+
+	/**
+	 * replace [totalvat] tag
+	 *
+	 * @return string
+	 */
+	private function getTagTotalvat()
+	{
+		return RdfHelper::formatPrice($this->answers->getVat(), $this->answers->getCurrency());
+	}
+
+	/**
+	 * replace [totalpricevatexcluded] tag
+	 *
+	 * @return string
+	 */
+	private function getTagTotalpricevatexcluded()
+	{
 		return RdfHelper::formatPrice($this->answers->getPrice(), $this->answers->getCurrency());
 	}
 

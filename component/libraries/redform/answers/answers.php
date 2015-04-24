@@ -36,6 +36,8 @@ class RdfAnswers
 
 	private $basePrice = 0;
 
+	private $baseVat = 0;
+
 	private $isnew = true;
 
 	private $sid = 0;
@@ -294,13 +296,15 @@ class RdfAnswers
 	/**
 	 * Set an initial price, before fields prices
 	 *
-	 * @param   float  $initial  initial price
+	 * @param   float  $price  initial price
+	 * @param   float  $vat    initial vat
 	 *
 	 * @return void
 	 */
-	public function initPrice($initial)
+	public function initPrice($price, $vat = 0)
 	{
-		$this->basePrice = $initial;
+		$this->basePrice = $price;
+		$this->baseVat = $vat;
 	}
 
 	/**
@@ -311,6 +315,23 @@ class RdfAnswers
 	public function getPrice()
 	{
 		return $this->getSubmissionPrice();
+	}
+
+	/**
+	 * Return total vat
+	 *
+	 * @return float
+	 */
+	public function getVat()
+	{
+		$vat = $this->baseVat;
+
+		foreach ($this->fields as $field)
+		{
+			$vat += $field->getVat();
+		}
+
+		return $vat;
 	}
 
 	/**
@@ -480,7 +501,7 @@ class RdfAnswers
 			$this->sid = $this->updateSubmitter();
 		}
 
-		$this->setPrice();
+		$this->updateSubmitterPrice();
 
 		return $this->sid;
 	}
@@ -701,7 +722,7 @@ class RdfAnswers
 	 *
 	 * @return bool|mixed
 	 */
-	protected function setPrice()
+	protected function updateSubmitterPrice()
 	{
 		if (!$this->sid)
 		{
@@ -711,10 +732,12 @@ class RdfAnswers
 		$params = JComponentHelper::getParams('com_redform');
 
 		$price = $this->getSubmissionPrice();
+		$vat = $this->getVat();
 
 		if (!$params->get('allow_negative_total', 1))
 		{
 			$price = max(array(0, $price));
+			$vat = max(array(0, $vat));
 		}
 
 		$db = JFactory::getDbo();
@@ -722,6 +745,7 @@ class RdfAnswers
 
 		$query->update('#__rwf_submitters');
 		$query->set('price = ' . $db->quote($price));
+		$query->set('vat = ' . $db->quote($vat));
 		$query->set('currency = ' . $db->quote($this->currency));
 		$query->where('id = ' . $db->Quote($this->sid));
 		$db->setQuery($query);

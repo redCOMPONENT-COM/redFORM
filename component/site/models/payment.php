@@ -131,18 +131,18 @@ class RedFormModelPayment extends JModelLegacy
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('price')
+		$query->select('price, vat')
 			->from('#__rwf_submitters')
 			->where('submit_key = ' . $db->quote($this->submitKey));
 
 		$db->setQuery($query);
-		$res = $db->loadColumn();
+		$res = $db->loadObjectList();
 
 		$total = 0.0;
 
 		foreach ($res as $p)
 		{
-			$total += $p;
+			$total += $p->price + $p->vat;
 		}
 
 		return $total;
