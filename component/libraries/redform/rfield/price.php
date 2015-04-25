@@ -75,6 +75,11 @@ class RdfRfieldPrice extends RdfRfield
 			$properties['readonly'] = 'readonly';
 		}
 
+		if (is_numeric($this->getParam('vat')))
+		{
+			$properties['vat'] = $this->getParam('vat');
+		}
+
 		if ($this->load()->validate)
 		{
 			if ($properties['class'])

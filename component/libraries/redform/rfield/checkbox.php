@@ -138,6 +138,11 @@ class RdfRfieldCheckbox extends RdfRfield
 		if ($option->price)
 		{
 			$properties['price'] = $option->price;
+
+			if (is_numeric($this->getParam('vat')))
+			{
+				$properties['vat'] = $this->getParam('vat');
+			}
 		}
 
 		if ($this->load()->readonly && !$app->isAdmin())

@@ -189,6 +189,11 @@ class RdfRfieldSelect extends RdfRfield
 		if ($option->price)
 		{
 			$properties['price'] = $option->price;
+
+			if (is_numeric($this->getParam('vat')))
+			{
+				$properties['vat'] = $this->getParam('vat');
+			}
 		}
 
 		$value = $this->getValue();
