@@ -150,8 +150,6 @@ class RedformModelSubmitters extends RModelList
 	{
 		$form_id = $this->getState('filter.form_id');
 
-		$subPayment = "SELECT MAX(id) as id, submit_key FROM #__rwf_payment GROUP BY submit_key";
-
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
@@ -381,6 +379,13 @@ class RedformModelSubmitters extends RModelList
 		return $items;
 	}
 
+	/**
+	 * Build payment requests array from table
+	 *
+	 * @param   array  $results  payment request + payments
+	 *
+	 * @return array
+	 */
 	private function buildPaymentrequests($results)
 	{
 		$requests = array();
@@ -412,6 +417,14 @@ class RedformModelSubmitters extends RModelList
 		return $requests;
 	}
 
+	/**
+	 * Add payment to payment requests
+	 *
+	 * @param   array  $paymentrequests  payment requests
+	 * @param   array  $results          results from query
+	 *
+	 * @return mixed
+	 */
 	private function addPaymentrequestsPayments($paymentrequests, $results)
 	{
 		foreach ($results as $result)
