@@ -102,9 +102,21 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   KEY `field_id` (`field_id`)
 ) COMMENT='Stores fields options';
 
-CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
+CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `submit_key` varchar(255) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `price` double NULL DEFAULT NULL,
+  `vat` double NULL DEFAULT NULL,
+  `currency` varchar(3) DEFAULT NULL,
+  `paid` tinyint(2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `submit_key` (`submit_key`)
+) COMMENT='submissions payment requests';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payment_request_id` int(11) NOT NULL,
   `date` datetime DEFAULT NULL,
   `gateway` varchar(100) NOT NULL,
   `status` varchar(100) NOT NULL,
