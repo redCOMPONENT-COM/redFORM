@@ -12,15 +12,13 @@ defined('_JEXEC') or die('Restricted access');
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
-include_once 'vendor/autoload.php';
-
 /**
- * Class plgRedform_captchaRecaptcha
+ * Class plgRedform_captchaHiddencaptcha
  *
  * @package  Redform.plugins
  * @since    2.5
  */
-class PlgRedform_captchaRecaptcha extends JPlugin
+class plgRedform_captchaHiddencaptcha extends JPlugin
 {
 	/**
 	 * Constructor
@@ -45,10 +43,15 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	 */
 	public function onGetCaptchaField(&$text)
 	{
-		JFactory::getDocument()->addScript('https://www.google.com/recaptcha/api.js', null, true, true);
-
-		$publickey = $this->params->get('public_key');
-		$text = '<div class="g-recaptcha" data-sitekey="' . $publickey . '"></div>';
+		$text = '<input type="text" id="url" name="url" value="" />'
+			. '<script type="text/javascript">'
+			. 'document.getElementById("url").style.display = "none";'
+			. 'for (var i=0;i<document.getElementsByTagName("label").length;i++) {'
+			. 'if (document.getElementsByTagName("label")[i].firstChild.data == "Captcha Check") {'
+			. 'document.getElementsByTagName("label")[i].firstChild.data = ""'
+			. '}'
+			. '}'
+			. '</script>';
 
 		return true;
 	}
@@ -62,14 +65,9 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	 */
 	public function onCheckCaptcha(&$result)
 	{
-		require_once 'vendor/autoload.php';
-		$privatekey = $this->params->get('private_key');
-		$gRecaptchaResponse = JFactory::getApplication()->input->get('g-recaptcha-response');
+		$posted = JFactory::getApplication()->input->getString('url', -1, 'post');
 
-		$recaptcha = new \ReCaptcha\ReCaptcha($privatekey);
-		$resp = $recaptcha->verify($gRecaptchaResponse, $_SERVER["REMOTE_ADDR"]);
-
-		$result = $resp->isSuccess();
+		$result = $posted == "";
 
 		return true;
 	}
