@@ -86,21 +86,14 @@ class RdfCoreSubmission extends JObject
 			$data = $formData;
 		}
 
-		if (!isset($data[$token]))
-		{
-			$this->setError('Form integrity check failed');
-
-			return false;
-		}
-
-		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
-
 		if (!isset($data['submit_key']) || !$data['submit_key'])
 		{
+			$isNew = true;
 			$submit_key = uniqid();
 		}
 		else
 		{
+			$isNew = false;
 			$submit_key = $data['submit_key'];
 		}
 
@@ -222,6 +215,15 @@ class RdfCoreSubmission extends JObject
 		$app->setUserState('formdata' . $data['form_id'], $sessiondata);
 
 		// Captcha verification
+		if (!isset($data[$token]))
+		{
+			$this->setError('Form integrity check failed');
+
+			return false;
+		}
+
+		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
+
 		if ($check_captcha)
 		{
 			JPluginHelper::importPlugin('redform_captcha');
@@ -275,6 +277,9 @@ class RdfCoreSubmission extends JObject
 				$this->updateMailingList($answers);
 			}
 		}
+
+		// Update payment request attached to submissions
+
 
 		// Send email to maintainers
 		$this->notifymaintainer($allanswers, $answers->isNew());

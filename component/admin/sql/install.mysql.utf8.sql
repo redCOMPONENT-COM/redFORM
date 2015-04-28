@@ -104,15 +104,56 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `submit_key` varchar(255) NOT NULL,
+  `sid` int(11) NOT NULL,
   `created` datetime DEFAULT NULL,
-  `price` double NULL DEFAULT NULL,
+  `total` double NULL DEFAULT NULL,
   `vat` double NULL DEFAULT NULL,
   `currency` varchar(3) DEFAULT NULL,
   `paid` tinyint(2) NOT NULL,
+  `note` text NULL,
   PRIMARY KEY (`id`),
-  KEY `submit_key` (`submit_key`)
+  KEY `sid` (`sid`)
 ) COMMENT='submissions payment requests';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_payment_request_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payment_request_id` int(11) NOT NULL,
+  `sku` varchar(255),
+  `label` varchar(255),
+  `quantity` int(11) NOT NULL DEFAULT '1',
+  `price` double NULL DEFAULT NULL,
+  `vat` double NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `prid` (`prid`),
+  KEY `sku` (`sku`)
+) COMMENT='submissions payment request items';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_cart` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reference` VARCHAR (255) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `total` double NULL DEFAULT NULL,
+  `vat` double NULL DEFAULT NULL,
+  `currency` varchar(3) DEFAULT NULL,
+  `paid` tinyint(2) NOT NULL,
+  `note` text NULL,
+  PRIMARY KEY (`id`),
+  KEY `reference` (`reference`)
+) COMMENT='payment cart';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_cart_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cart_id` int(11) NOT NULL,
+  `payment_request_id` int(11) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `total` double NULL DEFAULT NULL,
+  `vat` double NULL DEFAULT NULL,
+  `currency` varchar(3) DEFAULT NULL,
+  `paid` tinyint(2) NOT NULL,
+  `note` text NULL,
+  PRIMARY KEY (`id`),
+  KEY `sid` (`sid`)
+) COMMENT='payment cart';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

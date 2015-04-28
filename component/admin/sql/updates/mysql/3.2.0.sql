@@ -3,14 +3,15 @@ ALTER TABLE `#__rwf_values` ADD `sku` varchar(255);
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `submit_key` varchar(255) NOT NULL,
+  `sid` int(11) NOT NULL,
   `created` datetime DEFAULT NULL,
-  `price` double NULL DEFAULT NULL,
+  `total` double NULL DEFAULT NULL,
   `vat` double NULL DEFAULT NULL,
   `currency` varchar(3) DEFAULT NULL,
   `paid` tinyint(2) NOT NULL,
+  `note` text NULL,
   PRIMARY KEY (`id`),
-  KEY `submit_key` (`submit_key`)
+  KEY `sid` (`sid`)
 ) COMMENT='submissions payment requests';
 
 ALTER TABLE `#__rwf_payment` ADD payment_request_id` int(11) NOT NULL,
