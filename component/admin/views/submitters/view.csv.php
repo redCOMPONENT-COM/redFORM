@@ -39,6 +39,7 @@ class RedformViewSubmitters extends RViewCsv
 		{
 			$columns['confirmed_date'] = JText::_('COM_REDFORM_confirmed_HEADER');
 			$columns['confirmed_type'] = JText::_('COM_REDFORM_confirmed_type_HEADER');
+			$columns['confirmed_ip'] = JText::_('COM_REDFORM_confirmed_info_HEADER');
 		}
 
 		if ($app->input->get('integration', '') && $params->get('showintegration', false))
