@@ -106,7 +106,7 @@ class RdfCoreModelSubmissionprice extends RModel
 
 		$this->updateSubmissionPriceItems();
 
-		if ($price && !$row->paid)
+		if ($price && !$this->isPaid())
 		{
 			$this->updatePaymentRequest();
 		}
@@ -225,5 +225,26 @@ class RdfCoreModelSubmissionprice extends RModel
 		{
 			throw new RuntimeException('Couldn\'t delete submission price items');
 		}
+	}
+
+	/**
+	 * Check if is paid
+	 *
+	 * @TODO: it might be better to check if the sum of all currently paid payment request matches submission total
+	 *
+	 * @return string
+	 */
+	private function isPaid()
+	{
+		$query = $this->_db->getQuery(true);
+
+		$query->select('pr.id')
+			->from('#__rwf_payment_request AS p')
+			->where('pr.submission_id = ' . $this->answers->sid)
+			->where('pr.paid = 0');
+
+		$this->_db->setQuery($query);
+
+		return $this->_db->loadResult() ? 'false' : 'true';
 	}
 }
