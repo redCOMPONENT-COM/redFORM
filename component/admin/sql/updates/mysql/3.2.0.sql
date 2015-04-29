@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_cart_item` (
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sid` int(11) NOT NULL,
+  `submission_id` int(11) NOT NULL,
   `created` datetime DEFAULT NULL,
   `price` double NULL DEFAULT NULL,
   `vat` double NULL DEFAULT NULL,
@@ -76,10 +76,10 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `paid` tinyint(2) NOT NULL,
   `note` text NULL,
   PRIMARY KEY (`id`),
-  KEY `sid` (`sid`)
+  KEY `submission_id` (`submission_id`)
 ) COMMENT='submissions payment requests';
 
-INSERT INTO `#__rwf_payment_request` (`sid`, `created`, `price`, `vat`, `currency`)
+INSERT INTO `#__rwf_payment_request` (`submission_id`, `created`, `price`, `vat`, `currency`)
 	SELECT `s`.`id`, `s`.`submission_date`, `s`.`price`, 0, `s`.`currency`
 	FROM `#__rwf_submitters` AS s
 	WHERE `s`.`price` > 0;
@@ -93,7 +93,7 @@ INSERT INTO `#__rwf_cart_item` (`cart_id`, `payment_request_id`)
 	SELECT `c`.`id`, `pr`.`id`
 	FROM `#__rwf_cart` AS c
 	INNER JOIN `#__rwf_submitters` AS s ON `s`.`submit_key` = `c`.`reference`
-	INNER JOIN `#__rwf_payment_request` AS pr ON `pr`.`sid` = `s`.`id`;
+	INNER JOIN `#__rwf_payment_request` AS pr ON `pr`.`submission_id` = `s`.`id`;
 
 UPDATE `#__rwf_payment` AS `p`
 	INNER JOIN `#__rwf_cart` AS `c` ON `c`.`reference` = `p`.`submit_key`

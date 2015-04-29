@@ -12,6 +12,8 @@ defined('_JEXEC') or die;
 /**
  * Class RdfCoreModel Submission price
  *
+ * This class deals with the creation of necessary object for submission payment
+ *
  * @package     Redform.Libraries
  * @subpackage  Core.Model
  * @since       3.0
@@ -22,6 +24,13 @@ class RdfCoreModelSubmissionprice extends RModel
 	 * @var RdfAnswers
 	 */
 	protected $answers;
+
+	/**
+	 * Data saved to db
+	 *
+	 * @var object
+	 */
+	protected $submission;
 
 	/**
 	 * Constructor
@@ -78,6 +87,12 @@ class RdfCoreModelSubmissionprice extends RModel
 		$db = $this->_db;
 		$query = $db->getQuery(true);
 
+		$row = RTable::getAdminInstance('submitter', array(), 'com_redform');
+		$row->load($this->answers->sid);
+		$row->price = $price;
+		$row->vat = $vat;
+		$row->currency = $this->answers->currency;
+
 		$query->update('#__rwf_submitters');
 		$query->set('price = ' . $db->quote($price));
 		$query->set('vat = ' . $db->quote($vat));
@@ -85,14 +100,16 @@ class RdfCoreModelSubmissionprice extends RModel
 		$query->where('id = ' . $db->Quote($this->answers->sid));
 		$db->setQuery($query);
 
-		if (!$db->query())
-		{
-			RdfHelperLog::simpleLog($db->getError());
+		$row->store();
 
-			return false;
-		}
+		$this->submission = $row;
 
 		$this->updateSubmissionPriceItems();
+
+		if ($price && !$row->paid)
+		{
+			$this->updatePaymentRequest();
+		}
 
 		return true;
 	}
@@ -151,6 +168,56 @@ class RdfCoreModelSubmissionprice extends RModel
 
 		$query->delete('#__rwf_submission_price_item')
 			->where('submission_id = ' . $this->answers->sid);
+
+		$this->_db->setQuery($query);
+
+		if (!$this->_db->execute())
+		{
+			throw new RuntimeException('Couldn\'t delete submission price items');
+		}
+	}
+
+	/**
+	 * Update Payment Request
+	 *
+	 * @return void
+	 */
+	private function updatePaymentRequest()
+	{
+		$this->deletePreviousPaymentRequests();
+
+		$date = JFactory::getDate();
+		$row = RTable::getAdminInstance('paymentrequest', array(), 'com_redform');
+		$row->submission_id = $this->submission->id;
+		$row->created = $date->toSql();
+		$row->price = $this->submission->price;
+		$row->vat = $this->submission->vat;
+		$row->currency = $this->submission->currency;
+
+		$row->store();
+
+		// Now create payment request items
+		$query = ' INSERT INTO #__rwf_payment_request_item (payment_request_id, sku, label, price, vat) '
+			. ' SELECT ' . $row->id . ', sku, label, price, vat '
+			. ' FROM #__rwf_submission_price_item '
+			. ' WHERE submission_id = ' . $this->answers->sid;
+
+		$this->_db->setQuery($query);
+		$this->_db->execute();
+	}
+
+	/**
+	 * delete Previous Payment Requests
+	 *
+	 * @return void
+	 */
+	private function deletePreviousPaymentRequests()
+	{
+		$query = $this->_db->getQuery(true);
+
+		$query->delete('#__rwf_payment_request')
+			->where('submission_id = ' . $this->answers->sid)
+			->where('paid = 0');
 
 		$this->_db->setQuery($query);
 
