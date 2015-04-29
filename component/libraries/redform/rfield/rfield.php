@@ -407,6 +407,16 @@ abstract class RdfRfield extends JObject
 	}
 
 	/**
+	 * SKU associated to price
+	 *
+	 * @return string
+	 */
+	public function getSku()
+	{
+		return '';
+	}
+
+	/**
 	 * Return input properties array
 	 *
 	 * @return array
@@ -590,7 +600,7 @@ abstract class RdfRfield extends JObject
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('id, value, label, field_id, price');
+			$query->select('id, value, label, field_id, price, sku');
 			$query->from('#__rwf_values');
 			$query->where('published = 1');
 			$query->where('field_id = ' . $this->load()->field_id);

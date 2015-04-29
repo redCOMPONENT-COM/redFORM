@@ -99,6 +99,31 @@ class RdfRfieldSelect extends RdfRfield
 	}
 
 	/**
+	 * SKU associated to price
+	 *
+	 * @return string
+	 */
+	public function getSku()
+	{
+		$sku = array();
+
+		if (!$this->value)
+		{
+			return '';
+		}
+
+		foreach ($this->getOptions() as $option)
+		{
+			if (in_array($option->value, $this->value))
+			{
+				$sku[] = $option->sku;
+			}
+		}
+
+		return implode('-', $sku);
+	}
+
+	/**
 	 * Try to get a default value from integrations
 	 *
 	 * @return void

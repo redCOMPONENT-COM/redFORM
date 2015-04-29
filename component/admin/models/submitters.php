@@ -340,29 +340,29 @@ class RedformModelSubmitters extends RModelList
 			return $items;
 		}
 
-		$keys = array();
-
-		foreach ($items as $i)
-		{
-			$keys[] = $i->submit_key;
-		}
-
-		$keys = array_map(array($this->_db, 'quote'), $keys);
-
-		$query = $this->_db->getQuery(true);
-
-		$query->select('pr.id AS prid, pr.submit_key, pr.price, pr.vat, pr.vat, pr.created')
-			->select('p.id AS payment_id, p.paid, p.status, p.date')
-			->from('#__rwf_payment_request AS pr')
-			->join('LEFT', '#__rwf_payment AS p ON p.payment_request_id = pr.id')
-			->where('pr.submit_key IN (' . implode(', ', array_unique($keys)) . ')')
-			->order('p.id DESC, pr.id DESC');
-
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObjectList();
-
-		$paymentrequests = $this->buildPaymentrequests($res);
-		$paymentrequests = $this->addPaymentrequestsPayments($paymentrequests, $res);
+//		$keys = array();
+//
+//		foreach ($items as $i)
+//		{
+//			$keys[] = $i->submit_key;
+//		}
+//
+//		$keys = array_map(array($this->_db, 'quote'), $keys);
+//
+//		$query = $this->_db->getQuery(true);
+//
+//		$query->select('pr.id AS prid, pr.submit_key, pr.price, pr.vat, pr.vat, pr.created')
+//			->select('p.id AS payment_id, p.paid, p.status, p.date')
+//			->from('#__rwf_payment_request AS pr')
+//			->join('LEFT', '#__rwf_payment AS p ON p.payment_request_id = pr.id')
+//			->where('pr.submit_key IN (' . implode(', ', array_unique($keys)) . ')')
+//			->order('p.id DESC, pr.id DESC');
+//
+//		$this->_db->setQuery($query);
+//		$res = $this->_db->loadObjectList();
+//
+//		$paymentrequests = $this->buildPaymentrequests($res);
+//		$paymentrequests = $this->addPaymentrequestsPayments($paymentrequests, $res);
 
 		foreach ($items as &$i)
 		{

@@ -77,6 +77,9 @@ class RdfAnswers
 
 			case 'fields':
 				return $this->fields;
+
+			case 'currency':
+				return $this->currency;
 		}
 
 		$trace = debug_backtrace();
@@ -729,35 +732,10 @@ class RdfAnswers
 			return false;
 		}
 
-		$params = JComponentHelper::getParams('com_redform');
+		$model = new RdfCoreModelSubmissionprice;
+		$model->setAnswers($this);
 
-		$price = $this->getSubmissionPrice();
-		$vat = $this->getVat();
-
-		if (!$params->get('allow_negative_total', 1))
-		{
-			$price = max(array(0, $price));
-			$vat = max(array(0, $vat));
-		}
-
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->update('#__rwf_submitters');
-		$query->set('price = ' . $db->quote($price));
-		$query->set('vat = ' . $db->quote($vat));
-		$query->set('currency = ' . $db->quote($this->currency));
-		$query->where('id = ' . $db->Quote($this->sid));
-		$db->setQuery($query);
-
-		if (!$res = $db->query())
-		{
-			RdfHelperLog::simpleLog($db->getError());
-
-			return false;
-		}
-
-		return $res;
+		return $model->updatePrice();
 	}
 
 	/**
