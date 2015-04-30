@@ -110,31 +110,4 @@ class PaymentStripe extends RdfPaymentHelper
 
 		return 1;
 	}
-
-	/**
-	 * get price, checking for extra fee
-	 *
-	 * @param   object  $details  details
-	 *
-	 * @return float
-	 */
-	private function getPrice($details)
-	{
-		$basePrice = $details->price + $details->vat;
-
-		if ((float) $this->params->get('extrafee'))
-		{
-			$extraPercentage = (float) $this->params->get('extrafee');
-			$price = $basePrice * (1 + $extraPercentage / 100);
-
-			// Trim to precision
-			$price = round($price, RHelperCurrency::getPrecision($details->currency));
-		}
-		else
-		{
-			$price = $basePrice;
-		}
-
-		return $price;
-	}
 }

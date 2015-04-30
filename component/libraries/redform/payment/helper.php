@@ -197,12 +197,12 @@ abstract class RdfPaymentHelper extends JObject
 	/**
 	 * returns state uri object (notify, cancel, etc...)
 	 *
-	 * @param   string  $state       the state for the url
-	 * @param   string  $submit_key  submit key
+	 * @param   string  $state      the state for the url
+	 * @param   string  $reference  cart reference
 	 *
 	 * @return string
 	 */
-	protected function getUri($state, $submit_key)
+	protected function getUri($state, $reference)
 	{
 		$app = JFactory::getApplication();
 		$lang = $app->input->get('lang');
@@ -210,7 +210,7 @@ abstract class RdfPaymentHelper extends JObject
 		$uri = JURI::getInstance(JURI::root());
 		$uri->setVar('option', 'com_redform');
 		$uri->setVar('gw', $this->gateway);
-		$uri->setVar('reference', $submit_key);
+		$uri->setVar('reference', $reference);
 
 		if (JLanguageMultilang::isEnabled() && $lang)
 		{
@@ -291,5 +291,32 @@ abstract class RdfPaymentHelper extends JObject
 		$dispatcher->trigger('onCurrencyConvert', array($price, $currencyFrom, $currencyTo, &$result));
 
 		return $result;
+	}
+
+	/**
+	 * get price, checking for extra fee
+	 *
+	 * @param   object  $details  details
+	 *
+	 * @return float
+	 */
+	protected function getPrice($details)
+	{
+		$basePrice = $details->price + $details->vat;
+
+		if ((float) $this->params->get('extrafee'))
+		{
+			$extraPercentage = (float) $this->params->get('extrafee');
+			$price = $basePrice * (1 + $extraPercentage / 100);
+
+			// Trim to precision
+			$price = round($basePrice, RHelperCurrency::getPrecision($details->currency));
+		}
+		else
+		{
+			$price = $basePrice;
+		}
+
+		return $price;
 	}
 }
