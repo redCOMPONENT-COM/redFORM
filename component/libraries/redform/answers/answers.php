@@ -331,7 +331,7 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			$vat += $field->getVat();
+			$vat += round($field->getVat(), RHelperCurrency::getPrecision($this->currency));
 		}
 
 		return $vat;
@@ -749,7 +749,7 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			$price += $field->getPrice();
+			$price += round($field->getPrice(), RHelperCurrency::getPrecision($this->currency));
 		}
 
 		return $price;

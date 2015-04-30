@@ -171,7 +171,7 @@ $listDirn = $this->state->get('list.direction');
 									<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&pr=' . $pr->prid), JText::_('COM_REDFORM_history')); ?>
 									<?php if (!$pr->paid): ?>
 										<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID') . '::' . $pr->status; ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
-										<?php echo ' '.JHTML::link(JURI::root().'index.php?option=com_redform&task=payment.select&pr=' . $pr->prid, JText::_('COM_REDFORM_link')); ?>
+										<?php echo ' '.JHTML::link(JURI::root().'index.php?option=com_redform&task=payment.select&key=' . $item->submit_key, JText::_('COM_REDFORM_link')); ?>
 									<?php else: ?>
 										<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID') . '::' . $pr->status; ?>"><i class="icon-ok"></i><?php echo $link; ?></span>
 									<?php endif; ?>

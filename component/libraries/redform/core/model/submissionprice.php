@@ -148,8 +148,8 @@ class RdfCoreModelSubmissionprice extends RModel
 		$row->submission_id = $this->answers->sid;
 		$row->sku = $field->getSku();
 		$row->label = $field->name;
-		$row->price = $price;
-		$row->vat = $field->getVat();
+		$row->price = round($price, RHelperCurrency::getPrecision($this->answers->getCurrency()));
+		$row->vat = round($field->getVat(), RHelperCurrency::getPrecision($this->answers->getCurrency()));
 
 		if (!$row->store())
 		{
@@ -239,12 +239,12 @@ class RdfCoreModelSubmissionprice extends RModel
 		$query = $this->_db->getQuery(true);
 
 		$query->select('pr.id')
-			->from('#__rwf_payment_request AS p')
+			->from('#__rwf_payment_request AS pr')
 			->where('pr.submission_id = ' . $this->answers->sid)
 			->where('pr.paid = 0');
 
 		$this->_db->setQuery($query);
 
-		return $this->_db->loadResult() ? 'false' : 'true';
+		return $this->_db->loadResult() ? false : true;
 	}
 }
