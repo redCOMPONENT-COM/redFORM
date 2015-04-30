@@ -222,6 +222,8 @@ class RedformControllerPayment extends JControllerLegacy
 
 			if (!$alreadypaid)
 			{
+				$model->setPaymentRequestAsPaid();
+
 				// Trigger event for custom handling
 				JPluginHelper::importPlugin('redform');
 				$dispatcher = JDispatcher::getInstance();

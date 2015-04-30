@@ -174,6 +174,26 @@ class RedFormModelPayment extends JModelLegacy
 	}
 
 	/**
+	 * Set payment requests associated to cart as paid
+	 *
+	 * @return void
+	 */
+	public function setPaymentRequestAsPaid()
+	{
+		$cart = $this->getCart();
+
+		$query = $this->_db->getQuery(true);
+
+		$query->update('#__rwf_payment_request AS pr')
+			->join('INNER', '#__rwf_cart_item AS ci on ci.payment_request_id = pr.id')
+			->where('ci.cart_id = ' . $cart->id)
+			->set('pr.paid = 1');
+
+		$this->_db->setQuery($query);
+		$this->_db->execute();
+	}
+
+	/**
 	 * returns form associated to submit_key
 	 *
 	 * @return object
