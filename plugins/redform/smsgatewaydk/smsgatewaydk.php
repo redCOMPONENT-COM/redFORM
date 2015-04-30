@@ -94,7 +94,7 @@ class plgRedformSmsgatewaydk extends JPlugin
 			return;
 		}
 
-		$this->confirmSid($sid);
+		$this->confirmSid($sid, $phoneNumber);
 		$this->sendMessage($phoneNumber, $this->params->get('confirmation'));
 
 		$updatedIds[] = $sid;
@@ -103,11 +103,12 @@ class plgRedformSmsgatewaydk extends JPlugin
 	/**
 	 * Confirm sid
 	 *
-	 * @param   int  $sid  submitter id
+	 * @param   int     $sid          submitter id
+	 * @param   string  $phoneNumber  number used to confirm
 	 *
 	 * @return bool
 	 */
-	private function confirmSid($sid)
+	private function confirmSid($sid, $phoneNumber)
 	{
 		$db = JFactory::getDbo();
 		$date = JFactory::getDate()->toSql();
@@ -117,6 +118,7 @@ class plgRedformSmsgatewaydk extends JPlugin
 		$query->update('#__rwf_submitters')
 			->set('confirmed_date = ' . $db->quote($date))
 			->set('confirmed_type = ' . $db->quote('sms'))
+			->set('confirmed_ip = ' . $db->quote($phoneNumber))
 			->where('id = ' . $db->quote($sid));
 
 		$db->setQuery($query);
