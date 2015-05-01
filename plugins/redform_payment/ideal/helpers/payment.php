@@ -39,7 +39,7 @@ class PaymentIdeal extends  RdfPaymentHelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
-		$posted = JRequest::getVar('partner_id', 0, 'post', 'int');
+		$posted = JFactory::getApplication()->input->get('partner_id', 0, 'post', 'int');
 
 		if ($posted)
 		{
@@ -58,28 +58,13 @@ class PaymentIdeal extends  RdfPaymentHelper
 	 */
 	public function notify()
 	{
-		$mainframe = JFactory::getApplication();
-		$db = JFactory::getDBO();
+		$app = JFactory::getApplication();
 		$paid = 0;
 
-		$submit_key = JRequest::getvar('key');
-		JRequest::setVar('submit_key', $submit_key);
-		RdfHelperLog::simpleLog('IDEAL_NOTIFICATION_RECEIVED' . ' ' . $submit_key);
-		$transaction_id = JRequest::getVar('transaction_id');
-
-		// First check that we didn't already received the payment...
-		$query = ' SELECT id '
-			. ' FROM #__rwf_payment '
-			. ' WHERE submit_key = ' . $db->Quote($submit_key)
-			. '   AND paid = 1 ';
-		$db->setQuery($query);
-		$res = $db->loadResult();
-
-		// Already paid
-		if ($res)
-		{
-			return true;
-		}
+		$reference = $app->input->get('reference');
+		$app->input->set('reference', $reference);
+		RdfHelperLog::simpleLog('IDEAL_NOTIFICATION_RECEIVED' . ' ' . $reference);
+		$transaction_id = $app->input->get('transaction_id');
 
 		$ideal = new iDEAL_Payment($this->params->get('partner_id'));
 		$ideal->setTestmode($this->params->get('testmode'));
@@ -88,33 +73,32 @@ class PaymentIdeal extends  RdfPaymentHelper
 		if (!$res)
 		{
 			RdfHelperLog::simpleLog(
-				JText::_('IDEAL_PAYMENT_ERROR') . ' / ' . $submit_key . ': ' . $ideal->getErrorMessage()
+				JText::_('IDEAL_PAYMENT_ERROR') . ' / ' . $reference . ': ' . $ideal->getErrorMessage()
 				. ' (' . $ideal->getErrorCode() . ')'
 			);
-			JError::raiseWarning(0, $ideal->getErrorMessage());
 
 			return false;
 		}
 
-		$details = $this->_getSubmission($submit_key);
+		$details = $this->getDetails($reference);
 
 		if (!$ideal->getPaidStatus())
 		{
-			RdfHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PAYMENT REFUSED') . ' / ' . $submit_key);
-			$this->writeTransaction($submit_key, $ideal->getInfo(), 'NOTPAID', 0);
+			RdfHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PAYMENT REFUSED') . ' / ' . $reference);
+			$this->writeTransaction($reference, $ideal->getInfo(), 'NOTPAID', 0);
 
 			return false;
 		}
 
-		if ($ideal->getAmount() != round($details->price * 100))
+		if ($ideal->getAmount() != round($this->getPrice($details) * 100))
 		{
-			RdfHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PRICE MISMATCH') . ' / ' . $submit_key);
-			$this->writeTransaction($submit_key, JText::_('IDEAL NOTIFICATION PRICE MISMATCH') . "\n" . $ideal->getInfo(), 'FAILED', 0);
+			RdfHelperLog::simpleLog(JText::_('IDEAL NOTIFICATION PRICE MISMATCH') . ' / ' . $reference);
+			$this->writeTransaction($reference, JText::_('IDEAL NOTIFICATION PRICE MISMATCH') . "\n" . $ideal->getInfo(), 'FAILED', 0);
 
 			return false;
 		}
 
-		$this->writeTransaction($submit_key, $ideal->getInfo(), 'SUCCESS', 1);
+		$this->writeTransaction($reference, $ideal->getInfo(), 'SUCCESS', 1);
 
 		return $paid;
 	}
@@ -132,8 +116,8 @@ class PaymentIdeal extends  RdfPaymentHelper
 	{
 		$document = JFactory::getDocument();
 
-		$details = $this->_getSubmission($request->key);
-		$submit_key = $request->key;
+		$details = $this->getDetails($request->key);
+		$reference = $request->key;
 		$currency = RHelperCurrency::getIsoNumber($details->currency);
 
 		$ideal = new iDEAL_Payment($this->params->get('partner_id'));
@@ -153,17 +137,17 @@ class PaymentIdeal extends  RdfPaymentHelper
 				<legend><?php echo JText::_('iDeal Payment Gateway'); ?></legend>
 				<p><?php echo $request->title; ?></p>
 
-				<p><?php echo $details->price; ?> Euros</p>
+				<p><?php echo $details->getPrice(); ?> Euros</p>
 				<label for="bank_id"><?php echo JText::_('IDEAL_SELECT_BANK'); ?></label>
 				<?php echo JHTML::_('select.genericlist', $options, 'bank_id') ?>
 			</fieldset>
 
 			<?php echo JHTML::_('form.token'); ?>
 			<input type="hidden" name="partner_id" value="<?php echo $this->params->get('partner_id'); ?>">
-			<input type="hidden" name="amount" value="<?php echo round($details->price * 100); ?>">
+			<input type="hidden" name="amount" value="<?php echo round($this->getPrice($details) * 100); ?>">
 			<input type="hidden" name="description" value="<?php echo $request->title; ?>">
 			<input type="hidden" name="task" value="payment.process">
-			<input type="hidden" name="key" value="<?php echo $request->key; ?>">
+			<input type="hidden" name="reference" value="<?php echo $request->key; ?>">
 			<input type="hidden" name="gw" value="ideal">
 
 			<input type="submit" name="submit" value="<?php echo JText::_('IDEAL_PAY_VIA_IDEAL'); ?>"/>
@@ -189,8 +173,8 @@ class PaymentIdeal extends  RdfPaymentHelper
 		// Check for request forgeries
 		JRequest::checkToken() or die('Invalid Token');
 
-		$details = $this->_getSubmission($request->key);
-		$submit_key = $request->key;
+		$details = $this->getDetails($request->key);
+		$reference = $request->key;
 
 		$ideal = new iDEAL_Payment($this->params->get('partner_id'));
 		$ideal->setTestmode($this->params->get('testmode'));
@@ -200,24 +184,23 @@ class PaymentIdeal extends  RdfPaymentHelper
 
 		$res = $ideal->createPayment(
 			$bank,
-			round($details->price * 100),
+			round($this->getPrice($details) * 100),
 			$request->title,
-			$this->getUrl('notify', $submit_key),
-			$this->getUrl('notify', $submit_key)
+			$this->getUrl('notify', $reference),
+			$this->getUrl('notify', $reference)
 		);
 
 		if (!$res)
 		{
 			RdfHelperLog::simpleLog(
-				'IDEAL_PAYMENT_ERROR' . ' for ' . $submit_key . ': ' . $ideal->getErrorMessage()
+				'IDEAL_PAYMENT_ERROR' . ' for ' . $reference . ': ' . $ideal->getErrorMessage()
 				. ' (' . $ideal->getErrorCode() . ')'
 			);
-			JError::raiseWarning(0, $ideal->getErrorMessage());
 
 			return false;
 		}
 
-		$this->writeTransaction($submit_key, $ideal->getInfo(), 'prepared', 0);
+		$this->writeTransaction($reference, $ideal->getInfo(), 'prepared', 0);
 		$app->redirect($ideal->getBankURL());
 
 		return true;

@@ -15,6 +15,8 @@ JHtml::_('rjquery.chosen', 'select');
 $action = JRoute::_('index.php?option=com_redform&view=payment');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
+
+$payment_request_id = $this->state->get('payment_request');
 ?>
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 	<?php if (empty($this->items)) : ?>
@@ -62,7 +64,7 @@ $listDirn = $this->state->get('list.direction');
 							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 						</td>
 						<td>
-							<a href="<?php echo JRoute::_('index.php?option=com_redform&task=payment.edit&id=' . $item->id); ?>">
+							<a href="<?php echo JRoute::_('index.php?option=com_redform&task=payment.edit&id=' . $item->id . '&pr=' . $payment_request_id); ?>">
 								<?php echo $this->escape($item->date); ?>
 							</a>
 						</td>
@@ -89,7 +91,7 @@ $listDirn = $this->state->get('list.direction');
 	<div>
 		<input type="hidden" name="task" value="">
 		<input type="hidden" name="boxchecked" value="0">
-		<input type="hidden" name="submit_key" value="<?php echo $this->state->get('submit_key'); ?>" />
+		<input type="hidden" name="pr" value="<?php echo $payment_request_id; ?>" />
 		<input type="hidden" name="return" value="<?php echo base64_encode('index.php?option=com_redform&view=submitters'); ?>" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>

@@ -86,21 +86,14 @@ class RdfCoreSubmission extends JObject
 			$data = $formData;
 		}
 
-		if (!isset($data[$token]))
-		{
-			$this->setError('Form integrity check failed');
-
-			return false;
-		}
-
-		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
-
 		if (!isset($data['submit_key']) || !$data['submit_key'])
 		{
+			$isNew = true;
 			$submit_key = uniqid();
 		}
 		else
 		{
+			$isNew = false;
 			$submit_key = $data['submit_key'];
 		}
 
@@ -147,11 +140,14 @@ class RdfCoreSubmission extends JObject
 			{
 				if (is_array($options['baseprice']))
 				{
-					$answers->initPrice(isset($options['baseprice'][$signup - 1]) ? $options['baseprice'][$signup - 1] : 0);
+					$answers->initPrice(
+						isset($options['baseprice'][$signup - 1]) ? $options['baseprice'][$signup - 1] : 0,
+						isset($options['basevat'][$signup - 1]) ? $options['basevat'][$signup - 1] : 0
+					);
 				}
 				else
 				{
-					$answers->initPrice($options['baseprice']);
+					$answers->initPrice($options['baseprice'], isset($options['basevat']) ? $options['basevat'] : 0);
 				}
 			}
 
@@ -201,9 +197,16 @@ class RdfCoreSubmission extends JObject
 				}
 			}
 
+			if (isset($options['extrafields'][$signup]))
+			{
+				foreach ($options['extrafields'][$signup] as $field)
+				{
+					$answers->addField($field);
+				}
+			}
+
 			$allanswers[] = $answers;
 		}
-
 		/* End multi-user signup */
 
 		$this->answers = $allanswers;
@@ -219,6 +222,15 @@ class RdfCoreSubmission extends JObject
 		$app->setUserState('formdata' . $data['form_id'], $sessiondata);
 
 		// Captcha verification
+		if (!isset($data[$token]))
+		{
+			$this->setError('Form integrity check failed');
+
+			return false;
+		}
+
+		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
+
 		if ($check_captcha)
 		{
 			JPluginHelper::importPlugin('redform_captcha');
@@ -273,6 +285,9 @@ class RdfCoreSubmission extends JObject
 			}
 		}
 
+		// Update payment request attached to submissions
+
+
 		// Send email to maintainers
 		$this->notifymaintainer($allanswers, $answers->isNew());
 
@@ -315,7 +330,7 @@ class RdfCoreSubmission extends JObject
 
 		if (isset($options['baseprice']))
 		{
-			$answers->initPrice($options['baseprice']);
+			$answers->initPrice($options['baseprice'], isset($options['basevat']) ? $options['basevat'] : 0);
 		}
 
 		if (isset($options['currency']))
@@ -604,6 +619,13 @@ class RdfCoreSubmission extends JObject
 					{
 						$htmlmsg .= '<tr><td>' . JText::_('COM_REDFORM_TOTAL_PRICE') . '</td><td>';
 						$htmlmsg .= $p;
+						$htmlmsg .= '</td></tr>' . "\n";
+					}
+
+					if ($v = $answers->getVat())
+					{
+						$htmlmsg .= '<tr><td>' . JText::_('COM_REDFORM_VAT') . '</td><td>';
+						$htmlmsg .= $v;
 						$htmlmsg .= '</td></tr>' . "\n";
 					}
 

@@ -75,7 +75,7 @@ class RedformModelPayments extends RModelList
 		parent::populateState('date', 'desc');
 
 		$app = JFactory::getApplication();
-		$this->setState('submit_key', $app->input->getCmd('submit_key', ''));
+		$this->setState('payment_request', $app->input->getInt('pr', 0));
 	}
 
 	/**
@@ -88,10 +88,11 @@ class RedformModelPayments extends RModelList
 		$db	= $this->getDbo();
 
 		$query = $db->getQuery(true)
-			->select('*')
-			->from('#__rwf_payment');
+			->select('p.*')
+			->from('#__rwf_payment AS p')
+			->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = p.cart_id');
 
-		$query->where('submit_key = ' . $db->quote($this->getState('submit_key', '')));
+		$query->where('ci.payment_request_id = ' . $db->quote($this->getState('payment_request')));
 
 		// Ordering
 		$orderList = $this->getState('list.ordering');

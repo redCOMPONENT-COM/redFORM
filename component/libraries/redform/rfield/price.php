@@ -33,7 +33,8 @@ class RdfRfieldPrice extends RdfRfield
 
 		if (count($options))
 		{
-			$price = reset($options)->value;
+			$option = reset($options);
+			$price = $option->value;
 		}
 		else
 		{
@@ -72,6 +73,11 @@ class RdfRfieldPrice extends RdfRfield
 		if ($this->load()->readonly && !$app->isAdmin())
 		{
 			$properties['readonly'] = 'readonly';
+		}
+
+		if (is_numeric($this->getParam('vat')))
+		{
+			$properties['vat'] = $this->getParam('vat');
 		}
 
 		if ($this->load()->validate)

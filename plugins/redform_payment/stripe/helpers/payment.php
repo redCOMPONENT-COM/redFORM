@@ -37,15 +37,15 @@ class PaymentStripe extends RdfPaymentHelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
-		$details = $this->_getSubmission($request->key);
-		$submit_key = $request->key;
+		$details = $this->getDetails($request->key);
+		$reference = $request->key;
 
 		$price = $this->getPrice($details);
 
 		echo RdfHelperLayout::render(
 			'notify',
 			array(
-				'action' => $this->getUrl('notify', $submit_key),
+				'action' => $this->getUrl('notify', $reference),
 				'details' => $details,
 				'request' => $request,
 				'price' => $price,
@@ -66,11 +66,11 @@ class PaymentStripe extends RdfPaymentHelper
 	{
 		$app = JFactory::getApplication();
 
-		$submit_key = $app->input->get('submitKey');
-		$app->input->set('submit_key', $submit_key);
-		RdfHelperLog::simpleLog('STRIPE NOTIFICATION RECEIVED' . ' for ' . $submit_key);
+		$reference = $app->input->get('reference');
+		$app->input->set('reference', $reference);
+		RdfHelperLog::simpleLog('STRIPE NOTIFICATION RECEIVED' . ' for ' . $reference);
 
-		$details = $this->_getSubmission($submit_key);
+		$details = $this->getDetails($reference);
 		$price = $this->getPrice($details);
 
 		\Stripe\Stripe::setApiKey($this->params->get('secretKey'));
@@ -78,19 +78,20 @@ class PaymentStripe extends RdfPaymentHelper
 
 		try
 		{
-			$charge = \Stripe\Charge::create(array(
+			$charge = \Stripe\Charge::create(
+				array(
 					"amount" => round($price * 100),
 					"currency" => $details->currency,
 					"source" => $token,
-					"description" => $submit_key)
+					"description" => $reference)
 			);
 		}
 		catch (\Stripe\Error\Card $e)
 		{
 			// The card has been declined
-			RdfHelperLog::simpleLog('STRIPE NOTIFICATION PAYMENT REFUSED' . ' for ' . $submit_key);
+			RdfHelperLog::simpleLog('STRIPE NOTIFICATION PAYMENT REFUSED' . ' for ' . $reference);
 			$this->writeTransaction(
-				$submit_key, $e->getMessage(),
+				$reference, $e->getMessage(),
 				$this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0
 			);
 
@@ -105,33 +106,8 @@ class PaymentStripe extends RdfPaymentHelper
 		$resp[] = 'amount: ' . $charge->amount;
 		$resp[] = 'currency: ' . $charge->currency;
 
-		$this->writeTransaction($submit_key, implode("\n", $resp), 'SUCCESS', 1);
+		$this->writeTransaction($reference, implode("\n", $resp), 'SUCCESS', 1);
 
 		return 1;
-	}
-
-	/**
-	 * get price, checking for extra fee
-	 *
-	 * @param   object  $details  details
-	 *
-	 * @return float
-	 */
-	private function getPrice($details)
-	{
-		if ((float) $this->params->get('extrafee'))
-		{
-			$extraPercentage = (float) $this->params->get('extrafee');
-			$price = $details->price * (1 + $extraPercentage / 100);
-
-			// Trim to precision
-			$price = round($price, RHelperCurrency::getPrecision($details->currency));
-		}
-		else
-		{
-			$price = $details->price;
-		}
-
-		return $price;
 	}
 }

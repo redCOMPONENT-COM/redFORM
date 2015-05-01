@@ -121,4 +121,70 @@ class RedformModelForms extends RModelList
 
 		return $query;
 	}
+
+	/**
+	 * Method to get an array of data items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+		// Get a storage key.
+		$store = $this->getStoreId();
+
+		$items = $this->addSubmittersStat($items);
+
+		// Add the items to the internal cache.
+		$this->cache[$store] = $items;
+
+		return $items;
+	}
+
+	/**
+	 * Method to add number of submitters to forms
+	 *
+	 * @param   array  $items  items
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	private function addSubmittersStat($items)
+	{
+		if (!$items)
+		{
+			return $items;
+		}
+
+		$ids = array();
+
+		foreach ($items as $i)
+		{
+			$ids[] = $i->id;
+		}
+
+		$query = $this->_db->getQuery(true);
+
+		$query->select('form_id, COUNT(id) AS total')
+			->from('#__rwf_submitters')
+			->where('form_id IN (' . implode(',', $ids) . ')')
+			->group('form_id');
+
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadObjectList('form_id');
+
+		foreach ($items as &$i)
+		{
+			if (isset($res[$i->id]))
+			{
+				$i->submitters = $res[$i->id]->total;
+			}
+			else
+			{
+				$i->submitters = 0;
+			}
+		}
+
+		return $items;
+	}
 }

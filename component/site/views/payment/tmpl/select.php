@@ -32,6 +32,6 @@ defined('_JEXEC') or die('Restricted access');
 </fieldset>
 
 <input type="hidden" name="task" value="payment.process"/>
-<input type="hidden" name="key" value="<?php echo $this->key; ?>"/>
+<input type="hidden" name="reference" value="<?php echo $this->reference; ?>"/>
 <input type="hidden" name="source" value="<?php echo $this->source; ?>"/>
 </form>

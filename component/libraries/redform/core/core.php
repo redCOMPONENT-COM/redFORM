@@ -406,16 +406,6 @@ class RdfCore extends JObject
 			$html .= '</div>';
 		}
 
-		// TODO: redcompetition should use redform core directly
-		/* Add any redCOMPETITION values */
-		$redcompetition = JRequest::getVar('redcompetition', false);
-
-		if ($redcompetition)
-		{
-			$html .= '<input type="hidden" name="competition_task" value="' . $redcompetition->task . '" />';
-			$html .= '<input type="hidden" name="competition_id" value="' . $redcompetition->competitionid . '" />';
-		}
-
 		if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
 		{
 			$html .= $this->getGatewaySelect($currency);
@@ -937,15 +927,16 @@ class RdfCore extends JObject
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('p.paid, p.status');
-		$query->from('#__rwf_payment AS p');
-		$query->where('p.submit_key = ' . $db->quote($submit_key));
-		$query->order('p.id DESC');
+		$query->select('pr.id');
+		$query->from('#__rwf_payment_request AS pr');
+		$query->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id');
+		$query->where('s.submit_key = ' . $db->quote($submit_key));
+		$query->where('pr.paid = 0');
 
 		$db->setQuery($query);
-		$res = $db->loadObject();
+		$res = $db->loadResult();
 
-		return $res->paid;
+		return $res ? false : true;
 	}
 
 	/**
@@ -1090,5 +1081,45 @@ class RdfCore extends JObject
 		$table = JTable::getInstance('Submitter', 'RedformTable');
 
 		$table->delete($pk, true);
+	}
+
+	/**
+	 * Get payments requests details indexed by sids
+	 *
+	 * @param   array  $sids  submission ids
+	 *
+	 * @return array
+	 */
+	public static function getSubmissionsPaymentRequests($sids)
+	{
+		if (!count($sids))
+		{
+			return false;
+		}
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('*')
+			->from('#__rwf_payment_request')
+			->where('submission_id IN (' . implode(', ', $sids) . ')')
+			->order('id DESC');
+
+		$db->setQuery($query);
+		$paymentRequests = $db->loadObjectList();
+
+		$res = array();
+
+		foreach ($paymentRequests as $paymentRequest)
+		{
+			if (!isset($res[$paymentRequest->submission_id]))
+			{
+				$res[$paymentRequest->submission_id] = array();
+			}
+
+			$res[$paymentRequest->submission_id][] = $paymentRequest;
+		}
+
+		return $res;
 	}
 }

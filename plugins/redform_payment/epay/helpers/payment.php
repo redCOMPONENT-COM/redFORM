@@ -37,8 +37,8 @@ class PaymentEpay extends RdfPaymentHelper
 		$document = JFactory::getDocument();
 		$document->addScript("https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js");
 
-		$details = $this->_getSubmission($request->key);
-		$submit_key = $request->key;
+		$details = $this->getDetails($request->key);
+		$reference = $request->key;
 
 		$currency = RHelperCurrency::getIsoNumber($details->currency);
 
@@ -54,9 +54,9 @@ class PaymentEpay extends RdfPaymentHelper
 			'lockpaymentcollection' => $this->params->get('lockpaymentcollection'),
 			'language' => $this->params->get('language'),
 			'instantcapture' => $this->params->get('instantcapture'),
-			'callbackurl' => $this->getUrl('notify', $submit_key),
-			'accepturl' => $this->getUrl('notify', $submit_key),
-			'cancelurl' => $this->getUrl('cancel', $submit_key),
+			'callbackurl' => $this->getUrl('notify', $reference),
+			'accepturl' => $this->getUrl('notify', $reference),
+			'cancelurl' => $this->getUrl('cancel', $reference),
 			'ordertext' => $request->title, // Shown in the payment window + receipt
 			'group' => $this->params->get('group'),
 			'description' => $request->adminDesc, // This description can be seen in the ePay administration
@@ -92,11 +92,11 @@ class PaymentEpay extends RdfPaymentHelper
 			<?php endif; ?>
 			paymentwindow.on('close', function(){
 				alert("<?php echo JText::_('PLG_REDFORM_PAYMENT_EPAY_PAYMENT_WAS_CANCELLED'); ?>");
-				window.location = "<?php echo $this->getUrl('cancel', $submit_key); ?>";
+				window.location = "<?php echo $this->getUrl('cancel', $reference); ?>";
 			});
 			paymentwindow.on('declined', function(){
 				alert("<?php echo JText::_('PLG_REDFORM_PAYMENT_EPAY_PAYMENT_WAS_DECLINED'); ?>");
-				window.location = "<?php echo $this->getUrl('decline', $submit_key); ?>";
+				window.location = "<?php echo $this->getUrl('decline', $reference); ?>";
 			});
 			paymentwindow.open();
 		</script>
@@ -112,20 +112,21 @@ class PaymentEpay extends RdfPaymentHelper
 	 */
 	public function notify()
 	{
-		$mainframe = JFactory::getApplication();
+		$app = JFactory::getApplication();
 		$db = JFactory::getDBO();
 		$paid = 0;
 
-		$submit_key = JRequest::getvar('key');
-		JRequest::setVar('submit_key', $submit_key);
-		RdfHelperLog::simpleLog('EPAY NOTIFICATION RECEIVED' . ' for ' . $submit_key);
+		$reference = $app->input->get('reference');
+		$app->input->set('reference', $reference);
+		RdfHelperLog::simpleLog('EPAY NOTIFICATION RECEIVED' . ' for ' . $reference);
 
-		if (JRequest::getVar('accept', 0) == 0)
+		if ($app->input->get('accept', 0) == 0)
 		{
 			// Payment was refused
-			RdfHelperLog::simpleLog('EPAY NOTIFICATION PAYMENT REFUSED' . ' for ' . $submit_key);
+			RdfHelperLog::simpleLog('EPAY NOTIFICATION PAYMENT REFUSED' . ' for ' . $reference);
+
 			$this->writeTransaction(
-				$submit_key, JRequest::getVar('error') . ': ' . JRequest::getVar('errortext'),
+				$reference, $app->input->get('error') . ': ' . $app->input->get('errortext'),
 				$this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0
 			);
 
@@ -134,23 +135,23 @@ class PaymentEpay extends RdfPaymentHelper
 
 		// It was successull, get the details
 		$resp = array();
-		$resp[] = 'tid:' . JRequest::getVar('txnid');
-		$resp[] = 'orderid:' . JRequest::getVar('orderid');
-		$resp[] = 'amount:' . JRequest::getVar('amount');
-		$resp[] = 'currency:' . JRequest::getVar('currency');
-		$resp[] = 'date:' . JRequest::getVar('date');
-		$resp[] = 'time:' . JRequest::getVar('time');
+		$resp[] = 'tid:' . $app->input->get('txnid');
+		$resp[] = 'orderid:' . $app->input->get('orderid');
+		$resp[] = 'amount:' . $app->input->get('amount');
+		$resp[] = 'currency:' . $app->input->get('currency');
+		$resp[] = 'date:' . $app->input->get('date');
+		$resp[] = 'time:' . $app->input->get('time');
 		$resp = implode("\n", $resp);
 
-		$details = $this->_getSubmission($submit_key);
+		$details = $this->getDetails($reference);
 		$price = $this->getPrice($details);
 
 		$currency = RHelperCurrency::getIsoNumber($details->currency);
 
-		if (round($price * 100) != JRequest::getVar('amount'))
+		if (round($price * 100) != $app->input->get('amount'))
 		{
-			RdfHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH' . ' for ' . $submit_key);
-			$this->writeTransaction($submit_key, 'EPAY NOTIFICATION PRICE MISMATCH' . "\n" . $resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+			RdfHelperLog::simpleLog('EPAY NOTIFICATION PRICE MISMATCH' . ' for ' . $reference);
+			$this->writeTransaction($reference, 'EPAY NOTIFICATION PRICE MISMATCH' . "\n" . $resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
 
 			return false;
 		}
@@ -159,10 +160,10 @@ class PaymentEpay extends RdfPaymentHelper
 			$paid = 1;
 		}
 
-		if ($currency != JRequest::getVar('currency'))
+		if ($currency != $app->input->get('currency'))
 		{
-			RdfHelperLog::simpleLog('EPAY NOTIFICATION CURRENCY MISMATCH' . ' for ' . $submit_key);
-			$this->writeTransaction($submit_key, 'EPAY NOTIFICATION CURRENCY MISMATCH' . "\n" . $resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+			RdfHelperLog::simpleLog('EPAY NOTIFICATION CURRENCY MISMATCH' . ' for ' . $reference);
+			$this->writeTransaction($reference, 'EPAY NOTIFICATION CURRENCY MISMATCH' . "\n" . $resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
 
 			return false;
 		}
@@ -186,14 +187,14 @@ class PaymentEpay extends RdfPaymentHelper
 
 			if ($genstamp != $_GET["hash"])
 			{
-				RdfHelperLog::simpleLog('EPAY NOTIFICATION MD5 KEY MISMATCH' . ' for ' . $submit_key);
-				$this->writeTransaction($submit_key, 'EPAY NOTIFICATION MD5 KEY MISMATCH' . "\n" . $resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
+				RdfHelperLog::simpleLog('EPAY NOTIFICATION MD5 KEY MISMATCH' . ' for ' . $reference);
+				$this->writeTransaction($reference, 'EPAY NOTIFICATION MD5 KEY MISMATCH' . "\n" . $resp, $this->params->get('EPAY_INVALID_STATUS', 'FAIL'), 0);
 
 				return false;
 			}
 		}
 
-		$this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
+		$this->writeTransaction($reference, $resp, 'SUCCESS', 1);
 
 		return $paid;
 	}
@@ -201,14 +202,14 @@ class PaymentEpay extends RdfPaymentHelper
 	/**
 	 * returns state uri object (notify, cancel, etc...)
 	 *
-	 * @param   string  $state       the state for the url
-	 * @param   string  $submit_key  submit key
+	 * @param   string  $state      the state for the url
+	 * @param   string  $reference  cart reference
 	 *
 	 * @return string
 	 */
-	protected function getUri($state, $submit_key)
+	protected function getUri($state, $reference)
 	{
-		$uri = parent::getUri($state, $submit_key);
+		$uri = parent::getUri($state, $reference);
 
 		switch ($state)
 		{
@@ -225,30 +226,5 @@ class PaymentEpay extends RdfPaymentHelper
 		}
 
 		return $uri;
-	}
-
-	/**
-	 * get price, checking for extra fee
-	 *
-	 * @param   object  $details  details
-	 *
-	 * @return float
-	 */
-	private function getPrice($details)
-	{
-		if ((float) $this->params->get('extrafee'))
-		{
-			$extraPercentage = (float) $this->params->get('extrafee');
-			$price = $details->price * (1 + $extraPercentage / 100);
-
-			// Trim to precision
-			$price = round($price, RHelperCurrency::getPrecision($details->currency));
-		}
-		else
-		{
-			$price = $details->price;
-		}
-
-		return $price;
 	}
 }

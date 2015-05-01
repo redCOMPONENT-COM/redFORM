@@ -52,15 +52,16 @@ class RedformViewPayment extends JViewLegacy
 	{
 		$uri = JFactory::getURI();
 		$document = JFactory::getDocument();
+		$input = JFactory::getApplication()->input;
 
 		$uri->delVar('task');
 
-		$submit_key = JRequest::getVar('key',    '');
-		$source     = JRequest::getVar('source', '');
+		$reference = $input->get('reference', '');
+		$source = $input->get('source', '');
 
-		if (empty($submit_key))
+		if (empty($reference))
 		{
-			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_KEY');
+			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_REFERENCE');
 
 			return;
 		}
@@ -83,8 +84,8 @@ class RedformViewPayment extends JViewLegacy
 
 		$this->assignRef('lists',  $lists);
 		$this->assign('action',    htmlspecialchars($uri->toString()));
-		$this->assign('key',       $submit_key);
-		$this->assign('source',    $submit_key);
+		$this->assign('reference', $reference);
+		$this->assign('source',    $source);
 		$this->assign('price',     $price);
 		$this->assign('currency',  $currency);
 
@@ -92,9 +93,9 @@ class RedformViewPayment extends JViewLegacy
 		if (RdfHelperAnalytics::isEnabled())
 		{
 			$event = new stdclass;
-			$event->category = 'payement';
+			$event->category = 'payment';
 			$event->action = 'display';
-			$event->label = "display payment form {$submit_key}";
+			$event->label = "display payment form {$reference}";
 			$event->value = null;
 			RdfHelperAnalytics::trackEvent($event);
 		}
