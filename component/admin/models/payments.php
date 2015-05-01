@@ -57,6 +57,27 @@ class RedformModelPayments extends RModelList
 	}
 
 	/**
+	 * Get associated billing info
+	 *
+	 * @return mixed
+	 */
+	public function getBilling()
+	{
+		$query = $this->_db->getQuery(true);
+
+		$query->select('b.*')
+			->from('#__rwf_billinginfo AS b')
+			->join('INNER', '#__rwf_cart AS c ON c.id = b.cart_id')
+			->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = c.id')
+			->where('ci.payment_request_id = ' . $this->_db->quote($this->getState('payment_request')));
+
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadObject();
+
+		return $res;
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * This method should only be called once per instantiation and is designed
@@ -85,7 +106,7 @@ class RedformModelPayments extends RModelList
 	 */
 	protected function getListQuery()
 	{
-		$db	= $this->getDbo();
+		$db	= $this->_db;
 
 		$query = $db->getQuery(true)
 			->select('p.*')

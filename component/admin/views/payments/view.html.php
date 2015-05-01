@@ -31,6 +31,7 @@ class RedformViewPayments extends RdfView
 		$model = $this->getModel();
 
 		$this->items = $model->getItems();
+		$this->billing = $model->getBilling();
 		$this->state = $model->getState();
 		$this->pagination = $model->getPagination();
 

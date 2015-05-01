@@ -1,3 +1,24 @@
+CREATE TABLE IF NOT EXISTS `#__rwf_billinginfo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cart_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `uniqueid` varchar(255) NOT NULL,
+  `fullname` varchar(150) NOT NULL,
+  `company` varchar(150) NOT NULL,
+  `iscompany` tinyint(1) NOT NULL DEFAULT '0',
+  `vatnumber` varchar(150) NOT NULL,
+  `address` text NOT NULL,
+  `city` varchar(150) NOT NULL,
+  `zipcode` varchar(150) NOT NULL,
+  `phone` varchar(150) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `country` varchar(3) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `cart_id` (`cart_id`)
+) COMMENT='billing info for cart';
+
 CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `id` int(11) NOT NULL auto_increment,
   `field` varchar(255) NOT NULL default '',
@@ -41,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `captchaactive` tinyint(1) NOT NULL default '0',
   `access` tinyint(3) NOT NULL default '0',
   `activatepayment` tinyint(2) NOT NULL DEFAULT '0',
+  `requirebilling` tinyint(2) NOT NULL DEFAULT '0',
   `currency` varchar(3) DEFAULT NULL,
   `paymentprocessing` text DEFAULT NULL,
   `paymentaccepted` text DEFAULT NULL,

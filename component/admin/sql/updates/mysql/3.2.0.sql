@@ -7,6 +7,29 @@ ALTER TABLE `#__rwf_values`  CHANGE `price` `price` DECIMAL(10, 2) NULL DEFAULT 
 ALTER TABLE `#__rwf_payment` ADD `cart_id` int(11) NOT NULL,
 	ADD INDEX `cart_id` (`cart_id`);
 
+ALTER TABLE `#__rwf_forms` ADD `requirebilling` tinyint(2) NOT NULL DEFAULT '0';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_billinginfo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cart_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `uniqueid` varchar(255) NOT NULL,
+  `fullname` varchar(150) NOT NULL,
+  `company` varchar(150) NOT NULL,
+  `iscompany` tinyint(1) NOT NULL DEFAULT '0',
+  `vatnumber` varchar(150) NOT NULL,
+  `address` text NOT NULL,
+  `city` varchar(150) NOT NULL,
+  `zipcode` varchar(150) NOT NULL,
+  `phone` varchar(150) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `country` varchar(3) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `cart_id` (`cart_id`)
+) COMMENT='billing info for cart';
+
 CREATE TABLE IF NOT EXISTS `#__rwf_submission_price_item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `submission_id` int(11) NOT NULL,
