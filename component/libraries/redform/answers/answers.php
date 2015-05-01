@@ -430,8 +430,11 @@ class RdfAnswers
 
 		foreach ($this->fields as $v)
 		{
-			$fields[] = $db->quoteName('field_' . $v->field_id);
-			$values[] = $db->quote($v->getDatabaseValue());
+			if ($v->id)
+			{
+				$fields[] = $db->quoteName('field_' . $v->field_id);
+				$values[] = $db->quote($v->getDatabaseValue());
+			}
 		}
 
 		// We need to make sure all table fields are updated: typically, if a field is of type checkbox,
@@ -946,8 +949,11 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			$tablefield = 'field_' . $field->field_id;
-			$answers->$tablefield = $field->getValue();
+			if ($field->id)
+			{
+				$tablefield = 'field_' . $field->field_id;
+				$answers->$tablefield = $field->getValue();
+			}
 		}
 
 		return $answers;

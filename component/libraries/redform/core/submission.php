@@ -197,9 +197,16 @@ class RdfCoreSubmission extends JObject
 				}
 			}
 
+			if (isset($options['extrafields'][$signup]))
+			{
+				foreach ($options['extrafields'][$signup] as $field)
+				{
+					$answers->addField($field);
+				}
+			}
+
 			$allanswers[] = $answers;
 		}
-
 		/* End multi-user signup */
 
 		$this->answers = $allanswers;
