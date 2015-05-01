@@ -47,6 +47,51 @@ class RedFormModelPayment extends JModelLegacy
 		$this->reference = JFactory::getApplication()->input->get('reference', '');
 	}
 
+
+	/**
+	 * Method for getting the form from the model.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
+	 */
+	public function getBillingForm()
+	{
+		// Get the form.
+		RForm::addFormPath(JPATH_COMPONENT . '/models/forms');
+		RForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
+
+		$form = RForm::getInstance('billing', 'billing', array('control' => 'jform'));
+
+		if (empty($form))
+		{
+			return false;
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Is billing required ?
+	 *
+	 * @return bool
+	 */
+	public function isRequiredBilling()
+	{
+		$cart = $this->getCart();
+
+		$query = $this->_db->getQuery(true);
+
+		$query->select('f.requirebilling')
+			->from('#__rwf_cart_item AS ci')
+			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = ci.payment_request_id')
+			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
+			->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id')
+			->where('f.requirebilling = 1')
+			->where('ci.cart_id = ' . $cart->id);
+		$this->_db->setQuery($query);
+
+		return ($this->_db->loadResult() ? true : false);
+	}
+
 	/**
 	 * Setter
 	 *
@@ -534,7 +579,7 @@ class RedFormModelPayment extends JModelLegacy
 		return $res;
 	}
 
-	private function getCart()
+	public function getCart()
 	{
 		if (!$this->cart)
 		{

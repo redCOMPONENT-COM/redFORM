@@ -52,17 +52,21 @@ class RedformControllerPayment extends JControllerLegacy
 
 		$model->setCartReference($cart->reference);
 		$options = $model->getGatewayOptions();
+		$requireBilling = $model->isRequiredBilling();
 
-		if (count($options) == 1)
+		if ($requireBilling)
+		{
+			$this->setRedirect('index.php?option=com_redform&view=payment&layout=billing&reference=' . $cart->reference . $lang_v);
+		}
+		elseif (count($options) == 1)
 		{
 			$this->setRedirect('index.php?option=com_redform&task=payment.process&reference=' . $cart->reference . '&gw=' . $options[0]->value . $lang_v);
 			$this->redirect();
 		}
-
-		$app->input->set('view', 'payment');
-		$app->input->set('layout', 'select');
-		$app->input->set('reference', $cart->reference);
-		$this->display();
+		else
+		{
+			$this->setRedirect('index.php?option=com_redform&view=payment&layout=select&reference=' . $cart->reference . $lang_v);
+		}
 	}
 
 	/**
@@ -86,6 +90,60 @@ class RedformControllerPayment extends JControllerLegacy
 		$key    = $app->input->get('reference');
 
 		$model->setCartReference($key);
+		$cart = $model->getCart();
+
+		if ($model->isRequiredBilling())
+		{
+			$data  = $this->input->post->get('jform', array(), 'array');
+			$data['cart_id'] = $cart->id;
+
+			$billingModel = $this->getModel('billing');
+			$form = $billingModel->getForm();
+			$validData = $billingModel->validate($form, $data);
+
+			// Check for validation errors.
+			if ($validData === false)
+			{
+				// Get the validation messages.
+				$errors = $billingModel->getErrors();
+
+				// Push up to three validation messages out to the user.
+				for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++)
+				{
+					if ($errors[$i] instanceof Exception)
+					{
+						$app->enqueueMessage($errors[$i]->getMessage(), 'warning');
+					}
+					else
+					{
+						$app->enqueueMessage($errors[$i], 'warning');
+					}
+				}
+
+				// Redirect back to the edit screen.
+				$this->setRedirect(
+					'index.php?option=com_redform&view=payment&layout=billing&reference=' . $cart->reference
+				);
+
+				return false;
+			}
+
+			// Attempt to save the data.
+			if (!$billingModel->save($validData))
+			{
+				// Redirect back to the edit screen.
+				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $billingModel->getError()));
+				$this->setMessage($this->getError(), 'error');
+
+				// Redirect back to the edit screen.
+				$this->setRedirect(
+					'index.php?option=com_redform&view=payment&layout=billing&reference=' . $cart->reference
+				);
+
+				return false;
+			}
+		}
+
 		$details = $model->getPaymentDetails();
 
 		if (!$res = $helper->process($details))

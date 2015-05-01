@@ -28,14 +28,14 @@ class RedformViewPayment extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		if ($this->getLayout() == 'select')
+		if ($this->getLayout() == 'select' || $this->getLayout() == 'billing')
 		{
-			return $this->_displaySelect($tpl);
+			return $this->displaySelect($tpl);
 		}
 
 		if ($this->getLayout() == 'final')
 		{
-			return $this->_displayFinal($tpl);
+			return $this->displayFinal($tpl);
 		}
 
 		parent::display($tpl);
@@ -48,8 +48,9 @@ class RedformViewPayment extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 */
-	private function _displaySelect($tpl = null)
+	private function displaySelect($tpl = null)
 	{
+		$params = JFactory::getApplication()->getParams('com_redform');
 		$uri = JFactory::getURI();
 		$document = JFactory::getDocument();
 		$input = JFactory::getApplication()->input;
@@ -89,6 +90,11 @@ class RedformViewPayment extends JViewLegacy
 		$this->assign('price',     $price);
 		$this->assign('currency',  $currency);
 
+		if ($this->getLayout() == 'billing')
+		{
+			$this->assign('billingform',  $this->get('BillingForm'));
+		}
+
 		// Analytics
 		if (RdfHelperAnalytics::isEnabled())
 		{
@@ -110,7 +116,7 @@ class RedformViewPayment extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 */
-	private function _displayFinal($tpl = null)
+	private function displayFinal($tpl = null)
 	{
 		$document   = JFactory::getDocument();
 		$document->setTitle($document->getTitle() . ' - ' . JText::_('COM_REDFORM'));

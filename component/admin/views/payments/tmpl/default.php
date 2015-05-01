@@ -18,6 +18,50 @@ $listDirn = $this->state->get('list.direction');
 
 $payment_request_id = $this->state->get('payment_request');
 ?>
+<?php if ($this->billing): ?>
+	<h3><?php echo JText::_('COM_REDFORM_BILLING_INFO_TITLE'); ?></h3>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_FULLNAME'); ?></dt>
+		<dd><?php echo $this->billing->fullname; ?></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_COMPANY'); ?></dt>
+		<dd><?php echo $this->billing->company; ?></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_ISCOMPANY'); ?></dt>
+		<dd><?php echo $this->billing->iscompany ? JText::_('JYES') : JText::_('JNO'); ?></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_VATNUMBER'); ?></dt>
+		<dd><?php echo $this->billing->vatnumber; ?></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_ADDRESS'); ?></dt>
+		<dd><?php echo $this->billing->address; ?></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_CITY'); ?></dt>
+		<dd><?php echo $this->billing->city; ?></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_ZIPCODE'); ?></dt>
+		<dd><?php echo $this->billing->zipcode; ?></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_PHONE'); ?></dt>
+		<dd><?php echo $this->billing->phone; ?></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_EMAIL'); ?></dt>
+		<dd><?php echo $this->billing->email; ?></dd>
+	</dl>
+	<dl class="dl-horizontal">
+		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_COUNTRY'); ?></dt>
+		<dd><?php echo $this->billing->country; ?></dd>
+	</dl>
+<?php endif;?>
+
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 	<?php if (empty($this->items)) : ?>
 		<div class="alert alert-info">

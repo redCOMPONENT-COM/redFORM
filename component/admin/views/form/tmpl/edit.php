@@ -311,6 +311,14 @@ $isNew = (int) $this->item->id <= 0;
 			</div>
 			<div class="control-group">
 				<div class="control-label">
+					<?php echo $this->form->getLabel('requirebilling'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('requirebilling'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
 					<?php echo $this->form->getLabel('paymentprocessing'); ?>
 				</div>
 				<div class="controls">
