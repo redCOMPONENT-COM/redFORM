@@ -397,8 +397,9 @@ abstract class RdfRfield extends JObject
 	public function getVat()
 	{
 		$vatRate = (float) $this->getParam('vat');
+		$price = $this->getPrice();
 
-		if ($price = $this->getPrice() && is_numeric($vatRate))
+		if ($price && is_numeric($vatRate))
 		{
 			return $price * $vatRate / 100;
 		}

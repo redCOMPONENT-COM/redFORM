@@ -241,10 +241,10 @@ class RdfCoreModelSubmissionprice extends RModel
 		$query->select('pr.id')
 			->from('#__rwf_payment_request AS pr')
 			->where('pr.submission_id = ' . $this->answers->sid)
-			->where('pr.paid = 0');
+			->where('pr.paid = 1');
 
 		$this->_db->setQuery($query);
 
-		return $this->_db->loadResult() ? false : true;
+		return $this->_db->loadResult() ? true : false;
 	}
 }

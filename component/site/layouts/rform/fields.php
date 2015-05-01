@@ -21,15 +21,9 @@ $index = $data['index'];
 
 $html = '';
 
-if (isset($options['extrafields']) && count($options['extrafields']))
+if (isset($options['extrafields'][$index]))
 {
-	foreach ($options['extrafields'] as $field)
-	{
-		$html .= '<div class="fieldline' . (isset($field['class']) && !empty($field['class']) ? ' ' . $field['class'] : '' ) . '">';
-		$html .= '<div class="label">' . $field['label'] . '</div>';
-		$html .= '<div class="field">' . $field['field'] . '</div>';
-		$html .= '</div>';
-	}
+	$fields = array_merge($options['extrafields'][$index], $fields);
 }
 
 foreach ($fields as $field)
@@ -40,28 +34,26 @@ foreach ($fields as $field)
 		continue;
 	}
 
-	// Init rfield
-	$rfield = RdfRfieldFactory::getFormField($field->id);
-	$rfield->setFormIndex($index);
-	$rfield->setUser($user);
+	$field->setFormIndex($index);
+	$field->setUser($user);
 
 	// Set value if editing
-	if ($answers)
+	if ($answers && $field->id)
 	{
 		$value = $answers->getFieldAnswer($field->id);
-		$rfield->setValue($value, true);
+		$field->setValue($value, true);
 	}
 	else
 	{
-		$rfield->lookupDefaultValue();
+		$field->lookupDefaultValue();
 	}
 
-	if (!$rfield->isHidden())
+	if (!$field->isHidden())
 	{
 		$html .= '<div class="fieldline type-' . $field->fieldtype . $field->getParam('class', '') . '">';
 	}
 
-	if (!$rfield->isHidden())
+	if (!$field->isHidden())
 	{
 		$element = "<div class=\"field\">";
 	}
@@ -70,18 +62,18 @@ foreach ($fields as $field)
 		$element = '';
 	}
 
-	if (!$rfield->isHidden() && $rfield->displayLabel())
+	if (!$field->isHidden() && $field->displayLabel())
 	{
-		$label = '<div class="label">' . $rfield->getLabel() . '</div>';
+		$label = '<div class="label">' . $field->getLabel() . '</div>';
 	}
 	else
 	{
 		$label = '';
 	}
 
-	$element .= $rfield->getInput();
+	$element .= $field->getInput();
 
-	if ($rfield->isHidden())
+	if ($field->isHidden())
 	{
 		$html .= $element;
 	}
@@ -92,11 +84,11 @@ foreach ($fields as $field)
 		// Fieldtype div
 		$html .= '</div>';
 
-		if ($rfield->isRequired() || strlen($field->tooltip))
+		if ($field->isRequired() || strlen($field->tooltip))
 		{
 			$html .= '<div class="fieldinfo">';
 
-			if ($rfield->isRequired())
+			if ($field->isRequired())
 			{
 				$img = JHTML::image(JURI::root() . 'media/com_redform/images/warning.png', JText::_('COM_REDFORM_Required'));
 				$html .= ' <span class="editlinktip hasTipField" title="' . JText::_('COM_REDFORM_Required') . '" style="text-decoration: none; color: #333;">' . $img . '</span>';

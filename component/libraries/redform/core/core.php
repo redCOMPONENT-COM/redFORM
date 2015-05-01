@@ -406,16 +406,6 @@ class RdfCore extends JObject
 			$html .= '</div>';
 		}
 
-		// TODO: redcompetition should use redform core directly
-		/* Add any redCOMPETITION values */
-		$redcompetition = JRequest::getVar('redcompetition', false);
-
-		if ($redcompetition)
-		{
-			$html .= '<input type="hidden" name="competition_task" value="' . $redcompetition->task . '" />';
-			$html .= '<input type="hidden" name="competition_id" value="' . $redcompetition->competitionid . '" />';
-		}
-
 		if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
 		{
 			$html .= $this->getGatewaySelect($currency);
