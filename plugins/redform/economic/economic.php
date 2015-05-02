@@ -289,11 +289,11 @@ class plgRedformEconomic extends JPlugin
 				Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_BOOKED_STATUS'));
 			}
 
-			$this->_rfStoreInvoice($invoiceId);
+			$this->rfStoreInvoice($invoiceId);
 
 			if ($this->params->get('send_invoice'))
 			{
-				$this->_rfSendInvoiceEmail($invoiceHandle->Number);
+				$this->rfSendInvoiceEmail($invoiceHandle->Number);
 			}
 		}
 
@@ -370,7 +370,7 @@ class plgRedformEconomic extends JPlugin
 			}
 
 			// send email to billing address
-			$this->_rfSendInvoiceEmail($invoiceHandle->Number);
+			$this->rfSendInvoiceEmail($invoiceHandle->Number);
 		}
 		return (bool) $invoiceHandle;
 	}
@@ -447,7 +447,7 @@ class plgRedformEconomic extends JPlugin
 		}
 
 		// send email to billing address
-		$this->_rfSendInvoiceEmail($invoiceHandle->Number);
+		$this->rfSendInvoiceEmail($invoiceHandle->Number);
 
 		return (bool) true;
 	}
@@ -606,7 +606,7 @@ class plgRedformEconomic extends JPlugin
 				}
 
 				// send email to billing address
-				$this->_rfSendInvoiceEmail($invoiceHandle->Number);
+				$this->rfSendInvoiceEmail($invoiceHandle->Number);
 			}
 		}
 	}
@@ -667,7 +667,7 @@ class plgRedformEconomic extends JPlugin
 		$helper = $this->getClient();
 		if ($res->booked)
 		{
-			$path = $this->_rfStoreInvoice($res->reference);
+			$path = $this->rfStoreInvoice($res->reference);
 			$pdf = file_get_contents($path);
 		}
 		else
@@ -685,7 +685,7 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return string path on success, false otherwise
 	 */
-	public function _rfStoreInvoice($invoiceId)
+	public function rfStoreInvoice($invoiceId)
 	{
 		$fullpath = JPATH_ROOT . '/media/redform/invoices';
 
@@ -724,13 +724,13 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return boolean
 	 */
-	public function _rfSendInvoiceEmail($invoiceId)
+	public function rfSendInvoiceEmail($invoiceId)
 	{
 		$app = JFactory::getApplication();
 		$data = $this->getCartDetails();
 
 		//	make sure the invoice is stored indeed
-		$path = $this->_rfStoreInvoice($invoiceId);
+		$path = $this->rfStoreInvoice($invoiceId);
 
 		if (!$path)
 		{
@@ -743,8 +743,8 @@ class plgRedformEconomic extends JPlugin
 		$mailer->FromName = $app->getCfg('sitename');
 		$mailer->AddReplyTo(array($app->getCfg('mailfrom'), $app->getCfg('sitename')));
 		$mailer->addAttachment($path);
-		$mailer->setSubject(JText::sprintf('PLG_REDFORM_INTEGRATION_ECONOMIC_SEND_INVOICE_SUBJECT', $data->title));
-		$mailer->MsgHTML(JText::sprintf('PLG_REDFORM_INTEGRATION_ECONOMIC_SEND_INVOICE_BODY'));
+		$mailer->setSubject(JText::sprintf('PLG_REDFORM_ECONOMIC_SEND_INVOICE_SUBJECT', $data->title));
+		$mailer->MsgHTML(JText::sprintf('PLG_REDFORM_ECONOMIC_SEND_INVOICE_BODY'));
 		$mailer->addRecipient($data->billing->email);
 		$mailer->send();
 	}
