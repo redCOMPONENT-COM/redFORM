@@ -1072,7 +1072,7 @@ class RedformeconomicSoapClient
 		$contraAccountHandle->Number = $this->params->get('economic_contra_account', 1200);
 
 		$CurrencyHandle = new stdclass;
-		$CurrencyHandle->Code = $d ['currency_code'];
+		$CurrencyHandle->Code = $d['currency_code'];
 		$text = 'INV (' . $bookHandle->Number . ') CUST (' . $d['name'] . ')';
 
 		if (isset($d['uniqueid']) && !empty($d['uniqueid']))

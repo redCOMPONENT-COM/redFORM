@@ -31,6 +31,11 @@ class plgRedformEconomic extends JPlugin
 	private $client = null;
 
 	/**
+	 * @var object
+	 */
+	private $cart = null;
+
+	/**
 	 * constructor
 	 *
 	 * @param   object  $subject  subject
@@ -56,7 +61,15 @@ class plgRedformEconomic extends JPlugin
 	{
 		$cartId = $this->getCartIdFromReference($cartReference);
 
-		return $this->rfCreateInvoice($cartId);
+		try
+		{
+			return $this->rfCreateInvoice($cartId);
+		}
+		catch (Exception $e)
+		{
+			echo '<pre>'; echo print_r($e->getMessage(), true); echo '</pre>';
+			echo '<pre>'; echo $e->getTraceAsString(); echo '</pre>';
+		}
 	}
 
 	/**
@@ -78,7 +91,8 @@ class plgRedformEconomic extends JPlugin
 	 */
 	public function rfCreateInvoice($cartId)
 	{
-		$data = $this->getCartDetails($cartId);
+		$this->cart = $this->getCartDetails($cartId);
+		$data = $this->cart;
 
 		if (!$data || $data->invoices)
 		{
@@ -94,7 +108,7 @@ class plgRedformEconomic extends JPlugin
 		$invoiceData['currency_code'] = $data->currency;
 		$invoiceData['debtorHandle'] = $debtorhandle->Number;
 		$invoiceData['vatzone'] = 'EU';
-		$invoiceData['isvat'] = $data->vat ? 1 : 0;
+		$invoiceData['isvat'] = $data->vat > 0 ? 1 : 0;
 		$invoiceData['user_info_id'] = $data->billing->email;
 		$invoiceData['name'] = $data->billing->fullname;
 		$invoiceData['text'] = $data->title;
@@ -118,14 +132,14 @@ class plgRedformEconomic extends JPlugin
 			foreach ($pr->items as $item)
 			{
 				$total += $item->price;
-				$producthandle = $this->createProduct($item);
+				$producthandle = $this->getProduct($item);
 				$line = array();
 				$line['InvoiceHandle'] = $invoice;
 				$line['ProductHandle'] = $producthandle;
 				$line['Number'] = $i++;
 				$line['Description'] = $item->label;
 				$line['Quantity'] = 1;
-				$line['UnitNetPrice'] = $item->price + $item->vat;
+				$line['UnitNetPrice'] = $item->price;
 				$line['DiscountAsPercent'] = 0;
 				$line['UnitCostPrice'] = 0;
 				$line['TotalMargin'] = 0;
@@ -144,6 +158,11 @@ class plgRedformEconomic extends JPlugin
 			$table->date = JFactory::getDate()->toSql();
 			$table->reference = $invoice->Id;
 			$table->store();
+		}
+
+		if ($this->params->get('book_invoice'))
+		{
+			$this->bookInvoice($invoice->Id);
 		}
 
 		return $invoice;
@@ -200,13 +219,13 @@ class plgRedformEconomic extends JPlugin
 	}
 
 	/**
-	 * creates product from price item object
+	 * get product from price item object
 	 *
 	 * @param   object  $priceitem  price item
 	 *
 	 * @return object product handle
 	 */
-	public function createProduct($priceitem)
+	public function getProduct($priceitem)
 	{
 		$helper = $this->getClient();
 		$eco = array();
@@ -225,7 +244,7 @@ class plgRedformEconomic extends JPlugin
 
 		$eco['product_name'] = $priceitem->label;
 		$eco['product_price'] = $priceitem->price;
-		$resHandle = $helper->Product_FindByNumber($priceitem->id);
+		$resHandle = $helper->Product_FindByNumber($eco['number']);
 
 		if ($resHandle)
 		{
@@ -241,8 +260,42 @@ class plgRedformEconomic extends JPlugin
 		return $ecoProductNumber;
 	}
 
-	public function paymentReceived($submit_key)
+	public function bookInvoice($invoiceId)
 	{
+		$data = $this->getCartDetails();
+
+		$bookingData = array();
+		$bookingData['amount'] = $data->price + $data->vat;
+		$bookingData['invoiceHandle'] = $invoiceId;
+		$bookingData['currency_code'] = $data->currency;
+		$bookingData['vat'] = $data->vat;
+		$bookingData['name'] = $data->billing->fullname;
+		$bookingData['uniqueid'] = $data->reference;
+		$invoiceHandle = $this->client->bookInvoice($bookingData);
+
+		if ($invoiceHandle)
+		{
+			$query = $this->_db->getQuery(true);
+
+			$query->update('#__rwf_invoice')
+				->set('booked = 1')
+				->set('reference = ' . $this->_db->Quote($invoiceHandle->Number))
+				->where('cart_id = ' . $this->_db->Quote($data->id));
+
+			$this->_db->setQuery($query);
+
+			if (!$this->_db->execute())
+			{
+				Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_BOOKED_STATUS'));
+			}
+
+			if ($this->params->get('send_invoice'))
+			{
+				$this->_rfSendInvoiceEmail($invoiceHandle->Number);
+			}
+		}
+
+		return (bool) $invoiceHandle;
 	}
 
 	public function rfBookInvoice($paymentrequest_id)
@@ -732,15 +785,20 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return mixed
 	 */
-	private function getCartDetails($cartId)
+	private function getCartDetails($cartId = 0)
 	{
-		$cart = $this->getCart($cartId);
-		$cart->paymentRequests = $this->getPaymentRequests($cartId);
-		$cart->billing = $this->getBilling($cartId);
-		$cart->invoices = $this->getInvoices($cartId);
-		$cart->title = $this->getCartTitle($cart);
+		if ((!$this->cart) && $cartId)
+		{
+			$cart = $this->getCart($cartId);
+			$cart->paymentRequests = $this->getPaymentRequests($cartId);
+			$cart->billing = $this->getBilling($cartId);
+			$cart->invoices = $this->getInvoices($cartId);
+			$cart->title = $this->getCartTitle($cart);
 
-		return $cart;
+			$this->cart = $cart;
+		}
+
+		return $this->cart;
 	}
 
 	/**
