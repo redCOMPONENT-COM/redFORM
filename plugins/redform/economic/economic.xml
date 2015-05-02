@@ -41,6 +41,8 @@
 					   description="PLG_REDFORM_ECONOMIC_DEBTOR_GROUP_LABEL_DESC"/>
 				<field name="economic_creditor_group" type="text" default="" label="PLG_REDFORM_ECONOMIC_CREDITOR_GROUP_LABEL"
 					   description="PLG_REDFORM_ECONOMIC_CREDITOR_GROUP_LABEL_DESC"/>
+				<field name="default_product_group" type="text" default="" label="PLG_REDFORM_ECONOMIC_DEFAULT_PRODUCT_GROUP_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_DEFAULT_PRODUCT_GROUP_DESC"/>
 				<field name="economic_default_currency" type="text" default="EUR" label="PLG_REDFORM_ECONOMIC_DEFAULT_CURRENCY_LABEL"
 					   description="PLG_REDFORM_ECONOMIC_DEFAULT_CURRENCY_DESC"/>
 

@@ -80,8 +80,9 @@ class plgRedformEconomic extends JPlugin
 	{
 		$data = $this->getCartDetails($cartId);
 
-		if (!$data || $data->invoice)
-		{ // do not create if already invoiced
+		if (!$data || $data->invoices)
+		{
+			// Do not create if already invoiced
 			return false;
 		}
 
@@ -89,14 +90,13 @@ class plgRedformEconomic extends JPlugin
 
 		$debtorhandle = $this->getDebtor($data);
 
-		$invoiceData = get_object_vars($data);
-		//$invoice = $helper->CurrentInvoice_Create($debtorhandle);
+		$invoiceData = array();
 		$invoiceData['currency_code'] = $data->currency;
 		$invoiceData['debtorHandle'] = $debtorhandle->Number;
 		$invoiceData['vatzone'] = 'EU';
 		$invoiceData['isvat'] = $data->vat ? 1 : 0;
-		$invoiceData['user_info_id'] = $data->email;
-		$invoiceData['name'] = $data->fullname;
+		$invoiceData['user_info_id'] = $data->billing->email;
+		$invoiceData['name'] = $data->billing->fullname;
 		$invoiceData['text'] = $data->title;
 
 		$invoice = $helper->createInvoice($invoiceData);
@@ -108,49 +108,62 @@ class plgRedformEconomic extends JPlugin
 			return false;
 		}
 
-		$helper->CurrentInvoice_SetOtherReference(array('currentInvoiceHandle' => $invoice, 'value' => $data->submit_key . '-' . $paymentrequest_id));
-
-		$priceitems = RedFormCore::getPaymentRequestPriceItems($paymentrequest_id);
+		$helper->CurrentInvoice_SetOtherReference(array('currentInvoiceHandle' => $invoice, 'value' => $data->reference . '-' . $cartId));
 
 		$i = 1;
 		$total = 0;
 
-		foreach ($priceitems as $item)
+		foreach ($data->paymentRequests as $pr)
 		{
-			$total += $item->price;
-			$producthandle = $this->createProduct($item);
-			$line = array();
-			$line['InvoiceHandle'] = $invoice;
-			$line['ProductHandle'] = $producthandle;
-			$line['Number'] = $i++;
-			$line['Description'] = $item->label;
-			$line['Quantity'] = 1;
-			$line['UnitNetPrice'] = $item->price;
-			$line['DiscountAsPercent'] = 0;
-			$line['UnitCostPrice'] = 0;
-			$line['TotalMargin'] = 0;
-			$line['MarginAsPercent'] = 0;
+			foreach ($pr->items as $item)
+			{
+				$total += $item->price;
+				$producthandle = $this->createProduct($item);
+				$line = array();
+				$line['InvoiceHandle'] = $invoice;
+				$line['ProductHandle'] = $producthandle;
+				$line['Number'] = $i++;
+				$line['Description'] = $item->label;
+				$line['Quantity'] = 1;
+				$line['UnitNetPrice'] = $item->price + $item->vat;
+				$line['DiscountAsPercent'] = 0;
+				$line['UnitCostPrice'] = 0;
+				$line['TotalMargin'] = 0;
+				$line['MarginAsPercent'] = 0;
 
-			$newCurrentInvoiceLineHandle = $helper->CurrentInvoiceLine_CreateFromData(array('data' => $line));
+				$newCurrentInvoiceLineHandle = $helper->CurrentInvoiceLine_CreateFromData(array('data' => $line));
+			}
 		}
+
 		if ($invoice)
 		{
-			// update billing
-			$table = &JTable::getInstance('PaymentsRequests', 'RedformTable');
-			$table->load($paymentrequest_id);
-			$table->invoice = $invoice->Id;
+			// Update billing
+			RTable::addIncludePath(__DIR__ . '/lib/table');
+			$table = RTable::getInstance('Invoice', 'RedformTable');
+			$table->cart_id = $data->id;
+			$table->date = JFactory::getDate()->toSql();
+			$table->reference = $invoice->Id;
 			$table->store();
 		}
 
 		return $invoice;
 	}
 
+	/**
+	 * Get Debtor, creating if needed
+	 *
+	 * @param   object  $data  data
+	 *
+	 * @return array
+	 */
 	public function getDebtor($data)
 	{
 		$helper = $this->getClient();
 		$eco = array();
-		// check if the debtor already exists
-		$debtorids = $helper->Debtor_FindByEmail(array('email' => $data->email));
+
+		// Check if the debtor already exists
+		$debtorids = $helper->Debtor_FindByEmail(array('email' => $data->billing->email));
+
 		if ($debtorids)
 		{
 			$eco['Number'] = $debtorids[0];
@@ -160,25 +173,27 @@ class plgRedformEconomic extends JPlugin
 			$eco['Number'] = 0;
 		}
 
-		$contact_name = (empty($data->fullname) ? $data->email : $data->fullname);
+		$contact_name = (empty($data->billing->fullname) ? $data->billing->email : $data->billing->fullname);
 
 		$eco['currency_code'] = $data->currency;
 		$eco['vatzone'] = 'EU';
-		$eco['email'] = $data->email;
-		if ($data->iscompany)
+		$eco['email'] = $data->billing->email;
+
+		if ($data->billing->iscompany)
 		{
-			$eco['name'] = (empty($data->company) ? $contact_name : $data->company);
+			$eco['name'] = (empty($data->billing->company) ? $contact_name : $data->billing->company);
 		}
 		else
 		{
 			$eco['name'] = $contact_name;
 		}
-		$eco['phone'] = $data->phone;
-		$eco['address'] = $data->address;
-		$eco['zipcode'] = $data->zipcode;
-		$eco['city'] = $data->city;
-		$eco['country'] = $data->country;
-		$eco['vatnumber'] = $data->vatnumber;
+
+		$eco['phone'] = $data->billing->phone;
+		$eco['address'] = $data->billing->address;
+		$eco['zipcode'] = $data->billing->zipcode;
+		$eco['city'] = $data->billing->city;
+		$eco['country'] = $data->billing->country;
+		$eco['vatnumber'] = $data->billing->vatnumber;
 		$ecodebtorNumber = $helper->storeDebtor($eco);
 
 		return $ecodebtorNumber;
@@ -196,10 +211,22 @@ class plgRedformEconomic extends JPlugin
 		$helper = $this->getClient();
 		$eco = array();
 
-		$eco['number'] = $priceitem->itemid;
+		$matches = null;
+
+		if (preg_match("/([0-9]+)-(.*)/", $priceitem->sku, $matches))
+		{
+			$eco['productgroup'] = $matches[1];
+			$eco['number'] = $matches[2];
+		}
+		else
+		{
+			$eco['number'] = $priceitem->sku;
+		}
+
 		$eco['product_name'] = $priceitem->label;
 		$eco['product_price'] = $priceitem->price;
-		$resHandle = $helper->Product_FindByNumber($priceitem->itemid);
+		$resHandle = $helper->Product_FindByNumber($priceitem->id);
+
 		if ($resHandle)
 		{
 			$eco['handle'] = $resHandle;
@@ -208,11 +235,9 @@ class plgRedformEconomic extends JPlugin
 		{
 			$eco['handle'] = 0;
 		}
-		if (isset($priceitem->productgroup) && $priceitem->productgroup)
-		{
-			$eco['productgroup'] = $priceitem->productgroup;
-		}
+
 		$ecoProductNumber = $helper->storeProduct($eco);
+
 		return $ecoProductNumber;
 	}
 
@@ -713,8 +738,8 @@ class plgRedformEconomic extends JPlugin
 		$cart->paymentRequests = $this->getPaymentRequests($cartId);
 		$cart->billing = $this->getBilling($cartId);
 		$cart->invoices = $this->getInvoices($cartId);
+		$cart->title = $this->getCartTitle($cart);
 
-		echo '<pre>'; echo print_r($cart, true); echo '</pre>'; exit;
 		return $cart;
 	}
 
@@ -772,9 +797,10 @@ class plgRedformEconomic extends JPlugin
 		// Get Payment requests
 		$query = $this->_db->getQuery(true);
 
-		$query->select('pr.*')
+		$query->select('pr.*, s.integration, s.submit_key')
 			->from('#__rwf_payment_request AS pr')
 			->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
 			->where('ci.cart_id = ' . $cartId);
 
 		$this->_db->setQuery($query);
@@ -811,6 +837,8 @@ class plgRedformEconomic extends JPlugin
 	 * @param   int  $cartId  cart id
 	 *
 	 * @return mixed
+	 *
+	 * @throws Exception
 	 */
 	private function getBilling($cartId)
 	{
@@ -822,6 +850,11 @@ class plgRedformEconomic extends JPlugin
 
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadObject();
+
+		if (!$res->email)
+		{
+			throw new Exception('E-conomic: billing email is required');
+		}
 
 		return $res;
 	}
@@ -862,6 +895,43 @@ class plgRedformEconomic extends JPlugin
 		}
 
 		return $res;
+	}
+
+	/**
+	 * Return a title for invoice
+	 *
+	 * @param   int  $cartDetails  cart details
+	 *
+	 * @return mixed
+	 */
+	private function getCartTitle($cartDetails)
+	{
+		JPluginHelper::importPlugin('redform_integration');
+		$dispatcher = JDispatcher::getInstance();
+
+		foreach ($cartDetails->paymentRequests as $pr)
+		{
+			if (!$pr->integration)
+			{
+				continue;
+			}
+
+			$integrationDetails = null;
+			$dispatcher->trigger('getRFSubmissionPaymentDetailFields',
+				array(
+					$pr->integration,
+					$cartDetails->submit_key,
+					$integrationDetails
+				)
+			);
+
+			if ($integrationDetails)
+			{
+				return $integrationDetails->title;
+			}
+		}
+
+		return $this->params->get('default_cart_title', 'Payment for cart reference ' . $cartDetails->reference);
 	}
 
 	/**

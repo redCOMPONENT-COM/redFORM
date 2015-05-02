@@ -613,6 +613,7 @@ class RedformeconomicSoapClient
 	{
 		if (isset($d['productgroup']))
 		{
+			// Try the product group from the product
 			$res = $this->client->ProductGroup_FindByNumber(array('number' => $d['productgroup']))->ProductGroup_FindByNumberResult;
 
 			if ($res && isset($res->Number))
@@ -620,7 +621,18 @@ class RedformeconomicSoapClient
 				return $res;
 			}
 		}
+		elseif ($number = $this->params->get('default_product_group'))
+		{
+			// Try default product group
+			$res = $this->client->ProductGroup_FindByNumber(array('number' => $number))->ProductGroup_FindByNumberResult;
 
+			if ($res && isset($res->Number))
+			{
+				return $res;
+			}
+		}
+
+		// Get any product group...
 		$productGroupHandles = $this->client->ProductGroup_GetAll()->ProductGroup_GetAllResult->ProductGroupHandle;
 
 		for ($i = 0; $i < count($productGroupHandles); $i++)
@@ -669,9 +681,9 @@ class RedformeconomicSoapClient
 			'ProductGroupHandle' => $productGroupHandle,
 			'Name' => $d['product_name'],
 			'BarCode' => '22222',
-			'SalesPrice' => intval($d ['product_price']),
-			'CostPrice' => intval($d ['product_price']),
-			'RecommendedPrice' => intval($d ['product_price']),
+			'SalesPrice' => intval($d['product_price']),
+			'CostPrice' => intval($d['product_price']),
+			'RecommendedPrice' => intval($d['product_price']),
 			'Volume' => 0,
 			'IsAccessible' => 1,
 			'InStock' => 1
@@ -806,9 +818,7 @@ class RedformeconomicSoapClient
 
 		$TermOfPaymentHandle = $this->getTermOfPayment();
 
-		$VatZone = $d['vatzone'];
 		$isvat = $d['isvat'];
-
 
 		$invoiceHandle = $this->client->CurrentInvoice_Create(array('debtorHandle' => $debtorHandle))->CurrentInvoice_CreateResult;
 		$this->client->CurrentInvoice_SetCurrency(array('currentInvoiceHandle' => $invoiceHandle, 'valueHandle' => $CurrencyHandle));
