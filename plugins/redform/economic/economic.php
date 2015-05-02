@@ -289,6 +289,8 @@ class plgRedformEconomic extends JPlugin
 				Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_BOOKED_STATUS'));
 			}
 
+			$this->_rfStoreInvoice($invoiceId);
+
 			if ($this->params->get('send_invoice'))
 			{
 				$this->_rfSendInvoiceEmail($invoiceHandle->Number);
@@ -685,45 +687,33 @@ class plgRedformEconomic extends JPlugin
 	 */
 	public function _rfStoreInvoice($invoiceId)
 	{
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
+		$fullpath = JPATH_ROOT . '/media/redform/invoices';
 
-		/* Get the file path for file upload */
-		$query = ' SELECT c.value '
-			. ' FROM #__rwf_configuration AS c '
-			. ' WHERE name = ' . $this->_db->Quote('filelist_path');
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObject();
-
-		$filepath = $res->value;
-		if (empty($filepath))
-		{
-			$filepath = JPATH_ROOT . DS . 'media' . DS . 'redform';
-		}
-
-		$fullpath = $filepath . DS . 'invoices';
 		if (!JFolder::exists($fullpath))
 		{
 			if (!JFolder::create($fullpath))
 			{
 				JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDER') . ': ' . $fullpath);
-				$status = false;
+
 				return false;
 			}
 		}
 
-		if (JFile::exists($fullpath . DS . 'invoice' . $invoiceId . '.pdf'))
+		if (JFile::exists($fullpath . '/invoice' . $invoiceId . '.pdf'))
 		{
-			return $fullpath . DS . 'invoice' . $invoiceId . '.pdf';
+			return $fullpath . '/invoice' . $invoiceId . '.pdf';
 		}
 
 		$helper = $this->getClient();
 		$pdf = $helper->Invoice_GetPdf(array('Number' => $invoiceId));
+
 		if ($pdf)
 		{
-			$res = JFile::write($fullpath . DS . 'invoice' . $invoiceId . '.pdf', $pdf);
-			return $fullpath . DS . 'invoice' . $invoiceId . '.pdf';
+			JFile::write($fullpath . '/invoice' . $invoiceId . '.pdf', $pdf);
+
+			return $fullpath . '/invoice' . $invoiceId . '.pdf';
 		}
+
 		return false;
 	}
 
@@ -736,45 +726,26 @@ class plgRedformEconomic extends JPlugin
 	 */
 	public function _rfSendInvoiceEmail($invoiceId)
 	{
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
-		$app = &Jfactory::getApplication();
-
-		$query = ' SELECT b.* '
-			. ' FROM #__rwf_billings AS b '
-			. ' INNER JOIN #__rwf_payments_requests AS pr ON pr.submit_key = b.submit_key '
-			. ' INNER JOIN #__rwf_invoices AS i ON i.paymentrequest_id = pr.id '
-			. ' WHERE i.reference = ' . $this->_db->Quote($invoiceId)
-			. ' ORDER BY b.id DESC ';
-		$this->_db->setQuery($query);
-		$data = $this->_db->loadObject();
-
-		if (!$data)
-		{
-			JError::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_SEND_INVOICE_ERROR_UNKOWN_INVOICE'));
-			return false;
-		}
+		$app = JFactory::getApplication();
+		$data = $this->getCartDetails();
 
 		//	make sure the invoice is stored indeed
 		$path = $this->_rfStoreInvoice($invoiceId);
+
 		if (!$path)
 		{
 			return false;
 		}
 
-		$mailer = &JFactory::getMailer();
-
-		jimport('joomla.mail.helper');
 		/* Start the mailer object */
-		$mailer = &JFactory::getMailer();
-		$mailer->isHTML(true);
+		$mailer = JFactory::getMailer();
 		$mailer->From = $app->getCfg('mailfrom');
 		$mailer->FromName = $app->getCfg('sitename');
 		$mailer->AddReplyTo(array($app->getCfg('mailfrom'), $app->getCfg('sitename')));
 		$mailer->addAttachment($path);
 		$mailer->setSubject(JText::sprintf('PLG_REDFORM_INTEGRATION_ECONOMIC_SEND_INVOICE_SUBJECT', $data->title));
-		$mailer->setBody(JText::sprintf('PLG_REDFORM_INTEGRATION_ECONOMIC_SEND_INVOICE_BODY'));
-		$mailer->addRecipient($data->email);
+		$mailer->MsgHTML(JText::sprintf('PLG_REDFORM_INTEGRATION_ECONOMIC_SEND_INVOICE_BODY'));
+		$mailer->addRecipient($data->billing->email);
 		$mailer->send();
 	}
 
