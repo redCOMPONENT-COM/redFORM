@@ -67,8 +67,11 @@ class plgRedformEconomic extends JPlugin
 		}
 		catch (Exception $e)
 		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			RdfHelperLog::simpleLog(sprintf('E-conomic error for vart reference %s: %s', $cartReference, $e->getMessage());
 			echo '<pre>'; echo print_r($e->getMessage(), true); echo '</pre>';
 			echo '<pre>'; echo $e->getTraceAsString(); echo '</pre>';
+//			exit();
 		}
 	}
 
@@ -289,7 +292,7 @@ class plgRedformEconomic extends JPlugin
 				Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_BOOKED_STATUS'));
 			}
 
-			$this->rfStoreInvoice($invoiceId);
+			$this->rfStoreInvoice($invoiceHandle->Number);
 
 			if ($this->params->get('send_invoice'))
 			{
@@ -949,8 +952,8 @@ class plgRedformEconomic extends JPlugin
 			$dispatcher->trigger('getRFSubmissionPaymentDetailFields',
 				array(
 					$pr->integration,
-					$cartDetails->submit_key,
-					$integrationDetails
+					$pr->submit_key,
+					&$integrationDetails
 				)
 			);
 
