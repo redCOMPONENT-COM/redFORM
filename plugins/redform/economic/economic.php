@@ -69,9 +69,6 @@ class plgRedformEconomic extends JPlugin
 		{
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 			RdfHelperLog::simpleLog(sprintf('E-conomic error for cart reference %s: %s', $cartReference, $e->getMessage()));
-			echo '<pre>'; echo print_r($e->getMessage(), true); echo '</pre>';
-			echo '<pre>'; echo $e->getTraceAsString(); echo '</pre>';
-//			exit();
 		}
 	}
 
@@ -240,9 +237,13 @@ class plgRedformEconomic extends JPlugin
 			$eco['productgroup'] = $matches[1];
 			$eco['number'] = $matches[2];
 		}
-		else
+		elseif ($priceitem->sku)
 		{
 			$eco['number'] = $priceitem->sku;
+		}
+		else
+		{
+			$eco['number'] = $priceitem->id;
 		}
 
 		$eco['product_name'] = $priceitem->label;
@@ -263,6 +264,13 @@ class plgRedformEconomic extends JPlugin
 		return $ecoProductNumber;
 	}
 
+	/**
+	 * Book an invoice
+	 *
+	 * @param   int  $invoiceId  invoice id
+	 *
+	 * @return bool
+	 */
 	public function bookInvoice($invoiceId)
 	{
 		$data = $this->getCartDetails();
@@ -289,7 +297,7 @@ class plgRedformEconomic extends JPlugin
 
 			if (!$this->_db->execute())
 			{
-				Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_BOOKED_STATUS'));
+				throw new RuntimeException(JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_BOOKED_STATUS'));
 			}
 
 			$this->rfStoreInvoice($invoiceHandle->Number);
@@ -301,384 +309,6 @@ class plgRedformEconomic extends JPlugin
 		}
 
 		return (bool) $invoiceHandle;
-	}
-
-	public function rfBookInvoice($paymentrequest_id)
-	{
-		$db = &Jfactory::getDBO();
-
-		$query = ' SELECT b.*, b.fullname as name, pr.*, b.uniqueid '
-			. ' FROM #__rwf_payments_requests AS pr '
-			. ' INNER JOIN #__rwf_billings AS b ON pr.submit_key = b.submit_key '
-			. ' WHERE pr.id = ' . $db->Quote($paymentrequest_id);
-		$db->setQuery($query);
-		$data = $db->loadObject();
-
-		if (!$data)
-		{
-			JError::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_NO_BILLING_INFO'));
-			return false;
-		}
-
-		if ($data->booked)
-		{
-			JError::raiseNotice(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ALREADY_BOOKED'));
-			return false;
-		}
-		$data->amount = $data->total + $data->vat;
-
-		$helper = $this->getClient();
-		$invoice = $helper->CurrentInvoice_FindByOtherReference($data->submit_key . '-' . $paymentrequest_id);
-		if (!$invoice || !count($invoice))
-		{
-			$invoice = $this->rfCreateInvoice($paymentrequest_id);
-			if (!$invoice)
-			{
-				return false;
-			}
-		}
-		else
-		{
-			$invoice = $invoice[0];
-		}
-		$bookingData = get_object_vars($data);
-
-		$bookingData['invoiceHandle'] = $invoice->Id;
-		$bookingData['currency_code'] = $data->currency;
-		$bookingData['vat'] = $data->vat;
-		$invoiceHandle = $helper->bookInvoice($bookingData);
-
-		if ($invoiceHandle)
-		{
-			$query = ' UPDATE #__rwf_payments_requests SET booked = 1 '
-				. ' WHERE id = ' . $db->Quote($paymentrequest_id);
-			$db->setQuery($query);
-			if (!$data = $db->query())
-			{
-				Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_BOOKED_STATUS'));
-			}
-
-			$query = sprintf(' INSERT INTO #__rwf_invoices (submit_key, paymentrequest_id, name, reference, booked, date) '
-				. ' VALUES (%s, %s, %s, %s, %d, NOW())',
-				$db->Quote($data->submit_key),
-				$db->Quote($paymentrequest_id),
-				$db->Quote(JText::_('Invoice')),
-				$db->Quote($invoiceHandle->Number),
-				1
-			);
-			$db->setQuery($query);
-			if (!$data = $db->query())
-			{
-				Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_BOOKED_STATUS'));
-			}
-
-			// send email to billing address
-			$this->rfSendInvoiceEmail($invoiceHandle->Number);
-		}
-		return (bool) $invoiceHandle;
-	}
-
-	public function rfTurnInvoice($reference)
-	{
-		$db = &Jfactory::getDBO();
-
-		$helper = $this->getClient();
-		$invoicehandle = array('Number' => $reference);
-		$data = $helper->Invoice_GetData(array('entityHandle' => $invoicehandle));
-		if (!$data)
-		{
-			JError::raiseNotice(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_INVOICE_NOT_FOUND'));
-			return false;
-		}
-		$lines = $helper->Invoice_GetLines(array('invoiceHandle' => $invoicehandle));
-
-//		echo '<pre>';print_r($data); echo '</pre>';exit;
-		$currentInvoiceHandle = $helper->client->CurrentInvoice_Create(array('debtorHandle' => $data->DebtorHandle))->CurrentInvoice_CreateResult;
-		$helper->client->CurrentInvoice_SetCurrency(array('currentInvoiceHandle' => $currentInvoiceHandle, 'valueHandle' => $data->CurrencyHandle));
-		$helper->client->CurrentInvoice_SetTermOfPayment(array('currentInvoiceHandle' => $currentInvoiceHandle, 'valueHandle' => $data->TermOfPaymentHandle));
-		$helper->client->CurrentInvoice_SetIsVatIncluded(array('currentInvoiceHandle' => $currentInvoiceHandle, 'value' => $data->IsVatIncluded));
-		$helper->client->CurrentInvoice_SetTextLine1(array('currentInvoiceHandle' => $currentInvoiceHandle, 'value' => $data->TextLine1));
-		$helper->client->CurrentInvoice_SetOtherReference(array('currentInvoiceHandle' => $currentInvoiceHandle, 'value' => $data->OtherReference . '-rev'));
-
-		foreach ($lines as $l)
-		{
-			$ldata = $helper->client->InvoiceLine_GetData(array('entityHandle' => $l))->InvoiceLine_GetDataResult;
-			$ldata->Quantity = -($ldata->Quantity);
-			$ldata->InvoiceHandle = $currentInvoiceHandle;
-			$ldata->Id = $currentInvoiceHandle->Id;
-			$ldata->Number = $l->Number;
-			$ldata->TotalMargin = 0;
-			$ldata->MarginAsPercent = 0;
-			$helper->client->CurrentInvoiceLine_CreateFromData(array('data' => $ldata));
-		}
-
-		// book it
-		$bookingData = array();
-		$bookingData['invoiceHandle'] = $currentInvoiceHandle->Id;
-		$invoiceHandle = $helper->bookInvoice($bookingData);
-
-		if ($invoiceHandle)
-		{
-			// find out paymentrequest_id
-			$query = ' SELECT paymentrequest_id '
-				. ' FROM #__rwf_invoices '
-				. ' WHERE reference = ' . $db->Quote($reference);
-			$this->_db->setQuery($query);
-			$res = $this->_db->loadResult();
-
-			$query = sprintf(' INSERT INTO #__rwf_invoices (paymentrequest_id, name, reference, note, booked, date) '
-				. ' VALUES (%s, %s, %s, %s,%d, NOW())',
-				$db->Quote($res),
-				$db->Quote(JText::_('Turned')),
-				$db->Quote($invoiceHandle->Number),
-				$db->Quote(JText::_('Turned invoice') . ' ' . $reference),
-				1
-			);
-			$db->setQuery($query);
-			if (!$db->query())
-			{
-				Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_STORING_TURNED_INVOICE_ROW'));
-			}
-
-			// set invoice as turned
-			$query = ' UPDATE #__rwf_invoices AS i SET turned = ' . $db->Quote($invoiceHandle->Number) . ' WHERE reference = ' . $db->Quote($reference);
-			$this->_db->setQuery($query);
-			if (!$db->query())
-			{
-				Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_TURNED_STATUS'));
-			}
-		}
-
-		// send email to billing address
-		$this->rfSendInvoiceEmail($invoiceHandle->Number);
-
-		return (bool) true;
-	}
-
-	public function rfUpdateBilling($data, $additems, $removeitems)
-	{
-		$helper = $this->getClient();
-
-		if (!$data->booked) // edit the current invoice
-		{
-			$invoice = false;
-			if ($data->invoice)
-			{
-				// check that the invoice exists in e-conomic
-				$invoices = $helper->CurrentInvoice_GetAll();
-				foreach ((array) $invoices as $i)
-				{
-					if ($i->Id == $data->invoice)
-					{
-						$invoice = $i;
-						break;
-					}
-				}
-
-				if ($invoice)
-				{
-					// remove all lines
-					$lines = $helper->CurrentInvoice_GetLines(array('currentInvoiceHandle' => $invoice));
-					foreach ($lines as $l)
-					{
-						$helper->client->CurrentInvoiceLine_Delete(array('currentInvoiceLineHandle' => $l));
-					}
-				}
-			}
-
-			if (!$invoice)
-			{
-				$debtorhandle = $this->getDebtor($data);
-
-				$invoiceData = get_object_vars($data);
-				//$invoice = $helper->CurrentInvoice_Create($debtorhandle);
-				$invoiceData['currency_code'] = $data->currency;
-				$invoiceData['debtorHandle'] = $debtorhandle->Number;
-				$invoiceData['vatzone'] = 'EU';
-				$invoiceData['isvat'] = $data->vatexempt ? 0 : 1;
-				$invoiceData['user_info_id'] = $data->email;
-				$invoiceData['name'] = $data->fullname;
-
-				$invoice = $helper->createInvoice($invoiceData);
-				$helper->CurrentInvoice_SetOtherReference(array('currentInvoiceHandle' => $invoice, 'value' => $data->submit_key));
-			}
-
-			$priceitems = RedFormCore::getSubmissionPriceItems($data->submit_key);
-			$i = 1;
-			foreach ($priceitems as $item)
-			{
-				$producthandle = $this->createProduct($item);
-				$line = array();
-				$line['InvoiceHandle'] = $invoice;
-				$line['ProductHandle'] = $producthandle;
-				$line['Number'] = $i++;
-				$line['Description'] = $item->label;
-				$line['Quantity'] = 1;
-				$line['UnitNetPrice'] = $item->price;
-				$line['DiscountAsPercent'] = 0;
-				$line['UnitCostPrice'] = 0;
-				$line['TotalMargin'] = 0;
-				$line['MarginAsPercent'] = 0;
-
-				$newCurrentInvoiceLineHandle = $helper->CurrentInvoiceLine_CreateFromData(array('data' => $line));
-			}
-			if ($invoice)
-			{
-				// update billing
-				$table = &JTable::getInstance('billings', 'RedformTable');
-				$table->load($data->id);
-				$table->invoice = $invoice->Id;
-				$table->store();
-			}
-
-			return $invoice;
-		}
-		else // already booked, so create an invoice with just the difference
-		{
-			$debtorhandle = $this->getDebtor($data);
-
-			$invoiceData = get_object_vars($data);
-			//$invoice = $helper->CurrentInvoice_Create($debtorhandle);
-			$invoiceData['currency_code'] = $data->currency;
-			$invoiceData['debtorHandle'] = $debtorhandle->Number;
-			$invoiceData['vatzone'] = 'EU';
-			$invoiceData['isvat'] = $data->vatexempt ? 0 : 1;
-			$invoiceData['user_info_id'] = $data->email;
-			$invoiceData['name'] = $data->fullname;
-
-			$invoice = $helper->createInvoice($invoiceData);
-			$helper->CurrentInvoice_SetOtherReference(array('currentInvoiceHandle' => $invoice, 'value' => $data->submit_key));
-
-			$i = 1;
-			foreach ($additems as $item)
-			{
-				$producthandle = $this->createProduct($item);
-				$line = array();
-				$line['InvoiceHandle'] = $invoice;
-				$line['ProductHandle'] = $producthandle;
-				$line['Number'] = $i++;
-				$line['Description'] = $item->label;
-				$line['Quantity'] = 1;
-				$line['UnitNetPrice'] = $item->price;
-				$line['DiscountAsPercent'] = 0;
-				$line['UnitCostPrice'] = 0;
-				$line['TotalMargin'] = 0;
-				$line['MarginAsPercent'] = 0;
-
-				$newCurrentInvoiceLineHandle = $helper->CurrentInvoiceLine_CreateFromData(array('data' => $line));
-			}
-			foreach ($removeitems as $item)
-			{
-				$producthandle = $this->createProduct($item);
-				$line = array();
-				$line['InvoiceHandle'] = $invoice;
-				$line['ProductHandle'] = $producthandle;
-				$line['Number'] = $i++;
-				$line['Description'] = $item->label;
-				$line['Quantity'] = -1;
-				$line['UnitNetPrice'] = $item->price;
-				$line['DiscountAsPercent'] = 0;
-				$line['UnitCostPrice'] = 0;
-				$line['TotalMargin'] = 0;
-				$line['MarginAsPercent'] = 0;
-
-				$newCurrentInvoiceLineHandle = $helper->CurrentInvoiceLine_CreateFromData(array('data' => $line));
-			}
-
-			// book it
-			$bookingData = array();
-			$bookingData['invoiceHandle'] = $invoice->Id;
-			$invoiceHandle = $helper->bookInvoice($bookingData);
-
-			if ($invoiceHandle)
-			{
-				$db = &Jfactory::getDBO();
-
-				$query = sprintf(' INSERT INTO #__rwf_invoices (submit_key, name, reference, note, booked, date) '
-					. ' VALUES (%s, %s, %s, %s,%d, NOW())',
-					$db->Quote($data->submit_key),
-					$db->Quote(JText::_('Difference')),
-					$db->Quote($invoiceHandle->Number),
-					$db->Quote(JText::_('Price changed') . ' ' . $reference),
-					1
-				);
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					Jerror::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_PRICE_CHANGE'));
-				}
-
-				// send email to billing address
-				$this->rfSendInvoiceEmail($invoiceHandle->Number);
-			}
-		}
-	}
-
-	public function rfGetUserInvoices(&$invoices, $userid = null)
-	{
-		if (!$userid)
-		{
-			$user = &JFactory::getUser();
-		}
-		else
-		{
-			$user = &JFactory::getUser($userid);
-		}
-		if (!$user->get('id'))
-		{
-			return false;
-		}
-
-		$query = ' SELECT b.* '
-			. ' FROM #__rwf_billings AS b '
-			. ' WHERE b.user_id = ' . $this->_db->Quote($user->get('id'))
-			. '   AND b.invoice > 0 '
-			. ' GROUP BY b.id '
-			. ' ORDER BY b.id DESC';
-
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObjectList();
-
-		foreach ($res as $r)
-		{
-			$invoices[] = $r;
-		}
-		return true;
-	}
-
-	public function rfGetPdfInvoice(&$pdf, $submit_key, $reference)
-	{
-		if (!$submit_key || !$reference)
-		{
-			return false;
-		}
-
-		// make sure the invoice reference matches the key (security)
-		$query = ' SELECT i.id, i.reference, i.booked '
-			. ' FROM #__rwf_invoices AS i '
-			. ' INNER JOIN #__rwf_payments_requests AS pr on pr.id = i.paymentrequest_id '
-			. ' WHERE pr.submit_key = ' . $this->_db->Quote($submit_key)
-			. '   AND i.reference = ' . $this->_db->Quote($reference);
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObject();
-		if (!$res)
-		{
-			JError::raiseError('403', JText::_('COM_REDFORM_ECONOMIC_INVOICE_ACCESS_NOT_ALLOWED'));
-			return false;
-		}
-
-		$helper = $this->getClient();
-		if ($res->booked)
-		{
-			$path = $this->rfStoreInvoice($res->reference);
-			$pdf = file_get_contents($path);
-		}
-		else
-		{ // not stored locally as long as not booked
-			$pdf = $helper->CurrentInvoice_GetPdf(array('Id' => $reference));
-		}
-
-		return true;
 	}
 
 	/**
@@ -696,9 +326,7 @@ class plgRedformEconomic extends JPlugin
 		{
 			if (!JFolder::create($fullpath))
 			{
-				JError::raiseWarning(0, JText::_('CANNOT_CREATE_FOLDER') . ': ' . $fullpath);
-
-				return false;
+				throw new RuntimeException(JText::_('CANNOT_CREATE_FOLDER') . ': ' . $fullpath);
 			}
 		}
 
@@ -732,7 +360,7 @@ class plgRedformEconomic extends JPlugin
 		$app = JFactory::getApplication();
 		$data = $this->getCartDetails();
 
-		//	make sure the invoice is stored indeed
+		// Make sure the invoice is stored indeed
 		$path = $this->rfStoreInvoice($invoiceId);
 
 		if (!$path)
@@ -894,7 +522,8 @@ class plgRedformEconomic extends JPlugin
 	/**
 	 * Return Invoices info row from database
 	 *
-	 * @param   int  $cartId  cart id
+	 * @param   int      $cartId         cart id
+	 * @param   boolean  $createOnError  create table if not found
 	 *
 	 * @return mixed
 	 */
@@ -968,6 +597,8 @@ class plgRedformEconomic extends JPlugin
 
 	/**
 	 * Create the invoice table
+	 *
+	 * @return void
 	 */
 	private function updateDb()
 	{
@@ -989,11 +620,7 @@ class plgRedformEconomic extends JPlugin
 			if ($query != '' && $query{0} != '#')
 			{
 				$this->_db->setQuery($query);
-
-				if (!$this->_db->execute())
-				{
-					throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $this->_db->stderr(true)));
-				}
+				$this->_db->execute();
 			}
 		}
 	}

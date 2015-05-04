@@ -113,7 +113,7 @@ class RedformeconomicSoapClient
 	 *
 	 * @return array
 	 */
-	function Debtor_FindByEmail($d)
+	public function Debtor_FindByEmail($d)
 	{
 		$Handle = $this->client->Debtor_FindByEmail(array('email' => $d['email']))->Debtor_FindByEmailResult;
 
@@ -218,7 +218,7 @@ class RedformeconomicSoapClient
 	/**
 	 * Method to get invoice data in economic
 	 *
-	 * @param   object $d handle
+	 * @param   object  $d  handle
 	 *
 	 * @return array
 	 */
@@ -342,7 +342,7 @@ class RedformeconomicSoapClient
 	 *
 	 * @return bool
 	 */
-	function CurrentInvoice_Delete($invoiceHandle)
+	public function CurrentInvoice_Delete($invoiceHandle)
 	{
 		$this->client->CurrentInvoice_Delete(array('currentInvoiceHandle' => $invoiceHandle));
 
@@ -743,7 +743,6 @@ class RedformeconomicSoapClient
 		}
 	}
 
-
 	/**
 	 * Method to create debtor contact in economic
 	 *
@@ -751,7 +750,7 @@ class RedformeconomicSoapClient
 	 *
 	 * @return array
 	 */
-	function DebtorContact_Create($d)
+	public function DebtorContact_Create($d)
 	{
 		$Id = $d['user_info_id'];
 		$Handle = new stdclass;
@@ -979,8 +978,6 @@ class RedformeconomicSoapClient
 			return false;
 		}
 	}
-
-
 
 	/**
 	 * Method to get Invoice By number
