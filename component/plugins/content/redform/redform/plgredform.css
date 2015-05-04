@@ -53,12 +53,12 @@ input.emptyfield {
 	background-color: pink;
 }
 
-select.emptyfield {
+textarea.emptyfield {
 	border: 1px solid red;
 	background-color: pink;
 }
 
-textarea.emptyfield {
+select.emptyfield {
 	border: 1px solid red;
 	background-color: pink;
 }
