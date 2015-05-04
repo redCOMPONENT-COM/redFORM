@@ -68,7 +68,7 @@ class plgRedformEconomic extends JPlugin
 		catch (Exception $e)
 		{
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-			RdfHelperLog::simpleLog(sprintf('E-conomic error for vart reference %s: %s', $cartReference, $e->getMessage());
+			RdfHelperLog::simpleLog(sprintf('E-conomic error for cart reference %s: %s', $cartReference, $e->getMessage()));
 			echo '<pre>'; echo print_r($e->getMessage(), true); echo '</pre>';
 			echo '<pre>'; echo $e->getTraceAsString(); echo '</pre>';
 //			exit();
