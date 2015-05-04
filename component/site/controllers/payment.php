@@ -125,7 +125,7 @@ class RedformControllerPayment extends JControllerLegacy
 					'index.php?option=com_redform&view=payment&layout=billing&reference=' . $cart->reference
 				);
 
-				return false;
+				return;
 			}
 
 			// Attempt to save the data.
@@ -140,7 +140,7 @@ class RedformControllerPayment extends JControllerLegacy
 					'index.php?option=com_redform&view=payment&layout=billing&reference=' . $cart->reference
 				);
 
-				return false;
+				return;
 			}
 		}
 
@@ -187,7 +187,9 @@ class RedformControllerPayment extends JControllerLegacy
 						break;
 
 					default:
-						$app->redirect('index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v);
+						$app->redirect(
+							'index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v
+						);
 						break;
 				}
 			}

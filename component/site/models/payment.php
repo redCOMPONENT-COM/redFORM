@@ -47,7 +47,6 @@ class RedFormModelPayment extends JModelLegacy
 		$this->reference = JFactory::getApplication()->input->get('reference', '');
 	}
 
-
 	/**
 	 * Method for getting the form from the model.
 	 *
@@ -295,8 +294,6 @@ class RedFormModelPayment extends JModelLegacy
 
 	/**
 	 * provides information for process function of helpers (object id, title, etc...)
-	 *
-	 * @param   string  $reference  cart reference
 	 *
 	 * @return object
 	 *
@@ -579,6 +576,11 @@ class RedFormModelPayment extends JModelLegacy
 		return $res;
 	}
 
+	/**
+	 * get cart data from db
+	 *
+	 * @return mixed|object
+	 */
 	public function getCart()
 	{
 		if (!$this->cart)

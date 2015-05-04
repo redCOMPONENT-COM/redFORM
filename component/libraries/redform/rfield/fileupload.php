@@ -82,7 +82,6 @@ class RdfRfieldFileupload extends RdfRfield
 		return $this->value ? basename($this->value) : $this->value;
 	}
 
-
 	/**
 	 * Check if there was a file uploaded
 	 *

@@ -68,7 +68,6 @@ class RdfCoreSubmission extends JObject
 		throw new RuntimeException('Unaccessible or undefined property: ' . $name);
 	}
 
-
 	/**
 	 * Set submit key
 	 *
