@@ -41,6 +41,35 @@ class RdfCoreSubmission extends JObject
 	}
 
 	/**
+	 * Getter
+	 *
+	 * @param   string  $name  property to get
+	 *
+	 * @return mixed
+	 */
+	public function __get($name)
+	{
+		switch ($name)
+		{
+			case 'submit_key':
+				return $this->submitKey;
+
+			case 'posts':
+				$posts = array();
+
+				foreach ($this->answers AS $answer)
+				{
+					$posts[] = array('sid' => $answer->sid);
+				}
+
+				return $posts;
+		}
+
+		throw new RuntimeException('Unaccessible or undefined property: ' . $name);
+	}
+
+
+	/**
 	 * Set submit key
 	 *
 	 * @param   string  $submit_key  submit key
@@ -59,14 +88,11 @@ class RdfCoreSubmission extends JObject
 	 * @param   array   $options          options: skip_captcha, ...
 	 * @param   array   $formData         form data, leave null to use posted data
 	 *
-	 * @return boolean|stdclass
+	 * @return RdfCoreSubmission
 	 */
 	public function apisaveform($integration_key = '', $options = array(), $formData = null)
 	{
 		$app = JFactory::getApplication();
-
-		$result = new stdclass;
-		$result->posts = array();
 
 		// Check the token
 		$token = RdfCore::getToken();
@@ -88,18 +114,14 @@ class RdfCoreSubmission extends JObject
 
 		if (!isset($data['submit_key']) || !$data['submit_key'])
 		{
-			$isNew = true;
 			$submit_key = uniqid();
 		}
 		else
 		{
-			$isNew = false;
 			$submit_key = $data['submit_key'];
 		}
 
 		$this->setSubmitKey($submit_key);
-
-		$result->submit_key = $submit_key;
 
 		/* Get the form details */
 		$this->formId = $data['form_id'];
@@ -207,7 +229,6 @@ class RdfCoreSubmission extends JObject
 
 			$allanswers[] = $answers;
 		}
-		/* End multi-user signup */
 
 		$this->answers = $allanswers;
 
@@ -246,7 +267,7 @@ class RdfCoreSubmission extends JObject
 			}
 		}
 
-		// Savetosession: data is saved to session using the submit key
+		// Save to session: data is saved to session using the submit key
 		if (isset($options['savetosession']))
 		{
 			$sessiondata = array();
@@ -258,7 +279,7 @@ class RdfCoreSubmission extends JObject
 
 			$app->setUserState($submit_key, $sessiondata);
 
-			return $result;
+			return $this;
 		}
 
 		// Else save to db !
@@ -276,7 +297,6 @@ class RdfCoreSubmission extends JObject
 			{
 				// Delete session data
 				$app->setUserState('formdata' . $form->id, null);
-				$result->posts[] = array('sid' => $res);
 			}
 
 			if ($answers->isNew())
@@ -284,9 +304,6 @@ class RdfCoreSubmission extends JObject
 				$this->updateMailingList($answers);
 			}
 		}
-
-		// Update payment request attached to submissions
-
 
 		// Send email to maintainers
 		$this->notifymaintainer($allanswers, $answers->isNew());
@@ -300,7 +317,7 @@ class RdfCoreSubmission extends JObject
 			}
 		}
 
-		return $result;
+		return $this;
 	}
 
 	/**
@@ -314,11 +331,8 @@ class RdfCoreSubmission extends JObject
 	 */
 	public function quicksubmit($fields, $integration = null, $options = null)
 	{
-		$result = new stdclass;
-		$result->posts = array();
-
 		$submit_key = uniqid();
-		$result->submit_key = $submit_key;
+		$this->submit_key = $submit_key;
 
 		$form = $this->getForm();
 
@@ -344,7 +358,15 @@ class RdfCoreSubmission extends JObject
 			$answers->addField($field);
 		}
 
-		$sid = $answers->savedata();
+		if (isset($options['extrafields'][0]))
+		{
+			foreach ($options['extrafields'][0] as $field)
+			{
+				$answers->addField($field);
+			}
+		}
+
+		$answers->savedata();
 
 		$this->updateMailingList($answers);
 
@@ -357,9 +379,9 @@ class RdfCoreSubmission extends JObject
 			$this->notifysubmitter($answers);
 		}
 
-		$result->posts[] = array('sid' => $sid);
+		$this->answers = array($answers);
 
-		return $result;
+		return $this;
 	}
 
 	/**

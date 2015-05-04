@@ -472,7 +472,7 @@ class RdfCore extends JObject
 	 * @param   array   $options          options for registration
 	 * @param   array   $data             data if empty, the $_POST variable is used
 	 *
-	 * @return   int/array submission_id, or array of submission ids in case of success, 0 otherwise
+	 * @return   RdfCoreSubmission
 	 */
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
