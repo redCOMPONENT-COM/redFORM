@@ -13,7 +13,8 @@ defined('JPATH_BASE') or die;
 jimport('joomla.plugin.plugin');
 
 /**
- * Specific parameters for redEVENT.
+ *
+ * gasel kmd integration
  *
  * @package     Redform.Plugin
  * @subpackage  Redform.gaselkmd
@@ -28,6 +29,9 @@ class plgRedformGaselkmd extends JPlugin
 	 */
 	private $answers;
 
+	/**
+	 * @var RdfCore
+	 */
 	private $redFormCore;
 
 	private $mapping;
@@ -45,6 +49,35 @@ class plgRedformGaselkmd extends JPlugin
 	}
 
 	/**
+	 * Called after a submission was saved in  frontend
+	 *
+	 * @param   object  $result  result
+	 *
+	 * @return void
+	 */
+	public function onAfterRedformSavedSubmission($result)
+	{
+		$sids = array();
+
+		foreach ($result->posts as $post)
+		{
+			$sids[] = $post['sid'];
+		}
+
+		// Check if the form has confirmation enabled or not
+		$this->sids = $sids;
+		$submissions = $this->getAnswers();
+
+		$formId = $submissions->getFirstSubmission()->getFormId();
+		$form = $this->getRedFormCore()->getForm($formId);
+
+		if (!$form->enable_confirmation)
+		{
+			$this->sendSubmissions();
+		}
+	}
+
+	/**
 	 * Called after a submission was confirmed
 	 *
 	 * @param   array  $sids  submission id's
@@ -59,7 +92,16 @@ class plgRedformGaselkmd extends JPlugin
 		}
 
 		$this->sids = $sids;
+		$this->sendSubmissions();
+	}
 
+	/**
+	 * Do the work...
+	 *
+	 * @return void
+	 */
+	private function sendSubmissions()
+	{
 		try
 		{
 			$submissions = $this->getAnswers();
@@ -74,6 +116,7 @@ class plgRedformGaselkmd extends JPlugin
 			$app = JFactory::getApplication();
 			$app->enqueueMessage($e->getMessage(), 'error');
 		}
+
 	}
 
 	/**
@@ -249,7 +292,7 @@ class plgRedformGaselkmd extends JPlugin
 	/**
 	 * Get redformcore
 	 *
-	 * @return RedFormCore
+	 * @return RdfCore
 	 */
 	private function getRedFormCore()
 	{
