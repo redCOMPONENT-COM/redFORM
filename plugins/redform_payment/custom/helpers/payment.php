@@ -71,12 +71,12 @@ class PaymentCustom extends  RdfPaymentHelper
 	public function notify()
 	{
 		$app = JFactory::getApplication();
-		$submit_key = $app->input->get('key');
+		$reference = $app->input->get('reference');
 
 		$status = $this->params->get('payment_status', 'pending') == 'paid';
 		$data = 'tid:' . uniqid();
 
-		$this->writeTransaction($submit_key, $data, $status, 1);
+		$this->writeTransaction($reference, $data, $status, 1);
 
 		return 1;
 	}

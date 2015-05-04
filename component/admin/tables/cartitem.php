@@ -10,18 +10,18 @@
 defined('_JEXEC') or die;
 
 /**
- * Payment table.
+ * Cart item table.
  *
  * @package     Redform.Backend
  * @subpackage  Tables
- * @since       1.0
+ * @since       2.5
  */
-class RedformTablePayment extends RTable
+class RedformTableCartitem extends RTable
 {
 	/**
 	 * The table name without the prefix.
 	 *
 	 * @var  string
 	 */
-	protected $_tableName = 'rwf_payment';
+	protected $_tableName = 'rwf_cart_item';
 }

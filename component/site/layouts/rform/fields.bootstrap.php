@@ -21,15 +21,9 @@ $index = $data['index'];
 
 $html = '';
 
-if (isset($options['extrafields']) && count($options['extrafields']))
+if (isset($options['extrafields'][$index]))
 {
-	foreach ($options['extrafields'] as $field)
-	{
-		$html .= '<div class="control-group ' . (isset($field['class']) && !empty($field['class']) ? ' ' . $field['class'] : '' ) . '">';
-		$html .= '  <div class="control-label">' . $field['label'] . '</div>';
-		$html .= '  <div class="controls">' . $field['field'] . '</div>';
-		$html .= '</div>';
-	}
+	$fields = array_merge($options['extrafields'][$index], $fields);
 }
 
 foreach ($fields as $field)
@@ -41,32 +35,31 @@ foreach ($fields as $field)
 	}
 
 	// Init rfield
-	$rfield = RdfRfieldFactory::getFormField($field->id);
-	$rfield->setFormIndex($index);
-	$rfield->setUser($user);
+	$field->setFormIndex($index);
+	$field->setUser($user);
 
 	// Set value if editing
 	if ($answers)
 	{
 		$value = $answers->getFieldAnswer($field->id);
-		$rfield->setValue($value, true);
+		$field->setValue($value, true);
 	}
 
-	if ($rfield->isHidden())
+	if ($field->isHidden())
 	{
-		$html .= $rfield->getInput();
+		$html .= $field->getInput();
 
 		continue;
 	}
 
 	$html .= '<div class="control-group type-' . $field->fieldtype . $field->getParam('class', '') . '">';
 
-	if ($rfield->displayLabel())
+	if ($field->displayLabel())
 	{
-		$html .= '<div class="control-label">' . $rfield->getLabel() . '</div>';
+		$html .= '<div class="control-label">' . $field->getLabel() . '</div>';
 	}
 
-	$html .= '<div class="controls">' . $rfield->getInput() . '</div>';
+	$html .= '<div class="controls">' . $field->getInput() . '</div>';
 
 
 	$html .= '</div>';
