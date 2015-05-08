@@ -53,7 +53,7 @@ abstract class RdfPaymentHelper extends JObject
 
 	/**
 	 * Details of cart being processed
-	 * @var object
+	 * @var RdfCorePaymentCart
 	 */
 	protected $details;
 
@@ -110,7 +110,7 @@ abstract class RdfPaymentHelper extends JObject
 	 *
 	 * @param   string  $cartReference  cart reference
 	 *
-	 * @return object
+	 * @return RdfCorePaymentCart
 	 */
 	protected function getDetails($cartReference)
 	{
@@ -182,14 +182,14 @@ abstract class RdfPaymentHelper extends JObject
 	/**
 	 * returns state url (notify, cancel, etc...)
 	 *
-	 * @param   string  $state       the state for the url
-	 * @param   string  $submit_key  submit key
+	 * @param   string  $state      the state for the url
+	 * @param   string  $reference  cart reference
 	 *
 	 * @return string
 	 */
-	protected function getUrl($state, $submit_key)
+	protected function getUrl($state, $reference)
 	{
-		$uri = $this->getUri($state, $submit_key);
+		$uri = $this->getUri($state, $reference);
 
 		return $uri->toString();
 	}

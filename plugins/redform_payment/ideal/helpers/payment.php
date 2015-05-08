@@ -137,7 +137,7 @@ class PaymentIdeal extends  RdfPaymentHelper
 				<legend><?php echo JText::_('iDeal Payment Gateway'); ?></legend>
 				<p><?php echo $request->title; ?></p>
 
-				<p><?php echo $details->getPrice(); ?> Euros</p>
+				<p><?php echo $this->getPrice($details); ?> Euros</p>
 				<label for="bank_id"><?php echo JText::_('IDEAL_SELECT_BANK'); ?></label>
 				<?php echo JHTML::_('select.genericlist', $options, 'bank_id') ?>
 			</fieldset>

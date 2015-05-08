@@ -82,6 +82,11 @@ class RedformModelPayment extends RModelAdmin
 		return $cart_id;
 	}
 
+	/**
+	 * set associated Payment Requests As Paid
+	 *
+	 * @return void
+	 */
 	public function setPaymentRequestsAsPaid()
 	{
 		$id = $this->getState($this->getName() . '.id');
