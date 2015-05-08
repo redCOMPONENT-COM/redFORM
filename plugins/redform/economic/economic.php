@@ -118,25 +118,61 @@ class plgRedformEconomic extends JPlugin
 		return true;
 	}
 
+	/**
+	 * Handle onAjaxGetpdf event
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 */
+	public function onAjaxBook()
+	{
+		$app = JFactory::getApplication();
+		$invoiceId = $app->input->getInt('id', 0);
+		$reference = $app->input->get('reference');
+		$return = $app->input->get('return');
+
+		$invoice = $this->confirmReference($invoiceId, $reference);
+		$this->getCartDetails($invoice->cart_id);
+
+		$this->bookInvoice($reference);
+
+		if ($return)
+		{
+			$app->redirect(base64_decode($return));
+		}
+		else
+		{
+			$app->redirect('index.php?option=com_redform&view=submitters');
+		}
+	}
+
+	/**
+	 * Handle onAjaxGetpdf event
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 */
+	public function onAjaxTurninvoice()
+	{
+
+	}
+
+	/**
+	 * Handle onAjaxGetpdf event
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 */
 	public function onAjaxGetpdf()
 	{
 		$app = JFactory::getApplication();
 		$invoiceId = $app->input->getInt('id', 0);
 		$reference = $app->input->get('reference');
 
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select('reference')
-			->from('#__rwf_invoice')
-			->where('reference = ' . $db->quote($reference))
-			->where('id = ' . $invoiceId);
-
-		$db->setQuery($query);
-
-		if (!$db->loadResult())
-		{
-			throw new Exception('Invoice not found');
-		}
+		$this->confirmReference($invoiceId, $reference);
 
 		if (!$path = $this->rfStoreInvoice($reference))
 		{
@@ -151,6 +187,35 @@ class plgRedformEconomic extends JPlugin
 		@readfile($path);
 
 		$app->close();
+	}
+
+	/**
+	 * Check that ivoice id matches reference
+	 *
+	 * @param   int     $invoiceId  invoice id
+	 * @param   string  $reference  reference
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 */
+	private function confirmReference($invoiceId, $reference)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from('#__rwf_invoice')
+			->where('reference = ' . $db->quote($reference))
+			->where('id = ' . $invoiceId);
+
+		$db->setQuery($query);
+
+		if (!$invoice = $db->loadObject())
+		{
+			throw new Exception('Invoice not found');
+		}
+
+		return $invoice;
 	}
 
 	/**
@@ -353,22 +418,22 @@ class plgRedformEconomic extends JPlugin
 	/**
 	 * Book an invoice
 	 *
-	 * @param   int  $invoiceId  invoice id
+	 * @param   string  $invoiceNumber  invoice number
 	 *
 	 * @return bool
 	 */
-	private function bookInvoice($invoiceId)
+	private function bookInvoice($invoiceNumber)
 	{
 		$data = $this->getCartDetails();
 
 		$bookingData = array();
 		$bookingData['amount'] = $data->price + $data->vat;
-		$bookingData['invoiceHandle'] = $invoiceId;
+		$bookingData['invoiceHandle'] = $invoiceNumber;
 		$bookingData['currency_code'] = $data->currency;
 		$bookingData['vat'] = $data->vat;
 		$bookingData['name'] = $data->billing->fullname;
 		$bookingData['uniqueid'] = $data->reference;
-		$invoiceHandle = $this->client->bookInvoice($bookingData);
+		$invoiceHandle = $this->getClient()->bookInvoice($bookingData);
 
 		if ($invoiceHandle)
 		{
