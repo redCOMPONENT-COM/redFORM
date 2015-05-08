@@ -7,6 +7,8 @@
 	<property name="dirs.root" value="." />
 	<property name="dirs.tmp" value="tmp" />
 	<property name="dirs.release" value="release" />
+	<property name="www.template.site" value="protostar" />
+	<property name="www.template.admin" value="hathor" />
 	<property name="version" value="dev" />
 
 	<xmlproperty file="redCORE/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
@@ -321,6 +323,27 @@
 			</filterchain>
         </copy>
 
+		<!-- Templates -->
+		<if>
+			<available file="overrides/site/" type="dir" />
+			<then>
+				<copy todir="${www.dir}/templates/${www.template.site}" overwrite="true">
+					<fileset dir="${dirs.root}/overrides/site">
+						<include name="**" />
+					</fileset>
+				</copy>
+			</then>
+		</if>
+		<if>
+			<available file="overrides/admin/" type="dir" />
+			<then>
+				<copy todir="${www.dir}/administrator/templates/${www.template.admin}" overwrite="true">
+					<fileset dir="${dirs.root}/overrides/admin">
+						<include name="**" />
+					</fileset>
+				</copy>
+			</then>
+		</if>
     </target>
 
     <!--
