@@ -23,7 +23,7 @@ RLoader::registerPrefix('Redformeconomic', __DIR__ . '/lib');
  */
 class plgRedformEconomic extends JPlugin
 {
-	private $_db = null;
+	private $db = null;
 
 	/**
 	 * @var RedformeconomicSoapClient
@@ -46,8 +46,7 @@ class plgRedformEconomic extends JPlugin
 		parent::__construct($subject, $params);
 		$this->loadLanguage();
 
-		$this->client = new RedformeconomicSoapClient($this->params);
-		$this->_db = JFactory::getDbo();
+		$this->db = JFactory::getDbo();
 	}
 
 	/**
@@ -73,12 +72,99 @@ class plgRedformEconomic extends JPlugin
 	}
 
 	/**
+	 * Handle onAfterPaymentVerified event
+	 *
+	 * @param   array  $submitterIds  submitter Ids
+	 * @param   array  &$invoices     invoices
+	 *
+	 * @return bool
+	 */
+	public function onGetSubmittersInvoices(array $submitterIds, &$invoices)
+	{
+		if (empty($submitterIds))
+		{
+			return true;
+		}
+
+		JArrayHelper::toInteger($submitterIds);
+
+		$query = $this->db->getQuery(true)
+			->select('i.*, ci.payment_request_id, pr.submission_id')
+			->from('#__rwf_invoice AS i')
+			->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = i.cart_id')
+			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = ci.payment_request_id')
+			->where('pr.submission_id IN(' . implode(", ", $submitterIds) . ')');
+
+		$this->db->setQuery($query);
+		$res = $this->db->loadObjectList();
+
+		$invoices = array();
+
+		foreach ($res as $result)
+		{
+			if (!isset($invoices[$result->submission_id]))
+			{
+				$invoices[$result->submission_id] = array();
+			}
+
+			if (!isset($invoices[$result->submission_id][$result->payment_request_id]))
+			{
+				$invoices[$result->submission_id][$result->payment_request_id] = array();
+			}
+
+			$invoices[$result->submission_id][$result->payment_request_id][] = $result;
+		}
+
+		return true;
+	}
+
+	public function onAjaxGetpdf()
+	{
+		$app = JFactory::getApplication();
+		$invoiceId = $app->input->getInt('id', 0);
+		$reference = $app->input->get('reference');
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('reference')
+			->from('#__rwf_invoice')
+			->where('reference = ' . $db->quote($reference))
+			->where('id = ' . $invoiceId);
+
+		$db->setQuery($query);
+
+		if (!$db->loadResult())
+		{
+			throw new Exception('Invoice not found');
+		}
+
+		if (!$path = $this->rfStoreInvoice($reference))
+		{
+			throw new Exception('Invoice not stored');
+		}
+
+		$filename = 'invoice_' . $reference . '.pdf';
+		header('Content-type: application/pdf');
+		header('Content-Disposition: attachment; filename="' . $filename . '"');
+		header('Content-Transfer-Encoding: binary');
+		header('Accept-Ranges: bytes');
+		@readfile($path);
+
+		$app->close();
+	}
+
+	/**
 	 * Get the client
 	 *
 	 * @return RedformeconomicSoapClient
 	 */
 	private function getClient()
 	{
+		if (!$this->client)
+		{
+			$this->client = new RedformeconomicSoapClient($this->params);
+		}
+
 		return $this->client;
 	}
 
@@ -89,7 +175,7 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return array|bool
 	 */
-	public function rfCreateInvoice($cartId)
+	private function rfCreateInvoice($cartId)
 	{
 		$this->cart = $this->getCartDetails($cartId);
 		$data = $this->cart;
@@ -175,7 +261,7 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return array
 	 */
-	public function getDebtor($data)
+	private function getDebtor($data)
 	{
 		$helper = $this->getClient();
 		$eco = array();
@@ -225,7 +311,7 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return object product handle
 	 */
-	public function getProduct($priceitem)
+	private function getProduct($priceitem)
 	{
 		$helper = $this->getClient();
 		$eco = array();
@@ -271,7 +357,7 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return bool
 	 */
-	public function bookInvoice($invoiceId)
+	private function bookInvoice($invoiceId)
 	{
 		$data = $this->getCartDetails();
 
@@ -286,16 +372,16 @@ class plgRedformEconomic extends JPlugin
 
 		if ($invoiceHandle)
 		{
-			$query = $this->_db->getQuery(true);
+			$query = $this->db->getQuery(true);
 
 			$query->update('#__rwf_invoice')
 				->set('booked = 1')
-				->set('reference = ' . $this->_db->Quote($invoiceHandle->Number))
-				->where('cart_id = ' . $this->_db->Quote($data->id));
+				->set('reference = ' . $this->db->Quote($invoiceHandle->Number))
+				->where('cart_id = ' . $this->db->Quote($data->id));
 
-			$this->_db->setQuery($query);
+			$this->db->setQuery($query);
 
-			if (!$this->_db->execute())
+			if (!$this->db->execute())
 			{
 				throw new RuntimeException(JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_UPDATING_BOOKED_STATUS'));
 			}
@@ -314,13 +400,15 @@ class plgRedformEconomic extends JPlugin
 	/**
 	 * store invoices
 	 *
-	 * @param   int  $invoiceId  invoice id
+	 * @param   string  $invoiceReference  invoice reference
 	 *
 	 * @return string path on success, false otherwise
 	 */
-	public function rfStoreInvoice($invoiceId)
+	private function rfStoreInvoice($invoiceReference)
 	{
-		$fullpath = JPATH_ROOT . '/media/redform/invoices';
+		$relPath = $this->params->get('invoices_folder', 'images/economic/invoices');
+		$relPath = ($relPath[0] == '/' || $relPath[0] == '\\') ? $relPath : '/' . $relPath;
+		$fullpath = JPATH_ROOT . $relPath;
 
 		if (!JFolder::exists($fullpath))
 		{
@@ -330,19 +418,19 @@ class plgRedformEconomic extends JPlugin
 			}
 		}
 
-		if (JFile::exists($fullpath . '/invoice' . $invoiceId . '.pdf'))
+		if (JFile::exists($fullpath . '/invoice' . $invoiceReference . '.pdf'))
 		{
-			return $fullpath . '/invoice' . $invoiceId . '.pdf';
+			return $fullpath . '/invoice' . $invoiceReference . '.pdf';
 		}
 
 		$helper = $this->getClient();
-		$pdf = $helper->Invoice_GetPdf(array('Number' => $invoiceId));
+		$pdf = $helper->Invoice_GetPdf(array('Number' => $invoiceReference));
 
 		if ($pdf)
 		{
-			JFile::write($fullpath . '/invoice' . $invoiceId . '.pdf', $pdf);
+			JFile::write($fullpath . '/invoice' . $invoiceReference . '.pdf', $pdf);
 
-			return $fullpath . '/invoice' . $invoiceId . '.pdf';
+			return $fullpath . '/invoice' . $invoiceReference . '.pdf';
 		}
 
 		return false;
@@ -355,7 +443,7 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return boolean
 	 */
-	public function rfSendInvoiceEmail($invoiceId)
+	private function rfSendInvoiceEmail($invoiceId)
 	{
 		$app = JFactory::getApplication();
 		$data = $this->getCartDetails();
@@ -410,16 +498,16 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return mixed
 	 */
-	public function getCartIdFromReference($reference)
+	private function getCartIdFromReference($reference)
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $this->db->getQuery(true);
 
 		$query->select('c.id')
 			->from('#__rwf_cart AS c')
-			->where('reference = ' . $this->_db->quote($reference));
+			->where('reference = ' . $this->db->quote($reference));
 
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadResult();
+		$this->db->setQuery($query);
+		$res = $this->db->loadResult();
 
 		return $res;
 	}
@@ -433,14 +521,14 @@ class plgRedformEconomic extends JPlugin
 	 */
 	private function getCart($cartId)
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $this->db->getQuery(true);
 
 		$query->select('c.*')
 			->from('#__rwf_cart AS c')
 			->where('id = ' . $cartId);
 
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObject();
+		$this->db->setQuery($query);
+		$res = $this->db->loadObject();
 
 		return $res;
 	}
@@ -455,7 +543,7 @@ class plgRedformEconomic extends JPlugin
 	private function getPaymentRequests($cartId)
 	{
 		// Get Payment requests
-		$query = $this->_db->getQuery(true);
+		$query = $this->db->getQuery(true);
 
 		$query->select('pr.*, s.integration, s.submit_key')
 			->from('#__rwf_payment_request AS pr')
@@ -463,11 +551,11 @@ class plgRedformEconomic extends JPlugin
 			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
 			->where('ci.cart_id = ' . $cartId);
 
-		$this->_db->setQuery($query);
-		$requests = $this->_db->loadObjectList('id');
+		$this->db->setQuery($query);
+		$requests = $this->db->loadObjectList('id');
 
 		// Get Payment requests items
-		$query = $this->_db->getQuery(true);
+		$query = $this->db->getQuery(true);
 
 		$query->select('pri.*')
 			->from('#__rwf_payment_request_item AS pri')
@@ -475,8 +563,8 @@ class plgRedformEconomic extends JPlugin
 			->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
 			->where('ci.cart_id = ' . $cartId);
 
-		$this->_db->setQuery($query);
-		$requestsItems = $this->_db->loadObjectList();
+		$this->db->setQuery($query);
+		$requestsItems = $this->db->loadObjectList();
 
 		foreach ($requestsItems as $item)
 		{
@@ -502,14 +590,14 @@ class plgRedformEconomic extends JPlugin
 	 */
 	private function getBilling($cartId)
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $this->db->getQuery(true);
 
 		$query->select('b.*')
 			->from('#__rwf_billinginfo AS b')
 			->where('b.cart_id = ' . $cartId);
 
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObject();
+		$this->db->setQuery($query);
+		$res = $this->db->loadObject();
 
 		if (!$res->email)
 		{
@@ -529,17 +617,17 @@ class plgRedformEconomic extends JPlugin
 	 */
 	private function getInvoices($cartId, $createOnError = true)
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $this->db->getQuery(true);
 
 		$query->select('i.*')
 			->from('#__rwf_invoice AS i')
 			->where('i.cart_id = ' . $cartId);
 
-		$this->_db->setQuery($query);
+		$this->db->setQuery($query);
 
 		try
 		{
-			$res = $this->_db->loadObjectList();
+			$res = $this->db->loadObjectList();
 		}
 		catch (RuntimeException $e)
 		{
@@ -619,8 +707,8 @@ class plgRedformEconomic extends JPlugin
 
 			if ($query != '' && $query{0} != '#')
 			{
-				$this->_db->setQuery($query);
-				$this->_db->execute();
+				$this->db->setQuery($query);
+				$this->db->execute();
 			}
 		}
 	}

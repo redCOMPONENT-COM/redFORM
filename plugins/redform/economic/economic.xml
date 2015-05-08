@@ -47,6 +47,9 @@
 					   description="PLG_REDFORM_ECONOMIC_DEFAULT_CURRENCY_DESC"/>
 
 
+				<field name="invoices_folder" type="text" default="images/economic/invoices" label="PLG_REDFORM_ECONOMIC_INVOICES_FOLDER"
+					   description="PLG_REDFORM_ECONOMIC_INVOICES_FOLDER_DESC"/>
+
 				<field name="book_invoice" type="radio"
 					   default="0"
 					   label="PLG_REDFORM_ECONOMIC_BOOK_INVOICE_LABEL"
