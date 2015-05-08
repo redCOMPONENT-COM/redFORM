@@ -24,7 +24,7 @@ class RedformeconomicSoapClient
 
 	private $errorMsg = null;
 
-	private $client = '';
+	private $client = null;
 
 	private $LayoutHandle;
 
@@ -51,6 +51,23 @@ class RedformeconomicSoapClient
 		$this->connect();
 		$this->authenticate();
 	}
+
+	/**
+	 * getter
+	 *
+	 * @param   string  $name  property
+	 *
+	 * @return mixed
+	 */
+	public function __get($name)
+	{
+		switch ($name)
+		{
+			case 'client':
+				return $this->client;
+		}
+	}
+
 
 	/**
 	 * connect

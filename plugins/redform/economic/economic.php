@@ -156,7 +156,25 @@ class plgRedformEconomic extends JPlugin
 	 */
 	public function onAjaxTurninvoice()
 	{
+		$app = JFactory::getApplication();
+		$invoiceId = $app->input->getInt('id', 0);
+		$reference = $app->input->get('reference');
+		$return = $app->input->get('return');
 
+		$invoice = $this->confirmReference($invoiceId, $reference);
+		$this->getCartDetails($invoice->cart_id);
+
+
+		$this->turnInvoice($reference);
+
+		if ($return)
+		{
+			$app->redirect(base64_decode($return));
+		}
+		else
+		{
+			$app->redirect('index.php?option=com_redform&view=submitters');
+		}
 	}
 
 	/**
@@ -302,7 +320,7 @@ class plgRedformEconomic extends JPlugin
 
 		if ($invoice)
 		{
-			// Update billing
+			// Update table
 			RTable::addIncludePath(__DIR__ . '/lib/table');
 			$table = RTable::getInstance('Invoice', 'RedformTable');
 			$table->cart_id = $data->id;
@@ -420,7 +438,7 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @param   string  $invoiceNumber  invoice number
 	 *
-	 * @return bool
+	 * @return object invoice handle
 	 */
 	private function bookInvoice($invoiceNumber)
 	{
@@ -442,7 +460,7 @@ class plgRedformEconomic extends JPlugin
 			$query->update('#__rwf_invoice')
 				->set('booked = 1')
 				->set('reference = ' . $this->db->Quote($invoiceHandle->Number))
-				->where('cart_id = ' . $this->db->Quote($data->id));
+				->where('reference = ' . $this->db->Quote($invoiceNumber));
 
 			$this->db->setQuery($query);
 
@@ -459,7 +477,72 @@ class plgRedformEconomic extends JPlugin
 			}
 		}
 
-		return (bool) $invoiceHandle;
+		return $invoiceHandle;
+	}
+
+	/**
+	 * Book an invoice
+	 *
+	 * @param   string  $reference  invoice number
+	 *
+	 * @return bool
+	 */
+	private function turnInvoice($reference)
+	{
+		$client = $this->getClient();
+		$cart = $this->getCartDetails();
+
+		$invoicehandle = array('Number' => $reference);
+		$data = $client->Invoice_GetData(array('entityHandle' => $invoicehandle));
+
+		if (!$data)
+		{
+			throw new RuntimeException(JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_INVOICE_NOT_FOUND'));
+		}
+
+		$lines = $client->Invoice_GetLines(array('invoiceHandle' => $invoicehandle));
+
+		$currentInvoiceHandle = $client->CurrentInvoice_Create($data->DebtorHandle);
+		$client->client->CurrentInvoice_SetCurrency(array('currentInvoiceHandle' => $currentInvoiceHandle, 'valueHandle' => $data->CurrencyHandle));
+		$client->client->CurrentInvoice_SetTermOfPayment(array('currentInvoiceHandle' => $currentInvoiceHandle, 'valueHandle' => $data->TermOfPaymentHandle));
+		$client->client->CurrentInvoice_SetIsVatIncluded(array('currentInvoiceHandle' => $currentInvoiceHandle, 'value' => $data->IsVatIncluded));
+		$client->client->CurrentInvoice_SetTextLine1(array('currentInvoiceHandle' => $currentInvoiceHandle, 'value' => $data->TextLine1));
+		$client->client->CurrentInvoice_SetOtherReference(array('currentInvoiceHandle' => $currentInvoiceHandle, 'value' => $data->OtherReference . '-rev'));
+
+		foreach ($lines as $l)
+		{
+			$ldata = $client->client->InvoiceLine_GetData(array('entityHandle' => $l))->InvoiceLine_GetDataResult;
+			$ldata->Quantity = - ($ldata->Quantity);
+			$ldata->InvoiceHandle = $currentInvoiceHandle;
+			$ldata->Id = $currentInvoiceHandle->Id;
+			$ldata->Number = $l->Number;
+			$ldata->TotalMargin = 0;
+			$ldata->MarginAsPercent = 0;
+			$client->CurrentInvoiceLine_CreateFromData(array('data' => $ldata));
+		}
+
+		// Add new table row
+		RTable::addIncludePath(__DIR__ . '/lib/table');
+		$table = RTable::getInstance('Invoice', 'RedformTable');
+		$table->cart_id = $cart->id;
+		$table->date = JFactory::getDate()->toSql();
+		$table->reference = $currentInvoiceHandle->Id;
+		$table->store();
+
+		// Book it
+		$bookedHandle = $this->bookInvoice($currentInvoiceHandle->Id);
+
+		if ($bookedHandle)
+		{
+			// Updated turned invoice
+			$table = RTable::getInstance('Invoice', 'RedformTable');
+			$table->reset();
+			$table->load(array('reference' => $reference));
+			$table->turned = $bookedHandle->Number;
+			$table->store();
+		}
+
+		return (bool) true;
 	}
 
 	/**
@@ -488,8 +571,8 @@ class plgRedformEconomic extends JPlugin
 			return $fullpath . '/invoice' . $invoiceReference . '.pdf';
 		}
 
-		$helper = $this->getClient();
-		$pdf = $helper->Invoice_GetPdf(array('Number' => $invoiceReference));
+		$client = $this->getClient();
+		$pdf = $client->Invoice_GetPdf(array('Number' => $invoiceReference));
 
 		if ($pdf)
 		{
