@@ -257,14 +257,14 @@ class RdfCoreModelSubmissionprice extends RModel
 		if ($alreadyPaid->price)
 		{
 			// Add a line for difference
-			$row = RTable::getAdminInstance('Paymentrequestitem', array(), 'com_redform');
+			$itemRow = RTable::getAdminInstance('Paymentrequestitem', array(), 'com_redform');
 
-			$row->payment_request_id = $row->id;
-			$row->label = JText::_('COM_REDFORM_PAYMENT_REQUEST_DIFFERENCE');
-			$row->price = - round($alreadyPaid->price, RHelperCurrency::getPrecision($this->answers->getCurrency()));
-			$row->vat = - round($alreadyPaid->price->vat, RHelperCurrency::getPrecision($this->answers->getCurrency()));
+			$itemRow->payment_request_id = $row->id;
+			$itemRow->label = JText::_('COM_REDFORM_PAYMENT_REQUEST_DIFFERENCE');
+			$itemRow->price = - round($alreadyPaid->price, RHelperCurrency::getPrecision($this->answers->getCurrency()));
+			$itemRow->vat = - round($alreadyPaid->vat, RHelperCurrency::getPrecision($this->answers->getCurrency()));
 
-			$row->store();
+			$itemRow->store();
 		}
 	}
 
