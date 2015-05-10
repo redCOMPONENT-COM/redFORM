@@ -351,13 +351,13 @@ class RedformModelSubmitters extends RModelList
 
 		$query = $this->_db->getQuery(true);
 
-		$query->select('pr.id AS prid, pr.submission_id, pr.price, pr.vat, pr.vat, pr.created')
+		$query->select('pr.id AS prid, pr.submission_id, pr.price, pr.vat, pr.vat, pr.created, pr.currency')
 			->select('p.id AS payment_id, p.paid, p.status, p.date')
 			->from('#__rwf_payment_request AS pr')
 			->join('LEFT', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
 			->join('LEFT', '#__rwf_payment AS p ON p.cart_id = ci.cart_id')
 			->where('pr.submission_id IN (' . implode(', ', array_unique($keys)) . ')')
-			->order('p.id DESC, pr.id DESC');
+			->order('pr.id ASC, p.id ASC');
 
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadObjectList();
