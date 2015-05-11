@@ -52,14 +52,12 @@ class plgRedformEconomic extends JPlugin
 	/**
 	 * Handle onAfterPaymentVerified event
 	 *
-	 * @param   string  $cartReference  cart reference
+	 * @param   string  $cartId  cart id
 	 *
 	 * @return array|bool
 	 */
-	public function onAfterPaymentVerified($cartReference)
+	public function onAfterPaymentVerified($cartId)
 	{
-		$cartId = $this->getCartIdFromReference($cartReference);
-
 		try
 		{
 			return $this->rfCreateInvoice($cartId);
@@ -67,7 +65,32 @@ class plgRedformEconomic extends JPlugin
 		catch (Exception $e)
 		{
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-			RdfHelperLog::simpleLog(sprintf('E-conomic error for cart reference %s: %s', $cartReference, $e->getMessage()));
+			RdfHelperLog::simpleLog(sprintf('E-conomic error for cart id %s: %s', $cartId, $e->getMessage()));
+		}
+	}
+
+	/**
+	 * Handle onPaymentAfterSave event from backend
+	 *
+	 * @param   string  $context  context
+	 * @param   object  $table    table data
+	 * @param   bool    $isNew    is new
+	 *
+	 * @return array|bool
+	 */
+	public function onPaymentAfterSave($context, $table, $isNew)
+	{
+		try
+		{
+			if (strstr($context, 'com_redform') && $table->paid && $isNew)
+			{
+				return $this->rfCreateInvoice($table->cart_id);
+			}
+		}
+		catch (Exception $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			RdfHelperLog::simpleLog(sprintf('E-conomic error for cart id %s: %s', $table->cart_id, $e->getMessage()));
 		}
 	}
 
@@ -747,10 +770,62 @@ class plgRedformEconomic extends JPlugin
 		$this->db->setQuery($query);
 		$res = $this->db->loadObject();
 
+		if (!$res)
+		{
+			$sid = $this->getSubmissionId($cartId);
+			$res = $this->getASubmissionBilling($sid);
+		}
+
 		if (!$res->email)
 		{
 			throw new Exception('E-conomic: billing email is required');
 		}
+
+		return $res;
+	}
+
+	/**
+	 * Get submission id associated to cart
+	 *
+	 * @param   int  $cartId  cart id
+	 *
+	 * @return mixed
+	 */
+	private function getSubmissionId($cartId)
+	{
+		// No billing, try to find one from previous pr for this sid
+		$query = $this->db->getQuery(true)
+			->select('pr.submission_id')
+			->from('#__rwf_payment_request AS pr')
+			->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+			->where('ci.cart_id = ' . $cartId);
+
+		$this->db->setQuery($query);
+
+		return $this->db->loadResult();
+	}
+
+
+	/**
+	 * Get any billing associated to sid
+	 *
+	 * @param   int  $submissionId  submission id
+	 *
+	 * @return mixed
+	 */
+	private function getASubmissionBilling($submissionId)
+	{
+		$query = $this->db->getQuery(true);
+
+		$query->select('b.*')
+			->from('#__rwf_billinginfo AS b')
+			->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = b.cart_id')
+			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = ci.payment_request_id')
+			->where('pr.submission_id = ' . $submissionId)
+			->order('pr.id DESC');
+
+		$this->db->setQuery($query);
+		$res = $this->db->loadObject();
 
 		return $res;
 	}
