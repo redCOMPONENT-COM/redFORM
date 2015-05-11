@@ -151,9 +151,15 @@ abstract class RdfRfield extends JObject
 
 		$trace = debug_backtrace();
 		throw new Exception(
-			'Undefined property via __get(): ' . $name .
-			' in ' . $trace[0]['file'] .
-			' on line ' . $trace[0]['line'],
+			sprintf(
+				"Undefined property via __get(): %s in %s on line %s\nForm field %s. field %s (%s)",
+				$name,
+				$trace[0]['file'],
+				$trace[0]['line'],
+				$this->getId(),
+				$this->load()->field_id,
+				$this->load()->field
+			),
 			500
 		);
 
