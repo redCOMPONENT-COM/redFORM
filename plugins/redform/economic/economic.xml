@@ -11,6 +11,7 @@
 	<description>PLG_REDFORM_ECONOMIC_XML_DESC</description>
 
 	<files>
+		<folder>images</folder>
 		<folder>language</folder>
 		<folder>lib</folder>
 		<folder>sql</folder>
