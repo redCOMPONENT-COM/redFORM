@@ -143,7 +143,7 @@ abstract class RdfRfield extends JObject
 			default:
 				$data = $this->load();
 
-				if (isset($data->{$name}))
+				if (property_exists($data, $name))
 				{
 					return $data->{$name};
 				}
