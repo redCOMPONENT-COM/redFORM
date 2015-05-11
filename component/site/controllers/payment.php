@@ -284,11 +284,6 @@ class RedformControllerPayment extends JControllerLegacy
 			{
 				$model->setPaymentRequestAsPaid();
 
-				// Trigger event for custom handling
-				JPluginHelper::importPlugin('redform');
-				$dispatcher = JDispatcher::getInstance();
-				$dispatcher->trigger('onAfterPaymentVerified', array($key));
-
 				// Built-in notifications
 				if (!$model->notifyPaymentReceived())
 				{
