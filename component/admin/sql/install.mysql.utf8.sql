@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `checked_out` int(11) NOT NULL default '0',
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
   `redmember_field` varchar(20) NULL default NULL,
-  `default` varchar(255) default NULL,
+  `default` varchar(255) default '',
   `tooltip` varchar(255) default NULL,
   `params` text default NULL,
   PRIMARY KEY  (`id`)
