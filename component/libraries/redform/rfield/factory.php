@@ -18,6 +18,8 @@ defined('_JEXEC') or die;
  */
 abstract class RdfRfieldFactory extends JObject
 {
+	protected static $fields;
+
 	/**
 	 * Return all supported types
 	 *
@@ -68,18 +70,16 @@ abstract class RdfRfieldFactory extends JObject
 	 */
 	public static function getFormField($id)
 	{
-		static $fields = array();
-
-		if (!isset($fields[$id]))
+		if (!isset(static::$fields[$id]))
 		{
 			$type = static::getType($id);
 			$field = static::getFieldType($type);
 			$field->setId($id);
 
-			$fields[$id] = $field;
+			static::$fields[$id] = $field;
 		}
 
-		return $fields[$id];
+		return clone static::$fields[$id];
 	}
 
 	/**
