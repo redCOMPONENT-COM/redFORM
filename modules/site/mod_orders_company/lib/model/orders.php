@@ -61,6 +61,7 @@ class ModorderscompanyLibModelOrders extends RModel
 	private function getSubmissions($formId)
 	{
 		$model = RModel::getAdminInstance('Submitters', array('ignore_request' => true), 'com_redform');
+		$model->setState('filter.form_id', $formId);
 
 		if ($this->formUsesConfirm($formId))
 		{
