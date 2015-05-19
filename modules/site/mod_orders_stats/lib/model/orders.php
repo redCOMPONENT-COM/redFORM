@@ -67,12 +67,32 @@ class ModordersstatsLibModelOrders extends RModel
 	{
 		$model = RModel::getAdminInstance('Submitters', array('ignore_request' => true), 'com_redform');
 		$model->setState('filter.form_id', $formId);
-		$model->setState('filter.confirmed', 1);
+
+		if ($this->formUsesConfirm($formId))
+		{
+			$model->setState('filter.confirmed', 1);
+		}
+
 		$model->setState('filter.from', date('Y-m-d 00:00:00', time()));
 		$model->setState('filter.to', date('Y-m-d 23:59:59', time()));
 		$model->setState('limit', 0);
 
 		return $model->getItems();
+	}
+
+	/**
+	 * Check if form requires confirmation
+	 *
+	 * @param   int  $formId  form id
+	 *
+	 * @return int
+	 */
+	private function formUsesConfirm($formId)
+	{
+		$table = RTable::getAdminInstance('Form', array(), 'com_redform');
+		$table->load($formId);
+
+		return $table->enable_confirmation;
 	}
 
 	/**
