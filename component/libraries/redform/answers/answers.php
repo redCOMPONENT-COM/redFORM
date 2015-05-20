@@ -304,7 +304,7 @@ class RdfAnswers
 	 *
 	 * @return void
 	 */
-	public function initPrice($price, $vat = 0)
+	public function initPrice($price, $vat = 0.0)
 	{
 		$this->basePrice = $price;
 		$this->baseVat = $vat;
@@ -331,7 +331,10 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			$vat += round($field->getVat(), RHelperCurrency::getPrecision($this->currency));
+			if ($fieldVat = $field->getVat())
+			{
+				$vat += round($fieldVat, RHelperCurrency::getPrecision($this->currency));
+			}
 		}
 
 		return $vat;
@@ -752,7 +755,10 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			$price += round($field->getPrice(), RHelperCurrency::getPrecision($this->currency));
+			if ($fieldPrice = $field->getPrice())
+			{
+				$price += round($fieldPrice, RHelperCurrency::getPrecision($this->currency));
+			}
 		}
 
 		return $price;
