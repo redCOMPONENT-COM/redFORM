@@ -30,6 +30,7 @@ class RedformAnalyticsMeasurementprotocolClient implements RedformAnalyticsMeasu
 
 	/**
 	 * anonymous client id
+	 *
 	 * @var string uuid
 	 */
 	private $clientId;
@@ -152,6 +153,7 @@ class RedformAnalyticsMeasurementprotocolClient implements RedformAnalyticsMeasu
 	 * Generate UUID v4 function - needed to generate a CID when one isn't available
 	 *
 	 * @author Andrew Moore http://www.php.net/manual/en/function.uniqid.php#94959
+	 *
 	 * @return string
 	 */
 	private function generateClientId()
@@ -167,9 +169,11 @@ class RedformAnalyticsMeasurementprotocolClient implements RedformAnalyticsMeasu
 			// four most significant bits holds version number 4
 			mt_rand(0, 0x0fff) | 0x4000,
 
-			// 16 bits, 8 bits for "clk_seq_hi_res",
-			// 8 bits for "clk_seq_low",
-			// two most significant bits holds zero and one for variant DCE1.1
+			/*
+			 * 16 bits, 8 bits for "clk_seq_hi_res",
+			 * 8 bits for "clk_seq_low",
+			 * two most significant bits holds zero and one for variant DCE1.1
+			 */
 			mt_rand(0, 0x3fff) | 0x8000,
 
 			// 48 bits for "node"
