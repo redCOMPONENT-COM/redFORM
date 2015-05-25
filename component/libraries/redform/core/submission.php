@@ -400,12 +400,12 @@ class RdfCoreSubmission extends JObject
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('s.price');
+		$query->select('pr.id');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
-		$query->join('LEFT', '#__rwf_payment AS p ON s.submit_key = p.submit_key AND p.paid = 1');
+		$query->join('INNER', '#__rwf_payment_request AS pr ON pr.submission_id = s.id');
 		$query->where('s.submit_key = ' . $db->quote($submitKey));
-		$query->where('p.id IS NULL');
+		$query->where('pr.paid = 0');
 		$query->where('f.activatepayment = 1');
 
 		$db->setQuery($query);
