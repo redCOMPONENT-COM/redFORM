@@ -507,15 +507,18 @@ class RdfCoreSubmission extends JObject
 				{
 					$sender = array($user->email, $user->name);
 				}
-				elseif ($allanswers[0]->getSubmitterEmails())
+				elseif ($emails = $allanswers[0]->getSubmitterEmails())
 				{
-					if ($allanswers[0]->getFullname())
+					$email = reset($emails);
+					$name = $allanswers[0]->getFullname();
+
+					if ($name)
 					{
-						$sender = array(reset($allanswers[0]->getSubmitterEmails()), $allanswers[0]->getFullname());
+						$sender = array($email, $name);
 					}
 					else
 					{
-						$sender = array(reset($allanswers[0]->getSubmitterEmails()), null);
+						$sender = array($email, null);
 					}
 				}
 				else
