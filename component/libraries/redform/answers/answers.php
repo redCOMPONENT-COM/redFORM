@@ -399,11 +399,13 @@ class RdfAnswers
 	/**
 	 * Save submission
 	 *
+	 * @param   $validate  boolean  validate form fields
+	 *
 	 * @return int submitter_id
 	 *
 	 * @throws Exception
 	 */
-	public function savedata()
+	public function savedata($validate = true)
 	{
 		$mainframe = Jfactory::getApplication();
 		$db = JFactory::getDBO();
@@ -418,7 +420,7 @@ class RdfAnswers
 			throw new Exception('No field to save !');
 		}
 
-		if (!$this->validate())
+		if ($validate && !$this->validate())
 		{
 			return false;
 		}
@@ -473,8 +475,8 @@ class RdfAnswers
 
 			if (!$db->execute())
 			{
-				JError::raiseError(0, JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'));
 				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_update_answers') . ' ' . $db->getErrorMsg());
+				throw new Exception(JText::_('COM_REDFORM_UPDATE_ANSWERS_FAILED'));
 			}
 		}
 		else
@@ -497,7 +499,7 @@ class RdfAnswers
 				}
 				else
 				{
-					$mainframe->enqueueMessage(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getError(), 'error');
+					throw new Exception(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getError());
 				}
 
 				/* We cannot save the answers, do not continue */
@@ -644,7 +646,6 @@ class RdfAnswers
 	 */
 	protected function validate()
 	{
-		$mainframe = JFactory::getApplication();
 		$res = true;
 
 		foreach ($this->fields as $field)
@@ -653,9 +654,7 @@ class RdfAnswers
 			{
 				if (!$field->validate())
 				{
-					// TODO: an exception should bubble up from here, this is too high level
-					$mainframe->enqueueMessage($field->getError(), 'notice');
-					$res = false;
+					throw new RuntimeException($field->getError());
 				}
 			}
 		}
@@ -675,7 +674,7 @@ class RdfAnswers
 
 		if (!$this->submitKey)
 		{
-			JError::raiseError(0, JText::_('COM_REDFORM_ERROR_SUBMIT_KEY_MISSING'));
+			throw new RuntimeException(JText::_('COM_REDFORM_ERROR_SUBMIT_KEY_MISSING'));
 		}
 
 		/* Prepare the submitter details */
@@ -700,10 +699,8 @@ class RdfAnswers
 		/* pre-save checks */
 		if (!$row->check())
 		{
-			$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data'), 'error');
 			RdfHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data') . ': ' . $row->getError());
-
-			return false;
+			throw new RuntimeException(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data'));
 		}
 
 		/* save the changes */
@@ -711,13 +708,13 @@ class RdfAnswers
 		{
 			if (stristr($db->getError(), 'Duplicate entry'))
 			{
-				$mainframe->enqueueMessage(JText::_('COM_REDFORM_You_have_already_entered_this_form'), 'error');
 				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_You_have_already_entered_this_form'));
+				throw new RuntimeException(JText::_('COM_REDFORM_You_have_already_entered_this_form'));
 			}
 			else
 			{
-				$mainframe->enqueueMessage(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data'), 'error');
 				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data') . ': ' . $row->getError());
+				throw new RuntimeException(JText::_('COM_REDFORM_There_was_a_problem_storing_the_submitter_data'));
 			}
 
 			return false;

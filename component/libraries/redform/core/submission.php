@@ -365,7 +365,11 @@ class RdfCoreSubmission extends JObject
 			}
 		}
 
-		$answers->savedata();
+		if (!$answers->savedata(false))
+		{
+			throw new RuntimeException('redFORM quicksubmit data save failed');
+		}
+
 
 		$this->updateMailingList($answers);
 
