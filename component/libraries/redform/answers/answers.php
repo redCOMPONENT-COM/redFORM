@@ -433,20 +433,20 @@ class RdfAnswers
 		$values = array();
 		$fields = array();
 
-		foreach ($this->fields as $v)
-		{
-			if ($v->id)
-			{
-				$fields[] = $db->quoteName('field_' . $v->field_id);
-				$values[] = $db->quote($v->getDatabaseValue());
-			}
-		}
-
 		// We need to make sure all table fields are updated: typically, if a field is of type checkbox,
 		// if not checked it won't be posted, hence we have to set the value to empty
 		$q = " SHOW COLUMNS FROM " . $db->quoteName('#__rwf_forms_' . $this->formId);
 		$db->setQuery($q);
 		$columns = $db->loadColumn();
+
+		foreach ($this->fields as $v)
+		{
+			if ($v->id && in_array('field_' . $v->field_id, $columns))
+			{
+				$fields[] = $db->quoteName('field_' . $v->field_id);
+				$values[] = $db->quote($v->getDatabaseValue());
+			}
+		}
 
 		foreach ($columns as $col)
 		{
