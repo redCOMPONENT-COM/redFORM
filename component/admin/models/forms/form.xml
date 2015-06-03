@@ -247,6 +247,17 @@
 			<option value="">COM_REDFORM_SELECT_CURRENCY</option>
 		</field>
 		<field
+				name="requirebilling"
+				type="radio"
+				class="btn-group btn-group-yesno"
+				label="COM_REDFORM_REQUIRE_BILLING"
+				description="COM_REDFORM_REQUIRE_BILLING_DESC"
+				default="0"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
 				name="paymentprocessing"
 				type="editor"
 				label="COM_REDFORM_PAYMENTPROCESSING"

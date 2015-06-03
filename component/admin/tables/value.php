@@ -71,6 +71,11 @@ class RedformTableValue extends RTable
 	public $price = null;
 
 	/**
+	 * @var string
+	 */
+	public $sku = null;
+
+	/**
 	 * Field name to publish/unpublish/trash table registers. Ex: state
 	 *
 	 * @var  string

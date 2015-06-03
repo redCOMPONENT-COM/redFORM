@@ -19,41 +19,87 @@ defined('_JEXEC') or die;
 class RedformModelPayment extends RModelAdmin
 {
 	/**
-	 * Method to get a single record.
+	 * Constructor
 	 *
-	 * @param   integer  $pk  The id of the primary key.
-	 *
-	 * @return  mixed    Object on success, false on failure.
-	 *
-	 * @since   11.1
+	 * @param   array  $config  config
 	 */
-	public function getItem($pk = null)
+	public function __construct($config = array())
 	{
-		$item = parent::getItem($pk);
+		parent::__construct($config);
 
-		if (!$item->id)
-		{
-			$submit_key = $this->getState($this->getName() . '.submit_key');
-			$item->submit_key = $submit_key;
-		}
-
-		return $item;
+		$this->setState('payment_request', JFactory::getApplication()->input->getInt('pr', 0));
 	}
 
 	/**
-	 * Method to auto-populate the model state.
+	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * This method should only be called once per instantiation and is designed
-	 * to be called on the first call to the getState() method unless the model
-	 * configuration flag to ignore the request is set.
+	 * @param   JTable  &$table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 */
-	protected function populateState()
+	protected function prepareTable(&$table)
 	{
-		parent::populateState();
+		parent::prepareTable($table);
 
-		$submit_key = JFactory::getApplication()->input->getCmd('submit_key', '');
-		$this->setState($this->getName() . '.submit_key', $submit_key);
+		if (!$table->id && !$table->cart_id)
+		{
+			$table->cart_id = $this->getNewCartId($table);
+		}
+	}
+
+	/**
+	 * Get a new cart
+	 *
+	 * @param   object  $table  current table
+	 *
+	 * @return int
+	 */
+	protected function getNewCartId($table)
+	{
+		$pr = $this->getState('payment_request');
+
+		if (!$pr)
+		{
+			throw new RuntimeException('Missing payment request id');
+		}
+
+		$query = ' INSERT INTO #__rwf_cart (created, price, vat, currency, paid) '
+			. ' SELECT NOW(), price, vat, currency, ' . $this->_db->quote($table->paid)
+			. ' FROM #__rwf_payment_request '
+			. ' WHERE id = ' . $pr;
+
+		$this->_db->setQuery($query);
+		$this->_db->execute();
+
+		$cart_id = $this->_db->insertid();
+
+		$row = $this->getTable('Cartitem');
+		$row->cart_id = $cart_id;
+		$row->payment_request_id = $pr;
+
+		$row->store();
+
+		return $cart_id;
+	}
+
+	/**
+	 * set associated Payment Requests As Paid
+	 *
+	 * @return void
+	 */
+	public function setPaymentRequestsAsPaid()
+	{
+		$id = $this->getState($this->getName() . '.id');
+
+		$query = $this->_db->getQuery(true);
+
+		$query->update('#__rwf_payment_request AS pr')
+			->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+			->join('INNER', '#__rwf_payment AS p ON p.cart_id = ci.cart_id')
+			->where('p.id = ' . $id)
+			->set('pr.paid = 1');
+
+		$this->_db->setQuery($query);
+		$this->_db->execute();
 	}
 }

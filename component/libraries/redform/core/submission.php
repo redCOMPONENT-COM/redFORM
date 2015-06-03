@@ -41,6 +41,34 @@ class RdfCoreSubmission extends JObject
 	}
 
 	/**
+	 * Getter
+	 *
+	 * @param   string  $name  property to get
+	 *
+	 * @return mixed
+	 */
+	public function __get($name)
+	{
+		switch ($name)
+		{
+			case 'submit_key':
+				return $this->submitKey;
+
+			case 'posts':
+				$posts = array();
+
+				foreach ($this->answers AS $answer)
+				{
+					$posts[] = array('sid' => $answer->sid);
+				}
+
+				return $posts;
+		}
+
+		throw new RuntimeException('Unaccessible or undefined property: ' . $name);
+	}
+
+	/**
 	 * Set submit key
 	 *
 	 * @param   string  $submit_key  submit key
@@ -59,14 +87,11 @@ class RdfCoreSubmission extends JObject
 	 * @param   array   $options          options: skip_captcha, ...
 	 * @param   array   $formData         form data, leave null to use posted data
 	 *
-	 * @return boolean|stdclass
+	 * @return RdfCoreSubmission
 	 */
 	public function apisaveform($integration_key = '', $options = array(), $formData = null)
 	{
 		$app = JFactory::getApplication();
-
-		$result = new stdclass;
-		$result->posts = array();
 
 		// Check the token
 		$token = RdfCore::getToken();
@@ -86,15 +111,6 @@ class RdfCoreSubmission extends JObject
 			$data = $formData;
 		}
 
-		if (!isset($data[$token]))
-		{
-			$this->setError('Form integrity check failed');
-
-			return false;
-		}
-
-		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
-
 		if (!isset($data['submit_key']) || !$data['submit_key'])
 		{
 			$submit_key = uniqid();
@@ -105,8 +121,6 @@ class RdfCoreSubmission extends JObject
 		}
 
 		$this->setSubmitKey($submit_key);
-
-		$result->submit_key = $submit_key;
 
 		/* Get the form details */
 		$this->formId = $data['form_id'];
@@ -147,11 +161,14 @@ class RdfCoreSubmission extends JObject
 			{
 				if (is_array($options['baseprice']))
 				{
-					$answers->initPrice(isset($options['baseprice'][$signup - 1]) ? $options['baseprice'][$signup - 1] : 0);
+					$answers->initPrice(
+						isset($options['baseprice'][$signup - 1]) ? $options['baseprice'][$signup - 1] : 0,
+						isset($options['basevat'][$signup - 1]) ? $options['basevat'][$signup - 1] : 0
+					);
 				}
 				else
 				{
-					$answers->initPrice($options['baseprice']);
+					$answers->initPrice($options['baseprice'], isset($options['basevat']) ? $options['basevat'] : 0);
 				}
 			}
 
@@ -201,10 +218,16 @@ class RdfCoreSubmission extends JObject
 				}
 			}
 
+			if (isset($options['extrafields'][$signup]))
+			{
+				foreach ($options['extrafields'][$signup] as $field)
+				{
+					$answers->addField($field);
+				}
+			}
+
 			$allanswers[] = $answers;
 		}
-
-		/* End multi-user signup */
 
 		$this->answers = $allanswers;
 
@@ -219,6 +242,15 @@ class RdfCoreSubmission extends JObject
 		$app->setUserState('formdata' . $data['form_id'], $sessiondata);
 
 		// Captcha verification
+		if (!isset($data[$token]))
+		{
+			$this->setError('Form integrity check failed');
+
+			return false;
+		}
+
+		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
+
 		if ($check_captcha)
 		{
 			JPluginHelper::importPlugin('redform_captcha');
@@ -234,7 +266,7 @@ class RdfCoreSubmission extends JObject
 			}
 		}
 
-		// Savetosession: data is saved to session using the submit key
+		// Save to session: data is saved to session using the submit key
 		if (isset($options['savetosession']))
 		{
 			$sessiondata = array();
@@ -246,7 +278,7 @@ class RdfCoreSubmission extends JObject
 
 			$app->setUserState($submit_key, $sessiondata);
 
-			return $result;
+			return $this;
 		}
 
 		// Else save to db !
@@ -264,7 +296,6 @@ class RdfCoreSubmission extends JObject
 			{
 				// Delete session data
 				$app->setUserState('formdata' . $form->id, null);
-				$result->posts[] = array('sid' => $res);
 			}
 
 			if ($answers->isNew())
@@ -285,7 +316,7 @@ class RdfCoreSubmission extends JObject
 			}
 		}
 
-		return $result;
+		return $this;
 	}
 
 	/**
@@ -299,11 +330,8 @@ class RdfCoreSubmission extends JObject
 	 */
 	public function quicksubmit($fields, $integration = null, $options = null)
 	{
-		$result = new stdclass;
-		$result->posts = array();
-
 		$submit_key = uniqid();
-		$result->submit_key = $submit_key;
+		$this->submit_key = $submit_key;
 
 		$form = $this->getForm();
 
@@ -315,7 +343,7 @@ class RdfCoreSubmission extends JObject
 
 		if (isset($options['baseprice']))
 		{
-			$answers->initPrice($options['baseprice']);
+			$answers->initPrice($options['baseprice'], isset($options['basevat']) ? $options['basevat'] : 0);
 		}
 
 		if (isset($options['currency']))
@@ -329,7 +357,19 @@ class RdfCoreSubmission extends JObject
 			$answers->addField($field);
 		}
 
-		$sid = $answers->savedata();
+		if (isset($options['extrafields'][0]))
+		{
+			foreach ($options['extrafields'][0] as $field)
+			{
+				$answers->addField($field);
+			}
+		}
+
+		if (!$answers->savedata(false))
+		{
+			throw new RuntimeException('redFORM quicksubmit data save failed');
+		}
+
 
 		$this->updateMailingList($answers);
 
@@ -342,9 +382,9 @@ class RdfCoreSubmission extends JObject
 			$this->notifysubmitter($answers);
 		}
 
-		$result->posts[] = array('sid' => $sid);
+		$this->answers = array($answers);
 
-		return $result;
+		return $this;
 	}
 
 	/**
@@ -364,12 +404,12 @@ class RdfCoreSubmission extends JObject
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('s.price');
+		$query->select('pr.id');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
-		$query->join('LEFT', '#__rwf_payment AS p ON s.submit_key = p.submit_key AND p.paid = 1');
+		$query->join('INNER', '#__rwf_payment_request AS pr ON pr.submission_id = s.id');
 		$query->where('s.submit_key = ' . $db->quote($submitKey));
-		$query->where('p.id IS NULL');
+		$query->where('pr.paid = 0');
 		$query->where('f.activatepayment = 1');
 
 		$db->setQuery($query);
@@ -471,15 +511,18 @@ class RdfCoreSubmission extends JObject
 				{
 					$sender = array($user->email, $user->name);
 				}
-				elseif ($allanswers[0]->getSubmitterEmails())
+				elseif ($emails = $allanswers[0]->getSubmitterEmails())
 				{
-					if ($allanswers[0]->getFullname())
+					$email = reset($emails);
+					$name = $allanswers[0]->getFullname();
+
+					if ($name)
 					{
-						$sender = array(reset($allanswers[0]->getSubmitterEmails()), $allanswers[0]->getFullname());
+						$sender = array($email, $name);
 					}
 					else
 					{
-						$sender = array(reset($allanswers[0]->getSubmitterEmails()), null);
+						$sender = array($email, null);
 					}
 				}
 				else
@@ -604,6 +647,13 @@ class RdfCoreSubmission extends JObject
 					{
 						$htmlmsg .= '<tr><td>' . JText::_('COM_REDFORM_TOTAL_PRICE') . '</td><td>';
 						$htmlmsg .= $p;
+						$htmlmsg .= '</td></tr>' . "\n";
+					}
+
+					if ($v = $answers->getVat())
+					{
+						$htmlmsg .= '<tr><td>' . JText::_('COM_REDFORM_VAT') . '</td><td>';
+						$htmlmsg .= $v;
 						$htmlmsg .= '</td></tr>' . "\n";
 					}
 

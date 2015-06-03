@@ -57,8 +57,8 @@
 				name="form_layout"
 				type="list" default="j25" label="COM_REDFORM_SETTINGS_FORM_LAYOUT"
 				description="COM_REDFORM_SETTINGS_FORM_LAYOUT_DESC">
-			<option value="j25">redFORM 2.5</option>
-			<option value="bootstrap">Bootstrap</option>
+			<option value="">COM_REDFORM_SETTINGS_FORM_LAYOUT_REGULAR</option>
+			<option value="bootstrap">COM_REDFORM_SETTINGS_FORM_LAYOUT_BOOTSTRAP</option>
 		</field>
 
 		<field type="spacer" hr="true"/>

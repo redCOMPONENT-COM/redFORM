@@ -84,6 +84,11 @@ class RdfRfieldTextfield extends RdfRfield
 		return $properties;
 	}
 
+	/**
+	 * Returns field Input
+	 *
+	 * @return string
+	 */
 	public function getInput()
 	{
 		if ($regex = $this->getParam('regexformat'))
@@ -113,7 +118,6 @@ JS;
 
 		return parent::getInput();
 	}
-
 
 	/**
 	 * Check that data is valid

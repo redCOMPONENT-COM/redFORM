@@ -25,4 +25,11 @@ $answers = $displayData;
 		<td><?php echo $p; ?></td>
 	</tr>
 	<?php endif; ?>
+
+	<?php if ($v = $answers->getVat()): ?>
+		<tr>
+			<th><?php echo JText::_('COM_REDFORM_VAT'); ?></th>
+			<td><?php echo $v; ?></td>
+		</tr>
+	<?php endif; ?>
 </table>

@@ -163,12 +163,21 @@ class RdfHelper
 	{
 		$params = JComponentHelper::getParams('com_redform');
 
+		if (RHelperCurrency::isValid($currencyCode))
+		{
+			$precision = RHelperCurrency::getPrecision($currencyCode);
+		}
+		else
+		{
+			$precision = 2;
+		}
+
 		return sprintf(
 			$format,
 			$currencyCode,
 			number_format(
 				$price,
-				RHelperCurrency::getPrecision($currencyCode),
+				$precision,
 				$params->get('decimalseparator', '.'),
 				$params->get('thousandseparator', ' ')
 			)
