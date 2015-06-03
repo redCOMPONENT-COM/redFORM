@@ -365,7 +365,11 @@ class RdfCoreSubmission extends JObject
 			}
 		}
 
-		$answers->savedata();
+		if (!$answers->savedata(false))
+		{
+			throw new RuntimeException('redFORM quicksubmit data save failed');
+		}
+
 
 		$this->updateMailingList($answers);
 
@@ -400,12 +404,12 @@ class RdfCoreSubmission extends JObject
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('s.price');
+		$query->select('pr.id');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id');
-		$query->join('LEFT', '#__rwf_payment AS p ON s.submit_key = p.submit_key AND p.paid = 1');
+		$query->join('INNER', '#__rwf_payment_request AS pr ON pr.submission_id = s.id');
 		$query->where('s.submit_key = ' . $db->quote($submitKey));
-		$query->where('p.id IS NULL');
+		$query->where('pr.paid = 0');
 		$query->where('f.activatepayment = 1');
 
 		$db->setQuery($query);
@@ -507,15 +511,18 @@ class RdfCoreSubmission extends JObject
 				{
 					$sender = array($user->email, $user->name);
 				}
-				elseif ($allanswers[0]->getSubmitterEmails())
+				elseif ($emails = $allanswers[0]->getSubmitterEmails())
 				{
-					if ($allanswers[0]->getFullname())
+					$email = reset($emails);
+					$name = $allanswers[0]->getFullname();
+
+					if ($name)
 					{
-						$sender = array(reset($allanswers[0]->getSubmitterEmails()), $allanswers[0]->getFullname());
+						$sender = array($email, $name);
 					}
 					else
 					{
-						$sender = array(reset($allanswers[0]->getSubmitterEmails()), null);
+						$sender = array($email, null);
 					}
 				}
 				else
