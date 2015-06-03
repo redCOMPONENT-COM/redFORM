@@ -119,7 +119,16 @@ class plgRedformEconomic extends JPlugin
 			->where('pr.submission_id IN(' . implode(", ", $submitterIds) . ')');
 
 		$this->db->setQuery($query);
-		$res = $this->db->loadObjectList();
+
+		try
+		{
+			$res = $this->db->loadObjectList();
+		}
+		catch (Exception $e)
+		{
+			$this->updateDb();
+			$res = $this->db->loadObjectList();
+		}
 
 		$invoices = array();
 
