@@ -48,27 +48,6 @@ class RedFormModelPayment extends JModelLegacy
 	}
 
 	/**
-	 * Method for getting the form from the model.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
-	 */
-	public function getBillingForm()
-	{
-		// Get the form.
-		RForm::addFormPath(JPATH_COMPONENT . '/models/forms');
-		RForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
-
-		$form = RForm::getInstance('billing', 'billing', array('control' => 'jform'));
-
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
-	}
-
-	/**
 	 * Is billing required ?
 	 *
 	 * @return bool
