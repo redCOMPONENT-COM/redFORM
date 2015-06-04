@@ -92,7 +92,9 @@ class RedformViewPayment extends JViewLegacy
 
 		if ($this->getLayout() == 'billing')
 		{
-			$this->assign('billingform',  $this->get('BillingForm'));
+			$model = RModel::getFrontInstance('Billing');
+			$this->item = $model->getItem();
+			$this->billingform = $model->getForm();
 		}
 
 		// Analytics
