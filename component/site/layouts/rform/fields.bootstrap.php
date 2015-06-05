@@ -44,6 +44,10 @@ foreach ($fields as $field)
 		$value = $answers->getFieldAnswer($field->id);
 		$field->setValue($value, true);
 	}
+	else
+	{
+		$field->lookupDefaultValue();
+	}
 
 	if ($field->isHidden())
 	{

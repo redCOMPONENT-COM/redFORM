@@ -502,11 +502,23 @@ class RdfCore extends JObject
 			return $user;
 		}
 
-		$rmFieldsValues = RedmemberHelperRMUser::getData($user->id);
+		$rmUser = RedmemberApi::getUser($user->id);
 
-		foreach ($rmFieldsValues as $rmField)
+		foreach ($rmUser->fields as $rmField)
 		{
 			$user->{$rmField->fieldcode} = $rmField->value;
+		}
+
+		if ($organizations = $rmUser->getOrganizations())
+		{
+			$firstOrg = reset($organizations);
+			$rmOrganization = RedmemberApi::getOrganization($firstOrg['organization_id']);
+			$user->organization = $rmOrganization->name;
+
+			foreach ($rmOrganization->fields as $rmField)
+			{
+				$user->{$rmField->fieldcode} = $rmField->value;
+			}
 		}
 
 		return $user;

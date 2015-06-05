@@ -66,6 +66,7 @@
 				description="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_DESC"
 				>
             <option value=""></option>
+			<option value="organization">COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_ORGANIZATION</option>
         </field>
 		<field
 				name="params"
