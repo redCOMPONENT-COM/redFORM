@@ -66,6 +66,9 @@
 				description="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_DESC"
 				>
             <option value=""></option>
+			<option value="name">COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_Name</option>
+			<option value="username">COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_userName</option>
+			<option value="email">COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_email</option>
 			<option value="organization">COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_ORGANIZATION</option>
         </field>
 		<field
