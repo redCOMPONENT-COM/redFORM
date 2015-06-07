@@ -78,6 +78,7 @@ class RedformModelBilling extends RModelAdmin
 			if ($return === false && $table->getError())
 			{
 				$this->setError($table->getError());
+
 				return false;
 			}
 		}

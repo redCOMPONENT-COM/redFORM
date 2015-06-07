@@ -399,7 +399,7 @@ class RdfAnswers
 	/**
 	 * Save submission
 	 *
-	 * @param   $validate  boolean  validate form fields
+	 * @param   boolean  $validate  validate form fields
 	 *
 	 * @return int submitter_id
 	 *

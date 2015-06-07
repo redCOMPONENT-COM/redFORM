@@ -97,13 +97,9 @@ class RedFormModelPayment extends JModelLegacy
 		if (empty($this->gateways))
 		{
 			$details = $this->getPaymentDetails();
+			$helper = new RdfCorePaymentGateway($details);
 
-			JPluginHelper::importPlugin('redform_payment');
-			$dispatcher = JDispatcher::getInstance();
-
-			$gateways = array();
-			$dispatcher->trigger('onGetGateway', array(&$gateways, $details));
-			$this->gateways = $gateways;
+			$this->gateways = $helper->getGateways();
 		}
 
 		return $this->gateways;
@@ -117,31 +113,9 @@ class RedFormModelPayment extends JModelLegacy
 	public function getGatewayOptions()
 	{
 		$details = $this->getPaymentDetails();
+		$helper = new RdfCorePaymentGateway($details);
 
-		$gw = $this->getGateways();
-
-		$options = array();
-
-		foreach ($gw as $g)
-		{
-			if (isset($g['label']))
-			{
-				$label = $g['label'];
-			}
-			else
-			{
-				$label = $g['name'];
-			}
-
-			$options[] = JHTML::_('select.option', $g['name'], $label);
-		}
-
-		// Filter gateways through plugins
-		JPluginHelper::importPlugin('redform_payment');
-		$dispatcher = JDispatcher::getInstance();
-		$dispatcher->trigger('onFilterGateways', array(&$options, $details));
-
-		return $options;
+		return $helper->getOptions();
 	}
 
 	/**

@@ -898,11 +898,12 @@ class RdfCore extends JObject
 	 */
 	protected function getGatewaySelect($currency)
 	{
-		$helper = new RdfCorePaymentGateway;
+		$paymentDetails = new stdclass;
+		$paymentDetails->currency = $currency;
 
-		$config = new stdclass;
-		$config->currency = $currency;
-		$options = $helper->getOptions($config);
+		$helper = new RdfCorePaymentGateway($paymentDetails);
+
+		$options = $helper->getOptions();
 
 		if (!$options)
 		{
