@@ -28,8 +28,7 @@ class RdfHelperRoute
 	public static function getPaymentRoute($submit_key)
 	{
 		$parts = array( "option" => "com_redform",
-			"controller"   => 'payment',
-			"task"   => 'select',
+			"task"   => 'payment.select',
 			"key"   => $submit_key,
 		);
 
@@ -47,8 +46,7 @@ class RdfHelperRoute
 	public static function getPaymentProcessRoute($submit_key, $gateway)
 	{
 		$parts = array( "option" => "com_redform",
-			"controller"   => 'payment',
-			"task"   => 'process',
+			"task"   => 'payment.process',
 			"gw"   => $gateway,
 			"key"   => $submit_key,
 		);
