@@ -472,11 +472,11 @@ class RdfCore extends JObject
 	 * @param   array   $options          options for registration
 	 * @param   array   $data             data if empty, the $_POST variable is used
 	 *
-	 * @return   RdfCoreSubmission
+	 * @return   RdfCoreFormSubmission
 	 */
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
-		$model = new RdfCoreSubmission($this->formId);
+		$model = new RdfCoreFormSubmission($this->formId);
 
 		if (!$result = $model->apisaveform($integration_key, $options, $data))
 		{
@@ -824,7 +824,7 @@ class RdfCore extends JObject
 
 		$fields = $this->prepareUserData($userData);
 
-		$model = new RdfCoreSubmission($this->formId);
+		$model = new RdfCoreFormSubmission($this->formId);
 
 		if (!$result = $model->quicksubmit($fields, $integration, $options))
 		{

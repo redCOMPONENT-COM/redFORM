@@ -38,17 +38,17 @@ class RdfHelperRoute
 	/**
 	 * Route to payment process
 	 *
-	 * @param   string  $submit_key  submit keys
-	 * @param   string  $gateway     gateway name
+	 * @param   string  $cartReference  submit keys
+	 * @param   string  $gateway        gateway name
 	 *
 	 * @return string
 	 */
-	public static function getPaymentProcessRoute($submit_key, $gateway)
+	public static function getPaymentProcessRoute($cartReference, $gateway)
 	{
 		$parts = array( "option" => "com_redform",
 			"task"   => 'payment.process',
 			"gw"   => $gateway,
-			"key"   => $submit_key,
+			"reference"   => $cartReference,
 		);
 
 		return self::buildUrl($parts);

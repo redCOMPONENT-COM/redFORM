@@ -467,66 +467,14 @@ class RedFormModelPayment extends JModelLegacy
 	 *
 	 * @param   string  $submitKey  submitkey for which we want a payment
 	 *
-	 * @return RTable
+	 * @return RdfCorePaymentCart
 	 */
 	public function getNewCart($submitKey)
 	{
-		$paymentRequests = $this->getUnpaidSubmitKeyPaymentRequests($submitKey);
-
-		$ids = array();
-		$price = 0;
-		$vat = 0;
-		$currency = '';
-
-		foreach ($paymentRequests as $pr)
-		{
-			$ids[] = $pr->id;
-			$price += $pr->price;
-			$vat += $pr->vat;
-			$currency = $pr->currency;
-		}
-
-		$cart = RTable::getAdminInstance('Cart', array(), 'com_redform');
-		$cart->reference = uniqid();
-		$cart->created = JFactory::getDate()->toSql();
-		$cart->price = $price;
-		$cart->vat = $vat;
-		$cart->currency = $currency;
-
-		$cart->store();
-
-		foreach ($ids as $id)
-		{
-			$cartItem = RTable::getAdminInstance('Cartitem', array(), 'com_redform');
-			$cartItem->cart_id = $cart->id;
-			$cartItem->payment_request_id = $id;
-			$cartItem->store();
-		}
+		$cart = new RdfCorePaymentCart;
+		$cart->getNewCart($submitKey);
 
 		return $cart;
-	}
-
-	/**
-	 * Return unpaid payment requests for submission associated to submit key
-	 *
-	 * @param   string  $submitKey  submit key
-	 *
-	 * @return mixed
-	 */
-	private function getUnpaidSubmitKeyPaymentRequests($submitKey)
-	{
-		$query = $this->_db->getQuery(true);
-
-		$query->select('pr.id, pr.price, pr.vat, pr.currency')
-			->from('#__rwf_payment_request AS pr')
-			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
-			->where('pr.paid = 0')
-			->where('s.submit_key = ' . $this->_db->quote($submitKey));
-
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObjectList();
-
-		return $res;
 	}
 
 	/**
