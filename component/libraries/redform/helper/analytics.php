@@ -302,7 +302,7 @@ JS;
 			$clientId = $input->get('GuaClientId', null);
 		}
 
-		$client = new RedformAnalyticsMeasurementprotocolClient(array('clientId' => $clientId));
+		$client = new RdfAnalyticsMeasurementprotocolClient(array('clientId' => $clientId));
 
 		$model = JModel::getInstance('payment', 'RedformModel');
 		$model->setCartReference($cartReference);
@@ -311,7 +311,7 @@ JS;
 
 		$transactionId = $cartReference;
 
-		$transaction = new RedformAnalyticsTransaction;
+		$transaction = new RdfAnalyticsTransaction;
 		$transaction->setTransactionId($transactionId);
 		$transaction->setAffiliation(isset($options['affiliate']) ? $options['affiliate'] : $payment->form);
 		$transaction->setRevenue($model->getPrice());
@@ -325,7 +325,7 @@ JS;
 		// Add submitters as items
 		foreach ($submitters as $s)
 		{
-			$item = new RedformAnalyticsItem;
+			$item = new RdfAnalyticsItem;
 			$item->setTransactionId($transactionId);
 			$item->setName($productname ? $productname : 'submitter' . $s->id);
 			$item->setSku($sku ? $sku : 'submitter' . $s->id);

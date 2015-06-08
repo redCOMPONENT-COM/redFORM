@@ -696,13 +696,17 @@ class RdfCoreFormSubmission
 
 		$db->setQuery($query);
 
-		if (!$db->loadResult())
+		if ($res = $db->loadResult())
+		{
+			return $res;
+		}
+		elseif ($this->hasActivePayment())
 		{
 			$cart = new RdfCorePaymentCart;
 			$cart->getNewCart($this->submitKey);
-		}
 
-		return $cart->reference;
+			return $cart->reference;
+		}
 	}
 
 	/**

@@ -557,6 +557,18 @@ class RdfCore extends JObject
 	}
 
 	/**
+	 * Get cart reference associated to submit key
+	 *
+	 * @param   string  $submitKey  submit key
+	 *
+	 * @return mixed
+	 */
+	public function getSubmitkeyCartReference($submitKey)
+	{
+		return $this->getAnswers($submitKey)->getCartReference();
+	}
+
+	/**
 	 * returns RdfAnswers for sid
 	 *
 	 * @param   int  $sid  submitter id
