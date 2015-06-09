@@ -95,14 +95,6 @@ class RedformControllerRedform extends RedformController
 		parent::display();
 	}
 
-	public function getSubmitkeyCartReference($submit_key)
-	{
-		$submission = new RdfCoreFormSubmission;
-		$submission->setSubmitKey($submit_key);
-
-		return $submission->getCartReference();
-	}
-
 	/**
 	 * Confirm submission by email
 	 *

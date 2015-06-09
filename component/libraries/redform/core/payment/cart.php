@@ -28,6 +28,11 @@ class RdfCorePaymentCart
 	 */
 	protected $db;
 
+	/**
+	 * Constructor
+	 *
+	 * @param   array  $config  optional config
+	 */
 	public function __construct($config = array())
 	{
 		$this->db = isset($config['db']) ? $config['db'] : JFactory::getDbo();
