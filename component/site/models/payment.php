@@ -452,10 +452,12 @@ class RedFormModelPayment extends JModelLegacy
 	{
 		$query = $this->_db->getQuery(true);
 
-		$query->select('id')
-			->from('#__rwf_cart')
-			->where('reference = ' . $this->_db->quote($this->reference))
-			->where('paid = 1');
+		$query->select('pr.id')
+			->from('#__rwf_payment_request AS pr')
+			->join('INNER', '#__rwf_cart_item AS ci on ci.payment_request_id = pr.id')
+			->join('INNER', '#__rwf_cart AS c ON c.id = ci.cart_id')
+			->where('c.reference = ' . $this->_db->quote($this->reference))
+			->where('pr.paid = 1');
 
 		$this->_db->setQuery($query);
 
