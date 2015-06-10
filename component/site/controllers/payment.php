@@ -48,7 +48,16 @@ class RedformControllerPayment extends JControllerLegacy
 		$model = $this->getModel('payment');
 
 		// We need a cart for this submit key
-		$cart = $model->getNewCart($submitKey);
+		try
+		{
+			$cart = $model->getNewCart($submitKey);
+		}
+		catch (Exception $e)
+		{
+			echo 'Error getting new cart';
+
+			return;
+		}
 
 		$model->setCartReference($cart->reference);
 		$options = $model->getGatewayOptions();

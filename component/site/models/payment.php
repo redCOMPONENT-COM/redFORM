@@ -447,9 +447,16 @@ class RedFormModelPayment extends JModelLegacy
 	 * check if this has already been paid
 	 *
 	 * @return boolean
+	 *
+	 * @throws Exception
 	 */
 	public function hasAlreadyPaid()
 	{
+		if (!$this->reference)
+		{
+			throw new Exception('Missing reference');
+		}
+
 		$query = $this->_db->getQuery(true);
 
 		$query->select('pr.id')

@@ -44,10 +44,17 @@ class RdfCorePaymentCart
 	 * @param   string  $submitKey  submitkey for which we want a payment
 	 *
 	 * @return RTable
+	 *
+	 * @throws Exception
 	 */
 	public function getNewCart($submitKey)
 	{
 		$paymentRequests = $this->getUnpaidSubmitKeyPaymentRequests($submitKey);
+
+		if (!$paymentRequests)
+		{
+			throw new Exception('Nothing to pay');
+		}
 
 		$ids = array();
 		$price = 0;
