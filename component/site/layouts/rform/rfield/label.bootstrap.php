@@ -15,7 +15,7 @@ $class = array();
 
 $text = $field->field;
 
-if ($field->required)
+if ($field->required && !$field->readonly)
 {
 	$text .= ' <span class="star">*</span>';
 	$class[] = 'required';

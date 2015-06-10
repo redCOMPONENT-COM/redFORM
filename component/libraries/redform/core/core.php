@@ -472,11 +472,11 @@ class RdfCore extends JObject
 	 * @param   array   $options          options for registration
 	 * @param   array   $data             data if empty, the $_POST variable is used
 	 *
-	 * @return   RdfCoreSubmission
+	 * @return   RdfCoreFormSubmission
 	 */
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
-		$model = new RdfCoreSubmission($this->formId);
+		$model = new RdfCoreFormSubmission($this->formId);
 
 		if (!$result = $model->apisaveform($integration_key, $options, $data))
 		{
@@ -502,11 +502,23 @@ class RdfCore extends JObject
 			return $user;
 		}
 
-		$rmFieldsValues = RedmemberHelperRMUser::getData($user->id);
+		$rmUser = RedmemberApi::getUser($user->id);
 
-		foreach ($rmFieldsValues as $rmField)
+		foreach ($rmUser->fields as $rmField)
 		{
 			$user->{$rmField->fieldcode} = $rmField->value;
+		}
+
+		if ($organizations = $rmUser->getOrganizations())
+		{
+			$firstOrg = reset($organizations);
+			$rmOrganization = RedmemberApi::getOrganization($firstOrg['organization_id']);
+			$user->organization = $rmOrganization->name;
+
+			foreach ($rmOrganization->fields as $rmField)
+			{
+				$user->{$rmField->fieldcode} = $rmField->value;
+			}
 		}
 
 		return $user;
@@ -542,6 +554,18 @@ class RdfCore extends JObject
 		}
 
 		return $answers;
+	}
+
+	/**
+	 * Get cart reference associated to submit key
+	 *
+	 * @param   string  $submitKey  submit key
+	 *
+	 * @return mixed
+	 */
+	public function getSubmitkeyCartReference($submitKey)
+	{
+		return $this->getAnswers($submitKey)->getCartReference();
 	}
 
 	/**
@@ -812,7 +836,7 @@ class RdfCore extends JObject
 
 		$fields = $this->prepareUserData($userData);
 
-		$model = new RdfCoreSubmission($this->formId);
+		$model = new RdfCoreFormSubmission($this->formId);
 
 		if (!$result = $model->quicksubmit($fields, $integration, $options))
 		{
@@ -886,11 +910,12 @@ class RdfCore extends JObject
 	 */
 	protected function getGatewaySelect($currency)
 	{
-		$helper = new RdfCorePaymentGateway;
+		$paymentDetails = new stdclass;
+		$paymentDetails->currency = $currency;
 
-		$config = new stdclass;
-		$config->currency = $currency;
-		$options = $helper->getOptions($config);
+		$helper = new RdfCorePaymentGateway($paymentDetails);
+
+		$options = $helper->getOptions();
 
 		if (!$options)
 		{

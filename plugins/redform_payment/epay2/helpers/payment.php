@@ -15,13 +15,13 @@ defined('_JEXEC') or die('Restricted access');
  * @subpackage  Payment.epay
  * @since       2.5
  */
-class PaymentEpay extends RdfPaymentHelper
+class PaymentEpay2 extends RdfPaymentHelper
 {
 	/**
 	 * name of the gateway for dispatching
 	 * @var string
 	 */
-	protected $gateway = 'epay';
+	protected $gateway = 'epay2';
 
 	/**
 	 * Display or redirect to the payment page for the gateway
@@ -57,8 +57,8 @@ class PaymentEpay extends RdfPaymentHelper
 			'callbackurl' => $this->getUrl('notify', $reference),
 			'accepturl' => $this->getUrl('notify', $reference),
 			'cancelurl' => $this->getUrl('cancel', $reference),
-			'ordertext' => $request->title, // Shown in the payment window + receipt
-			'group' => $this->params->get('group'),
+				'ordertext' => $request->title, // Shown in the payment window + receipt
+		'group' => $this->params->get('group'),
 			'description' => $request->adminDesc, // This description can be seen in the ePay administration
 			'opacity' => 50,
 		);
@@ -202,7 +202,7 @@ class PaymentEpay extends RdfPaymentHelper
 	/**
 	 * returns state uri object (notify, cancel, etc...)
 	 *
-	 * @param   string  $state      the state for the url
+	 * @param   string  $state       the state for the url
 	 * @param   string  $reference  cart reference
 	 *
 	 * @return string

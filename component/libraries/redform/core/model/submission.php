@@ -231,7 +231,7 @@ class RdfCoreModelSubmission extends RModel
 		$query->where('s.submit_key = ' . $db->q($submit_key));
 
 		$db->setQuery($query);
-		$res = $db->loadObjectList('s.id');
+		$res = $db->loadObjectList('id');
 
 		return ($res);
 	}

@@ -29,7 +29,7 @@ class RedformControllerRedform extends RedformController
 
 		$formId = $app->input->getInt('form_id', 0);
 
-		$model = new RdfCoreSubmission($formId);
+		$model = new RdfCoreFormSubmission($formId);
 		$result = $model->apisaveform();
 
 		$referer = $app->input->get('referer', '', 'base64');

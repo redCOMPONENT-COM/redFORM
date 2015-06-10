@@ -58,8 +58,7 @@ class RdfBootstrap
 
 			if (file_exists(JPATH_LIBRARIES . '/redmember/library.php'))
 			{
-				include_once JPATH_LIBRARIES . '/redmember/library.php';
-
+				RLoader::registerPrefix('Redmember', JPATH_LIBRARIES . '/redmember');
 				define('REDFORM_REDMEMBER_INTEGRATION', true);
 			}
 			else

@@ -18,7 +18,71 @@ defined('_JEXEC') or die;
  */
 class RdfCorePaymentCart
 {
+	/**
+	 * @var  array
+	 */
 	protected $data;
+
+	/**
+	 * @var  JDatabaseDriver
+	 */
+	protected $db;
+
+	/**
+	 * Constructor
+	 *
+	 * @param   array  $config  optional config
+	 */
+	public function __construct($config = array())
+	{
+		$this->db = isset($config['db']) ? $config['db'] : JFactory::getDbo();
+	}
+
+	/**
+	 * return a new cart for payment
+	 *
+	 * @param   string  $submitKey  submitkey for which we want a payment
+	 *
+	 * @return RTable
+	 */
+	public function getNewCart($submitKey)
+	{
+		$paymentRequests = $this->getUnpaidSubmitKeyPaymentRequests($submitKey);
+
+		$ids = array();
+		$price = 0;
+		$vat = 0;
+		$currency = '';
+
+		foreach ($paymentRequests as $pr)
+		{
+			$ids[] = $pr->id;
+			$price += $pr->price;
+			$vat += $pr->vat;
+			$currency = $pr->currency;
+		}
+
+		$cart = RTable::getAdminInstance('Cart', array(), 'com_redform');
+		$cart->reference = uniqid();
+		$cart->created = JFactory::getDate()->toSql();
+		$cart->price = $price;
+		$cart->vat = $vat;
+		$cart->currency = $currency;
+
+		$cart->store();
+
+		foreach ($ids as $id)
+		{
+			$cartItem = RTable::getAdminInstance('Cartitem', array(), 'com_redform');
+			$cartItem->cart_id = $cart->id;
+			$cartItem->payment_request_id = $id;
+			$cartItem->store();
+		}
+
+		$this->data = $cart;
+
+		return $this;
+	}
 
 	/**
 	 * Load cart by id
@@ -69,5 +133,28 @@ class RdfCorePaymentCart
 		}
 
 		throw new Exception('Property not found or not accessible: ' . $name);
+	}
+
+	/**
+	 * Return unpaid payment requests for submission associated to submit key
+	 *
+	 * @param   string  $submitKey  submit key
+	 *
+	 * @return mixed
+	 */
+	private function getUnpaidSubmitKeyPaymentRequests($submitKey)
+	{
+		$query = $this->db->getQuery(true);
+
+		$query->select('pr.id, pr.price, pr.vat, pr.currency')
+			->from('#__rwf_payment_request AS pr')
+			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
+			->where('pr.paid = 0')
+			->where('s.submit_key = ' . $this->db->quote($submitKey));
+
+		$this->db->setQuery($query);
+		$res = $this->db->loadObjectList();
+
+		return $res;
 	}
 }

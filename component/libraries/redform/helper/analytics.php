@@ -234,23 +234,23 @@ JS;
 	}
 
 	/**
-	 * full transaction tracking. adds javsacript code to document head
+	 * full transaction tracking. adds javascript code to document head
 	 *
-	 * @param   String  $submit_key  submit key to add transaction for
-	 * @param   Array   $options     optional parameters for tracking
+	 * @param   String  $cartReference  cart reference
+	 * @param   Array   $options        optional parameters for tracking
 	 *
 	 * @return string js code
 	 */
-	public static function recordTrans($submit_key, array $options = array())
+	public static function recordTrans($cartReference, array $options = array())
 	{
-		$model = JModel::getInstance('payment', 'RedformModel');
-		$model->setSubmitKey($submit_key);
+		$model = Rmodel::getFrontInstance('payment', array(), 'com_redform');
+		$model->setCartReference($cartReference);
 		$submitters = $model->getSubmitters();
-		$payment   = $model->getPaymentDetails($submit_key);
+		$payment   = $model->getPaymentDetails();
 
 		// Add transaction
 		$trans = new stdclass;
-		$trans->id = $submit_key;
+		$trans->id = $cartReference;
 		$trans->affiliation = isset($options['affiliate']) ? $options['affiliate'] : $payment->form;
 		$trans->revenue = $model->getPrice();
 		$trans->currency = $model->getCurrency();
@@ -265,7 +265,7 @@ JS;
 		foreach ($submitters as $s)
 		{
 			$item = new stdclass;
-			$item->id = $submit_key;
+			$item->id = $cartReference;
 			$item->productname = $productname ? $productname : 'submitter' . $s->id;
 			$item->sku  = $sku ? $sku : 'submitter' . $s->id;
 			$item->category  = $category ? $category : '';
@@ -284,12 +284,12 @@ JS;
 	/**
 	 * full transaction tracking with measurement protocol
 	 *
-	 * @param   String  $submit_key  submit key to add transaction for
-	 * @param   Array   $options     optional parameters for tracking
+	 * @param   String  $cartReference  cart reference
+	 * @param   Array   $options        optional parameters for tracking
 	 *
 	 * @return string js code
 	 */
-	public static function recordTransMeasurementProtocol($submit_key, array $options = array())
+	public static function recordTransMeasurementProtocol($cartReference, array $options = array())
 	{
 		$input = JFactory::getApplication()->input;
 
@@ -302,16 +302,16 @@ JS;
 			$clientId = $input->get('GuaClientId', null);
 		}
 
-		$client = new RedformAnalyticsMeasurementprotocolClient(array('clientId' => $clientId));
+		$client = new RdfAnalyticsMeasurementprotocolClient(array('clientId' => $clientId));
 
 		$model = JModel::getInstance('payment', 'RedformModel');
-		$model->setSubmitKey($submit_key);
+		$model->setCartReference($cartReference);
 		$submitters = $model->getSubmitters();
-		$payment   = $model->getPaymentDetails($submit_key);
+		$payment   = $model->getPaymentDetails();
 
-		$transactionId = $submit_key;
+		$transactionId = $cartReference;
 
-		$transaction = new RedformAnalyticsTransaction;
+		$transaction = new RdfAnalyticsTransaction;
 		$transaction->setTransactionId($transactionId);
 		$transaction->setAffiliation(isset($options['affiliate']) ? $options['affiliate'] : $payment->form);
 		$transaction->setRevenue($model->getPrice());
@@ -325,7 +325,7 @@ JS;
 		// Add submitters as items
 		foreach ($submitters as $s)
 		{
-			$item = new RedformAnalyticsItem;
+			$item = new RdfAnalyticsItem;
 			$item->setTransactionId($transactionId);
 			$item->setName($productname ? $productname : 'submitter' . $s->id);
 			$item->setSku($sku ? $sku : 'submitter' . $s->id);
