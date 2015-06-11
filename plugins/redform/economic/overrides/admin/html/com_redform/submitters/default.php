@@ -7,6 +7,10 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+/**
+ * This is an override for economic integration plugin
+ */
+
 defined('_JEXEC') or die;
 
 JHtml::_('rbootstrap.tooltip');

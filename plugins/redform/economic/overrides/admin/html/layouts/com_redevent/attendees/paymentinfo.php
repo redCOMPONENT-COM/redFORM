@@ -6,6 +6,11 @@
  * @copyright   Copyright (C) 2005 - 2014 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
+
+/**
+ * This is an override for economic integration plugin
+ */
+
 defined('JPATH_REDCORE') or die;
 
 $row = $displayData;

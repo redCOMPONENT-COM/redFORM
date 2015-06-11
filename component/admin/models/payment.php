@@ -72,7 +72,6 @@ class RedformModelPayment extends RModelAdmin
 		return true;
 	}
 
-
 	/**
 	 * Get a new cart
 	 *
