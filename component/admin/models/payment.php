@@ -28,16 +28,19 @@ class RedformModelPayment extends RModelAdmin
 		parent::__construct($config);
 
 		$this->setState('payment_request', JFactory::getApplication()->input->getInt('pr', 0));
+
+		JPluginHelper::importPlugin('redform');
+		$this->event_after_save = 'onPaymentAfterSave';
 	}
 
 	/**
 	 * Prepare and sanitise the table data prior to saving.
 	 *
-	 * @param   JTable  &$table  A reference to a JTable object.
+	 * @param   JTable  $table  A reference to a JTable object.
 	 *
 	 * @return  void
 	 */
-	protected function prepareTable(&$table)
+	protected function prepareTable($table)
 	{
 		parent::prepareTable($table);
 
@@ -46,6 +49,29 @@ class RedformModelPayment extends RModelAdmin
 			$table->cart_id = $this->getNewCartId($table);
 		}
 	}
+
+	/**
+	 * Method to save the form data.
+	 *
+	 * @param   array  $data  The form data.
+	 *
+	 * @return  boolean  True on success, False on error.
+	 */
+	public function save($data)
+	{
+		if (!parent::save($data))
+		{
+			return false;
+		}
+
+		if ($data['paid'])
+		{
+			$this->setPaymentRequestsAsPaid();
+		}
+
+		return true;
+	}
+
 
 	/**
 	 * Get a new cart

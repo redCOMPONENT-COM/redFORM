@@ -19,25 +19,6 @@ defined('_JEXEC') or die;
 class RedformControllerPayment extends RdfControllerForm
 {
 	/**
-	 * Function that allows child controller access to model data
-	 * after the data has been saved.
-	 *
-	 * @param   object  &$model     The data model object.
-	 * @param   array   $validData  The validated data.
-	 *
-	 * @return  void
-	 */
-	protected function postSaveHook(&$model, $validData = array())
-	{
-		parent::postSaveHook($model, $validData);
-
-		if ($validData['paid'] == 1)
-		{
-			$model->setPaymentRequestsAsPaid();
-		}
-	}
-
-	/**
 	 * Gets the URL arguments to append to an item redirect.
 	 *
 	 * @param   integer  $recordId  The primary key id for the item.

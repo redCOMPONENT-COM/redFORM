@@ -357,7 +357,7 @@ class RedformModelSubmitters extends RModelList
 			->join('LEFT', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
 			->join('LEFT', '#__rwf_payment AS p ON p.cart_id = ci.cart_id')
 			->where('pr.submission_id IN (' . implode(', ', array_unique($keys)) . ')')
-			->order('p.id DESC, pr.id DESC');
+			->order('pr.id ASC, p.id ASC');
 
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadObjectList();
