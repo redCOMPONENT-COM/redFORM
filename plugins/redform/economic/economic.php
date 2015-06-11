@@ -240,6 +240,62 @@ class plgRedformEconomic extends JPlugin
 	}
 
 	/**
+	 * Install overrides and sql
+	 *
+	 * @return void
+	 */
+	public function onAjaxInstallEconomic()
+	{
+		$htmlTemplatePath = JPATH_ADMINISTRATOR . '/templates/' . JFactory::getApplication()->getTemplate() . '/html';
+
+		try
+		{
+			$files = JFolder::files(__DIR__ . '/overrides/admin/html', null, true, true);
+
+			foreach ($files as $file)
+			{
+				$relPath = $this->getRelPath(__DIR__ . '/overrides/admin/html', $file);
+
+				if (file_exists($htmlTemplatePath . $relPath))
+				{
+					rename($htmlTemplatePath . $relPath, $htmlTemplatePath . $relPath . JFactory::getDate()->format('_Y_m_d_h_i'));
+
+					JFactory::getApplication()->enqueueMessage(
+						JText::sprintf('PLG_REDFORM_INTEGRATION_ECONOMIC_INSTALL_REPLACE_FILE', $htmlTemplatePath . $relPath)
+					);
+				}
+				else
+				{
+					JFolder::create(dirname($htmlTemplatePath . $relPath));
+
+					JFactory::getApplication()->enqueueMessage(
+						JText::sprintf('PLG_REDFORM_INTEGRATION_ECONOMIC_INSTALL_ADD_FILE', $htmlTemplatePath)
+					);
+				}
+
+				if (!JFile::copy($file, $htmlTemplatePath . $relPath))
+				{
+					$error = error_get_last();
+					JFactory::getApplication()->enqueueMessage($error['message'], 'error');
+				}
+			}
+
+			$this->updateDb();
+		}
+		catch (Exception $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage());
+		}
+
+		JFactory::getApplication()->redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	private function getRelPath($basePath, $file)
+	{
+		return substr($file, strlen($basePath));
+	}
+
+	/**
 	 * Check that ivoice id matches reference
 	 *
 	 * @param   int     $invoiceId  invoice id

@@ -14,6 +14,7 @@
 		<folder>images</folder>
 		<folder>language</folder>
 		<folder>lib</folder>
+		<folder>overrides</folder>
 		<folder>sql</folder>
 		<filename plugin="economic">economic.php</filename>
 	</files>
