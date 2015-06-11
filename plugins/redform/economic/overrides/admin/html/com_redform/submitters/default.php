@@ -109,7 +109,7 @@ if (!empty($this->items))
 				<th class="nowrap hidden-phone">
 					<?php echo JText::_('COM_REDFORM_Price'); ?>
 				</th>
-				<th class="nowrap hidden-phone">
+				<th class="nowrap hidden-phone" width="auto">
 					<?php echo JText::_('COM_REDFORM_Payment'); ?>
 				</th>
 			<?php endif;?>
@@ -185,7 +185,7 @@ if (!empty($this->items))
 
 				<?php if ($this->formInfo->activatepayment): ?>
 					<td class="submitters-price"><?php echo $item->price ? RdfHelper::formatPrice($item->price + $item->vat, $item->currency) : ''; ?></td>
-					<td class="paymentrequests">
+					<td class="paymentrequests" width="auto">
 						<?php if ($item->paymentrequests): ?>
 						<ul class="unstyled">
 							<?php foreach ($item->paymentrequests as $pr): ?>
