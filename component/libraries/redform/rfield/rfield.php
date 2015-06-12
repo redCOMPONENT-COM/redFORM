@@ -443,6 +443,8 @@ class RdfRfield extends JObject
 	/**
 	 * Set customized label for price item
 	 *
+	 * @param   string  $label  the text to use as label
+	 *
 	 * @return string
 	 */
 	public function setPaymentRequestItemLabel($label)
