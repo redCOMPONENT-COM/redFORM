@@ -194,7 +194,7 @@ class RdfCoreModelSubmissionprice extends RModel
 
 		$row->submission_id = $this->answers->sid;
 		$row->sku = $field->getSku();
-		$row->label = $field->name;
+		$row->label = $field->getPaymentRequestItemLabel();
 		$row->price = round($price, RHelperCurrency::getPrecision($this->answers->getCurrency()));
 		$row->vat = round($field->getVat(), RHelperCurrency::getPrecision($this->answers->getCurrency()));
 

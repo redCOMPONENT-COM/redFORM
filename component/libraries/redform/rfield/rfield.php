@@ -93,6 +93,13 @@ class RdfRfield extends JObject
 	protected $hasOptions = false;
 
 	/**
+	 * Price item label
+	 *
+	 * @var null
+	 */
+	protected $paymentRequestItemLabel = null;
+
+	/**
 	 * Magic method
 	 *
 	 * @param   string  $name  property name
@@ -424,14 +431,32 @@ class RdfRfield extends JObject
 	}
 
 	/**
+	 * Get customized label for price item
+	 *
+	 * @return string
+	 */
+	public function getPaymentRequestItemLabel()
+	{
+		return $this->paymentRequestItemLabel ?: $this->load()->field;
+	}
+
+	/**
+	 * Set customized label for price item
+	 *
+	 * @return string
+	 */
+	public function setPaymentRequestItemLabel($label)
+	{
+		return $this->paymentRequestItemLabel = $label;
+	}
+
+	/**
 	 * Return input properties array
 	 *
 	 * @return array
 	 */
 	public function getInputProperties()
 	{
-		$app = JFactory::getApplication();
-
 		$properties = array();
 		$properties['type'] = 'text';
 		$properties['name'] = $this->getFormElementName();
