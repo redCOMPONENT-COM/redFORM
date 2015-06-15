@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="redform" method="upgrade">
+	<name>PLG_REDFORM_REDMEMBERBILLINGINFO_XML_NAME</name>
+	<creationDate>##DATE##</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2015 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>##VERSION##</version>
+	<description>PLG_REDFORM_REDMEMBERBILLINGINFO_XML_DESC</description>
+
+	<files>
+		<folder>language</folder>
+		<filename plugin="redmemberbillinginfo">redmemberbillinginfo.php</filename>
+	</files>
+
+	<config>
+		<fields name="params">
+			<fieldset name="basic" label="basic">
+
+				<field name="fullname" type="text" default="" label="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_FULLNAME"
+					   description="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_FULLNAME_DESC"/>
+
+				<field name="company" type="text" default="" label="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_COMPANY"
+					   description="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_COMPANY_DESC"/>
+
+				<field name="vatnumber" type="text" default="" label="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_VATNUMBER"
+					   description="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_VATNUMBER_DESC"/>
+
+				<field name="address" type="text" default="" label="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_ADDRESS"
+					   description="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_ADDRESS_DESC"/>
+
+				<field name="city" type="text" default="" label="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_CITY"
+					   description="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_CITY_DESC"/>
+
+				<field name="zipcode" type="text" default="" label="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_ZIPCODE"
+					   description="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_ZIPCODE_DESC"/>
+
+				<field name="phone" type="text" default="" label="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_PHONE"
+					   description="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_PHONE_DESC"/>
+
+				<field name="email" type="text" default="" label="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_EMAIL"
+					   description="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_EMAIL_DESC"/>
+
+				<field name="country" type="text" default="" label="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_COUNTRY"
+					   description="PLG_REDFORM_REDMEMBERBILLINGINFO_FIELD_COUNTRY_DESC"/>
+
+			</fieldset>
+		</fields>
+	</config>
+
+</extension>
