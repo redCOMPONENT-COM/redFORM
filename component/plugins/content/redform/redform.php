@@ -37,6 +37,9 @@ class PlgContentRedform extends JPlugin
 	 */
 	private $rwfparams = null;
 
+	/**
+	 * @var RdfCore
+	 */
 	private $rfcore = null;
 
 	/**
