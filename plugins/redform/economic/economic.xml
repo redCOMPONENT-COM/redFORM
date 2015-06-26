@@ -48,9 +48,16 @@
 				<field name="economic_default_currency" type="text" default="EUR" label="PLG_REDFORM_ECONOMIC_DEFAULT_CURRENCY_LABEL"
 					   description="PLG_REDFORM_ECONOMIC_DEFAULT_CURRENCY_DESC"/>
 
-
 				<field name="invoices_folder" type="text" default="images/economic/invoices" label="PLG_REDFORM_ECONOMIC_INVOICES_FOLDER"
 					   description="PLG_REDFORM_ECONOMIC_INVOICES_FOLDER_DESC"/>
+
+				<field name="force_company_as_debtor" type="radio"
+					   default="0"
+					   label="PLG_REDFORM_ECONOMIC_BOOK_FORCE_COMPANY_AS_DEBTOR_LABEL"
+					   description="PLG_REDFORM_ECONOMIC_BOOK_FORCE_COMPANY_AS_DEBTOR_DESC">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
 
 				<field name="book_invoice" type="radio"
 					   default="0"

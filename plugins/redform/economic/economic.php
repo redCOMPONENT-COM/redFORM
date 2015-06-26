@@ -455,9 +455,9 @@ class plgRedformEconomic extends JPlugin
 		$eco['vatzone'] = 'EU';
 		$eco['email'] = $data->billing->email;
 
-		if ($data->billing->iscompany)
+		if ($this->params->get('force_company_as_debtor') || $data->billing->iscompany)
 		{
-			$eco['name'] = (empty($data->billing->company) ? $contact_name : $data->billing->company);
+			$eco['name'] = $data->billing->company ?: $contact_name;
 		}
 		else
 		{
