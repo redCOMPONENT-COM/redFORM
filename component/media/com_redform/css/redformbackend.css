@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .redcore #component form select,
-.redcore #component form textarea,
+/*.redcore #component form textarea,*/
 .redcore #component form input[type="text"],
 .redcore #component form input[type="password"],
 .redcore #component form input[type="datetime"],
