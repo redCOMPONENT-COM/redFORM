@@ -255,7 +255,6 @@ class RdfCore extends JObject
 	public function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
 	{
 		JHtml::_('behavior.keepalive');
-		RHelperAsset::load('redform-validate.js', 'com_redform');
 
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
@@ -998,7 +997,9 @@ class RdfCore extends JObject
 	 */
 	protected function loadCheckScript()
 	{
-		JHtml::_('behavior.formvalidation');
+		RHelperAsset::load('redform-validate.js', 'com_redform');
+		JText::script('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED');
+		JText::script('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED');
 	}
 
 	/**
