@@ -444,6 +444,7 @@ class RdfCore extends JObject
 		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
 		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';
 		$html .= '<input type="hidden" name="' . self::getToken() . '" value="' . $uniq . '" />';
+		$html .= '<input type="hidden" name="submissionurl" value="' . base64_encode(JFactory::getURI()->toString()) . '" />';
 
 		if ($currency)
 		{
