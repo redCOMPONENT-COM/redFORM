@@ -477,13 +477,7 @@ class RdfCore extends JObject
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
 		$model = new RdfCoreFormSubmission($this->formId);
-
-		if (!$result = $model->apisaveform($integration_key, $options, $data))
-		{
-			$this->setError($model->getError());
-
-			return false;
-		}
+		$result = $model->apisaveform($integration_key, $options, $data);
 
 		return $result;
 	}

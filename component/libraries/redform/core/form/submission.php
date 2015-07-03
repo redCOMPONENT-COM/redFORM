@@ -88,6 +88,8 @@ class RdfCoreFormSubmission
 	 * @param   array   $formData         form data, leave null to use posted data
 	 *
 	 * @return RdfCoreFormSubmission
+	 *
+	 * @throws RdfExceptionSubmission
 	 */
 	public function apisaveform($integration_key = '', $options = array(), $formData = null)
 	{
@@ -197,24 +199,15 @@ class RdfCoreFormSubmission
 				$clone = clone $field;
 
 				/* Get the answers */
-				try
+				if (isset($postvalues['field' . $field->id]))
 				{
-					if (isset($postvalues['field' . $field->id]))
-					{
-						$clone->setValue($postvalues['field' . $clone->id]);
-						$answers->addField($clone);
-					}
-					else
-					{
-						$clone->getValueFromPost($signup);
-						$answers->addField($clone);
-					}
+					$clone->setValue($postvalues['field' . $clone->id]);
+					$answers->addField($clone);
 				}
-				catch (Exception $e)
+				else
 				{
-					$this->setError($e->getMessage());
-
-					return false;
+					$clone->getValueFromPost($signup);
+					$answers->addField($clone);
 				}
 			}
 
@@ -244,9 +237,7 @@ class RdfCoreFormSubmission
 		// Captcha verification
 		if (!isset($data[$token]))
 		{
-			$this->setError('Form integrity check failed');
-
-			return false;
+			throw new RdfExceptionSubmission('Form integrity check failed');
 		}
 
 		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
@@ -260,9 +251,7 @@ class RdfCoreFormSubmission
 
 			if (count($results) && $res == false)
 			{
-				$this->setError(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
-
-				return false;
+				throw new RdfExceptionSubmission(JText::_('COM_REDFORM_CAPTCHA_WRONG'));
 			}
 		}
 
@@ -288,9 +277,7 @@ class RdfCoreFormSubmission
 
 			if (!$res)
 			{
-				$this->setError(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED'));
-
-				return false;
+				throw new RdfExceptionSubmission(JText::_('COM_REDFORM_SAVE_ANSWERS_FAILED'));
 			}
 			else
 			{
