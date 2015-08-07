@@ -36,12 +36,14 @@ try
 }
 catch (Exception $e)
 {
-	if (JDEBUG || 1)
+	if (JDEBUG)
 	{
 		echo 'Exception:' . $e->getMessage();
 		echo "<pre>" . $e->getTraceAsString() . "</pre>";
 		exit(0);
 	}
-
-	throw $e;
+	else
+	{
+		JFactory::getApplication()->redirect('index.php', $e->getMessage());
+	}
 }
