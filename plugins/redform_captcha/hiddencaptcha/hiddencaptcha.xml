@@ -7,15 +7,15 @@
 	<authorUrl>www.redcomponent.com</authorUrl>
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-	<version>2.5.b.5.3</version>
+	<version>3.3.1</version>
   <description>PLG_REDFORM_CAPTCHA_HIDDEN_XML_DESCRIPTION</description>
-  
+
   <files>
     <filename plugin="hiddencaptcha">hiddencaptcha.php</filename>
     <filename>index.html</filename>
     <folder>language</folder>
   </files>
-  
+
   <config>
 	  <fields name="params">
 		  <fieldset name="extra" label="extra">
