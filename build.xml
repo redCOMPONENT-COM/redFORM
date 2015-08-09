@@ -19,6 +19,7 @@
 
 	<taskdef name="gitversion" classname="build.phingext.GitVersionTask" />
 	<taskdef name="gitdate" classname="build.phingext.GitDateTask" />
+	<taskdef name="extractversion" classname="build.ExtractVersionTask" />
 
 	<!--
 	====================================================================================================
@@ -79,16 +80,11 @@
 			<fileset dir="${dirs.root}/component">
 				<include name="**" />
 			</fileset>
-			<filterchain>
-				<replacetokens begintoken="##" endtoken="##">
-					<token key="DATE" value="${build.date}" />
-					<token key="VERSION" value="${version}" />
-				</replacetokens>
-			</filterchain>
 		</copy>
 
 		<!-- Create the package -->
-		<zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${version}.zip" includeemptydirs="true" />
+		<extractversion path="${dirs.tmp}/component" />
+		<zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${extensionversion}.zip" includeemptydirs="true" />
 
 		<!-- admin modules
 		<foreach param="dirname" absparam="absname" target="zipfolder">
@@ -112,10 +108,12 @@
 		<!-- languages -->
 		<foreach param="dirname" absparam="absname" target="zipfolder">
 			<property name="myp" value="language" />
-		  <fileset dir="${dirs.root}/languages">
-		  	<type type="dir"/>
-	        <depth max="0" min="0" />
-		  </fileset>
+			<property name="prefix" value="" />
+
+			<fileset dir="${dirs.root}/languages">
+				<type type="dir"/>
+				<depth max="0" min="0" />
+			</fileset>
 		</foreach>
 
 		<!-- plugins -->
@@ -166,16 +164,12 @@
 			<fileset dir="${absname}">
 				<include name="**" />
 			</fileset>
-			<filterchain>
-				<replacetokens begintoken="##" endtoken="##">
-					<token key="DATE" value="${build.date}" />
-					<token key="VERSION" value="${version}" />
-				</replacetokens>
-			</filterchain>
 		</copy>
 		<mkdir dir="${dirs.release}/${myp}" />
 		<!-- Create the package -->
-		<zip basedir="${dirs.tmp}/${myp}/${prefix}${dirname}" destfile="${dirs.release}/${myp}/${prefix}${dirname}-${version}.zip" includeemptydirs="true" />
+
+		<extractversion path="${dirs.tmp}/${myp}/${prefix}${dirname}" />
+		<zip basedir="${dirs.tmp}/${myp}/${prefix}${dirname}" destfile="${dirs.release}/${myp}/${prefix}${dirname}-${extensionversion}.zip" includeemptydirs="true" />
 	</target>
 
 	<!--

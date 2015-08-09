@@ -2,7 +2,7 @@
 <falang type="contentelement">
 	<name>redFORM - Values</name>
 	<author>redCOMPONENT</author>
-	<version>##VERSION##</version>
+	<version>3.3.1</version>
 	<description>redFORM Values</description>
 	<reference>
 		<table name="rwf_values">
