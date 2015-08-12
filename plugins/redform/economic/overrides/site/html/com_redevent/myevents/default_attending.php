@@ -36,6 +36,12 @@ $dispatcher = JDispatcher::getInstance();
 $dispatcher->trigger('onGetSubmittersInvoices', array($sids, &$invoices));
 
 $pdfImg = JHtml::image('plugins/redform/economic/images/pdf.png', 'get pdf');
+
+$cancelCol = array_reduce(
+	$this->attending, function($carry, $item) {
+		return $item->unregistra || $carry;
+	}, false
+);
 ?>
 <form action="<?php echo JRoute::_($this->action); ?>" method="post" id="attending-events" class="redevent-ajaxnav">
 
@@ -67,7 +73,9 @@ $pdfImg = JHtml::image('plugins/redform/economic/images/pdf.png', 'get pdf');
 			<?php endif; ?>
 			<th id="payementlcol"><?php echo JText::_('COM_REDEVENT_TABLE_HEADER_PAYMENT'); ?></th>
 
-			<th id="cancelcol">&nbsp;</th>
+			<?php if ($cancelCol): ?>
+				<th id="cancelcol">&nbsp;</th>
+			<?php endif ;?>
 		</tr>
 		</thead>
 
@@ -128,7 +136,7 @@ $pdfImg = JHtml::image('plugins/redform/economic/images/pdf.png', 'get pdf');
 					<?php endif; ?>
 
 					<td class="payment">
-						<?php if (!$row->paid): ?>
+						<?php if (!$row->paid && !$row->waiting): ?>
 							<?php
 								echo JHtml::link(
 									JRoute::_('index.php?option=com_redform&task=payment.select&source=redevent&key=' . $row->submit_key),
@@ -140,15 +148,17 @@ $pdfImg = JHtml::image('plugins/redform/economic/images/pdf.png', 'get pdf');
 						<?php echo RLayoutHelper::render('redevent.myevents.invoices', compact('row', 'pdflink', 'pdfImg', 'invoices')); ?>
 					</td>
 
-					<td class="cancel-reg">
-						<?php if ($row->unregistra): ?>
-							<button type="button" id="unreg-<?php echo $row->attendee_id; ?>" class="unreg-btn" xref="<?php echo $row->xref; ?>">
-								<?php echo Jtext::_('COM_REDEVENT_MYEVENTS_CANCEL_REGISTRATION'); ?>
-							</button>
-						<?php else: ?>
-							&nbsp;
-						<?php endif; ?>
-					</td>
+					<?php if ($cancelCol): ?>
+						<td class="cancel-reg">
+							<?php if ($row->unregistra): ?>
+								<button type="button" id="unreg-<?php echo $row->attendee_id; ?>" class="unreg-btn" xref="<?php echo $row->xref; ?>">
+									<?php echo Jtext::_('COM_REDEVENT_MYEVENTS_CANCEL_REGISTRATION'); ?>
+								</button>
+							<?php else: ?>
+								&nbsp;
+							<?php endif; ?>
+						</td>
+					<?php endif; ?>
 
 				</tr>
 
