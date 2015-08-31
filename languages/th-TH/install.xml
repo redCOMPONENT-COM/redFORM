@@ -8,6 +8,7 @@
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
 	<version>3.3.1</version>
+	<tag>##VERSION##</tag>
 	<description>th-TH language pack for redFORM&lt;br/&gt;Incomplete ? Please &lt;a href="http://www.redcomponent.com/translations"&gt;help us&lt;/a&gt; with translations !</description>
 
 	<fileset>

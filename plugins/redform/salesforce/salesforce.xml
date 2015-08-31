@@ -8,6 +8,7 @@
     <copyright>(C) 2014 redCOMPONENT.com</copyright>
     <license>GNU/GPL</license>
     <version>3.3.1</version>
+    <tag>##VERSION##</tag>
     <description>PLG_REDFORM_SALESFORCE_XML_DESC</description>
 
     <files>

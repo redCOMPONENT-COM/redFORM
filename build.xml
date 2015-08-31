@@ -80,6 +80,11 @@
 			<fileset dir="${dirs.root}/component">
 				<include name="**" />
 			</fileset>
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
 		</copy>
 
 		<!-- Create the package -->
@@ -164,6 +169,11 @@
 			<fileset dir="${absname}">
 				<include name="**" />
 			</fileset>
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
 		</copy>
 		<mkdir dir="${dirs.release}/${myp}" />
 		<!-- Create the package -->

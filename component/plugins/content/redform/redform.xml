@@ -8,6 +8,7 @@
 	<copyright>(C) 2008 - 2014 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
 	<version>3.3.1</version>
+	<tag>##VERSION##</tag>
 	<description>PLG_CONTENT_REDFORM_XML_DESC</description>
 	<files>
 		<filename plugin="redform">redform.php</filename>

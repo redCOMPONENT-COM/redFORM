@@ -69,6 +69,13 @@ abstract class RdfView extends RViewAdmin
 	protected $topBarInnerLayout = 'topnav';
 
 	/**
+	 * True to display "Version 1.0.x"
+	 *
+	 * @var  boolean
+	 */
+	protected $displayComponentVersion = true;
+
+	/**
 	 * Constructor
 	 *
 	 * @param   array  $config  A named configuration array for object construction.<br/>

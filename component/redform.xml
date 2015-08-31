@@ -9,6 +9,7 @@
 	<license>GNU/GPL</license>
 	<version>3.3.2</version>
 	<redcore version="1.6.0" />
+	<tag>##VERSION##</tag>
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
 	<!-- Runs on install/uninstall/update -->

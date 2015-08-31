@@ -9,6 +9,7 @@
 	<copyright>Copyright (C) 2014 redCOMPONENT.com. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later, see LICENSE.</license>
 	<version>3.3.1</version>
+	<tag>##VERSION##</tag>
 	<description>redFORM library</description>
 	<files>
 		<folder>answers</folder>
