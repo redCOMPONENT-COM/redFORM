@@ -18,6 +18,8 @@
 		<folder>exception</folder>
 		<folder>form</folder>
 		<folder>helper</folder>
+		<folder>layout</folder>
+		<folder>layouts</folder>
 		<folder>payment</folder>
 		<folder>rfield</folder>
 		<folder>view</folder>

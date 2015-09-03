@@ -226,11 +226,11 @@ class RdfRfield extends JObject
 	{
 		$data = $this->load();
 
-		$label = RdfHelperLayout::render(
+		$label = RdfLayoutHelper::render(
 			'rform.rfield.label',
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $label;
@@ -243,11 +243,11 @@ class RdfRfield extends JObject
 	 */
 	public function getInput()
 	{
-		$element = RdfHelperLayout::render(
+		$element = RdfLayoutHelper::render(
 			'rform.rfield.' . $this->type,
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $element;

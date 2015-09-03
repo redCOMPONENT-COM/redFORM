@@ -213,7 +213,7 @@ class RdfCore extends JObject
 		$form   = $model->getForm();
 		$fieldsHtml = $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
-		$html = RdfHelperLayout::render(
+		$html = RdfLayoutHelper::render(
 			'rform.form',
 			array(
 				'form' => $form,
@@ -222,7 +222,7 @@ class RdfCore extends JObject
 				'referer64' => base64_encode($uri->toString()),
 			),
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		// Analytics
@@ -377,7 +377,7 @@ class RdfCore extends JObject
 				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
 			}
 
-			$html .= RdfHelperLayout::render(
+			$html .= RdfLayoutHelper::render(
 				'rform.fields',
 				array(
 					'fields' => $fields,
@@ -387,7 +387,7 @@ class RdfCore extends JObject
 					'answers' => $indexAnswers
 				),
 				'',
-				array('client' => 0, 'component' => 'com_redform')
+				array('component' => 'com_redform')
 			);
 
 			if ($multi > 1)

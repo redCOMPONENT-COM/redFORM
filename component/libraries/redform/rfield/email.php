@@ -67,11 +67,11 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	 */
 	public function getInput()
 	{
-		$element = RdfHelperLayout::render(
+		$element = RdfLayoutHelper::render(
 			'rform.rfield.email',
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $element;

@@ -206,10 +206,10 @@ class RdfHelperTagsreplace
 	 */
 	private function getTagAnswers()
 	{
-		$text = RdfHelperLayout::render('tag.answers',
+		$text = RdfLayoutHelper::render('tag.answers',
 			$this->answers,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $text;
