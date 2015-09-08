@@ -33,6 +33,10 @@ Desktop.ini
 # Phing build script
 build.properties
 
+# Build config
+gulp-config.json
+node_modules
+
 # Packages #
 *.zip
 *.tar.*
