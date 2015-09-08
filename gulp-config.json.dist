@@ -1,0 +1,11 @@
+{
+	"wwwDir"           : "/path/to/joomla/root",
+	"browserSyncProxy" : "localhost",
+	"browser" : "chromium-browser",
+	"extensions"       : {
+		"components" : ["redform"],
+		"plugins" : {
+			"content" : ["redform"]
+		}
+	}
+}

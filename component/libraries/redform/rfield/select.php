@@ -41,6 +41,21 @@ class RdfRfieldSelect extends RdfRfield
 	}
 
 	/**
+	 * Returns field value
+	 *
+	 * @return string
+	 */
+	public function getValue()
+	{
+		if (is_array($this->value))
+		{
+			return $this->value[0];
+		}
+
+		return $this->value;
+	}
+
+	/**
 	 * Get and set the value from post data, using appropriate filtering
 	 *
 	 * @param   int  $signup  form instance number for the field
