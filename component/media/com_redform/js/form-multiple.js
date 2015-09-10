@@ -32,7 +32,9 @@
 			// trigger price update
 			if (redformPrice)
 			{
-				redformPrice(newSubForm);
+				var updater = redformPrice($(newSubForm));
+				updater.init();
+				updater.updatePrice();
 			}
 		}
 
