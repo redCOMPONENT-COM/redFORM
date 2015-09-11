@@ -143,6 +143,35 @@ class RdfCorePaymentCart
 	}
 
 	/**
+	 * write transaction to db
+	 *
+	 * @param   string  $gateway  payment gateway
+	 * @param   string  $data     data from gateway
+	 * @param   string  $status   status (paid, cancelled, ...)
+	 * @param   int     $paid     1 for paid
+	 * @param   string  $date     date in mysql format
+	 *
+	 * @return void
+	 */
+	public function writeTransaction($gateway, $data, $status, $paid, $date = null)
+	{
+		$table = RTable::getAdminInstance('Payment');
+		$table->date = $date ?: JFactory::getDate()->toSql();
+		$table->data = $data;
+		$table->cart_id = $this->id;
+		$table->status = $status;
+		$table->gateway = $gateway;
+		$table->paid = $paid;
+
+		$table->store();
+
+		// Trigger event for custom handling
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onPaymentAfterSave', array('com_redform.payment.helper', $table, true));
+	}
+
+	/**
 	 * Return unpaid payment requests for submission associated to submit key
 	 *
 	 * @param   string  $submitKey  submit key
