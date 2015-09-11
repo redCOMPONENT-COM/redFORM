@@ -10,10 +10,10 @@
 defined('_JEXEC') or die;
 
 /**
- * Paymentrequest entity.
+ * Submitter entity.
  *
  * @since  3.0
  */
-class RdfEntitySubmission extends RdfEntityBase
+class RdfEntitySubmitter extends RdfEntityBase
 {
 }

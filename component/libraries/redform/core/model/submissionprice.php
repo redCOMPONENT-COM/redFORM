@@ -268,9 +268,12 @@ class RdfCoreModelSubmissionprice extends RModel
 			$itemRow->store();
 		}
 
+		$entity = RdfEntityPaymentrequest::getInstance();
+		$entity->bind($row);
+
 		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
-		$dispatcher->trigger('onRedformAfterCreatePaymentRequest', array($row->id));
+		$dispatcher->trigger('onRedformAfterCreatePaymentRequest', array($entity));
 	}
 
 	/**

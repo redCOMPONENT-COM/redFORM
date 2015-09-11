@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Redevent.Library
+ * @package     Redform.Library
  * @subpackage  Entity
  *
  * @copyright   Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  *
  * @since  1.0
  */
-abstract class RedeventEntityBase
+abstract class RdfEntityBase
 {
 	/**
 	 * ACL prefix used to check permissions
@@ -57,7 +57,7 @@ abstract class RedeventEntityBase
 	 *
 	 * @var  string
 	 */
-	protected $component = 'com_redevent';
+	protected $component = 'com_redform';
 
 	/**
 	 * Translations for items that support them
@@ -112,7 +112,7 @@ abstract class RedeventEntityBase
 	 * @param   string  $property  Property tried to access
 	 * @param   mixed   $value     Value to assign
 	 *
-	 * @return  RedeventEntityBase
+	 * @return  RdfEntityBase
 	 *
 	 * @since   1.0
 	 */
@@ -133,7 +133,7 @@ abstract class RedeventEntityBase
 	 *
 	 * @param   mixed  $item  Array/Object containing the item fields
 	 *
-	 * @return  RedeventEntity    Self instance for chaining
+	 * @return  RdfEntityBase    Self instance for chaining
 	 */
 	public function bind($item)
 	{
@@ -389,7 +389,7 @@ abstract class RedeventEntityBase
 	/**
 	 * Gets the base URL for tasks/views.
 	 *
-	 * Example: index.php?option=com_redevent&view=shop
+	 * Example: index.php?option=com_redform&view=shop
 	 *
 	 * @return  string
 	 */
@@ -769,7 +769,7 @@ abstract class RedeventEntityBase
 	 *
 	 * @param   RTable  $table  Table with the item loaded
 	 *
-	 * @return  RedeventEntityBase  Self instance for chaining
+	 * @return  RdfEntityBase  Self instance for chaining
 	 */
 	public function loadFromTable($table)
 	{
@@ -800,7 +800,7 @@ abstract class RedeventEntityBase
 	/**
 	 * Default loading is trying to use the associated table
 	 *
-	 * @return  RedeventEntityBase  Self instance for chaining
+	 * @return  RdfEntityBase  Self instance for chaining
 	 */
 	public function loadItem()
 	{

@@ -16,4 +16,16 @@ defined('_JEXEC') or die;
  */
 class RdfEntityPaymentrequest extends RdfEntityBase
 {
+	/**
+	 * Get submitter
+	 *
+	 * @return RdfEntitySubmitter
+	 */
+	public function getSubmitter()
+	{
+		$submitter = RdfEntitySubmitter::getInstance($this->submission_id);
+		$submitter->loadItem();
+
+		return $submitter;
+	}
 }
