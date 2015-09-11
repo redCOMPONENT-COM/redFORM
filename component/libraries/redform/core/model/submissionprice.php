@@ -107,7 +107,7 @@ class RdfCoreModelSubmissionprice extends RModel
 
 		if (!$this->isPaid())
 		{
-			$this->updatePaymentRequest();
+			$this->createPaymentRequest();
 		}
 
 		return true;
@@ -231,10 +231,11 @@ class RdfCoreModelSubmissionprice extends RModel
 	 *
 	 * @return void
 	 */
-	private function updatePaymentRequest()
+	private function createPaymentRequest()
 	{
 		$alreadyPaid = $this->getAlreadyPaid();
 
+		// Create payment request
 		$date = JFactory::getDate();
 		$row = RTable::getAdminInstance('paymentrequest', array(), 'com_redform');
 		$row->submission_id = $this->submission->id;
@@ -266,6 +267,10 @@ class RdfCoreModelSubmissionprice extends RModel
 
 			$itemRow->store();
 		}
+
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onRedformAfterCreatePaymentRequest', array($row->id));
 	}
 
 	/**
