@@ -64,7 +64,7 @@ class PaymentWorldpay extends RdfPaymentHelper
 		$req_params = array(
 			'MerchantID' => $this->params->get('merchantid'),
 			'Amount' => round($price * 100),
-			'CurrencyCode' => RedformHelperLogCurrency::getIsoNumber($currency),
+			'CurrencyCode' => RHelperCurrency::getIsoNumber($currency),
 			'EchoAVSCheckResult'  => 'true',
 			'EchoCV2CheckResult'  => 'true',
 			'EchoThreeDSecureAuthenticationCheckResult'  => 'true',
@@ -177,7 +177,7 @@ class PaymentWorldpay extends RdfPaymentHelper
 		$resp[] = 'tid:' . $input->get('CrossReference', '', 'string');
 		$resp[] = 'orderid:' . $input->get('OrderID', '', 'string');
 		$resp[] = 'amount:' . $input->get('Amount', 0);
-		$resp[] = 'currency:' . RedformHelperLogCurrency::getIsoCode($input->get('CurrencyCode', 0));
+		$resp[] = 'currency:' . RHelperCurrency::getIsoCode($input->get('CurrencyCode', 0));
 		$resp[] = 'date:' . $input->get('TransactionDateTime', '', 'string');
 		$resp = implode("\n  ", $resp);
 

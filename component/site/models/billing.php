@@ -111,4 +111,18 @@ class RedformModelBilling extends RModelAdmin
 
 		return $item;
 	}
+
+	/**
+	 * Method to allow derived classes to preprocess the form.
+	 *
+	 * @param   JForm   $form   A JForm object.
+	 * @param   mixed   $data   The data expected for the form.
+	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
+	 *
+	 * @return  void
+	 */
+	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	{
+		return parent::preprocessForm($form, $data, 'redform');
+	}
 }

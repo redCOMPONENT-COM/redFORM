@@ -118,7 +118,7 @@ class plgRedformRedmemberbillinginfo extends JPlugin
 
 		if ($field = $this->params->get('country'))
 		{
-			$table->company = $this->replaceFields($field, $rmUser);
+			$table->country = $this->replaceFields($field, $rmUser);
 		}
 
 		$prefilled = true;

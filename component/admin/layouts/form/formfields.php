@@ -84,14 +84,14 @@ $searchToolsOptions = array(
 		// Render the toolbar?
 		if ($showToolbar)
 		{
-			echo RdfHelperLayout::render('formfields.toolbar', $data);
+			echo RdfLayoutHelper::render('formfields.toolbar', $data);
 		}
 		?>
 		</div>
 
 		<div class="panel-body">
 		<?php
-		echo RdfHelperLayout::render(
+		echo RdfLayoutHelper::render(
 			'searchtools.default',
 			array(
 				'view' => (object) array(

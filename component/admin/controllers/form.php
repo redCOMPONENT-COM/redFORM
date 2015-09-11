@@ -39,7 +39,7 @@ class RedformControllerForm extends RdfControllerForm
 			$pagination = $model->getPagination();
 			$pagination->set('formName', $formName);
 
-			echo RdfHelperLayout::render('form.formfields', array(
+			echo RdfLayoutHelper::render('form.formfields', array(
 					'state' => $model->getState(),
 					'items' => $model->getItems(),
 					'pagination' => $pagination,
@@ -55,5 +55,30 @@ class RedformControllerForm extends RdfControllerForm
 		}
 
 		$app->close();
+	}
+
+	/**
+	 * Method to edit an existing record.
+	 *
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key
+	 *                         (sometimes required to avoid router collisions).
+	 *
+	 * @return  boolean  True if access level check and checkout passes, false otherwise.
+	 */
+	public function edit($key = null, $urlVar = null)
+	{
+		$cid   = $this->input->post->get('cid', array(), 'array');
+
+		// Get the previous record id (if any) and the current record id.
+		$recordId = (int) (count($cid) ? $cid[0] : $this->input->getInt('id'));
+
+		if ($recordId)
+		{
+			$model = $this->getModel();
+			$model->checkFields($recordId);
+		}
+
+		return parent::edit($key, $urlVar);
 	}
 }

@@ -213,7 +213,7 @@ class RdfCore extends JObject
 		$form   = $model->getForm();
 		$fieldsHtml = $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
-		$html = RdfHelperLayout::render(
+		$html = RdfLayoutHelper::render(
 			'rform.form',
 			array(
 				'form' => $form,
@@ -222,7 +222,7 @@ class RdfCore extends JObject
 				'referer64' => base64_encode($uri->toString()),
 			),
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		// Analytics
@@ -255,7 +255,6 @@ class RdfCore extends JObject
 	public function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
 	{
 		JHtml::_('behavior.keepalive');
-		RHelperAsset::load('redform-validate.js', 'com_redform');
 
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
@@ -378,7 +377,7 @@ class RdfCore extends JObject
 				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
 			}
 
-			$html .= RdfHelperLayout::render(
+			$html .= RdfLayoutHelper::render(
 				'rform.fields',
 				array(
 					'fields' => $fields,
@@ -388,7 +387,7 @@ class RdfCore extends JObject
 					'answers' => $indexAnswers
 				),
 				'',
-				array('client' => 0, 'component' => 'com_redform')
+				array('component' => 'com_redform')
 			);
 
 			if ($multi > 1)
@@ -445,6 +444,7 @@ class RdfCore extends JObject
 		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
 		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';
 		$html .= '<input type="hidden" name="' . self::getToken() . '" value="' . $uniq . '" />';
+		$html .= '<input type="hidden" name="submissionurl" value="' . base64_encode(JFactory::getURI()->toString()) . '" />';
 
 		if ($currency)
 		{
@@ -477,13 +477,7 @@ class RdfCore extends JObject
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
 		$model = new RdfCoreFormSubmission($this->formId);
-
-		if (!$result = $model->apisaveform($integration_key, $options, $data))
-		{
-			$this->setError($model->getError());
-
-			return false;
-		}
+		$result = $model->apisaveform($integration_key, $options, $data);
 
 		return $result;
 	}
@@ -998,7 +992,9 @@ class RdfCore extends JObject
 	 */
 	protected function loadCheckScript()
 	{
-		JHtml::_('behavior.formvalidation');
+		RHelperAsset::load('redform-validate.js', 'com_redform');
+		JText::script('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED');
+		JText::script('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED');
 	}
 
 	/**

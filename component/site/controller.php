@@ -33,8 +33,7 @@ class RedformController extends JControllerLegacy
 		// Set a default view if none exists
 		if (!$input->getCmd('view', ''))
 		{
-			$input->set('view', 'redform');
-			$input->set('layout', 'redform');
+			$this->redirect('index.php', 'Something went wrong', 'error');
 		}
 
 		return parent::display($cachable, $urlparams);

@@ -1,22 +1,20 @@
 <?php
 /**
- * @package     Redform.Libraries
- * @subpackage  Helper
+ * @package     Redevent.Library
+ * @subpackage  Layout
  *
- * @copyright   Copyright (C) 2012 - 2014 redCOMPONENT.com. All rights reserved.
- * @license     GNU General Public License version 2 or later, see LICENSE.
+ * @copyright   Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
 /**
- * Class RdfHelperLayout
+ * Layout helper for fast rendering
  *
- * @package     Redform.Libraries
- * @subpackage  Helper
- * @since       3.0
+ * @since  3.0
  */
-class RdfHelperLayout extends RLayoutHelper
+class RdfLayoutHelper extends RLayoutHelper
 {
 	/**
 	 * Method to render the layout.
@@ -32,13 +30,10 @@ class RdfHelperLayout extends RLayoutHelper
 	 */
 	public static function render($layoutFile, $displayData = null, $basePath = '', $options = null)
 	{
-		if (!$options)
+		if (empty($options['suffixes']))
 		{
-			$options = array();
-		}
+			$options = is_null($options) ? array() : $options;
 
-		if (!isset($options['suffixes']))
-		{
 			if (JComponentHelper::getParams('com_redform')->get('form_layout') == 'bootstrap'
 				|| (JFactory::getApplication()->isAdmin() && JFactory::getApplication()->input->get('options') == 'com_redform'))
 			{
@@ -50,6 +45,13 @@ class RdfHelperLayout extends RLayoutHelper
 			}
 		}
 
-		return parent::render($layoutFile, $displayData, $basePath, $options);
+		$basePath = empty($basePath) ? self::$defaultBasePath : $basePath;
+
+		// Make sure we send null to RLayoutFile if no path set
+		$basePath = empty($basePath) ? null : $basePath;
+		$layout = new RdfLayoutFile($layoutFile, $basePath, $options);
+		$renderedLayout = $layout->render($displayData);
+
+		return $renderedLayout;
 	}
 }

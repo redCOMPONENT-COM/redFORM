@@ -28,19 +28,21 @@ class RedformControllerRedform extends RedformController
 		$app = JFactory::getApplication();
 
 		$formId = $app->input->getInt('form_id', 0);
-
-		$model = new RdfCoreFormSubmission($formId);
-		$result = $model->apisaveform();
-
 		$referer = $app->input->get('referer', '', 'base64');
 		$referer = $referer ? base64_decode($referer) : 'index.php';
 
-		if (!$result)
-		{
-			$msg = JText::_('COM_REDFORM_SORRY_THERE_WAS_A_PROBLEM_WITH_YOUR_SUBMISSION') . ': ' . $model->getError();
+		$model = new RdfCoreFormSubmission($formId);
 
+		try
+		{
+			$result = $model->apisaveform();
+		}
+		catch (Exception $e)
+		{
+			$msg = JText::_('COM_REDFORM_SORRY_THERE_WAS_A_PROBLEM_WITH_YOUR_SUBMISSION') . ': ' . $e->getMessage();
 			$this->setRedirect($referer, $msg, 'error');
-			$this->redirect();
+
+			return;
 		}
 
 		JPluginHelper::importPlugin('redform');

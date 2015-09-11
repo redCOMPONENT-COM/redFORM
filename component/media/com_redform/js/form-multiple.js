@@ -32,7 +32,9 @@
 			// trigger price update
 			if (redformPrice)
 			{
-				redformPrice(newSubForm);
+				var updater = redformPrice($(newSubForm));
+				updater.init();
+				updater.updatePrice();
 			}
 		}
 
@@ -68,7 +70,9 @@
 				updateAttributeFieldIndex(el, 'name', index);
 				updateAttributeFieldIndex(el, 'id', index);
 
-				if (resetValue && el.attr('type') != 'hidden') {
+				var preserveValue = ['hidden', 'radio', 'checkbox'];
+
+				if (resetValue && preserveValue.indexOf(el.attr('type')) == -1) {
 					el.val(null);
 				}
 			});

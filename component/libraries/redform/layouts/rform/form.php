@@ -19,14 +19,14 @@ if (isset($data['action']))
 }
 else
 {
-	$action = JRoute::_('index.php?option=com_redform');
+	$action = JRoute::_('index.php');
 }
 $form = $data['form'];
 $sid = $data['sid'];
 $fieldsHtml = $data['fieldsHtml'];
 $referer64 = $data['referer64'];
 ?>
-<form action="<?php echo $action; ?>" method="post" name="redform" class="redform-validate form-horizontal <?php echo $form->classname; ?>" enctype="multipart/form-data">
+<form action="<?php echo $action; ?>" method="post" name="redform" class="redform-validate <?php echo $form->classname; ?>" enctype="multipart/form-data">
 
 	<?php echo $fieldsHtml; ?>
 
@@ -38,6 +38,7 @@ $referer64 = $data['referer64'];
 		<input type="hidden" name="submitter_id" value="<?php echo $sid; ?>" />
 	<?php endif; ?>
 
+	<input type="hidden" name="option" value="com_redform" />
 	<input type="hidden" name="task" value="redform.save" />
 	<input type="hidden" name="referer" value="<?php echo $referer64; ?>" />
 </form>

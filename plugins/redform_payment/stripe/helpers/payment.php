@@ -42,7 +42,7 @@ class PaymentStripe extends RdfPaymentHelper
 
 		$price = $this->getPrice($details);
 
-		echo RdfHelperLayout::render(
+		echo RdfLayoutHelper::render(
 			'notify',
 			array(
 				'action' => $this->getUrl('notify', $reference),

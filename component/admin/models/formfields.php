@@ -87,6 +87,8 @@ class RedformModelFormfields extends RModelList
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
+	 *
+	 * @throws Exception
 	 */
 	protected function getListQuery()
 	{

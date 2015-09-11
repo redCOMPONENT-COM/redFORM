@@ -143,10 +143,10 @@ class RdfHelper
 	 */
 	public static function wrapMailHtmlBody($body, $subject)
 	{
-		return RdfHelperLayout::render('email.bodywrapper',
+		return RdfLayoutHelper::render('email.bodywrapper',
 			array('body' => $body, 'subject' => $subject),
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 	}
 

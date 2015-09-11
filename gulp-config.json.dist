@@ -1,0 +1,26 @@
+{
+	"wwwDir"           : "/path/to/joomla/root",
+	"browserSyncProxy" : "localhost",
+	"browser" : "chromium-browser",
+	"extensions"       : {
+		"components" : ["redform"],
+		"plugins" : {
+			"redform" : ["economic", "helpscout", "redmemberbillinginfo", "salesforce"],
+			"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
+			"redform_mailing" : ["acymailing", "ccnewsletter", "jnews", "phplist"],
+			"redform_payment" : [
+				"custom",
+				"epay",
+				"epay2",
+				"ideal",
+				"iridium",
+				"pagseguro",
+				"paypal",
+				"quickpay",
+				"stripe",
+				"worldpay",
+				"worldpay2"
+			]
+		}
+	}
+}

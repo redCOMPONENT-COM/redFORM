@@ -35,9 +35,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
-		$document = JFactory::getDocument();
-
-		$details = $this->details($request->key);
+		$details = $this->getDetails($request->key);
 		$reference = $request->key;
 		$currency = $details->currency;
 
@@ -100,46 +98,48 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		$db = JFactory::getDBO();
 		$paid = 0;
 
-		$reference = JRequest::getvar('reference');
-		JRequest::setVar('submit_key', $reference);
+		$input = $mainframe->input;
+
+		$reference = $input->get('reference');
+		$input->set('submit_key', $reference);
 		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_QUICKPAY_NOTIFICATION_RECEIVED', $reference));
 
 		// It was successull, get the details
 		$resp = array();
-		$resp[] = 'tid:' . JRequest::getVar('transaction');
-		$resp[] = 'orderid:' . JRequest::getVar('ordernumber');
-		$resp[] = 'amount:' . JRequest::getVar('amount');
-		$resp[] = 'cur:' . JRequest::getVar('currency');
-		$resp[] = 'date:' . substr(JRequest::getVar('time'), 0, 6);
-		$resp[] = 'time:' . substr(JRequest::getVar('time'), 6);
+		$resp[] = 'tid:' . $input->get('transaction');
+		$resp[] = 'orderid:' . $input->get('ordernumber');
+		$resp[] = 'amount:' . $input->get('amount');
+		$resp[] = 'cur:' . $input->get('currency');
+		$resp[] = 'date:' . substr($input->get('time'), 0, 6);
+		$resp[] = 'time:' . substr($input->get('time'), 6);
 		$resp = implode("\n  ", $resp);
 
 		if ($this->params->get('md5secret'))
 		{
 			$req_params = array(
-				JRequest::getVar('msgtype'),
-				JRequest::getVar('ordernumber'),
-				JRequest::getVar('amount'),
-				JRequest::getVar('currency'),
-				JRequest::getVar('time'),
-				JRequest::getVar('state'),
-				JRequest::getVar('qpstat'),
-				JRequest::getVar('qpstatmsg'),
-				JRequest::getVar('chstat'),
-				JRequest::getVar('chstatmsg'),
-				JRequest::getVar('merchant'),
-				JRequest::getVar('merchantemail'),
-				JRequest::getVar('transaction'),
-				JRequest::getVar('cardtype'),
-				JRequest::getVar('cardnumber'),
-				//     	  JRequest::getVar('cardexpire'),
-				JRequest::getVar('splitpayment'),
-				JRequest::getVar('fraudprobability'),
-				JRequest::getVar('fraudremarks'),
-				JRequest::getVar('fraudreport'),
-				JRequest::getVar('fee')
+				$input->get('msgtype'),
+				$input->get('ordernumber'),
+				$input->get('amount'),
+				$input->get('currency'),
+				$input->get('time'),
+				$input->get('state'),
+				$input->get('qpstat'),
+				$input->get('qpstatmsg'),
+				$input->get('chstat'),
+				$input->get('chstatmsg'),
+				$input->get('merchant'),
+				$input->get('merchantemail'),
+				$input->get('transaction'),
+				$input->get('cardtype'),
+				$input->get('cardnumber'),
+				//     	  $input->get('cardexpire'),
+				$input->get('splitpayment'),
+				$input->get('fraudprobability'),
+				$input->get('fraudremarks'),
+				$input->get('fraudreport'),
+				$input->get('fee')
 			);
-			$receivedkey = JRequest::getVar('md5check');
+			$receivedkey = $input->get('md5check');
 			$calc = md5(implode('', $req_params) . $this->params->get('md5secret'));
 
 			if (strcmp($receivedkey, $calc))
@@ -152,22 +152,22 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			}
 		}
 
-		if (!JRequest::getVar('qpstat') === '000')
+		if (!$input->get('qpstat') === '000')
 		{
 			// Payment was refused
 			$error = JText::sprintf('PLG_REDFORM_QUICKPAY_PAYMENT_REFUSED', $reference);
 			RdfHelperLog::simpleLog($error);
-			$this->writeTransaction($reference, JRequest::getVar('qpstat') . ': ' . JRequest::getVar('qpstatmsg'), 'FAIL', 0);
+			$this->writeTransaction($reference, $input->get('qpstat') . ': ' . $input->get('qpstatmsg'), 'FAIL', 0);
 
 			return 0;
 		}
 
-		if (JRequest::getVar('state') == 0)
+		if ($input->get('state') == 0)
 		{
 			// Payment was refused
 			RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_QUICKPAY_TRANSACTION_STATE_INITIAL', $reference));
 			$this->writeTransaction(
-				$submit_key,
+				$reference,
 				JText::sprintf('PLG_REDFORM_QUICKPAY_TRANSACTION_STATE_INITIAL', $reference) . "\n  " . $resp,
 				'FAIL',
 				0
@@ -175,7 +175,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 
 			return 0;
 		}
-		elseif (JRequest::getVar('state') == 5)
+		elseif ($input->get('state') == 5)
 		{
 			// Payment was refused
 			RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_QUICKPAY_TRANSACTION_STATE_CANCELLED', $reference));
@@ -193,7 +193,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 
 		$currency = $details->currency;
 
-		if (strcasecmp($currency, JRequest::getVar('currency')))
+		if (strcasecmp($currency, $input->get('currency')))
 		{
 			$error = JText::sprintf('PLG_REDFORM_QUICKPAY_CURRENCY_MISMATCH', $reference);
 			RdfHelperLog::simpleLog($error);
@@ -202,7 +202,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			return false;
 		}
 
-		if (round($this->getPrice($details) * 100) != JRequest::getVar('amount'))
+		if (round($this->getPrice($details) * 100) != $input->get('amount'))
 		{
 			$error = JText::sprintf('PLG_REDFORM_QUICKPAY_PRICE_MISMATCH', $reference);
 			RdfHelperLog::simpleLog($error);
