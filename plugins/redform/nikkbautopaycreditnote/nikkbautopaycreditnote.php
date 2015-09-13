@@ -84,8 +84,8 @@ class plgRedformNikkbautopaycreditnote extends JPlugin
 			$billingRow->bind($previousBilling);
 			$billingRow->id = null;
 			$billingRow->cart_id = $cart->id;
-		}
 
-		$billingRow->store();
+			$billingRow->store();
+		}
 	}
 }
