@@ -36,7 +36,6 @@ class plgRedformNikkbbilling extends JPlugin
 
 		$form->setFieldAttribute('fullname', 'required', true);
 		$form->setFieldAttribute('company', 'required', true);
-		$form->setFieldAttribute('vatnumber', 'required', true);
 		$form->setFieldAttribute('address', 'required', true);
 		$form->setFieldAttribute('city', 'required', true);
 		$form->setFieldAttribute('zipcode', 'required', true);
