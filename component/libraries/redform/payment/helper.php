@@ -163,7 +163,7 @@ abstract class RdfPaymentHelper extends JObject
 	{
 		$cart = $this->getCart($reference);
 
-		$table = RTable::getAdminInstance('Payment', array(), 'com_redcore');
+		$table = RTable::getAdminInstance('Payment', array(), 'com_redform');
 		$table->date = JFactory::getDate()->toSql();
 		$table->data = $data;
 		$table->cart_id = $cart->id;
