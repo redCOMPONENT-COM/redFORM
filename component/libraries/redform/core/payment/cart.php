@@ -155,7 +155,7 @@ class RdfCorePaymentCart
 	 */
 	public function writeTransaction($gateway, $data, $status, $paid, $date = null)
 	{
-		$table = RTable::getAdminInstance('Payment', array(), 'com_redcore');
+		$table = RTable::getAdminInstance('Payment', array(), 'com_redform');
 		$table->date = $date ?: JFactory::getDate()->toSql();
 		$table->data = $data;
 		$table->cart_id = $this->id;
