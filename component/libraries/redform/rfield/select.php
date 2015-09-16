@@ -236,9 +236,7 @@ class RdfRfieldSelect extends RdfRfield
 			}
 		}
 
-		$value = $this->getValue();
-
-		if ($value && in_array($option->value, $value))
+		if ($this->value && in_array($option->value, $this->value))
 		{
 			$properties['selected'] = 'selected';
 		}
