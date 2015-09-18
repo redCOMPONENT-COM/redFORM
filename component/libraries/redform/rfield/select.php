@@ -135,6 +135,11 @@ class RdfRfieldSelect extends RdfRfield
 			}
 		}
 
+		if (empty($sku))
+		{
+			return parent::getSku();
+		}
+
 		return implode('-', $sku);
 	}
 

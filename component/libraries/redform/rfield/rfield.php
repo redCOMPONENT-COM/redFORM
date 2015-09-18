@@ -427,7 +427,7 @@ class RdfRfield extends JObject
 	 */
 	public function getSku()
 	{
-		return '';
+		return 'FIELD' . $this->id;
 	}
 
 	/**
