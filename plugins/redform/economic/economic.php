@@ -394,7 +394,7 @@ class plgRedformEconomic extends JPlugin
 				$line['Number'] = $i++;
 				$line['Description'] = $item->label;
 				$line['Quantity'] = $item->price > 0 ? 1 : - 1;
-				$line['UnitNetPrice'] = $item->price;
+				$line['UnitNetPrice'] = abs($item->price);
 				$line['DiscountAsPercent'] = 0;
 				$line['UnitCostPrice'] = 0;
 				$line['TotalMargin'] = 0;
