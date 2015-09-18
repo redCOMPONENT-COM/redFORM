@@ -73,7 +73,7 @@ $pdfImg = JHtml::image('plugins/redform/economic/images/pdf.png', 'get pdf');
 		foreach ((array) $this->attended as $row) : ?>
 	  		<tr class="sectiontableentry<?php echo $i +1 . $this->params->get( 'pageclass_sfx' ); ?>" >
 	  			<td align="left">
-	   				<?php echo RedeventHelperOutput::formatEventDateTime($row);	?>
+	   				<?php echo RedeventHelperDate::formatEventDateTime($row);	?>
 				</td>
 
 				<?php

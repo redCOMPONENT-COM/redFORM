@@ -382,21 +382,19 @@ class plgRedformEconomic extends JPlugin
 		$helper->CurrentInvoice_SetOtherReference(array('currentInvoiceHandle' => $invoice, 'value' => $data->reference . '-' . $cartId));
 
 		$i = 1;
-		$total = 0;
 
 		foreach ($data->paymentRequests as $pr)
 		{
 			foreach ($pr->items as $item)
 			{
-				$total += $item->price;
 				$producthandle = $this->getProduct($item);
 				$line = array();
 				$line['InvoiceHandle'] = $invoice;
 				$line['ProductHandle'] = $producthandle;
 				$line['Number'] = $i++;
 				$line['Description'] = $item->label;
-				$line['Quantity'] = 1;
-				$line['UnitNetPrice'] = $item->price;
+				$line['Quantity'] = $item->price > 0 ? 1 : - 1;
+				$line['UnitNetPrice'] = abs($item->price);
 				$line['DiscountAsPercent'] = 0;
 				$line['UnitCostPrice'] = 0;
 				$line['TotalMargin'] = 0;

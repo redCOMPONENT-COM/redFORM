@@ -198,9 +198,9 @@ class RdfCoreModelSubmissionprice extends RModel
 		$row->price = round($price, RHelperCurrency::getPrecision($this->answers->getCurrency()));
 		$row->vat = round($field->getVat(), RHelperCurrency::getPrecision($this->answers->getCurrency()));
 
-		if (!$row->store())
+		if (!($row->check() && $row->store()))
 		{
-			throw new RuntimeException('Couldn\'t create submission price items');
+			throw new RuntimeException('Couldn\'t create submission price items: ' . $row->getError());
 		}
 
 		$this->submissionPriceItems[] = $row;
@@ -246,27 +246,7 @@ class RdfCoreModelSubmissionprice extends RModel
 
 		$row->store();
 
-		// Now create payment request items
-		$query = ' INSERT INTO #__rwf_payment_request_item (payment_request_id, sku, label, price, vat) '
-			. ' SELECT ' . $row->id . ', sku, label, price, vat '
-			. ' FROM #__rwf_submission_price_item '
-			. ' WHERE submission_id = ' . $this->answers->sid;
-
-		$this->_db->setQuery($query);
-		$this->_db->execute();
-
-		if ($alreadyPaid->price)
-		{
-			// Add a line for difference
-			$itemRow = RTable::getAdminInstance('Paymentrequestitem', array(), 'com_redform');
-
-			$itemRow->payment_request_id = $row->id;
-			$itemRow->label = JText::_('COM_REDFORM_PAYMENT_REQUEST_DIFFERENCE');
-			$itemRow->price = - round($alreadyPaid->price, RHelperCurrency::getPrecision($this->answers->getCurrency()));
-			$itemRow->vat = - round($alreadyPaid->vat, RHelperCurrency::getPrecision($this->answers->getCurrency()));
-
-			$itemRow->store();
-		}
+		$this->createPaymentRequestItems($row->id);
 
 		$entity = RdfEntityPaymentrequest::getInstance();
 		$entity->bind($row);
@@ -274,6 +254,71 @@ class RdfCoreModelSubmissionprice extends RModel
 		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onRedformAfterCreatePaymentRequest', array($entity));
+	}
+
+	/**
+	 * Create payment request items
+	 *
+	 * @param   int  $paymentRequestId  payment request id
+	 *
+	 * @return void
+	 */
+	private function createPaymentRequestItems($paymentRequestId)
+	{
+		$query = $this->_db->getQuery(true)
+			->select('sku, label, price, vat')
+			->from('#__rwf_submission_price_item')
+			->where('submission_id = ' . $this->answers->sid);
+
+		$this->_db->setQuery($query);
+
+		$currentItems = $this->_db->loadObjectList();
+		$alreadyPaid = $this->getAlreadyPaidPaymentRequestItems();
+
+		$finalItems = array();
+
+		// First substract already paid
+		foreach ($alreadyPaid as $item)
+		{
+			$finalItems[$item->sku] = $item;
+			$finalItems[$item->sku]->price = - $finalItems[$item->sku]->price;
+			$finalItems[$item->sku]->vat = - $finalItems[$item->sku]->vat;
+		}
+
+		// Then add current items
+		foreach ($currentItems as $item)
+		{
+			if (empty($finalItems[$item->sku]))
+			{
+				$finalItems[$item->sku] = $item;
+			}
+			else
+			{
+				$finalItems[$item->sku]->price += $item->price;
+				$finalItems[$item->sku]->vat += $item->vat;
+			}
+		}
+
+		// Now register result to db
+		foreach ($finalItems as $item)
+		{
+			if (!$item->price)
+			{
+				// Already paid
+				continue;
+			}
+
+			// Add a line for difference
+			$itemRow = RTable::getAdminInstance('Paymentrequestitem', array(), 'com_redform');
+
+			$itemRow->payment_request_id = $paymentRequestId;
+			$itemRow->sku = $item->sku;
+			$itemRow->label = $item->label;
+			$itemRow->price = $item->price;
+			$itemRow->vat = $item->vat;
+
+			$itemRow->store();
+		}
 	}
 
 	/**
@@ -342,5 +387,43 @@ class RdfCoreModelSubmissionprice extends RModel
 		}
 
 		return $res;
+	}
+
+	/**
+	 * Get already paid amount
+	 *
+	 * @return object properties price and vat
+	 */
+	private function getAlreadyPaidPaymentRequestItems()
+	{
+		$query = $this->_db->getQuery(true);
+
+		$query->select('i.*')
+			->from('#__rwf_payment_request AS pr')
+			->innerJoin('#__rwf_payment_request_item AS i ON i.payment_request_id = pr.id')
+			->where('pr.submission_id = ' . $this->answers->sid)
+			->where('pr.paid = 1');
+
+		$this->_db->setQuery($query);
+
+		$items = $this->_db->loadObjectList();
+
+		// Group by sku
+		$skus = array();
+
+		foreach ($items as $item)
+		{
+			if (empty($skus[$item->sku]))
+			{
+				$skus[$item->sku] = $item;
+			}
+			else
+			{
+				$skus[$item->sku]->price += $item->price;
+				$skus[$item->sku]->vat += $item->vat;
+			}
+		}
+
+		return $skus;
 	}
 }
