@@ -17,6 +17,8 @@
 		<lastnameFieldId>15</lastnameFieldId>
 		<!-- field id from redform, optional -->
 		<organizationFieldId>15</organizationFieldId>
+		<!-- autoreply, optional -->
+		<autoreply>1</autoreply>
 		<!-- field ids from redform, optional -->
 		<attachments>
 			<fieldId>17</fieldId>
