@@ -97,7 +97,7 @@ class RdfRfieldCheckbox extends RdfRfield
 		{
 			if (in_array($option->value, $this->value))
 			{
-				$sku[] = $option->sku;
+				$sku[] = $option->sku ?: parent::getSku() . '_' . $option->id;
 			}
 		}
 
