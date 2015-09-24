@@ -440,6 +440,11 @@ class RdfCore extends JObject
 			$html .= '<input type="hidden" name="submit_key" value="' . $submit_key . '" />';
 		}
 
+		if (isset($options['module_id']))
+		{
+			$html .= '<input type="hidden" name="module_id" value="' . $options['module_id'] . '" />';
+		}
+
 		$html .= '<input type="hidden" name="nbactive" value="' . $initialActive . '" />';
 		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
 		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';

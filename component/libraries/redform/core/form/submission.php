@@ -20,6 +20,8 @@ class RdfCoreFormSubmission
 {
 	protected $formId;
 
+	protected $moduleId;
+
 	protected $formModel;
 
 	protected $submitKey;
@@ -53,6 +55,9 @@ class RdfCoreFormSubmission
 		{
 			case 'submit_key':
 				return $this->submitKey;
+
+			case 'module_id':
+				return $this->moduleId;
 
 			case 'posts':
 				$posts = array();
@@ -103,6 +108,7 @@ class RdfCoreFormSubmission
 		{
 			$data = array();
 			$data['form_id'] = $app->input->getInt('form_id', 0);
+			$data['module_id'] = $app->input->getInt('module_id', 0);
 			$data['submit_key'] = $app->input->getCmd('submit_key', false);
 			$data['nbactive'] = $app->input->getInt('nbactive', 1);
 			$data['currency'] = $app->input->getCmd('currency', '');
@@ -123,6 +129,11 @@ class RdfCoreFormSubmission
 		}
 
 		$this->setSubmitKey($submit_key);
+
+		if (isset($data['module_id']))
+		{
+			$this->moduleId = $data['module_id'];
+		}
 
 		/* Get the form details */
 		$this->formId = $data['form_id'];
