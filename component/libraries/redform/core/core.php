@@ -1122,11 +1122,7 @@ class RdfCore extends JObject
 		$query = $db->getQuery(true);
 
 		$query->select('pr.*')
-			->select('CASE WHEN p.id IS NOT NULL THEN 1 ELSE 0 END AS paid')
 			->from('#__rwf_payment_request AS pr')
-			->leftJoin('#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
-			->leftJoin('#__rwf_cart AS c ON c.id = ci.cart_id')
-			->leftJoin('#__rwf_payment AS p ON p.cart_id = c.id AND p.paid = 1')
 			->where('pr.submission_id IN (' . implode(', ', $sids) . ')')
 			->order('pr.id DESC')
 			->group('pr.id');
