@@ -1124,8 +1124,7 @@ class RdfCore extends JObject
 		$query->select('pr.*')
 			->from('#__rwf_payment_request AS pr')
 			->where('pr.submission_id IN (' . implode(', ', $sids) . ')')
-			->order('pr.id DESC')
-			->group('pr.id');
+			->order('pr.id DESC');
 
 		$db->setQuery($query);
 		$paymentRequests = $db->loadObjectList();
