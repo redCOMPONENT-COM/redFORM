@@ -116,7 +116,14 @@ class PlgContentRedform extends JPlugin
 			return JText::_('COM_REDFORM_No_active_form_found');
 		}
 
-		return $this->rfcore->displayForm($form->id, null, $multiple);
+		$options = array();
+
+		if (isset($this->rwfparams['module_id']))
+		{
+			$options['module_id'] = $this->rwfparams['module_id'];
+		}
+
+		return $this->rfcore->displayForm($form->id, null, $multiple, $options);
 	}
 
 	/**
