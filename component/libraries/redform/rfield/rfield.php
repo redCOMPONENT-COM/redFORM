@@ -100,6 +100,13 @@ class RdfRfield extends JObject
 	protected $paymentRequestItemLabel = null;
 
 	/**
+	 * Should we force the creation of price item, even if price is 0
+	 *
+	 * @var bool
+	 */
+	protected $forceSubmissionPriceItem = false;
+
+	/**
 	 * Magic method
 	 *
 	 * @param   string  $name  property name
@@ -569,6 +576,16 @@ class RdfRfield extends JObject
 		}
 
 		return true;
+	}
+
+	/**
+	 * should we force creation of submission price item, even if price is null
+	 *
+	 * @return bool
+	 */
+	public function getForceSubmissionPriceItem()
+	{
+		return ($this->forceSubmissionPriceItem || $this->getParam('forceSubmissionPriceItem', false));
 	}
 
 	/**

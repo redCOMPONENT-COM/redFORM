@@ -327,7 +327,7 @@ class RedformModelSubmitters extends RModelList
 	}
 
 	/**
-	 * Method to add number of submitters to forms
+	 * Method to add payment requests to rows
 	 *
 	 * @param   array  $items  items
 	 *
@@ -351,19 +351,15 @@ class RedformModelSubmitters extends RModelList
 
 		$query = $this->_db->getQuery(true);
 
-		$query->select('pr.id AS prid, pr.submission_id, pr.price, pr.vat, pr.vat, pr.created, pr.currency')
-			->select('p.id AS payment_id, p.paid, p.status, p.date')
+		$query->select('pr.id AS prid, pr.submission_id, pr.price, pr.vat, pr.vat, pr.created, pr.currency, pr.paid')
 			->from('#__rwf_payment_request AS pr')
-			->join('LEFT', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
-			->join('LEFT', '#__rwf_payment AS p ON p.cart_id = ci.cart_id')
 			->where('pr.submission_id IN (' . implode(', ', array_unique($keys)) . ')')
-			->order('pr.id ASC, p.id ASC');
+			->order('pr.id DESC');
 
 		$this->_db->setQuery($query);
 		$res = $this->_db->loadObjectList();
 
 		$paymentrequests = $this->buildPaymentrequests($res);
-		$paymentrequests = $this->addPaymentrequestsPayments($paymentrequests, $res);
 
 		foreach ($items as &$i)
 		{
@@ -397,55 +393,10 @@ class RedformModelSubmitters extends RModelList
 			{
 				$requests[$result->submission_id] = array();
 			}
-			elseif (isset($requests[$result->submission_id][$result->prid]))
-			{
-				continue;
-			}
 
-			$paymentrequest = clone $result;
-
-			unset($paymentrequest->payment_id);
-			unset($paymentrequest->status);
-			unset($paymentrequest->date);
-
-			$paymentrequest->paid = 0;
-			$paymentrequest->status = '';
-			$paymentrequest->payments = array();
-
-			$requests[$paymentrequest->submission_id][$paymentrequest->prid] = $paymentrequest;
+			$requests[$result->submission_id][$result->prid] = $result;
 		}
 
 		return $requests;
-	}
-
-	/**
-	 * Add payment to payment requests
-	 *
-	 * @param   array  $paymentrequests  payment requests
-	 * @param   array  $results          results from query
-	 *
-	 * @return mixed
-	 */
-	private function addPaymentrequestsPayments($paymentrequests, $results)
-	{
-		foreach ($results as $result)
-		{
-			if (!$result->payment_id)
-			{
-				continue;
-			}
-
-			$payment = new stdClass;
-			$payment->id = $result->payment_id;
-			$payment->paid = $result->paid;
-			$payment->status = $result->status;
-			$payment->date = $result->date;
-
-			$paymentrequests[$result->submission_id][$result->prid]->paid = $payment->paid ? 1 : 0;
-			$paymentrequests[$result->submission_id][$result->prid]->status = $payment->status ? $payment->status : '';
-			$paymentrequests[$result->submission_id][$result->prid]->payments[] = $payment;
-		}
-
-		return $paymentrequests;
 	}
 }

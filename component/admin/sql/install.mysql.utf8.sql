@@ -156,6 +156,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment_request_item` (
   `label` varchar(255) NOT NULL default '',
   `price` DECIMAL(10, 2) NOT NULL default '0.0',
   `vat` DECIMAL(10, 2) NOT NULL default '0.0',
+  `quantity` INT(11) NOT NULL default '1',
   PRIMARY KEY (`id`),
   KEY `payment_request_id` (`payment_request_id`),
   KEY `sku` (`sku`)
