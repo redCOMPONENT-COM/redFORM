@@ -800,11 +800,14 @@ class RdfCoreFormSubmission
 	 */
 	public function getSubmissionBySid($sid)
 	{
-		foreach ($this->answers as $rdfanswers)
+		if (!empty($this->answers))
 		{
-			if ($rdfanswers->sid == $sid)
+			foreach ($this->answers as $rdfanswers)
 			{
-				return $rdfanswers;
+				if ($rdfanswers->sid == $sid)
+				{
+					return $rdfanswers;
+				}
 			}
 		}
 

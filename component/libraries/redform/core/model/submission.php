@@ -68,19 +68,21 @@ class RdfCoreModelSubmission extends RModel
 		{
 			$submission = new RdfCoreFormSubmission;
 			$submission->setSubmitKey($this->submitKey);
+			$this->submission = $submission;
+		}
 
-			if (!$sids)
-			{
-				$sids = $this->getSids($this->submitKey);
-			}
+		if (!$sids)
+		{
+			$sids = $this->getSids($this->submitKey);
+		}
 
-			foreach ($sids as $sid)
+		foreach ($sids as $sid)
+		{
+			if (!$this->submission->getSubmissionBySid($sid))
 			{
 				$answers = $this->getSubSubmission($sid);
-				$submission->addSubSubmission($answers);
+				$this->submission->addSubSubmission($answers);
 			}
-
-			$this->submission = $submission;
 		}
 
 		return $this->submission;
@@ -120,12 +122,14 @@ class RdfCoreModelSubmission extends RModel
 
 		foreach ($fields as $field)
 		{
+			$cloned = clone $field;
+
 			if (isset($submissionsData->{'field_' . $field->field_id}))
 			{
 				$field->setValueFromDatabase($submissionsData->{'field_' . $field->field_id});
 			}
 
-			$subSubmission->addField($field);
+			$subSubmission->addField($cloned);
 		}
 
 		return $subSubmission;
