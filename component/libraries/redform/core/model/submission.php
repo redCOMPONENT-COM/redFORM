@@ -122,14 +122,14 @@ class RdfCoreModelSubmission extends RModel
 
 		foreach ($fields as $field)
 		{
-			$cloned = clone $field;
+			$clonedField = clone $field;
 
-			if (isset($submissionsData->{'field_' . $field->field_id}))
+			if (isset($submissionsData->{'field_' . $clonedField->field_id}))
 			{
-				$field->setValueFromDatabase($submissionsData->{'field_' . $field->field_id});
+				$clonedField->setValueFromDatabase($submissionsData->{'field_' . $clonedField->field_id});
 			}
 
-			$subSubmission->addField($cloned);
+			$subSubmission->addField($clonedField);
 		}
 
 		return $subSubmission;
