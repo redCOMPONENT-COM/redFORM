@@ -31,6 +31,7 @@ $isNew = (int) $this->item->id <= 0;
 				// Perform the ajax request
 				$.ajax({
 					url: 'index.php?option=com_redform&task=form.ajaxfields&view=form&id=<?php echo $this->item->id ?>',
+					cache: false,
 					beforeSend: function (xhr) {
 						$('.fields-content .spinner').show();
 					}
@@ -70,6 +71,11 @@ $isNew = (int) $this->item->id <= 0;
 	<li>
 		<a href="#notification" data-toggle="tab">
 			<?php echo JText::_('COM_REDFORM_NOTIFICATION'); ?>
+		</a>
+	</li>
+	<li>
+		<a href="#confirmation" data-toggle="tab">
+			<?php echo JText::_('COM_REDFORM_FORM_TAB_CONFIRMATION'); ?>
 		</a>
 	</li>
 	<li>
@@ -243,6 +249,49 @@ $isNew = (int) $this->item->id <= 0;
 			</div>
 		</div>
 
+		<div class="tab-pane" id="confirmation">
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('enable_confirmation'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('enable_confirmation'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('enable_confirmation_notification'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('enable_confirmation_notification'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('confirmation_notification_recipients'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('confirmation_notification_recipients'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('confirmation_contactperson_subject'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('confirmation_contactperson_subject'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('confirmation_contactperson_body'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('confirmation_contactperson_body'); ?>
+				</div>
+			</div>
+		</div>
+
 		<div class="tab-pane" id="payment">
 			<div class="control-group">
 				<div class="control-label">
@@ -254,18 +303,18 @@ $isNew = (int) $this->item->id <= 0;
 			</div>
 			<div class="control-group">
 				<div class="control-label">
-					<?php echo $this->form->getLabel('show_js_price'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('show_js_price'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
 					<?php echo $this->form->getLabel('currency'); ?>
 				</div>
 				<div class="controls">
 					<?php echo $this->form->getInput('currency'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('requirebilling'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('requirebilling'); ?>
 				</div>
 			</div>
 			<div class="control-group">

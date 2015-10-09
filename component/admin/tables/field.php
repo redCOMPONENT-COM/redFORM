@@ -26,61 +26,6 @@ class RedformTableField extends RTable
 	protected $_tableName = 'rwf_fields';
 
 	/**
-	 * @var int Primary key
-	 */
-	public $id = null;
-
-	/**
-	 * @var string field name
-	 */
-	public $field = null;
-
-	/**
-	 * @var string field header for tables
-	 */
-	public $field_header = null;
-
-	/**
-	 * @var string field type
-	 */
-	public $fieldtype = 'textfield';
-
-	/**
-	 * @var int published state
-	 */
-	public $published = null;
-
-	/**
-	 * @var int id of user having checked out the item
-	 */
-	public $checked_out = null;
-
-	/**
-	 * @var string
-	 */
-	public $checked_out_time = null;
-
-	/**
-	 * @var string The default value for a field
-	 */
-	public $default = null;
-
-	/**
-	 * @var string The tooltip for a field
-	 */
-	public $tooltip = null;
-
-	/**
-	 * @var string linked redmember field db name
-	 */
-	public $redmember_field = null;
-
-	/**
-	 * @var string custom params
-	 */
-	public $params = null;
-
-	/**
 	 * Current row state before updating/saving
 	 *
 	 * @var null

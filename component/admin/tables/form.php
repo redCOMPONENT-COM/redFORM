@@ -98,6 +98,26 @@ class RedformTableForm extends RTable
 	/**
 	 * @var  int
 	 */
+	public $enable_confirmation = 0;
+
+	/**
+	 * @var  int
+	 */
+	public $enable_confirmation_notification = 0;
+
+	/**
+	 * @var  string
+	 */
+	public $confirmation_contactperson_subject;
+
+	/**
+	 * @var  string
+	 */
+	public $confirmation_contactperson_body;
+
+	/**
+	 * @var  int
+	 */
 	public $submitterinform = 0;
 
 	/**
@@ -134,11 +154,6 @@ class RedformTableForm extends RTable
 	 * @var  int
 	 */
 	public $activatepayment = 0;
-
-	/**
-	 * @var  int
-	 */
-	public $show_js_price = 1;
 
 	/**
 	 * @var  string

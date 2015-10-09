@@ -20,15 +20,15 @@ $listDirn = $this->state->get('list.direction');
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
 	<?php
-	echo RdfHelperLayout::render(
+	echo RdfLayoutHelper::render(
 		'submitters.searchtools.default',
 		array(
 			'view' => $this,
 			'options' => array(
 				'filterButton' => true,
 				'filtersHidden' => false,
-				'searchField' => 'search_fields',
-				'searchFieldSelector' => '#filter_search_fields',
+				'searchField' => 'search_submitters',
+				'searchFieldSelector' => '#filter_search_submitters',
 				'limitFieldSelector' => '#list_field_limit',
 				'activeOrder' => $listOrder,
 				'activeDirection' => $listDirn
@@ -59,6 +59,11 @@ $listDirn = $this->state->get('list.direction');
 			<th class="nowrap hidden-phone">
 				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Submission_date', 's.submission_date', $listDirn, $listOrder); ?>
 			</th>
+			<?php if ($this->formInfo->enable_confirmation): ?>
+				<th class="nowrap hidden-phone">
+					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_confirmed_HEADER', 's.confirmed_date', $listDirn, $listOrder); ?>
+				</th>
+			<?php endif; ?>
 			<th class="nowrap hidden-phone">
 				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Form_name', 'f.formname', $listDirn, $listOrder); ?>
 			</th>
@@ -82,7 +87,7 @@ $listDirn = $this->state->get('list.direction');
 				<th class="nowrap hidden-phone">
 					<?php echo JText::_('COM_REDFORM_Price'); ?>
 				</th>
-				<th class="nowrap hidden-phone">
+				<th class="nowrap hidden-phone" width="auto">
 					<?php echo JText::_('COM_REDFORM_Payment'); ?>
 				</th>
 			<?php endif;?>
@@ -109,6 +114,17 @@ $listDirn = $this->state->get('list.direction');
 						<?php echo $this->escape($item->submission_date); ?>
 					</a>
 				</td>
+
+				<?php if ($this->formInfo->enable_confirmation): ?>
+				<td>
+					<?php if (RdfHelper::isNonNullDate($item->confirmed_date)): ?>
+						<i class="icon-ok hasTip" title="<?php
+						echo $this->escape(JText::sprintf('COM_REDFORM_COMFIRMATION_INFO', $item->confirmed_date, $item->confirmed_type, $item->confirmed_ip));
+						?>"/>
+					<?php endif; ?>
+				</td>
+				<?php endif; ?>
+
 				<td>
 					<?php echo $this->escape($item->formname); ?>
 				</td>
@@ -146,15 +162,23 @@ $listDirn = $this->state->get('list.direction');
 				?>
 
 				<?php if ($this->formInfo->activatepayment): ?>
-					<td class="submitters-price"><?php echo $item->price ? $item->currency . ' ' . $item->price : ''; ?></td>
-					<td class="price <?php echo ($item->paid ? 'paid' : 'unpaid'); ?>">
-						<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit_key='.$item->submit_key), JText::_('COM_REDFORM_history')); ?>
-						<?php if (!$item->paid): ?>
-							<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID').'::'.$item->status; ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
-							<?php echo ' '.JHTML::link(JURI::root().'/index.php?option=com_redform&task=payment.select&key='.$item->submit_key, JText::_('COM_REDFORM_link')); ?>
-						<?php else: ?>
-							<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID').'::'.$item->status; ?>"><i class="icon-ok"></i><?php echo $link; ?></span>
-						<?php endif; ?>
+					<td class="submitters-price"><?php echo $item->price ? RdfHelper::formatPrice($item->price + $item->vat, $item->currency) : ''; ?></td>
+					<td class="paymentrequests" width="auto">
+						<?php if ($item->paymentrequests): ?>
+						<ul class="unstyled">
+							<?php foreach ($item->paymentrequests as $pr): ?>
+								<li>
+									<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&pr=' . $pr->prid), JText::_('COM_REDFORM_history')); ?>
+									<?php if (!$pr->paid): ?>
+										<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID') . '::' . $pr->status; ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
+										<?php echo ' '.JHTML::link(JURI::root().'index.php?option=com_redform&task=payment.select&key=' . $item->submit_key, JText::_('COM_REDFORM_link')); ?>
+									<?php else: ?>
+										<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID') . '::' . $pr->status; ?>"><i class="icon-ok"></i><?php echo $link; ?></span>
+									<?php endif; ?>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+						<?php endif;?>
 					</td>
 				<?php endif;?>
 			</tr>

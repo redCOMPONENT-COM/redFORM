@@ -91,4 +91,29 @@ class JFormFieldRedformField extends JFormFieldList
 
 		return $this->cache;
 	}
+
+	/**
+	 * Method to get the field input markup.
+	 *
+	 * @return  string  The field input markup
+	 */
+	protected function getInput()
+	{
+		$filterform = $this->element['filterform'] ?: null;
+
+		if ($filterform)
+		{
+			JFactory::getDocument()->addScriptDeclaration(
+				'(function ($) {
+					$(document).ready(function(){
+						redformFieldsFilter("' . $this->name . '", "' . (String) $filterform . '");
+					});
+				})(jQuery);'
+			);
+
+			RHelperAsset::load('filterform.js', 'com_redform');
+		}
+
+		return parent::getInput();
+	}
 }

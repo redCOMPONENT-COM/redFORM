@@ -52,10 +52,16 @@ abstract class RdfPaymentHelper extends JObject
 	protected $notify_url;
 
 	/**
-	 * Submission being processed
-	 * @var object
+	 * Details of cart being processed
+	 * @var RdfCorePaymentCart
 	 */
-	protected $submission;
+	protected $details;
+
+	/**
+	 * Cart being processed
+	 * @var RdfCorePaymentCart
+	 */
+	protected $cart;
 
 	/**
 	 * Class contructor
@@ -86,71 +92,104 @@ abstract class RdfPaymentHelper extends JObject
 	abstract public function notify();
 
 	/**
-	 * returns details about the submission
+	 * returns details about the reference
 	 *
-	 * @param   string  $submit_key  submit key
+	 * @param   string  $cartReference  cart reference
 	 *
 	 * @return object
+	 *
+	 * @deprecated use getDetails()
 	 */
-	protected function _getSubmission($submit_key)
+	protected function _getSubmission($cartReference)
 	{
-		if (!$this->submission)
+		return $this->getDetails($cartReference);
+	}
+
+	/**
+	 * returns details about the reference
+	 *
+	 * @param   string  $cartReference  cart reference
+	 *
+	 * @return RdfCorePaymentCart
+	 */
+	protected function getDetails($cartReference)
+	{
+		if (!$this->details)
 		{
-			// Get price and currency
-			$db    = JFactory::getDBO();
-			$query = $db->getQuery(true);
-
-			$query->select('s.currency, SUM(s.price) AS price, s.id AS sid');
-			$query->from('#__rwf_submitters AS s');
-			$query->where('s.submit_key = ' . $db->Quote($submit_key));
-			$query->group('s.submit_key');
-
-			$db->setQuery($query);
-			$this->submission = $db->loadObject();
+			$this->details = $this->getCart($cartReference);
 		}
 
-		return $this->submission;
+		return $this->details;
+	}
+
+	/**
+	 * Get cart from reference
+	 *
+	 * @param   string  $reference  cart reference
+	 *
+	 * @return RdfCorePaymentCart
+	 *
+	 * @throws Exception
+	 */
+	protected function getCart($reference)
+	{
+		if (!$this->cart || $this->cart->reference != $reference)
+		{
+			$cart = new RdfCorePaymentCart;
+			$cart->loadByReference($reference);
+
+			if (!$cart->id)
+			{
+				throw new Exception('cart not found');
+			}
+
+			$this->cart = $cart;
+		}
+
+		return $this->cart;
 	}
 
 	/**
 	 * write transaction to db
 	 *
-	 * @param   string  $submit_key  submit key
-	 * @param   string  $data        data from gateway
-	 * @param   string  $status      status (paid, cancelled, ...)
-	 * @param   int     $paid        1 for paid
+	 * @param   string  $reference  cart reference
+	 * @param   string  $data       data from gateway
+	 * @param   string  $status     status (paid, cancelled, ...)
+	 * @param   int     $paid       1 for paid
 	 *
 	 * @return void
 	 */
-	protected function writeTransaction($submit_key, $data, $status, $paid)
+	protected function writeTransaction($reference, $data, $status, $paid)
 	{
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
+		$cart = $this->getCart($reference);
 
-		$query->insert('#__rwf_payment');
-		$query->columns(array('date', 'data', 'submit_key', 'status', 'gateway', 'paid'));
-		$query->values('NOW(), ' . $db->Quote($data)
-						. ', ' . $db->Quote($submit_key)
-						. ', ' . $db->Quote($status)
-						. ', ' . $db->Quote($this->gateway)
-						. ', ' . $db->Quote($paid)
-		);
+		$table = RTable::getAdminInstance('Payment', array(), 'com_redform');
+		$table->date = JFactory::getDate()->toSql();
+		$table->data = $data;
+		$table->cart_id = $cart->id;
+		$table->status = $status;
+		$table->gateway = $this->gateway;
+		$table->paid = $paid;
 
-		$db->setQuery($query);
-		$db->query();
+		$table->store();
+
+		// Trigger event for custom handling
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onPaymentAfterSave', array('com_redform.payment.helper', $table, true));
 	}
 
 	/**
 	 * returns state url (notify, cancel, etc...)
 	 *
-	 * @param   string  $state       the state for the url
-	 * @param   string  $submit_key  submit key
+	 * @param   string  $state      the state for the url
+	 * @param   string  $reference  cart reference
 	 *
 	 * @return string
 	 */
-	protected function getUrl($state, $submit_key)
+	protected function getUrl($state, $reference)
 	{
-		$uri = $this->getUri($state, $submit_key);
+		$uri = $this->getUri($state, $reference);
 
 		return $uri->toString();
 	}
@@ -158,21 +197,20 @@ abstract class RdfPaymentHelper extends JObject
 	/**
 	 * returns state uri object (notify, cancel, etc...)
 	 *
-	 * @param   string  $state       the state for the url
-	 * @param   string  $submit_key  submit key
+	 * @param   string  $state      the state for the url
+	 * @param   string  $reference  cart reference
 	 *
 	 * @return string
 	 */
-	protected function getUri($state, $submit_key)
+	protected function getUri($state, $reference)
 	{
 		$app = JFactory::getApplication();
 		$lang = $app->input->get('lang');
 
 		$uri = JURI::getInstance(JURI::root());
 		$uri->setVar('option', 'com_redform');
-		$uri->setVar('controller', 'payment');
 		$uri->setVar('gw', $this->gateway);
-		$uri->setVar('key', $submit_key);
+		$uri->setVar('reference', $reference);
 
 		if (JLanguageMultilang::isEnabled() && $lang)
 		{
@@ -253,5 +291,32 @@ abstract class RdfPaymentHelper extends JObject
 		$dispatcher->trigger('onCurrencyConvert', array($price, $currencyFrom, $currencyTo, &$result));
 
 		return $result;
+	}
+
+	/**
+	 * get price, checking for extra fee
+	 *
+	 * @param   object  $details  details
+	 *
+	 * @return float
+	 */
+	protected function getPrice($details)
+	{
+		$basePrice = $details->price + $details->vat;
+
+		if ((float) $this->params->get('extrafee'))
+		{
+			$extraPercentage = (float) $this->params->get('extrafee');
+			$price = $basePrice * (1 + $extraPercentage / 100);
+
+			// Trim to precision
+			$price = round($basePrice, RHelperCurrency::getPrecision($details->currency));
+		}
+		else
+		{
+			$price = $basePrice;
+		}
+
+		return $price;
 	}
 }

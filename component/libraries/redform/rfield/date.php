@@ -27,11 +27,11 @@ class RdfRfieldDate extends RdfRfield
 	 */
 	public function getInput()
 	{
-		$element = RdfHelperLayout::render(
+		$element = RdfLayoutHelper::render(
 			'rform.rfield.date',
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $element;
@@ -42,7 +42,7 @@ class RdfRfieldDate extends RdfRfield
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		$format = $this->getParam('dateformat', '%Y-%m-%d');
 

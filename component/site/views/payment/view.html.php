@@ -28,14 +28,14 @@ class RedformViewPayment extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		if ($this->getLayout() == 'select')
+		if ($this->getLayout() == 'select' || $this->getLayout() == 'billing')
 		{
-			return $this->_displaySelect($tpl);
+			return $this->displaySelect($tpl);
 		}
 
 		if ($this->getLayout() == 'final')
 		{
-			return $this->_displayFinal($tpl);
+			return $this->displayFinal($tpl);
 		}
 
 		parent::display($tpl);
@@ -48,19 +48,21 @@ class RedformViewPayment extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 */
-	private function _displaySelect($tpl = null)
+	private function displaySelect($tpl = null)
 	{
+		$params = JFactory::getApplication()->getParams('com_redform');
 		$uri = JFactory::getURI();
 		$document = JFactory::getDocument();
+		$input = JFactory::getApplication()->input;
 
 		$uri->delVar('task');
 
-		$submit_key = JRequest::getVar('key',    '');
-		$source     = JRequest::getVar('source', '');
+		$reference = $input->get('reference', '');
+		$source = $input->get('source', '');
 
-		if (empty($submit_key))
+		if (empty($reference))
 		{
-			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_KEY');
+			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_REFERENCE');
 
 			return;
 		}
@@ -83,18 +85,25 @@ class RedformViewPayment extends JViewLegacy
 
 		$this->assignRef('lists',  $lists);
 		$this->assign('action',    htmlspecialchars($uri->toString()));
-		$this->assign('key',       $submit_key);
-		$this->assign('source',    $submit_key);
+		$this->assign('reference', $reference);
+		$this->assign('source',    $source);
 		$this->assign('price',     $price);
 		$this->assign('currency',  $currency);
+
+		if ($this->getLayout() == 'billing')
+		{
+			$model = RModel::getFrontInstance('Billing');
+			$this->item = $model->getItem();
+			$this->billingform = $model->getForm();
+		}
 
 		// Analytics
 		if (RdfHelperAnalytics::isEnabled())
 		{
 			$event = new stdclass;
-			$event->category = 'payement';
+			$event->category = 'payment';
 			$event->action = 'display';
-			$event->label = "display payment form {$submit_key}";
+			$event->label = "display payment form {$reference}";
 			$event->value = null;
 			RdfHelperAnalytics::trackEvent($event);
 		}
@@ -109,7 +118,7 @@ class RedformViewPayment extends JViewLegacy
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 */
-	private function _displayFinal($tpl = null)
+	private function displayFinal($tpl = null)
 	{
 		$document   = JFactory::getDocument();
 		$document->setTitle($document->getTitle() . ' - ' . JText::_('COM_REDFORM'));

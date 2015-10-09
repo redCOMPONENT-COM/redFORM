@@ -5,4 +5,8 @@ DROP TABLE IF EXISTS
 	`#__rwf_submitters`,
 	`#__rwf_values`,
 	`#__rwf_payment`
+	`#__rwf_payment_request`
+	`#__rwf_payment_request_item`
+	`#__rwf_cart`
+	`#__rwf_cart_item`
 	;

@@ -28,23 +28,21 @@ class RedformControllerRedform extends RedformController
 		$app = JFactory::getApplication();
 
 		$formId = $app->input->getInt('form_id', 0);
-
-		$model = new RdfCoreSubmission($formId);
-		$result = $model->apisaveform();
-
-		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
-		$dispatcher->trigger('onAfterRedformSavedSubmission', array(&$result));
-
 		$referer = $app->input->get('referer', '', 'base64');
 		$referer = $referer ? base64_decode($referer) : 'index.php';
 
-		if (!$result)
-		{
-			$msg = JText::_('COM_REDFORM_SORRY_THERE_WAS_A_PROBLEM_WITH_YOUR_SUBMISSION') . ': ' . $model->getError();
+		$model = new RdfCoreFormSubmission($formId);
 
+		try
+		{
+			$result = $model->apisaveform();
+		}
+		catch (Exception $e)
+		{
+			$msg = JText::_('COM_REDFORM_SORRY_THERE_WAS_A_PROBLEM_WITH_YOUR_SUBMISSION') . ': ' . $e->getMessage();
 			$this->setRedirect($referer, $msg, 'error');
-			$this->redirect();
+
+			return;
 		}
 
 		JPluginHelper::importPlugin('redform');
@@ -61,11 +59,67 @@ class RedformControllerRedform extends RedformController
 		if ($url = $model->getFormRedirect())
 		{
 			$this->setRedirect($url);
-			$this->redirect();
 		}
 		else
 		{
-			echo $model->getNotificationText();
+			echo $this->setRedirect('index.php?option=com_redform&view=notification&submitKey=' . $result->submit_key);
 		}
+
+		$this->redirect();
+	}
+
+	/**
+	 * Confirm submission
+	 *
+	 * @return void
+	 */
+	public function confirm()
+	{
+		$input = JFactory::getApplication()->input;
+		$type = $input->get('type');
+
+		// If no type, then it's regular email confirmation
+		if (!$type)
+		{
+			return $this->emailConfirm();
+		}
+
+		// Else it should be handled by plugins
+		$updatedIds = array();
+
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onConfirm', array($type, &$updatedIds));
+
+		$input->set('view', 'confirm');
+		$input->set('updatedIds', $updatedIds);
+
+		parent::display();
+	}
+
+	/**
+	 * Confirm submission by email
+	 *
+	 * @return void
+	 */
+	private function emailConfirm()
+	{
+		$input = JFactory::getApplication()->input;
+		$key = $input->get('key');
+
+		if ($key)
+		{
+			$model = $this->getModel('Confirm');
+
+			if ($model->confirm($key))
+			{
+				$model->sendNotification();
+				$input->set('updatedIds', $model->getState('updatedIds'));
+			}
+		}
+
+		$input->set('view', 'confirm');
+
+		parent::display();
 	}
 }

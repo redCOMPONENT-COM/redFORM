@@ -69,6 +69,13 @@ abstract class RdfView extends RViewAdmin
 	protected $topBarInnerLayout = 'topnav';
 
 	/**
+	 * True to display "Version 1.0.x"
+	 *
+	 * @var  boolean
+	 */
+	protected $displayComponentVersion = true;
+
+	/**
 	 * Constructor
 	 *
 	 * @param   array  $config  A named configuration array for object construction.<br/>
@@ -87,5 +94,13 @@ abstract class RdfView extends RViewAdmin
 		$this->sidebarData = array(
 			'active' => strtolower($this->_name)
 		);
+
+		RHelperAsset::load('redformbackend.css');
+
+		// For Joomla! 2.5 compatibility we load bootstrap3 css adapter
+		if (version_compare(JVERSION, '3.0', '<'))
+		{
+			RHelperAsset::load('joomla25_bs3.css');
+		}
 	}
 }

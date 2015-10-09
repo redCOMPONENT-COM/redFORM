@@ -29,15 +29,24 @@ class RdfHelperTagsreplace
 	private $formdata;
 
 	/**
+	 * Glue to use for imploding fields array value
+	 *
+	 * @var string
+	 */
+	private $glue;
+
+	/**
 	 * Contructor
 	 *
 	 * @param   object      $formdata  form data
 	 * @param   RdfAnswers  $answers   answers to form
+	 * @param   string      $glue      Glue to use for imploding fields array value
 	 */
-	public function __construct($formdata, RdfAnswers $answers)
+	public function __construct($formdata, RdfAnswers $answers, $glue = ',')
 	{
 		$this->formdata = $formdata;
 		$this->answers = $answers;
+		$this->glue = $glue;
 	}
 
 	/**
@@ -55,6 +64,11 @@ class RdfHelperTagsreplace
 			return $text;
 		}
 
+		// Plugins integration
+		JPluginHelper::importPlugin('redform_integration');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onRedformTagReplace', array(&$text, $this->formdata, $this->answers));
+
 		foreach ($alltags as $tag)
 		{
 			if (method_exists($this, 'getTag' . ucfirst($tag[1])))
@@ -64,7 +78,7 @@ class RdfHelperTagsreplace
 			}
 			else
 			{
-				$replace = $this->getAnswerReplace($tag[0]);
+				$replace = $this->getFieldReplace($tag[0]);
 
 				if ($replace !== false)
 				{
@@ -85,13 +99,42 @@ class RdfHelperTagsreplace
 	}
 
 	/**
+	 * Replace field_xx tag with it's field value
+	 *
+	 * @param   string  $tag  the tag to replace
+	 *
+	 * @return mixed
+	 */
+	private function getFieldReplace($tag)
+	{
+		if (preg_match('/^\[field_([0-9]+)\]$/', $tag, $match))
+		{
+			$id = $match[1];
+		}
+		else
+		{
+			return $this->getAnswerReplace($tag);
+		}
+
+		foreach ($this->answers->getFields() as $field)
+		{
+			if ($field->field_id === $id)
+			{
+				return $field->getValueAsString($this->glue);
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Replace answer_xx tag with it's field value
 	 *
 	 * @param   string  $tag  the tag to replace
 	 *
 	 * @return mixed
 	 */
-	private function getAnswerReplace($tag)
+	private function  getAnswerReplace($tag)
 	{
 		if (!preg_match('/^\[answer_([0-9]+)\]$/', $tag, $match))
 		{
@@ -100,11 +143,11 @@ class RdfHelperTagsreplace
 
 		$id = $match[1];
 
-		foreach ($this->answers->getAnswers() as $field)
+		foreach ($this->answers->getFields() as $field)
 		{
-			if ($field['field_id'] == $id)
+			if ($field->id == $id)
 			{
-				return $field['value'];
+				return $field->getValueAsString($this->glue);
 			}
 		}
 
@@ -136,9 +179,29 @@ class RdfHelperTagsreplace
 	 *
 	 * @return string
 	 */
-	private function getTotalprice()
+	private function getTagTotalprice()
 	{
-		return $this->answers->getPrice();
+		return RdfHelper::formatPrice($this->answers->getPrice() + $this->answers->getVat(), $this->answers->getCurrency());
+	}
+
+	/**
+	 * replace [totalvat] tag
+	 *
+	 * @return string
+	 */
+	private function getTagTotalvat()
+	{
+		return RdfHelper::formatPrice($this->answers->getVat(), $this->answers->getCurrency());
+	}
+
+	/**
+	 * replace [totalpricevatexcluded] tag
+	 *
+	 * @return string
+	 */
+	private function getTagTotalpricevatexcluded()
+	{
+		return RdfHelper::formatPrice($this->answers->getPrice(), $this->answers->getCurrency());
 	}
 
 	/**
@@ -148,12 +211,24 @@ class RdfHelperTagsreplace
 	 */
 	private function getTagAnswers()
 	{
-		$text = RdfHelperLayout::render('tag.answers',
+		$text = RdfLayoutHelper::render('tag.answers',
 			$this->answers,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $text;
+	}
+
+	/**
+	 * replaces [confirmemail]
+	 *
+	 * @return string
+	 */
+	private function getTagConfirmlink()
+	{
+		$url = JURI::root() . 'index.php?option=com_redform&task=redform.confirm&key=' . $this->answers->getSubmitKey();
+
+		return JRoute::_($url);
 	}
 }

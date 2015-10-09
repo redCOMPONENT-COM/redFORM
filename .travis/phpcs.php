@@ -37,7 +37,8 @@ $ignored = array(
 	REPO_BASE . '/component/admin/tables/*',
 	REPO_BASE . '/component/site/views/*/tmpl/*',
 	REPO_BASE . '/component/site/layouts/*',
-	REPO_BASE . '/component/media'
+	REPO_BASE . '/component/media',
+	REPO_BASE . '/component/libraries/redform/layouts/*'
 );
 
 // Build the options for the sniffer

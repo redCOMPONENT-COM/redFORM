@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+defined('_JEXEC') or die;
+
 jimport('joomla.form.fields.list');
 
 /**
@@ -33,7 +35,7 @@ class JFormFieldRedformmailinglist extends JFormField
 	 */
 	protected function getInput()
 	{
-		JFactory::getDocument()->addScript(JURI::root() . '/media/com_redform/js/redformmailinglist.js');
+		RHelperAsset::load('redformmailinglist.js', 'com_redform');
 
 		if ($this->value && !is_array($this->value))
 		{

@@ -11,68 +11,59 @@ var redformPrice;
 
 		var form = formbox.parents('form').first();
 
+		var price = 0.0;
+		var vat = 0.0;
+
 		function updatePrice() {
-			var price = calcPrice();
-			displayPrice(price);
+			getPrices();
+			displayPrice();
 		}
 
-		function calcPrice () {
-			var price = 0.0;
+		function getPrices() {
+			price = 0.0;
+			vat = 0.0;
 
 			formbox.find("input.rfprice").each(function() {
-				var p = $(this).val();
-				if (p) {
-					price += parseFloat(p);
-				}
+				addPrice($(this).val(), $(this).attr('vat'));
 			});
 
-			formbox.find(":checked").each(function() { // works for select list too
-				var p = $(this).attr('price');
-				if (p) {
-					price += parseFloat(p);
-				}
-			});
-
-			formbox.find(".eventprice").each(function() {
-				var p = $(this).attr('price');
-				if (p) {
-					price += parseFloat(p);
-				}
-			});
-
-			formbox.find(".fixedprice").each(function() {
-				var p = $(this).attr('price');
-				if (p) {
-					price += parseFloat(p);
-				}
-			});
-
-			formbox.find(".bookingprice").each(function(element) {
-				var p = $(this).attr('price');
-				if (p) {
-					price += parseFloat(p);
-				}
+			formbox.find(":checked, .eventprice, .fixedprice, .bookingprice").each(function() {
+				addPrice($(this).attr('price'), $(this).attr('vat'));
 			});
 
 			if (round_negative_price) {
 				price = Math.max(price, 0);
+				vat = Math.max(vat, 0);
 			}
-
-			return price;
 		}
 
-		function displayPrice(price) {
-			var totalElement = formbox.find(".totalprice");
-			var line = formbox.find('.priceline');
+		function addPrice(elementPrice, elementValue)
+		{
+			var floatPrice = 0;
+			var floatVat = 0;
 
-			if (!totalElement)
+			if (elementPrice)
 			{
-				return;
+				floatPrice = parseFloat(elementPrice);
 			}
 
-			line.hide();
+			if (elementValue)
+			{
+				floatVat = parseFloat(elementValue);
+			}
 
-			if (!(price > 0))
+			price += floatPrice;
+
+			if (floatVat)
+			{
+				vat += floatPrice * floatVat / 100;
+			}
+		}
+
+		function displayPrice() {
+			var totalElement = formbox.find(".totalprice");
+
+			if (!totalElement)
 			{
 				return;
 			}
@@ -81,16 +72,16 @@ var redformPrice;
 			var text = '';
 
 			var currencyField = form.find('input[name="currency"]');
+			var currency = (currencyField && currencyField.val()) ? currencyField.val() : '';
+			var precision = currencyField ? $(currencyField).attr('precision') : 2;
+			var decSeparator = currencyField ? $(currencyField).attr('decimal') : '.';
+			var thSeparator = currencyField ? $(currencyField).attr('thousands') : ' ';
 
-			if (currencyField && currencyField.val()) {
-				text = currencyField.val();
-			}
+			var roundedPrice = accounting.formatMoney(price + vat, {symbol: currency, precision: precision, thousand: thSeparator, decimal: decSeparator, format: '%s %v'});
 
-			var roundedPrice = Math.round(price*100)/100;
 			text += ' <span>' + roundedPrice + '</span>';
 
 			formbox.find(".totalprice").html(text);
-			line.show();
 		}
 
 		return {

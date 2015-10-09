@@ -30,11 +30,11 @@ class RedformControllerPayment extends RdfControllerForm
 	{
 		$append = parent::getRedirectToItemAppend($recordId, $urlVar);
 
-		$submit_key = $this->input->get('submit_key');
+		$prid = $this->input->get('pr');
 
-		if ($submit_key)
+		if ($prid)
 		{
-			$append .= '&submit_key=' . $submit_key;
+			$append .= '&pr=' . $prid;
 		}
 
 		return $append;
@@ -49,11 +49,11 @@ class RedformControllerPayment extends RdfControllerForm
 	{
 		$append = parent::getRedirectToListAppend();
 
-		$submit_key = $this->input->get('submit_key');
+		$prid = $this->input->get('pr');
 
-		if ($submit_key)
+		if ($prid)
 		{
-			$append .= '&submit_key=' . $submit_key;
+			$append .= '&pr=' . $prid;
 		}
 
 		return $append;

@@ -27,21 +27,19 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	protected $selectedNewsletters = null;
 
 	/**
-	 * Set field value from post data
+	 * Get and set the value from post data, using appropriate filtering
 	 *
-	 * @param   string  $value  value
+	 * @param   int  $signup  form instance number for the field
 	 *
-	 * @return string new value
-	 *
-	 * @throws LogicException
+	 * @return mixed
 	 */
-	public function setValueFromPost($value)
+	public function getValueFromPost($signup)
 	{
-		if (!is_array($value) || !isset($value['email']))
-		{
-			throw new LogicException('wrong input for email field set value ');
-		}
+		$input = JFactory::getApplication()->input;
 
+		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
+
+		$value = $input->get($postName, null, 'array');
 		$this->value = $value['email'];
 
 		if (isset($value['newsletter']))
@@ -69,11 +67,11 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	 */
 	public function getInput()
 	{
-		$element = RdfHelperLayout::render(
+		$element = RdfLayoutHelper::render(
 			'rform.rfield.email',
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $element;
@@ -165,7 +163,7 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		if ($this->formIndex == 1 && $this->user && $this->user->email)
 		{

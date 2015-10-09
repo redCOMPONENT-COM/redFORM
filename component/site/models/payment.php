@@ -20,13 +20,20 @@ class RedFormModelPayment extends JModelLegacy
 {
 	protected $gateways = null;
 
-	protected $submitKey = null;
+	protected $reference = null;
 
 	protected $form = null;
 
 	protected $submitters = null;
 
 	protected $paymentsDetails = array();
+
+	/**
+	 * Cart data from db
+	 *
+	 * @var object
+	 */
+	protected $cart;
 
 	/**
 	 * contructor
@@ -37,21 +44,44 @@ class RedFormModelPayment extends JModelLegacy
 	{
 		parent::__construct();
 
-		$this->setSubmitKey(JRequest::getVar('key', ''));
+		$this->reference = JFactory::getApplication()->input->get('reference', '');
+	}
+
+	/**
+	 * Is billing required ?
+	 *
+	 * @return bool
+	 */
+	public function isRequiredBilling()
+	{
+		$cart = $this->getCart();
+
+		$query = $this->_db->getQuery(true);
+
+		$query->select('f.requirebilling')
+			->from('#__rwf_cart_item AS ci')
+			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = ci.payment_request_id')
+			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
+			->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id')
+			->where('f.requirebilling = 1')
+			->where('ci.cart_id = ' . $cart->id);
+		$this->_db->setQuery($query);
+
+		return ($this->_db->loadResult() ? true : false);
 	}
 
 	/**
 	 * Setter
 	 *
-	 * @param   string  $key  submit key
+	 * @param   string  $reference  submit key
 	 *
 	 * @return object
 	 */
-	public function setSubmitKey($key)
+	public function setCartReference($reference)
 	{
-		if (!empty($key))
+		if (!empty($reference))
 		{
-			$this->submitKey = $key;
+			$this->reference = $reference;
 		}
 
 		return $this;
@@ -67,13 +97,9 @@ class RedFormModelPayment extends JModelLegacy
 		if (empty($this->gateways))
 		{
 			$details = $this->getPaymentDetails();
+			$helper = new RdfCorePaymentGateway($details);
 
-			JPluginHelper::importPlugin('redform_payment');
-			$dispatcher = JDispatcher::getInstance();
-
-			$gateways = array();
-			$dispatcher->trigger('onGetGateway', array(&$gateways, $details));
-			$this->gateways = $gateways;
+			$this->gateways = $helper->getGateways();
 		}
 
 		return $this->gateways;
@@ -87,65 +113,23 @@ class RedFormModelPayment extends JModelLegacy
 	public function getGatewayOptions()
 	{
 		$details = $this->getPaymentDetails();
+		$helper = new RdfCorePaymentGateway($details);
 
-		$gw = $this->getGateways();
-
-		$options = array();
-
-		foreach ($gw as $g)
-		{
-			if (isset($g['label']))
-			{
-				$label = $g['label'];
-			}
-			else
-			{
-				$label = $g['name'];
-			}
-
-			$options[] = JHTML::_('select.option', $g['name'], $label);
-		}
-
-		// Filter gateways through plugins
-		JPluginHelper::importPlugin('redform_payment');
-		$dispatcher = JDispatcher::getInstance();
-		$dispatcher->trigger('onFilterGateways', array(&$options, $details));
-
-		return $options;
+		return $helper->getOptions();
 	}
 
 	/**
 	 * return total price for submissions associated to submit _key
 	 *
 	 * @return float
+	 *
+	 * @throws Exception
 	 */
 	public function getPrice()
 	{
-		if (empty($this->submitKey))
-		{
-			JError::raiseError(0, JText::_('COM_REDFORM_Missing_key'));
+		$cart = $this->getCart();
 
-			return false;
-		}
-
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('price')
-			->from('#__rwf_submitters')
-			->where('submit_key = ' . $db->quote($this->submitKey));
-
-		$db->setQuery($query);
-		$res = $db->loadColumn();
-
-		$total = 0.0;
-
-		foreach ($res as $p)
-		{
-			$total += $p;
-		}
-
-		return $total;
+		return $cart->price + $cart->vat;
 	}
 
 	/**
@@ -157,23 +141,9 @@ class RedFormModelPayment extends JModelLegacy
 	 */
 	public function getCurrency()
 	{
-		if (empty($this->submitKey))
-		{
-			throw new LogicException(JText::_('COM_REDFORM_Missing_key'), 500);
+		$cart = $this->getCart();
 
-			return false;
-		}
-
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('currency')
-			->from('#__rwf_submitters')
-			->where('submit_key = ' . $db->quote($this->submitKey));
-
-		$db->setQuery($query);
-
-		return $db->loadResult();
+		return $cart->currency;
 	}
 
 	/**
@@ -201,18 +171,33 @@ class RedFormModelPayment extends JModelLegacy
 	}
 
 	/**
+	 * Set payment requests associated to cart as paid
+	 *
+	 * @return void
+	 */
+	public function setPaymentRequestAsPaid()
+	{
+		$cart = $this->getCart();
+
+		$query = $this->_db->getQuery(true);
+
+		$query->update('#__rwf_payment_request AS pr')
+			->join('INNER', '#__rwf_cart_item AS ci on ci.payment_request_id = pr.id')
+			->where('ci.cart_id = ' . $cart->id)
+			->set('pr.paid = 1');
+
+		$this->_db->setQuery($query);
+		$this->_db->execute();
+	}
+
+	/**
 	 * returns form associated to submit_key
 	 *
 	 * @return object
 	 */
 	public function getForm()
 	{
-		if (empty($this->submitKey))
-		{
-			JError::raiseError(0, JText::_('COM_REDFORM_Missing_key'));
-
-			return false;
-		}
+		$cart = $this->getCart();
 
 		if (empty($this->form))
 		{
@@ -222,7 +207,9 @@ class RedFormModelPayment extends JModelLegacy
 			$query->select('f.*')
 				->from('#__rwf_submitters AS s')
 				->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id')
-				->where('s.submit_key = ' . $db->quote($this->submitKey));
+				->join('INNER', '#__rwf_payment_request AS pr ON pr.submission_id = s.id')
+				->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+				->where('ci.cart_id = ' . $db->quote($cart->id));
 
 			$db->setQuery($query);
 			$this->form = $db->loadObject();
@@ -238,12 +225,7 @@ class RedFormModelPayment extends JModelLegacy
 	 */
 	public function getSubmitters()
 	{
-		if (empty($this->submitKey))
-		{
-			JError::raiseError(0, JText::_('COM_REDFORM_Missing_key'));
-
-			return false;
-		}
+		$cart = $this->getCart();
 
 		if (empty($this->submitters))
 		{
@@ -252,7 +234,9 @@ class RedFormModelPayment extends JModelLegacy
 
 			$query->select('s.*')
 				->from('#__rwf_submitters AS s')
-				->where('s.submit_key = ' . $db->quote($this->submitKey));
+				->join('INNER', '#__rwf_payment_request AS pr ON pr.submission_id = s.id')
+				->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+				->where('ci.cart_id = ' . $db->quote($cart->id));
 
 			$db->setQuery($query);
 			$this->submitters = $db->loadObjectList();
@@ -264,18 +248,14 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * provides information for process function of helpers (object id, title, etc...)
 	 *
-	 * @param   string  $key  submit key
-	 *
 	 * @return object
 	 *
 	 * @throws Exception
 	 */
-	public function getPaymentDetails($key = null)
+	public function getPaymentDetails()
 	{
-		if (!$key)
-		{
-			$key = $this->submitKey;
-		}
+		$cart = $this->getCart();
+		$key = $cart->reference;
 
 		if (!isset($this->paymentsDetails[$key]))
 		{
@@ -292,7 +272,7 @@ class RedFormModelPayment extends JModelLegacy
 			$asub = current($submitters);
 			$form = $this->getForm();
 
-			if (!$asub->currency)
+			if (!$cart->currency)
 			{
 				throw new Exception('Currency must be set in submission for payment - Please contact system administrator', 500);
 			}
@@ -301,12 +281,13 @@ class RedFormModelPayment extends JModelLegacy
 			$obj->integration = $asub->integration;
 			$obj->form = $form->formname;
 			$obj->form_id = $form->id;
-			$obj->key = $key;
-			$obj->currency = $asub->currency;
+			$obj->key = $cart->reference;
+			$obj->currency = $cart->currency;
+			$obj->submit_key = $asub->submit_key;
 
 			// More fields with integration
 			$paymentDetailFields = null;
-			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($asub->integration, $key, &$paymentDetailFields));
+			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($asub->integration, $asub->submit_key, &$paymentDetailFields));
 
 			if (!$paymentDetailFields)
 			{
@@ -356,17 +337,16 @@ class RedFormModelPayment extends JModelLegacy
 	private function _notifySubmitter()
 	{
 		$mainframe = JFactory::getApplication();
-		$mailer = JFactory::getMailer();
+		$mailer = RdfHelper::getMailer();
 
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
-		$mailer->IsHTML(true);
 
 		$form = $this->getForm();
 
 		$core = new RdfCore;
-		$answers = $core->getAnswers($this->submitKey);
+		$answers = $core->getAnswers($this->getSubmitKey());
 		$first = $answers->getFirstSubmission();
 		$replaceHelper = new RdfHelperTagsreplace($form, $first);
 
@@ -382,9 +362,11 @@ class RedFormModelPayment extends JModelLegacy
 			: $form->submitterpaymentnotificationbody);
 		$link = JRoute::_(JURI::root() . 'administrator/index.php?option=com_redform&view=submitters&form_id=' . $form->id);
 		$body = $replaceHelper->replace($body, array('[submitters]' => $link));
-		$mailer->setBody($body);
 
-		$contact = $core->getSubmissionContactEmail($this->submitKey, true);
+		$body = RdfHelper::wrapMailHtmlBody($body, $subject);
+		$mailer->MsgHTML($body);
+
+		$contact = $core->getSubmissionContactEmail($this->getSubmitKey(), true);
 
 		if (!$contact)
 		{
@@ -409,11 +391,10 @@ class RedFormModelPayment extends JModelLegacy
 	private function _notifyFormContact()
 	{
 		$mainframe = JFactory::getApplication();
-		$mailer = JFactory::getMailer();
+		$mailer = RdfHelper::getMailer();
 		$mailer->From = $mainframe->getCfg('mailfrom');
 		$mailer->FromName = $mainframe->getCfg('sitename');
 		$mailer->AddReplyTo(array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename')));
-		$mailer->IsHTML(true);
 
 		$form = $this->getForm();
 
@@ -432,7 +413,7 @@ class RedFormModelPayment extends JModelLegacy
 			}
 
 			$core = new RdfCore;
-			$answers = $core->getAnswers($this->submitKey);
+			$answers = $core->getAnswers($this->getSubmitKey());
 			$first = $answers->getFirstSubmission();
 			$replaceHelper = new RdfHelperTagsreplace($form, $first);
 
@@ -448,9 +429,10 @@ class RedFormModelPayment extends JModelLegacy
 
 			$link = JRoute::_(JURI::root() . 'administrator/index.php?option=com_redform&view=submitters&form_id=' . $form->id);
 			$body = $replaceHelper->replace($body, array('[submitters]' => $link));
+			$body = RdfHelper::wrapMailHtmlBody($body, $subject);
 
 			$mailer->setSubject($subject);
-			$mailer->setBody($body);
+			$mailer->MsgHTML($body);
 
 			if (!$mailer->send())
 			{
@@ -462,23 +444,82 @@ class RedFormModelPayment extends JModelLegacy
 	}
 
 	/**
-	 * check if this has already be paid
+	 * check if this has already been paid
 	 *
-	 * @return int id of payment
+	 * @return boolean
+	 *
+	 * @throws Exception
 	 */
 	public function hasAlreadyPaid()
 	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		if (!$this->reference)
+		{
+			throw new Exception('Missing reference');
+		}
 
-		$query->select('id')
-			->from('#__rwf_payment')
-			->where('submit_key = ' . $db->quote($this->submitKey))
-			->where('paid = 1');
+		$query = $this->_db->getQuery(true);
 
-		$db->setQuery($query);
-		$res = $db->loadResult();
+		$query->select('pr.id')
+			->from('#__rwf_payment_request AS pr')
+			->join('INNER', '#__rwf_cart_item AS ci on ci.payment_request_id = pr.id')
+			->join('INNER', '#__rwf_cart AS c ON c.id = ci.cart_id')
+			->where('c.reference = ' . $this->_db->quote($this->reference))
+			->where('pr.paid = 1');
 
-		return $res;
+		$this->_db->setQuery($query);
+
+		return $this->_db->loadResult() ? true : false;
+	}
+
+	/**
+	 * return a new cart for payment
+	 *
+	 * @param   string  $submitKey  submitkey for which we want a payment
+	 *
+	 * @return RdfCorePaymentCart
+	 */
+	public function getNewCart($submitKey)
+	{
+		$cart = new RdfCorePaymentCart;
+		$cart->getNewCart($submitKey);
+
+		return $cart;
+	}
+
+	/**
+	 * get cart data from db
+	 *
+	 * @return mixed|object
+	 */
+	public function getCart()
+	{
+		if (!$this->cart)
+		{
+			$query = $this->_db->getQuery(true);
+
+			$query->select('*')
+				->from('#__rwf_cart')
+				->where('reference = ' . $this->_db->quote($this->reference));
+
+			$this->_db->setQuery($query);
+			$this->cart = $this->_db->loadObject();
+		}
+
+		return $this->cart;
+	}
+
+	/**
+	 * Return a submit key associated to cart
+	 *
+	 * @TODO: this is to stay compatible with legacy code from before payment request code
+	 *
+	 * @return mixed
+	 */
+	private function getSubmitKey()
+	{
+		$submitters = $this->getSubmitters();
+		$first = reset($submitters);
+
+		return $first->submit_key;
 	}
 }

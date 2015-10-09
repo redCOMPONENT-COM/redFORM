@@ -39,6 +39,7 @@ class RedformViewPayment extends RdfView
 	{
 		$this->form	= $this->get('Form');
 		$this->item	= $this->get('Item');
+		$this->state = $this->get('State');
 
 		parent::display($tpl);
 	}

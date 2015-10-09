@@ -84,14 +84,14 @@ $searchToolsOptions = array(
 		// Render the toolbar?
 		if ($showToolbar)
 		{
-			echo RdfHelperLayout::render('formfields.toolbar', $data);
+			echo RdfLayoutHelper::render('formfields.toolbar', $data);
 		}
 		?>
 		</div>
 
 		<div class="panel-body">
 		<?php
-		echo RdfHelperLayout::render(
+		echo RdfLayoutHelper::render(
 			'searchtools.default',
 			array(
 				'view' => (object) array(
@@ -136,7 +136,7 @@ $searchToolsOptions = array(
 						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Unique', 'ff.unique', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="nowrap" data-hide="phone">
-						<?php echo JHtml::_('rsearchtools.sort', 'JGRID_HEADING_ID', 'ff.id', $listDirn, $listOrder, null, 'asc', '', null, $formName); ?>
+						<?php echo JHtml::_('rsearchtools.sort', 'JGRID_HEADING_ID', 'ff.field_id', $listDirn, $listOrder, null, 'asc', '', null, $formName); ?>
 					</th>
 				</tr>
 				</thead>
@@ -194,7 +194,7 @@ $searchToolsOptions = array(
 							</td>
 
 							<td>
-								<?php echo $item->id; ?>
+								<?php echo $item->field_id; ?>
 							</td>
 						</tr>
 					<?php endforeach; ?>

@@ -20,7 +20,7 @@ $saveOrder = $listOrder == 'ordering';
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
 	<?php
-	echo RdfHelperLayout::render(
+	echo RdfLayoutHelper::render(
 		'searchtools.default',
 		array(
 			'view' => $this,
@@ -123,7 +123,7 @@ $saveOrder = $listOrder == 'ordering';
 								JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
 						</td>
 						<td>
-							<?php echo JHtml::link('index.php?option=com_redform&view=submitters&filter[form_id]=' . $item->id, JText::_('COM_REDFORM_SUBMITTERS')); ?>
+							<?php echo JHtml::link('index.php?option=com_redform&view=submitters&filter[form_id]=' . $item->id, $item->submitters); ?>
 						</td>
 						<td>
 							<?php echo '{redform}' . $item->id . '{/redform}'; ?>

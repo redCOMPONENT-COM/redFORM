@@ -1,0 +1,45 @@
+<config>
+	<!-- one form tag per redform form... -->
+	<form>
+		<!-- form id from redform -->
+		<id>1</id>
+		<!-- mailbox id, get it from helpscout dashboard manage > mailboxes -->
+		<mailboxId>12346</mailboxId>
+		<!-- field id from redform -->
+		<emailFieldId>3</emailFieldId>
+		<!-- field id from redform / You can use <subject>Bla bla</subject> tag for a fixed subject -->
+		<subjectFieldId>1</subjectFieldId>
+		<!-- field id from redform / You can use <body>Bla bla</body> tag for a fixed body -->
+		<bodyFieldId>13</bodyFieldId>
+		<!-- field id from redform, optional -->
+		<firstNameFieldId>15</firstNameFieldId>
+		<!-- field id from redform, optional -->
+		<lastnameFieldId>15</lastnameFieldId>
+		<!-- field id from redform, optional -->
+		<organizationFieldId>15</organizationFieldId>
+		<!-- autoreply, optional -->
+		<autoreply>1</autoreply>
+		<!-- field ids from redform, optional -->
+		<attachments>
+			<fieldId>17</fieldId>
+			<fieldId>18</fieldId>
+		</attachments>
+		<!-- tags to associate to conversation, optional -->
+		<tags>
+			<tag>tag1</tag>
+			<tag>tag2</tag>
+		</tags>
+		<!-- cc list to associate to conversation, optional -->
+		<ccList>
+			<email>test@myweb.dk</email>
+			<email>test2@myweb.dk</email>
+		</ccList>
+		<!-- bcc list to associate to conversation, optional -->
+		<bccList>
+			<email>test3@myweb.dk</email>
+			<email>test4@myweb.dk</email>
+		</bccList>
+		<!-- helpscout user id to assign to conversation, optional -->
+		<assignTo>65300</assignTo>
+	</form>
+</config>

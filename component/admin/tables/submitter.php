@@ -34,8 +34,20 @@ class RedformTableSubmitter extends RTable
 	/** @var string Date and time form was submitted */
 	public $submission_date = null;
 
+	/** @var string ip with which form was submitted */
+	public $submission_ip;
+
+	/** @var string Date and time form was confirmed */
+	public $confirmed_date;
+
+	/** @var string ip with which form was confirmed */
+	public $confirmed_ip;
+
+	/** @var string type of confirmation (email, sms, etc...) */
+	public $confirmed_type = 'email';
+
 	/** @var string integration key */
-	public $integration 	= null;
+	public $integration = null;
 
 	/** @var int The cross reference ID of the redEVENT event/venue/date */
 	public $xref = null;
@@ -55,6 +67,8 @@ class RedformTableSubmitter extends RTable
 	public $uniqueid = null;
 
 	public $price = null;
+
+	public $vat = null;
 
 	public $currency = null;
 
@@ -110,6 +124,7 @@ class RedformTableSubmitter extends RTable
 		$pks = $this->sanitizeInPk($pk);
 		$formId = $this->getAssociatedFormId($pks);
 
+		//@TODO: convert to JDatabaseQuery
 		// Delete answers
 		$query = 'DELETE a FROM #__rwf_forms_' . $formId . ' AS a'
 			. ' INNER JOIN #__rwf_submitters AS s ON s.answer_id = a.id'

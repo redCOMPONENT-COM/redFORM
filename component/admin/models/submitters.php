@@ -40,6 +40,13 @@ class RedformModelSubmitters extends RModelList
 	protected $limitstartField = 'auto';
 
 	/**
+	 * form fields
+	 *
+	 * @var array
+	 */
+	protected $fields;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
@@ -52,6 +59,8 @@ class RedformModelSubmitters extends RModelList
 				'id', 's.id',
 				'form_id', 's.form_id',
 				'date', 's.date',
+				'submission_date', 's.submission_date',
+				'confirmed_date', 's.confirmed_date',
 			);
 		}
 
@@ -74,10 +83,19 @@ class RedformModelSubmitters extends RModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$formId = $this->getUserStateFromRequest($this->context . '.filter.formId', 'filter.form_id', $this->getDefaultFormId(), 'int');
-		$this->setState('filter.form_id', $formId);
-
 		parent::populateState('s.id', 'desc');
+
+		// Receive & set filters
+		if ($filters = JFactory::getApplication()->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array'))
+		{
+			foreach ($filters as $name => $value)
+			{
+				if ($name == 'form_id')
+				{
+					$this->setState('filter.' . $name, $value ? $value : $this->getDefaultFormId());
+				}
+			}
+		}
 	}
 
 	/**
@@ -102,6 +120,26 @@ class RedformModelSubmitters extends RModelList
 	}
 
 	/**
+	 * Method to get an array of data items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+		// Get a storage key.
+		$store = $this->getStoreId();
+
+		$items = $this->addPaymentinfo($items);
+
+		// Add the items to the internal cache.
+		$this->cache[$store] = $items;
+
+		return $items;
+	}
+
+	/**
 	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
 	 *
 	 * @return  JDatabaseQuery   A JDatabaseQuery object to retrieve the data set.
@@ -112,20 +150,15 @@ class RedformModelSubmitters extends RModelList
 	{
 		$form_id = $this->getState('filter.form_id');
 
-		$subPayment = "SELECT MAX(id) as id, submit_key FROM #__rwf_payment GROUP BY submit_key";
-
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('s.submission_date, s.form_id, f.formname, s.price, s.currency, s.submit_key');
+		$query->select('s.submission_date, s.form_id, f.formname, s.price, s.vat, s.currency, s.submit_key');
+		$query->select('s.confirmed_date, s.confirmed_ip, s.confirmed_type');
 		$query->select('s.integration');
 		$query->select('f.formname');
-		$query->select('p.status, p.paid');
-		$query->select('s.id');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON s.form_id = f.id');
-		$query->join('LEFT', '(' . $subPayment . ') AS latest_payment ON latest_payment.submit_key = s.submit_key');
-		$query->join('LEFT', '#__rwf_payment AS p ON p.id = latest_payment.id');
 		$query->where("s.form_id = " . $form_id);
 
 		if ($form_id)
@@ -146,10 +179,48 @@ class RedformModelSubmitters extends RModelList
 			$query->where('s.submission_date <= ' . $db->quote($date));
 		}
 
+		$confirmed = $this->getState('filter.confirmed');
+
+		if (is_numeric($confirmed))
+		{
+			if ($confirmed)
+			{
+				$query->where('s.confirmed_date > 0');
+			}
+			else
+			{
+				$query->where('s.confirmed_date = 0');
+			}
+		}
+
+		// Filter search
+		$search = $this->getState('filter.search_submitters');
+
+		if (!empty($search))
+		{
+			$search = $db->quote('%' . $db->escape($search, true) . '%');
+
+			$lookup = array();
+			$lookup[] = 's.submit_key LIKE ' . $search;
+
+			if ($fields = $this->getFields())
+			{
+				foreach ($this->getFields() as $field)
+				{
+					$lookup[] = 'a.field_' . $field->field_id . ' LIKE ' . $search;
+				}
+			}
+
+			$query->where('(' . implode(' OR ', $lookup) . ')');
+		}
+
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 's.submission_date');
 		$orderDirn = $this->state->get('list.direction', 'desc');
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
+
+		// To make sure submitter id will indeed be the 'id'
+		$query->select('s.id');
 
 		return $query;
 	}
@@ -190,7 +261,12 @@ class RedformModelSubmitters extends RModelList
 
 		if ($id)
 		{
-			$query = ' SELECT id, formname, activatepayment, currency FROM #__rwf_forms WHERE id = ' . $this->_db->Quote($id);
+			$query = $this->_db->getQuery(true);
+
+			$query->select('id, formname, activatepayment, currency, enable_confirmation')
+				->from('#__rwf_forms')
+				->where('id = ' . $this->_db->Quote($id));
+
 			$this->_db->setQuery($query);
 
 			return $this->_db->loadObject();
@@ -208,26 +284,29 @@ class RedformModelSubmitters extends RModelList
 	 */
 	public function getFields()
 	{
-		$db = JFactory::getDBO();
-		$form_id = $this->getState('filter.form_id');
-
-		$query = ' SELECT f.id AS field_id, f.field '
-			. '      , CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header '
-			. ' FROM #__rwf_fields AS f '
-			. ' INNER JOIN #__rwf_form_field AS ff ON ff.field_id = f.id '
-			. ' WHERE f.fieldtype <> "info" ';
-
-		if ($form_id)
+		if (!$this->fields)
 		{
-			$query .= ' AND ff.form_id = ' . $db->Quote($form_id);
+			$form_id = $this->getState('filter.form_id');
+			$query = $this->_db->getQuery(true);
+
+			$query->select('f.id AS field_id, f.field')
+				->select('CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header')
+				->from('#__rwf_fields AS f')
+				->join('INNER', '#__rwf_form_field AS ff ON ff.field_id = f.id')
+				->where('f.fieldtype NOT IN ("info", "submissionprice")')
+				->group('f.id')
+				->order('ff.ordering');
+
+			if ($form_id)
+			{
+				$query->where('ff.form_id = ' . $this->_db->Quote($form_id));
+			}
+
+			$this->_db->setQuery($query);
+			$this->fields = $this->_db->loadObjectList();
 		}
 
-		$query .= "GROUP BY f.id
-				ORDER BY ff.ordering ";
-
-		$db->setQuery($query);
-
-		return $db->loadObjectList();
+		return $this->fields;
 	}
 
 	/**
@@ -245,5 +324,128 @@ class RedformModelSubmitters extends RModelList
 		$table->delete($pks, $force);
 
 		return true;
+	}
+
+	/**
+	 * Method to add number of submitters to forms
+	 *
+	 * @param   array  $items  items
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	private function addPaymentinfo($items)
+	{
+		if (!$items)
+		{
+			return $items;
+		}
+
+		$keys = array();
+
+		foreach ($items as $i)
+		{
+			$keys[] = $i->id;
+		}
+
+		$keys = array_map(array($this->_db, 'quote'), $keys);
+
+		$query = $this->_db->getQuery(true);
+
+		$query->select('pr.id AS prid, pr.submission_id, pr.price, pr.vat, pr.vat, pr.created, pr.currency')
+			->select('p.id AS payment_id, p.paid, p.status, p.date')
+			->from('#__rwf_payment_request AS pr')
+			->join('LEFT', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+			->join('LEFT', '#__rwf_payment AS p ON p.cart_id = ci.cart_id')
+			->where('pr.submission_id IN (' . implode(', ', array_unique($keys)) . ')')
+			->order('pr.id ASC, p.id ASC');
+
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadObjectList();
+
+		$paymentrequests = $this->buildPaymentrequests($res);
+		$paymentrequests = $this->addPaymentrequestsPayments($paymentrequests, $res);
+
+		foreach ($items as &$i)
+		{
+			if (isset($paymentrequests[$i->id]))
+			{
+				$i->paymentrequests = $paymentrequests[$i->id];
+			}
+			else
+			{
+				$i->paymentrequests = false;
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Build payment requests array from table
+	 *
+	 * @param   array  $results  payment request + payments
+	 *
+	 * @return array
+	 */
+	private function buildPaymentrequests($results)
+	{
+		$requests = array();
+
+		foreach ($results as $result)
+		{
+			if (!isset($requests[$result->submission_id]))
+			{
+				$requests[$result->submission_id] = array();
+			}
+			elseif (isset($requests[$result->submission_id][$result->prid]))
+			{
+				continue;
+			}
+
+			$paymentrequest = clone $result;
+
+			unset($paymentrequest->payment_id);
+			unset($paymentrequest->status);
+			unset($paymentrequest->date);
+
+			$paymentrequest->paid = 0;
+			$paymentrequest->status = '';
+			$paymentrequest->payments = array();
+
+			$requests[$paymentrequest->submission_id][$paymentrequest->prid] = $paymentrequest;
+		}
+
+		return $requests;
+	}
+
+	/**
+	 * Add payment to payment requests
+	 *
+	 * @param   array  $paymentrequests  payment requests
+	 * @param   array  $results          results from query
+	 *
+	 * @return mixed
+	 */
+	private function addPaymentrequestsPayments($paymentrequests, $results)
+	{
+		foreach ($results as $result)
+		{
+			if (!$result->payment_id)
+			{
+				continue;
+			}
+
+			$payment = new stdClass;
+			$payment->id = $result->payment_id;
+			$payment->paid = $result->paid;
+			$payment->status = $result->status;
+			$payment->date = $result->date;
+
+			$paymentrequests[$result->submission_id][$result->prid]->paid = $payment->paid ? 1 : 0;
+			$paymentrequests[$result->submission_id][$result->prid]->status = $payment->status ? $payment->status : '';
+			$paymentrequests[$result->submission_id][$result->prid]->payments[] = $payment;
+		}
+
+		return $paymentrequests;
 	}
 }

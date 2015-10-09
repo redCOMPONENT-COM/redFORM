@@ -47,8 +47,8 @@ class PaymentPagseguro extends RdfPaymentHelper
 			return false;
 		}
 
-		$details = $this->_getSubmission($request->key);
-		$submit_key = $request->key;
+		$details = $this->getDetails($request->key);
+		$reference = $request->key;
 
 		$date = JFactory::getDate();
 
@@ -58,12 +58,12 @@ class PaymentPagseguro extends RdfPaymentHelper
 		if (!$this->currencyIsSupported($details->currency))
 		{
 			// Convert
-			$price    = $this->convertPrice($details->price, $details->currency, 'BRL');
+			$price    = $this->convertPrice($this->getPrice($details), $details->currency, 'BRL');
 			$currency = 'BRL';
 		}
 		else
 		{
-			$price    = $details->price;
+			$price    = $this->getPrice($details);
 			$currency = $details->currency;
 		}
 
@@ -76,22 +76,22 @@ class PaymentPagseguro extends RdfPaymentHelper
 		$paymentRequest->setReference($request->uniqueid);
 
 		// Sets the url used by PagSeguro for redirect user after ends checkout process
-		$paymentRequest->setRedirectUrl($this->getUrl('processing', $submit_key));
-		$paymentRequest->setNotificationURL($this->getUrl('notify', $submit_key));
+		$paymentRequest->setRedirectUrl($this->getUrl('processing', $reference));
+		$paymentRequest->setNotificationURL($this->getUrl('notify', $reference));
 
 		// Get email and fullname from answers
-		$rfcore = new RdfCore;
-		$email = $rfcore->getSubmissionContactEmail($submit_key);
-
-		if ($email)
-		{
-			$paymentRequest->setSenderEmail($email['email']);
-
-			if (isset($email['fullname']))
-			{
-				$paymentRequest->setSenderName($email['fullname']);
-			}
-		}
+//		$rfcore = new RdfCore;
+//		$email = $rfcore->getSubmissionContactEmail($reference);
+//
+//		if ($email)
+//		{
+//			$paymentRequest->setSenderEmail($email['email']);
+//
+//			if (isset($email['fullname']))
+//			{
+//				$paymentRequest->setSenderName($email['fullname']);
+//			}
+//		}
 
 		try
 		{
@@ -127,10 +127,10 @@ class PaymentPagseguro extends RdfPaymentHelper
 	{
 		$mainframe = JFactory::getApplication();
 
-		$submit_key = $mainframe->input->get('key');
-		$mainframe->input->set('submit_key', $submit_key);
+		$reference = $mainframe->input->get('reference');
+		$mainframe->input->set('reference', $reference);
 
-		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_PAGSEGURO_NOTIFICATION_RECEIVED', $submit_key));
+		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_PAGSEGURO_NOTIFICATION_RECEIVED', $reference));
 
 		$code = $mainframe->input->get('notificationCode');
 		$type = $mainframe->input->get('notificationType');
@@ -147,13 +147,13 @@ class PaymentPagseguro extends RdfPaymentHelper
 					break;
 
 				default:
-					$error = "Unknown notification type [" . $notificationType->getValue() . "] for key " . $submit_key;
+					$error = "Unknown notification type [" . $notificationType->getValue() . "] for cart " . $reference;
 					throw new RedformPaymentException($error);
 			}
 		}
 		else
 		{
-			$error = "Invalid notification parameters for key " . $submit_key;
+			$error = "Invalid notification parameters for cart " . $reference;
 			throw new RedformPaymentException($error);
 		}
 
@@ -184,7 +184,7 @@ class PaymentPagseguro extends RdfPaymentHelper
 						break;
 				}
 
-				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_NOT_PAID_KEY_S_REASON_S', $submit_key, $reason);
+				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_NOT_PAID_KEY_S_REASON_S', $reference, $reason);
 				throw new RedformPaymentException($error);
 			}
 
@@ -194,12 +194,12 @@ class PaymentPagseguro extends RdfPaymentHelper
 			$resp[] = 'Amount: ' . $transaction->getGrossAmount();
 			$resp = implode("\n", $resp);
 
-			$this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
+			$this->writeTransaction($reference, $resp, 'SUCCESS', 1);
 		}
 		catch (RedformPaymentException $e) // Just easier for debugging...
 		{
 			RdfHelperLog::simpleLog($e->getMessage());
-			$this->writeTransaction($submit_key, $e->getMessage() . $resp, 'FAIL', 0);
+			$this->writeTransaction($reference, $e->getMessage() . $resp, 'FAIL', 0);
 
 			return false;
 		}

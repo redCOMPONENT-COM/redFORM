@@ -184,6 +184,9 @@ if ($this->item->hasOptions && $this->item->id)
 							<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_HEADER_PRICE'); ?>
 						</th>
 						<th class="nowrap center">
+							<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_HEADER_SKU'); ?>
+						</th>
+						<th class="nowrap center">
 							&nbsp;
 						</th>
 					</tr>
@@ -205,6 +208,9 @@ if ($this->item->hasOptions && $this->item->id)
 							</td>
 							<td>
 								<input type="text" name="option-price[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_PRICE'); ?>"/>
+							</td>
+							<td>
+								<input type="text" name="option-sku[]" placeholder="<?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ENTER_SKU'); ?>"/>
 							</td>
 							<td class="buttons">
 								<button type="button" name="option-save-button[]" class="save-option btn btn-success btn-sm"><?php echo JText::_('COM_REDFORM_FIELD_VALUES_TABLE_ADD'); ?></button>

@@ -211,10 +211,9 @@ class RdfCore extends JObject
 
 		$model = $this->getFormModel($form_id);
 		$form   = $model->getForm();
-
 		$fieldsHtml = $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
-		$html = RdfHelperLayout::render(
+		$html = RdfLayoutHelper::render(
 			'rform.form',
 			array(
 				'form' => $form,
@@ -223,7 +222,7 @@ class RdfCore extends JObject
 				'referer64' => base64_encode($uri->toString()),
 			),
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		// Analytics
@@ -255,6 +254,8 @@ class RdfCore extends JObject
 	 */
 	public function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
 	{
+		JHtml::_('behavior.keepalive');
+
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
 		$app = JFactory::getApplication();
@@ -311,13 +312,13 @@ class RdfCore extends JObject
 
 		$this->loadCheckScript();
 
-		if ($multi)
+		if ($multi > 1)
 		{
 			$this->loadMultipleFormScript();
 		}
 
 		// Redmember integration: pull extra fields
-		if ($user->get('id') && file_exists(JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php'))
+		if ($user->get('id') && REDFORM_REDMEMBER_INTEGRATION)
 		{
 			$this->getRedmemberfields($user);
 		}
@@ -376,7 +377,7 @@ class RdfCore extends JObject
 				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
 			}
 
-			$html .= RdfHelperLayout::render(
+			$html .= RdfLayoutHelper::render(
 				'rform.fields',
 				array(
 					'fields' => $fields,
@@ -386,24 +387,12 @@ class RdfCore extends JObject
 					'answers' => $indexAnswers
 				),
 				'',
-				array('client' => 0, 'component' => 'com_redform')
+				array('component' => 'com_redform')
 			);
 
 			if ($multi > 1)
 			{
 				$html .= '</fieldset>';
-			}
-
-			if ($form->show_js_price)
-			{
-				$this->loadPriceScript();
-
-				$html .= RdfHelperLayout::render(
-					'rform.totalprice',
-					null,
-					'',
-					array('client' => 0, 'component' => 'com_redform')
-				);
 			}
 
 			if (isset($this->_rwfparams['uid']))
@@ -414,16 +403,6 @@ class RdfCore extends JObject
 
 			// Formfield div
 			$html .= '</div>';
-		}
-
-		// TODO: redcompetition should use redform core directly
-		/* Add any redCOMPETITION values */
-		$redcompetition = JRequest::getVar('redcompetition', false);
-
-		if ($redcompetition)
-		{
-			$html .= '<input type="hidden" name="competition_task" value="' . $redcompetition->task . '" />';
-			$html .= '<input type="hidden" name="competition_id" value="' . $redcompetition->competitionid . '" />';
 		}
 
 		if ($form->activatepayment && isset($options['selectPaymentGateway']) && $options['selectPaymentGateway'])
@@ -464,11 +443,19 @@ class RdfCore extends JObject
 		$html .= '<input type="hidden" name="nbactive" value="' . $initialActive . '" />';
 		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
 		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';
-		$html .= '<input type="hidden" name="' . JSession::getFormToken() . '" value="' . $uniq . '" />';
+		$html .= '<input type="hidden" name="' . self::getToken() . '" value="' . $uniq . '" />';
+		$html .= '<input type="hidden" name="submissionurl" value="' . base64_encode(JFactory::getURI()->toString()) . '" />';
 
 		if ($currency)
 		{
-			$html .= '<input type="hidden" name="currency" value="' . $currency . '" />';
+			$html .= '<input
+				type="hidden"
+				name="currency"
+				value="' . $currency . '"
+				precision="' . RHelperCurrency::getPrecision($currency) . '"
+				decimal="' . JComponentHelper::getParams('com_redform')->get('decimalseparator', '.') . '"
+				thousands="' . JComponentHelper::getParams('com_redform')->get('thousandseparator', ' ') . '"
+			/>';
 		}
 
 		// End div #redform
@@ -485,18 +472,12 @@ class RdfCore extends JObject
 	 * @param   array   $options          options for registration
 	 * @param   array   $data             data if empty, the $_POST variable is used
 	 *
-	 * @return   int/array submission_id, or array of submission ids in case of success, 0 otherwise
+	 * @return   RdfCoreFormSubmission
 	 */
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
-		$model = new RdfCoreSubmission($this->formId);
-
-		if (!$result = $model->apisaveform($integration_key, $options, $data))
-		{
-			$this->setError($model->getError());
-
-			return false;
-		}
+		$model = new RdfCoreFormSubmission($this->formId);
+		$result = $model->apisaveform($integration_key, $options, $data);
 
 		return $result;
 	}
@@ -510,22 +491,28 @@ class RdfCore extends JObject
 	 */
 	protected function getRedmemberfields(&$user)
 	{
-		$path = JPATH_SITE . '/components/com_redmember/lib/redmemberlib.php';
-
-		if (!file_exists($path))
+		if (!REDFORM_REDMEMBER_INTEGRATION)
 		{
 			return $user;
 		}
 
-		require_once $path;
+		$rmUser = RedmemberApi::getUser($user->id);
 
-		$all = RedmemberLib::getUserData($user->id);
-
-		$fields = get_object_vars($all);
-
-		foreach ($fields as $key => $value)
+		foreach ($rmUser->fields as $rmField)
 		{
-			$user->{$key} = $value;
+			$user->{$rmField->fieldcode} = $rmField->value;
+		}
+
+		if ($organizations = $rmUser->getOrganizations())
+		{
+			$firstOrg = reset($organizations);
+			$rmOrganization = RedmemberApi::getOrganization($firstOrg['organization_id']);
+			$user->organization = $rmOrganization->name;
+
+			foreach ($rmOrganization->fields as $rmField)
+			{
+				$user->{$rmField->fieldcode} = $rmField->value;
+			}
 		}
 
 		return $user;
@@ -561,6 +548,18 @@ class RdfCore extends JObject
 		}
 
 		return $answers;
+	}
+
+	/**
+	 * Get cart reference associated to submit key
+	 *
+	 * @param   string  $submitKey  submit key
+	 *
+	 * @return mixed
+	 */
+	public function getSubmitkeyCartReference($submitKey)
+	{
+		return $this->getAnswers($submitKey)->getCartReference();
 	}
 
 	/**
@@ -831,7 +830,7 @@ class RdfCore extends JObject
 
 		$fields = $this->prepareUserData($userData);
 
-		$model = new RdfCoreSubmission($this->formId);
+		$model = new RdfCoreFormSubmission($this->formId);
 
 		if (!$result = $model->quicksubmit($fields, $integration, $options))
 		{
@@ -905,11 +904,12 @@ class RdfCore extends JObject
 	 */
 	protected function getGatewaySelect($currency)
 	{
-		$helper = new RdfCorePaymentGateway;
+		$paymentDetails = new stdclass;
+		$paymentDetails->currency = $currency;
 
-		$config = new stdclass;
-		$config->currency = $currency;
-		$options = $helper->getOptions($config);
+		$helper = new RdfCorePaymentGateway($paymentDetails);
+
+		$options = $helper->getOptions();
 
 		if (!$options)
 		{
@@ -946,15 +946,16 @@ class RdfCore extends JObject
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('p.paid, p.status');
-		$query->from('#__rwf_payment AS p');
-		$query->where('p.submit_key = ' . $db->quote($submit_key));
-		$query->order('p.id DESC');
+		$query->select('pr.id');
+		$query->from('#__rwf_payment_request AS pr');
+		$query->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id');
+		$query->where('s.submit_key = ' . $db->quote($submit_key));
+		$query->where('pr.paid = 0');
 
 		$db->setQuery($query);
-		$res = $db->loadObject();
+		$res = $db->loadResult();
 
-		return $res->paid;
+		return $res ? false : true;
 	}
 
 	/**
@@ -966,7 +967,7 @@ class RdfCore extends JObject
 	{
 		JText::script('COM_REDFORM_MAX_SIGNUP_REACHED');
 		JText::script('COM_REDFORM_FIELDSET_SIGNUP_NB');
-		JFactory::getDocument()->addScript(JURI::root() . '/media/com_redform/js/form-multiple.js');
+		RHelperAsset::load('form-multiple.js', 'com_redform');
 	}
 
 	/**
@@ -981,7 +982,7 @@ class RdfCore extends JObject
 		JText::script('COM_REDFORM_Total_Price');
 		$doc = JFactory::getDocument();
 		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
-		$doc->addScript(JURI::root() . 'media/com_redform/js/form-price.js');
+		RHelperAsset::load('form-price.js', 'com_redform');
 	}
 
 	/**
@@ -991,7 +992,9 @@ class RdfCore extends JObject
 	 */
 	protected function loadCheckScript()
 	{
-		JHtml::_('behavior.formvalidation');
+		RHelperAsset::load('redform-validate.js', 'com_redform');
+		JText::script('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED');
+		JText::script('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED');
 	}
 
 	/**
@@ -1043,5 +1046,106 @@ class RdfCore extends JObject
 		}
 
 		return $instances[$submitKey];
+	}
+
+	/**
+	 * Get form token
+	 *
+	 * @param   bool  $forcenew  force new token
+	 *
+	 * @return string
+	 */
+	public static function getToken($forcenew = false)
+	{
+		$user = JFactory::getUser();
+		$session = JFactory::getSession();
+
+		if (!$session->has('redformtoken') || $forcenew)
+		{
+			$token = $session->getToken($forcenew);
+			$session->set('redformtoken', $token);
+		}
+		else
+		{
+			$token = $session->get('redformtoken');
+		}
+
+		$hash = JApplication::getHash($user->get('id', 0) . $token);
+
+		return $hash;
+	}
+
+	/**
+	 * Delete submissions
+	 *
+	 * @param   mixed  $pk  id or array of id of submitters to delete
+	 *
+	 * @return void
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	public function deleteSubmission($pk)
+	{
+		if (!$pk)
+		{
+			throw new InvalidArgumentException('Missing sids for deletion');
+		}
+
+		if ($pk && !is_array($pk))
+		{
+			$pk = array($pk);
+		}
+
+		JArrayHelper::toInteger($pk);
+
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_redform/tables');
+		$table = JTable::getInstance('Submitter', 'RedformTable');
+
+		$table->delete($pk, true);
+	}
+
+	/**
+	 * Get payments requests details indexed by sids
+	 *
+	 * @param   array  $sids  submission ids
+	 *
+	 * @return array
+	 */
+	public static function getSubmissionsPaymentRequests($sids)
+	{
+		if (!count($sids))
+		{
+			return false;
+		}
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('pr.*')
+			->select('CASE WHEN p.id IS NOT NULL THEN 1 ELSE 0 END AS paid')
+			->from('#__rwf_payment_request AS pr')
+			->leftJoin('#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+			->leftJoin('#__rwf_cart AS c ON c.id = ci.cart_id')
+			->leftJoin('#__rwf_payment AS p ON p.cart_id = c.id AND p.paid = 1')
+			->where('pr.submission_id IN (' . implode(', ', $sids) . ')')
+			->order('pr.id DESC')
+			->group('pr.id');
+
+		$db->setQuery($query);
+		$paymentRequests = $db->loadObjectList();
+
+		$res = array();
+
+		foreach ($paymentRequests as $paymentRequest)
+		{
+			if (!isset($res[$paymentRequest->submission_id]))
+			{
+				$res[$paymentRequest->submission_id] = array();
+			}
+
+			$res[$paymentRequest->submission_id][] = $paymentRequest;
+		}
+
+		return $res;
 	}
 }

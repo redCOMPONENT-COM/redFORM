@@ -36,8 +36,8 @@ class RedformControllerPayment extends JControllerLegacy
 	 */
 	public function select()
 	{
-		$app    = JFactory::getApplication();
-		$key    = $app->input->get('key');
+		$app = JFactory::getApplication();
+		$submitKey = $app->input->get('key');
 		$lang_v = '';
 
 		if ($app->input->get('lang'))
@@ -46,18 +46,36 @@ class RedformControllerPayment extends JControllerLegacy
 		}
 
 		$model = $this->getModel('payment');
-		$model->setSubmitKey($key);
-		$options = $model->getGatewayOptions();
 
-		if (count($options) == 1)
+		// We need a cart for this submit key
+		try
 		{
-			$this->setRedirect('index.php?option=com_redform&task=payment.process&key=' . $key . '&gw=' . $options[0]->value . $lang_v);
-			$this->redirect();
+			$cart = $model->getNewCart($submitKey);
+		}
+		catch (Exception $e)
+		{
+			echo 'Error getting new cart';
+
+			return;
 		}
 
-		$app->input->set('view', 'payment');
-		$app->input->set('layout', 'select');
-		$this->display();
+		$model->setCartReference($cart->reference);
+		$options = $model->getGatewayOptions();
+		$requireBilling = $model->isRequiredBilling();
+
+		if ($requireBilling)
+		{
+			$this->setRedirect('index.php?option=com_redform&view=payment&layout=billing&reference=' . $cart->reference . $lang_v);
+		}
+		elseif (count($options) == 1)
+		{
+			$this->setRedirect('index.php?option=com_redform&task=payment.process&reference=' . $cart->reference . '&gw=' . $options[0]->value . $lang_v);
+			$this->redirect();
+		}
+		else
+		{
+			$this->setRedirect('index.php?option=com_redform&view=payment&layout=select&reference=' . $cart->reference . $lang_v);
+		}
 	}
 
 	/**
@@ -73,14 +91,69 @@ class RedformControllerPayment extends JControllerLegacy
 
 		if (empty($gw))
 		{
-			JError::raiseError(404, 'MISSING GATEWAY');
+			throw new Exception('MISSING GATEWAY', 500);
 		}
 
 		$model  = $this->getModel('payment');
 		$helper = $model->getGatewayHelper($gw);
-		$key    = $app->input->get('key');
+		$key    = $app->input->get('reference');
 
-		$details = $model->getPaymentDetails($key);
+		$model->setCartReference($key);
+		$cart = $model->getCart();
+
+		if ($model->isRequiredBilling())
+		{
+			$data  = $this->input->post->get('jform', array(), 'array');
+			$data['cart_id'] = $cart->id;
+
+			$billingModel = $this->getModel('billing');
+			$form = $billingModel->getForm();
+			$validData = $billingModel->validate($form, $data);
+
+			// Check for validation errors.
+			if ($validData === false)
+			{
+				// Get the validation messages.
+				$errors = $billingModel->getErrors();
+
+				// Push up to three validation messages out to the user.
+				for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++)
+				{
+					if ($errors[$i] instanceof Exception)
+					{
+						$app->enqueueMessage($errors[$i]->getMessage(), 'warning');
+					}
+					else
+					{
+						$app->enqueueMessage($errors[$i], 'warning');
+					}
+				}
+
+				// Redirect back to the edit screen.
+				$this->setRedirect(
+					'index.php?option=com_redform&view=payment&layout=billing&reference=' . $cart->reference
+				);
+
+				return;
+			}
+
+			// Attempt to save the data.
+			if (!$billingModel->save($validData))
+			{
+				// Redirect back to the edit screen.
+				$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $billingModel->getError()));
+				$this->setMessage($this->getError(), 'error');
+
+				// Redirect back to the edit screen.
+				$this->setRedirect(
+					'index.php?option=com_redform&view=payment&layout=billing&reference=' . $cart->reference
+				);
+
+				return;
+			}
+		}
+
+		$details = $model->getPaymentDetails();
 
 		if (!$res = $helper->process($details))
 		{
@@ -98,7 +171,7 @@ class RedformControllerPayment extends JControllerLegacy
 	{
 		$app = JFactory::getApplication();
 
-		$submit_key = $app->input->getString('key', '');
+		$key = $app->input->getString('reference', '');
 
 		if ($app->input->get('lang'))
 		{
@@ -106,7 +179,7 @@ class RedformControllerPayment extends JControllerLegacy
 		}
 
 		$model = $this->getModel('payment');
-		$model->setSubmitKey($submit_key);
+		$model->setCartReference($key);
 
 		$submitters = $model->getSubmitters();
 
@@ -119,11 +192,13 @@ class RedformControllerPayment extends JControllerLegacy
 				switch ($first->integration)
 				{
 					case 'redevent':
-						$app->redirect('index.php?option=com_redevent&view=payment&submit_key=' . $submit_key . '&state=processing' . $lang_v);
+						$app->redirect('index.php?option=com_redevent&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v);
 						break;
 
 					default:
-						$app->redirect('index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $submit_key . '&state=processing' . $lang_v);
+						$app->redirect(
+							'index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v
+						);
 						break;
 				}
 			}
@@ -132,14 +207,14 @@ class RedformControllerPayment extends JControllerLegacy
 		// Analytics for default landing page
 		if (RdfHelperAnalytics::isEnabled())
 		{
-			$payement = $model->getPaymentDetails($submit_key);
+			$payment = $model->getPaymentDetails();
 
 			// Add transaction
 			$trans = new stdclass;
-			$trans->id = $submit_key;
-			$trans->affiliation = $payement->form;
+			$trans->id = $key;
+			$trans->affiliation = $payment->form;
 			$trans->revenue = $model->getPrice();
-			$trans->currency = $payement->currency;
+			$trans->currency = $payment->currency;
 
 			RdfHelperAnalytics::addTrans($trans);
 
@@ -147,7 +222,7 @@ class RedformControllerPayment extends JControllerLegacy
 			foreach ($submitters as $s)
 			{
 				$item = new stdclass;
-				$item->id = $submit_key;
+				$item->id = $key;
 				$item->productname = 'submitter' . $s->id;
 				$item->sku = 'submitter' . $s->id;
 				$item->category = '';
@@ -189,7 +264,7 @@ class RedformControllerPayment extends JControllerLegacy
 	{
 		$app = JFactory::getApplication();
 
-		$submit_key = $app->input->get('key');
+		$key = $app->input->get('reference');
 		$gw = $app->input->get('gw', '');
 
 		RdfHelperLog::simpleLog('PAYMENT NOTIFICATION RECEIVED' . ': ' . $gw);
@@ -202,6 +277,7 @@ class RedformControllerPayment extends JControllerLegacy
 		}
 
 		$model = $this->getModel('payment');
+		$model->setCartReference($key);
 
 		$alreadypaid = $model->hasAlreadyPaid();
 		$helper      = $model->getGatewayHelper($gw);
@@ -215,10 +291,7 @@ class RedformControllerPayment extends JControllerLegacy
 
 			if (!$alreadypaid)
 			{
-				// Trigger event for custom handling
-				JPluginHelper::importPlugin('redform');
-				$dispatcher = JDispatcher::getInstance();
-				$dispatcher->trigger('onAfterPaymentVerified', array($submit_key));
+				$model->setPaymentRequestAsPaid();
 
 				// Built-in notifications
 				if (!$model->notifyPaymentReceived())
@@ -243,13 +316,13 @@ class RedformControllerPayment extends JControllerLegacy
 				switch ($first->integration)
 				{
 					case 'redevent':
-						$app->redirect('index.php?option=com_redevent&view=payment&submit_key=' . $submit_key
+						$app->redirect('index.php?option=com_redevent&view=payment&submit_key=' . $first->submit_key
 							. '&state=' . ($res ? 'accepted' : 'refused')
 						);
 						break;
 
 					default:
-						$app->redirect('index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $submit_key
+						$app->redirect('index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $first->submit_key
 							. '&state=' . ($res ? 'accepted' : 'refused')
 						);
 						break;

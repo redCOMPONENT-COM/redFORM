@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.7" type="plugin" group="redform_captcha" method="upgrade">
+  <name>PLG_REDFORM_CAPTCHA_HIDDEN</name>
+	<creationDate>19 September 2013</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>3.3.1</version>
+	<tag>##VERSION##</tag>
+  <description>PLG_REDFORM_CAPTCHA_HIDDEN_XML_DESCRIPTION</description>
+
+  <files>
+    <filename plugin="hiddencaptcha">hiddencaptcha.php</filename>
+    <filename>index.html</filename>
+    <folder>language</folder>
+  </files>
+
+  <config>
+	  <fields name="params">
+		  <fieldset name="extra" label="extra">
+		  </fieldset>
+	  </fields>
+  </config>
+</extension>

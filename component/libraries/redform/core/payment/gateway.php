@@ -20,18 +20,25 @@ class RdfCorePaymentGateway
 {
 	protected $gateways;
 
-	protected $config;
+	protected $paymentDetails;
+
+	/**
+	 * Constructor
+	 *
+	 * @param   object  $paymentDetails  payment details data to filter the gateways
+	 */
+	public function __construct($paymentDetails = null)
+	{
+		$this->paymentDetails = $paymentDetails;
+	}
 
 	/**
 	 * Return gateway options
 	 *
-	 * @param   object  $config  options to filter the gateways
-	 *
 	 * @return array
 	 */
-	public function getOptions($config = null)
+	public function getOptions()
 	{
-		$this->config = $config;
 		$options = array();
 
 		if ($gateways = $this->getGateways())
@@ -53,7 +60,7 @@ class RdfCorePaymentGateway
 			// Filter gateways through plugins
 			JPluginHelper::importPlugin('redform_payment');
 			$dispatcher = JDispatcher::getInstance();
-			$dispatcher->trigger('onFilterGateways', array(&$options, $this->config));
+			$dispatcher->trigger('onFilterGateways', array(&$options, $this->paymentDetails));
 		}
 
 		return $options;
@@ -64,7 +71,7 @@ class RdfCorePaymentGateway
 	 *
 	 * @return array
 	 */
-	protected function getGateways()
+	public function getGateways()
 	{
 		if (empty($this->gateways))
 		{
@@ -72,10 +79,10 @@ class RdfCorePaymentGateway
 			$dispatcher = JDispatcher::getInstance();
 
 			$gateways = array();
-			$dispatcher->trigger('onGetGateway', array(&$gateways, $this->config));
-			$this->_gateways = $gateways;
+			$dispatcher->trigger('onGetGateway', array(&$gateways, $this->paymentDetails));
+			$this->gateways = $gateways;
 		}
 
-		return $this->_gateways;
+		return $this->gateways;
 	}
 }

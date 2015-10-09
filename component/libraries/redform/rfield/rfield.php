@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-abstract class RdfRfield extends JObject
+class RdfRfield extends JObject
 {
 	/**
 	 * Field type name
@@ -93,6 +93,13 @@ abstract class RdfRfield extends JObject
 	protected $hasOptions = false;
 
 	/**
+	 * Price item label
+	 *
+	 * @var null
+	 */
+	protected $paymentRequestItemLabel = null;
+
+	/**
 	 * Magic method
 	 *
 	 * @param   string  $name  property name
@@ -143,7 +150,7 @@ abstract class RdfRfield extends JObject
 			default:
 				$data = $this->load();
 
-				if (isset($data->{$name}))
+				if (property_exists($data, $name))
 				{
 					return $data->{$name};
 				}
@@ -151,9 +158,15 @@ abstract class RdfRfield extends JObject
 
 		$trace = debug_backtrace();
 		throw new Exception(
-			'Undefined property via __get(): ' . $name .
-			' in ' . $trace[0]['file'] .
-			' on line ' . $trace[0]['line'],
+			sprintf(
+				"Undefined property via __get(): %s in %s on line %s\nForm field %s. field %s (%s)",
+				$name,
+				$trace[0]['file'],
+				$trace[0]['line'],
+				$this->getId(),
+				$this->load()->field_id,
+				$this->load()->field
+			),
 			500
 		);
 
@@ -213,11 +226,11 @@ abstract class RdfRfield extends JObject
 	{
 		$data = $this->load();
 
-		$label = RdfHelperLayout::render(
+		$label = RdfLayoutHelper::render(
 			'rform.rfield.label',
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $label;
@@ -230,11 +243,11 @@ abstract class RdfRfield extends JObject
 	 */
 	public function getInput()
 	{
-		$element = RdfHelperLayout::render(
+		$element = RdfLayoutHelper::render(
 			'rform.rfield.' . $this->type,
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $element;
@@ -269,15 +282,17 @@ abstract class RdfRfield extends JObject
 
 	/**
 	 * Returns field value ready to be printed.
-	 * Array values will be separated with ~~~
+	 * Array values will be separated with separator (default '~~~')
+	 *
+	 * @param   string  $separator  separator
 	 *
 	 * @return string
 	 */
-	public function getValueAsString()
+	public function getValueAsString($separator = '~~~')
 	{
 		if (is_array($this->value))
 		{
-			return implode('~~~', $this->value);
+			return implode($separator, $this->value);
 		}
 		else
 		{
@@ -306,15 +321,16 @@ abstract class RdfRfield extends JObject
 	}
 
 	/**
-	 * Set field value from post data
+	 * Get and set the value from post data, using appropriate filtering
 	 *
-	 * @param   string  $value  value
+	 * @param   int  $signup  form instance number for the field
 	 *
-	 * @return string new value
+	 * @return mixed
 	 */
-	public function setValueFromPost($value)
+	public function getValueFromPost($signup)
 	{
-		$this->value = $value;
+		$input = JFactory::getApplication()->input;
+		$this->value = $input->getString($this->getPostName($signup), '');
 
 		return $this->value;
 	}
@@ -387,14 +403,62 @@ abstract class RdfRfield extends JObject
 	}
 
 	/**
+	 * Return vat, possibly depending on current field value
+	 *
+	 * @return float
+	 */
+	public function getVat()
+	{
+		$vatRate = (float) $this->getParam('vat');
+		$price = $this->getPrice();
+
+		if ($price && is_numeric($vatRate))
+		{
+			return $price * $vatRate / 100;
+		}
+
+		return 0;
+	}
+
+	/**
+	 * SKU associated to price
+	 *
+	 * @return string
+	 */
+	public function getSku()
+	{
+		return 'FIELD' . $this->id;
+	}
+
+	/**
+	 * Get customized label for price item
+	 *
+	 * @return string
+	 */
+	public function getPaymentRequestItemLabel()
+	{
+		return $this->paymentRequestItemLabel ?: $this->load()->field;
+	}
+
+	/**
+	 * Set customized label for price item
+	 *
+	 * @param   string  $label  the text to use as label
+	 *
+	 * @return string
+	 */
+	public function setPaymentRequestItemLabel($label)
+	{
+		return $this->paymentRequestItemLabel = $label;
+	}
+
+	/**
 	 * Return input properties array
 	 *
 	 * @return array
 	 */
 	public function getInputProperties()
 	{
-		$app = JFactory::getApplication();
-
 		$properties = array();
 		$properties['type'] = 'text';
 		$properties['name'] = $this->getFormElementName();
@@ -413,7 +477,7 @@ abstract class RdfRfield extends JObject
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		if ($this->load()->redmember_field)
 		{
@@ -499,7 +563,7 @@ abstract class RdfRfield extends JObject
 
 		if ($data->validate && !$this->getValue())
 		{
-			$this->setError(JText::sprintf('COM_REDFORM_FIELD_S_IS_REQUIRED', $data->name));
+			$this->setError(JText::sprintf('COM_REDFORM_FIELD_S_IS_REQUIRED', $this->name));
 
 			return false;
 		}
@@ -570,7 +634,7 @@ abstract class RdfRfield extends JObject
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('id, value, label, field_id, price');
+			$query->select('id, value, label, field_id, price, sku');
 			$query->from('#__rwf_values');
 			$query->where('published = 1');
 			$query->where('field_id = ' . $this->load()->field_id);
@@ -608,5 +672,17 @@ abstract class RdfRfield extends JObject
 	protected function mapProperties($property, $value)
 	{
 		return $property . '="' . $value . '"';
+	}
+
+	/**
+	 * Return field form name with signup offset
+	 *
+	 * @param   int  $signup  signup id
+	 *
+	 * @return string
+	 */
+	protected function getPostName($signup)
+	{
+		return 'field' . $this->load()->id . '_' . (int) $signup;
 	}
 }

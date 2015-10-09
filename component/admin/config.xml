@@ -2,30 +2,83 @@
 
 <config>
 	<fieldset name="general" label="COM_REDFORM_SETTINGS_general">
-		<field name="showintegration" type="radio" default="0" label="COM_REDFORM_SHOWINTEGRATION" description="COM_REDFORM_SHOWINTEGRATION_DESC">
-			<option value="0">Hide</option>
-			<option value="1">Show</option>
+		<field
+				name="showintegration"
+				type="radio"
+				default="0"
+				class="btn-group btn-group-yesno"
+				label="COM_REDFORM_SHOWINTEGRATION"
+				description="COM_REDFORM_SHOWINTEGRATION_DESC">
+			<option value="0">JNo</option>
+			<option value="1">JYes</option>
 		</field>
-		<field name="allow_email_aliasing" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING" description="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING_DESC">
-			<option value="0">No</option>
-			<option value="1">Yes</option>
-		</field>
-		<field name="upload_path" type="text" default="images/redform" label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL" description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
-		<field name="allow_negative_total" type="radio" default="1" label="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL" description="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL_DESC">
-			<option value="0">No</option>
-			<option value="1">Yes</option>
-		</field>
-        <field name="form_layout" type="list" default="j25" label="COM_REDFORM_SETTINGS_FORM_LAYOUT" description="COM_REDFORM_SETTINGS_FORM_LAYOUT_DESC">
-            <option value="j25">redFORM 2.5</option>
-            <option value="bootstrap">Bootstrap</option>
-        </field>
 
-		<field type="spacer" hr="true" />
-		<field name="enable_ga" type="radio" default="0" label="COM_REDFORM_SETTINGS_ENABLE_GOOGLE_ANALYTICS" description="COM_REDFORM_SETTINGS_ENABLE_GOOGLE_ANALYTICS_DESC">
+		<field
+				name="allow_email_aliasing"
+				type="radio"
+				default="1"
+				class="btn-group btn-group-yesno"
+				label="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING"
+				description="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING_DESC">
+			<option value="0">JNo</option>
+			<option value="1">JYes</option>
+		</field>
+
+		<field
+				name="upload_path"
+				type="text"
+				default="images/redform"
+				label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL"
+				description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
+
+		<field name="decimalseparator"
+			   type="text"
+			   default="."
+			   label="COM_REDFORM_SETTINGS_PRICEFORMAT_DECIMALSEPARATOR"
+			   description="COM_REDFORM_SETTINGS_PRICEFORMAT_DECIMALSEPARATOR_DESC"/>
+
+		<field name="thousandseparator"
+			   type="text"
+			   default=" "
+			   label="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR"
+			   description="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR_DESC"/>
+
+		<field
+				name="allow_negative_total"
+				type="radio"
+				class="btn-group btn-group-yesno"
+				default="1"
+				label="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL"
+				description="COM_REDFORM_SETTINGS_ALLOW_NEGATIVE_TOTAL_DESC">
+			<option value="0">JNo</option>
+			<option value="1">JYes</option>
+		</field>
+		<field
+				name="form_layout"
+				type="list" default="j25" label="COM_REDFORM_SETTINGS_FORM_LAYOUT"
+				description="COM_REDFORM_SETTINGS_FORM_LAYOUT_DESC">
+			<option value="">COM_REDFORM_SETTINGS_FORM_LAYOUT_REGULAR</option>
+			<option value="bootstrap">COM_REDFORM_SETTINGS_FORM_LAYOUT_BOOTSTRAP</option>
+		</field>
+
+		<field type="spacer" hr="true"/>
+		<field
+				name="enable_ga"
+				type="radio"
+				class="btn-group btn-group-yesno"
+				default="0"
+				label="COM_REDFORM_SETTINGS_ENABLE_GOOGLE_ANALYTICS"
+			   description="COM_REDFORM_SETTINGS_ENABLE_GOOGLE_ANALYTICS_DESC">
 			<option value="0">JDisabled</option>
 			<option value="1">JEnabled</option>
 		</field>
-		<field name="ga_mode" type="radio" default="0" label="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE" description="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE_DESC">
+		<field
+				name="ga_mode"
+				type="radio"
+				class="btn-group btn-group-yesno"
+				default="0"
+				label="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE"
+			   description="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE_DESC">
 			<option value="0">COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE_UA</option>
 			<option value="1">COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_MODE_CLASSIC</option>
 		</field>
@@ -33,19 +86,56 @@
 		<field name="ga_code" type="text" default="UA-1111111-22" label="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE" description="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE_DESC"/>
 		 -->
 	</fieldset>
-
-	<fieldset	name="permissions"
-		label="JCONFIG_PERMISSIONS_LABEL"
-		description="JCONFIG_PERMISSIONS_DESC">
+	<fieldset name="advanced_email" label="COM_REDFORM_SETTINGS_advanced_email"
+			  description="COM_REDFORM_SETTINGS_advanced_email_DESCRIPTION">
+		<field name="email_encoding" type="list" default="quoted-printable"
+			   label="COM_REDFORM_SETTINGS_email_encoding_LABEL" description="COM_REDFORM_SETTINGS_email_encoding_DESC">
+			<option value="">JDefault</option>
+			<option value="8bit">8bit</option>
+			<option value="7bit">7bit</option>
+			<option value="binary">binary</option>
+			<option value="base64">base64</option>
+			<option value="quoted-printable">quoted-printable</option>
+		</field>
 		<field
-			name="rules"
-			type="rules"
-			label="JCONFIG_PERMISSIONS_LABEL"
-			class="inputbox"
-			validate="rules"
-			filter="rules"
-			component="com_redform"
-			section="component"
-		/>
+				name="dkim_enable"
+				type="radio"
+				class="btn-group btn-group-yesno"
+				default="0"
+				label="COM_REDFORM_SETTINGS_DKIM_ENABLE_LABEL"
+			   description="COM_REDFORM_SETTINGS_DKIM_ENABLE_DESC">
+			<option value="0">JNo</option>
+			<option value="1">JYes</option>
+		</field>
+		<field name="dkim_selector"
+			   type="text" label="COM_REDFORM_SETTINGS_DKIM_SELECTOR_LABEL"
+			   description="COM_REDFORM_SETTINGS_DKIM_SELECTOR_DESC"/>
+		<field name="dkim_identity"
+			   type="text" label="COM_REDFORM_SETTINGS_DKIM_IDENTITY_LABEL"
+			   description="COM_REDFORM_SETTINGS_DKIM_IDENTITY_DESC"/>
+		<field name="dkim_passphrase"
+			   type="text" label="COM_REDFORM_SETTINGS_DKIM_PASSPHRASE_LABEL"
+			   description="COM_REDFORM_SETTINGS_DKIM_PASSPHRASE_DESC"/>
+		<field name="dkim_domain"
+			   type="text" label="COM_REDFORM_SETTINGS_DKIM_DOMAIN_LABEL"
+			   description="COM_REDFORM_SETTINGS_DKIM_DOMAIN_DESC"/>
+		<field name="dkim_private"
+			   type="text" label="COM_REDFORM_SETTINGS_DKIM_PRIVATE_LABEL"
+			   description="COM_REDFORM_SETTINGS_DKIM_PRIVATE_DESC"/>
+	</fieldset>
+
+	<fieldset name="permissions"
+			  label="JCONFIG_PERMISSIONS_LABEL"
+			  description="JCONFIG_PERMISSIONS_DESC">
+		<field
+				name="rules"
+				type="rrules"
+				label="JCONFIG_PERMISSIONS_LABEL"
+				class="inputbox"
+				validate="rules"
+				filter="rules"
+				component="com_redform"
+				section="component"
+				/>
 	</fieldset>
 </config>

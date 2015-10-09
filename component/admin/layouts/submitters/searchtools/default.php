@@ -1,13 +1,13 @@
 <?php
 /**
- * @package     Redcore
+ * @package     Redform.Admin
  * @subpackage  Layouts
  *
- * @copyright   Copyright (C) 2012 - 2013 redCOMPONENT.com. All rights reserved.
- * @license     GNU General Public License version 2 or later, see LICENSE.
+ * @copyright   Copyright (C) 2012 - 2015 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
-defined('JPATH_REDCORE') or die;
+defined('_JEXEC') or die;
 
 $data = $displayData;
 
@@ -33,14 +33,14 @@ RHtml::_('rsearchtools.form', $formSelector, $data['options']);
 <div class="js-stools clearfix">
 	<div class="clearfix">
 		<div class="js-stools-container-bar">
-			<?php echo RdfHelperLayout::render('searchtools.default.bar', $data); ?>
+			<?php echo RdfLayoutHelper::render('searchtools.default.bar', $data); ?>
 		</div>
 		<div class="js-stools-container-list hidden-phone hidden-tablet">
-			<?php echo RdfHelperLayout::render('searchtools.default.list', $data); ?>
+			<?php echo RdfLayoutHelper::render('searchtools.default.list', $data); ?>
 		</div>
 	</div>
 	<!-- Filters div -->
 	<div class="js-stools-container-filters hidden-phone clearfix">
-		<?php echo RdfHelperLayout::render('submitters.searchtools.default.filters', $data); ?>
+		<?php echo RdfLayoutHelper::render('submitters.searchtools.default.filters', $data); ?>
 	</div>
 </div>

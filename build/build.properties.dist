@@ -6,3 +6,7 @@ www.dir=/var/www/joomla
 
 # clean install for unit tests
 www.dirtest=/var/www/joomla_test
+
+#template name for overrides
+www.template.site=protostar
+www.template.admin=hathor

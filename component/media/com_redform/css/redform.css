@@ -6,24 +6,24 @@
 
 .formbox {
 	clear:both;
-}	
-	
+}
+
  .fieldline {
 	padding: 3px 0;
 	clear:both;
 }
 
- .fieldline div {
+ .fieldline > div {
 	float:left;
 	text-align:left;
 }
 
- .fieldline div.fieldoption {
+ .fieldline > div.fieldoption {
 	float:none;
 	text-align:left;
 }
 
- .fieldline div.label {
+ .fieldline > div.label {
 	width:150px;
 }
 
@@ -35,7 +35,7 @@
  clear:both;
 }
 
- .fieldline.type-email div div {
+ .fieldline.type-email > div > div {
  float: none;
 }
 
@@ -68,8 +68,13 @@ textarea.emptyfield {
 	background-color:pink;
 }
 
-div#signedusers ul {
+div#signedusers > ul {
 	list-style-type: none;
 	padding: 0px;
 	margin: 0px;
+}
+
+.checkboxes.invalid {
+	border:1px solid red;
+	background-color:pink;
 }

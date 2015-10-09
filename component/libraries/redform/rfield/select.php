@@ -41,20 +41,37 @@ class RdfRfieldSelect extends RdfRfield
 	}
 
 	/**
-	 * Set field value from post data
+	 * Returns field value
 	 *
-	 * @param   string  $value  value
-	 *
-	 * @return string new value
+	 * @return string
 	 */
-	public function setValueFromPost($value)
+	public function getValue()
 	{
-		if ($value && !is_array($value))
+		if (is_array($this->value))
 		{
-			$value = array($value);
+			return $this->value[0];
 		}
 
-		return parent::setValueFromPost($value);
+		return $this->value;
+	}
+
+	/**
+	 * Get and set the value from post data, using appropriate filtering
+	 *
+	 * @param   int  $signup  form instance number for the field
+	 *
+	 * @return mixed
+	 */
+	public function getValueFromPost($signup)
+	{
+		$value = parent::getValueFromPost($signup);
+
+		if ($value && !is_array($value))
+		{
+			$this->value = array($value);
+		}
+
+		return $this->value;
 	}
 
 	/**
@@ -97,11 +114,41 @@ class RdfRfieldSelect extends RdfRfield
 	}
 
 	/**
+	 * SKU associated to price
+	 *
+	 * @return string
+	 */
+	public function getSku()
+	{
+		$sku = array();
+
+		if (!$this->value)
+		{
+			return '';
+		}
+
+		foreach ($this->getOptions() as $option)
+		{
+			if (in_array($option->value, $this->value))
+			{
+				$sku[] = $option->sku ?: parent::getSku() . '_' . $option->id;
+			}
+		}
+
+		if (empty($sku))
+		{
+			return parent::getSku();
+		}
+
+		return implode('-', $sku);
+	}
+
+	/**
 	 * Try to get a default value from integrations
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		if ($this->load()->redmember_field)
 		{
@@ -187,11 +234,14 @@ class RdfRfieldSelect extends RdfRfield
 		if ($option->price)
 		{
 			$properties['price'] = $option->price;
+
+			if (is_numeric($this->getParam('vat')))
+			{
+				$properties['vat'] = $this->getParam('vat');
+			}
 		}
 
-		$value = $this->getValue();
-
-		if ($value && in_array($option->value, $value))
+		if ($this->value && in_array($option->value, $this->value))
 		{
 			$properties['selected'] = 'selected';
 		}

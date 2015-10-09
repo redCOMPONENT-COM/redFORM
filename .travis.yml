@@ -6,6 +6,6 @@ before_script:
 script:
 - php .travis/phppec.php component/ plugins/ # Parse error checker
 - php .travis/phpcs.php # Code Sniffer Checker
-- php .travis/phpmd.php # Mess detector Checker
+#- php .travis/phpmd.php # Mess detector Checker
 notifications:
   slack: redweb:7hTS3MPEBxt3lkVopUcVPJKa

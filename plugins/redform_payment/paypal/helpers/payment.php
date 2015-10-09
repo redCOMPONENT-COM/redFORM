@@ -37,20 +37,20 @@ class PaymentPaypal extends  RdfPaymentHelper
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
 		$app = JFactory::getApplication();
-		$submit_key = $request->key;
+		$reference = $request->key;
 
 		if (empty($return_url))
 		{
-			$return_url = $this->getUrl('processing', $submit_key);
+			$return_url = $this->getUrl('processing', $reference);
 		}
 
 		if (empty($cancel_url))
 		{
-			$cancel_url = $this->getUrl('cancel', $submit_key);
+			$cancel_url = $this->getUrl('cancel', $reference);
 		}
 
 		// Get price and currency
-		$res = $this->_getSubmission($submit_key);
+		$res = $this->getDetails($reference);
 
 		if ($this->params->get('paypal_sandbox', 1) == 1)
 		{
@@ -67,9 +67,9 @@ class PaymentPaypal extends  RdfPaymentHelper
 			"item_name" => $request->title,
 			"no_shipping" => '1',
 			"invoice" => $request->uniqueid,
-			"amount" => $res->price,
+			"amount" => $this->getPrice($res),
 			"return" => $return_url,
-			"notify_url" => $this->getUrl('notify', $submit_key),
+			"notify_url" => $this->getUrl('notify', $reference),
 			"cancel_return" => $cancel_url,
 			"undefined_quantity" => "0",
 			"currency_code" => $res->currency,
@@ -97,10 +97,9 @@ class PaymentPaypal extends  RdfPaymentHelper
 		$db = JFactory::getDBO();
 
 		$post = JRequest::get('post');
-		$submit_key = JRequest::getvar('key');
+		$reference = JRequest::getvar('reference');
 		$paid = 0;
 
-		// RdfHelperLog::simpleLog('PAYPAL NOTIFICATION RECEIVED'. ' for ' . $submit_key);
 		// read the post from PayPal system and add 'cmd'
 		$req = 'cmd=_notify-validate';
 
@@ -151,15 +150,15 @@ class PaymentPaypal extends  RdfPaymentHelper
 			   check that receiver_email is your Primary PayPal email
 			   check that payment_amount/payment_currency are correct */
 
-			$res = $this->_getSubmission($submit_key);
+			$res = $this->getDetails($reference);
 
-			if ($payment_amount != $res->price)
+			if ($payment_amount != $this->getPrice($res))
 			{
-				RdfHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG AMOUNT(' . $res->price . ') - ' . $submit_key);
+				RdfHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG AMOUNT(' . $this->getPrice($res) . ') - ' . $reference);
 			}
 			elseif ($payment_currency != $res->currency)
 			{
-				RdfHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY (' . $res->currency . ') - ' . $submit_key);
+				RdfHelperLog::simpleLog('PAYPAL NOTIFICATION WRONG CURRENCY (' . $res->currency . ') - ' . $reference);
 			}
 			elseif (strcasecmp($payment_status, 'completed') == 0)
 			{
@@ -169,26 +168,17 @@ class PaymentPaypal extends  RdfPaymentHelper
 		elseif (strcmp($res, "INVALID") == 0)
 		{
 			// Log for manual investigation
-			RdfHelperLog::simpleLog('PAYPAL NOTIFICATION INVALID IPN' . ' - ' . $submit_key);
+			RdfHelperLog::simpleLog('PAYPAL NOTIFICATION INVALID IPN' . ' - ' . $reference);
 		}
 		else
 		{
-			RdfHelperLog::simpleLog('PAYPAL NOTIFICATION HTTP ERROR' . ' for ' . $submit_key);
+			RdfHelperLog::simpleLog('PAYPAL NOTIFICATION HTTP ERROR' . ' for ' . $reference);
 		}
 
-		// Log ipn
-		$query = ' INSERT INTO #__rwf_payment (`date`, `data`, `submit_key`, `status`, `gateway`, `paid`) '
-			. ' VALUES (NOW(), ' . $db->Quote(implode("\n", $data))
-			. ', ' . $db->Quote($submit_key)
-			. ', ' . $db->Quote($payment_status)
-			. ', ' . $db->Quote('Paypal')
-			. ', ' . $db->Quote($paid)
-			. ') ';
-		$db->setQuery($query);
-		$db->query();
+		$this->writeTransaction($reference, implode("\n", $data), $payment_status, $paid);
 
 		// For routing
-		JRequest::setVar('submit_key', $submit_key);
+		JRequest::setVar('reference', $reference);
 
 		return $paid;
 	}

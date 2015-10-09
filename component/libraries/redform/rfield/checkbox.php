@@ -80,11 +80,36 @@ class RdfRfieldCheckbox extends RdfRfield
 	}
 
 	/**
+	 * SKU associated to price
+	 *
+	 * @return string
+	 */
+	public function getSku()
+	{
+		$sku = array();
+
+		if (!$this->value)
+		{
+			return '';
+		}
+
+		foreach ($this->getOptions() as $option)
+		{
+			if (in_array($option->value, $this->value))
+			{
+				$sku[] = $option->sku ?: parent::getSku() . '_' . $option->id;
+			}
+		}
+
+		return implode('-', $sku);
+	}
+
+	/**
 	 * Try to get a default value from integrations
 	 *
 	 * @return void
 	 */
-	protected function lookupDefaultValue()
+	public function lookupDefaultValue()
 	{
 		if ($this->load()->redmember_field)
 		{
@@ -108,11 +133,11 @@ class RdfRfieldCheckbox extends RdfRfield
 	{
 		$this->getOptions();
 
-		$element = RdfHelperLayout::render(
+		$element = RdfLayoutHelper::render(
 			'rform.rfield.checkbox',
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $element;
@@ -138,23 +163,16 @@ class RdfRfieldCheckbox extends RdfRfield
 		if ($option->price)
 		{
 			$properties['price'] = $option->price;
+
+			if (is_numeric($this->getParam('vat')))
+			{
+				$properties['vat'] = $this->getParam('vat');
+			}
 		}
 
 		if ($this->load()->readonly && !$app->isAdmin())
 		{
 			$properties['readonly'] = 'readonly';
-		}
-
-		if ($this->load()->validate)
-		{
-			if ($properties['class'])
-			{
-				$properties['class'] .= ' required';
-			}
-			else
-			{
-				$properties['class'] = ' required';
-			}
 		}
 
 		$value = $this->getValue();
@@ -177,5 +195,23 @@ class RdfRfieldCheckbox extends RdfRfield
 		$name = parent::getFormElementName() . '[]';
 
 		return $name;
+	}
+
+	/**
+	 * Get and set the value from post data, using appropriate filtering
+	 *
+	 * @param   int  $signup  form instance number for the field
+	 *
+	 * @return mixed
+	 */
+	public function getValueFromPost($signup)
+	{
+		$input = JFactory::getApplication()->input;
+
+		$postName = 'field' . $this->load()->id . '_' . (int) $signup;
+
+		$this->value = $input->get($postName, '', 'array');
+
+		return $this->value;
 	}
 }

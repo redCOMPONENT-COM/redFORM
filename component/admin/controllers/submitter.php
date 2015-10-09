@@ -32,33 +32,28 @@ class RedformControllerSubmitter extends RdfControllerForm
 
 		// Save redform data
 		$rfcore = new RdfCore;
-		$result = $rfcore->saveAnswers('');
 
-		if (!$result)
+		try
 		{
-			$msg = JText::_('COM_REDEVENT_REGISTRATION_REDFORM_SAVE_FAILED');
-			$this->setError($msg . ' - ' . $rfcore->getError());
-
-			// Redirect to the list screen
-			$this->setRedirect(
-				$this->getRedirectToListRoute($this->getRedirectToListAppend())
-			);
-
-			return false;
+			$result = $rfcore->saveAnswers('');
+			$this->setMessage(JText::_('COM_REDFORM_SUBMISSION_SAVE_SUCCESS'));
+		}
+		catch (RdfExceptionSubmission $e)
+		{
+			$msg = JText::_('COM_REDFORM_SUBMISSION_SAVE_FAILED');
+			$this->setMessage($msg . ' - ' . $e->getMessage(), 'error');
 		}
 
 		// Redirect the user and adjust session state based on the chosen task.
 		switch ($this->getTask())
 		{
 			case 'apply':
-				// Redirect back to the edit screen.
 				$this->setRedirect(
 					$this->getRedirectToItemRoute($this->getRedirectToItemAppend($app->input->getInt('submitter_id1', 0), 'id'))
 				);
 				break;
 
 			default:
-				// Set redirect
 				$this->setRedirect(
 					$this->getRedirectToListRoute($this->getRedirectToListAppend())
 				);

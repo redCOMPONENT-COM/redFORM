@@ -48,6 +48,36 @@ class RdfRfieldRadio extends RdfRfield
 	}
 
 	/**
+	 * SKU associated to price
+	 *
+	 * @return string
+	 */
+	public function getSku()
+	{
+		$sku = array();
+
+		if (!$this->value)
+		{
+			return '';
+		}
+
+		foreach ($this->getOptions() as $option)
+		{
+			if ($option->value == $this->getValue())
+			{
+				$sku[] = $option->sku ?: parent::getSku() . '_' . $option->id;
+			}
+		}
+
+		if (empty($sku))
+		{
+			return parent::getSku();
+		}
+
+		return implode('-', $sku);
+	}
+
+	/**
 	 * Return input properties array
 	 *
 	 * @param   object  $option  the option
@@ -67,6 +97,11 @@ class RdfRfieldRadio extends RdfRfield
 		if ($option->price)
 		{
 			$properties['price'] = $option->price;
+
+			if (is_numeric($this->getParam('vat')))
+			{
+				$properties['vat'] = $this->getParam('vat');
+			}
 		}
 
 		if ($this->load()->readonly && !$app->isAdmin())

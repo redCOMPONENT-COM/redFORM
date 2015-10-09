@@ -61,8 +61,9 @@ $action = JRoute::_('index.php?option=com_redform&view=payment');
 	<!-- hidden fields -->
 	<input type="hidden" name="option" value="com_redform">
 	<input type="hidden" name="id" value="<?php echo $this->item->id; ?>">
-	<input type="hidden" name="submit_key" value="<?php echo $this->item->submit_key; ?>">
-	<?php echo $this->form->getInput('submit_key'); ?>
+	<input type="hidden" name="pr" value="<?php echo $this->state->get('payment_request'); ?>">
+	<?php echo $this->form->getInput('cart_id'); ?>
+	<?php echo $this->form->getInput('id'); ?>
 	<input type="hidden" name="task" value="">
 	<?php echo JHTML::_('form.token'); ?>
 </form>

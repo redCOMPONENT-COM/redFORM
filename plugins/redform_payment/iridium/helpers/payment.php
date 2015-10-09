@@ -47,15 +47,15 @@ class PaymentIridium extends RdfPaymentHelper
 
 		$document = JFactory::getDocument();
 
-		$details = $this->_getSubmission($request->key);
-		$submit_key = $request->key;
+		$details = $this->getDetails($request->key);
+		$reference = $request->key;
 		$currency = $details->currency;
 
 		$date = JFactory::getDate();
 
 		$req_params = array(
 			'MerchantID' => $this->params->get('merchantid'),
-			'Amount' => round($details->price * 100),
+			'Amount' => round($this->getPrice($details) * 100),
 			'CurrencyCode' => RHelperCurrency::getIsoNumber($currency),
 			'EchoAVSCheckResult'  => 'true',
 			'EchoCV2CheckResult'  => 'true',
@@ -64,7 +64,7 @@ class PaymentIridium extends RdfPaymentHelper
 			'OrderID' => $request->uniqueid,
 			'TransactionType' => "SALE",
 			'TransactionDateTime' => $date->format('Y-m-d H:i:s O'),
-			'CallbackURL' => $this->getUrl('notify', $submit_key),
+			'CallbackURL' => $this->getUrl('notify', $reference),
 			'EmailAddressEditable' => 'true',
 			'PhoneNumberEditable' => 'true',
 			'CV2Mandatory' => 'true',
@@ -158,9 +158,9 @@ class PaymentIridium extends RdfPaymentHelper
 		$db = JFactory::getDBO();
 		$paid = 0;
 
-		$submit_key = JRequest::getvar('key');
-		JRequest::setVar('submit_key', $submit_key);
-		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_IRIDIUM_NOTIFICATION_RECEIVED', $submit_key));
+		$reference = JRequest::getvar('reference');
+		JRequest::setVar('reference', $reference);
+		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_IRIDIUM_NOTIFICATION_RECEIVED', $reference));
 
 		// It was successful, get the details
 		$resp = array();
@@ -238,7 +238,7 @@ class PaymentIridium extends RdfPaymentHelper
 		{
 			if (strcmp($HashDigest, JRequest::getVar('HashDigest')))
 			{
-				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_HASHDIGEST_MISMATCH', $submit_key);
+				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_HASHDIGEST_MISMATCH', $reference);
 				throw new RedformPaymentException($error);
 			}
 
@@ -267,27 +267,27 @@ class PaymentIridium extends RdfPaymentHelper
 				}
 
 				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_KEY_S_REASON_S_MESSAGE_M',
-					$submit_key, $reason, JRequest::getVar('Message')
+					$reference, $reason, JRequest::getVar('Message')
 				);
 				throw new RedformPaymentException($error);
 			}
 
-			$details = $this->_getSubmission($submit_key);
+			$details = $this->getDetails($reference);
 
 			$currency = $details->currency;
 
 			if (strcasecmp($currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'))))
 			{
 				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_CURRENCY_MISMATCH_EXPECTED_S_RECEIVED_S',
-					$submit_key, $currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'))
+					$reference, $currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'))
 				);
 				throw new RedformPaymentException($error);
 			}
 
-			if (round($details->price * 100) != JRequest::getVar('Amount'))
+			if (round($this->getPrice($details) * 100) != JRequest::getVar('Amount'))
 			{
 				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PRICE_MISMATCH_EXPECTED_S_RECEIVED_S',
-					$submit_key, $details->price * 100, JRequest::getVar('Amount')
+					$reference, $this->getPrice($details) * 100, JRequest::getVar('Amount')
 				);
 				throw new RedformPaymentException($error);
 			}
@@ -296,12 +296,12 @@ class PaymentIridium extends RdfPaymentHelper
 				$paid = 1;
 			}
 
-			$this->writeTransaction($submit_key, $resp, 'SUCCESS', 1);
+			$this->writeTransaction($reference, $resp, 'SUCCESS', 1);
 		}
 		catch (RedformPaymentException $e)
 		{
 			RdfHelperLog::simpleLog($e->getMessage());
-			$this->writeTransaction($submit_key, $e->getMessage() . $resp, 'FAIL', 0);
+			$this->writeTransaction($reference, $e->getMessage() . $resp, 'FAIL', 0);
 
 			return false;
 		}

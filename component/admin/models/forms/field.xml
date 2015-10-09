@@ -59,13 +59,17 @@
 				cols="80"
 				rows="5"
 				/>
-		<field
+		<field addfieldpath="/libraries/redmember/form/fields"
 				name="redmember_field"
-				type="redformrmfield"
+				type="rmfieldlist"
 				label="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD"
 				description="COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_DESC"
 				>
             <option value=""></option>
+			<option value="name">COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_Name</option>
+			<option value="username">COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_userName</option>
+			<option value="email">COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_email</option>
+			<option value="organization">COM_REDFORM_FORMS_XML_FIELD_REDMEMBER_FIELD_ORGANIZATION</option>
         </field>
 		<field
 				name="params"
