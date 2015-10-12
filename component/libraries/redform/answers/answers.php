@@ -219,9 +219,11 @@ class RdfAnswers
 	/**
 	 * Return emails associated to submission for notifications
 	 *
+	 * @param   bool  $filterIsNotNotified  filter out emails which have not notifiy set to true
+	 *
 	 * @return array
 	 */
-	public function getSubmitterEmails()
+	public function getSubmitterEmails($filterIsNotNotified = true)
 	{
 		if (!$this->submitter_email)
 		{
@@ -229,7 +231,7 @@ class RdfAnswers
 
 			foreach ($this->fields as $field)
 			{
-				if ($field->fieldtype == 'email' && $field->getParam('notify', 1))
+				if ($field->fieldtype == 'email' && ($field->getParam('notify', 1) || !$filterIsNotNotified))
 				{
 					$this->submitter_email[] = $field->value;
 				}

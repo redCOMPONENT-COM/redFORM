@@ -902,9 +902,20 @@ class RdfCoreFormSubmission
 
 		foreach ((array) $listnames as $field_id => $lists)
 		{
+			// Make sure there is an associated email
+			if (!$lists['email'])
+			{
+				$emails = $answers->getSubmitterEmails();
+				$email = reset($emails);
+			}
+			else
+			{
+				$email = $lists['email'];
+			}
+
 			$subscriber = new stdclass;
-			$subscriber->name  = empty($fullname) ? $lists['email'] : $fullname;
-			$subscriber->email = $lists['email'];
+			$subscriber->name  = empty($fullname) ? $email : $fullname;
+			$subscriber->email = $email;
 
 			$integration = $this->getMailingList($field_id);
 
