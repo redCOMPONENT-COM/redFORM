@@ -53,13 +53,14 @@ class PlgContentRedform extends JPlugin
 	 *
 	 * @return boolean true on success
 	 */
-	public function onContentPrepare($context,&$row, &$params, $page = 0)
+	public function onContentPrepare($context, &$row, &$params, $page = 0)
 	{
 		$this->rfcore = new RdfCore;
 
 		JPlugin::loadLanguage('plg_content_redform', JPATH_ADMINISTRATOR);
 
-		$this->rwfparams = $params;
+		// Make sure params is an array
+		$this->rwfparams = (array) $params;
 
 		$regex = "#{redform}(.*?){/redform}#s";
 
