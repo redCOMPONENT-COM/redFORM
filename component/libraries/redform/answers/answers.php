@@ -254,7 +254,7 @@ class RdfAnswers
 			{
 				if ($field->fieldtype == 'recipients' && count($field->value))
 				{
-					$this->recipients = array_merge($this->recipients, $field->value);
+					$this->recipients = $this->recipients ? array_merge($this->recipients, $field->value) : $field->value;
 				}
 			}
 		}
