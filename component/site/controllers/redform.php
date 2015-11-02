@@ -32,6 +32,7 @@ class RedformControllerRedform extends RedformController
 		$referer = $referer ? base64_decode($referer) : 'index.php';
 
 		$model = new RdfCoreFormSubmission($formId);
+		$form = RdfEntityForm::load($formId);
 
 		try
 		{
@@ -60,9 +61,13 @@ class RedformControllerRedform extends RedformController
 		{
 			$this->setRedirect($url);
 		}
+		elseif ($form->submitnotification)
+		{
+			$this->setRedirect('index.php?option=com_redform&view=notification&submitKey=' . $result->submit_key);
+		}
 		else
 		{
-			echo $this->setRedirect('index.php?option=com_redform&view=notification&submitKey=' . $result->submit_key);
+			$this->setRedirect($referer, JText::_('COM_REDFORM_DEFAULT_SUBMISSION_SUCCESS_MESSAGE'));
 		}
 
 		$this->redirect();
