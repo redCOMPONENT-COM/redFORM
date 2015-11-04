@@ -165,6 +165,11 @@ class RdfCorePaymentCart
 
 		$table->store();
 
+		if ($paid)
+		{
+			$this->setPaymentRequestAsPaid();
+		}
+
 		// Trigger event for custom handling
 		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
@@ -192,5 +197,23 @@ class RdfCorePaymentCart
 		$res = $this->db->loadObjectList();
 
 		return $res;
+	}
+
+	/**
+	 * set associated Payment Request As Paid
+	 *
+	 * @return void
+	 */
+	private function setPaymentRequestAsPaid()
+	{
+		$query = $this->db->getQuery(true);
+
+		$query->update('#__rwf_payment_request AS pr')
+			->join('INNER', '#__rwf_cart_item AS ci on ci.payment_request_id = pr.id')
+			->where('ci.cart_id = ' . $this->id)
+			->set('pr.paid = 1');
+
+		$this->db->setQuery($query);
+		$this->db->execute();
 	}
 }

@@ -65,7 +65,7 @@ class RdfRfieldRadio extends RdfRfield
 		{
 			if ($option->value == $this->getValue())
 			{
-				$sku[] = $option->sku;
+				$sku[] = $option->sku ?: parent::getSku() . '_' . $option->id;
 			}
 		}
 

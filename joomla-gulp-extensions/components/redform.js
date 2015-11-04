@@ -56,7 +56,7 @@ gulp.task('clean:' + baseTask + ':media', function(cb) {
 
 // Clean: plugins
 gulp.task('clean:' + baseTask + ':plugins', function(cb) {
-	del(config.wwwDir + '/plugins/content/com_redform', {force : true}, cb);
+	del(config.wwwDir + '/plugins/content/redform', {force : true}, cb);
 });
 
 // Copy

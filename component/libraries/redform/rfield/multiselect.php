@@ -62,4 +62,14 @@ class RdfRfieldMultiselect extends RdfRfieldSelect
 
 		return $this->value;
 	}
+
+	/**
+	 * Returns field value
+	 *
+	 * @return string
+	 */
+	public function getValue()
+	{
+		return $this->value;
+	}
 }

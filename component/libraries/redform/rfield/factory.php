@@ -70,7 +70,7 @@ abstract class RdfRfieldFactory extends JObject
 	 */
 	public static function getFormField($id)
 	{
-		if (!isset(static::$fields[$id]))
+		if (empty(static::$fields[$id]))
 		{
 			$type = static::getType($id);
 			$field = static::getFieldType($type);
