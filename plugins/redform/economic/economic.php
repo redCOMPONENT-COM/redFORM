@@ -14,6 +14,18 @@ jimport('joomla.plugin.plugin');
 
 RLoader::registerPrefix('Redformeconomic', __DIR__ . '/lib');
 
+$redformLoader = JPATH_LIBRARIES . '/redform/bootstrap.php';
+
+if (!file_exists($redformLoader))
+{
+	throw new Exception(JText::_('COM_REDFORM_LIB_INIT_FAILED'), 404);
+}
+
+include_once $redformLoader;
+
+// Bootstraps redFORM
+RdfBootstrap::bootstrap();
+
 /**
  * Class plgRedformEconomic
  *
@@ -66,6 +78,37 @@ class plgRedformEconomic extends JPlugin
 		{
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 			RdfHelperLog::simpleLog(sprintf('E-conomic error for cart id %s: %s', $cartId, $e->getMessage()));
+		}
+	}
+
+	/**
+	 * Create invoice from payment request
+	 *
+	 * @return void
+	 */
+	public function onAjaxCreateinvoice()
+	{
+		$paymentrequestId = JFactory::getApplication()->input->getInt('id', 0);
+		$force = JFactory::getApplication()->input->getInt('force', 0);
+
+		try
+		{
+			$query = $this->db->getQuery(true);
+
+			$query->select('c.id')
+				->from('#__rwf_cart AS c')
+				->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = c.id')
+				->where('ci.payment_request_id = ' . $paymentrequestId);
+
+			$this->db->setQuery($query);
+			$cartId = $this->db->loadResult();
+
+			return $this->rfCreateInvoice($cartId, $force);
+		}
+		catch (Exception $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			RdfHelperLog::simpleLog(sprintf('E-conomic error for payment request id %s: %s', $paymentrequestId, $e->getMessage()));
 		}
 	}
 
@@ -342,16 +385,23 @@ class plgRedformEconomic extends JPlugin
 	/**
 	 * Create invoice from cart
 	 *
-	 * @param   int  $cartId  cart id
+	 * @param   int   $cartId  cart id
+	 * @param   bool  $force   force creation even if there is already a reference for this cart
 	 *
 	 * @return array|bool
+	 *
+	 * @throws Exception
 	 */
-	private function rfCreateInvoice($cartId)
+	private function rfCreateInvoice($cartId, $force = 0)
 	{
-		$this->cart = $this->getCartDetails($cartId);
+		if (!$this->cart = $this->getCartDetails($cartId))
+		{
+			throw new Exception('Cart details not found');
+		}
+
 		$data = $this->cart;
 
-		if (!$data || $data->invoices)
+		if ($data->invoices && !$force)
 		{
 			// Do not create if already invoiced
 			return false;

@@ -52,7 +52,7 @@ class RdfRfieldDate extends RdfRfield
 		}
 		elseif ($this->load()->default && strtotime($this->load()->default))
 		{
-			$this->value = strftime($format, $this->load()->default);
+			$this->value = strftime($format, strtotime($this->load()->default));
 		}
 
 		if ($this->value && !strtotime($this->value))

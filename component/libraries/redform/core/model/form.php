@@ -82,27 +82,9 @@ class RdfCoreModelForm extends RModel
 	 */
 	public function getFormFields()
 	{
-		$form_id = $this->id;
+		$form = RdfEntityForm::getInstance($this->id);
 
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('ff.id');
-		$query->from('#__rwf_form_field AS ff');
-		$query->where('ff.form_id = ' . $form_id);
-		$query->order('ff.ordering');
-
-		$db->setQuery($query);
-		$ids = $db->loadColumn();
-
-		$fields = array();
-
-		foreach ($ids as $formfieldId)
-		{
-			$fields[] = RdfRfieldFactory::getFormField($formfieldId);
-		}
-
-		return $fields;
+		return $form->getFormFields();
 	}
 
 	/**
