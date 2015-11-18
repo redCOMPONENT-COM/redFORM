@@ -71,14 +71,14 @@
 		};
 
 		form.find('.kmd-zip').autocomplete({
-			serviceUrl: "https://geo.oiorest.dk/postnumre.json",
+			serviceUrl: "https://dawa.aws.dk/postnumre/autocomplete",
 			dataType: 'jsonp',
 			paramName: 'q',
 			minChars: 1,
 			transformResult: function(jsonresp){
 				return {
 					suggestions: $.map(jsonresp, function(dataItem) {
-						return {value: dataItem.nr, data: dataItem};
+						return {value: dataItem.postnummer.nr, data: dataItem.postnummer};
 					})
 				};
 			},
@@ -94,30 +94,23 @@
 
 		form.find('.kmd-street').autocomplete({
 			serviceUrl: function(query) {
-				var url = "https://geo.oiorest.dk/vejnavne.json";
+				var url = "https://dawa.aws.dk/vejstykker/autocomplete";
 
 				var zip = form.find('.kmd-zip');
 
 				if (zip && zip.val()) {
-					var range = zip.val().split("-");
-
-					if (range.length > 1) {
-						url = url + '?frapostnr=' + range[0] + '&tilpostnr=' + range[1];
-					}
-					else {
-						url = url + '?postnr=' + range[0];
-					}
+					url = url + '?postnr=' + zip.val();
 				}
 
 				return url;
 			},
 			dataType: 'jsonp',
-			paramName: 'vejnavn',
+			paramName: 'q',
 			minChars: 2,
 			transformResult: function(jsonresp){
 				return {
 					suggestions: $.map(jsonresp, function(dataItem) {
-						return {value: dataItem.navn, data: dataItem};
+						return {value: dataItem.vejstykke.navn, data: dataItem.vejstykke};
 					})
 				};
 			},
@@ -129,7 +122,7 @@
 
 				var municipalityNumberElement = form.find('.kmd-municipalitynumber');
 				if (municipalityNumberElement) {
-					municipalityNumberElement.val(suggestion.data.kommune.kode);
+					municipalityNumberElement.val(suggestion.data.kommunekode);
 				}
 			}
 		});

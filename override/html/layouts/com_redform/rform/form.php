@@ -30,7 +30,7 @@ $app = JFactory::getApplication();
 $templatePath = JURI::root() . '/templates/' . $app->getTemplate().'/';
 
 $doc = JFactory::getDocument();
-$doc->addScript($templatePath . '/javascript/gasel.js');
+$doc->addScript($templatePath . '/javascript/gasel.js?v=1.4');
 $doc->addScript($templatePath . '/javascript/jquery.autocomplete.js');
 $doc->addStyleSheet($templatePath . '/css/ajaxjquery.css');
 ?>
