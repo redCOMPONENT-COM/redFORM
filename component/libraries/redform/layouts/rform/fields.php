@@ -18,8 +18,14 @@ $fields = $data['fields'];
 $answers = $data['answers'];
 $user = $data['user'];
 $index = $data['index'];
+$form = $data['form'];
 
 $html = '';
+
+// Custom tooltip
+$toolTipArray = array('className' => 'redformtip' . $form->classname);
+JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
+JHtml::_('behavior.keepalive');
 
 if (isset($options['extrafields'][$index]))
 {

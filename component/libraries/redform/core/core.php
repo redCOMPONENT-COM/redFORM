@@ -254,8 +254,6 @@ class RdfCore extends JObject
 	 */
 	public function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
 	{
-		JHtml::_('behavior.keepalive');
-
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
 		$app = JFactory::getApplication();
@@ -305,10 +303,6 @@ class RdfCore extends JObject
 		{
 			$currency = $form->currency;
 		}
-
-		// Custom tooltip
-		$toolTipArray = array('className' => 'redformtip' . $form->classname);
-		JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
 
 		$this->loadCheckScript();
 
@@ -384,7 +378,8 @@ class RdfCore extends JObject
 					'index' => $formIndex,
 					'user' => $user,
 					'options' => $options,
-					'answers' => $indexAnswers
+					'answers' => $indexAnswers,
+					'form' => $form
 				),
 				'',
 				array('component' => 'com_redform')
