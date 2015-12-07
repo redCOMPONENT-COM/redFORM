@@ -231,6 +231,8 @@ JS;
 				]);
 JS;
 		$js = $params->get('ga_mode', 0) ? $js_classic : $js_ua;
+
+		$js = 'window.addEvent("domready", function() {' . $js . '});';
 		JFactory::getDocument()->addScriptDeclaration($js);
 
 		return $js;
