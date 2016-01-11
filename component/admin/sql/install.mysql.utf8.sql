@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_form_field` (
   `id` int(11) NOT NULL auto_increment,
   `form_id` int(11) NOT NULL,
   `field_id` int(11) NOT NULL,
+  `section_id` int(11) NOT NULL,
   `validate` tinyint(1) NOT NULL DEFAULT '0',
   `published` int(11) NOT NULL default '0',
   `unique` tinyint(1) NOT NULL DEFAULT '0',
@@ -85,7 +86,8 @@ CREATE TABLE IF NOT EXISTS `#__rwf_form_field` (
   `ordering` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `form_id` (`form_id`),
-  KEY `field_id` (`field_id`)
+  KEY `field_id` (`field_id`),
+  KEY `section_id` (`section_id`)
 ) COMMENT='form field relation';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
@@ -194,3 +196,14 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
   PRIMARY KEY (`id`),
   KEY `cart_id` (`cart_id`)
 ) COMMENT='logging gateway notifications';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_section` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `ordering` int(11) NOT NULL default '0',
+  `description` text NOT NULL default '',
+  `checked_out` int(11) NOT NULL default '0',
+  `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) COMMENT='form sections';
+

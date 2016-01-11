@@ -130,6 +130,9 @@ $searchToolsOptions = array(
 						</th>
 					<?php endif; ?>
 					<th width="12%" class="nowrap hidden-phone">
+						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_TABLE_HEADER_SECTION', 's.ordering', $listDirn, $listOrder); ?>
+					</th>
+					<th width="12%" class="nowrap hidden-phone">
 						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Required', 'ff.validate', $listDirn, $listOrder); ?>
 					</th>
 					<th width="12%" class="nowrap hidden-phone">
@@ -180,6 +183,10 @@ $searchToolsOptions = array(
 									<input type="text" style="display:none" name="order[]" value="<?php echo $orderkey + 1;?>" class="text-area-order" />
 								</td>
 							<?php endif; ?>
+
+							<td>
+								<?php echo $item->section; ?>
+							</td>
 
 							<td>
 								<?php echo $item->validate ?

@@ -10,27 +10,27 @@
 defined('_JEXEC') or die;
 
 /**
- * Fields Model
+ * Sections Model
  *
  * @package     Redform.Backend
  * @subpackage  Models
- * @since       1.0
+ * @since       3.3.8
  */
-class RedformModelFormfields extends RModelList
+class RedformModelSections extends RModelList
 {
 	/**
 	 * Name of the filter form to load
 	 *
 	 * @var  string
 	 */
-	protected $filterFormName = 'filter_formfields';
+	protected $filterFormName = 'filter_sections';
 
 	/**
 	 * Limitstart field used by the pagination
 	 *
 	 * @var  string
 	 */
-	protected $limitField = 'field_limit';
+	protected $limitField = 'section_limit';
 
 	/**
 	 * Limitstart field used by the pagination
@@ -49,17 +49,8 @@ class RedformModelFormfields extends RModelList
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
-				'id', 'ff.id',
-				'field', 'f.field',
-				'published', 'ff.published',
-				'formname', 'fo.formname',
-				'ordering', 'ff.ordering',
-				'field_header', 'f.field_header',
-				'fieldtype', 'f.fieldtype',
-				'validate', 'ff.validate',
-				'unique', 'ff.unique',
-				's.ordering',
-				);
+				's.id', 's.name', 's.ordering'
+			);
 		}
 
 		parent::__construct($config);
@@ -81,55 +72,21 @@ class RedformModelFormfields extends RModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		parent::populateState($ordering ?: 'ff.ordering', $direction ?: 'asc');
+		parent::populateState($ordering ?: 'obj.ordering', $direction ?: 'asc');
 	}
 
 	/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
-	 *
-	 * @throws Exception
 	 */
 	protected function getListQuery()
 	{
 		$db	= $this->getDbo();
 
 		$query = $db->getQuery(true)
-			->select('ff.id, f.field, f.fieldtype, ff.validate, ff.unique, ff.ordering, ff.field_id, ff.published')
-			->select('fo.formname')
-			->select('s.name AS section')
-			->from('#__rwf_fields as f')
-			->join('INNER', '#__rwf_form_field as ff ON ff.field_id = f.id')
-			->join('INNER', '#__rwf_section as s ON s.id = ff.section_id')
-			->join('INNER', '#__rwf_forms as fo ON fo.id = ff.form_id');
-
-		// Filter by state.
-		$state = $this->getState('filter.field_state');
-
-		if (is_numeric($state))
-		{
-			$query->where('f.published = ' . (int) $state);
-		}
-
-		$formId = $this->getState('filter.form_id');
-
-		if (is_numeric($formId))
-		{
-			$query->where('ff.form_id = ' . (int) $formId);
-		}
-		else
-		{
-			throw new Exception('Form id is required');
-		}
-
-		// Filter type
-		$type = $this->getState('filter.fieldtype');
-
-		if (!empty($type))
-		{
-			$query->where('f.fieldtype = ' . $db->quote($type));
-		}
+			->select('obj.*')
+			->from('#__rwf_section as obj');
 
 		// Filter search
 		$search = $this->getState('filter.search_fields');
@@ -137,14 +94,14 @@ class RedformModelFormfields extends RModelList
 		if (!empty($search))
 		{
 			$search = $db->quote('%' . $db->escape($search, true) . '%');
-			$query->where('(f.field LIKE ' . $search . ')');
+			$query->where('(obj.name LIKE ' . $search . ')');
 		}
 
 		// Ordering
 		$orderList = $this->getState('list.ordering');
 		$directionList = $this->getState('list.direction');
 
-		$order = !empty($orderList) ? $orderList : 'ff.ordering';
+		$order = !empty($orderList) ? $orderList : 'obj.ordering';
 		$direction = !empty($directionList) ? $directionList : 'ASC';
 		$query->order($db->escape($order) . ' ' . $db->escape($direction));
 
