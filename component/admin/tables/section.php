@@ -31,6 +31,8 @@ class RedformTableSection extends RTable
 
 	public $description;
 
+	public $class;
+
 	public $checked_out;
 
 	public $checked_out_time;

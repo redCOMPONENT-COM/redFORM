@@ -18,6 +18,12 @@
 				description="COM_REDFORM_FORMS_XML_SECTION_NAME_DESC"
 		/>
 		<field
+				name="class"
+				type="text"
+				label="COM_REDFORM_FORMS_XML_SECTION_CLASS"
+				description="COM_REDFORM_FORMS_XML_SECTION_CLASS_DESC"
+		/>
+		<field
 				name="description"
 				type="editor"
 				label="COM_REDFORM_FORMS_XML_SECTION_DESCRIPTION"

@@ -31,6 +31,12 @@ class RdfRfield extends JObject
 	protected $id = 0;
 
 	/**
+	 * Form field section id
+	 * @var int
+	 */
+	protected $section_id = 0;
+
+	/**
 	 * Field data from
 	 * @var null
 	 */
@@ -604,7 +610,7 @@ class RdfRfield extends JObject
 			$query = $db->getQuery(true);
 
 			$query->select('f.field, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.default');
-			$query->select('ff.id, ff.field_id, ff.validate, ff.readonly');
+			$query->select('ff.id, ff.field_id, ff.validate, ff.readonly, ff.section_id');
 			$query->select('ff.form_id, ff.published');
 			$query->select('CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header');
 			$query->from('#__rwf_form_field AS ff');

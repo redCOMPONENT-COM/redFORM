@@ -37,8 +37,9 @@ class RdfEntityForm extends RdfEntityBase
 
 			$query->select('ff.id');
 			$query->from('#__rwf_form_field AS ff');
+			$query->innerJoin('#__rwf_section AS s ON s.id = ff.section_id');
 			$query->where('ff.form_id = ' . $this->id);
-			$query->order('ff.ordering');
+			$query->order('s.ordering, ff.ordering');
 
 			$db->setQuery($query);
 			$ids = $db->loadColumn();

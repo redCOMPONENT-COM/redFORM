@@ -200,6 +200,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
 CREATE TABLE IF NOT EXISTS `#__rwf_section` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
+  `class` varchar(100) NOT NULL default '',
   `ordering` int(11) NOT NULL default '0',
   `description` text NOT NULL default '',
   `checked_out` int(11) NOT NULL default '0',

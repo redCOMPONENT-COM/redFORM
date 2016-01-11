@@ -227,7 +227,7 @@ var RedFormValidator = function() {
  	 	 	return regex.test(value);
  	 	});
  	 	setHandler('email', function(value, element) {
-		    value = punycode.toASCII(value);
+			value = punycode.toASCII(value);
  	 	 	var regex = /^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
  	 	 	return regex.test(value);
  	 	});
@@ -253,9 +253,4 @@ var RedFormValidator = function() {
 document.redformvalidator = null;
 jQuery(function() {
 	document.redformvalidator = new RedFormValidator();
-
-	document.redformvalidator.custom.checkboxes = function(){
-		alert(form.name);
-		return true;
-	};
 });

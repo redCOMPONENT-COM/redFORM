@@ -24,6 +24,15 @@ $action = JRoute::_('index.php?option=com_redform&view=section');
 
 	<div class="control-group">
 		<div class="control-label">
+			<?php echo $this->form->getLabel('class'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('class'); ?>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<div class="control-label">
 			<?php echo $this->form->getLabel('description'); ?>
 		</div>
 		<div class="controls">
