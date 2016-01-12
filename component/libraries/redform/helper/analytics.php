@@ -243,6 +243,11 @@ JS;
 	 */
 	public static function recordTrans($cartReference, array $options = array())
 	{
+		if (!$cartReference)
+		{
+			return false;
+		}
+
 		$model = Rmodel::getFrontInstance('payment', array(), 'com_redform');
 		$model->setCartReference($cartReference);
 		$submitters = $model->getSubmitters();
