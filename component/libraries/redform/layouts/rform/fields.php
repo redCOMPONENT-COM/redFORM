@@ -46,10 +46,11 @@ $sections = array_map(
 	},
 	$fields
 );
+$sections = array_unique($sections);
 
 $sortedSections = array();
 
-foreach (array_unique($sections) as $section)
+foreach ($sections as $section)
 {
 	$sortedSections[$section] = new stdClass;
 	$sortedSections[$section]->id = $section;
@@ -58,7 +59,15 @@ foreach (array_unique($sections) as $section)
 
 foreach ($fields as $f)
 {
-	$sortedSections[$f->section_id]->fields[] = $f;
+	if ($f->section_id)
+	{
+		$sortedSections[$f->section_id]->fields[] = $f;
+	}
+	else
+	{
+		// Might happen in integration that the section is not set...
+		$sortedSections[$sections[0]]->fields[] = $f;
+	}
 }
 
 foreach ($sortedSections as $s)
