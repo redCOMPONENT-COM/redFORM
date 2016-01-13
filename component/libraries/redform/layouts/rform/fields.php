@@ -27,8 +27,6 @@ $toolTipArray = array('className' => 'redformtip' . $form->classname);
 JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
 JHtml::_('behavior.keepalive');
 
-//$document = JFactory::getDocument();
-//$document->addScript('/media/system/js/punycode.js');
 RHelperAsset::load('punycode.js');
 
 RHelperAsset::load('formsteps.js', 'com_redform');
@@ -46,7 +44,7 @@ $sections = array_map(
 	},
 	$fields
 );
-$sections = array_unique($sections);
+$sections = array_values(array_unique(array_filter($sections)));
 
 $sortedSections = array();
 

@@ -149,6 +149,16 @@ class RdfRfield extends JObject
 			case 'redmember_field':
 				return $this->load()->redmember_field;
 
+			case 'section_id':
+				$data = $this->load();
+
+				if (property_exists($data, $name))
+				{
+					return $data->{$name};
+				}
+
+				return $this->section_id;
+
 			case 'required':
 			case 'validate':
 				return $this->load()->validate;
