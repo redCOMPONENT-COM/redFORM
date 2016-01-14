@@ -99,10 +99,16 @@ class RdfRfieldFileupload extends RdfRfield
 		}
 
 		$input = JFactory::getApplication()->input;
+		$upload = $input->files->get($this->getPostName($signup), array(), 'array');
 
-		if (!$upload = $input->files->get($this->getPostName($signup), array(), 'array'))
+		if (!$upload || !$upload['size'])
 		{
 			return false;
+		}
+
+		if ($upload['error'])
+		{
+			throw new RuntimeException('File upload error');
 		}
 
 		$maxSizeB = $this->getParam('maxsize', 1000000);
