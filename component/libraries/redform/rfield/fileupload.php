@@ -119,7 +119,7 @@ class RdfRfieldFileupload extends RdfRfield
 		$src_file = $upload['tmp_name'];
 
 		// Make sure we have a unique name for file
-		$dest_filename = uniqid() . '_' . basename($upload['name']);
+		$dest_filename = uniqid() . '_' . basename(JFile::makeSafe($upload['name']));
 
 		/* Start processing uploaded file */
 		if (is_uploaded_file($src_file))
