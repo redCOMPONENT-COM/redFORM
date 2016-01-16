@@ -6,6 +6,7 @@
 		"redform_mailing" : ["acymailing", "ccnewsletter", "jnews", "phplist"],
 		"redform_payment" : [
 			"custom",
+			"cybersource",
 			"epay",
 			"epay2",
 			"ideal",
