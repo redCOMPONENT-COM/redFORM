@@ -49,12 +49,38 @@ class JFormFieldRedformField extends JFormFieldList
 		// Get the forms
 		$items = $this->getFields($state);
 
+		$excludeFields = array();
+		$excludeFormFields = isset($this->element['excludeFormFields']) ?
+			filter_var($this->element['excludeFormFields'], FILTER_VALIDATE_BOOLEAN) :
+			false;
+
+		if ($excludeFormFields)
+		{
+			$formId = $this->form->getField('form_id')->value;
+			$form = RdfEntityForm::load($formId);
+			$fields = $form->getFormFields();
+
+			if ($fields)
+			{
+				$excludeFields = array_map(
+					function($item)
+					{
+						return $item->field_id;
+					},
+					$fields
+				);
+			}
+		}
+
 		// Build the field options
 		if (!empty($items))
 		{
 			foreach ($items as $item)
 			{
-				$options[] = JHtml::_('select.option', $item->value, $item->text);
+				if ($item->value == $this->value || !in_array($item->value, $excludeFields))
+				{
+					$options[] = JHtml::_('select.option', $item->value, $item->text);
+				}
 			}
 		}
 

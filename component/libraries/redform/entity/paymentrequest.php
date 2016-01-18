@@ -23,8 +23,7 @@ class RdfEntityPaymentrequest extends RdfEntityBase
 	 */
 	public function getSubmitter()
 	{
-		$submitter = RdfEntitySubmitter::getInstance($this->submission_id);
-		$submitter->loadItem();
+		$submitter = RdfEntitySubmitter::load($this->submission_id);
 
 		return $submitter;
 	}

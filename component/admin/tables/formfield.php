@@ -81,6 +81,22 @@ class RedformTableFormField extends RTable
 			$this->ordering = $this->getNextOrder('form_id = ' . (int) $this->form_id);
 		}
 
+		if ($this->form_id)
+		{
+			$form = RdfEntityForm::load($this->form_id);
+			$fields = $form->getFormFields();
+
+			foreach ($fields as $field)
+			{
+				if ($field->id != $this->id && $field->field_id == $this->field_id)
+				{
+					$this->setError(JText::_('COM_REDFORM_FORM_FIELD_ALREADY_EXISTS'));
+
+					return false;
+				}
+			}
+		}
+
 		return parent::beforeStore($updateNulls);
 	}
 

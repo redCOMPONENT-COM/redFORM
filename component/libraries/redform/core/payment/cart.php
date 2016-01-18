@@ -29,6 +29,11 @@ class RdfCorePaymentCart
 	protected $db;
 
 	/**
+	 * @var RdfEntityBilling
+	 */
+	protected $billingInfo;
+
+	/**
 	 * Constructor
 	 *
 	 * @param   array  $config  optional config
@@ -36,6 +41,27 @@ class RdfCorePaymentCart
 	public function __construct($config = array())
 	{
 		$this->db = isset($config['db']) ? $config['db'] : JFactory::getDbo();
+	}
+
+	/**
+	 * Get billing info
+	 *
+	 * @return RdfEntityBilling
+	 */
+	public function getBillingInfo()
+	{
+		if (empty($this->billingInfo))
+		{
+			if ($this->id)
+			{
+				$billingInfo = RdfEntityBilling::getInstance();
+				$billingInfo->loadByCartId($this->id);
+
+				$this->billingInfo = $billingInfo;
+			}
+		}
+
+		return $this->billingInfo;
 	}
 
 	/**

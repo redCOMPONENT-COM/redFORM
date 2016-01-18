@@ -234,6 +234,68 @@ JS;
 	}
 
 	/**
+	 * full submission tracking. adds javascript code to document head
+	 *
+	 * @param   String  $submit_key  submit key
+	 * @param   Array   $options     optional parameters for tracking
+	 *
+	 * @return string js code
+	 */
+	public static function recordSubmission($submit_key, array $options = array())
+	{
+		$submitters = RdfEntitySubmitter::loadBySubmitKey($submit_key);
+
+		if (!$submitters)
+		{
+			return false;
+		}
+
+		$first = reset($submitters);
+
+		$price = array_reduce(
+			$submitters,
+			function($carry, $item)
+			{
+				$carry += $item->price;
+
+				return $carry;
+			}
+		);
+
+		// Add transaction
+		$trans = new stdclass;
+		$trans->id = $submit_key;
+		$trans->affiliation = isset($options['affiliate']) ? $options['affiliate'] : $first->getForm()->formname;
+		$trans->revenue = $price;
+		$trans->currency = $first->currency;
+
+		$js = self::addTrans($trans);
+
+		$productname = isset($options['productname']) ? $options['productname'] : null;
+		$sku         = isset($options['sku']) ? $options['sku'] : null;
+		$category    = isset($options['category']) ? $options['category'] : null;
+
+		// Add submitters as items
+		foreach ($submitters as $s)
+		{
+			$item = new stdclass;
+			$item->id = $s->id;
+			$item->productname = $productname ? $productname : 'submitter' . $s->id;
+			$item->sku  = $sku ? $sku : 'submitter' . $s->id;
+			$item->category  = $category ? $category : '';
+			$item->price = $s->price;
+			$item->currency = $s->currency;
+
+			$js .= self::addItem($item);
+		}
+
+		// Push transaction to server
+		$js .= self::trackTrans();
+
+		return $js;
+	}
+
+	/**
 	 * full transaction tracking. adds javascript code to document head
 	 *
 	 * @param   String  $cartReference  cart reference
@@ -243,6 +305,11 @@ JS;
 	 */
 	public static function recordTrans($cartReference, array $options = array())
 	{
+		if (!$cartReference)
+		{
+			return false;
+		}
+
 		$model = Rmodel::getFrontInstance('payment', array(), 'com_redform');
 		$model->setCartReference($cartReference);
 		$submitters = $model->getSubmitters();

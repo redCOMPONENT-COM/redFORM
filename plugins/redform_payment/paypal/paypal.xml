@@ -25,8 +25,8 @@
 					description="PAYPAL_ACCOUNT_DESC"/>
 				<field name="paypal_sandbox" type="radio" default="1" label="PAYPAL_USE_SANDBOX"
 					description="PAYPAL_USE_SANDBOX_DESC">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
+					<option value="0">JNo</option>
+					<option value="1">JYes</option>
 				</field>
 				<field name="allowed_currencies" type="textarea"
 					label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
