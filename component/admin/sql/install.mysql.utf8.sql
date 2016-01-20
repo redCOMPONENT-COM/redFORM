@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_billinginfo` (
   `phone` varchar(150) NOT NULL DEFAULT '',
   `email` varchar(150) NOT NULL DEFAULT '',
   `country` varchar(3) NOT NULL DEFAULT '',
+  `params` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `cart_id` (`cart_id`)
