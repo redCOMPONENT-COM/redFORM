@@ -992,6 +992,7 @@ class RdfCore extends JObject
 	 */
 	protected function loadCheckScript()
 	{
+		RHtmlMedia::loadFrameworkJs();
 		RHelperAsset::load('redform-validate.js', 'com_redform');
 		JText::script('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED');
 		JText::script('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED');
