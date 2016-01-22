@@ -5,9 +5,9 @@
     <author>redWEB Aps</author>
     <authorEmail>email@redweb.dk</authorEmail>
     <authorUrl>www.redcomponent.com</authorUrl>
-    <copyright>(C) 2008 - 2013 redCOMPONENT.com</copyright>
+    <copyright>(C) 2008 - 2016 redCOMPONENT.com</copyright>
     <license>GNU/GPL</license>
-    <version>3.3.1</version>
+    <version>3.3.8</version>
     <tag>##VERSION##</tag>
     <description>PLG_REDFORM_WORLDPAY_XML_DESC</description>
 
