@@ -120,7 +120,7 @@ class RdfAnalyticsMeasurementprotocolClient implements RdfAnalyticsMeasurementpr
 
 		if (!$ch_result = curl_exec($ch))
 		{
-			RedformHelperLog::simpleLog('Gua mp error: ' . curl_error($ch));
+			RdfHelperLog::simpleLog('Gua mp error: ' . curl_error($ch));
 
 			return false;
 		}
