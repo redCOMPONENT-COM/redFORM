@@ -29,9 +29,9 @@ class RedFormModelPayment extends JModelLegacy
 	protected $paymentsDetails = array();
 
 	/**
-	 * Cart data from db
+	 * Cart entity
 	 *
-	 * @var object
+	 * @var RdfEntityCart
 	 */
 	protected $cart;
 
@@ -199,23 +199,7 @@ class RedFormModelPayment extends JModelLegacy
 	{
 		$cart = $this->getCart();
 
-		if (empty($this->form))
-		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-
-			$query->select('f.*')
-				->from('#__rwf_submitters AS s')
-				->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id')
-				->join('INNER', '#__rwf_payment_request AS pr ON pr.submission_id = s.id')
-				->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
-				->where('ci.cart_id = ' . $db->quote($cart->id));
-
-			$db->setQuery($query);
-			$this->form = $db->loadObject();
-		}
-
-		return $this->form;
+		return $cart->getForm();
 	}
 
 	/**
@@ -259,58 +243,7 @@ class RedFormModelPayment extends JModelLegacy
 
 		if (!isset($this->paymentsDetails[$key]))
 		{
-			JPluginHelper::importPlugin('redform_integration');
-			$dispatcher = JDispatcher::getInstance();
-
-			$submitters = $this->getSubmitters();
-
-			if (!count($submitters))
-			{
-				return false;
-			}
-
-			$asub = current($submitters);
-			$form = $this->getForm();
-
-			if (!$cart->currency)
-			{
-				throw new Exception('Currency must be set in submission for payment - Please contact system administrator', 500);
-			}
-
-			$obj = new stdclass;
-			$obj->integration = $asub->integration;
-			$obj->form = $form->formname;
-			$obj->form_id = $form->id;
-			$obj->key = $cart->reference;
-			$obj->currency = $cart->currency;
-			$obj->submit_key = $asub->submit_key;
-
-			// More fields with integration
-			$paymentDetailFields = null;
-			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($asub->integration, $asub->submit_key, &$paymentDetailFields));
-
-			if (!$paymentDetailFields)
-			{
-				$paymentDetailFields = new stdClass;
-
-				if (JFactory::getApplication()->input->get('paymenttitle'))
-				{
-					$paymentDetailFields->title = JFactory::getApplication()->input->get('paymenttitle');
-				}
-				else
-				{
-					$paymentDetailFields->title = JText::_('COM_REDFORM_Form_submission') . ': ' . $form->formname;
-				}
-
-				$paymentDetailFields->adminDesc = $paymentDetailFields->title;
-				$paymentDetailFields->uniqueid = $key;
-			}
-
-			// Map
-			$obj->title = $paymentDetailFields->title;
-			$obj->adminDesc = $paymentDetailFields->adminDesc;
-			$obj->uniqueid = $paymentDetailFields->uniqueid;
-			$this->paymentsDetails[$key] = $obj;
+			$this->paymentsDetails[$key] = new RdfPaymentInfo($cart);
 		}
 
 		return $this->paymentsDetails[$key];
@@ -489,20 +422,14 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * get cart data from db
 	 *
-	 * @return mixed|object
+	 * @return RdfEntityCart
 	 */
 	public function getCart()
 	{
 		if (!$this->cart)
 		{
-			$query = $this->_db->getQuery(true);
-
-			$query->select('*')
-				->from('#__rwf_cart')
-				->where('reference = ' . $this->_db->quote($this->reference));
-
-			$this->_db->setQuery($query);
-			$this->cart = $this->_db->loadObject();
+			$this->cart = RdfEntityCart::getInstance();
+			$this->cart->loadByReference($this->reference);
 		}
 
 		return $this->cart;

@@ -22,7 +22,7 @@ JLoader::registerPrefix('R', JPATH_LIBRARIES . '/redcore');
  * @subpackage  payment
  * @since       2.5
  */
-abstract class RdfPaymentPlugin extends JPlugin
+abstract class RdfPaymentPlugin extends RPlugin
 {
 	/**
 	 * Name of the plugin gateway
@@ -63,6 +63,7 @@ abstract class RdfPaymentPlugin extends JPlugin
 
 		$helperClass = 'Payment' . ucfirst($this->gateway);
 		$helper = new $helperClass($this->params);
+		$helper->plugin = $this;
 
 		if (!$details || $helper->currencyIsAllowed($details->currency))
 		{

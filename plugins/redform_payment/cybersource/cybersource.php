@@ -21,4 +21,29 @@ RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 class PlgRedform_PaymentCybersource extends RdfPaymentPlugin
 {
 	protected $gateway = 'cybersource';
+
+	/**
+	 * Render a tmpl file
+	 *
+	 * @param   string  $path  path
+	 * @param   array   $data  data
+	 *
+	 * @return string
+	 */
+	public function render($path, $data)
+	{
+		$path = $this->getLayoutPath($path);
+
+		$layoutOutput = '';
+
+		if (!empty($path))
+		{
+			ob_start();
+			include $path;
+			$layoutOutput = ob_get_contents();
+			ob_end_clean();
+		}
+
+		return $layoutOutput;
+	}
 }

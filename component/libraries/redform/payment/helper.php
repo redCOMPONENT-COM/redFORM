@@ -69,6 +69,11 @@ abstract class RdfPaymentHelper extends JObject
 	protected $input;
 
 	/**
+	 * @var RdfPaymentPlugin
+	 */
+	public $plugin;
+
+	/**
 	 * Class contructor
 	 *
 	 * @param   array  $params  plugin params
