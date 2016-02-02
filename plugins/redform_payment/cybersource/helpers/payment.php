@@ -60,12 +60,13 @@ class PaymentCybersource extends RdfPaymentHelper
 		}
 
 		$lang = JFactory::getLanguage();
+		$price = $this->getPrice($details);
 
 		$post_variables = Array(
 			"access_key" => $this->params->get('access_key'),
 			"profile_id" => $this->params->get('profile_id'),
 			"transaction_uuid" => uniqid(),
-			"amount" => $this->getPrice($details),
+			"amount" => $price,
 			"currency" => $details->currency,
 			"locale" => $lang->getTag(),
 			"override_backoffice_post_url" => $this->getUrl('notify', $reference),
@@ -85,21 +86,7 @@ class PaymentCybersource extends RdfPaymentHelper
 		$post_variables["signed_field_names"] = implode(",", $fields);
 		$post_variables["signature"] = $this->sign($post_variables);
 
-		?>
-		<form method="post" action="<?php echo $target; ?>">
-			<fieldset>
-				<legend><?php echo JText::_('Cybersource Payment Gateway'); ?></legend>
-				<p><?php echo $request->title; ?></p>
-
-				<p><?php echo $this->getPrice($details) . ' ' . $details->currency; ?></p>
-			</fieldset>
-			<?php foreach ($post_variables as $key => $value): ?>
-				<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>"/>
-			<?php endforeach; ?>
-
-			<input type="submit" name="submit" value="<?php echo JText::_('PLG_REDFORM_PAYMENT_CYBERSOURCE_FORM_SUBMIT'); ?>"/>
-		</form>
-		<?php
+		echo $this->plugin->render('process', compact('target', 'request', 'price', 'details', 'post_variables'));
 
 		return true;
 	}
