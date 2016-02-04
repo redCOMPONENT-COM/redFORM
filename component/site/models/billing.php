@@ -84,18 +84,9 @@ class RedformModelBilling extends RModelAdmin
 		}
 		else
 		{
-			JPluginHelper::importPlugin('redform');
-			$dispatcher = JDispatcher::getInstance();
-
-			$user = JFactory::getUser();
-			$prefilled = false;
-			$dispatcher->trigger('onRedformPrefillBilling', array($this->reference, &$table, &$prefilled));
-
-			if (!$prefilled && $user->id)
-			{
-				$table->fullname = $user->name;
-				$table->email = $user->email;
-			}
+			$cart = RdfEntityCart::getInstance();
+			$cart->loadByReference($this->reference);
+			$cart->prefillBilling($table);
 		}
 
 		// Convert to the JObject before adding other data.

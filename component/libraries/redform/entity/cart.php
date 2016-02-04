@@ -89,4 +89,40 @@ class RdfEntityCart extends RdfEntityBase
 
 		return $this->submitters;
 	}
+
+	/**
+	 * Prefill billing table
+	 *
+	 * @param   RedformTableBilling  &$table  table
+	 *
+	 * @return void
+	 */
+	public function prefillBilling(RedformTableBilling &$table)
+	{
+		$submitters = $this->getSubmitters();
+		$asubmitter = reset($submitters);
+
+		$submissionModel = new RdfCoreModelSubmission;
+		$submission = $submissionModel->getSubmission(array($asubmitter->id));
+
+		$fields = $submission->getFirstSubmission()->getFields();
+
+		$data = array();
+
+		foreach ($fields as $field)
+		{
+			if ($mapping = $field->getParam('billing_field'))
+			{
+				$data[$mapping] = $field->getValue();
+			}
+		}
+
+		$table->bind($data);
+
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+
+		$prefilled = false;
+		$dispatcher->trigger('onRedformPrefillBilling', array($this->reference, &$table, &$prefilled));
+	}
 }

@@ -35,7 +35,7 @@ class RdfCoreModelSubmission extends RModel
 	{
 		parent::__construct($config);
 
-		if ($config && isset($config['submitKey']))
+		if (!empty($config['submitKey']))
 		{
 			$this->setSubmitKey($config['submitKey']);
 		}
@@ -69,6 +69,11 @@ class RdfCoreModelSubmission extends RModel
 			$submission = new RdfCoreFormSubmission;
 			$submission->setSubmitKey($this->submitKey);
 			$this->submission = $submission;
+		}
+
+		if (is_array($sids))
+		{
+			$this->setSubmitKey($this->getSidSubmitKey(reset($sids)));
 		}
 
 		if (!$sids)
