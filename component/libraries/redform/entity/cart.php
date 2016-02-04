@@ -95,10 +95,12 @@ class RdfEntityCart extends RdfEntityBase
 	 *
 	 * @param   RedformTableBilling  &$table  table
 	 *
-	 * @return void
+	 * @return true if some fields were filled
 	 */
 	public function prefillBilling(RedformTableBilling &$table)
 	{
+		$table->cart_id = $this->id;
+
 		$submitters = $this->getSubmitters();
 		$asubmitter = reset($submitters);
 
@@ -109,11 +111,14 @@ class RdfEntityCart extends RdfEntityBase
 
 		$data = array();
 
+		$prefilled = false;
+
 		foreach ($fields as $field)
 		{
 			if ($mapping = $field->getParam('billing_field'))
 			{
 				$data[$mapping] = $field->getValue();
+				$prefilled = !empty($data[$mapping]);
 			}
 		}
 
@@ -121,8 +126,8 @@ class RdfEntityCart extends RdfEntityBase
 
 		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
-
-		$prefilled = false;
 		$dispatcher->trigger('onRedformPrefillBilling', array($this->reference, &$table, &$prefilled));
+
+		return $prefilled;
 	}
 }

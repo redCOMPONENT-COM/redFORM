@@ -38,6 +38,30 @@ class RedformModelBilling extends RModelAdmin
 	}
 
 	/**
+	 * Auto fill billing form
+	 *
+	 * @return void
+	 */
+	public function createAutoBilling()
+	{
+		$cart = RdfEntityCart::getInstance();
+		$cart->loadByReference($this->reference);
+
+		$table = $this->getTable();
+		$table->load(array('cart_id' => $cart->id));
+
+		if ($table->id)
+		{
+			// There is already a billing
+			return;
+		}
+
+		$cart->prefillBilling($table);
+
+		$table->store();
+	}
+
+	/**
 	 * Setter
 	 *
 	 * @param   string  $reference  submit key
