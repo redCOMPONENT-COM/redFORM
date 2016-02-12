@@ -103,6 +103,22 @@ class RedformControllerRedform extends RedformController
 	}
 
 	/**
+	 * Prefill a form and redirect
+	 *
+	 * @return void
+	 */
+	public function prefill()
+	{
+		$fields = $this->input->get('fields', null, 'array');
+		$formId = $this->input->getInt('formId');
+		$return = $this->input->getString('return');
+
+		JFactory::getApplication()->setUserState('formdata' . $formId, array((object) $fields));
+		$this->setRedirect($return);
+		$this->redirect();
+	}
+
+	/**
 	 * Confirm submission by email
 	 *
 	 * @return void
