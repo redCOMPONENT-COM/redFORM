@@ -37,7 +37,7 @@ class RedformFormFieldBillingfield extends JFormFieldList
 		// Get an instance of billing form
 		RForm::addFormPath(JPATH_SITE . '/components/com_redform/models/forms');
 		$model = RModel::getFrontInstance('billing', array('ignore_request' => true), 'com_redform');
-		$form = $model->getForm();
+		$form = $model->getForm(array(), false);
 
 		$options = array();
 
