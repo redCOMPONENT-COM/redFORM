@@ -101,7 +101,7 @@ class RedformModelFormfields extends RModelList
 			->select('s.name AS section')
 			->from('#__rwf_fields as f')
 			->join('INNER', '#__rwf_form_field as ff ON ff.field_id = f.id')
-			->join('INNER', '#__rwf_section as s ON s.id = ff.section_id')
+			->join('LEFT', '#__rwf_section as s ON s.id = ff.section_id')
 			->join('INNER', '#__rwf_forms as fo ON fo.id = ff.form_id');
 
 		// Filter by state.
