@@ -264,6 +264,7 @@ class RdfCore extends JObject
 
 		$this->setReference($reference);
 		$submit_key = $this->submitKey;
+		$answers = false;
 
 		// Was this form already submitted before (and there was an error for example, or editing)
 		if ($this->submitKey)
@@ -286,10 +287,6 @@ class RdfCore extends JObject
 			// Unset
 			$app->setUserState('formdata' . $form->id, null);
 		}
-		else
-		{
-			$answers = false;
-		}
 
 		// Css
 		$document->addStyleSheet(JURI::base() . 'media/com_redform/css/tooltip.css');
@@ -309,12 +306,6 @@ class RdfCore extends JObject
 		if ($multi > 1)
 		{
 			$this->loadMultipleFormScript();
-		}
-
-		// Redmember integration: pull extra fields
-		if ($user->get('id') && REDFORM_REDMEMBER_INTEGRATION)
-		{
-			$this->getRedmemberfields($user);
 		}
 
 		$html = '<div class="redform-form ' . $form->classname . '">';
@@ -371,10 +362,12 @@ class RdfCore extends JObject
 				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
 			}
 
+			$indexedFields = $this->prepareFieldsForIndex($fields, $formIndex, $indexAnswers);
+
 			$html .= RdfLayoutHelper::render(
 				'rform.fields',
 				array(
-					'fields' => $fields,
+					'fields' => $indexedFields,
 					'index' => $formIndex,
 					'user' => $user,
 					'options' => $options,
@@ -1143,5 +1136,57 @@ class RdfCore extends JObject
 		}
 
 		return $res;
+	}
+
+	/**
+	 * Prepare fields with proper index and answers
+	 *
+	 * @param   RdfRfield[]  $fields        fields
+	 * @param   int          $index         form index
+	 * @param   RdfAnswers   $indexAnswers  answers for index
+	 *
+	 * @return RdfRfield[]
+	 */
+	protected function prepareFieldsForIndex($fields, $index, $indexAnswers)
+	{
+		$app = JFactory::getApplication();
+		$user = JFactory::getUser();
+
+		// Redmember integration: pull extra fields
+		if ($user->get('id') && REDFORM_REDMEMBER_INTEGRATION)
+		{
+			$this->getRedmemberfields($user);
+		}
+
+		$indexed = array();
+
+		foreach ($fields as $fieldOrg)
+		{
+			if (!($app->isAdmin() || $fieldOrg->published))
+			{
+				// Only display unpublished fields in backend form
+				continue;
+			}
+
+			$field = clone $fieldOrg;
+
+			$field->setFormIndex($index);
+			$field->setUser($user);
+
+			// Set value if editing
+			if ($indexAnswers && $field->id)
+			{
+				$value = $indexAnswers->getFieldAnswer($field->id);
+				$field->setValue($value, true);
+			}
+			else
+			{
+				$field->lookupDefaultValue();
+			}
+
+			$indexed[] = $field;
+		}
+
+		return $indexed;
 	}
 }

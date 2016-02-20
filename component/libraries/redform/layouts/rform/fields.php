@@ -37,125 +37,56 @@ if (isset($options['extrafields'][$index]))
 	$fields = array_merge($options['extrafields'][$index], $fields);
 }
 
-$sections = array_map(
-	function ($item)
-	{
-		return $item->section_id;
-	},
-	$fields
-);
-$sections = array_values(array_unique(array_filter($sections)));
-
-$sortedSections = array();
-
-foreach ($sections as $section)
-{
-	$sortedSections[$section] = new stdClass;
-	$sortedSections[$section]->id = $section;
-	$sortedSections[$section]->fields = array();
-}
-
-foreach ($fields as $f)
-{
-	if ($f->section_id)
-	{
-		$sortedSections[$f->section_id]->fields[] = $f;
-	}
-	else
-	{
-		// Might happen in integration that the section is not set...
-		$sortedSections[$sections[0]]->fields[] = $f;
-	}
-}
-
-foreach ($sortedSections as $s)
+foreach (RdfHelper::sortFieldBySection($fields) as $s)
 {
 	$section = RdfEntitySection::load($s->id);
-	$html .= '<fieldset class="redform-section' . ($section->class ? ' ' . $section->class : '') . '">';
+	$section = '<fieldset class="redform-section' . ($section->class ? ' ' . $section->class : '') . '">';
 
 	foreach ($s->fields as $field)
 	{
-		if (!($app->isAdmin() || $field->published))
+		if ($field->isHidden())
 		{
-			// Only display unpublished fields in backend form
+			$section .= $field->getInput();
 			continue;
 		}
 
-		$field->setFormIndex($index);
-		$field->setUser($user);
+		$class = "fieldline type-" . $field->fieldtype . $field->getParam('class', '');
+		$fieldDiv = '<div class="' . $class . '">';
 
-		// Set value if editing
-		if ($answers && $field->id)
+		if ($field->displayLabel())
 		{
-			$value = $answers->getFieldAnswer($field->id);
-			$field->setValue($value, true);
-		}
-		else
-		{
-			$field->lookupDefaultValue();
+			$fieldDiv .= '<div class="label">' . $field->getLabel() . '</div>';
 		}
 
-		if (!$field->isHidden())
-		{
-			$html .= '<div class="fieldline type-' . $field->fieldtype . $field->getParam('class', '') . '">';
-		}
+		$fieldDiv .= '<div class="field">' . $field->getInput() . '</div>';
 
-		if (!$field->isHidden())
+		if ($field->isRequired() || strlen($field->tooltip))
 		{
-			$element = "<div class=\"field\">";
-		}
-		else
-		{
-			$element = '';
-		}
+			$fieldDiv .= '<div class="fieldinfo">';
 
-		if (!$field->isHidden() && $field->displayLabel())
-		{
-			$label = '<div class="label">' . $field->getLabel() . '</div>';
-		}
-		else
-		{
-			$label = '';
-		}
-
-		$element .= $field->getInput();
-
-		if ($field->isHidden())
-		{
-			$html .= $element;
-		}
-		else
-		{
-			$html .= $label . $element;
-
-			// Fieldtype div
-			$html .= '</div>';
-
-			if ($field->isRequired() || strlen($field->tooltip))
+			if ($field->isRequired())
 			{
-				$html .= '<div class="fieldinfo">';
-
-				if ($field->isRequired())
-				{
-					$img = JHTML::image(JURI::root() . 'media/com_redform/images/warning.png', JText::_('COM_REDFORM_Required'));
-					$html .= ' <span class="editlinktip hasTipField" title="' . JText::_('COM_REDFORM_Required') . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
-				}
-
-				if (strlen($field->tooltip) > 0)
-				{
-					$img = JHTML::image(JURI::root() . 'media/com_redform/images/info.png', JText::_('COM_REDFORM_ToolTip'));
-					$html .= ' <span class="editlinktip hasTipField" title="' . htmlspecialchars($field->field) . '::' . htmlspecialchars($field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
-				}
-
-				$html .= '</div>';
+				$img = JHTML::image(JURI::root() . 'media/com_redform/images/warning.png', JText::_('COM_REDFORM_Required'));
+				$fieldDiv .= ' <span class="editlinktip hasTipField" title="' . JText::_('COM_REDFORM_Required') . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 			}
 
-			// Fieldline_ div
-			$html .= '</div>';
+			if (strlen($field->tooltip) > 0)
+			{
+				$img = JHTML::image(JURI::root() . 'media/com_redform/images/info.png', JText::_('COM_REDFORM_ToolTip'));
+				$fieldDiv .= ' <span class="editlinktip hasTipField" title="' . htmlspecialchars($field->field) . '::' . htmlspecialchars($field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
+			}
+
+			$fieldDiv .= '</div>';
 		}
+
+		// Fieldline_ div
+		$fieldDiv .= '</div>';
+		$section .= $fieldDiv;
 	}
 
-	$html .= '</fieldset>';
+	$section .= '</fieldset>';
+
+	$html .= $section;
 }
 
 echo $html;

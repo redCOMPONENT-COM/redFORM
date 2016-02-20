@@ -28,27 +28,6 @@ if (isset($options['extrafields'][$index]))
 
 foreach ($fields as $field)
 {
-	if (!($app->isAdmin() || $field->published))
-	{
-		// Only display unpublished fields in backend form
-		continue;
-	}
-
-	// Init rfield
-	$field->setFormIndex($index);
-	$field->setUser($user);
-
-	// Set value if editing
-	if ($answers)
-	{
-		$value = $answers->getFieldAnswer($field->id);
-		$field->setValue($value, true);
-	}
-	else
-	{
-		$field->lookupDefaultValue();
-	}
-
 	if ($field->isHidden())
 	{
 		$html .= $field->getInput();

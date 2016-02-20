@@ -183,4 +183,47 @@ class RdfHelper
 			)
 		);
 	}
+
+	/**
+	 * Return fields by sections
+	 *
+	 * @param   RdfRfield[]  $fields  fields
+	 *
+	 * @return array
+	 */
+	public static function sortFieldBySection($fields)
+	{
+		$sections = array_map(
+			function ($item)
+			{
+				return $item->section_id;
+			},
+			$fields
+		);
+		$sections = array_values(array_unique(array_filter($sections)));
+
+		$sortedSections = array();
+
+		foreach ($sections as $section)
+		{
+			$sortedSections[$section] = new stdClass;
+			$sortedSections[$section]->id = $section;
+			$sortedSections[$section]->fields = array();
+		}
+
+		foreach ($fields as $f)
+		{
+			if ($f->section_id)
+			{
+				$sortedSections[$f->section_id]->fields[] = $f;
+			}
+			else
+			{
+				// Might happen in integration that the section is not set...
+				$sortedSections[$sections[0]]->fields[] = $f;
+			}
+		}
+
+		return $sortedSections;
+	}
 }
