@@ -485,6 +485,15 @@ class RdfRfield extends JObject
 			$properties['class'] = $class;
 		}
 
+		if ($showon = $this->getParam('showon'))
+		{
+			$showon   = explode(':', $showon, 2);
+			$properties['class'] .= ' showon_' . implode(' showon_', explode(',', $showon[1]));
+			$id = $this->getName($showon[0]);
+			$properties['rel'] = ' rel="showon_' . $id . '"';
+			$options['showonEnabled'] = true;
+		}
+
 		return $properties;
 	}
 

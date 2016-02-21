@@ -2,12 +2,6 @@
 <form>
 	<fields name="params">
 		<fieldset name="extra" label="extra">
-			<field name="class" type="text" id="class" label="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS"
-				   description="COM_REDFORM_FIELD_TEXT_PARAMS_CLASS_DESC"/>
-			<field name="billing_field" type="redform.billingfield" default="" label="COM_REDFORM_FIELD_PARAMS_BILLINGFIELD"
-				   description="COM_REDFORM_FIELD_PARAMS_BILLINGFIELD_DESC">
-				<option value="">JSelect</option>
-			</field>
 			<field name="vat" type="text" default="" label="COM_REDFORM_FIELD_PARAMS_VAT_RATE"
 				   description="COM_REDFORM_FIELD_PARAMS_VAT_RATE_DESC"/>
 		</fieldset>

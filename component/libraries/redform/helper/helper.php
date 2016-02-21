@@ -226,4 +226,25 @@ class RdfHelper
 
 		return $sortedSections;
 	}
+
+	/**
+	 * Look for a field by field id in array of form fields
+	 *
+	 * @param   RdfRfield[]  $fields   fields
+	 * @param   int          $fieldId  field id
+	 *
+	 * @return RdfRfield
+	 */
+	public static function findFormFieldByFieldId($fields, $fieldId)
+	{
+		foreach ($fields as $field)
+		{
+			if ($field->field_id == $fieldId)
+			{
+				return $field;
+			}
+		}
+
+		return false;
+	}
 }
