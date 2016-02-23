@@ -35,7 +35,7 @@ class ExtractVersionTask extends Task
 	{
 		if (!file_exists($this->path))
 		{
-			throw new Exception('Path doesnt exists');
+			throw new Exception('Path doesnt exists:' . $this->path);
 		}
 
 		$files = scandir($this->path);

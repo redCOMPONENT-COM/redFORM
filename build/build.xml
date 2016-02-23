@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="redFORM" default="site" basedir=".">
-	<property file="build/build.properties" />
+	<property file="build.properties" />
 
 	<!-- Default properties, set only if not already assigned in the build.properties file -->
 	<property name="comp.name" value="redform" />
-	<property name="dirs.root" value="." />
+	<property name="dirs.root" value=".." />
 	<property name="dirs.tmp" value="tmp" />
 	<property name="dirs.release" value="release" />
 	<property name="www.template.site" value="protostar" />
 	<property name="www.template.admin" value="hathor" />
 	<property name="version" value="dev" />
 
-	<xmlproperty file="redCORE/extensions/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
+	<xmlproperty file="../redCORE/extensions/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
 	<property
 			name="redCOREVersion"
 			value="${redCOREDetails.version}"
 			override="true"/>
 
-	<taskdef name="gitversion" classname="build.phingext.GitVersionTask" />
-	<taskdef name="gitdate" classname="build.phingext.GitDateTask" />
-	<taskdef name="extractversion" classname="build.ExtractVersionTask" />
+	<taskdef name="gitversion" classname="phingext.GitVersionTask" />
+	<taskdef name="gitdate" classname="phingext.GitDateTask" />
+	<taskdef name="extractversion" classname="phingext.ExtractVersionTask" />
 
 	<!--
 	====================================================================================================

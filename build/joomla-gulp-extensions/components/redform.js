@@ -16,7 +16,7 @@ var uglify      = require('gulp-uglify');
 var zip         = require('gulp-zip');
 
 var baseTask  = 'components.redform';
-var extPath   = './component';
+var extPath   = '../component';
 var libPath = extPath + '/libraries/redform';
 var mediaPath = extPath + '/media/com_redform';
 var pluginsPath = extPath + '/plugins';

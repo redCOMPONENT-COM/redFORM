@@ -13,7 +13,7 @@ var uglify      = require('gulp-uglify');
 
 module.exports.addPlugin = function (group, name) {
 	var baseTask  = 'plugins.' + group + '.' + name;
-	var extPath   = './plugins/' + group + '/' + name;
+	var extPath   = '../plugins/' + group + '/' + name;
 
 	// Clean
 	gulp.task('clean:' + baseTask, function(cb) {
