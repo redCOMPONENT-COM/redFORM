@@ -10,6 +10,11 @@ if (argv.wwwDir)
 	config.wwwDir = argv.wwwDir;
 }
 
+if (argv.testRelease)
+{
+	config.release_dir = config.testrelease_dir;
+}
+
 var requireDir 	= require('require-dir');
 var zip        	= require('gulp-zip');
 var xml2js     	= require('xml2js');
@@ -50,7 +55,7 @@ gulp.task('release',
 	}
 );
 
-gulp.task('release:redform', function (cb) {
+gulp.task('release:redform', ['release:prepare-redform', 'release:prepare-redcore'], function (cb) {
 	fs.readFile( '../component/redform.xml', function(err, data) {
 		parser.parseString(data, function (err, result) {
 			var version = result.extension.version[0];
@@ -58,25 +63,29 @@ gulp.task('release:redform', function (cb) {
 
 			// We will output where release package is going so it is easier to find
 			console.log('Creating new release file in: ' + path.join(config.release_dir, fileName));
-			return gulp.src([
-					'../component/**/*',
-					'../redCORE/component/**/*',
-					'../redCORE/component/**/.gitkeep',
-					'../redCORE/libraries/**/*',
-					'../redCORE/libraries/**/.gitkeep',
-					'../redCORE/media/**/*',
-					'../redCORE/media/**/.gitkeep',
-					'../redCORE/modules/**/*',
-					'../redCORE/modules/**/.gitkeep',
-					'../redCORE/plugins/**/*',
-					'../redCORE/plugins/**/.gitkeep',
-					'../redCORE/*(install.php|LICENSE|redcore.xml)'
-				])
+			return gulp.src('./tmp/**/*')
 				.pipe(zip(fileName))
 				.pipe(gulp.dest(config.release_dir))
-				.on('end', cb);
+				.on('end', function(){
+					del(['tmp']);
+					cb();
+				});
 		});
 	});
+});
+
+gulp.task('release:prepare-redform', function () {
+	return gulp.src([
+			'../component/**/*'
+		])
+		.pipe(gulp.dest('tmp'));
+});
+
+gulp.task('release:prepare-redcore', function () {
+	return gulp.src([
+			'../redCORE/extensions/**/*'
+		])
+		.pipe(gulp.dest('tmp/redCORE'));
 });
 
 gulp.task('release:plugins',

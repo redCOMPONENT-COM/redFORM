@@ -1,7 +1,9 @@
 {
 	"wwwDir"           : "/opt/www/public_html/jl3x",
+	"release_dir"   : "../tests/releases/",
 	"browserConfig" : {
 		"proxy": "localhost/jl3x",
 		"browser" : "default"
-	}
+	},
+	"testrelease_dir": "/opt/www/public_html/releases"
 }

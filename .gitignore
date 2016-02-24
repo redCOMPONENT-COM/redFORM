@@ -1,6 +1,3 @@
-0release
-build/build.properties
-
 # OSX
 .DS_Store
 ._*
@@ -31,25 +28,45 @@ Desktop.ini
 *~
 
 # Phing build script
-build.properties
+build/build.properties
+phing-latest.phar
+.dist
+release
+
 
 # Build config
 gulp-config.json
 node_modules
+releases
 
 # Packages #
 *.zip
 *.tar.*
 
-# Composer
-/vendor
-vendor
+# phpunit
+tests/unit/phpunit.xml
+
+# composer
+composer.phar
+tests/vendor/*
+
+# Robo
+robo.phar
 
 # Test related files
-/tests/system/servers/configdef.php
-/tests/system/webdriver/tests/logs/
-/tests/acceptance.suite.yml
+tests/acceptance.suite.yml
+tests/functional.suite.yml
+tests/unit.suite.yml
+tests/api.suite.yml
+tests/*/*Tester.php
+tests/joomla-cms3*
+tests/_output
+selenium-server-standalone.jar
 codecept.phar
+selenium.log
+selenium-errors.log
+tests/_support/_generated/*
+tests/checkers/phpcs/*
 
 # Never ignore
 !.gitignore

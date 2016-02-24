@@ -1,5 +1,8 @@
 {
-	"components" : ["redform"],
+	"cli" 		 : ["redcore"],
+	"components" : ["redcore", "redform"],
+	"libraries"  : ["redcore"],
+	"media"      : ["redcore"],
 	"plugins" : {
 		"redform" : ["economic", "helpscout", "redmemberbillinginfo", "salesforce"],
 		"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
@@ -18,5 +21,6 @@
 			"worldpay",
 			"worldpay2"
 		]
-	}
+	},
+	"webservices" : ["redcore"]
 }

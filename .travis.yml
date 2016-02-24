@@ -1,11 +1,45 @@
 language: php
+env: TRAVIS_PUBLIC_REPOSITORY=true
 php:
-- 5.4
+- 5.5
+- 5.6
+- 7.0
+addons:
+  firefox: "44.0.2"
+matrix:
+  allow_failures:
+    - php: 5.6
+    - php: 7.0
 before_script:
-- composer install --dev --prefer-dist
+- sudo apt-get update -qq
+- sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 php5-curl php5-mysql php5-intl php5-gd php5-sqlite > /dev/null
+- sudo /etc/init.d/apache2 stop
+- sudo sed -i -e "s,APACHE_RUN_USER=www-data,APACHE_RUN_USER=$USER,g" /etc/apache2/envvars
+- sudo sed -i -e "s,APACHE_RUN_GROUP=www-data,APACHE_RUN_GROUP=$USER,g" /etc/apache2/envvars
+- sudo chown -R $USER /var/lock/apache2
+- sudo chown -R $USER:$USER /var/www
+- ln -s $TRAVIS_BUILD_DIR/tests/ /var/www/tests
+- sudo sed -i -e "s,AllowOverride[ ]None,AllowOverride All,g" /etc/apache2/sites-available/default
+- sudo /etc/init.d/apache2 start
+- "export DISPLAY=:99.0"
+- "sh -e /etc/init.d/xvfb start"
+- sleep 3 # give xvfb some time to start
+- sudo apt-get install fluxbox -y --force-yes
+- fluxbox &
+- sleep 3 # give fluxbox some time to start
+- cd build
+- npm install gulp -g # install globally so that it's available to robo
+- npm install
+- mv gulp-config.json.dist gulp-config.json
+- gulp release --skip-version --testRelease
+- cd ../tests
+
 script:
-- php .travis/phppec.php component/ plugins/ # Parse error checker
-- php .travis/phpcs.php # Code Sniffer Checker
-#- php .travis/phpmd.php # Mess detector Checker
-notifications:
-  slack: redweb:7hTS3MPEBxt3lkVopUcVPJKa
+- composer install --prefer-dist
+- vendor/bin/robo check:for-missed-debug-code
+- vendor/bin/robo check:for-parse-errors
+- vendor/bin/robo check:codestyle
+- mv acceptance.suite.dist.yml acceptance.suite.yml
+- mv api.suite.dist.yml api.suite.yml
+- vendor/bin/robo run:tests
+- vendor/bin/robo run:unit-tests
