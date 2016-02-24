@@ -1,9 +1,9 @@
 {
-	"wwwDir"           : "/opt/www/public_html/jl3x",
-	"release_dir"   : "../tests/releases/",
+	"wwwDir"           : "/home/travis/build/redCOMPONENT-COM/redFORM/tests/joomla-cms3",
+	"release_dir"   : "../releases/",
 	"browserConfig" : {
-		"proxy": "localhost/jl3x",
+		"proxy": "localhost",
 		"browser" : "default"
 	},
-	"testrelease_dir": "/opt/www/public_html/releases"
+	"testrelease_dir": "../tests/releases/"
 }
