@@ -35,6 +35,7 @@
     "joomla-gulp": "^1.1.1",
     "merge-stream": "^1.0.0",
     "require-dir": "^0.3.0",
-    "run-sequence": "^1.1.5"
+    "run-sequence": "^1.1.5",
+    "yargs": "^4.1.0"
   }
 }
