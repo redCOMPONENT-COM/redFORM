@@ -9,4 +9,7 @@
     <testsuite name="library">
         <directory>unit/suite/library</directory>
     </testsuite>
+    <testsuite name="plugins">
+        <directory>unit/suite/plugins</directory>
+    </testsuite>
 </phpunit>

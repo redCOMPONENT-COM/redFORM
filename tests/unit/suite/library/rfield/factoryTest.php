@@ -17,7 +17,7 @@ JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
  * @subpackage  Library
  * @since       2.5
  */
-class RfieldFactoryTest extends JoomlaTestCase
+class RfieldFactoryTest extends TestCase
 {
 	private $fixedTypes = array(
 		'checkbox',
