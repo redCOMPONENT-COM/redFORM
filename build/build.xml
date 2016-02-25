@@ -11,7 +11,7 @@
 	<property name="www.template.admin" value="hathor" />
 	<property name="version" value="dev" />
 
-	<xmlproperty file="../redCORE/extensions/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
+	<xmlproperty file="redCORE/extensions/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
 	<property
 			name="redCOREVersion"
 			value="${redCOREDetails.version}"
@@ -65,11 +65,11 @@
 	====================================================================================================
 	-->
 	<target name="copyredcore">
-		<phing phingfile="${dirs.root}/redCORE/build/redcore_copy_mandatory.xml"
+		<phing phingfile="${dirs.root}/build/redCORE/build/redcore_copy_mandatory.xml"
 		       target="copyframework"
 		       haltonfailure="true">
 			<property name="redcoretargetdir" value="${dirs.tmp}/component/redCORE" />
-			<property name="redcorepath" value="${dirs.root}/redCORE" />
+			<property name="redcorepath" value="${dirs.root}/build/redCORE" />
 		</phing>
 	</target>
 
