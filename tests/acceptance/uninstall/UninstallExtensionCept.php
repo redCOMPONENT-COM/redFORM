@@ -11,7 +11,7 @@ $I->wantTo('Uninstall redFORM Extension');
 $I->doAdministratorLogin();
 $I->amOnPage('/administrator/index.php?option=com_installer&view=manage');
 $I->waitForText('Extensions: Manage', 30, ['css' => 'H1']);
-$I->fillField('#filter_search', 'redFORM - component');
+$I->fillField('#filter_search', 'redFORM - Component');
 $I->click(['xpath' => "//button[@type='submit' and @data-original-title='Search']"]);
 $I->waitForElement(['id' => 'manageList']);
 $I->click(['xpath' => "//input[@id='cb0']"]);
