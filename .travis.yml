@@ -40,7 +40,6 @@ script:
 - vendor/bin/robo check:for-parse-errors
 - vendor/bin/robo check:codestyle
 - mv acceptance.suite.dist.yml acceptance.suite.yml
-- mv api.suite.dist.yml api.suite.yml
 - vendor/bin/robo run:tests
 - vendor/bin/robo run:unit-tests
 notifications:
