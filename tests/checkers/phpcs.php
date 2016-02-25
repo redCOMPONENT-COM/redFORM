@@ -25,39 +25,21 @@ fwrite(STDOUT, "\033[32;1mInitializing PHP_CodeSniffer checks.\033[0m\n");
 
 // Ignored files
 $ignored = array(
-	REPO_BASE . '/extensions/components/com_redcore/admin/views/*/tmpl/*',
-	REPO_BASE . '/extensions/components/com_redcore/admin/layouts/*',
-	REPO_BASE . '/extensions/components/com_redcore/site/views/*/tmpl/*',
-	REPO_BASE . '/extensions/components/com_redcore/site/layouts/*',
-	REPO_BASE . '/extensions/libraries/redcore/api/hal/document/resource.php',
-	REPO_BASE . '/extensions/libraries/redcore/api/hal/document/link.php',
-	REPO_BASE . '/extensions/libraries/redcore/api/oauth2/*',
-	REPO_BASE . '/extensions/libraries/redcore/layouts/*',
-	REPO_BASE . '/extensions/libraries/redcore/model/admin.php',
-	REPO_BASE . '/extensions/libraries/redcore/oauth/*',
-	REPO_BASE . '/extensions/libraries/redcore/joomla/*',
-	REPO_BASE . '/extensions/libraries/redcore/controller/admin.php',
-	REPO_BASE . '/extensions/libraries/redcore/form/form.php',
-	REPO_BASE . '/extensions/libraries/redcore/database/sqlparser/lexersplitter.php',
-	REPO_BASE . '/extensions/libraries/redcore/database/sqlparser/positioncalculator.php',
-	REPO_BASE . '/extensions/libraries/redcore/database/sqlparser/sqlcreator.php',
-	REPO_BASE . '/extensions/libraries/redcore/database/sqlparser/sqllexer.php',
-	REPO_BASE . '/extensions/libraries/redcore/database/sqlparser/sqlparser.php',
-	REPO_BASE . '/extensions/libraries/redcore/database/sqlparser/sqlparserutils.php',
-	REPO_BASE . '/extensions/libraries/redcore/database/driver.php',
-	REPO_BASE . '/extensions/libraries/redcore/table/*',
-	REPO_BASE . '/extensions/libraries/redcore/media/redcore/lib/*',
-	REPO_BASE . '/extensions/modules/site/mod_redcore_language_switcher/tmpl/*',
-	REPO_BASE . '/extensions/plugins/redpayment/paypal/form/*',
+	REPO_BASE . '/component/admin/views/*/tmpl/*',
+	REPO_BASE . '/component/admin/falang',
+	REPO_BASE . '/component/admin/layouts/*',
+	REPO_BASE . '/component/admin/tables/*',
+	REPO_BASE . '/component/site/views/*/tmpl/*',
+	REPO_BASE . '/component/site/layouts/*',
+	REPO_BASE . '/component/media',
+	REPO_BASE . '/component/libraries/redform/layouts/*'
 );
 
 // Build the options for the sniffer
 $options = array(
 	'files'        => array(
-		REPO_BASE . '/extensions/plugins',
-		REPO_BASE . '/extensions/components',
-		REPO_BASE . '/extensions/modules',
-		REPO_BASE . '/extensions/libraries',
+		REPO_BASE . '/component',
+//	REPO_BASE . '/plugins'
 	),
 	'standard'     => array( REPO_BASE . '/tests/checkers/phpcs/Joomla'),
 	'ignored'      => $ignored,

@@ -38,11 +38,13 @@ abstract class RdfRfieldFactory extends JObject
 			$types[] = substr($f, 0, -4);
 		}
 
-		$types = array_filter($types, function($item) {
-			return !in_array($item, array(
-				'baseparams'
-			));
-		});
+		$types = array_filter(
+			$types,
+			function($item)
+			{
+				return !in_array($item, array('baseparams'));
+			}
+		);
 
 		return $types;
 	}
