@@ -20,34 +20,29 @@ define('REPO_BASE', dirname(__DIR__));
 // Welcome message
 fwrite(STDOUT, "\033[32;1mInitializing PHP Debug Missed Debug Code Checker.\033[0m\n");
 
-// Check for arguments
-if (2 > count($argv))
-{
-    fwrite(STDOUT, "\033[32;1mPlease add path to check with PHP Debug Missed Code Checker.\033[0m\n");
-    exit(1);
-}
+$folders = array(
+    '../component/',
+    '../plugins/'
+);
 
-for($i=1;$i < count($argv);$i++)
+$exclude = array(
+    'PagSeguroHelper.class.php'
+);
+
+$exclude = '--exclude=' . (count($exclude) > 1 ? '{' . implode(",", $exclude) . '}' : implode(",", $exclude));
+
+foreach ($folders as $folder)
 {
-    $folderToCheck = REPO_BASE . '/' .$argv[$i];
+    $folderToCheck = REPO_BASE . '/' . $folder;
 
     if (!file_exists($folderToCheck))
     {
-        fwrite(STDOUT, "\033[32;1mFolder: " . $argv[$i] . " does not exist\033[0m\n");
+        fwrite(STDOUT, "\033[32;1mFolder: " . $folder . " does not exist\033[0m\n");
         continue;
     }
 
-    // In case of media we dont want to check media library folder
-    if ($argv[$i] == '../extensions/libraries/')
-    {
-        $folderToCheck .= ' | grep -v media/redcore/lib';
-    }
-
-    fwrite(STDOUT, "\033[32;1m- Checking missed debug code at: " . $argv[$i] . "\033[0m\n");
-
-    $vardumpCheck = shell_exec('grep -r --include "*.php" var_dump ' . $folderToCheck);
-    $consolelogCheck = shell_exec('grep -r --include "*.js" console.log ' . $folderToCheck);
-
+    $vardumpCheck = shell_exec('grep -r --include "*.php"' . $exclude . ' var_dump ' . $folderToCheck);
+    $consolelogCheck = shell_exec('grep -r --include "*.js"' . $exclude . ' console.log ' . $folderToCheck);
 
     if ($vardumpCheck)
     {

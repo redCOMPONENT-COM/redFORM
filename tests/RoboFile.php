@@ -363,7 +363,7 @@ class RoboFile extends \Robo\Tasks
 	 */
 	public function checkForMissedDebugCode()
 	{
-		$this->_exec('php checkers/misseddebugcodechecker.php ../component/ ../plugins/');
+		$this->_exec('php checkers/misseddebugcodechecker.php');
 	}
 
 	/**
