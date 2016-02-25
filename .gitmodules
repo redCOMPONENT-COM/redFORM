@@ -1,5 +1,5 @@
 [submodule "redCORE"]
-	path = redCORE
+	path = build/redCORE
 	url = https://github.com/redCOMPONENT-COM/redCORE.git
 [submodule ".travis/coding-standards/Joomla"]
 	path = .travis/coding-standards/Joomla

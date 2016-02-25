@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 
-var config = require('../../gulp-config.json');
+var config = require('../../config.js');
 
 // Dependencies
 var browserSync = require('browser-sync');
@@ -14,6 +14,7 @@ var symlink     = require('gulp-symlink');
 var sass        = require('gulp-ruby-sass');
 var uglify      = require('gulp-uglify');
 var zip         = require('gulp-zip');
+var util        = require("gulp-util");
 
 var baseTask  = 'components.redform';
 var extPath   = '../component';
@@ -35,28 +36,28 @@ gulp.task('clean:' + baseTask,
 });
 
 // Clean: frontend
-gulp.task('clean:' + baseTask + ':frontend', function(cb) {
-	del(config.wwwDir + '/components/com_redform', {force : true}, cb);
+gulp.task('clean:' + baseTask + ':frontend', function() {
+	del(config.wwwDir + '/components/com_redform', {force : true});
 });
 
 // Clean: backend
-gulp.task('clean:' + baseTask + ':backend', function(cb) {
-	del(config.wwwDir + '/administrator/components/com_redform', {force : true}, cb);
+gulp.task('clean:' + baseTask + ':backend', function() {
+	del(config.wwwDir + '/administrator/components/com_redform', {force : true});
 });
 
 // Clean: lib
-gulp.task('clean:' + baseTask + ':libraries', function(cb) {
-	del(config.wwwDir + '/libraries/redform', {force : true}, cb);
+gulp.task('clean:' + baseTask + ':libraries', function() {
+	del(config.wwwDir + '/libraries/redform', {force : true});
 });
 
 // Clean: media
-gulp.task('clean:' + baseTask + ':media', function(cb) {
-	del(config.wwwDir + '/media/com_redform', {force : true}, cb);
+gulp.task('clean:' + baseTask + ':media', function() {
+	del(config.wwwDir + '/media/com_redform', {force : true});
 });
 
 // Clean: plugins
-gulp.task('clean:' + baseTask + ':plugins', function(cb) {
-	del(config.wwwDir + '/plugins/content/redform', {force : true}, cb);
+gulp.task('clean:' + baseTask + ':plugins', function() {
+	del(config.wwwDir + '/plugins/content/redform', {force : true});
 });
 
 // Copy

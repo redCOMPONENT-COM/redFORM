@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 
 // Load config
-var config = require('../../gulp-config.json');
+var config = require('../../config.js');
 
 // Dependencies
 var browserSync = require('browser-sync');
@@ -13,7 +13,6 @@ var uglify      = require('gulp-uglify');
 var fs          = require('fs');
 var xml2js      = require('xml2js');
 var parser      = new xml2js.Parser();
-var argv       	= require('yargs').argv;
 var path       	= require('path');
 
 module.exports.addPlugin = function (group, name) {
@@ -21,8 +20,8 @@ module.exports.addPlugin = function (group, name) {
 	var extPath   = '../plugins/' + group + '/' + name;
 
 	// Clean
-	gulp.task('clean:' + baseTask, function(cb) {
-		del(config.wwwDir + '/plugins/' + group + '/' + name, {force : true}, cb);
+	gulp.task('clean:' + baseTask, function() {
+		del(config.wwwDir + '/plugins/' + group + '/' + name, {force : true});
 	});
 
 	// Copy
@@ -49,7 +48,7 @@ module.exports.addPlugin = function (group, name) {
 		fs.readFile(extPath + '/' + name + '.xml', function(err, data) {
 			parser.parseString(data, function (err, result)	 {
 				var version = result.extension.version[0];
-				var fileName = argv.skipVersion ? 'plg_' + group + '_' + name + '.zip' : 'plg_' + group + '_' + name + '-v' + version + '.zip';
+				var fileName = config.skipVersion ? 'plg_' + group + '_' + name + '.zip' : 'plg_' + group + '_' + name + '-v' + version + '.zip';
 
 				// We will output where release package is going so it is easier to find
 				var releasePath = path.join(config.release_dir, 'plugins');

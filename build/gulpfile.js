@@ -1,19 +1,7 @@
 var gulp = require('gulp');
 
+var config      = require('./config.js');
 var extension   = require('./package.json');
-var config      = require('./gulp-config.json');
-
-var argv        = require('yargs').argv;
-
-if (argv.wwwDir)
-{
-	config.wwwDir = argv.wwwDir;
-}
-
-if (argv.testRelease)
-{
-	config.release_dir = config.testrelease_dir;
-}
 
 var requireDir 	= require('require-dir');
 var zip        	= require('gulp-zip');
@@ -26,10 +14,8 @@ var del         = require('del');
 var parser      = new xml2js.Parser();
 
 var jgulp   = requireDir('./node_modules/joomla-gulp', {recurse: true});
-var redcore = requireDir('./node_modules/gulp-redcore', {recurse: true});
+var redcore = requireDir('./redCORE/build/gulp-redcore', {recurse: true});
 var dir = requireDir('./joomla-gulp-extensions', {recurse: true});
-
-var skipVersion = argv.skipVersion;
 
 // Override of the release script
 gulp.task('release',
@@ -41,7 +27,7 @@ gulp.task('release',
 		fs.readFile( '../component/redform.xml', function(err, data) {
 			parser.parseString(data, function (err, result) {
 				var version = result.extension.version[0];
-				var fileName = skipVersion ? extension.name + '_ALL_UNZIP_FIRST.zip' : extension.name + '-v' + version + '_ALL_UNZIP_FIRST.zip';
+				var fileName = config.skipVersion ? extension.name + '_ALL_UNZIP_FIRST.zip' : extension.name + '-v' + version + '_ALL_UNZIP_FIRST.zip';
 
 				// We will output where release package is going so it is easier to find
 				console.log('Creating all in one release file in: ' + path.join(config.release_dir, fileName));
@@ -59,7 +45,7 @@ gulp.task('release:redform', ['release:prepare-redform', 'release:prepare-redcor
 	fs.readFile( '../component/redform.xml', function(err, data) {
 		parser.parseString(data, function (err, result) {
 			var version = result.extension.version[0];
-			var fileName = skipVersion ? extension.name + '.zip' : extension.name + '-v' + version + '.zip';
+			var fileName = config.skipVersion ? extension.name + '.zip' : extension.name + '-v' + version + '.zip';
 
 			// We will output where release package is going so it is easier to find
 			console.log('Creating new release file in: ' + path.join(config.release_dir, fileName));
@@ -83,7 +69,7 @@ gulp.task('release:prepare-redform', function () {
 
 gulp.task('release:prepare-redcore', function () {
 	return gulp.src([
-			'../redCORE/extensions/**/*'
+			'./redCORE/extensions/**/*'
 		])
 		.pipe(gulp.dest('tmp/redCORE'));
 });
@@ -109,7 +95,7 @@ gulp.task('release:languages', function() {
 			parser.parseString(data, function (err, result) {
 				var lang = path.basename(directory);
 				var version = result.extension.version[0];
-				var fileName = skipVersion ? 'redform_' + lang + '.zip' : 'redform_' + lang + '-v' + version + '.zip';
+				var fileName = config.skipVersion ? 'redform_' + lang + '.zip' : 'redform_' + lang + '-v' + version + '.zip';
 
 				return gulp.src([
 						directory + '/**'

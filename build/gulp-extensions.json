@@ -1,6 +1,6 @@
 {
 	"cli" 		 : ["redcore"],
-	"components" : ["redcore", "redform"],
+	"components" : ["redform", "redcore"],
 	"libraries"  : ["redcore"],
 	"media"      : ["redcore"],
 	"plugins" : {
