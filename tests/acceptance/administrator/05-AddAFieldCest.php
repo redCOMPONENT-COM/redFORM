@@ -10,7 +10,7 @@ class AddAFieldCest
 {
 	public function addTextField(\Step\Acceptance\Adminredform $I)
 	{
-		$I->wantToTest('Add a field in redFORM');
+		$I->wantToTest('Add a text field in redFORM');
 		$I->doAdministratorLogin();
 		$I->createField(
 			array(
@@ -22,5 +22,21 @@ class AddAFieldCest
 		);
 		$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
 		$I->seeElement('//*[@id="fieldList"]//td//*[contains(., "Text 1")]');
+	}
+
+	public function addEmailField(\Step\Acceptance\Adminredform $I)
+	{
+		$I->wantToTest('Add an email field in redFORM');
+		$I->doAdministratorLogin();
+		$I->createField(
+			array(
+				'field' => 'Email 1',
+				'field_header' => 'Email 1',
+				'fieldtype' => 'E-mail',
+				'tooltip' => 'a test email field'
+			)
+		);
+		$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
+		$I->seeElement('//*[@id="fieldList"]//td//*[contains(., "Email 1")]');
 	}
 }

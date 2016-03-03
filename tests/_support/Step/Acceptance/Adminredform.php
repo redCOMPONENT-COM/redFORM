@@ -77,5 +77,12 @@ class Adminredform extends \AcceptanceTester
 	public function createForm($params)
 	{
 		$I = $this;
+		$I->amOnPage('administrator/index.php?option=com_redform&view=forms');
+		$I->waitForText('Forms', 30, ['css' => 'H1']);
+		$I->click(['xpath' => '//button[contains(@onclick, "form.add")]']);
+		$I->waitForText('Form name', 30, ['css' => 'label']);
+		$I->fillField(['id' => 'jform_formname'], $params['formname']);
+
+		$I->click(['xpath' => '//button[contains(@onclick, "form.save")]']);
 	}
 }
