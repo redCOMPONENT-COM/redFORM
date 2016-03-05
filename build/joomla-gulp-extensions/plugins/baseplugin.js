@@ -21,7 +21,7 @@ module.exports.addPlugin = function (group, name) {
 
 	// Clean
 	gulp.task('clean:' + baseTask, function() {
-		del(config.wwwDir + '/plugins/' + group + '/' + name, {force : true});
+		del.sync(config.wwwDir + '/plugins/' + group + '/' + name, {force : true});
 	});
 
 	// Copy
@@ -40,7 +40,7 @@ module.exports.addPlugin = function (group, name) {
 
 	// Watch: plugin
 	gulp.task('watch:' + baseTask + ':plugin', function() {
-		gulp.watch(extPath + '/**', ['copy:' + baseTask]);
+		return gulp.watch(extPath + '/**', ['copy:' + baseTask]);
 	});
 
 	// Release: plugin

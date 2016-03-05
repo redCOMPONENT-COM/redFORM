@@ -20,6 +20,28 @@ CREATE TABLE IF NOT EXISTS `#__rwf_billinginfo` (
   KEY `cart_id` (`cart_id`)
 ) COMMENT='billing info for cart';
 
+CREATE TABLE IF NOT EXISTS `#__rwf_cart` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reference` VARCHAR (255) NOT NULL,
+  `created` datetime NOT NULL,
+  `price` DECIMAL(10, 2) NOT NULL default '0.0',
+  `vat` DECIMAL(10, 2) NOT NULL default '0.0',
+  `currency` varchar(3) NOT NULL default '',
+  `paid` tinyint(2) NOT NULL default '0',
+  `note` text NOT NULL default '',
+  PRIMARY KEY (`id`),
+  KEY `reference` (`reference`)
+) COMMENT='payment cart';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_cart_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cart_id` int(11) NOT NULL,
+  `payment_request_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cart_id` (`cart_id`),
+  KEY `payment_request_id` (`payment_request_id`)
+) COMMENT='payment cart item';
+
 CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `id` int(11) NOT NULL auto_increment,
   `field` varchar(255) NOT NULL,
@@ -33,6 +55,22 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `params` text NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
 ) COMMENT='Fields for redFORM';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_form_field` (
+  `id` int(11) NOT NULL auto_increment,
+  `form_id` int(11) NOT NULL,
+  `field_id` int(11) NOT NULL,
+  `section_id` int(11) NOT NULL,
+  `validate` tinyint(1) NOT NULL DEFAULT '0',
+  `published` int(11) NOT NULL default '0',
+  `unique` tinyint(1) NOT NULL DEFAULT '0',
+  `readonly` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `form_id` (`form_id`),
+  KEY `field_id` (`field_id`),
+  KEY `section_id` (`section_id`)
+) COMMENT='form field relation';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `id` int(11) NOT NULL auto_increment,
@@ -75,69 +113,31 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   PRIMARY KEY  (`id`)
 ) COMMENT='Forms for redFORM';
 
-CREATE TABLE IF NOT EXISTS `#__rwf_form_field` (
-  `id` int(11) NOT NULL auto_increment,
-  `form_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  `section_id` int(11) NOT NULL,
-  `validate` tinyint(1) NOT NULL DEFAULT '0',
-  `published` int(11) NOT NULL default '0',
-  `unique` tinyint(1) NOT NULL DEFAULT '0',
-  `readonly` tinyint(1) NOT NULL DEFAULT '0',
-  `ordering` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `form_id` (`form_id`),
-  KEY `field_id` (`field_id`),
-  KEY `section_id` (`section_id`)
-) COMMENT='form field relation';
-
-CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
-  `id` int(11) NOT NULL auto_increment,
-  `form_id` int(11) NOT NULL,
-  `submission_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `submission_ip` VARCHAR(50) NOT NULL default '',
-  `confirmed_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `confirmed_ip` VARCHAR(50) NOT NULL default '',
-  `confirmed_type` VARCHAR(50)  NOT NULL default 'email',
-  `integration` VARCHAR(30) NOT NULL default '',
-  `answer_id` int(11) NOT NULL default '0',
-  `submitternewsletter` int(11) NOT NULL default '0',
-  `rawformdata` text NOT NULL default '',
-  `submit_key` varchar(45) NOT NULL,
-  `price` DECIMAL(10, 2) NOT NULL default '0.0',
-  `vat` DECIMAL(10, 2) NOT NULL default '0.0',
-  `currency` varchar(3) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `form_id` (`form_id`),
-  KEY `answer_id` (`answer_id`)
-) COMMENT='Submitters for redFORM';
-
-CREATE TABLE IF NOT EXISTS `#__rwf_submission_price_item` (
+CREATE TABLE IF NOT EXISTS `#__rwf_invoice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `submission_id` int(11) NOT NULL,
-  `sku` varchar(255) NOT NULL default '',
-  `label` varchar(255) NOT NULL default '',
-  `price` DECIMAL(10, 2) NOT NULL default '0.0',
-  `vat` DECIMAL(10, 2) NOT NULL default '0.0',
+  `cart_id` int(11) NOT NULL default '0',
+  `date` datetime DEFAULT NULL,
+  `reference` varchar(100) NOT NULL default '',
+  `name` varchar(100) NOT NULL default '',
+  `note` varchar(250) NOT NULL default '',
+  `booked` tinyint(2) NOT NULL default '0',
+  `turned` int(11) NOT NULL default '0',
+  `params` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  KEY `submission_id` (`submission_id`),
-  KEY `sku` (`sku`)
-) COMMENT='submissions price items';
+  KEY `cart_id` (`cart_id`)
+) COMMENT='accounting invoices references per cart id';
 
-CREATE TABLE IF NOT EXISTS `#__rwf_values` (
-  `id` int(11) NOT NULL auto_increment,
-  `value` varchar(255) NOT NULL,
-  `label` varchar(255) NOT NULL,
-  `published` int(11) NOT NULL default '0',
-  `checked_out` int(11) NOT NULL default '0',
-  `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `field_id` int(11) NOT NULL,
-  `ordering` int(11) NOT NULL default '0',
-  `price` DECIMAL(10, 2) NOT NULL default '0.0',
-  `sku` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `field_id` (`field_id`)
-) COMMENT='Stores fields options';
+CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cart_id` int(11) NOT NULL,
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `gateway` varchar(100) NOT NULL,
+  `status` varchar(100) NOT NULL default '',
+  `data` text NOT NULL default '',
+  `paid` tinyint(2) NOT NULL default '0',
+  PRIMARY KEY (`id`),
+  KEY `cart_id` (`cart_id`)
+) COMMENT='logging gateway notifications';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -164,40 +164,6 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment_request_item` (
   KEY `sku` (`sku`)
 ) COMMENT='payment request items';
 
-CREATE TABLE IF NOT EXISTS `#__rwf_cart` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `reference` VARCHAR (255) NOT NULL,
-  `created` datetime NOT NULL,
-  `price` DECIMAL(10, 2) NOT NULL default '0.0',
-  `vat` DECIMAL(10, 2) NOT NULL default '0.0',
-  `currency` varchar(3) NOT NULL default '',
-  `paid` tinyint(2) NOT NULL default '0',
-  `note` text NOT NULL default '',
-  PRIMARY KEY (`id`),
-  KEY `reference` (`reference`)
-) COMMENT='payment cart';
-
-CREATE TABLE IF NOT EXISTS `#__rwf_cart_item` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cart_id` int(11) NOT NULL,
-  `payment_request_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `cart_id` (`cart_id`),
-  KEY `payment_request_id` (`payment_request_id`)
-) COMMENT='payment cart item';
-
-CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cart_id` int(11) NOT NULL,
-  `date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `gateway` varchar(100) NOT NULL,
-  `status` varchar(100) NOT NULL default '',
-  `data` text NOT NULL default '',
-  `paid` tinyint(2) NOT NULL default '0',
-  PRIMARY KEY (`id`),
-  KEY `cart_id` (`cart_id`)
-) COMMENT='logging gateway notifications';
-
 CREATE TABLE IF NOT EXISTS `#__rwf_section` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -208,4 +174,52 @@ CREATE TABLE IF NOT EXISTS `#__rwf_section` (
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) COMMENT='form sections';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_submission_price_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `submission_id` int(11) NOT NULL,
+  `sku` varchar(255) NOT NULL default '',
+  `label` varchar(255) NOT NULL default '',
+  `price` DECIMAL(10, 2) NOT NULL default '0.0',
+  `vat` DECIMAL(10, 2) NOT NULL default '0.0',
+  PRIMARY KEY (`id`),
+  KEY `submission_id` (`submission_id`),
+  KEY `sku` (`sku`)
+) COMMENT='submissions price items';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
+  `id` int(11) NOT NULL auto_increment,
+  `form_id` int(11) NOT NULL,
+  `submission_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `submission_ip` VARCHAR(50) NOT NULL default '',
+  `confirmed_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `confirmed_ip` VARCHAR(50) NOT NULL default '',
+  `confirmed_type` VARCHAR(50)  NOT NULL default 'email',
+  `integration` VARCHAR(30) NOT NULL default '',
+  `answer_id` int(11) NOT NULL default '0',
+  `submitternewsletter` int(11) NOT NULL default '0',
+  `rawformdata` text NOT NULL default '',
+  `submit_key` varchar(45) NOT NULL,
+  `price` DECIMAL(10, 2) NOT NULL default '0.0',
+  `vat` DECIMAL(10, 2) NOT NULL default '0.0',
+  `currency` varchar(3) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  KEY `form_id` (`form_id`),
+  KEY `answer_id` (`answer_id`)
+) COMMENT='Submitters for redFORM';
+
+CREATE TABLE IF NOT EXISTS `#__rwf_values` (
+  `id` int(11) NOT NULL auto_increment,
+  `value` varchar(255) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `published` int(11) NOT NULL default '0',
+  `checked_out` int(11) NOT NULL default '0',
+  `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `field_id` int(11) NOT NULL,
+  `ordering` int(11) NOT NULL default '0',
+  `price` DECIMAL(10, 2) NOT NULL default '0.0',
+  `sku` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  KEY `field_id` (`field_id`)
+) COMMENT='Stores fields options';
 

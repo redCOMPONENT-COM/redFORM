@@ -37,27 +37,27 @@ gulp.task('clean:' + baseTask,
 
 // Clean: frontend
 gulp.task('clean:' + baseTask + ':frontend', function() {
-	del(config.wwwDir + '/components/com_redform', {force : true});
+	del.sync(config.wwwDir + '/components/com_redform', {force : true});
 });
 
 // Clean: backend
 gulp.task('clean:' + baseTask + ':backend', function() {
-	del(config.wwwDir + '/administrator/components/com_redform', {force : true});
+	del.sync(config.wwwDir + '/administrator/components/com_redform', {force : true});
 });
 
 // Clean: lib
 gulp.task('clean:' + baseTask + ':libraries', function() {
-	del(config.wwwDir + '/libraries/redform', {force : true});
+	del.sync(config.wwwDir + '/libraries/redform', {force : true});
 });
 
 // Clean: media
 gulp.task('clean:' + baseTask + ':media', function() {
-	del(config.wwwDir + '/media/com_redform', {force : true});
+	del.sync(config.wwwDir + '/media/com_redform', {force : true});
 });
 
 // Clean: plugins
 gulp.task('clean:' + baseTask + ':plugins', function() {
-	del(config.wwwDir + '/plugins/content/redform', {force : true});
+	del.sync(config.wwwDir + '/plugins/content/redform', {force : true});
 });
 
 // Copy

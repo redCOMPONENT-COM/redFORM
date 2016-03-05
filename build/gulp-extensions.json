@@ -4,7 +4,7 @@
 	"libraries"  : ["redcore"],
 	"media"      : ["redcore"],
 	"plugins" : {
-		"redform" : ["economic", "helpscout", "redmemberbillinginfo", "salesforce"],
+		"redform" : ["economic", "helpscout", "pdfinvoice", "redmemberbillinginfo", "salesforce"],
 		"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
 		"redform_mailing" : ["acymailing", "ccnewsletter", "jnews", "phplist"],
 		"redform_payment" : [
