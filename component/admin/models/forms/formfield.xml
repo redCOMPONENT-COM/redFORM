@@ -13,7 +13,7 @@
 				/>
 		<field
 				name="field_id"
-				type="redformfield"
+				type="redform.field"
 				label="COM_REDFORM_FORMS_XML_FORMFIELD_FIELD"
 				description="COM_REDFORM_FORMS_XML_FORMFIELD_FIELD_DESC"
 				required="true"
