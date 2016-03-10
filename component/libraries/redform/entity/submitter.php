@@ -17,6 +17,42 @@ defined('_JEXEC') or die;
 class RdfEntitySubmitter extends RdfEntityBase
 {
 	/**
+	 * Get any billing associated to sid
+	 *
+	 * @return RdfEntityBilling
+	 */
+	public function getASubmissionBilling()
+	{
+		if (!$this->hasId())
+		{
+			return false;
+		}
+
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true);
+
+		$query->select('b.*')
+			->from('#__rwf_billinginfo AS b')
+			->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = b.cart_id')
+			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = ci.payment_request_id')
+			->where('pr.submission_id = ' . $this->id)
+			->order('pr.id DESC');
+
+		$db->setQuery($query);
+
+		if (!$res = $db->loadObject())
+		{
+			return false;
+		}
+
+		$billing = RdfEntityBilling::getInstance();
+		$billing->bind($res);
+
+		return $billing;
+	}
+
+	/**
 	 * Get associated form
 	 *
 	 * @return RdfEntityForm
@@ -31,6 +67,46 @@ class RdfEntitySubmitter extends RdfEntityBase
 		}
 
 		return RdfEntityForm::load($item->form_id);
+	}
+
+	/**
+	 * Get any billing associated to sid
+	 *
+	 * @return RdfEntityPaymentrequest[]
+	 */
+	public function getPaymentRequests()
+	{
+		if (!$this->hasId())
+		{
+			return false;
+		}
+
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true);
+
+		$query->select('pr.*')
+			->from('#__rwf_payment_request AS pr')
+			->where('pr.submission_id = ' . $this->id)
+			->order('pr.id DESC');
+
+		$db->setQuery($query);
+
+		if (!$res = $db->loadObjectList())
+		{
+			return false;
+		}
+
+		$paymentRequests = array();
+
+		foreach ($res as $prData)
+		{
+			$paymentRequest = RdfEntityPaymentrequest::getInstance();
+			$paymentRequest->bind($prData);
+			$paymentRequests[] = $paymentRequest;
+		}
+
+		return $paymentRequests;
 	}
 
 	/**

@@ -101,4 +101,24 @@ class RedformControllerSubmitters extends RControllerAdmin
 		// Set redirect
 		$this->setRedirect($this->getRedirectToListRoute());
 	}
+
+	/**
+	 * Turn a submission
+	 *
+	 * @return void
+	 */
+	public function turn()
+	{
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+
+		foreach ($cid as $sid)
+		{
+			$helper = new RdfPaymentTurnsubmission($sid);
+			$helper->turn();
+		}
+
+		// Set redirect
+		$this->setRedirect($this->getRedirectToListRoute());
+	}
 }

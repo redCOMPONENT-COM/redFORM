@@ -847,6 +847,8 @@ abstract class RdfEntityBase
 			throw new RuntimeException("Item could not be saved: " . $table->getError(), 500);
 		}
 
-		return $table->id;
+		$this->loadFromTable($table);
+
+		return $this->id;
 	}
 }

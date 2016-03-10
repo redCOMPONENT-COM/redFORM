@@ -21,7 +21,7 @@ module.exports.addPlugin = function (group, name) {
 
 	// Clean
 	gulp.task('clean:' + baseTask, function() {
-		del(config.wwwDir + '/plugins/' + group + '/' + name, {force : true});
+		del.sync(config.wwwDir + '/plugins/' + group + '/' + name, {force : true});
 	});
 
 	// Copy
