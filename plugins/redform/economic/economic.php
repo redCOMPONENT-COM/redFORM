@@ -239,7 +239,6 @@ class plgRedformEconomic extends JPlugin
 		$invoice = $this->confirmReference($invoiceId, $reference);
 		$this->getCartDetails($invoice->cart_id);
 
-
 		$this->turnInvoice($reference);
 
 		if ($return)
@@ -918,7 +917,6 @@ class plgRedformEconomic extends JPlugin
 		return $this->db->loadResult();
 	}
 
-
 	/**
 	 * Get any billing associated to sid
 	 *
@@ -928,19 +926,9 @@ class plgRedformEconomic extends JPlugin
 	 */
 	private function getASubmissionBilling($submissionId)
 	{
-		$query = $this->db->getQuery(true);
+		$submission = RdfEntitySubmitter::getInstance($submissionId);
 
-		$query->select('b.*')
-			->from('#__rwf_billinginfo AS b')
-			->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = b.cart_id')
-			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = ci.payment_request_id')
-			->where('pr.submission_id = ' . $submissionId)
-			->order('pr.id DESC');
-
-		$this->db->setQuery($query);
-		$res = $this->db->loadObject();
-
-		return $res;
+		return $submission->getASubmissionBilling();
 	}
 
 	/**

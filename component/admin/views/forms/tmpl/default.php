@@ -45,7 +45,7 @@ $saveOrder = $listOrder == 'ordering';
 			</div>
 		</div>
 	<?php else : ?>
-		<table class="table table-striped table-hover" id="categoryList">
+		<table class="table table-striped table-hover" id="formList">
 			<thead>
 			<tr>
 				<th width="1%" class="hidden-phone">

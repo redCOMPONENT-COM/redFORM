@@ -152,6 +152,13 @@ class RedformControllerPayment extends JControllerLegacy
 				return;
 			}
 		}
+		else
+		{
+			// Try to auto bill
+			$billingModel = $this->getModel('billing');
+			$billingModel->setCartReference($cart->reference);
+			$billingModel->createAutoBilling();
+		}
 
 		$details = $model->getPaymentDetails();
 

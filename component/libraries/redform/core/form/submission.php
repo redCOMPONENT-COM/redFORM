@@ -705,6 +705,9 @@ class RdfCoreFormSubmission
 
 			return $cart->reference;
 		}
+
+		// No cart
+		return false;
 	}
 
 	/**

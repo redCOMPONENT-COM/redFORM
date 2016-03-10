@@ -50,6 +50,7 @@ class RdfCoreModelFormfield extends JModelItem
 		$query->select('CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header');
 		$query->from('#__rwf_fields AS f');
 		$query->join('INNER', '#__rwf_form_field AS ff ON ff.field_id = f.id');
+		$query->join('INNER', '#__rwf_section AS s ON s.id = ff.section_id');
 		$query->where('ff.id = ' . $this->id);
 
 		$db->setQuery($query);

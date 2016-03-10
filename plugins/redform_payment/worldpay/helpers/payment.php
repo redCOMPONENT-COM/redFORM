@@ -170,14 +170,16 @@ class PaymentWorldpay extends RdfPaymentHelper
 
 		$reference = $input->get('reference');
 		$input->set('reference', $reference);
-		RedformHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_WORLDPAY_NOTIFICATION_RECEIVED', $reference));
+		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_WORLDPAY_NOTIFICATION_RECEIVED', $reference));
 
 		// It was successull, get the details
+		$receivedCurrency = RHelperCurrency::getIsoCode($input->get('CurrencyCode', 0));
+
 		$resp = array();
 		$resp[] = 'tid:' . $input->get('CrossReference', '', 'string');
 		$resp[] = 'orderid:' . $input->get('OrderID', '', 'string');
 		$resp[] = 'amount:' . $input->get('Amount', 0);
-		$resp[] = 'currency:' . RHelperCurrency::getIsoCode($input->get('CurrencyCode', 0));
+		$resp[] = 'currency:' . $receivedCurrency;
 		$resp[] = 'date:' . $input->get('TransactionDateTime', '', 'string');
 		$resp = implode("\n  ", $resp);
 
@@ -254,7 +256,7 @@ class PaymentWorldpay extends RdfPaymentHelper
 			if (strcmp($HashDigest, $input->get('HashDigest', '', 'string')))
 			{
 				$error = JText::sprintf('PLG_REDFORM_WORLDPAY_HASHDIGEST_MISMATCH', $reference);
-				throw new PaymentException($error);
+				throw new RdfPaymentException($error);
 			}
 
 			// Hash match, record result
@@ -310,39 +312,15 @@ class PaymentWorldpay extends RdfPaymentHelper
 				$error = JText::sprintf('PLG_REDFORM_WORLDPAY_PAYMENT_REFUSED_KEY_S_REASON_S_MESSAGE_M',
 					$reference, $reason, $input->get('Message', '', 'string')
 				);
-				throw new PaymentException($error);
+				throw new RdfPaymentException($error);
 			}
 
-			$details = $this->getDetails($reference);
-			$price = $this->getPrice($details);
-
-			$currency = $details->currency;
-
-			if (strcasecmp($currency, RHelperCurrency::getIsoNumber($input->getInt('CurrencyCode', 0))))
-			{
-				$error = JText::sprintf('PLG_REDFORM_WORLDPAY_CURRENCY_MISMATCH_EXPECTED_S_RECEIVED_S',
-					$reference, $currency, RHelperCurrency::getIsoNumber($input->getInt('CurrencyCode', 0))
-				);
-				throw new PaymentException($error);
-			}
-
-			if (round($price * 100) != $input->getInt('Amount', 0))
-			{
-				$error = JText::sprintf('PLG_REDFORM_WORLDPAY_PRICE_MISMATCH_EXPECTED_S_RECEIVED_S',
-					$reference, $price * 100, $input->getInt('Amount', 0)
-				);
-				throw new PaymentException($error);
-			}
-			else
-			{
-				$paid = 1;
-			}
-
-			$this->writeTransaction($reference, $resp, 'SUCCESS', 1);
+			$paid = 1;
+			$this->writeTransaction($reference, $resp, 'SUCCESS', $paid);
 		}
-		catch (PaymentException $e)
+		catch (RdfPaymentException $e)
 		{
-			RedformHelperLog::simpleLog($e->getMessage());
+			RdfHelperLog::simpleLog($e->getMessage());
 			$this->writeTransaction($reference, $e->getMessage() . $resp, 'FAIL', 0);
 
 			return false;

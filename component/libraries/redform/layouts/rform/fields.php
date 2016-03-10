@@ -18,94 +18,88 @@ $fields = $data['fields'];
 $answers = $data['answers'];
 $user = $data['user'];
 $index = $data['index'];
+$form = $data['form'];
 
 $html = '';
+
+// Custom tooltip
+$toolTipArray = array('className' => 'redformtip' . $form->classname);
+JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
+JHtml::_('behavior.keepalive');
+
+RHelperAsset::load('punycode.js');
+
+RHelperAsset::load('formsteps.js', 'com_redform');
+RHelperAsset::load('formsteps.css', 'com_redform');
+RHelperAsset::load('showon.js', 'com_redform');
 
 if (isset($options['extrafields'][$index]))
 {
 	$fields = array_merge($options['extrafields'][$index], $fields);
 }
 
-foreach ($fields as $field)
+foreach (RdfHelper::sortFieldBySection($fields) as $s)
 {
-	if (!($app->isAdmin() || $field->published))
-	{
-		// Only display unpublished fields in backend form
-		continue;
-	}
+	$section = RdfEntitySection::load($s->id);
+	$section = '<fieldset class="redform-section' . ($section->class ? ' ' . $section->class : '') . '">';
 
-	$field->setFormIndex($index);
-	$field->setUser($user);
+	foreach ($s->fields as $field)
+	{
+		if ($field->isHidden())
+		{
+			$section .= $field->getInput();
+			continue;
+		}
 
-	// Set value if editing
-	if ($answers && $field->id)
-	{
-		$value = $answers->getFieldAnswer($field->id);
-		$field->setValue($value, true);
-	}
-	else
-	{
-		$field->lookupDefaultValue();
-	}
+		$class = "fieldline type-" . $field->fieldtype . $field->getParam('class', '');
+		$rel = "";
 
-	if (!$field->isHidden())
-	{
-		$html .= '<div class="fieldline type-' . $field->fieldtype . $field->getParam('class', '') . '">';
-	}
+		if ($showon = $field->getParam('showon'))
+		{
+			$showon = explode(':', $showon, 2);
 
-	if (!$field->isHidden())
-	{
-		$element = "<div class=\"field\">";
-	}
-	else
-	{
-		$element = '';
-	}
+			// We need the form field id, from the field id given in parameters
+			$targetField = RdfHelper::findFormFieldByFieldId($fields, $showon[0]);
+			$class .= ' rfshowon_' . implode(' showon_', explode(',', $showon[1]));
+			$rel = ' rel="rfshowon_field' . $targetField->id . '_' . $index . '"';
+		}
 
-	if (!$field->isHidden() && $field->displayLabel())
-	{
-		$label = '<div class="label">' . $field->getLabel() . '</div>';
-	}
-	else
-	{
-		$label = '';
-	}
+		$fieldDiv = '<div class="' . $class . '"' . $rel . '>';
 
-	$element .= $field->getInput();
+		if ($field->displayLabel())
+		{
+			$fieldDiv .= '<div class="label">' . $field->getLabel() . '</div>';
+		}
 
-	if ($field->isHidden())
-	{
-		$html .= $element;
-	}
-	else
-	{
-		$html .= $label . $element;
-
-		// Fieldtype div
-		$html .= '</div>';
+		$fieldDiv .= '<div class="field">' . $field->getInput() . '</div>';
 
 		if ($field->isRequired() || strlen($field->tooltip))
 		{
-			$html .= '<div class="fieldinfo">';
+			$fieldDiv .= '<div class="fieldinfo">';
 
 			if ($field->isRequired())
 			{
 				$img = JHTML::image(JURI::root() . 'media/com_redform/images/warning.png', JText::_('COM_REDFORM_Required'));
-				$html .= ' <span class="editlinktip hasTipField" title="' . JText::_('COM_REDFORM_Required') . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
+				$fieldDiv .= ' <span class="editlinktip hasTipField" title="' . JText::_('COM_REDFORM_Required') . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 			}
 
 			if (strlen($field->tooltip) > 0)
 			{
 				$img = JHTML::image(JURI::root() . 'media/com_redform/images/info.png', JText::_('COM_REDFORM_ToolTip'));
-				$html .= ' <span class="editlinktip hasTipField" title="' . htmlspecialchars($field->field) . '::' . htmlspecialchars($field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
+				$fieldDiv .= ' <span class="editlinktip hasTipField" title="' . htmlspecialchars($field->field) . '::' . htmlspecialchars($field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 			}
 
-			$html .= '</div>';
+			$fieldDiv .= '</div>';
 		}
 
 		// Fieldline_ div
-		$html .= '</div>';
+		$fieldDiv .= '</div>';
+		$section .= $fieldDiv;
 	}
+
+	$section .= '</fieldset>';
+
+	$html .= $section;
 }
 
 echo $html;

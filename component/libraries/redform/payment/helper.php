@@ -64,6 +64,16 @@ abstract class RdfPaymentHelper extends JObject
 	protected $cart;
 
 	/**
+	 * @var JInput
+	 */
+	protected $input;
+
+	/**
+	 * @var RdfPaymentPlugin
+	 */
+	public $plugin;
+
+	/**
 	 * Class contructor
 	 *
 	 * @param   array  $params  plugin params
@@ -71,6 +81,7 @@ abstract class RdfPaymentHelper extends JObject
 	public function __construct($params)
 	{
 		$this->params = $params;
+		$this->input = JFactory::getApplication()->input;
 	}
 
 	/**

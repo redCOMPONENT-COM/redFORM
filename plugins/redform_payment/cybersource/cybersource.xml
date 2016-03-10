@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="redform_payment" method="upgrade">
+    <name>PLG_REDFORM_PAYMENT_CYBERSOURCE</name>
+    <creationDate>Jan, 2016</creationDate>
+    <author>redWEB Aps</author>
+    <authorEmail>email@redweb.dk</authorEmail>
+    <authorUrl>www.redcomponent.com</authorUrl>
+    <copyright>(C) 2008 - 2016 redCOMPONENT.com</copyright>
+    <license>GNU/GPL</license>
+    <version>3.3.8</version>
+    <tag>##VERSION##</tag>
+    <description>PLG_REDFORM_PAYMENT_CYBERSOURCE_XML_DESCRIPTION</description>
+
+    <files>
+        <filename plugin="cybersource">cybersource.php</filename>
+        <folder>helpers</folder>
+        <filename>index.html</filename>
+        <folder>language</folder>
+        <folder>tmpl</folder>
+    </files>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_GENERAL">
+                <field name="access_key"
+                       type="text"
+                       label="PLG_REDFORM_PAYMENT_CYBERSOURCE_ACCESS_KEY_LABEL"
+                       description="PLG_REDFORM_PAYMENT_CYBERSOURCE_ACCESS_KEY_DESC"
+                       required="true"
+                />
+                <field name="profile_id"
+                       type="false"
+                       label="PLG_REDFORM_PAYMENT_CYBERSOURCE_PROFILE_ID_LABEL"
+                       description="PLG_REDFORM_PAYMENT_CYBERSOURCE_PROFILE_ID_DESC"
+                       required="true"
+                />
+                <field name="secret_key"
+                       type="false"
+                       label="PLG_REDFORM_PAYMENT_CYBERSOURCE_SECRET_KEY_LABEL"
+                       description="PLG_REDFORM_PAYMENT_CYBERSOURCE_SECRET_KEY_DESC"
+                       required="true"
+                />
+                <field name="sandbox"
+                       type="radio"
+                       label="PLG_REDFORM_PAYMENT_CYBERSOURCE_SANDBOX_LABEL"
+                       description="PLG_REDFORM_PAYMENT_CYBERSOURCE_SANDBOX_DESC"
+                       default="1"
+                    >
+                    <option value="0">JNo</option>
+                    <option value="1">JYes</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="extra" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_EXTRA">
+
+                <field name="gatewaylabel" type="text" default="" label="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL"
+                       description="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL_DESC"/>
+
+                <field name="gatewaybackendlabel" type="text" default=""
+                       label="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL"
+                       description="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL_DESC"/>
+
+                <field name="allowed_currencies" type="textarea"
+                       label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
+                       description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
+                       rows="10"
+                />
+            </fieldset>
+        </fields>
+    </config>
+
+</extension>

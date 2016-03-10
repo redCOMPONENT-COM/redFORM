@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="redFORM" default="site" basedir=".">
+	<property file="build.properties" />
+
+	<!-- Default properties, set only if not already assigned in the build.properties file -->
+	<property name="comp.name" value="redform" />
+	<property name="dirs.root" value=".." />
+	<property name="dirs.tmp" value="tmp" />
+	<property name="dirs.release" value="release" />
+	<property name="www.template.site" value="protostar" />
+	<property name="www.template.admin" value="hathor" />
+	<property name="version" value="dev" />
+
+	<xmlproperty file="redCORE/extensions/redcore.xml" prefix="redCOREDetails" keepRoot="false" />
+	<property
+			name="redCOREVersion"
+			value="${redCOREDetails.version}"
+			override="true"/>
+
+	<taskdef name="gitversion" classname="phingext.GitVersionTask" />
+	<taskdef name="gitdate" classname="phingext.GitDateTask" />
+	<taskdef name="extractversion" classname="phingext.ExtractVersionTask" />
+
+	<!--
+	====================================================================================================
+	Tasks - General
+	====================================================================================================
+	-->
+
+	<target name="all" description="Makes everything"
+		depends="dev-release">
+	</target>
+
+	<target name="dev-release" description="Makes the release"
+		depends="new-release,setup-properties,release">
+	</target>
+
+	<target name="new-release" description="Create the release directory afresh">
+		<!-- Recreate the release directory -->
+		<delete dir="${dirs.release}" quiet="yes" includeemptydirs="false" />
+		<mkdir dir="${dirs.release}" />
+	</target>
+
+	<target name="setup-properties" description="Set up version and build properties">
+		<!-- Initialize the build.date timestamp -->
+		<tstamp>
+			<format property="build.date" pattern="%Y-%m-%d" />
+		</tstamp>
+
+		<!-- Initialize the version if it's not set -->
+		<if>
+			<equals arg1="${version}" arg2="dev" />
+			<then>
+				<gitversion propertyname="git.lastrevision" />
+				<gitdate propertyname="git.timestamp" />
+				<!--<property name="version" value="rev${git.lastrevision}" override="true" />-->
+				<property name="version" value="${git.lastrevision}" override="true" />
+			</then>
+		</if>
+	</target>
+
+	<!--
+	====================================================================================================
+	Tasks - Joomla! packages
+	====================================================================================================
+	-->
+	<target name="copyredcore">
+		<phing phingfile="${dirs.root}/build/redCORE/build/redcore_copy_mandatory.xml"
+		       target="copyframework"
+		       haltonfailure="true">
+			<property name="redcoretargetdir" value="${dirs.tmp}/component/redCORE" />
+			<property name="redcorepath" value="${dirs.root}/build/redCORE" />
+		</phing>
+	</target>
+
+	<target name="release" description="Installation Package for Joomla!"
+		depends="setup-properties, new-release, copyredcore">
+
+		<copy todir="${dirs.tmp}/component" >
+			<fileset dir="${dirs.root}/component">
+				<include name="**" />
+			</fileset>
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+		<!-- Create the package -->
+		<extractversion path="${dirs.tmp}/component" />
+		<zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${extensionversion}.zip" includeemptydirs="true" />
+		<!-- Light version without redcore -->
+		<delete dir="${dirs.tmp}/component/redCORE" quiet="yes" includeemptydirs="false" />
+		<zip basedir="${dirs.tmp}/component" destfile="${dirs.release}/com_${comp.name}-${extensionversion}_no_redCORE.zip" includeemptydirs="true" />
+
+		<!-- admin modules
+		<foreach param="dirname" absparam="absname" target="zipfolder">
+			<property name="myp" value="modules/admin" />
+		  	<fileset dir="${dirs.root}/modules/admin">
+		  	<type type="dir"/>
+	        <depth max="0" min="0" />
+		  </fileset>
+		</foreach>
+		-->
+		<!-- site modules
+		<foreach param="dirname" absparam="absname" target="zipfolder">
+			<property name="myp" value="modules/site" />
+		  	<fileset dir="${dirs.root}/modules/site">
+		  	<type type="dir"/>
+	        <depth max="0" min="0" />
+		  </fileset>
+		</foreach>
+		-->
+
+		<!-- languages -->
+		<foreach param="dirname" absparam="absname" target="zipfolder">
+			<property name="myp" value="language" />
+			<property name="prefix" value="" />
+
+			<fileset dir="${dirs.root}/languages">
+				<type type="dir"/>
+				<depth max="0" min="0" />
+			</fileset>
+		</foreach>
+
+		<!-- plugins -->
+		<foreach param="pdirname" absparam="pabsname" target="zipplugins">
+			<fileset dir="${dirs.root}/plugins">
+				<type type="dir"/>
+				<depth max="0" min="0" />
+			</fileset>
+		</foreach>
+
+		<!-- global zip -->
+		<zip destfile="${dirs.release}/redform-all-unzip-first-${version}.zip">
+			<fileset dir="${dirs.release}">
+			</fileset>
+		</zip>
+
+		<delete dir="${dirs.tmp}" quiet="yes" includeemptydirs="false" />
+	</target>
+
+	<target name="zipplugins">
+		<echo msg="handling plugins group ${pdirname}" />
+		<foreach param="dirname" absparam="absname" target="zipfolder">
+			<property name="myp" value="plugins" />
+			<property name="prefix" value="plg_${pdirname}_" />
+			<fileset dir="${pabsname}">
+				<type type="dir"/>
+				<depth max="0" min="0" />
+			</fileset>
+		</foreach>
+	</target>
+
+	<target name="zipplugins">
+		<echo msg="handling plugins group ${pdirname}" />
+		<foreach param="dirname" absparam="absname" target="zipfolder">
+			<property name="myp" value="plugins" />
+			<property name="prefix" value="plg_${pdirname}_" />
+			<fileset dir="${pabsname}">
+				<type type="dir"/>
+				<depth max="0" min="0" />
+			</fileset>
+		</foreach>
+	</target>
+
+
+	<target name="zipfolder">
+		<echo msg="packaging ${dirname} ${absname}" />
+		<copy todir="${dirs.tmp}/${myp}/${prefix}${dirname}" >
+			<fileset dir="${absname}">
+				<include name="**" />
+			</fileset>
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<mkdir dir="${dirs.release}/${myp}" />
+		<!-- Create the package -->
+
+		<extractversion path="${dirs.tmp}/${myp}/${prefix}${dirname}" />
+		<zip basedir="${dirs.tmp}/${myp}/${prefix}${dirname}" destfile="${dirs.release}/${myp}/${prefix}${dirname}-${extensionversion}.zip" includeemptydirs="true" />
+	</target>
+
+	<!--
+	====================================================================================================
+	Tasks - copy to your test site
+	====================================================================================================
+	-->
+
+	<target name="site" description="Copies files to a existing joomla site" depends="setup-properties">
+        <delete dir="${www.dir}/administrator/components/com_${comp.name}" quiet="yes" includeemptydirs="false" />
+        <delete dir="${www.dir}/components/com_${comp.name}" quiet="yes" includeemptydirs="false" />
+
+        <echo message="Copying administrator component..." />
+
+		<!-- Manifest & install script -->
+		<echo message="Copying manifest..." />
+		<copy file="${dirs.root}/component/${comp.name}.xml"
+			tofile="${www.dir}/administrator/components/com_${comp.name}/${comp.name}.xml" overwrite="true">
+			<!-- trick to replace extension folders in the manifest-->
+			<filterchain>
+			  <replaceregexp>
+				<regexp pattern="folder=&quot;admin&quot;" replace="folder=&quot;administrator/components/com_${comp.name}&quot;"/>
+			  </replaceregexp>
+			  <replaceregexp>
+				<regexp pattern="folder=&quot;site&quot;" replace="folder=&quot;components/com_${comp.name}&quot;"/>
+			  </replaceregexp>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${build.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<copy file="${dirs.root}/component/install.php"
+			tofile="${www.dir}/administrator/components/com_${comp.name}/install.php" overwrite="true" />
+
+		<!-- Backend component -->
+		<copy todir="${www.dir}/administrator/components/com_${comp.name}" overwrite="true">
+			<fileset dir="${dirs.root}/component/admin">
+				<include name="**" />
+				<!-- Exclude the manifest to avoid overwriting the previously copied -->
+				<exclude name="${comp.name}.xml" />
+			</fileset>
+		</copy>
+
+		<!-- Frontend component -->
+		<echo message="Copying frontend component..." />
+		<copy todir="${www.dir}/components/com_${comp.name}" overwrite="true">
+			<fileset dir="${dirs.root}/component/site" />
+		</copy>
+
+		<!-- Media -->
+		<copy todir="${www.dir}/media" overwrite="true">
+			<fileset dir="${dirs.root}/component/media">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<!-- Libraries -->
+		<copy todir="${www.dir}/libraries" overwrite="true">
+			<fileset dir="${dirs.root}/component/libraries">
+				<include name="**"/>
+			</fileset>
+		</copy>
+
+		<!-- Component included Modules - Site
+		<copy todir="${www.dir}/modules" overwrite="true">
+			<fileset dir="${dirs.root}/component/admin/extras/modules/site">
+				<include name="**" />
+			</fileset>
+
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${build.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+        </copy>
+ -->
+		<!-- Component included Modules - Admin
+		<copy todir="${www.dir}/administrator/modules" overwrite="true">
+			<fileset dir="${dirs.root}/component/admin/extras/modules/admin">
+				<include name="**" />
+			</fileset>
+
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${build.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+        </copy>
+ -->
+		<!-- Modules - Site
+		<copy todir="${www.dir}/modules" overwrite="true">
+			<fileset dir="${dirs.root}/modules/site">
+				<include name="**" />
+			</fileset>
+
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${build.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+        </copy>
+-->
+		<!-- Modules - Admin
+		<copy todir="${www.dir}/administrator/modules" overwrite="true">
+			<fileset dir="${dirs.root}/modules/admin">
+				<include name="**" />
+			</fileset>
+
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${build.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+        </copy>
+-->
+		<!-- Plugins -->
+		<copy todir="${www.dir}/plugins" overwrite="true">
+			<fileset dir="${dirs.root}/component/plugins">
+				<include name="**" />
+			</fileset>
+
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${build.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+        </copy>
+
+		<copy todir="${www.dir}/plugins" overwrite="true">
+			<fileset dir="${dirs.root}/plugins">
+				<include name="**" />
+			</fileset>
+
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${build.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+        </copy>
+
+		<!-- Templates -->
+		<if>
+			<available file="overrides/site/" type="dir" />
+			<then>
+				<copy todir="${www.dir}/templates/${www.template.site}" overwrite="true">
+					<fileset dir="${dirs.root}/overrides/site">
+						<include name="**" />
+					</fileset>
+				</copy>
+			</then>
+		</if>
+		<if>
+			<available file="overrides/admin/" type="dir" />
+			<then>
+				<copy todir="${www.dir}/administrator/templates/${www.template.admin}" overwrite="true">
+					<fileset dir="${dirs.root}/overrides/admin">
+						<include name="**" />
+					</fileset>
+				</copy>
+			</then>
+		</if>
+    </target>
+
+    <!--
+    ====================================================================================================
+    Tasks - Copy to test site
+    ====================================================================================================
+    -->
+	<target name="unit-test" description="Run test suite"
+			depends="unit-test-prepare">
+		<phpunit configuration="tests/unit/phpunit.xml"
+				 printsummary="true" haltonfailure="true" haltonerror="true"
+				 pharlocation="/usr/local/bin/phpunit">
+			<batchtest>
+				<fileset dir="tests/unit/suite">
+					<include name="**/*Test.php"/>
+				</fileset>
+			</batchtest>
+		</phpunit>
+	</target>
+
+	<target name="unit-test-prepare" description="Copy to test site"
+			depends="setup-test, site">
+	</target>
+
+	<target name="setup-test" description="Init to copy to test site"
+			depends="setup-properties">
+		<property name="www.dir" value="${www.dirtest}" override="true"/>
+
+		<!-- Test -->
+		<copy todir="${www.dir}/redunittests/unit/suite/redform" overwrite="true">
+			<fileset dir="tests/unit/suite">
+				<include name="**" />
+			</fileset>
+		</copy>
+	</target>
+</project>

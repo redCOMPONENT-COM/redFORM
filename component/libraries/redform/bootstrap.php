@@ -51,6 +51,7 @@ class RdfBootstrap
 			RLoader::registerPrefix('Rdf', __DIR__);
 
 			// Make available the fields
+			JFormHelper::addFieldPath(JPATH_LIBRARIES . '/redform/form/field');
 			JFormHelper::addFieldPath(JPATH_LIBRARIES . '/redform/form/fields');
 
 			// Make available the form rules

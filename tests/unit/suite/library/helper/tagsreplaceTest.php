@@ -17,7 +17,7 @@ JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
  * @subpackage  Library
  * @since       2.5
  */
-class tagsreplaceTest extends JoomlaTestCase
+class tagsreplaceTest extends TestCaseDatabase
 {
 	/**
 	 * Data provider

@@ -52,9 +52,9 @@ class plgRedformRedmemberbillinginfo extends JPlugin
 	/**
 	 * Prefills redFORM billing form
 	 *
-	 * @param   string               $reference  carat reference
-	 * @param   RedformTableBilling  $table      table data to prefill
-	 * @param   boolean              $prefilled  did this plugin prefilled the info
+	 * @param   string               $reference   carat reference
+	 * @param   RedformTableBilling  &$table      table data to prefill
+	 * @param   boolean              &$prefilled  did this plugin prefilled the info
 	 *
 	 * @return true on success
 	 */
@@ -70,55 +70,64 @@ class plgRedformRedmemberbillinginfo extends JPlugin
 
 		if ($field = $this->params->get('fullname'))
 		{
-			$table->fullname = $this->replaceFields($field, $rmUser);
+			$rmValue = $this->replaceFields($field, $rmUser);
+			$table->fullname = $rmValue ?: $table->fullname;
 		}
 		else
 		{
-			$table->fullname = $rmUser->name;
+			$table->fullname = $rmUser->name ?: $table->fullname;
 		}
 
 		if ($field = $this->params->get('company'))
 		{
-			$table->company = $this->replaceFields($field, $rmUser);
+			$rmValue = $this->replaceFields($field, $rmUser);
+			$table->company = $rmValue ?: $table->company;
 		}
 
 		if ($field = $this->params->get('vatnumber'))
 		{
-			$table->vatnumber = $this->replaceFields($field, $rmUser);
+			$rmValue = $this->replaceFields($field, $rmUser);
+			$table->vatnumber = $rmValue ?: $table->vatnumber;
 		}
 
 		if ($field = $this->params->get('address'))
 		{
-			$table->address = $this->replaceFields($field, $rmUser);
+			$rmValue = $this->replaceFields($field, $rmUser);
+			$table->address = $rmValue ?: $table->address;
 		}
 
 		if ($field = $this->params->get('city'))
 		{
-			$table->city = $this->replaceFields($field, $rmUser);
+			$rmValue = $this->replaceFields($field, $rmUser);
+			$table->city = $rmValue ?: $table->city;
 		}
 
 		if ($field = $this->params->get('zipcode'))
 		{
-			$table->zipcode = $this->replaceFields($field, $rmUser);
+			$rmValue = $this->replaceFields($field, $rmUser);
+			$table->zipcode = $rmValue ?: $table->zipcode;
 		}
 
 		if ($field = $this->params->get('phone'))
 		{
-			$table->phone = $this->replaceFields($field, $rmUser);
+			$rmValue = $this->replaceFields($field, $rmUser);
+			$table->phone = $rmValue ?: $table->phone;
 		}
 
 		if ($field = $this->params->get('email'))
 		{
-			$table->email = $this->replaceFields($field, $rmUser);
+			$rmValue = $this->replaceFields($field, $rmUser);
+			$table->email = $rmValue ?: $table->email;
 		}
 		else
 		{
-			$table->email = $rmUser->email;
+			$table->email = $rmUser->email ?: $table->email;
 		}
 
 		if ($field = $this->params->get('country'))
 		{
-			$table->country = $this->replaceFields($field, $rmUser);
+			$rmValue = $this->replaceFields($field, $rmUser);
+			$table->country = $rmValue ?: $table->country;
 		}
 
 		$prefilled = true;

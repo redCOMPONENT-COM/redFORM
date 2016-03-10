@@ -18,7 +18,7 @@ JLoader::registerPrefix('Plghs', JPATH_SITE . '/plugins/redform/helpscout/lib');
  * @subpackage  Library
  * @since       2.5
  */
-class formTest extends JoomlaTestCase
+class formTest extends TestCase
 {
 	/**
 	 * provides test xml
