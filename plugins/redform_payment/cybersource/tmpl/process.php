@@ -12,9 +12,9 @@ extract($data);
 
 $intro = $request->processIntroText;
 ?>
+<h1><?php echo JText::_('PLG_REDFORM_PAYMENT_CYBERSOURCE_PROCESS_FORM_TITLE'); ?></h1>
 <form method="post" action="<?php echo $target; ?>">
 	<fieldset>
-		<legend><?php echo JText::_('PLG_REDFORM_PAYMENT_CYBERSOURCE_PROCESS_FORM_TITLE'); ?></legend>
 
 		<div class="payment-intro">
 			<?php if ($intro): ?>
@@ -30,5 +30,7 @@ $intro = $request->processIntroText;
 		<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>"/>
 	<?php endforeach; ?>
 
-	<input type="submit" name="submit" value="<?php echo JText::_('PLG_REDFORM_PAYMENT_CYBERSOURCE_FORM_SUBMIT'); ?>"/>
+	<div class="redform-payment">
+		<button type="submit"><?php echo JText::_('PLG_REDFORM_PAYMENT_CYBERSOURCE_FORM_SUBMIT'); ?></button>
+	</div>
 </form>

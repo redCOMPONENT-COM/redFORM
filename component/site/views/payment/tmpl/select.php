@@ -9,9 +9,9 @@
 defined('_JEXEC') or die('Restricted access');
 
 ?>
+<h1><?php echo JText::_('COM_REDFORM_Payment')?></h1>
 <form action="<?php echo $this->action; ?>" method="post">
 <fieldset>
-	<legend><?php echo JText::_('COM_REDFORM_Payment')?></legend>
 	<table class="rwf_payment">
 		<tbody>
 			<tr>

@@ -159,6 +159,13 @@ class PaymentCybersource extends RdfPaymentHelper
 		return $params;
 	}
 
+	/**
+	 * Handle payment not accepted
+	 *
+	 * @param   array  $params  parameters
+	 *
+	 * @return int
+	 */
 	private function handleNotAccepted($params)
 	{
 		switch ($params['decision'])
@@ -177,6 +184,13 @@ class PaymentCybersource extends RdfPaymentHelper
 		}
 	}
 
+	/**
+	 * Handle declined state
+	 *
+	 * @param   array  $params  parameters
+	 *
+	 * @return int
+	 */
 	private function handleDecline($params)
 	{
 		$reference = $this->input->get('reference');
@@ -190,6 +204,13 @@ class PaymentCybersource extends RdfPaymentHelper
 		return 0;
 	}
 
+	/**
+	 * Handle Review state
+	 *
+	 * @param   array  $params  parameters
+	 *
+	 * @return int
+	 */
 	private function handleReview($params)
 	{
 		$reference = $this->input->get('reference');
@@ -203,6 +224,13 @@ class PaymentCybersource extends RdfPaymentHelper
 		return 0;
 	}
 
+	/**
+	 * Handle generic error state
+	 *
+	 * @param   array  $params  parameters
+	 *
+	 * @return int
+	 */
 	private function handleError($params)
 	{
 		$reference = $this->input->get('reference');
@@ -216,7 +244,7 @@ class PaymentCybersource extends RdfPaymentHelper
 
 		if ($required_fields  = $this->input->get('required_fields'))
 		{
-			$message .= "Required fields: " . $required_fields. ".";
+			$message .= "Required fields: " . $required_fields . ".";
 		}
 
 		RdfHelperLog::simpleLog('CYBERSOURCE NOTIFICATION PAYMENT ERROR for ' . $reference . ": $message");
@@ -228,6 +256,13 @@ class PaymentCybersource extends RdfPaymentHelper
 		return 0;
 	}
 
+	/**
+	 * Handle UndefinedDecision state
+	 *
+	 * @param   array  $params  parameters
+	 *
+	 * @return int
+	 */
 	private function handleUndefinedDecision($params)
 	{
 		$reference = $this->input->get('reference');
