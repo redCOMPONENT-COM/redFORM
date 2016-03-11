@@ -26,7 +26,7 @@ class RdfEntityForm extends RdfEntityBase
 	/**
 	 * Get form fields
 	 *
-	 * @return array
+	 * @return RdfRfieldFactory[]
 	 */
 	public function getFormFields()
 	{
