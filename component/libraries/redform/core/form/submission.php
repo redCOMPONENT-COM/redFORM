@@ -300,10 +300,10 @@ class RdfCoreFormSubmission
 			{
 				$this->updateMailingList($answers);
 			}
-		}
 
-		// Send email to maintainers
-		$this->notifymaintainer($allanswers, $answers->isNew());
+			// Send email to maintainers
+			$this->notifymaintainer($answers);
+		}
 
 		/* Send a submission mail to the submitters if set */
 		if ($answers->isNew() && $form->submitterinform)
@@ -371,7 +371,7 @@ class RdfCoreFormSubmission
 		$this->updateMailingList($answers);
 
 		// Send email to maintainers
-		$this->notifymaintainer(array($answers), true);
+		$this->notifymaintainer($answers);
 
 		/* Send a submission mail to the submitters if set */
 		if ($form->submitterinform)
@@ -432,14 +432,13 @@ class RdfCoreFormSubmission
 	/**
 	 * send email to form maintaineers or/and selected recipients
 	 *
-	 * @param   array  $allanswers  answers
-	 * @param   bool   $new         is new ?
+	 * @param   RdfAnswers  $answers  answers
 	 *
 	 * @return bool
 	 */
-	public function notifymaintainer($allanswers, $new = true)
+	public function notifymaintainer($answers)
 	{
-		$helper = new RdfHelperNotifymaintainer($allanswers[0], $new);
+		$helper = new RdfHelperNotifymaintainer($answers);
 
 		return $helper->notify();
 	}

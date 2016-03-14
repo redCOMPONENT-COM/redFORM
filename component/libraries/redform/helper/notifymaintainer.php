@@ -24,11 +24,6 @@ class RdfHelperNotifymaintainer
 	private $answers;
 
 	/**
-	 * @var bool
-	 */
-	private $isNew;
-
-	/**
 	 * @var JMail
 	 */
 	private $mailer;
@@ -37,12 +32,10 @@ class RdfHelperNotifymaintainer
 	 * RdfHelperNotifymaintainer constructor.
 	 *
 	 * @param   RdfAnswers  $answers  answers
-	 * @param   bool        $isNew    is it a new submission
 	 */
-	public function __construct($answers, $isNew = true)
+	public function __construct($answers)
 	{
 		$this->answers = $answers;
-		$this->isNew = $isNew;
 		$this->mailer = RdfHelper::getMailer();
 	}
 
@@ -69,7 +62,7 @@ class RdfHelperNotifymaintainer
 		{
 			$subject = $replaceHelper->replace($form->contactpersonemailsubject);
 		}
-		elseif ($this->isNew)
+		elseif ($this->answers->isNew())
 		{
 			$subject = $replaceHelper->replace(JText::_('COM_REDFORM_CONTACT_NOTIFICATION_EMAIL_SUBJECT'));
 		}
@@ -81,7 +74,7 @@ class RdfHelperNotifymaintainer
 		$this->mailer->setSubject($subject);
 
 		// Mail body
-		if ($this->isNew)
+		if ($this->answers->isNew())
 		{
 			$htmlmsg = $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY'));
 		}
