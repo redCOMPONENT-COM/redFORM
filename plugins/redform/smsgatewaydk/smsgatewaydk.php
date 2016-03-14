@@ -12,6 +12,18 @@ defined('JPATH_BASE') or die;
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
+$redformLoader = JPATH_LIBRARIES . '/redform/bootstrap.php';
+
+if (!file_exists($redformLoader))
+{
+	throw new Exception(JText::_('COM_REDFORM_LIB_INIT_FAILED'), 404);
+}
+
+include_once $redformLoader;
+
+// Bootstraps redFORM
+RdfBootstrap::bootstrap();
+
 /**
  * SMSgateway.dk integration
  *
@@ -73,8 +85,8 @@ class plgRedformSmsgatewaydk extends JPlugin
 		}
 
 		$input = JFactory::getApplication()->input;
-		$message = $input->get('text');
-		$phoneNumber = $input->get('mobile');
+		$message = $input->get('SMS');
+		$phoneNumber = $input->get('FROM');
 		RdfHelperLog::simpleLog('received message on smsgatewaydk (mobile: ' . $phoneNumber . '):' . $message);
 
 		if (!preg_match('/([0-9]+)[\s]*ok/i', $message, $matches))
@@ -98,6 +110,23 @@ class plgRedformSmsgatewaydk extends JPlugin
 		$this->sendMessage($phoneNumber, $this->params->get('confirmation'));
 
 		$updatedIds[] = $sid;
+	}
+
+	/**
+	 * For testing
+	 *
+	 * @return void
+	 */
+	public function onAjaxTestsendsms()
+	{
+		$input = JFactory::getApplication()->input;
+		$message = $input->get('message', 'A simple test with æøå barbaric characters');
+		$number = $input->get('mobile');
+
+		if ($number)
+		{
+			$this->sendMessage($number, $message);
+		}
 	}
 
 	/**
@@ -237,7 +266,7 @@ class plgRedformSmsgatewaydk extends JPlugin
 
 		if (strlen($cleaned) == 8)
 		{
-			$cleaned = '45' . $cleaned;
+			$cleaned = '+45' . $cleaned;
 		}
 
 		return $cleaned;
@@ -257,32 +286,44 @@ class plgRedformSmsgatewaydk extends JPlugin
 	{
 		$phoneNumber = $this->cleanPhone($phoneNumber);
 
-		$url1 = "http://smschannel1.dk";
-		$url2 = "http://smschannel2.dk";
-		$str = "/sendsms/";
-		$str .= "?username=" . $this->params->get('username');
-		$str .= "&password=" . $this->params->get('password');
-		$str .= "&to=" . $phoneNumber;
-		$str .= "&from=" . $this->params->get('from');
-		$str .= "&message=" . urlencode(utf8_decode($message));
-		$str .= "&charset=UTF-8";
+		$url = "http://restapi.smsgateway.dk/v2/message.json?apikey=" . $this->params->get('apikey');
 
-		if (file_get_contents($url1))
+		$json = json_encode(
+				array(
+					"message" => array(
+						"recipients" => $phoneNumber,
+						"sender" => $this->params->get('from'),
+						"message" => $message,
+						"charset" => "UTF-8"
+					)
+				)
+			);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS,$json);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$response = curl_exec($ch);
+		curl_close($ch);
+
+		if (!$response)
 		{
-			$res = file_get_contents($url1 . $str);
-			RdfHelperLog::simpleLog('SMSGateway.dk message sent: ' . $url1 . $str);
-		}
-		elseif (file_get_contents($url2))
-		{
-			$res = file_get_contents($url2 . $str);
-			RdfHelperLog::simpleLog('SMSGateway.dk message sent: ' . $url2 . $str);
-		}
-		else
-		{
+			RdfHelperLog::simpleLog('SMSGateway error: ' . curl_error($ch));
 			throw new RuntimeException('SMSGateway error');
 		}
 
-		RdfHelperLog::simpleLog('SMSGateway.dk message response: ' . $res);
+		$jsonResponse = json_decode($response);
+
+		if ($jsonResponse->status != 200)
+		{
+			RdfHelperLog::simpleLog('SMSGateway error: ' . $response);
+			throw new RuntimeException('SMSGateway error: ' . $response);
+		}
+
+		RdfHelperLog::simpleLog('SMSGateway.dk message sent: ' . json_encode($message));
+		RdfHelperLog::simpleLog('SMSGateway.dk message response: ' . $response);
 	}
 
 	/**

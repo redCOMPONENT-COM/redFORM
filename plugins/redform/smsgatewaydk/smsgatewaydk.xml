@@ -21,24 +21,27 @@
                 <field name="forms" type="redformform" multiple="1"
                        label="PLG_REDFORM_SMSGATEWAYDK_SELECT_FORMS"
                        desc="PLG_REDFORM_SMSGATEWAYDK_SELECT_FORMS_DESC" />
+
                 <field name="phoneFieldIds" type="redformfield" multiple="1"
                        label="PLG_REDFORM_SMSGATEWAYDK_SELECT_PHONE_FIELDS"
                        desc="PLG_REDFORM_SMSGATEWAYDK_SELECT_PHONE_FIELDS_DESC" />
-                <field name="username" type="text"
-                       label="PLG_REDFORM_SMSGATEWAYDK_USERNAME"
-                       desc="PLG_REDFORM_SMSGATEWAYDK_USERNAME_DESC" />
-                <field name="password" type="text"
-                       label="PLG_REDFORM_SMSGATEWAYDK_PASSWORD"
-                       desc="PLG_REDFORM_SMSGATEWAYDK_PASSWORD_DESC" />
+
+                <field name="apikey" type="text"
+                       label="PLG_REDFORM_SMSGATEWAYDK_APIKEY"
+                       desc="PLG_REDFORM_SMSGATEWAYDK_APIKEY_DESC" />
+
                 <field name="from" type="text"
                        label="PLG_REDFORM_SMSGATEWAYDK_FROM"
                        desc="PLG_REDFORM_SMSGATEWAYDK_FROM_DESC" />
+
                 <field name="notification" type="textarea"
                        label="PLG_REDFORM_SMSGATEWAYDK_NOTIFICATION_MESSAGE"
                        desc="PLG_REDFORM_SMSGATEWAYDK_NOTIFICATION_MESSAGE_DESC" />
+
                 <field name="confirmation" type="textarea"
                        label="PLG_REDFORM_SMSGATEWAYDKATION_MESSAGE"
                        desc="PLG_REDFORM_SMSGATEWAYDKATION_MESSAGE_DESC" />
+
                 <field name="error" type="textarea"
                        label="PLG_REDFORM_SMSGATEWAYDK_ERROR_MESSAGE"
                        desc="PLG_REDFORM_SMSGATEWAYDK_ERROR_MESSAGE_DESC" />
