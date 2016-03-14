@@ -58,29 +58,29 @@ class RdfHelperNotifymaintainer
 		// Set the email subject
 		$replaceHelper = new RdfHelperTagsreplace($form, $this->answers);
 
-		if (trim($form->contactpersonemailsubject))
+		if ($form->admin_notification_email_mode)
 		{
-			$subject = $replaceHelper->replace($form->contactpersonemailsubject);
-		}
-		elseif ($this->answers->isNew())
-		{
-			$subject = $replaceHelper->replace(JText::_('COM_REDFORM_CONTACT_NOTIFICATION_EMAIL_SUBJECT'));
+			$subject = $replaceHelper->replace($form->admin_notification_email_subject);
 		}
 		else
 		{
-			$subject = $replaceHelper->replace(JText::_('COM_REDFORM_CONTACT_NOTIFICATION_UPDATE_EMAIL_SUBJECT'));
+			$subject = $this->answers->isNew() ?
+				$replaceHelper->replace(JText::_('COM_REDFORM_CONTACT_NOTIFICATION_EMAIL_SUBJECT')) :
+				$replaceHelper->replace(JText::_('COM_REDFORM_CONTACT_NOTIFICATION_UPDATE_EMAIL_SUBJECT'));
 		}
 
 		$this->mailer->setSubject($subject);
 
 		// Mail body
-		if ($this->answers->isNew())
+		if ($form->admin_notification_email_mode)
 		{
-			$htmlmsg = $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY'));
+			$htmlmsg = $replaceHelper->replace($form->admin_notification_email_body);
 		}
 		else
 		{
-			$htmlmsg = $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY'));
+			$htmlmsg = $this->answers->isNew() ?
+				$replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY')) :
+				$replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY'));
 		}
 
 		/* Add user submitted data if set */
@@ -112,31 +112,14 @@ class RdfHelperNotifymaintainer
 	 */
 	private function addFormContactPersonAddress()
 	{
-		$hasValidRecipients = false;
-
-		$form = $this->getForm();
-
-		if (strstr($form->contactpersonemail, ';'))
-		{
-			$addresses = explode(";", $form->contactpersonemail);
-		}
-		else
-		{
-			$addresses = explode(",", $form->contactpersonemail);
-		}
+		$addresses = RdfHelper::extractEmails($this->getForm()->contactpersonemail);
 
 		foreach ($addresses as $a)
 		{
-			$a = trim($a);
-
-			if (JMailHelper::isEmailAddress($a))
-			{
-				$hasValidRecipients = true;
-				$this->mailer->addRecipient($a);
-			}
+			$this->mailer->addRecipient($a);
 		}
 
-		return $hasValidRecipients;
+		return count($addresses);
 	}
 
 	/**
