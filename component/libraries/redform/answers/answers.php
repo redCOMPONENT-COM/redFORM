@@ -250,11 +250,21 @@ class RdfAnswers
 	{
 		if (!$this->recipients)
 		{
+			// Check for recipients file type
 			foreach ($this->fields as $field)
 			{
 				if ($field->fieldtype == 'recipients' && count($field->value))
 				{
 					$this->recipients = $this->recipients ? array_merge($this->recipients, $field->value) : $field->value;
+				}
+			}
+
+			// Check for conditional recipients
+			if ($conditional = RdfHelperConditionalrecipients::getRecipients($this->getForm(), $this))
+			{
+				foreach ($conditional as $recipient)
+				{
+					$this->recipients[] = $recipient[0];
 				}
 			}
 		}
@@ -391,7 +401,7 @@ class RdfAnswers
 	/**
 	 * Get fields
 	 *
-	 * @return RdfRfield
+	 * @return RdfRfield[]
 	 */
 	public function getFields()
 	{
