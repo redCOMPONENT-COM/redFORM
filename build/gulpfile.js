@@ -28,11 +28,13 @@ gulp.task('release',
 			parser.parseString(data, function (err, result) {
 				var version = result.extension.version[0];
 				var fileName = config.skipVersion ? extension.name + '_ALL_UNZIP_FIRST.zip' : extension.name + '-v' + version + '_ALL_UNZIP_FIRST.zip';
+				del.sync(path.join(config.release_dir, fileName), {force: true});
 
 				// We will output where release package is going so it is easier to find
 				console.log('Creating all in one release file in: ' + path.join(config.release_dir, fileName));
 				return gulp.src([
-						config.release_dir + '/**'
+						config.release_dir + '/**',
+						'!' + fileName
 					])
 					.pipe(zip(fileName))
 					.pipe(gulp.dest(config.release_dir));
