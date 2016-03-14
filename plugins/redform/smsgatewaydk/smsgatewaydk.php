@@ -86,8 +86,9 @@ class plgRedformSmsgatewaydk extends JPlugin
 
 		$input = JFactory::getApplication()->input;
 		$message = $input->get('SMS');
-		$phoneNumber = $input->get('FROM');
-		RdfHelperLog::simpleLog('received message on smsgatewaydk (mobile: ' . $phoneNumber . '):' . $message);
+		$phoneNumber = '+' . $input->get('FROM');
+
+		RdfHelperLog::simpleLog('received message on smsgatewaydk (mobile: ' . $phoneNumber . '): ' . $message);
 
 		if (!preg_match('/([0-9]+)[\s]*ok/i', $message, $matches))
 		{
@@ -257,9 +258,9 @@ class plgRedformSmsgatewaydk extends JPlugin
 	 */
 	private function cleanPhone($phoneNumber)
 	{
-		$cleaned = str_replace(array(' ', '+'), '', $phoneNumber);
+		$cleaned = str_replace(' ', '', $phoneNumber);
 
-		if (!preg_match('/^[0-9]+$/', $cleaned))
+		if (!preg_match('/^[+]*[0-9]+$/', $cleaned))
 		{
 			throw new InvalidArgumentException('Invalid phone number: ' . $phoneNumber);
 		}
@@ -316,7 +317,7 @@ class plgRedformSmsgatewaydk extends JPlugin
 
 		$jsonResponse = json_decode($response);
 
-		if ($jsonResponse->status != 200)
+		if ($jsonResponse->status != 201)
 		{
 			RdfHelperLog::simpleLog('SMSGateway error: ' . $response);
 			throw new RuntimeException('SMSGateway error: ' . $response);
