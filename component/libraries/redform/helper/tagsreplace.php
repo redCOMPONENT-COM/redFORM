@@ -64,6 +64,11 @@ class RdfHelperTagsreplace
 			return $text;
 		}
 
+		// Plugins integration
+		JPluginHelper::importPlugin('redform_integration');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onRedformTagReplace', array(&$text, $this->formdata, $this->answers));
+
 		foreach ($alltags as $tag)
 		{
 			if (method_exists($this, 'getTag' . ucfirst($tag[1])))
@@ -206,10 +211,10 @@ class RdfHelperTagsreplace
 	 */
 	private function getTagAnswers()
 	{
-		$text = RdfHelperLayout::render('tag.answers',
+		$text = RdfLayoutHelper::render('tag.answers',
 			$this->answers,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $text;

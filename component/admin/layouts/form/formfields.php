@@ -84,14 +84,14 @@ $searchToolsOptions = array(
 		// Render the toolbar?
 		if ($showToolbar)
 		{
-			echo RdfHelperLayout::render('formfields.toolbar', $data);
+			echo RdfLayoutHelper::render('formfields.toolbar', $data);
 		}
 		?>
 		</div>
 
 		<div class="panel-body">
 		<?php
-		echo RdfHelperLayout::render(
+		echo RdfLayoutHelper::render(
 			'searchtools.default',
 			array(
 				'view' => (object) array(
@@ -129,6 +129,9 @@ $searchToolsOptions = array(
 							<?php echo JHTML::_('rsearchtools.sort', 'COM_REDFORM_ORDERING', 'ff.ordering', $listDirn, $listOrder); ?>
 						</th>
 					<?php endif; ?>
+					<th width="12%" class="nowrap hidden-phone">
+						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_TABLE_HEADER_SECTION', 's.ordering', $listDirn, $listOrder); ?>
+					</th>
 					<th width="12%" class="nowrap hidden-phone">
 						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Required', 'ff.validate', $listDirn, $listOrder); ?>
 					</th>
@@ -180,6 +183,10 @@ $searchToolsOptions = array(
 									<input type="text" style="display:none" name="order[]" value="<?php echo $orderkey + 1;?>" class="text-area-order" />
 								</td>
 							<?php endif; ?>
+
+							<td>
+								<?php echo $item->section; ?>
+							</td>
 
 							<td>
 								<?php echo $item->validate ?

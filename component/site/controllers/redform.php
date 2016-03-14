@@ -28,19 +28,22 @@ class RedformControllerRedform extends RedformController
 		$app = JFactory::getApplication();
 
 		$formId = $app->input->getInt('form_id', 0);
-
-		$model = new RdfCoreSubmission($formId);
-		$result = $model->apisaveform();
-
 		$referer = $app->input->get('referer', '', 'base64');
 		$referer = $referer ? base64_decode($referer) : 'index.php';
 
-		if (!$result)
-		{
-			$msg = JText::_('COM_REDFORM_SORRY_THERE_WAS_A_PROBLEM_WITH_YOUR_SUBMISSION') . ': ' . $model->getError();
+		$model = new RdfCoreFormSubmission($formId);
+		$form = RdfEntityForm::load($formId);
 
+		try
+		{
+			$result = $model->apisaveform();
+		}
+		catch (Exception $e)
+		{
+			$msg = JText::_('COM_REDFORM_SORRY_THERE_WAS_A_PROBLEM_WITH_YOUR_SUBMISSION') . ': ' . $e->getMessage();
 			$this->setRedirect($referer, $msg, 'error');
-			$this->redirect();
+
+			return;
 		}
 
 		JPluginHelper::importPlugin('redform');
@@ -58,9 +61,13 @@ class RedformControllerRedform extends RedformController
 		{
 			$this->setRedirect($url);
 		}
+		elseif ($form->submitnotification)
+		{
+			$this->setRedirect('index.php?option=com_redform&view=notification&submitKey=' . $result->submit_key);
+		}
 		else
 		{
-			echo $this->setRedirect('index.php?option=com_redform&view=notification&submitKey=' . $result->submit_key);
+			$this->setRedirect($referer, JText::_('COM_REDFORM_DEFAULT_SUBMISSION_SUCCESS_MESSAGE'));
 		}
 
 		$this->redirect();
@@ -100,6 +107,22 @@ class RedformControllerRedform extends RedformController
 		$input->set('updatedIds', $updatedIds);
 
 		parent::display();
+	}
+
+	/**
+	 * Prefill a form and redirect
+	 *
+	 * @return void
+	 */
+	public function prefill()
+	{
+		$fields = $this->input->get('fields', null, 'array');
+		$formId = $this->input->getInt('formId');
+		$return = $this->input->getString('return');
+
+		JFactory::getApplication()->setUserState('formdata' . $formId, array((object) $fields));
+		$this->setRedirect($return);
+		$this->redirect();
 	}
 
 	/**

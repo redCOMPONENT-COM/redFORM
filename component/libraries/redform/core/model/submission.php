@@ -35,7 +35,7 @@ class RdfCoreModelSubmission extends RModel
 	{
 		parent::__construct($config);
 
-		if ($config && isset($config['submitKey']))
+		if (!empty($config['submitKey']))
 		{
 			$this->setSubmitKey($config['submitKey']);
 		}
@@ -68,19 +68,26 @@ class RdfCoreModelSubmission extends RModel
 		{
 			$submission = new RdfCoreFormSubmission;
 			$submission->setSubmitKey($this->submitKey);
+			$this->submission = $submission;
+		}
 
-			if (!$sids)
-			{
-				$sids = $this->getSids($this->submitKey);
-			}
+		if (is_array($sids))
+		{
+			$this->setSubmitKey($this->getSidSubmitKey(reset($sids)));
+		}
 
-			foreach ($sids as $sid)
+		if (!$sids)
+		{
+			$sids = $this->getSids($this->submitKey);
+		}
+
+		foreach ($sids as $sid)
+		{
+			if (!$this->submission->getSubmissionBySid($sid))
 			{
 				$answers = $this->getSubSubmission($sid);
-				$submission->addSubSubmission($answers);
+				$this->submission->addSubSubmission($answers);
 			}
-
-			$this->submission = $submission;
 		}
 
 		return $this->submission;
@@ -120,12 +127,14 @@ class RdfCoreModelSubmission extends RModel
 
 		foreach ($fields as $field)
 		{
-			if (isset($submissionsData->{'field_' . $field->field_id}))
+			$clonedField = clone $field;
+
+			if (isset($submissionsData->{'field_' . $clonedField->field_id}))
 			{
-				$field->setValueFromDatabase($submissionsData->{'field_' . $field->field_id});
+				$clonedField->setValueFromDatabase($submissionsData->{'field_' . $clonedField->field_id});
 			}
 
-			$subSubmission->addField($field);
+			$subSubmission->addField($clonedField);
 		}
 
 		return $subSubmission;
@@ -231,7 +240,7 @@ class RdfCoreModelSubmission extends RModel
 		$query->where('s.submit_key = ' . $db->q($submit_key));
 
 		$db->setQuery($query);
-		$res = $db->loadObjectList('s.id');
+		$res = $db->loadObjectList('id');
 
 		return ($res);
 	}

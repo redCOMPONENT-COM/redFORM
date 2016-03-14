@@ -51,6 +51,7 @@ class RdfBootstrap
 			RLoader::registerPrefix('Rdf', __DIR__);
 
 			// Make available the fields
+			JFormHelper::addFieldPath(JPATH_LIBRARIES . '/redform/form/field');
 			JFormHelper::addFieldPath(JPATH_LIBRARIES . '/redform/form/fields');
 
 			// Make available the form rules
@@ -58,8 +59,7 @@ class RdfBootstrap
 
 			if (file_exists(JPATH_LIBRARIES . '/redmember/library.php'))
 			{
-				include_once JPATH_LIBRARIES . '/redmember/library.php';
-
+				RLoader::registerPrefix('Redmember', JPATH_LIBRARIES . '/redmember');
 				define('REDFORM_REDMEMBER_INTEGRATION', true);
 			}
 			else

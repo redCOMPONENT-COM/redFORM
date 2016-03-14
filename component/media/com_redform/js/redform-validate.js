@@ -158,9 +158,49 @@ var RedFormValidator = function() {
  	 	 	 	 	 	$el.get(0).type = 'email';
  	 	 	 	 	}
  	 	 	 	}
+
  	 	 	 	inputFields.push($el);
  	 	 	}
  	 	}
+
+		if ($form.find('.checkboxes.required')) {
+
+			$form.find('.checkboxes.required input').change(function(){
+				var fieldset = jQuery(this).parents('fieldset').first();
+				fieldset.removeClass('invalid');
+				jQuery(fieldset).find('input').get().each(function(input){
+					input.setCustomValidity('');
+				});
+			});
+
+			$form.submit(function(){
+				var valid = true;
+
+				$form.find('.checkboxes.required').get().each(function(fieldset){
+					var $fieldset = jQuery(fieldset);
+					if ($fieldset.find(':checked').length === 0) {
+						$fieldset.addClass('invalid');
+						var boxes = $fieldset.find('input').get();
+
+						if (boxes.length == 1) {
+							boxes[0].setCustomValidity(Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED'));
+						}
+						else {
+							boxes[0].setCustomValidity(Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED'));
+						}
+
+						if (typeof boxes[0].reportValidity === 'function') {
+							boxes[0].reportValidity();
+						}
+
+						valid = false;
+					}
+				});
+
+				return valid;
+			});
+		}
+
  	 	$form.data('inputfields', inputFields);
  	},
 
@@ -187,7 +227,7 @@ var RedFormValidator = function() {
  	 	 	return regex.test(value);
  	 	});
  	 	setHandler('email', function(value, element) {
-		    value = punycode.toASCII(value);
+			value = punycode.toASCII(value);
  	 	 	var regex = /^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
  	 	 	return regex.test(value);
  	 	});

@@ -106,7 +106,7 @@ class PaymentEpay extends RdfPaymentHelper
 	}
 
 	/**
-	 * handle the recpetion of notification
+	 * handle the reception of notification
 	 *
 	 * @return bool paid status
 	 */

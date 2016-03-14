@@ -17,7 +17,7 @@ JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
  * @subpackage  Library
  * @since       2.5
  */
-class conditionalrecipientTest extends JoomlaTestCase
+class conditionalrecipientTest extends TestCase
 {
 	/**
 	 * Data provider

@@ -77,7 +77,8 @@ class plgRedform_mailingAcymailing extends JPlugin
 
 		foreach ($lists as $l)
 		{
-			if ($l->name == $listname)
+			if ((is_numeric($listname) && $listname == $l->listid)
+				|| $l->name == $listname)
 			{
 				$listid = $l->listid;
 				break;
@@ -96,7 +97,7 @@ class plgRedform_mailingAcymailing extends JPlugin
 		$myUser->email = $subscriber->email;
 		$myUser->name  = $subscriber->name;
 
-		$subscriberClass = acymailing::get('class.subscriber');
+		$subscriberClass = acymailing_get('class.subscriber');
 
 		// This function will return you the ID of the user inserted in the AcyMailing table
 		$subid = $subscriberClass->save($myUser);
@@ -139,7 +140,7 @@ class plgRedform_mailingAcymailing extends JPlugin
 
 		include_once JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php';
 
-		$listClass = acymailing::get('class.list');
+		$listClass = acymailing_get('class.list');
 
 		$allLists = $listClass->getLists();
 

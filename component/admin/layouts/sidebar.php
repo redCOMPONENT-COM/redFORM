@@ -46,6 +46,13 @@ $return = base64_encode('index.php' . $uri->toString(array('query')));
 		</a>
 	</li>
 	<li>
+		<a class="<?php echo $fieldsClass; ?>"
+		   href="<?php echo JRoute::_('index.php?option=com_redform&view=sections') ?>">
+			<i class="icon-list"></i>
+			<?php echo JText::_('COM_REDFORM_SECTION_LIST_TITLE') ?>
+		</a>
+	</li>
+	<li>
 		<a class="<?php echo $submittersClass; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=submitters') ?>">
 			<i class="icon-user"></i>

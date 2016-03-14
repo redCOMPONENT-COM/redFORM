@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="file" version="1.7.0" method="upgrade">
 	<name>redFORM bs-BA</name>
-	<creationDate>##DATE##</creationDate>
+	<creationDate>July 8, 2015</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redcomponent.com</authorUrl>
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-	<version>##VERSION##</version>
+	<version>3.3.9</version>
+	<tag>##VERSION##</tag>
 	<description>bs-BA language pack for redFORM&lt;br/&gt;Incomplete ? Please &lt;a href="http://www.redcomponent.com/translations"&gt;help us&lt;/a&gt; with translations !</description>
 
 	<fileset>

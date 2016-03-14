@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="redform_payment" method="upgrade">
+    <name>PLG_REDFORM_WORLDPAY2</name>
+    <creationDate>July 8, 2015</creationDate>
+    <author>redWEB Aps</author>
+    <authorEmail>email@redweb.dk</authorEmail>
+    <authorUrl>www.redcomponent.com</authorUrl>
+    <copyright>(C) 2008 - 2016 redCOMPONENT.com</copyright>
+    <license>GNU/GPL</license>
+    <version>3.3.8</version>
+    <tag>##VERSION##</tag>
+    <description>PLG_REDFORM_WORLDPAY2_XML_DESC</description>
+
+    <files>
+        <filename plugin="worldpay2">worldpay2.php</filename>
+        <folder>helpers</folder>
+        <filename>index.html</filename>
+        <folder>js</folder>
+        <folder>language</folder>
+    </files>
+
+    <config>
+        <fields name="params">
+            <fieldset name="general" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_GENERAL">
+
+                <field name="merchantid" type="text" default=""
+                       label="PLG_REDFORM_WORLDPAY_MERCHANTID_LABEL"
+                       description="PLG_REDFORM_WORLDPAY_MERCHANTID_DESC"/>
+
+                <field name="password" type="text" default=""
+                       label="PLG_REDFORM_WORLDPAY_PASSWORD_LABEL"
+                       description="PLG_REDFORM_WORLDPAY_PASSWORD_DESC"/>
+
+                <field type="list" name="hashmethod" default="sha1"
+                       label="PLG_REDFORM_WORLDPAY_HASHTYPE_LABEL"
+                       description="PLG_REDFORM_WORLDPAY_HASHTYPE_DESC">
+                    <option value="sha1">SHA1</option>
+                    <option value="md5">MD5</option>
+                </field>
+
+                <field name="presharedkey" type="text" default=""
+                       label="PLG_REDFORM_WORLDPAY_PRESHAREDKEY_LABEL"
+                       description="PLG_REDFORM_WORLDPAY_PRESHAREDKEY_DESC"/>
+
+
+                <field name="allowed_currencies" type="textarea"
+                       label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
+                       description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
+                       rows="10"
+                        />
+            </fieldset>
+
+            <fieldset name="extra" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_EXTRA">
+
+                <field name="gatewaylabel" type="text" default="" label="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL"
+                       description="PLG_REDFORM_PAYMENT_XML_GATEWAY_LABEL_DESC"/>
+
+                <field name="gatewaybackendlabel" type="text" default="" label="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL"
+                       description="PLG_REDFORM_PAYMENT_XML_GATEWAY_BACKEND_LABEL_DESC"/>
+
+            </fieldset>
+        </fields>
+    </config>
+
+</extension>

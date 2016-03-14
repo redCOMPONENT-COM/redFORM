@@ -41,6 +41,21 @@ class RdfRfieldSelect extends RdfRfield
 	}
 
 	/**
+	 * Returns field value
+	 *
+	 * @return string
+	 */
+	public function getValue()
+	{
+		if (is_array($this->value))
+		{
+			return $this->value[0];
+		}
+
+		return $this->value;
+	}
+
+	/**
 	 * Get and set the value from post data, using appropriate filtering
 	 *
 	 * @param   int  $signup  form instance number for the field
@@ -116,8 +131,13 @@ class RdfRfieldSelect extends RdfRfield
 		{
 			if (in_array($option->value, $this->value))
 			{
-				$sku[] = $option->sku;
+				$sku[] = $option->sku ?: parent::getSku() . '_' . $option->id;
 			}
+		}
+
+		if (empty($sku))
+		{
+			return parent::getSku();
 		}
 
 		return implode('-', $sku);
@@ -221,9 +241,7 @@ class RdfRfieldSelect extends RdfRfield
 			}
 		}
 
-		$value = $this->getValue();
-
-		if ($value && in_array($option->value, $value))
+		if ($this->value && in_array($option->value, $this->value))
 		{
 			$properties['selected'] = 'selected';
 		}

@@ -20,7 +20,7 @@ $listDirn = $this->state->get('list.direction');
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
 	<?php
-	echo RdfHelperLayout::render(
+	echo RdfLayoutHelper::render(
 		'submitters.searchtools.default',
 		array(
 			'view' => $this,
@@ -87,7 +87,7 @@ $listDirn = $this->state->get('list.direction');
 				<th class="nowrap hidden-phone">
 					<?php echo JText::_('COM_REDFORM_Price'); ?>
 				</th>
-				<th class="nowrap hidden-phone">
+				<th class="nowrap hidden-phone" width="auto">
 					<?php echo JText::_('COM_REDFORM_Payment'); ?>
 				</th>
 			<?php endif;?>
@@ -163,7 +163,7 @@ $listDirn = $this->state->get('list.direction');
 
 				<?php if ($this->formInfo->activatepayment): ?>
 					<td class="submitters-price"><?php echo $item->price ? RdfHelper::formatPrice($item->price + $item->vat, $item->currency) : ''; ?></td>
-					<td class="paymentrequests">
+					<td class="paymentrequests" width="auto">
 						<?php if ($item->paymentrequests): ?>
 						<ul class="unstyled">
 							<?php foreach ($item->paymentrequests as $pr): ?>

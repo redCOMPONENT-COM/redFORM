@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Analytics
  * @since       2.5
  */
-class RedformAnalyticsItem
+class RdfAnalyticsItem
 {
 	/**
 	 * Type of transaction
@@ -167,11 +167,11 @@ class RedformAnalyticsItem
 	/**
 	 * Send
 	 *
-	 * @param   RedformAnalyticsMeasurementprotocolClientinterface  $client  client to send the hit
+	 * @param   RdfAnalyticsMeasurementprotocolClientinterface  $client  client to send the hit
 	 *
 	 * @return mixed
 	 */
-	public function hit(RedformAnalyticsMeasurementprotocolClientinterface $client)
+	public function hit(RdfAnalyticsMeasurementprotocolClientinterface $client)
 	{
 		$data = array(
 			't' => $this->type,

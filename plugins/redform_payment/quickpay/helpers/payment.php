@@ -22,7 +22,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 	 */
 	protected $gateway = 'quickpay';
 
-	protected $params = null;
+	protected $params;
 
 	/**
 	 * Display or redirect to the payment page for the gateway
@@ -35,53 +35,40 @@ class PaymentQuickpay extends  RdfPaymentHelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
-		$document = JFactory::getDocument();
-
-		$details = $this->details($request->key);
+		$details = $this->getDetails($request->key);
 		$reference = $request->key;
 		$currency = $details->currency;
 
+		if (!$this->checkParameters())
+		{
+			return false;
+		}
+
+		$orderId = str_replace("-", "", $request->uniqueid) . strftime("%H%M%S");
+
 		$req_params = array(
-			'protocol' => 4,
-			'msgtype' => "authorize",
-			'merchant' => $this->params->get('quickpayid'),
-			'language' => "en",
-			'ordernumber' => $request->uniqueid,
+			'version' => 'v10',
+			'merchant_id' => $this->params->get('merchant_id'),
+			'agreement_id' => $this->params->get('agreement_id'),
+			'order_id' => $orderId,
 			'amount' => round($this->getPrice($details) * 100),
 			'currency' => $currency,
 			'continueurl' => $this->getUrl('processing', $reference),
 			'cancelurl' => $this->getUrl('paymentcancelled', $reference),
 			'callbackurl' => $this->getUrl('notify', $reference),
 			'autocapture' => 0,
-			'cardtypelock' => $this->_getAllowedCard(),
-			'description' => 0,
-			'testmode' => $this->params->get('testmode', 0),
-			'splitpayment' => 0,
+			'payment_methods' => $this->_getAllowedCard(),
+			'description' => $request->title,
 		);
-		$md5 = md5(implode("", $req_params) . $this->params->get('md5secret'));
-
-		if (!$req_params['merchant'])
-		{
-			echo JText::_('PLG_REDFORM_QUICKPAY_MISSING_QUICKPAYID');
-
-			return false;
-		}
-
-		if (!$this->params->get('md5secret'))
-		{
-			echo JText::_('PLG_REDFORM_QUICKPAY_MISSING_MD5SECRET');
-
-			return false;
-		}
+		$req_params['checksum'] = $this->checksum($req_params);
 
 		?>
 		<h3><?php echo JText::_('Quickpay Payment Gateway'); ?></h3>
-		<form action="https://secure.quickpay.dk/form/" method="post">
+		<form action="https://payment.quickpay.net" method="post">
 			<p><?php echo $request->title; ?></p>
 			<?php foreach ($req_params as $key => $val): ?>
 				<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $val; ?>"/>
 			<?php endforeach; ?>
-			<input type="hidden" name="md5check" value="<?php echo $md5; ?>"/>
 			<input type="submit" value="Open Quickpay payment window"/>
 		</form>
 		<?php
@@ -96,104 +83,90 @@ class PaymentQuickpay extends  RdfPaymentHelper
 	 */
 	public function notify()
 	{
+		if (!$this->checkParameters())
+		{
+			return false;
+		}
+
 		$mainframe = JFactory::getApplication();
 		$db = JFactory::getDBO();
 		$paid = 0;
 
-		$reference = JRequest::getvar('reference');
-		JRequest::setVar('submit_key', $reference);
-		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_QUICKPAY_NOTIFICATION_RECEIVED', $reference));
+		$input = $mainframe->input;
 
-		// It was successull, get the details
-		$resp = array();
-		$resp[] = 'tid:' . JRequest::getVar('transaction');
-		$resp[] = 'orderid:' . JRequest::getVar('ordernumber');
-		$resp[] = 'amount:' . JRequest::getVar('amount');
-		$resp[] = 'cur:' . JRequest::getVar('currency');
-		$resp[] = 'date:' . substr(JRequest::getVar('time'), 0, 6);
-		$resp[] = 'time:' . substr(JRequest::getVar('time'), 6);
-		$resp = implode("\n  ", $resp);
+		$request_body = file_get_contents("php://input");
+		$checksum = $this->signCallback($request_body);
 
-		if ($this->params->get('md5secret'))
+		if ($checksum !== $_SERVER["HTTP_QUICKPAY_CHECKSUM_SHA256"])
 		{
-			$req_params = array(
-				JRequest::getVar('msgtype'),
-				JRequest::getVar('ordernumber'),
-				JRequest::getVar('amount'),
-				JRequest::getVar('currency'),
-				JRequest::getVar('time'),
-				JRequest::getVar('state'),
-				JRequest::getVar('qpstat'),
-				JRequest::getVar('qpstatmsg'),
-				JRequest::getVar('chstat'),
-				JRequest::getVar('chstatmsg'),
-				JRequest::getVar('merchant'),
-				JRequest::getVar('merchantemail'),
-				JRequest::getVar('transaction'),
-				JRequest::getVar('cardtype'),
-				JRequest::getVar('cardnumber'),
-				//     	  JRequest::getVar('cardexpire'),
-				JRequest::getVar('splitpayment'),
-				JRequest::getVar('fraudprobability'),
-				JRequest::getVar('fraudremarks'),
-				JRequest::getVar('fraudreport'),
-				JRequest::getVar('fee')
-			);
-			$receivedkey = JRequest::getVar('md5check');
-			$calc = md5(implode('', $req_params) . $this->params->get('md5secret'));
+			RdfHelperLog::simpleLog('Wrong checksum for quickpay callback: ' . $checksum . '/' . $_SERVER["HTTP_QUICKPAY_CHECKSUM_SHA256"] . ' / ' . print_r($request_body, true));
 
-			if (strcmp($receivedkey, $calc))
-			{
-				$error = JText::sprintf('PLG_REDFORM_QUICKPAY_MD5_KEY_MISMATCH', $reference);
-				RdfHelperLog::simpleLog($error);
-				$this->writeTransaction($reference, $error . $resp, 'FAIL', 0);
-
-				return false;
-			}
+			return false;
 		}
 
-		if (!JRequest::getVar('qpstat') === '000')
+		$reference = $input->get('reference');
+		$input->set('submit_key', $reference);
+		RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_QUICKPAY_NOTIFICATION_RECEIVED', $reference));
+
+		$details = $this->getDetails($reference);
+
+		$callBackData = json_decode($request_body);
+
+		// It was successull, get the details
+		$operations = $callBackData->operations;
+
+		if ($callBackData->test_mode && !$this->params->get('testmode'))
+		{
+			RdfHelperLog::simpleLog('Quickpay: received test mode transaction while not in test mode...' . print_r($this->params, true));
+
+			return false;
+		}
+
+		if (!count($operations))
+		{
+			RdfHelperLog::simpleLog('Quickpay callback: no operations');
+
+			return false;
+		}
+
+		// Get operation
+		$operation = reset($operations);
+
+		$resp = array();
+		$resp[] = 'tid:' . $callBackData->order_id;
+		$resp[] = 'orderid:' . $callBackData->order_id;
+		$resp[] = 'amount:' . $operation->amount;
+		$resp[] = 'currency:' . $callBackData->currency;
+		$resp[] = 'date:' . $callBackData->created_at;
+		$resp = implode("\n  ", $resp);
+
+		if ($operation->qp_status_code !== '20000')
 		{
 			// Payment was refused
 			$error = JText::sprintf('PLG_REDFORM_QUICKPAY_PAYMENT_REFUSED', $reference);
 			RdfHelperLog::simpleLog($error);
-			$this->writeTransaction($reference, JRequest::getVar('qpstat') . ': ' . JRequest::getVar('qpstatmsg'), 'FAIL', 0);
+			$this->writeTransaction($reference, $operation->qp_status_code . ': ' . $operation->qp_status_msg, 'FAIL', 0);
 
-			return 0;
+			return false;
 		}
 
-		if (JRequest::getVar('state') == 0)
+		if (!$callBackData->accepted)
 		{
 			// Payment was refused
 			RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_QUICKPAY_TRANSACTION_STATE_INITIAL', $reference));
 			$this->writeTransaction(
-				$submit_key,
-				JText::sprintf('PLG_REDFORM_QUICKPAY_TRANSACTION_STATE_INITIAL', $reference) . "\n  " . $resp,
-				'FAIL',
-				0
-			);
-
-			return 0;
-		}
-		elseif (JRequest::getVar('state') == 5)
-		{
-			// Payment was refused
-			RdfHelperLog::simpleLog(JText::sprintf('PLG_REDFORM_QUICKPAY_TRANSACTION_STATE_CANCELLED', $reference));
-			$this->writeTransaction(
 				$reference,
-				JText::sprintf('PLG_REDFORM_QUICKPAY_TRANSACTION_STATE_CANCELLED', $reference) . "\n  " . $resp,
+				'Payment not accepted for reference: ' . $reference . "\n  " . $resp,
 				'FAIL',
 				0
 			);
 
-			return 0;
+			return false;
 		}
-
-		$details = $this->getDetails($reference);
 
 		$currency = $details->currency;
 
-		if (strcasecmp($currency, JRequest::getVar('currency')))
+		if (strcasecmp($currency, $callBackData->currency))
 		{
 			$error = JText::sprintf('PLG_REDFORM_QUICKPAY_CURRENCY_MISMATCH', $reference);
 			RdfHelperLog::simpleLog($error);
@@ -202,7 +175,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			return false;
 		}
 
-		if (round($this->getPrice($details) * 100) != JRequest::getVar('amount'))
+		if (round($this->getPrice($details) * 100) != $operation->amount)
 		{
 			$error = JText::sprintf('PLG_REDFORM_QUICKPAY_PRICE_MISMATCH', $reference);
 			RdfHelperLog::simpleLog($error);
@@ -268,5 +241,70 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		}
 
 		return implode(",", $allowed);
+	}
+
+	/**
+	 * Compute checksum
+	 *
+	 * @param   array  $params  params without checksum
+	 *
+	 * @return string
+	 */
+	private function checksum($params)
+	{
+		ksort($params);
+		$base = implode(" ", $params);
+
+		return hash_hmac("sha256", $base, $this->params->get('api_key'));
+	}
+
+	/**
+	 * Get checksum for callback
+	 *
+	 * @param   array  $base  input data
+	 *
+	 * @return string
+	 */
+	private function signCallback($base)
+	{
+		return hash_hmac("sha256", $base, $this->params->get('private_key'));
+	}
+
+	/**
+	 * Check config
+	 *
+	 * @return bool
+	 */
+	private function checkParameters()
+	{
+		if (!$this->params->get('merchant_id'))
+		{
+			echo JText::_('PLG_REDFORM_QUICKPAY_MISSING_MERCHANT_ID');
+
+			return false;
+		}
+
+		if (!$this->params->get('agreement_id'))
+		{
+			echo JText::_('PLG_REDFORM_QUICKPAY_MISSING_agreement_id');
+
+			return false;
+		}
+
+		if (!$this->params->get('api_key'))
+		{
+			echo JText::_('PLG_REDFORM_QUICKPAY_MISSING_api_key');
+
+			return false;
+		}
+
+		if (!$this->params->get('private_key'))
+		{
+			echo JText::_('PLG_REDFORM_QUICKPAY_MISSING_private_key');
+
+			return false;
+		}
+
+		return true;
 	}
 }

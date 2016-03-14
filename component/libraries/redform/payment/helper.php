@@ -64,6 +64,16 @@ abstract class RdfPaymentHelper extends JObject
 	protected $cart;
 
 	/**
+	 * @var JInput
+	 */
+	protected $input;
+
+	/**
+	 * @var RdfPaymentPlugin
+	 */
+	public $plugin;
+
+	/**
 	 * Class contructor
 	 *
 	 * @param   array  $params  plugin params
@@ -71,6 +81,7 @@ abstract class RdfPaymentHelper extends JObject
 	public function __construct($params)
 	{
 		$this->params = $params;
+		$this->input = JFactory::getApplication()->input;
 	}
 
 	/**
@@ -163,20 +174,20 @@ abstract class RdfPaymentHelper extends JObject
 	{
 		$cart = $this->getCart($reference);
 
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
+		$table = RTable::getAdminInstance('Payment', array(), 'com_redform');
+		$table->date = JFactory::getDate()->toSql();
+		$table->data = $data;
+		$table->cart_id = $cart->id;
+		$table->status = $status;
+		$table->gateway = $this->gateway;
+		$table->paid = $paid;
 
-		$query->insert('#__rwf_payment');
-		$query->columns(array('date', 'data', 'cart_id', 'status', 'gateway', 'paid'));
-		$query->values('NOW(), ' . $db->Quote($data)
-						. ', ' . $db->Quote($cart->id)
-						. ', ' . $db->Quote($status)
-						. ', ' . $db->Quote($this->gateway)
-						. ', ' . $db->Quote($paid)
-		);
+		$table->store();
 
-		$db->setQuery($query);
-		$db->query();
+		// Trigger event for custom handling
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onPaymentAfterSave', array('com_redform.payment.helper', $table, true));
 	}
 
 	/**

@@ -25,6 +25,15 @@ $action = JRoute::_('index.php?option=com_redform&view=formfield');
 
 	<div class="control-group">
 		<div class="control-label">
+			<?php echo $this->form->getLabel('section_id'); ?>
+		</div>
+		<div class="controls">
+			<?php echo $this->form->getInput('section_id'); ?>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<div class="control-label">
 			<?php echo $this->form->getLabel('validate'); ?>
 		</div>
 		<div class="controls">

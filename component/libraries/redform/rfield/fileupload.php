@@ -99,10 +99,16 @@ class RdfRfieldFileupload extends RdfRfield
 		}
 
 		$input = JFactory::getApplication()->input;
+		$upload = $input->files->get($this->getPostName($signup), array(), 'array');
 
-		if (!$upload = $input->files->get($this->getPostName($signup), array(), 'array'))
+		if (!$upload || !$upload['size'])
 		{
 			return false;
+		}
+
+		if ($upload['error'])
+		{
+			throw new RuntimeException('File upload error');
 		}
 
 		$maxSizeB = $this->getParam('maxsize', 1000000);
@@ -119,7 +125,7 @@ class RdfRfieldFileupload extends RdfRfield
 		$src_file = $upload['tmp_name'];
 
 		// Make sure we have a unique name for file
-		$dest_filename = uniqid() . '_' . basename($upload['name']);
+		$dest_filename = uniqid() . '_' . basename(JFile::makeSafe($upload['name']));
 
 		/* Start processing uploaded file */
 		if (is_uploaded_file($src_file))

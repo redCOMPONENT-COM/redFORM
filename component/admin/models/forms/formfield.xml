@@ -13,11 +13,19 @@
 				/>
 		<field
 				name="field_id"
-				type="redformfield"
+				type="redform.field"
 				label="COM_REDFORM_FORMS_XML_FORMFIELD_FIELD"
 				description="COM_REDFORM_FORMS_XML_FORMFIELD_FIELD_DESC"
 				required="true"
+				excludeFormFields="true"
 				/>
+		<field
+				name="section_id"
+				type="redform.section"
+				label="COM_REDFORM_FORMS_XML_FORMFIELD_SECTION"
+				description="COM_REDFORM_FORMS_XML_FORMFIELD_SECTION_DESC"
+				required="true"
+		/>
         <field
                 name="validate"
                 type="radio"

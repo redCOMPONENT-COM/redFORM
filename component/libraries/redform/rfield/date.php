@@ -27,11 +27,11 @@ class RdfRfieldDate extends RdfRfield
 	 */
 	public function getInput()
 	{
-		$element = RdfHelperLayout::render(
+		$element = RdfLayoutHelper::render(
 			'rform.rfield.date',
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $element;
@@ -52,7 +52,7 @@ class RdfRfieldDate extends RdfRfield
 		}
 		elseif ($this->load()->default && strtotime($this->load()->default))
 		{
-			$this->value = strftime($format, $this->load()->default);
+			$this->value = strftime($format, strtotime($this->load()->default));
 		}
 
 		if ($this->value && !strtotime($this->value))

@@ -58,7 +58,8 @@ class RedformModelFormfields extends RModelList
 				'fieldtype', 'f.fieldtype',
 				'validate', 'ff.validate',
 				'unique', 'ff.unique',
-			);
+				's.ordering',
+				);
 		}
 
 		parent::__construct($config);
@@ -80,13 +81,15 @@ class RedformModelFormfields extends RModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		parent::populateState('ff.ordering', 'asc');
+		parent::populateState($ordering ?: 'ff.ordering', $direction ?: 'asc');
 	}
 
 	/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
+	 *
+	 * @throws Exception
 	 */
 	protected function getListQuery()
 	{
@@ -95,8 +98,10 @@ class RedformModelFormfields extends RModelList
 		$query = $db->getQuery(true)
 			->select('ff.id, f.field, f.fieldtype, ff.validate, ff.unique, ff.ordering, ff.field_id, ff.published')
 			->select('fo.formname')
+			->select('s.name AS section')
 			->from('#__rwf_fields as f')
 			->join('INNER', '#__rwf_form_field as ff ON ff.field_id = f.id')
+			->join('LEFT', '#__rwf_section as s ON s.id = ff.section_id')
 			->join('INNER', '#__rwf_forms as fo ON fo.id = ff.form_id');
 
 		// Filter by state.

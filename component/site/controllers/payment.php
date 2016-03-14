@@ -48,7 +48,16 @@ class RedformControllerPayment extends JControllerLegacy
 		$model = $this->getModel('payment');
 
 		// We need a cart for this submit key
-		$cart = $model->getNewCart($submitKey);
+		try
+		{
+			$cart = $model->getNewCart($submitKey);
+		}
+		catch (Exception $e)
+		{
+			echo 'Error getting new cart';
+
+			return;
+		}
 
 		$model->setCartReference($cart->reference);
 		$options = $model->getGatewayOptions();
@@ -142,6 +151,13 @@ class RedformControllerPayment extends JControllerLegacy
 
 				return;
 			}
+		}
+		else
+		{
+			// Try to auto bill
+			$billingModel = $this->getModel('billing');
+			$billingModel->setCartReference($cart->reference);
+			$billingModel->createAutoBilling();
 		}
 
 		$details = $model->getPaymentDetails();
@@ -283,11 +299,6 @@ class RedformControllerPayment extends JControllerLegacy
 			if (!$alreadypaid)
 			{
 				$model->setPaymentRequestAsPaid();
-
-				// Trigger event for custom handling
-				JPluginHelper::importPlugin('redform');
-				$dispatcher = JDispatcher::getInstance();
-				$dispatcher->trigger('onAfterPaymentVerified', array($key));
 
 				// Built-in notifications
 				if (!$model->notifyPaymentReceived())

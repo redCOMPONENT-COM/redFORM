@@ -38,6 +38,14 @@ abstract class RdfRfieldFactory extends JObject
 			$types[] = substr($f, 0, -4);
 		}
 
+		$types = array_filter(
+			$types,
+			function($item)
+			{
+				return !in_array($item, array('baseparams'));
+			}
+		);
+
 		return $types;
 	}
 
@@ -70,7 +78,7 @@ abstract class RdfRfieldFactory extends JObject
 	 */
 	public static function getFormField($id)
 	{
-		if (!isset(static::$fields[$id]))
+		if (empty(static::$fields[$id]))
 		{
 			$type = static::getType($id);
 			$field = static::getFieldType($type);

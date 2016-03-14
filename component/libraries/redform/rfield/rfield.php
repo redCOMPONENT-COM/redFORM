@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Rfield
  * @since       2.5
  */
-abstract class RdfRfield extends JObject
+class RdfRfield extends JObject
 {
 	/**
 	 * Field type name
@@ -29,6 +29,12 @@ abstract class RdfRfield extends JObject
 	 * @var int
 	 */
 	protected $id = 0;
+
+	/**
+	 * Form field section id
+	 * @var int
+	 */
+	protected $section_id = 0;
 
 	/**
 	 * Field data from
@@ -93,6 +99,13 @@ abstract class RdfRfield extends JObject
 	protected $hasOptions = false;
 
 	/**
+	 * Price item label
+	 *
+	 * @var null
+	 */
+	protected $paymentRequestItemLabel = null;
+
+	/**
 	 * Magic method
 	 *
 	 * @param   string  $name  property name
@@ -135,6 +148,16 @@ abstract class RdfRfield extends JObject
 
 			case 'redmember_field':
 				return $this->load()->redmember_field;
+
+			case 'section_id':
+				$data = $this->load();
+
+				if (property_exists($data, $name))
+				{
+					return $data->{$name};
+				}
+
+				return $this->section_id;
 
 			case 'required':
 			case 'validate':
@@ -219,11 +242,11 @@ abstract class RdfRfield extends JObject
 	{
 		$data = $this->load();
 
-		$label = RdfHelperLayout::render(
+		$label = RdfLayoutHelper::render(
 			'rform.rfield.label',
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $label;
@@ -236,11 +259,11 @@ abstract class RdfRfield extends JObject
 	 */
 	public function getInput()
 	{
-		$element = RdfHelperLayout::render(
+		$element = RdfLayoutHelper::render(
 			'rform.rfield.' . $this->type,
 			$this,
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		return $element;
@@ -420,7 +443,29 @@ abstract class RdfRfield extends JObject
 	 */
 	public function getSku()
 	{
-		return '';
+		return 'FIELD' . $this->id;
+	}
+
+	/**
+	 * Get customized label for price item
+	 *
+	 * @return string
+	 */
+	public function getPaymentRequestItemLabel()
+	{
+		return $this->paymentRequestItemLabel ?: $this->load()->field;
+	}
+
+	/**
+	 * Set customized label for price item
+	 *
+	 * @param   string  $label  the text to use as label
+	 *
+	 * @return string
+	 */
+	public function setPaymentRequestItemLabel($label)
+	{
+		return $this->paymentRequestItemLabel = $label;
 	}
 
 	/**
@@ -430,8 +475,6 @@ abstract class RdfRfield extends JObject
 	 */
 	public function getInputProperties()
 	{
-		$app = JFactory::getApplication();
-
 		$properties = array();
 		$properties['type'] = 'text';
 		$properties['name'] = $this->getFormElementName();
@@ -440,6 +483,15 @@ abstract class RdfRfield extends JObject
 		if ($class = trim($this->getParam('class')))
 		{
 			$properties['class'] = $class;
+		}
+
+		if ($showon = $this->getParam('showon'))
+		{
+			$showon   = explode(':', $showon, 2);
+			$properties['class'] .= ' showon_' . implode(' showon_', explode(',', $showon[1]));
+			$id = $this->getName($showon[0]);
+			$properties['rel'] = ' rel="showon_' . $id . '"';
+			$options['showonEnabled'] = true;
 		}
 
 		return $properties;
@@ -577,7 +629,7 @@ abstract class RdfRfield extends JObject
 			$query = $db->getQuery(true);
 
 			$query->select('f.field, f.tooltip, f.redmember_field, f.fieldtype, f.params, f.default');
-			$query->select('ff.id, ff.field_id, ff.validate, ff.readonly');
+			$query->select('ff.id, ff.field_id, ff.validate, ff.readonly, ff.section_id');
 			$query->select('ff.form_id, ff.published');
 			$query->select('CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header');
 			$query->from('#__rwf_form_field AS ff');

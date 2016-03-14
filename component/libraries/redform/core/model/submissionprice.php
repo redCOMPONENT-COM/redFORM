@@ -32,6 +32,12 @@ class RdfCoreModelSubmissionprice extends RModel
 	 */
 	protected $submission;
 
+	protected $price;
+
+	protected $vat;
+
+	protected $submissionPriceItems;
+
 	/**
 	 * Constructor
 	 *
@@ -68,16 +74,8 @@ class RdfCoreModelSubmissionprice extends RModel
 	 */
 	public function updatePrice()
 	{
-		$params = JComponentHelper::getParams('com_redform');
-
-		$price = $this->answers->getPrice();
-		$vat = $this->answers->getVat();
-
-		if (!$params->get('allow_negative_total', 1))
-		{
-			$price = max(array(0, $price));
-			$vat = max(array(0, $vat));
-		}
+		$price = $this->getPrice();
+		$vat = $this->getVat();
 
 		if (!$price)
 		{
@@ -105,13 +103,60 @@ class RdfCoreModelSubmissionprice extends RModel
 		$this->submission = $row;
 
 		$this->updateSubmissionPriceItems();
+		$this->deleteUnpaidPaymentRequests();
 
-		if ($price && !$this->isPaid())
+		if (!$this->isPaid())
 		{
-			$this->updatePaymentRequest();
+			$this->createPaymentRequest();
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get price
+	 *
+	 * @return float|mixed
+	 */
+	private function getPrice()
+	{
+		if (!$this->price)
+		{
+			$params = JComponentHelper::getParams('com_redform');
+			$price = $this->answers->getPrice();
+
+			if (!$params->get('allow_negative_total', 1))
+			{
+				$price = max(array(0, $price));
+			}
+
+			$this->price = $price;
+		}
+
+		return $this->price;
+	}
+
+	/**
+	 * Get vat
+	 *
+	 * @return float|mixed
+	 */
+	private function getVat()
+	{
+		if (!$this->vat)
+		{
+			$params = JComponentHelper::getParams('com_redform');
+			$vat = $this->answers->getVat();
+
+			if (!$params->get('allow_negative_total', 1))
+			{
+				$vat = max(array(0, $vat));
+			}
+
+			$this->vat = $vat;
+		}
+
+		return $this->vat;
 	}
 
 	/**
@@ -143,18 +188,22 @@ class RdfCoreModelSubmissionprice extends RModel
 			return;
 		}
 
+		$this->submissionPriceItems = array();
+
 		$row = RTable::getAdminInstance('Submissionpriceitem', array(), 'com_redform');
 
 		$row->submission_id = $this->answers->sid;
 		$row->sku = $field->getSku();
-		$row->label = $field->name;
+		$row->label = $field->getPaymentRequestItemLabel();
 		$row->price = round($price, RHelperCurrency::getPrecision($this->answers->getCurrency()));
 		$row->vat = round($field->getVat(), RHelperCurrency::getPrecision($this->answers->getCurrency()));
 
-		if (!$row->store())
+		if (!($row->check() && $row->store()))
 		{
-			throw new RuntimeException('Couldn\'t create submission price items');
+			throw new RuntimeException('Couldn\'t create submission price items: ' . $row->getError());
 		}
+
+		$this->submissionPriceItems[] = $row;
 	}
 
 	/**
@@ -182,28 +231,94 @@ class RdfCoreModelSubmissionprice extends RModel
 	 *
 	 * @return void
 	 */
-	private function updatePaymentRequest()
+	private function createPaymentRequest()
 	{
-		$this->deletePreviousPaymentRequests();
+		$alreadyPaid = $this->getAlreadyPaid();
 
+		// Create payment request
 		$date = JFactory::getDate();
 		$row = RTable::getAdminInstance('paymentrequest', array(), 'com_redform');
 		$row->submission_id = $this->submission->id;
 		$row->created = $date->toSql();
-		$row->price = $this->submission->price;
-		$row->vat = $this->submission->vat;
+		$row->price = $this->submission->price - $alreadyPaid->price;
+		$row->vat = $this->submission->vat - $alreadyPaid->vat;
 		$row->currency = $this->submission->currency;
 
 		$row->store();
 
-		// Now create payment request items
-		$query = ' INSERT INTO #__rwf_payment_request_item (payment_request_id, sku, label, price, vat) '
-			. ' SELECT ' . $row->id . ', sku, label, price, vat '
-			. ' FROM #__rwf_submission_price_item '
-			. ' WHERE submission_id = ' . $this->answers->sid;
+		$this->createPaymentRequestItems($row->id);
+
+		$entity = RdfEntityPaymentrequest::getInstance();
+		$entity->bind($row);
+
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onRedformAfterCreatePaymentRequest', array($entity));
+	}
+
+	/**
+	 * Create payment request items
+	 *
+	 * @param   int  $paymentRequestId  payment request id
+	 *
+	 * @return void
+	 */
+	private function createPaymentRequestItems($paymentRequestId)
+	{
+		$query = $this->_db->getQuery(true)
+			->select('sku, label, price, vat')
+			->from('#__rwf_submission_price_item')
+			->where('submission_id = ' . $this->answers->sid);
 
 		$this->_db->setQuery($query);
-		$this->_db->execute();
+
+		$currentItems = $this->_db->loadObjectList();
+		$alreadyPaid = $this->getAlreadyPaidPaymentRequestItems();
+
+		$finalItems = array();
+
+		// First substract already paid
+		foreach ($alreadyPaid as $item)
+		{
+			$finalItems[$item->sku] = $item;
+			$finalItems[$item->sku]->price = - $finalItems[$item->sku]->price;
+			$finalItems[$item->sku]->vat = - $finalItems[$item->sku]->vat;
+		}
+
+		// Then add current items
+		foreach ($currentItems as $item)
+		{
+			if (empty($finalItems[$item->sku]))
+			{
+				$finalItems[$item->sku] = $item;
+			}
+			else
+			{
+				$finalItems[$item->sku]->price += $item->price;
+				$finalItems[$item->sku]->vat += $item->vat;
+			}
+		}
+
+		// Now register result to db
+		foreach ($finalItems as $item)
+		{
+			if (!$item->price)
+			{
+				// Already paid
+				continue;
+			}
+
+			// Add a line for difference
+			$itemRow = RTable::getAdminInstance('Paymentrequestitem', array(), 'com_redform');
+
+			$itemRow->payment_request_id = $paymentRequestId;
+			$itemRow->sku = $item->sku;
+			$itemRow->label = $item->label;
+			$itemRow->price = $item->price;
+			$itemRow->vat = $item->vat;
+
+			$itemRow->store();
+		}
 	}
 
 	/**
@@ -211,7 +326,7 @@ class RdfCoreModelSubmissionprice extends RModel
 	 *
 	 * @return void
 	 */
-	private function deletePreviousPaymentRequests()
+	private function deleteUnpaidPaymentRequests()
 	{
 		$query = $this->_db->getQuery(true);
 
@@ -223,28 +338,92 @@ class RdfCoreModelSubmissionprice extends RModel
 
 		if (!$this->_db->execute())
 		{
-			throw new RuntimeException('Couldn\'t delete submission price items');
+			throw new RuntimeException('Couldn\'t delete payment request');
 		}
 	}
 
 	/**
 	 * Check if is paid
 	 *
-	 * @TODO: it might be better to check if the sum of all currently paid payment request matches submission total
-	 *
 	 * @return string
 	 */
 	private function isPaid()
 	{
+		$price = $this->getPrice();
+		$vat = $this->getVat();
+
+		$alreadyPaid = $this->getAlreadyPaid();
+
+		return ($price - $alreadyPaid->price == 0) ? true : false;
+	}
+
+	/**
+	 * Get already paid amount
+	 *
+	 * @return object properties price and vat
+	 */
+	private function getAlreadyPaid()
+	{
 		$query = $this->_db->getQuery(true);
 
-		$query->select('pr.id')
+		$query->select('SUM(pr.price) AS price, SUM(pr.vat) AS vat')
 			->from('#__rwf_payment_request AS pr')
+			->where('pr.submission_id = ' . $this->answers->sid)
+			->where('pr.paid = 1')
+			->group('pr.submission_id');
+
+		$this->_db->setQuery($query);
+
+		$sums = $this->_db->loadObject();
+
+		$res = new stdclass;
+		$res->price = 0;
+		$res->vat = 0;
+
+		if ($sums)
+		{
+			$res->price += $sums->price;
+			$res->vat += $sums->vat;
+		}
+
+		return $res;
+	}
+
+	/**
+	 * Get already paid amount
+	 *
+	 * @return object properties price and vat
+	 */
+	private function getAlreadyPaidPaymentRequestItems()
+	{
+		$query = $this->_db->getQuery(true);
+
+		$query->select('i.*')
+			->from('#__rwf_payment_request AS pr')
+			->innerJoin('#__rwf_payment_request_item AS i ON i.payment_request_id = pr.id')
 			->where('pr.submission_id = ' . $this->answers->sid)
 			->where('pr.paid = 1');
 
 		$this->_db->setQuery($query);
 
-		return $this->_db->loadResult() ? true : false;
+		$items = $this->_db->loadObjectList();
+
+		// Group by sku
+		$skus = array();
+
+		foreach ($items as $item)
+		{
+			if (empty($skus[$item->sku]))
+			{
+				$skus[$item->sku] = $item;
+			}
+			else
+			{
+				$skus[$item->sku]->price += $item->price;
+				$skus[$item->sku]->vat += $item->vat;
+			}
+		}
+
+		return $skus;
 	}
 }

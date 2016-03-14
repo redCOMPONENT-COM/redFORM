@@ -29,9 +29,9 @@ class RedFormModelPayment extends JModelLegacy
 	protected $paymentsDetails = array();
 
 	/**
-	 * Cart data from db
+	 * Cart entity
 	 *
-	 * @var object
+	 * @var RdfEntityCart
 	 */
 	protected $cart;
 
@@ -45,27 +45,6 @@ class RedFormModelPayment extends JModelLegacy
 		parent::__construct();
 
 		$this->reference = JFactory::getApplication()->input->get('reference', '');
-	}
-
-	/**
-	 * Method for getting the form from the model.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
-	 */
-	public function getBillingForm()
-	{
-		// Get the form.
-		RForm::addFormPath(JPATH_COMPONENT . '/models/forms');
-		RForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
-
-		$form = RForm::getInstance('billing', 'billing', array('control' => 'jform'));
-
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
 	}
 
 	/**
@@ -118,13 +97,9 @@ class RedFormModelPayment extends JModelLegacy
 		if (empty($this->gateways))
 		{
 			$details = $this->getPaymentDetails();
+			$helper = new RdfCorePaymentGateway($details);
 
-			JPluginHelper::importPlugin('redform_payment');
-			$dispatcher = JDispatcher::getInstance();
-
-			$gateways = array();
-			$dispatcher->trigger('onGetGateway', array(&$gateways, $details));
-			$this->gateways = $gateways;
+			$this->gateways = $helper->getGateways();
 		}
 
 		return $this->gateways;
@@ -138,31 +113,9 @@ class RedFormModelPayment extends JModelLegacy
 	public function getGatewayOptions()
 	{
 		$details = $this->getPaymentDetails();
+		$helper = new RdfCorePaymentGateway($details);
 
-		$gw = $this->getGateways();
-
-		$options = array();
-
-		foreach ($gw as $g)
-		{
-			if (isset($g['label']))
-			{
-				$label = $g['label'];
-			}
-			else
-			{
-				$label = $g['name'];
-			}
-
-			$options[] = JHTML::_('select.option', $g['name'], $label);
-		}
-
-		// Filter gateways through plugins
-		JPluginHelper::importPlugin('redform_payment');
-		$dispatcher = JDispatcher::getInstance();
-		$dispatcher->trigger('onFilterGateways', array(&$options, $details));
-
-		return $options;
+		return $helper->getOptions();
 	}
 
 	/**
@@ -246,23 +199,7 @@ class RedFormModelPayment extends JModelLegacy
 	{
 		$cart = $this->getCart();
 
-		if (empty($this->form))
-		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-
-			$query->select('f.*')
-				->from('#__rwf_submitters AS s')
-				->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id')
-				->join('INNER', '#__rwf_payment_request AS pr ON pr.submission_id = s.id')
-				->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
-				->where('ci.cart_id = ' . $db->quote($cart->id));
-
-			$db->setQuery($query);
-			$this->form = $db->loadObject();
-		}
-
-		return $this->form;
+		return $cart->getForm();
 	}
 
 	/**
@@ -306,58 +243,7 @@ class RedFormModelPayment extends JModelLegacy
 
 		if (!isset($this->paymentsDetails[$key]))
 		{
-			JPluginHelper::importPlugin('redform_integration');
-			$dispatcher = JDispatcher::getInstance();
-
-			$submitters = $this->getSubmitters();
-
-			if (!count($submitters))
-			{
-				return false;
-			}
-
-			$asub = current($submitters);
-			$form = $this->getForm();
-
-			if (!$cart->currency)
-			{
-				throw new Exception('Currency must be set in submission for payment - Please contact system administrator', 500);
-			}
-
-			$obj = new stdclass;
-			$obj->integration = $asub->integration;
-			$obj->form = $form->formname;
-			$obj->form_id = $form->id;
-			$obj->key = $cart->reference;
-			$obj->currency = $cart->currency;
-			$obj->submit_key = $asub->submit_key;
-
-			// More fields with integration
-			$paymentDetailFields = null;
-			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($asub->integration, $asub->submit_key, &$paymentDetailFields));
-
-			if (!$paymentDetailFields)
-			{
-				$paymentDetailFields = new stdClass;
-
-				if (JFactory::getApplication()->input->get('paymenttitle'))
-				{
-					$paymentDetailFields->title = JFactory::getApplication()->input->get('paymenttitle');
-				}
-				else
-				{
-					$paymentDetailFields->title = JText::_('COM_REDFORM_Form_submission') . ': ' . $form->formname;
-				}
-
-				$paymentDetailFields->adminDesc = $paymentDetailFields->title;
-				$paymentDetailFields->uniqueid = $key;
-			}
-
-			// Map
-			$obj->title = $paymentDetailFields->title;
-			$obj->adminDesc = $paymentDetailFields->adminDesc;
-			$obj->uniqueid = $paymentDetailFields->uniqueid;
-			$this->paymentsDetails[$key] = $obj;
+			$this->paymentsDetails[$key] = new RdfPaymentInfo($cart);
 		}
 
 		return $this->paymentsDetails[$key];
@@ -494,15 +380,24 @@ class RedFormModelPayment extends JModelLegacy
 	 * check if this has already been paid
 	 *
 	 * @return boolean
+	 *
+	 * @throws Exception
 	 */
 	public function hasAlreadyPaid()
 	{
+		if (!$this->reference)
+		{
+			throw new Exception('Missing reference');
+		}
+
 		$query = $this->_db->getQuery(true);
 
-		$query->select('id')
-			->from('#__rwf_cart')
-			->where('reference = ' . $this->_db->quote($this->reference))
-			->where('paid = 1');
+		$query->select('pr.id')
+			->from('#__rwf_payment_request AS pr')
+			->join('INNER', '#__rwf_cart_item AS ci on ci.payment_request_id = pr.id')
+			->join('INNER', '#__rwf_cart AS c ON c.id = ci.cart_id')
+			->where('c.reference = ' . $this->_db->quote($this->reference))
+			->where('pr.paid = 1');
 
 		$this->_db->setQuery($query);
 
@@ -514,85 +409,27 @@ class RedFormModelPayment extends JModelLegacy
 	 *
 	 * @param   string  $submitKey  submitkey for which we want a payment
 	 *
-	 * @return RTable
+	 * @return RdfCorePaymentCart
 	 */
 	public function getNewCart($submitKey)
 	{
-		$paymentRequests = $this->getUnpaidSubmitKeyPaymentRequests($submitKey);
-
-		$ids = array();
-		$price = 0;
-		$vat = 0;
-		$currency = '';
-
-		foreach ($paymentRequests as $pr)
-		{
-			$ids[] = $pr->id;
-			$price += $pr->price;
-			$vat += $pr->vat;
-			$currency = $pr->currency;
-		}
-
-		$cart = RTable::getAdminInstance('Cart', array(), 'com_redform');
-		$cart->reference = uniqid();
-		$cart->created = JFactory::getDate()->toSql();
-		$cart->price = $price;
-		$cart->vat = $vat;
-		$cart->currency = $currency;
-
-		$cart->store();
-
-		foreach ($ids as $id)
-		{
-			$cartItem = RTable::getAdminInstance('Cartitem', array(), 'com_redform');
-			$cartItem->cart_id = $cart->id;
-			$cartItem->payment_request_id = $id;
-			$cartItem->store();
-		}
+		$cart = new RdfCorePaymentCart;
+		$cart->getNewCart($submitKey);
 
 		return $cart;
 	}
 
 	/**
-	 * Return unpaid payment requests for submission associated to submit key
-	 *
-	 * @param   string  $submitKey  submit key
-	 *
-	 * @return mixed
-	 */
-	private function getUnpaidSubmitKeyPaymentRequests($submitKey)
-	{
-		$query = $this->_db->getQuery(true);
-
-		$query->select('pr.id, pr.price, pr.vat, pr.currency')
-			->from('#__rwf_payment_request AS pr')
-			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
-			->where('pr.paid = 0')
-			->where('s.submit_key = ' . $this->_db->quote($submitKey));
-
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObjectList();
-
-		return $res;
-	}
-
-	/**
 	 * get cart data from db
 	 *
-	 * @return mixed|object
+	 * @return RdfEntityCart
 	 */
 	public function getCart()
 	{
 		if (!$this->cart)
 		{
-			$query = $this->_db->getQuery(true);
-
-			$query->select('*')
-				->from('#__rwf_cart')
-				->where('reference = ' . $this->_db->quote($this->reference));
-
-			$this->_db->setQuery($query);
-			$this->cart = $this->_db->loadObject();
+			$this->cart = RdfEntityCart::getInstance();
+			$this->cart->loadByReference($this->reference);
 		}
 
 		return $this->cart;

@@ -47,7 +47,17 @@ class PlghsConfigForm
 	 */
 	public function getAssignedTo()
 	{
-		return isset($this->xml->assignTo) ?(int) $this->xml->assignTo : false;
+		return isset($this->xml->assignTo) ? (int) $this->xml->assignTo : false;
+	}
+
+	/**
+	 * Return autoreply value
+	 *
+	 * @return boolean
+	 */
+	public function getAutoreply()
+	{
+		return isset($this->xml->autoreply) ? (bool) $this->xml->autoreply : false;
 	}
 
 	/**

@@ -32,7 +32,12 @@ class RedformModelForm extends RModelAdmin
 			return false;
 		}
 
-		$this->AddFormTable($this->getState($this->getName() . '.id'));
+		$formId = $this->getState($this->getName() . '.id');
+
+		$this->AddFormTable($formId);
+
+		// Check form fields against table structure
+		$this->checkFields($formId);
 
 		// Clear the cache
 		$this->cleanCache();
@@ -198,6 +203,35 @@ class RedformModelForm extends RModelAdmin
 	}
 
 	/**
+	 * Check form fields against table structure
+	 *
+	 * @param   int  $formId  form id
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 */
+	public function checkFields($formId)
+	{
+		$tableFields = $this->_db->getTableColumns('#__rwf_forms_' . $formId);
+
+		$model = RModel::getAdminInstance('formfields', array('ignore_request' => true));
+		$model->setState('filter.form_id', $formId);
+
+		$fields = $model->getItems();
+
+		foreach ($fields as $f)
+		{
+			if (!in_array('field_' . $f->field_id, array_keys($tableFields)))
+			{
+				$table = $this->getTable('formfield');
+				$table->load($f->id);
+				$table->store();
+			}
+		}
+	}
+
+	/**
 	 * Special case for attachment file upload
 	 *
 	 * @param   JForm   $form   The form to validate against.
@@ -257,5 +291,4 @@ class RedformModelForm extends RModelAdmin
 
 		return $filePostData['name'];
 	}
-
 }

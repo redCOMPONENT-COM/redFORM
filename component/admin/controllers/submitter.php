@@ -32,16 +32,16 @@ class RedformControllerSubmitter extends RdfControllerForm
 
 		// Save redform data
 		$rfcore = new RdfCore;
-		$result = $rfcore->saveAnswers('');
 
-		if (!$result)
+		try
+		{
+			$result = $rfcore->saveAnswers('');
+			$this->setMessage(JText::_('COM_REDFORM_SUBMISSION_SAVE_SUCCESS'));
+		}
+		catch (RdfExceptionSubmission $e)
 		{
 			$msg = JText::_('COM_REDFORM_SUBMISSION_SAVE_FAILED');
-			$this->setMessage($msg . ' - ' . $rfcore->getError(), 'error');
-		}
-		else
-		{
-			$this->setMessage(JText::_('COM_REDFORM_SUBMISSION_SAVE_SUCCESS'));
+			$this->setMessage($msg . ' - ' . $e->getMessage(), 'error');
 		}
 
 		// Redirect the user and adjust session state based on the chosen task.

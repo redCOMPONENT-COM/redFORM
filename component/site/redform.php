@@ -28,5 +28,22 @@ require_once JPATH_COMPONENT . '/redform.defines.php';
 
 // Execute the controller
 $controller = JControllerLegacy::getInstance('redform');
-$controller->execute($jinput->get('task'));
-$controller->redirect();
+
+try
+{
+	$controller->execute($jinput->get('task', ''));
+	$controller->redirect();
+}
+catch (Exception $e)
+{
+	if (JDEBUG)
+	{
+		echo 'Exception:' . $e->getMessage();
+		echo "<pre>" . $e->getTraceAsString() . "</pre>";
+		exit(0);
+	}
+	else
+	{
+		JFactory::getApplication()->redirect('index.php', $e->getMessage());
+	}
+}

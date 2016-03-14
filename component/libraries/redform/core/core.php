@@ -213,7 +213,7 @@ class RdfCore extends JObject
 		$form   = $model->getForm();
 		$fieldsHtml = $this->getFormFields($form_id, $submit_key, $multiple, $options);
 
-		$html = RdfHelperLayout::render(
+		$html = RdfLayoutHelper::render(
 			'rform.form',
 			array(
 				'form' => $form,
@@ -222,7 +222,7 @@ class RdfCore extends JObject
 				'referer64' => base64_encode($uri->toString()),
 			),
 			'',
-			array('client' => 0, 'component' => 'com_redform')
+			array('component' => 'com_redform')
 		);
 
 		// Analytics
@@ -254,9 +254,6 @@ class RdfCore extends JObject
 	 */
 	public function getFormFields($form_id, $reference = null, $multi = 1, $options = array())
 	{
-		JHtml::_('behavior.keepalive');
-		RHelperAsset::load('redform-validate.js', 'com_redform');
-
 		$user      = JFactory::getUser();
 		$document  = JFactory::getDocument();
 		$app = JFactory::getApplication();
@@ -267,6 +264,7 @@ class RdfCore extends JObject
 
 		$this->setReference($reference);
 		$submit_key = $this->submitKey;
+		$answers = false;
 
 		// Was this form already submitted before (and there was an error for example, or editing)
 		if ($this->submitKey)
@@ -289,10 +287,6 @@ class RdfCore extends JObject
 			// Unset
 			$app->setUserState('formdata' . $form->id, null);
 		}
-		else
-		{
-			$answers = false;
-		}
 
 		// Css
 		$document->addStyleSheet(JURI::base() . 'media/com_redform/css/tooltip.css');
@@ -307,21 +301,11 @@ class RdfCore extends JObject
 			$currency = $form->currency;
 		}
 
-		// Custom tooltip
-		$toolTipArray = array('className' => 'redformtip' . $form->classname);
-		JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
-
 		$this->loadCheckScript();
 
 		if ($multi > 1)
 		{
 			$this->loadMultipleFormScript();
-		}
-
-		// Redmember integration: pull extra fields
-		if ($user->get('id') && REDFORM_REDMEMBER_INTEGRATION)
-		{
-			$this->getRedmemberfields($user);
 		}
 
 		$html = '<div class="redform-form ' . $form->classname . '">';
@@ -378,17 +362,20 @@ class RdfCore extends JObject
 				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
 			}
 
-			$html .= RdfHelperLayout::render(
+			$indexedFields = $this->prepareFieldsForIndex($fields, $formIndex, $indexAnswers);
+
+			$html .= RdfLayoutHelper::render(
 				'rform.fields',
 				array(
-					'fields' => $fields,
+					'fields' => $indexedFields,
 					'index' => $formIndex,
 					'user' => $user,
 					'options' => $options,
-					'answers' => $indexAnswers
+					'answers' => $indexAnswers,
+					'form' => $form
 				),
 				'',
-				array('client' => 0, 'component' => 'com_redform')
+				array('component' => 'com_redform')
 			);
 
 			if ($multi > 1)
@@ -441,10 +428,16 @@ class RdfCore extends JObject
 			$html .= '<input type="hidden" name="submit_key" value="' . $submit_key . '" />';
 		}
 
+		if (isset($options['module_id']))
+		{
+			$html .= '<input type="hidden" name="module_id" value="' . $options['module_id'] . '" />';
+		}
+
 		$html .= '<input type="hidden" name="nbactive" value="' . $initialActive . '" />';
 		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
 		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';
 		$html .= '<input type="hidden" name="' . self::getToken() . '" value="' . $uniq . '" />';
+		$html .= '<input type="hidden" name="submissionurl" value="' . base64_encode(JFactory::getURI()->toString()) . '" />';
 
 		if ($currency)
 		{
@@ -472,18 +465,12 @@ class RdfCore extends JObject
 	 * @param   array   $options          options for registration
 	 * @param   array   $data             data if empty, the $_POST variable is used
 	 *
-	 * @return   RdfCoreSubmission
+	 * @return   RdfCoreFormSubmission
 	 */
 	public function saveAnswers($integration_key, $options = array(), $data = null)
 	{
-		$model = new RdfCoreSubmission($this->formId);
-
-		if (!$result = $model->apisaveform($integration_key, $options, $data))
-		{
-			$this->setError($model->getError());
-
-			return false;
-		}
+		$model = new RdfCoreFormSubmission($this->formId);
+		$result = $model->apisaveform($integration_key, $options, $data);
 
 		return $result;
 	}
@@ -502,11 +489,23 @@ class RdfCore extends JObject
 			return $user;
 		}
 
-		$rmFieldsValues = RedmemberHelperRMUser::getData($user->id);
+		$rmUser = RedmemberApi::getUser($user->id);
 
-		foreach ($rmFieldsValues as $rmField)
+		foreach ($rmUser->fields as $rmField)
 		{
 			$user->{$rmField->fieldcode} = $rmField->value;
+		}
+
+		if ($organizations = $rmUser->getOrganizations())
+		{
+			$firstOrg = reset($organizations);
+			$rmOrganization = RedmemberApi::getOrganization($firstOrg['organization_id']);
+			$user->organization = $rmOrganization->name;
+
+			foreach ($rmOrganization->fields as $rmField)
+			{
+				$user->{$rmField->fieldcode} = $rmField->value;
+			}
 		}
 
 		return $user;
@@ -542,6 +541,18 @@ class RdfCore extends JObject
 		}
 
 		return $answers;
+	}
+
+	/**
+	 * Get cart reference associated to submit key
+	 *
+	 * @param   string  $submitKey  submit key
+	 *
+	 * @return mixed
+	 */
+	public function getSubmitkeyCartReference($submitKey)
+	{
+		return $this->getAnswers($submitKey)->getCartReference();
 	}
 
 	/**
@@ -812,7 +823,7 @@ class RdfCore extends JObject
 
 		$fields = $this->prepareUserData($userData);
 
-		$model = new RdfCoreSubmission($this->formId);
+		$model = new RdfCoreFormSubmission($this->formId);
 
 		if (!$result = $model->quicksubmit($fields, $integration, $options))
 		{
@@ -886,11 +897,12 @@ class RdfCore extends JObject
 	 */
 	protected function getGatewaySelect($currency)
 	{
-		$helper = new RdfCorePaymentGateway;
+		$paymentDetails = new stdclass;
+		$paymentDetails->currency = $currency;
 
-		$config = new stdclass;
-		$config->currency = $currency;
-		$options = $helper->getOptions($config);
+		$helper = new RdfCorePaymentGateway($paymentDetails);
+
+		$options = $helper->getOptions();
 
 		if (!$options)
 		{
@@ -973,7 +985,10 @@ class RdfCore extends JObject
 	 */
 	protected function loadCheckScript()
 	{
-		JHtml::_('behavior.formvalidation');
+		RHtmlMedia::loadFrameworkJs();
+		RHelperAsset::load('redform-validate.js', 'com_redform');
+		JText::script('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED');
+		JText::script('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED');
 	}
 
 	/**
@@ -1100,10 +1115,10 @@ class RdfCore extends JObject
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('*')
-			->from('#__rwf_payment_request')
-			->where('submission_id IN (' . implode(', ', $sids) . ')')
-			->order('id DESC');
+		$query->select('pr.*')
+			->from('#__rwf_payment_request AS pr')
+			->where('pr.submission_id IN (' . implode(', ', $sids) . ')')
+			->order('pr.id DESC');
 
 		$db->setQuery($query);
 		$paymentRequests = $db->loadObjectList();
@@ -1121,5 +1136,57 @@ class RdfCore extends JObject
 		}
 
 		return $res;
+	}
+
+	/**
+	 * Prepare fields with proper index and answers
+	 *
+	 * @param   RdfRfield[]  $fields        fields
+	 * @param   int          $index         form index
+	 * @param   RdfAnswers   $indexAnswers  answers for index
+	 *
+	 * @return RdfRfield[]
+	 */
+	protected function prepareFieldsForIndex($fields, $index, $indexAnswers)
+	{
+		$app = JFactory::getApplication();
+		$user = JFactory::getUser();
+
+		// Redmember integration: pull extra fields
+		if ($user->get('id') && REDFORM_REDMEMBER_INTEGRATION)
+		{
+			$this->getRedmemberfields($user);
+		}
+
+		$indexed = array();
+
+		foreach ($fields as $fieldOrg)
+		{
+			if (!($app->isAdmin() || $fieldOrg->published))
+			{
+				// Only display unpublished fields in backend form
+				continue;
+			}
+
+			$field = clone $fieldOrg;
+
+			$field->setFormIndex($index);
+			$field->setUser($user);
+
+			// Set value if editing
+			if ($indexAnswers && $field->id)
+			{
+				$value = $indexAnswers->getFieldAnswer($field->id);
+				$field->setValue($value, true);
+			}
+			else
+			{
+				$field->lookupDefaultValue();
+			}
+
+			$indexed[] = $field;
+		}
+
+		return $indexed;
 	}
 }

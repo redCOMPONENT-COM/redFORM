@@ -125,7 +125,7 @@ class PlghsConversation
 
 		$conversation->setThreads(array($thread));
 		$conversation->setCreatedBy($createdBy);
-		$this->getClient()->createConversation($conversation);
+		$this->getClient()->createConversation($conversation, false, $this->config->getAutoreply($this->config));
 	}
 
 	/**

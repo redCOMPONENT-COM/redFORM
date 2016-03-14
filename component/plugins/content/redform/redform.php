@@ -37,6 +37,9 @@ class PlgContentRedform extends JPlugin
 	 */
 	private $rwfparams = null;
 
+	/**
+	 * @var RdfCore
+	 */
 	private $rfcore = null;
 
 	/**
@@ -50,13 +53,14 @@ class PlgContentRedform extends JPlugin
 	 *
 	 * @return boolean true on success
 	 */
-	public function onContentPrepare($context,&$row, &$params, $page = 0)
+	public function onContentPrepare($context, &$row, &$params, $page = 0)
 	{
 		$this->rfcore = new RdfCore;
 
 		JPlugin::loadLanguage('plg_content_redform', JPATH_ADMINISTRATOR);
 
-		$this->rwfparams = $params;
+		// Make sure params is an array
+		$this->rwfparams = (array) $params;
 
 		$regex = "#{redform}(.*?){/redform}#s";
 
@@ -113,7 +117,14 @@ class PlgContentRedform extends JPlugin
 			return JText::_('COM_REDFORM_No_active_form_found');
 		}
 
-		return $this->rfcore->displayForm($form->id, null, $multiple);
+		$options = array();
+
+		if (isset($this->rwfparams['module_id']))
+		{
+			$options['module_id'] = $this->rwfparams['module_id'];
+		}
+
+		return $this->rfcore->displayForm($form->id, null, $multiple, $options);
 	}
 
 	/**

@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Analytics
  * @since       2.5
  */
-class RedformAnalyticsMeasurementprotocolClient implements RedformAnalyticsMeasurementprotocolClientinterface
+class RdfAnalyticsMeasurementprotocolClient implements RdfAnalyticsMeasurementprotocolClientinterface
 {
 	/**
 	 * @var int
@@ -120,7 +120,7 @@ class RedformAnalyticsMeasurementprotocolClient implements RedformAnalyticsMeasu
 
 		if (!$ch_result = curl_exec($ch))
 		{
-			RedformHelperLog::simpleLog('Gua mp error: ' . curl_error($ch));
+			RdfHelperLog::simpleLog('Gua mp error: ' . curl_error($ch));
 
 			return false;
 		}

@@ -219,9 +219,11 @@ class RdfAnswers
 	/**
 	 * Return emails associated to submission for notifications
 	 *
+	 * @param   bool  $filterIsNotNotified  filter out emails which have not notifiy set to true
+	 *
 	 * @return array
 	 */
-	public function getSubmitterEmails()
+	public function getSubmitterEmails($filterIsNotNotified = true)
 	{
 		if (!$this->submitter_email)
 		{
@@ -229,7 +231,7 @@ class RdfAnswers
 
 			foreach ($this->fields as $field)
 			{
-				if ($field->fieldtype == 'email' && $field->getParam('notify', 1))
+				if ($field->fieldtype == 'email' && ($field->getParam('notify', 1) || !$filterIsNotNotified))
 				{
 					$this->submitter_email[] = $field->value;
 				}
@@ -248,11 +250,21 @@ class RdfAnswers
 	{
 		if (!$this->recipients)
 		{
+			// Check for recipients file type
 			foreach ($this->fields as $field)
 			{
 				if ($field->fieldtype == 'recipients' && count($field->value))
 				{
-					$this->recipients = array_merge($this->recipients, $field->value);
+					$this->recipients = $this->recipients ? array_merge($this->recipients, $field->value) : $field->value;
+				}
+			}
+
+			// Check for conditional recipients
+			if ($conditional = RdfHelperConditionalrecipients::getRecipients($this->getForm(), $this))
+			{
+				foreach ($conditional as $recipient)
+				{
+					$this->recipients[] = $recipient[0];
 				}
 			}
 		}
@@ -389,7 +401,7 @@ class RdfAnswers
 	/**
 	 * Get fields
 	 *
-	 * @return RdfRfield
+	 * @return RdfRfield[]
 	 */
 	public function getFields()
 	{
@@ -399,7 +411,7 @@ class RdfAnswers
 	/**
 	 * Save submission
 	 *
-	 * @param   $validate  boolean  validate form fields
+	 * @param   boolean  $validate  validate form fields
 	 *
 	 * @return int submitter_id
 	 *

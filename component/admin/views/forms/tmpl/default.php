@@ -20,7 +20,7 @@ $saveOrder = $listOrder == 'ordering';
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
 	<?php
-	echo RdfHelperLayout::render(
+	echo RdfLayoutHelper::render(
 		'searchtools.default',
 		array(
 			'view' => $this,
@@ -45,7 +45,7 @@ $saveOrder = $listOrder == 'ordering';
 			</div>
 		</div>
 	<?php else : ?>
-		<table class="table table-striped table-hover" id="categoryList">
+		<table class="table table-striped table-hover" id="formList">
 			<thead>
 			<tr>
 				<th width="1%" class="hidden-phone">

@@ -1,0 +1,26 @@
+{
+	"cli" 		 : ["redcore"],
+	"components" : ["redform", "redcore"],
+	"libraries"  : ["redcore"],
+	"media"      : ["redcore"],
+	"plugins" : {
+		"redform" : ["economic", "helpscout", "redmemberbillinginfo", "salesforce"],
+		"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
+		"redform_mailing" : ["acymailing", "ccnewsletter", "jnews", "phplist"],
+		"redform_payment" : [
+			"custom",
+			"cybersource",
+			"epay",
+			"epay2",
+			"ideal",
+			"iridium",
+			"pagseguro",
+			"paypal",
+			"quickpay",
+			"stripe",
+			"worldpay",
+			"worldpay2"
+		]
+	},
+	"webservices" : ["redcore"]
+}

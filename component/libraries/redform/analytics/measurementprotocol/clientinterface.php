@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  Analytics
  * @since       2.5
  */
-interface RedformAnalyticsMeasurementprotocolClientinterface
+interface RdfAnalyticsMeasurementprotocolClientinterface
 {
 	/**
 	 * generate hit

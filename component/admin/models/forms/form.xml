@@ -56,6 +56,7 @@
 				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_FORM_EXPIRES"
 				description="COM_REDFORM_FORM_EXPIRES_TIP"
+				default="0"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -66,6 +67,7 @@
                 format="%Y-%m-%d  %H:%M:%S"
 				label="COM_REDFORM_FORM_END_DATE"
 				description="COM_REDFORM_FORM_END_DATE_TIP"
+				showon="formexpires:1"
 				/>
 		<field
 				name="captchaactive"
@@ -95,7 +97,8 @@
 				type="editor"
 				label="COM_REDFORM_FORM_POST_SUBMISSION_TEXT"
 				description="COM_REDFORM_FORM_POST_SUBMISSION_TEXT_TIP"
-                filter="raw"
+				filter="raw"
+				showon="submitnotification:1"
 				/>
 		<field
 				name="redirect"
@@ -105,11 +108,40 @@
 				maxlength="255"
 				/>
 		<field
+				name="admin_notification_email_mode"
+				type="radio"
+				class="btn-group btn-group-yesno"
+				label="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_LABEL"
+				description="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_DESC"
+				default="0"
+		>
+			<option value="0">COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_DEFAULT</option>
+			<option value="1">COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_CUSTOM</option>
+		</field>
+		<field
+				name="admin_notification_email_subject"
+				type="text"
+				label="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_SUBJECT_LABEL"
+				description="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_SUBJECT_DESC"
+				maxlength="255"
+				size="100"
+				showon="admin_notification_email_mode:1"
+		/>
+		<field
+				name="admin_notification_email_body"
+				type="editor"
+				label="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_BODY_LABEL"
+				description="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_BODY_DESC"
+				filter="raw"
+				showon="admin_notification_email_mode:1"
+		/>
+		<field
 				name="contactpersoninform"
 				type="radio"
 				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_NOTIFY_CONTACTPERSON"
 				description="COM_REDFORM_NOTIFY_CONTACTPERSON_TIP"
+				default="0"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -121,6 +153,7 @@
 				label="COM_REDFORM_CONTACTPERSON_EMAIL"
 				description="COM_REDFORM_CONTACTPERSON_EMAIL_TIP"
 				maxlength="255"
+				showon="contactpersoninform:1"
 				/>
 		<field
 				name="contactpersonfullpost"
@@ -128,54 +161,55 @@
 				class="btn-group btn-group-yesno"
 				label="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS"
 				description="COM_REDFORM_CONTACTPERSON_EMAIL_ADD_ANSWERS_TIP"
+				showon="contactpersoninform:1"
 				>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
 
-        <field
-                name="enable_confirmation"
-                type="radio"
+		<field
+				name="enable_confirmation"
+				type="radio"
 				class="btn-group btn-group-yesno"
-                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_LABEL"
-                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_DESC"
-                >
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-        <field
-                name="enable_confirmation_notification"
-                type="radio"
+				label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_LABEL"
+				description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_DESC"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="enable_confirmation_notification"
+				type="radio"
 				class="btn-group btn-group-yesno"
-                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_LABEL"
-                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_DESC"
-                >
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
+				label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_LABEL"
+				description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_DESC"
+				>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+				name="confirmation_notification_recipients"
+				type="text"
+				label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_RECIPIENTS_LABEL"
+				description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_RECIPIENTS_DESC"
+				maxlength="255"
+				size="100"
+				/>
+		<field
+				name="confirmation_contactperson_subject"
+				type="text"
+				label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_SUBJECT_LABEL"
+				description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_SUBJECT_DESC"
+				maxlength="255"
+				size="100"
+				/>
         <field
-                name="confirmation_notification_recipients"
-                type="text"
-                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_RECIPIENTS_LABEL"
-                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_RECIPIENTS_DESC"
-                maxlength="255"
-                size="100"
-                />
-        <field
-                name="confirmation_contactperson_subject"
-                type="text"
-                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_SUBJECT_LABEL"
-                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_SUBJECT_DESC"
-                maxlength="255"
-                size="100"
-                />
-        <field
-                name="confirmation_contactperson_body"
-                type="editor"
-                label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
-                description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
-                filter="raw"
-                />
+				name="confirmation_contactperson_body"
+				type="editor"
+				label="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
+				description="COM_REDFORM_FORM_ENABLE_CONFIRMATION_NOTIFICATION_EMAIL_BODY_LABEL"
+				filter="raw"
+				/>
 
 		<field
 				name="submitterinform"
@@ -199,7 +233,7 @@
 				type="editor"
 				label="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY"
 				description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_BODY_TIP"
-                filter="raw"
+				filter="raw"
 				/>
         <field
                 name="submissionattachment"
@@ -269,7 +303,7 @@
 				type="editor"
 				label="COM_REDFORM_PAYMENTACCEPTED"
 				description="COM_REDFORM_PAYMENTACCEPTED_TIP"
-                filter="raw"
+				filter="raw"
 				/>
 		<field
 				name="contactpaymentnotificationsubject"
@@ -283,7 +317,7 @@
 				type="editor"
 				label="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY"
 				description="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY_TIP"
-                filter="raw"
+				filter="raw"
 				/>
 		<field
 				name="submitterpaymentnotificationsubject"
