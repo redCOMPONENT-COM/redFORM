@@ -43,7 +43,7 @@ class plgRedformEconomic extends JPlugin
 	private $client = null;
 
 	/**
-	 * @var object
+	 * @var RdfEntityCart
 	 */
 	private $cart = null;
 
@@ -208,7 +208,7 @@ class plgRedformEconomic extends JPlugin
 		$return = $app->input->get('return');
 
 		$invoice = $this->confirmReference($invoiceId, $reference);
-		$this->getCartDetails($invoice->cart_id);
+		$this->getCart($invoice->cart_id);
 
 		$this->bookInvoice($reference);
 
@@ -237,7 +237,7 @@ class plgRedformEconomic extends JPlugin
 		$return = $app->input->get('return');
 
 		$invoice = $this->confirmReference($invoiceId, $reference);
-		$this->getCartDetails($invoice->cart_id);
+		$this->getCart($invoice->cart_id);
 
 		$this->turnInvoice($reference);
 
@@ -391,16 +391,16 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @throws Exception
 	 */
-	private function rfCreateInvoice($cartId, $force = 0)
+	private function rfCreateInvoice($cartId, $force = false)
 	{
-		if (!$this->cart = $this->getCartDetails($cartId))
+		if (!$this->cart = $this->getCart($cartId))
 		{
 			throw new Exception('Cart details not found');
 		}
 
-		$data = $this->cart;
+		$cart = $this->cart;
 
-		if ($data->invoices && !$force)
+		if ($this->getInvoices($cartId) && !$force)
 		{
 			// Do not create if already invoiced
 			return false;
@@ -408,16 +408,16 @@ class plgRedformEconomic extends JPlugin
 
 		$helper = $this->getClient();
 
-		$debtorhandle = $this->getDebtor($data);
+		$debtorhandle = $this->getDebtor($cart);
 
 		$invoiceData = array();
-		$invoiceData['currency_code'] = $data->currency;
+		$invoiceData['currency_code'] = $cart->currency;
 		$invoiceData['debtorHandle'] = $debtorhandle->Number;
 		$invoiceData['vatzone'] = 'EU';
-		$invoiceData['isvat'] = $data->vat > 0 ? 1 : 0;
-		$invoiceData['user_info_id'] = $data->billing->email;
-		$invoiceData['name'] = $data->billing->fullname;
-		$invoiceData['text'] = $data->title;
+		$invoiceData['isvat'] = $cart->vat > 0 ? 1 : 0;
+		$invoiceData['user_info_id'] = $cart->getBilling()->email;
+		$invoiceData['name'] = $cart->getBilling()->fullname;
+		$invoiceData['text'] = $this->getCartTitle();
 
 		$invoice = $helper->createInvoice($invoiceData);
 
@@ -428,13 +428,18 @@ class plgRedformEconomic extends JPlugin
 			return false;
 		}
 
-		$helper->CurrentInvoice_SetOtherReference(array('currentInvoiceHandle' => $invoice, 'value' => $data->reference . '-' . $cartId));
+		$helper->CurrentInvoice_SetOtherReference(
+			array(
+				'currentInvoiceHandle' => $invoice,
+				'value' => ($cart->getIntegrationInfo()->uniqueid ?: $cart->reference) . ' / ' . $cart->id
+			)
+		);
 
 		$i = 1;
 
-		foreach ($data->paymentRequests as $pr)
+		foreach ($cart->getPaymentRequests() as $pr)
 		{
-			foreach ($pr->items as $item)
+			foreach ($pr->getItems() as $item)
 			{
 				$producthandle = $this->getProduct($item);
 				$line = array();
@@ -458,7 +463,7 @@ class plgRedformEconomic extends JPlugin
 			// Update table
 			RTable::addIncludePath(__DIR__ . '/lib/table');
 			$table = RTable::getInstance('Invoice', 'RedformTable');
-			$table->cart_id = $data->id;
+			$table->cart_id = $cart->id;
 			$table->date = JFactory::getDate()->toSql();
 			$table->reference = $invoice->Id;
 			$table->store();
@@ -475,17 +480,17 @@ class plgRedformEconomic extends JPlugin
 	/**
 	 * Get Debtor, creating if needed
 	 *
-	 * @param   object  $data  data
+	 * @param   RdfEntityCart  $cart  cart
 	 *
 	 * @return array
 	 */
-	private function getDebtor($data)
+	private function getDebtor($cart)
 	{
 		$helper = $this->getClient();
 		$eco = array();
 
 		// Check if the debtor already exists
-		$debtorids = $helper->Debtor_FindByEmail(array('email' => $data->billing->email));
+		$debtorids = $helper->Debtor_FindByEmail(array('email' => $cart->getBilling()->email));
 
 		if ($debtorids)
 		{
@@ -496,27 +501,27 @@ class plgRedformEconomic extends JPlugin
 			$eco['Number'] = 0;
 		}
 
-		$contact_name = (empty($data->billing->fullname) ? $data->billing->email : $data->billing->fullname);
+		$contact_name = $cart->getBilling()->fullname ?: $cart->getBilling()->email;
 
-		$eco['currency_code'] = $data->currency;
+		$eco['currency_code'] = $cart->currency;
 		$eco['vatzone'] = 'EU';
-		$eco['email'] = $data->billing->email;
+		$eco['email'] = $cart->getBilling()->email;
 
-		if ($this->params->get('force_company_as_debtor') || $data->billing->iscompany)
+		if ($this->params->get('force_company_as_debtor') || $cart->getBilling()->iscompany)
 		{
-			$eco['name'] = $data->billing->company ?: $contact_name;
+			$eco['name'] = $cart->getBilling()->company ?: $contact_name;
 		}
 		else
 		{
 			$eco['name'] = $contact_name;
 		}
 
-		$eco['phone'] = $data->billing->phone;
-		$eco['address'] = $data->billing->address;
-		$eco['zipcode'] = $data->billing->zipcode;
-		$eco['city'] = $data->billing->city;
-		$eco['country'] = $data->billing->country;
-		$eco['vatnumber'] = $data->billing->vatnumber;
+		$eco['phone'] = $cart->getBilling()->phone;
+		$eco['address'] = $cart->getBilling()->address;
+		$eco['zipcode'] = $cart->getBilling()->zipcode;
+		$eco['city'] = $cart->getBilling()->city;
+		$eco['country'] = $cart->getBilling()->country;
+		$eco['vatnumber'] = $cart->getBilling()->vatnumber;
 		$ecodebtorNumber = $helper->storeDebtor($eco);
 
 		return $ecodebtorNumber;
@@ -577,15 +582,15 @@ class plgRedformEconomic extends JPlugin
 	 */
 	private function bookInvoice($invoiceNumber)
 	{
-		$data = $this->getCartDetails();
+		$cart = $this->getCart();
 
 		$bookingData = array();
-		$bookingData['amount'] = $data->price + $data->vat;
+		$bookingData['amount'] = $cart->price + $cart->vat;
 		$bookingData['invoiceHandle'] = $invoiceNumber;
-		$bookingData['currency_code'] = $data->currency;
-		$bookingData['vat'] = $data->vat;
-		$bookingData['name'] = $data->billing->fullname;
-		$bookingData['uniqueid'] = $data->reference;
+		$bookingData['currency_code'] = $cart->currency;
+		$bookingData['vat'] = $cart->vat;
+		$bookingData['name'] = $cart->getBilling()->fullname;
+		$bookingData['uniqueid'] = ($cart->getIntegrationInfo()->uniqueid ?: $cart->reference) . ' / ' . $cart->id;
 		$invoiceHandle = $this->getClient()->bookInvoice($bookingData);
 
 		if ($invoiceHandle)
@@ -625,7 +630,7 @@ class plgRedformEconomic extends JPlugin
 	private function turnInvoice($reference)
 	{
 		$client = $this->getClient();
-		$cart = $this->getCartDetails();
+		$cart = $this->getCart();
 
 		$invoicehandle = array('Number' => $reference);
 		$data = $client->Invoice_GetData(array('entityHandle' => $invoicehandle));
@@ -729,7 +734,7 @@ class plgRedformEconomic extends JPlugin
 	private function rfSendInvoiceEmail($invoiceId)
 	{
 		$app = JFactory::getApplication();
-		$data = $this->getCartDetails();
+		$cart = $this->getCart();
 
 		// Make sure the invoice is stored indeed
 		$path = $this->rfStoreInvoice($invoiceId);
@@ -745,54 +750,10 @@ class plgRedformEconomic extends JPlugin
 		$mailer->FromName = $app->getCfg('sitename');
 		$mailer->AddReplyTo(array($app->getCfg('mailfrom'), $app->getCfg('sitename')));
 		$mailer->addAttachment($path);
-		$mailer->setSubject(JText::sprintf('PLG_REDFORM_ECONOMIC_SEND_INVOICE_SUBJECT', $data->title));
+		$mailer->setSubject(JText::sprintf('PLG_REDFORM_ECONOMIC_SEND_INVOICE_SUBJECT', $this->getCartTitle()));
 		$mailer->MsgHTML(JText::sprintf('PLG_REDFORM_ECONOMIC_SEND_INVOICE_BODY'));
-		$mailer->addRecipient($data->billing->email);
+		$mailer->addRecipient($cart->getBilling()->email);
 		$mailer->send();
-	}
-
-	/**
-	 * Get cart details, including billing and items and previous invoices
-	 *
-	 * @param   int  $cartId  cart id
-	 *
-	 * @return mixed
-	 */
-	private function getCartDetails($cartId = 0)
-	{
-		if ((!$this->cart) && $cartId)
-		{
-			$cart = $this->getCart($cartId);
-			$cart->paymentRequests = $this->getPaymentRequests($cartId);
-			$cart->billing = $this->getBilling($cartId);
-			$cart->invoices = $this->getInvoices($cartId);
-			$cart->title = $this->getCartTitle($cart);
-
-			$this->cart = $cart;
-		}
-
-		return $this->cart;
-	}
-
-	/**
-	 * Get cart id from reference
-	 *
-	 * @param   string  $reference  cart reference
-	 *
-	 * @return mixed
-	 */
-	private function getCartIdFromReference($reference)
-	{
-		$query = $this->db->getQuery(true);
-
-		$query->select('c.id')
-			->from('#__rwf_cart AS c')
-			->where('reference = ' . $this->db->quote($reference));
-
-		$this->db->setQuery($query);
-		$res = $this->db->loadResult();
-
-		return $res;
 	}
 
 	/**
@@ -800,135 +761,16 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @param   int  $cartId  cart id
 	 *
-	 * @return mixed
+	 * @return RdfEntityCart
 	 */
-	private function getCart($cartId)
+	private function getCart($cartId = 0)
 	{
-		$query = $this->db->getQuery(true);
-
-		$query->select('c.*')
-			->from('#__rwf_cart AS c')
-			->where('id = ' . $cartId);
-
-		$this->db->setQuery($query);
-		$res = $this->db->loadObject();
-
-		return $res;
-	}
-
-	/**
-	 * Return Payment requests and their items
-	 *
-	 * @param   int  $cartId  cart id
-	 *
-	 * @return mixed
-	 */
-	private function getPaymentRequests($cartId)
-	{
-		// Get Payment requests
-		$query = $this->db->getQuery(true);
-
-		$query->select('pr.*, s.integration, s.submit_key')
-			->from('#__rwf_payment_request AS pr')
-			->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
-			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
-			->where('ci.cart_id = ' . $cartId);
-
-		$this->db->setQuery($query);
-		$requests = $this->db->loadObjectList('id');
-
-		// Get Payment requests items
-		$query = $this->db->getQuery(true);
-
-		$query->select('pri.*')
-			->from('#__rwf_payment_request_item AS pri')
-			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = pri.payment_request_id')
-			->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
-			->where('ci.cart_id = ' . $cartId);
-
-		$this->db->setQuery($query);
-		$requestsItems = $this->db->loadObjectList();
-
-		foreach ($requestsItems as $item)
+		if (!$this->cart || ($cartId && $this->cart->id != $cartId))
 		{
-			if (!isset($requests[$item->payment_request_id]->items))
-			{
-				$requests[$item->payment_request_id]->items = array();
-			}
-
-			$requests[$item->payment_request_id]->items[] = $item;
+			$this->cart = RdfEntityCart::load($cartId);
 		}
 
-		return $requests;
-	}
-
-	/**
-	 * Return billing info row from database
-	 *
-	 * @param   int  $cartId  cart id
-	 *
-	 * @return mixed
-	 *
-	 * @throws Exception
-	 */
-	private function getBilling($cartId)
-	{
-		$query = $this->db->getQuery(true);
-
-		$query->select('b.*')
-			->from('#__rwf_billinginfo AS b')
-			->where('b.cart_id = ' . $cartId);
-
-		$this->db->setQuery($query);
-		$res = $this->db->loadObject();
-
-		if (!$res)
-		{
-			$sid = $this->getSubmissionId($cartId);
-			$res = $this->getASubmissionBilling($sid);
-		}
-
-		if (!$res->email)
-		{
-			throw new Exception('E-conomic: billing email is required');
-		}
-
-		return $res;
-	}
-
-	/**
-	 * Get submission id associated to cart
-	 *
-	 * @param   int  $cartId  cart id
-	 *
-	 * @return mixed
-	 */
-	private function getSubmissionId($cartId)
-	{
-		// No billing, try to find one from previous pr for this sid
-		$query = $this->db->getQuery(true)
-			->select('pr.submission_id')
-			->from('#__rwf_payment_request AS pr')
-			->join('INNER', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
-			->where('ci.cart_id = ' . $cartId);
-
-		$this->db->setQuery($query);
-
-		return $this->db->loadResult();
-	}
-
-	/**
-	 * Get any billing associated to sid
-	 *
-	 * @param   int  $submissionId  submission id
-	 *
-	 * @return mixed
-	 */
-	private function getASubmissionBilling($submissionId)
-	{
-		$submission = RdfEntitySubmitter::getInstance($submissionId);
-
-		return $submission->getASubmissionBilling();
+		return $this->cart;
 	}
 
 	/**
@@ -973,38 +815,18 @@ class plgRedformEconomic extends JPlugin
 	/**
 	 * Return a title for invoice
 	 *
-	 * @param   int  $cartDetails  cart details
-	 *
 	 * @return mixed
 	 */
-	private function getCartTitle($cartDetails)
+	private function getCartTitle()
 	{
-		JPluginHelper::importPlugin('redform_integration');
-		$dispatcher = JDispatcher::getInstance();
-
-		foreach ($cartDetails->paymentRequests as $pr)
+		if ($this->cart)
 		{
-			if (!$pr->integration)
-			{
-				continue;
-			}
-
-			$integrationDetails = null;
-			$dispatcher->trigger('getRFSubmissionPaymentDetailFields',
-				array(
-					$pr->integration,
-					$pr->submit_key,
-					&$integrationDetails
-				)
-			);
-
-			if ($integrationDetails)
-			{
-				return $integrationDetails->title;
-			}
+			return $this->cart->getIntegrationInfo()->title ?
+				$this->cart->getIntegrationInfo()->title :
+				$this->params->get('default_cart_title', 'Payment for cart reference ' . $this->cart->reference);
 		}
 
-		return $this->params->get('default_cart_title', 'Payment for cart reference ' . $cartDetails->reference);
+		return false;
 	}
 
 	/**

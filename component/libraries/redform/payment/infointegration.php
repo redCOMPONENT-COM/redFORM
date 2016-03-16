@@ -22,5 +22,7 @@ class RdfPaymentInfointegration
 
 	public $adminDesc;
 
+	public $paymentIntroText;
+
 	public $uniqueid;
 }

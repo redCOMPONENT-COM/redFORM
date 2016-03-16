@@ -48,15 +48,21 @@ gulp.task('release:redform', ['release:prepare-redform', 'release:prepare-redcor
 		parser.parseString(data, function (err, result) {
 			var version = result.extension.version[0];
 			var fileName = config.skipVersion ? extension.name + '.zip' : extension.name + '-v' + version + '.zip';
+			var fileNameNoRedcore = config.skipVersion ? extension.name + '_no_redCORE.zip' : extension.name + '-v' + version + '_no_redCORE.zip';
 
 			// We will output where release package is going so it is easier to find
 			console.log('Creating new release file in: ' + path.join(config.release_dir, fileName));
-			return gulp.src('./tmp/**/*')
+			gulp.src('./tmp/**/*')
 				.pipe(zip(fileName))
 				.pipe(gulp.dest(config.release_dir))
 				.on('end', function(){
-					del(['tmp']);
-					cb();
+					gulp.src(['./tmp/**/*', '!./tmp/redCORE{,/**}'])
+						.pipe(zip(fileNameNoRedcore))
+						.pipe(gulp.dest(config.release_dir))
+						.on('end', function(){
+							del(['tmp']);
+							cb();
+						});
 				});
 		});
 	});
