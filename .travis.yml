@@ -1,15 +1,11 @@
 language: php
-env: TRAVIS_PUBLIC_REPOSITORY=true
+env:
+  global:
+    - GITHUB_TOKEN=4d92f9e8be0eddc0e54445ff45bf1ca5a846b609
 php:
 - 5.5
-- 5.6
-- 7.0
 addons:
   firefox: "44.0.2"
-matrix:
-  allow_failures:
-    - php: 5.6
-    - php: 7.0
 before_script:
 - sudo apt-get update -qq
 - sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 php5-curl php5-mysql php5-intl php5-gd php5-sqlite > /dev/null
@@ -33,9 +29,10 @@ before_script:
 - mv gulp-config.json.dist gulp-config.json
 - gulp release --skip-version --testRelease
 - cd ../tests
+- composer config -g github-oauth.github.com $GITHUB_TOKEN
+- composer install --prefer-dist
 
 script:
-- composer install --prefer-dist
 - vendor/bin/robo check:for-missed-debug-code
 - vendor/bin/robo check:for-parse-errors
 - vendor/bin/robo check:codestyle
