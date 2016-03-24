@@ -29,7 +29,6 @@ JHtml::_('behavior.keepalive');
 
 RHelperAsset::load('punycode.js');
 
-RHtml::_('rjquery.ui');
 RHelperAsset::load('formsteps.js', 'com_redform');
 RHelperAsset::load('formsteps.css', 'com_redform');
 RHelperAsset::load('showon.js', 'com_redform');
