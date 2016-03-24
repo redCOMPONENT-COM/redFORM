@@ -29,6 +29,7 @@ JHtml::_('behavior.keepalive');
 
 RHelperAsset::load('punycode.js');
 
+RHtml::_('rjquery.ui');
 RHelperAsset::load('formsteps.js', 'com_redform');
 RHelperAsset::load('formsteps.css', 'com_redform');
 RHelperAsset::load('showon.js', 'com_redform');
@@ -38,7 +39,9 @@ if (isset($options['extrafields'][$index]))
 	$fields = array_merge($options['extrafields'][$index], $fields);
 }
 
-foreach (RdfHelper::sortFieldBySection($fields) as $s)
+$sections = RdfHelper::sortFieldBySection($fields);
+
+foreach ($sections as $s)
 {
 	$section = RdfEntitySection::load($s->id);
 	$section = '<fieldset class="redform-section' . ($section->class ? ' ' . $section->class : '') . '">';
@@ -101,5 +104,7 @@ foreach (RdfHelper::sortFieldBySection($fields) as $s)
 
 	$html .= $section;
 }
+
+$html .= $this->sublayout('progressbar', $sections);
 
 echo $html;

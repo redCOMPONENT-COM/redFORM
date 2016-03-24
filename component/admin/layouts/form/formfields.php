@@ -124,6 +124,9 @@ $searchToolsOptions = array(
 					<th class="nowrap" data-toggle="true">
 						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_FIELD', 'f.field', $listDirn, $listOrder, null, 'asc', '', null, $formName); ?>
 					</th>
+					<th class="nowrap" data-toggle="true">
+						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Type', 'f.fieldtype', $listDirn, $listOrder, null, 'asc', '', null, $formName); ?>
+					</th>
 					<?php if ($search == ''): ?>
 						<th width="20" class="nowrap">
 							<?php echo JHTML::_('rsearchtools.sort', 'COM_REDFORM_ORDERING', 'ff.ordering', $listDirn, $listOrder); ?>
@@ -172,6 +175,10 @@ $searchToolsOptions = array(
 								<a href="<?php echo $itemUrl; ?>">
 									<?php echo $item->field; ?>
 								</a>
+							</td>
+
+							<td>
+								<?php echo $item->fieldtype; ?>
 							</td>
 
 							<?php if ($search == ''): ?>

@@ -46,6 +46,10 @@
 			$sections.hide();
 			$sections.eq(current).show();
 			showControls(current);
+
+			if ($.isFunction(window.setRedFormProgress)) {
+				setRedFormProgress(formbox, current);
+			}
 		}
 
 		//Show the controls dependent on the forms position.
