@@ -745,7 +745,7 @@ class plgRedformEconomic extends JPlugin
 		}
 
 		/* Start the mailer object */
-		$mailer = JFactory::getMailer();
+		$mailer = RdfHelper::getMailer();
 		$mailer->From = $app->getCfg('mailfrom');
 		$mailer->FromName = $app->getCfg('sitename');
 		$mailer->AddReplyTo(array($app->getCfg('mailfrom'), $app->getCfg('sitename')));

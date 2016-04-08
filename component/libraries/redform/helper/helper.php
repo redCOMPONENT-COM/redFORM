@@ -19,6 +19,13 @@ defined('_JEXEC') or die;
 class RdfHelper
 {
 	/**
+	 * Mailer object
+	 *
+	 * @var    JMail
+	 */
+	public static $mailer = null;
+
+	/**
 	 * Return array of emails from comma or semicolon separated emails
 	 *
 	 * @param   string  $string    string to parse
@@ -94,7 +101,13 @@ class RdfHelper
 	 */
 	public static function getMailer()
 	{
-		$mailer = JFactory::getMailer();
+		if (!self::$mailer)
+		{
+			self::$mailer = self::createMailer();
+		}
+
+		$mailer = clone self::$mailer;
+
 		$params = JComponentHelper::getParams('com_redform');
 
 		if ($encoding = $params->get('email_encoding', ''))
@@ -246,5 +259,52 @@ class RdfHelper
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Create a mailer object
+	 *
+	 * @return  JMail object
+	 *
+	 * @see     JMail
+	 * @since   11.1
+	 */
+	protected static function createMailer()
+	{
+		$conf = JFactory::getConfig();
+
+		$smtpauth = ($conf->get('smtpauth') == 0) ? null : 1;
+		$smtpuser = $conf->get('smtpuser');
+		$smtppass = $conf->get('smtppass');
+		$smtphost = $conf->get('smtphost');
+		$smtpsecure = $conf->get('smtpsecure');
+		$smtpport = $conf->get('smtpport');
+		$mailfrom = $conf->get('mailfrom');
+		$fromname = $conf->get('fromname');
+		$mailer = $conf->get('mailer');
+
+		// Create a JMail object
+		$mail = RdfHelperMailer::getInstance();
+
+		// Set default sender without Reply-to
+		$mail->SetFrom(JMailHelper::cleanLine($mailfrom), JMailHelper::cleanLine($fromname), 0);
+
+		// Default mailer is to use PHP's mail function
+		switch ($mailer)
+		{
+			case 'smtp':
+				$mail->useSmtp($smtpauth, $smtphost, $smtpuser, $smtppass, $smtpsecure, $smtpport);
+				break;
+
+			case 'sendmail':
+				$mail->IsSendmail();
+				break;
+
+			default:
+				$mail->IsMail();
+				break;
+		}
+
+		return $mail;
 	}
 }
