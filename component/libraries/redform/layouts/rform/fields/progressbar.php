@@ -11,11 +11,18 @@ defined('_JEXEC') or die;
 
 $sections = $displayData;
 
+$n = count($sections);
+
+if ($n < 2)
+{
+	// We only need this is there are more than 1 section
+	return;
+}
+
 RHelperAsset::load('progressbar/progressbar.css', 'com_redform');
 RHelperAsset::load('progressbar/progressbar.js', 'com_redform');
 
 $i = 1;
-$n = count($sections);
 ?>
 <div class="form-progress">
 	<?php foreach ($sections as $section): ?>
