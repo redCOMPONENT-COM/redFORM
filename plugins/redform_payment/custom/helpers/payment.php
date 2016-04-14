@@ -54,7 +54,11 @@ class PaymentCustom extends  RdfPaymentHelper
 			$text[] = '<p>' . JHTML::link($return_url, JText::_('Return')) . '</b>';
 		}
 
-		$text[] = '<form class="custom-payment" method="post" action="' . $this->getUrl('notify', $request->key) . '">';
+		$targetUrl = $this->params->get('payment_status', 'pending') == 'paid' ?
+			$this->getUrl('notify', $request->key) :
+			$this->getUrl('processing', $request->key);
+
+		$text[] = '<form class="custom-payment" method="post" action="' . $targetUrl . '">';
 		$text[] = '<button type="submit">' . $this->params->get('confirmButtonLabel', 'Confirm') . '</button>';
 		$text[] = '</form>';
 
@@ -78,6 +82,6 @@ class PaymentCustom extends  RdfPaymentHelper
 
 		$this->writeTransaction($reference, $data, $status, 1);
 
-		return 1;
+		return $status;
 	}
 }
