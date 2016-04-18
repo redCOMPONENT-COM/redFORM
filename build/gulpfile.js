@@ -133,4 +133,7 @@ function getVersion(xml) {
 	if (config.gitVersion && gitshort) {
 		return version = xml.extension.version[0] + '-' + gitshort;
 	}
+	else {
+		return xml.extension.version[0];
+	}
 }
