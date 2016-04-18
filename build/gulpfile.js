@@ -10,14 +10,13 @@ var fs         	= require('fs');
 var path       	= require('path');
 var ghPages     = require('gulp-gh-pages');
 var del         = require('del');
+var exec        = require('child_process').exec
 
 var parser      = new xml2js.Parser();
 
 var jgulp   = requireDir('./node_modules/joomla-gulp', {recurse: true});
 var redcore = requireDir('./redCORE/build/gulp-redcore', {recurse: true});
 var dir = requireDir('./joomla-gulp-extensions', {recurse: true});
-
-var git = require('git-rev')
 
 var gitshort = '';
 
@@ -26,7 +25,7 @@ gulp.task('clean:release', ['git_version'], function(){
 });
 
 gulp.task('git_version', function(){
-	return git.short(function(str) {
+	return gitDescribe(function(str) {
 		gitshort = str;
 	});
 });
@@ -129,9 +128,15 @@ gulp.task('release:languages', ['clean:release'], function() {
 	return tasks;
 });
 
+function gitDescribe (cb) {
+	exec('git describe', function (err, stdout, stderr) {
+		cb(stdout.split('\n').join(''))
+	})
+}
+
 function getVersion(xml) {
 	if (config.gitVersion && gitshort) {
-		return version = xml.extension.version[0] + '-' + gitshort;
+		return gitshort;
 	}
 	else {
 		return xml.extension.version[0];
