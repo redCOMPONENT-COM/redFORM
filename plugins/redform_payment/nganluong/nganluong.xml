@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="redform_payment" method="upgrade">
+	<name>PLG_REDFORM_PAYMENT_NGANLUONG</name>
+	<creationDate>July 8, 2015</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>3.3.1</version>
+	<tag>##VERSION##</tag>
+	<description>PLG_REDFORM_PAYMENT_NGANLUONG_XML_DESCRIPTION</description>
+
+	<files>
+		<filename plugin="nganluong">nganluong.php</filename>
+		<folder>helpers</folder>
+		<filename>index.html</filename>
+		<folder>layouts</folder>
+		<folder>language</folder>
+		<folder>lib</folder>
+	</files>
+
+	<config>
+		<fields name="params">
+			<fieldset name="extra" label="extra">
+				<field name="nganluong_url_api" type="text" default="" label="NGANLUONG_URL_API"
+					description="NGANLUONG_URL_API_DESC"/>
+				<field name="nganluong_email" type="text" default="" label="NGANLUONG_EMAIL"
+					description="NGANLUONG_EMAIL_DESC"/>
+				<field name="nganluong_merchant_id" type="text" default="" label="NGANLUONG_MERCHANT_ID"
+					description="NGANLUONG_MERCHANT_ID_DESC"/>
+				<field name="nganluong_merchant_password" type="password" default="" label="NGANLUONG_MERCHANT_PASS"
+					description="NGANLUONG_MERCHANT_PASS_DESC"/>
+			</fieldset>
+		</fields>
+	</config>
+
+</extension>
