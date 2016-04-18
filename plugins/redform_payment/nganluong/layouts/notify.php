@@ -94,20 +94,20 @@ $cancel_url = $displayData['cancel_return'];
 </style>
 <form  name="NLpayBank" action="<?php echo $action; ?>" method="post">	
 	<table style="clear:both;width:500px;padding-left:46px;"> 
-			<tr><td colspan="2"><p><span style="color:#ff5a00;font-weight:bold;text-decoration:underline;">Lưu ý</span> Bạn nhập đầy đủ thông tin sau </td>
+			<tr><td colspan="2"><p><span style="color:#ff5a00;font-weight:bold;text-decoration:underline;"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_NOTICE'); ?></span> <?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CONFIRM'); ?> </td>
 				
 			</tr>
-			<tr><td>Họ Tên: </td>
+			<tr><td><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_NAME'); ?></td>
 				<td>
 					 <input type="text" style="width:270px" id="fullname" name="buyer_fullname" class="field-check " value="">
 				</td>
 			</tr>
-			<tr><td>Email: </td>
+			<tr><td><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_EMAIL'); ?></td>
 				<td>
 					 <input type="text" style="width:270px" id="fullname" name="buyer_email" class="field-check " value="">
 				</td>
 			</tr>
-			<tr><td>Số Điện thoại: </td>
+			<tr><td><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_MOBILE'); ?></td>
 				<td>
 					 <input type="text" style="width:270px" id="fullname" name="buyer_mobile" class="field-check " value="">
 				</td>
@@ -115,19 +115,18 @@ $cancel_url = $displayData['cancel_return'];
 		</table>		
 	<ul class="list-content">
 		<li class="active">
-			<label><input type="radio" value="NL" name="option_payment" selected="true">Thanh toán bằng Ví điện tử NgânLượng</label>
+			<label><input type="radio" value="NL" name="option_payment" selected="true"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_NGANLUONG_WALLET'); ?></label>
 			<div class="boxContent">
 				<p>
-				Thanh toán trực tuyến AN TOÀN và ĐƯỢC BẢO VỆ, sử dụng thẻ ngân hàng trong và ngoài nước hoặc nhiều hình thức tiện lợi khác.
-				Được bảo hộ & cấp phép bởi NGÂN HÀNG NHÀ NƯỚC, ví điện tử duy nhất được cộng đồng ƯA THÍCH NHẤT 2 năm liên tiếp, Bộ Thông tin Truyền thông trao giải thưởng Sao Khuê
-				<br/>Giao dịch. Đăng ký ví NgânLượng.vn miễn phí <a href="https://www.nganluong.vn/?portal=nganluong&amp;page=user_register" target="_blank">tại đây</a></p>
+					<?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_NGANLUONG_WALLET_DESC'); ?>
+				</p>
 			</div>
 		</li>
 		<li>
-			<label><input type="radio" value="ATM_ONLINE" name="option_payment">Thanh toán online bằng thẻ ngân hàng nội địa</label>
+			<label><input type="radio" value="ATM_ONLINE" name="option_payment"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_ATM_ONLINE'); ?></label>
 			<div class="boxContent">
 				<p><i>
-				<span style="color:#ff5a00;font-weight:bold;text-decoration:underline;">Lưu ý</span>: Bạn cần đăng ký Internet-Banking hoặc dịch vụ thanh toán trực tuyến tại ngân hàng trước khi thực hiện.</i></p>
+				<span style="color:#ff5a00;font-weight:bold;text-decoration:underline;"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_NOTICE'); ?></span>: <?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_ATM_ONLINE_DESC'); ?></i></p>
 							
 						<ul class="cardList clearfix">
 						<li class="bank-online-methods ">
@@ -303,10 +302,10 @@ $cancel_url = $displayData['cancel_return'];
 			</div>
 		</li>
 		<li>
-			<label><input type="radio" value="IB_ONLINE" name="option_payment">Thanh toán bằng IB</label>
+			<label><input type="radio" value="IB_ONLINE" name="option_payment"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_INTERNET_BANKING'); ?></label>
 			<div class="boxContent">
 				<p><i>
-						<span style="color:#ff5a00;font-weight:bold;text-decoration:underline;">Lưu ý</span>: Bạn cần đăng ký Internet-Banking hoặc dịch vụ thanh toán trực tuyến tại ngân hàng trước khi thực hiện.</i></p>
+						<span style="color:#ff5a00;font-weight:bold;text-decoration:underline;"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_NOTICE'); ?></span>: <?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_INTERNET_BANKING_DESC'); ?></i></p>
 
 				<ul class="cardList clearfix">
 					<li class="bank-online-methods ">
@@ -342,7 +341,7 @@ $cancel_url = $displayData['cancel_return'];
 			</div>
 		</li>
 		<li>
-			<label><input type="radio" value="ATM_OFFLINE" name="option_payment">Thanh toán atm offline</label>
+			<label><input type="radio" value="ATM_OFFLINE" name="option_payment"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_ATM_OFFLINE'); ?></label>
 			<div class="boxContent">
 				
 				<ul class="cardList clearfix">
@@ -436,7 +435,7 @@ $cancel_url = $displayData['cancel_return'];
 			</div>
 		</li>
 		<li>
-			<label><input type="radio" value="NH_OFFLINE" name="option_payment">Thanh toán tại văn phòng ngân hàng</label>
+			<label><input type="radio" value="NH_OFFLINE" name="option_payment"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_OFFICE'); ?></label>
 			<div class="boxContent">
 				
 				<ul class="cardList clearfix">
@@ -538,20 +537,20 @@ $cancel_url = $displayData['cancel_return'];
 			</div>
 		</li>
 		<li>
-			<label><input type="radio" value="VISA" name="option_payment" selected="true">Thanh toán bằng thẻ Visa hoặc MasterCard</label>
+			<label><input type="radio" value="VISA" name="option_payment" selected="true"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_VISA'); ?></label>
 			<div class="boxContent">
-				<p><span style="color:#ff5a00;font-weight:bold;text-decoration:underline;">Lưu ý</span>:Visa hoặc MasterCard.</p>
+				<p><span style="color:#ff5a00;font-weight:bold;text-decoration:underline;"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_NOTICE'); ?></span>:<?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_VISA_DESC'); ?></p>
 				<ul class="cardList clearfix">
 						<li class="bank-online-methods ">
 							<label for="vcb_ck_on">
-								Visa:
+								<?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_VISA_CARD'); ?>:
 								<input type="radio" value="VISA"  name="bankcode" >
 							
 						</label></li>
 
 						<li class="bank-online-methods ">
 							<label for="vnbc_ck_on">
-								Master:<input type="radio" value="MASTER"  name="bankcode" >
+								<?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_MASTER_CARD'); ?>:<input type="radio" value="MASTER"  name="bankcode" >
 						</label></li>
 				</ul>	
 			</div>
@@ -562,7 +561,7 @@ $cancel_url = $displayData['cancel_return'];
 				
 			<tr><td></td>
 				<td>
-					 <input type="submit" name="nlpayment" value="thanh toán"/>
+					 <input type="submit" name="nlpayment" value="<?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_BUTTON'); ?>"/>
 				</td>
 			</tr>					
 		</table>

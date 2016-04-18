@@ -31,11 +31,6 @@
 					description="NGANLUONG_MERCHANT_ID_DESC"/>
 				<field name="nganluong_merchant_password" type="password" default="" label="NGANLUONG_MERCHANT_PASS"
 					description="NGANLUONG_MERCHANT_PASS_DESC"/>
-				<field name="nganluong_sandbox" type="radio" default="1" label="NGANLUONG_USE_SANDBOX"
-					description="NGANLUONG_USE_SANDBOX_DESC">
-					<option value="0">JNo</option>
-					<option value="1">JYes</option>
-				</field>
 			</fieldset>
 		</fields>
 	</config>
