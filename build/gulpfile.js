@@ -17,6 +17,20 @@ var jgulp   = requireDir('./node_modules/joomla-gulp', {recurse: true});
 var redcore = requireDir('./redCORE/build/gulp-redcore', {recurse: true});
 var dir = requireDir('./joomla-gulp-extensions', {recurse: true});
 
+var git = require('git-rev')
+
+var gitshort = '';
+
+gulp.task('clean:release', ['git_version'], function(){
+	return del(config.release_dir, {force: true});
+});
+
+gulp.task('git_version', function(){
+	return git.short(function(str) {
+		gitshort = str;
+	});
+});
+
 // Override of the release script
 gulp.task('release',
 	[
@@ -26,7 +40,7 @@ gulp.task('release',
 	], function() {
 		fs.readFile( '../component/redform.xml', function(err, data) {
 			parser.parseString(data, function (err, result) {
-				var version = result.extension.version[0];
+				var version = getVersion(result);
 				var fileName = config.skipVersion ? extension.name + '_ALL_UNZIP_FIRST.zip' : extension.name + '-v' + version + '_ALL_UNZIP_FIRST.zip';
 				del.sync(path.join(config.release_dir, fileName), {force: true});
 
@@ -43,10 +57,10 @@ gulp.task('release',
 	}
 );
 
-gulp.task('release:redform', ['release:prepare-redform', 'release:prepare-redcore'], function (cb) {
+gulp.task('release:redform', ['clean:release', 'release:prepare-redform', 'release:prepare-redcore'], function (cb) {
 	fs.readFile( '../component/redform.xml', function(err, data) {
 		parser.parseString(data, function (err, result) {
-			var version = result.extension.version[0];
+			var version = getVersion(result);
 			var fileName = config.skipVersion ? extension.name + '.zip' : extension.name + '-v' + version + '.zip';
 			var fileNameNoRedcore = config.skipVersion ? extension.name + '_no_redCORE.zip' : extension.name + '-v' + version + '_no_redCORE.zip';
 
@@ -82,11 +96,9 @@ gulp.task('release:prepare-redcore', function () {
 		.pipe(gulp.dest('tmp/redCORE'));
 });
 
-gulp.task('release:plugins',
-	jgulp.src.plugins.getPluginsTasks('release:plugins')
-);
+gulp.task('release:plugins', ['clean:release'].concat(jgulp.src.plugins.getPluginsTasks('release:plugins')));
 
-gulp.task('release:languages', function() {
+gulp.task('release:languages', ['clean:release'], function() {
 	var langPath = '../languages';
 	var releaseDir = path.join(config.release_dir, 'language');
 
@@ -116,3 +128,9 @@ gulp.task('release:languages', function() {
 
 	return tasks;
 });
+
+function getVersion(xml) {
+	if (config.gitVersion && gitshort) {
+		return version = xml.extension.version[0] + '-' + gitshort;
+	}
+}
