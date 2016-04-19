@@ -152,7 +152,7 @@ class RdfPaymentInfo
 				}
 
 				$paymentDetailFields->adminDesc = $paymentDetailFields->title;
-				$paymentDetailFields->uniqueid = $this->cart->reference;
+				$paymentDetailFields->uniqueid = $this->getForm()->id . '-' . $this->getASubmitter()->id . '-' . $this->cart->reference;
 			}
 
 			$this->paymentDetailFields = $paymentDetailFields;
