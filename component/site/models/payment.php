@@ -291,7 +291,7 @@ class RedFormModelPayment extends JModelLegacy
 		$mailer->setSubject($subject);
 
 		$body = (empty($form->submitterpaymentnotificationbody)
-			? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT')
+			? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_DEFAULT')
 			: $form->submitterpaymentnotificationbody);
 		$link = JRoute::_(JURI::root() . 'administrator/index.php?option=com_redform&view=submitters&form_id=' . $form->id);
 		$body = $replaceHelper->replace($body, array('[submitters]' => $link));

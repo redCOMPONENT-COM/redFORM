@@ -107,6 +107,18 @@ abstract class RdfEntityBase
 	}
 
 	/**
+	 * Proxy item properties isset. This needs to be implemented for proper result when doing empty() check
+	 *
+	 * @param   string  $property  Property tried to access
+	 *
+	 * @return  mixed   $this->item->property if it exists
+	 */
+	public function __isset($property)
+	{
+		return null != $this->item && property_exists($this->item, $property);
+	}
+
+	/**
 	 * Proxy item properties
 	 *
 	 * @param   string  $property  Property tried to access
