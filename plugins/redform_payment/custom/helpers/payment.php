@@ -54,7 +54,9 @@ class PaymentCustom extends  RdfPaymentHelper
 			$text[] = '<p>' . JHTML::link($return_url, JText::_('Return')) . '</b>';
 		}
 
-		$text[] = '<form class="custom-payment" method="post" action="' . $this->getUrl('notify', $request->key) . '">';
+		$target = $this->params->get('payment_status', 'pending') == 'paid' ? 'notify' : 'processing';
+
+		$text[] = '<form class="custom-payment" method="post" action="' . $this->getUrl($target, $request->key) . '">';
 		$text[] = '<button type="submit">' . $this->params->get('confirmButtonLabel', 'Confirm') . '</button>';
 		$text[] = '</form>';
 
@@ -64,19 +66,42 @@ class PaymentCustom extends  RdfPaymentHelper
 	}
 
 	/**
-	 * notify
+	 * processing
 	 *
 	 * @return bool|void
 	 */
-	public function notify()
+	public function processing()
 	{
 		$app = JFactory::getApplication();
 		$reference = $app->input->get('reference');
 
-		$status = $this->params->get('payment_status', 'pending') == 'paid';
 		$data = 'tid:' . uniqid();
 
-		$this->writeTransaction($reference, $data, $status, 1);
+		$this->writeTransaction($reference, $data, 'pending', 0);
+
+		return true;
+	}
+
+	/**
+	 * notify
+	 *
+	 * @return bool|void
+	 *
+	 * @throws RuntimeException
+	 */
+	public function notify()
+	{
+		if ($status = $this->params->get('payment_status', 'pending') != 'paid')
+		{
+			throw new RuntimeException(500, 'Unauthorized payment status');
+		}
+
+		$app = JFactory::getApplication();
+		$reference = $app->input->get('reference');
+
+		$data = 'tid:' . uniqid();
+
+		$this->writeTransaction($reference, $data, 'paid', 1);
 
 		return 1;
 	}

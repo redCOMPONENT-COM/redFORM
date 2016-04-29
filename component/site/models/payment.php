@@ -307,6 +307,15 @@ class RedFormModelPayment extends JModelLegacy
 		}
 
 		$mailer->addRecipient($contact['email']);
+		$doSend = true;
+
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onBeforeSendPaymentNotificationSubmitter', array(&$mailer, $this->getCart(), &$doSend));
+
+		if (!$doSend)
+		{
+			return true;
+		}
 
 		if (!$mailer->send())
 		{

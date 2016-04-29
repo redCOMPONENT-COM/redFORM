@@ -96,6 +96,16 @@ abstract class RdfPaymentHelper extends JObject
 	abstract public function process($request, $return_url = null, $cancel_url = null);
 
 	/**
+	 * handle the reception of 'processing notification' from gateway
+	 *
+	 * @return bool paid status
+	 */
+	public function processing()
+	{
+		return true;
+	}
+
+	/**
 	 * handle the reception of notification from gateway
 	 *
 	 * @return bool paid status

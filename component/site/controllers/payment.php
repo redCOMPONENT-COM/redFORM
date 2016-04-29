@@ -178,21 +178,26 @@ class RedformControllerPayment extends JControllerLegacy
 	{
 		$app = JFactory::getApplication();
 
-		$key = $app->input->getString('reference', '');
-
-		if ($app->input->get('lang'))
-		{
-			$lang_v = "&lang=" . $app->input->get('lang');
-		}
+		$key = $app->input->getString('reference');
+		$gw = $app->input->get('gw', '');
 
 		$model = $this->getModel('payment');
 		$model->setCartReference($key);
+
+		// Forward to the plugin
+		$helper = $model->getGatewayHelper($gw);
+		$helper->processing();
 
 		$submitters = $model->getSubmitters();
 
 		if (count($submitters))
 		{
 			$first = current($submitters);
+
+			if ($app->input->get('lang'))
+			{
+				$lang_v = "&lang=" . $app->input->get('lang');
+			}
 
 			if (!empty($first->integration))
 			{

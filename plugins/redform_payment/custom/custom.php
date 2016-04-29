@@ -21,4 +21,14 @@ RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 class plgRedform_PaymentCustom extends RdfPaymentPlugin
 {
 	protected $gateway = 'custom';
+
+	public function onBeforeSendPaymentNotificationSubmitter(RdfHelperMailer &$mailer, RdfEntityCart $cart, &$send)
+	{
+		if ($this->params->get('payment_status') == 'pending')
+		{
+			$send = false;
+		}
+
+		return true;
+	}
 }
