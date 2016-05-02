@@ -232,7 +232,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * provides information for process function of helpers (object id, title, etc...)
 	 *
-	 * @return object
+	 * @return RdfPaymentInfo
 	 *
 	 * @throws Exception
 	 */
