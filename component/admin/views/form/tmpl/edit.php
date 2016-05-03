@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 // HTML helpers
 JHtml::_('behavior.keepalive');
-JHtml::_('rbootstrap.tooltip');
+JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('rjquery.chosen', 'select');
 JHtml::_('rsearchtools.main');
 

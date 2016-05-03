@@ -28,7 +28,7 @@ if (isset($data['action']))
 
 JHtml::_('behavior.keepalive');
 JHtml::_('rdropdown.init');
-JHtml::_('rbootstrap.tooltip');
+JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('rjquery.chosen', 'select');
 
 $formId = JFactory::getApplication()->input->getInt('id');
