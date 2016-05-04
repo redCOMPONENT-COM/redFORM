@@ -112,6 +112,21 @@ class plgRedformEconomic extends JPlugin
 		}
 	}
 
+	public function onAjaxTestConnection()
+	{
+		try
+		{
+			$this->getClient();
+			echo 'ok';
+		}
+		catch (Exception $e)
+		{
+			echo $e;
+		}
+
+		JFactory::getApplication()->close();
+	}
+
 	/**
 	 * Handle onPaymentAfterSave event from backend
 	 *
