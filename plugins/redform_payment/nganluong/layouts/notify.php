@@ -92,27 +92,7 @@ $cancel_url = $displayData['cancel_return'];
 		width: 90px;
 	}
 </style>
-<form  name="NLpayBank" action="<?php echo $action; ?>" method="post">	
-	<table style="clear:both;width:500px;padding-left:46px;"> 
-			<tr><td colspan="2"><p><span style="color:#ff5a00;font-weight:bold;text-decoration:underline;"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_NOTICE'); ?></span> <?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CONFIRM'); ?> </td>
-				
-			</tr>
-			<tr><td><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_NAME'); ?></td>
-				<td>
-					 <input type="text" style="width:270px" id="fullname" name="buyer_fullname" class="field-check " value="">
-				</td>
-			</tr>
-			<tr><td><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_EMAIL'); ?></td>
-				<td>
-					 <input type="text" style="width:270px" id="fullname" name="buyer_email" class="field-check " value="">
-				</td>
-			</tr>
-			<tr><td><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_MOBILE'); ?></td>
-				<td>
-					 <input type="text" style="width:270px" id="fullname" name="buyer_mobile" class="field-check " value="">
-				</td>
-			</tr>				
-		</table>		
+<form  name="NLpayBank" action="<?php echo $action; ?>" method="post">		
 	<ul class="list-content">
 		<li class="active">
 			<label><input type="radio" value="NL" name="option_payment" selected="true"><?php echo JText::_('PLG_REDFORM_PAYMENT_NGANLUONG_CHECKOUT_NGANLUONG_WALLET'); ?></label>
