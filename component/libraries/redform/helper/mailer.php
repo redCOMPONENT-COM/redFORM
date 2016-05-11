@@ -21,8 +21,8 @@ class RdfHelperMailer extends JMail
 	/**
 	 * Override for 3.5.1 new behavior
 	 *
-	 * @param mixed   $replyto  reply to
-	 * @param string  $name     name
+	 * @param   mixed   $replyto  reply to
+	 * @param   string  $name     name
 	 *
 	 * @return JMail
 	 */
@@ -53,7 +53,7 @@ class RdfHelperMailer extends JMail
 	{
 		if (empty(self::$instances[$id]))
 		{
-			self::$instances[$id] = new RdfHelperMailer();
+			self::$instances[$id] = new RdfHelperMailer;
 		}
 
 		return self::$instances[$id];

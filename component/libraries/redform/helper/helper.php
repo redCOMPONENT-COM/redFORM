@@ -260,7 +260,7 @@ class RdfHelper
 
 		return false;
 	}
-	
+
 	/**
 	 * Create a mailer object
 	 *
