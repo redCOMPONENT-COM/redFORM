@@ -601,16 +601,9 @@ class RdfCore extends JObject
 	 */
 	public function getFormStatus($form_id)
 	{
-		$model = $this->getFormModel($form_id);
+		$form = RdfEntityForm::load($form_id);
 
-		if (!$model->getFormStatus())
-		{
-			$this->setError($model->getError());
-
-			return false;
-		}
-
-		return true;
+		return $form->checkFormStatus();
 	}
 
 	/**

@@ -24,6 +24,67 @@ class RdfEntityForm extends RdfEntityBase
 	protected $formFields;
 
 	/**
+	 * @var string
+	 */
+	private $statusMessage;
+
+	/**
+	 * return form status
+	 *
+	 * @param   JUser  $user  user
+	 *
+	 * @return boolean
+	 */
+	public function checkFormStatus($user = null)
+	{
+		if (!$this->isValid())
+		{
+			throw new InvalidArgumentException('entity has no valid id');
+		}
+
+		$this->statusMessage = null;
+
+		$user = $user instanceof JUSer ? $user : JFactory::getUser();
+
+		if (!$this->published)
+		{
+			$this->statusMessage = JText::_('COM_REDFORM_STATUS_NOT_PUBLISHED');
+
+			return false;
+		}
+
+		if (strtotime($this->startdate) > time())
+		{
+			$this->statusMessage = JText::_('COM_REDFORM_STATUS_NOT_STARTED');
+
+			return false;
+		}
+
+		if ($this->formexpires && strtotime($this->enddate) < time())
+		{
+			$this->statusMessage = JText::_('COM_REDFORM_STATUS_EXPIRED');
+
+			return false;
+		}
+
+		if ($this->access > 1 && !$user->get('id'))
+		{
+			$this->statusMessage = JText::_('COM_REDFORM_STATUS_REGISTERED_ONLY');
+
+			return false;
+		}
+
+		if (!in_array($this->access, $user->getAuthorisedViewLevels()))
+		{
+			$this->statusMessage = JText::_('COM_REDFORM_STATUS_SPECIAL_ONLY');
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get form fields
 	 *
 	 * @return RdfRfieldFactory[]
@@ -55,5 +116,15 @@ class RdfEntityForm extends RdfEntityBase
 		}
 
 		return $this->formFields;
+	}
+
+	/**
+	 * Return status message after a checkFormStatus
+	 *
+	 * @return string
+	 */
+	public function getStatusMessage()
+	{
+		return $this->statusMessage;
 	}
 }
