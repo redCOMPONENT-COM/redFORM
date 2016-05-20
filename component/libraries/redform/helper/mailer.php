@@ -43,7 +43,8 @@ class RdfHelperMailer extends JMail
 	 * NOTE: If you need an instance to use that does not have the global configuration
 	 * values, use an id string that is not 'Joomla'.
 	 *
-	 * @param   string  $id  The id string for the JMail instance [optional]
+	 * @param   string   $id          The id string for the JMail instance [optional]
+	 * @param   boolean  $exceptions  Flag if Exceptions should be thrown [optional]
 	 *
 	 * @return  JMail  The global JMail object
 	 *
