@@ -58,7 +58,7 @@
 
 	<administration>
 		<!-- Menu entries -->
-		<menu img="../media/com_redform/images/redform_red_16.png" view="forms">COM_redFORM</menu>
+		<menu img="../media/com_redform/images/redform_red_16.png" view="forms">COM_redFORM_MENU_TITLE</menu>
 		<submenu>
 			<menu img="../media/com_redform/images/redform_red_16.png" view="forms">COM_redFORM_FORMS</menu>
 			<menu img="../media/com_redform/images/redform_quest_16.png" view="fields">COM_redFORM_Fields</menu>
