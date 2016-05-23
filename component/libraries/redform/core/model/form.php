@@ -58,18 +58,15 @@ class RdfCoreModelForm extends RModel
 	}
 
 	/**
-	 * Get form data
+	 * Get form entity
 	 *
-	 * @return mixed|object
+	 * @return RdfEntityForm
 	 */
 	public function getForm()
 	{
 		if (!$this->form)
 		{
-			$table = RTable::getInstance('Form', 'RedformTable');
-			$table->load($this->id);
-
-			$this->form = $table;
+			$this->form = RdfEntityForm::load($this->id);
 		}
 
 		return $this->form;

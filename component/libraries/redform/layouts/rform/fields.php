@@ -45,6 +45,8 @@ foreach ($sections as $s)
 
 	foreach ($s->fields as $field)
 	{
+		$field->setForm($form);
+
 		if ($field->isHidden())
 		{
 			$section .= $field->getInput();

@@ -160,7 +160,7 @@ class RdfRfieldCheckbox extends RdfRfield
 		$properties['class'] = trim($this->getParam('class'));
 		$properties['value'] = $option->value;
 
-		if ($option->price)
+		if (!empty($option->price))
 		{
 			$properties['price'] = $option->price;
 

@@ -29,6 +29,11 @@ class RdfEntityForm extends RdfEntityBase
 	private $statusMessage;
 
 	/**
+	 * @var array
+	 */
+	private $renderOptions;
+
+	/**
 	 * return form status
 	 *
 	 * @param   JUser  $user  user
@@ -109,13 +114,23 @@ class RdfEntityForm extends RdfEntityBase
 
 			foreach ($ids as $formfieldId)
 			{
-				$fields[] = RdfRfieldFactory::getFormField($formfieldId);
+				$fields[] = RdfRfieldFactory::getFormField($formfieldId, $this);
 			}
 
 			$this->formFields = $fields;
 		}
 
 		return $this->formFields;
+	}
+
+	/**
+	 * Set options for rendering (passed from integration when calling RdfCore->getFormFields())
+	 *
+	 * @return RdfEntityForm
+	 */
+	public function getRenderOptions()
+	{
+		return $this->renderOptions;
 	}
 
 	/**
@@ -126,5 +141,19 @@ class RdfEntityForm extends RdfEntityBase
 	public function getStatusMessage()
 	{
 		return $this->statusMessage;
+	}
+
+	/**
+	 * Set options for rendering (passed from integration when calling RdfCore->getFormFields())
+	 *
+	 * @param   array  $options  options
+	 *
+	 * @return RdfEntityForm
+	 */
+	public function setRenderOptions($options)
+	{
+		$this->renderOptions = $options;
+
+		return $this;
 	}
 }

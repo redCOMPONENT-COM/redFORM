@@ -260,6 +260,7 @@ class RdfCore extends JObject
 
 		$model = $this->getFormModel($form_id);
 		$form = $model->getForm();
+		$form->setRenderOptions($options);
 		$fields = $model->getFormFields();
 
 		$this->setReference($reference);

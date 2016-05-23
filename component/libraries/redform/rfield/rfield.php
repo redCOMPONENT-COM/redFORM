@@ -71,6 +71,12 @@ class RdfRfield extends JObject
 	protected $formIndex = 1;
 
 	/**
+	 * Form field section id
+	 * @var RdfEntityForm
+	 */
+	protected $form;
+
+	/**
 	 * User associated to submission, for value lookup
 	 *
 	 * @var JUser
@@ -376,6 +382,18 @@ class RdfRfield extends JObject
 	public function setFormIndex($index)
 	{
 		$this->formIndex = (int) $index;
+	}
+
+	/**
+	 * Form entity
+	 *
+	 * @param   RdfEntityForm  $form  form entity
+	 *
+	 * @return void
+	 */
+	public function setForm(RdfEntityForm $form)
+	{
+		$this->form = $form;
 	}
 
 	/**

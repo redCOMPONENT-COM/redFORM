@@ -55,7 +55,7 @@ class RedformModelField extends RModelAdmin
 			$data = get_object_vars($data);
 		}
 
-		$form->loadFile(JPATH_LIBRARIES . '/redform/rfield/baseparams.xml', false);
+		$form->loadFile(JPATH_LIBRARIES . '/redform/rfield/xml/baseparams.xml', false);
 
 		if (isset($data['fieldtype']))
 		{
