@@ -70,6 +70,11 @@ class RdfRfieldCheckbox extends RdfRfield
 
 		foreach ($this->getOptions() as $option)
 		{
+			if (empty($option->price))
+			{
+				continue;
+			}
+
 			if (in_array($option->value, $this->value))
 			{
 				$price += $option->price;

@@ -1170,7 +1170,7 @@ class RdfCore extends JObject
 			// Set value if editing
 			if ($indexAnswers && $field->id)
 			{
-				$value = $indexAnswers->getFieldAnswer($field->id);
+				$value = $indexAnswers->getFormFieldAnswer($field->id);
 				$field->setValue($value, true);
 			}
 			else

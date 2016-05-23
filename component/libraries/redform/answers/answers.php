@@ -820,7 +820,27 @@ class RdfAnswers
 	{
 		foreach ($this->fields as $field)
 		{
-			if ($field->id == $field_id)
+			if ($field->field_id == $field_id)
+			{
+				return $field->getValue();
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * return answer for specified form field
+	 *
+	 * @param   int  $form_field_id  form field id
+	 *
+	 * @return string
+	 */
+	public function getFormFieldAnswer($form_field_id)
+	{
+		foreach ($this->fields as $field)
+		{
+			if ($field->id == $form_field_id)
 			{
 				return $field->getValue();
 			}
