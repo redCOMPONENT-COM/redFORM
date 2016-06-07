@@ -20,6 +20,7 @@ if (isset($data['active']))
 
 $formsClass = ($active === 'forms') ? 'active' : '';
 $fieldsClass = ($active === 'fields') ? 'active' : '';
+$sectionsClass = ($active === 'sections') ? 'active' : '';
 $submittersClass = ($active === 'submitters') ? 'active' : '';
 $logsClass = ($active === 'logs') ? 'active' : '';
 $optionsClass = ($active === 'config') ? 'active' : '';
@@ -46,7 +47,7 @@ $return = base64_encode('index.php' . $uri->toString(array('query')));
 		</a>
 	</li>
 	<li>
-		<a class="<?php echo $fieldsClass; ?>"
+		<a class="<?php echo $sectionsClass; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=sections') ?>">
 			<i class="icon-list"></i>
 			<?php echo JText::_('COM_REDFORM_SECTION_LIST_TITLE') ?>

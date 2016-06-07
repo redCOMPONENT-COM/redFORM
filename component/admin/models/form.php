@@ -215,7 +215,7 @@ class RedformModelForm extends RModelAdmin
 	{
 		$tableFields = $this->_db->getTableColumns('#__rwf_forms_' . $formId);
 
-		$model = RModel::getAdminInstance('formfields', array('ignore_request' => true));
+		$model = RModel::getAdminInstance('formfields', array('ignore_request' => true), 'com_redform');
 		$model->setState('filter.form_id', $formId);
 
 		$fields = $model->getItems();
