@@ -14,7 +14,7 @@ class AddAFieldCest
 		$I->doAdministratorLogin();
 		$I->createField(
 			array(
-				'field' => 'Text 1',
+				'name' => 'Text 1',
 				'field_header' => 'Text 1',
 				'fieldtype' => 'Textfield',
 				'tooltip' => 'a test'
@@ -30,7 +30,7 @@ class AddAFieldCest
 		$I->doAdministratorLogin();
 		$I->createField(
 			array(
-				'field' => 'Email 1',
+				'name' => 'Email 1',
 				'field_header' => 'Email 1',
 				'fieldtype' => 'E-mail',
 				'tooltip' => 'a test email field'

@@ -15,7 +15,8 @@ class AddAFormCest
 		$name = "Form 1";
 		$I->createForm(
 			array(
-				'formname' => 'Form 1'
+				'name' => 'Form 1',
+				'fields' => ['Text 1', 'Email 1']
 			)
 		);
 		$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
