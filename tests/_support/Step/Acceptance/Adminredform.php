@@ -67,7 +67,7 @@ class Adminredform extends \AcceptanceTester
 		$I->waitForText('Fields', 30, ['css' => 'H1']);
 		$I->click(['xpath' => '//button[contains(@onclick, "field.add")]']);
 		$I->waitForText('Name', 30, ['css' => 'label']);
-		$I->fillField(['id' => 'jform_field'], $params['field']);
+		$I->fillField(['id' => 'jform_field'], $params['name']);
 		$I->selectOptionInChosenById('jform_fieldtype', $params['fieldtype']);
 
 		if (isset($params['field_header']))
@@ -166,6 +166,8 @@ class Adminredform extends \AcceptanceTester
 				$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
 			}
 		}
+
+		$I->click(['xpath' => '//button[contains(@onclick, "form.save")]']);
 	}
 
 	/**
