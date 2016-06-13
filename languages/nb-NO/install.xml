@@ -15,8 +15,8 @@
 		<files folder="admin" target="administrator/language">
 			<folder>nb-NO</folder>
 		</files>
-		<!--<files folder="site" target="language">-->
-			<!--<folder>nb-NO</folder>-->
-		<!--</files>-->
+		<files folder="site" target="language">
+			<folder>nb-NO</folder>
+		</files>
 	</fileset>
 </extension>

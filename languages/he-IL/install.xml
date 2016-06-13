@@ -15,5 +15,8 @@
 		<files folder="admin" target="administrator/language">
 			<folder>he-IL</folder>
 		</files>
+		<files folder="site" target="language">
+			<folder>he-IL</folder>
+		</files>
 	</fileset>
 </extension>

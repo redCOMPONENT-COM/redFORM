@@ -15,8 +15,8 @@
 		<files folder="admin" target="administrator/language">
 			<folder>id-ID</folder>
 		</files>
-		<!-- <files folder="site" target="language">
+		<files folder="site" target="language">
 			<folder>id-ID</folder>
-		</files> -->
+		</files>
 	</fileset>
 </extension>

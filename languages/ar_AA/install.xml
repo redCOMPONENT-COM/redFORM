@@ -15,5 +15,8 @@
 		<files folder="admin" target="administrator/language">
 			<folder>ar-AA</folder>
 		</files>
+		<files folder="site" target="language">
+			<folder>ar-AA</folder>
+		</files>
 	</fileset>
 </extension>

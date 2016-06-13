@@ -15,8 +15,8 @@
 		<files folder="admin" target="administrator/language">
 			<folder>it-IT</folder>
 		</files>
-		<!-- <files folder="site" target="language">
+		<files folder="site" target="language">
 			<folder>it-IT</folder>
-		</files> -->
+		</files>
 	</fileset>
 </extension>

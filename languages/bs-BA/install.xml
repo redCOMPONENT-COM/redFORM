@@ -15,5 +15,8 @@
 		<files folder="admin" target="administrator/language">
 			<folder>bs-BA</folder>
 		</files>
+		<files folder="site" target="language">
+			<folder>bs-BA</folder>
+		</files>
 	</fileset>
 </extension>

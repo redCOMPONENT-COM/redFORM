@@ -15,8 +15,8 @@
 		<files folder="admin" target="administrator/language">
 			<folder>ro-RO</folder>
 		</files>
-		<!--<files folder="site" target="language">-->
-			<!--<folder>ro-RO</folder>-->
-		<!--</files>-->
+		<files folder="site" target="language">
+			<folder>ro-RO</folder>
+		</files>
 	</fileset>
 </extension>
