@@ -30,34 +30,32 @@ gulp.task('clean:' + baseTask,
 		'clean:' + baseTask + ':libraries',
 		'clean:' + baseTask + ':media',
 		'clean:' + baseTask + ':plugins'
-	],
-	function() {
-		return true;
-});
+	]
+);
 
 // Clean: frontend
 gulp.task('clean:' + baseTask + ':frontend', function() {
-	del.sync(config.wwwDir + '/components/com_redform', {force : true});
+	return del(config.wwwDir + '/components/com_redform', {force : true});
 });
 
 // Clean: backend
 gulp.task('clean:' + baseTask + ':backend', function() {
-	del.sync(config.wwwDir + '/administrator/components/com_redform', {force : true});
+	return del(config.wwwDir + '/administrator/components/com_redform', {force : true});
 });
 
 // Clean: lib
 gulp.task('clean:' + baseTask + ':libraries', function() {
-	del.sync(config.wwwDir + '/libraries/redform', {force : true});
+	return del(config.wwwDir + '/libraries/redform', {force : true});
 });
 
 // Clean: media
 gulp.task('clean:' + baseTask + ':media', function() {
-	del.sync(config.wwwDir + '/media/com_redform', {force : true});
+	return del(config.wwwDir + '/media/com_redform', {force : true});
 });
 
 // Clean: plugins
 gulp.task('clean:' + baseTask + ':plugins', function() {
-	del.sync(config.wwwDir + '/plugins/content/redform', {force : true});
+	return del(config.wwwDir + '/plugins/content/redform', {force : true});
 });
 
 // Copy
@@ -122,20 +120,18 @@ gulp.task('watch:' + baseTask,
 		'watch:' + baseTask + ':plugins'
 		//'watch:' + baseTask + ':scripts',
 		//'watch:' + baseTask + ':less'
-	],
-	function() {
-		return true;
-});
+	]
+);
 
 // Watch: frontend
 gulp.task('watch:' + baseTask + ':frontend', function() {
-	gulp.watch(extPath + '/site/**',
+	return gulp.watch(extPath + '/site/**',
 	['copy:' + baseTask + ':frontend']);
 });
 
 // Watch: backend
 gulp.task('watch:' + baseTask + ':backend', function() {
-	gulp.watch([
+	return gulp.watch([
 		extPath + '/admin/**',
 		extPath + '/redform.xml',
 		extPath + '/install.php'
@@ -145,18 +141,18 @@ gulp.task('watch:' + baseTask + ':backend', function() {
 
 // Watch: libraries
 gulp.task('watch:' + baseTask + ':libraries', function() {
-	gulp.watch(extPath + '/libraries/**',
+	return gulp.watch(extPath + '/libraries/**',
 		['copy:' + baseTask + ':libraries']);
 });
 
 // Watch: media
 gulp.task('watch:' + baseTask + ':media', function() {
-	gulp.watch(extPath + '/media/**',
+	return gulp.watch(extPath + '/media/**',
 		['copy:' + baseTask + ':media']);
 });
 
 // Watch: plugins
 gulp.task('watch:' + baseTask + ':plugins', function() {
-	gulp.watch(extPath + '/plugins/**',
+	return gulp.watch(extPath + '/plugins/**',
 		['copy:' + baseTask + ':plugins']);
 });
