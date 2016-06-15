@@ -295,6 +295,28 @@ abstract class RdfEntityBase
 	}
 
 	/**
+	 * Delete item
+	 *
+	 * @return bool
+	 */
+	public function delete()
+	{
+		if ($this->isValid())
+		{
+			$table = $this->getTable();
+
+			if ($table->delete($this->id))
+			{
+				$this->clearInstance($this->id);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Format a link
 	 *
 	 * @param   string   $url     Url to format
