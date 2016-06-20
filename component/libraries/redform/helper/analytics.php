@@ -265,7 +265,7 @@ JS;
 		// Add transaction
 		$trans = new stdclass;
 		$trans->id = $submit_key;
-		$trans->affiliation = isset($options['affiliate']) ? $options['affiliate'] : $first->getForm()->formname;
+		$trans->affiliation = isset($options['affiliation']) ? $options['affiliation'] : $first->getForm()->formname;
 		$trans->revenue = $price;
 		$trans->currency = $first->currency;
 
