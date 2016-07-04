@@ -122,8 +122,14 @@ var RedFormValidator = function() {
  	 	 	for (i = invalid.length - 1; i >= 0; i--) {
  	 	 		label = jQuery(invalid[i]).data("label");
  	 			if (label) {
- 	 	 			error.error.push(message + label.text().replace("*", ""));
-                		}
+					var fieldmessage = message + label.text().replace("*", "");
+
+					if (invalid[i].validationMessage) {
+						fieldmessage += " - " + invalid[i].validationMessage;
+					}
+
+ 	 	 			error.error.push(fieldmessage);
+				}
  	 	 	}
  	 	 	Joomla.renderMessages(error);
  	 	}

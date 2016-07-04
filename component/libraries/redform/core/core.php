@@ -983,6 +983,7 @@ class RdfCore extends JObject
 		RHelperAsset::load('redform-validate.js', 'com_redform');
 		JText::script('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED');
 		JText::script('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED');
+		JText::script('JLIB_FORM_FIELD_INVALID');
 	}
 
 	/**
