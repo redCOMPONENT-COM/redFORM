@@ -327,12 +327,6 @@ class RdfCore extends JObject
 			$multi = min($multi, 30);
 		}
 
-		if ($multi > 1 && $user->id == 0)
-		{
-			$html .= '<div class="needlogin">' . JText::_('COM_REDFORM_LOGIN_BEFORE_MULTI_SIGNUP') . '</div>';
-			$multi = 1;
-		}
-
 		if ($multi > 1)
 		{
 			if (!$answers)
