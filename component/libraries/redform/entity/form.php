@@ -145,7 +145,7 @@ class RdfEntityForm extends RdfEntityBase
 
 	/**
 	 * Check if form has fields in multiple sections
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function hasMultipleSections()

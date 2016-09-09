@@ -84,11 +84,19 @@ class RedformModelField extends RModelAdmin
 		if (isset($data['form_id']) && $data['form_id'])
 		{
 			$formfield = $this->getTable('Formfield', 'RedformTable');
+			$form = RdfEntityForm::load($data['form_id']);
+			$formfields = $form->getFormFields();
 
 			$data = array(
 				'field_id' => $this->getState($this->getName() . '.id'),
-				'form_id' => (int) $data['form_id']
+				'form_id' => (int) $data['form_id'],
+				'published' => 1
 			);
+
+			if ($formfields)
+			{
+				$data['section_id'] = reset($formfields)->section_id;
+			}
 
 			if (!$formfield->save($data))
 			{
