@@ -97,6 +97,10 @@ class RedformModelField extends RModelAdmin
 			{
 				$data['section_id'] = reset($formfields)->section_id;
 			}
+			else
+			{
+				$data['section_id'] = RdfHelper::getConfig()->get('defaultsection', 1);
+			}
 
 			if (!$formfield->save($data))
 			{

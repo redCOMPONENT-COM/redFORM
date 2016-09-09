@@ -31,6 +31,11 @@
 				label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL"
 				description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
 
+		<field name="defaultsection"
+			   type="redform.section"
+			   label="COM_REDFORM_SETTINGS_DEFAULTSECTION"
+			   description="COM_REDFORM_SETTINGS_DEFAULTSECTION_DESC"/>
+
 		<field name="decimalseparator"
 			   type="text"
 			   default="."

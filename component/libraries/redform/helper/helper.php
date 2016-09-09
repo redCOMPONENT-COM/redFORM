@@ -26,6 +26,28 @@ class RdfHelper
 	public static $mailer = null;
 
 	/**
+	 * Get global parameters
+	 *
+	 * @return \Joomla\Registry\Registry|JRegistry
+	 */
+	public static function getConfig()
+	{
+		static $config;
+
+		if (empty($config))
+		{
+			$config = JComponentHelper::getParams('com_redform');
+
+			// See if there are any plugins that wish to alter the configuration (client specific demands !)
+			JPluginHelper::importPlugin('redform');
+			$dispatcher = JDispatcher::getInstance();
+			$dispatcher->trigger('onGetRedformConfig', array(&$config));
+		}
+
+		return $config;
+	}
+
+	/**
 	 * Return array of emails from comma or semicolon separated emails
 	 *
 	 * @param   string  $string    string to parse
