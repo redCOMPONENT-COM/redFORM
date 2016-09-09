@@ -302,6 +302,12 @@ class RdfCore extends JObject
 			$currency = $form->currency;
 		}
 
+		if ($multi > 1 && $form->hasMultipleSections())
+		{
+			// Multi steps isn't compatible with multiple signup
+			$multi = 1;
+		}
+
 		$this->loadCheckScript();
 
 		if ($multi > 1)

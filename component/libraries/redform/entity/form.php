@@ -144,6 +144,33 @@ class RdfEntityForm extends RdfEntityBase
 	}
 
 	/**
+	 * Check if form has fields in multiple sections
+	 * 
+	 * @return bool
+	 */
+	public function hasMultipleSections()
+	{
+		$fields = $this->getFormFields();
+
+		$sections = array();
+
+		foreach ($fields as $field)
+		{
+			if (!in_array($field->section_id, $sections))
+			{
+				$sections[] = $field->section_id;
+
+				if (count($sections) > 1)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Set options for rendering (passed from integration when calling RdfCore->getFormFields())
 	 *
 	 * @param   array  $options  options
