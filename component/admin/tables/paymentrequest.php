@@ -38,7 +38,7 @@ class RedformTablePaymentrequest extends RTable
 
 		if ($cartId = $this->getCartId($pk))
 		{
-			$table = RTable::getInstance('Cart');
+			$table = RTable::getInstance('Cart', 'RedformTable');
 			$table->delete($pk);
 		}
 
