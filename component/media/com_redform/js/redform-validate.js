@@ -76,7 +76,7 @@ var RedFormValidator = function() {
  	 	 	 	 	return false;
  	 	 	 	}
  	 	 	//If element has class placeholder that means it is empty.
- 	 	 	} else if (!$el.val() || $el.hasClass('placeholder') || ($el.attr('type') === 'checkbox' && !$el.is(':checked'))) {
+ 	 	 	} else if (!$el.val().trim() || $el.hasClass('placeholder') || ($el.attr('type') === 'checkbox' && !$el.is(':checked'))) {
  	 	 	 	handleResponse(false, $el);
  	 	 	 	return false;
  	 	 	}
