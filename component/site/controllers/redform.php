@@ -63,7 +63,7 @@ class RedformControllerRedform extends RedformController
 		}
 		elseif ($form->submitnotification)
 		{
-			$this->setRedirect('index.php?option=com_redform&view=notification&submitKey=' . $result->submit_key);
+			$this->setRedirect(JRoute('index.php?option=com_redform&view=notification&submitKey=' . $result->submit_key));
 		}
 		else
 		{
