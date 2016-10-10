@@ -12,13 +12,13 @@ defined('_JEXEC') or die;
 $data = $displayData;
 ?>
 <div class="fieldoptions">
-
 	<?php foreach ($data->options as $option): ?>
 		<div class="fieldoption">
 			<?php $properties = $data->getOptionProperties($option); ?>
-			<input <?php echo $data->propertiesToString($properties); ?>/>
-			<?php echo $option->label; ?>
+			<label class="radio" for="<?php echo $properties['value']; ?>">
+				<input id="<?php echo $properties['value']; ?>" <?php echo $data->propertiesToString($properties); ?>/>
+				<?php echo $option->label; ?>
+			</label>
 		</div>
 	<?php endforeach; ?>
-
 </div>
