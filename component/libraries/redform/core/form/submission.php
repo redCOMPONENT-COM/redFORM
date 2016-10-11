@@ -96,7 +96,7 @@ class RdfCoreFormSubmission
 	 *
 	 * @throws RdfExceptionSubmission
 	 */
-	public function apisaveform($integration_key = '', $options = array(), $formData = null)
+	public function apisaveform($integration_key = '', $options = array(), $formData = array())
 	{
 		$app = JFactory::getApplication();
 
@@ -104,24 +104,17 @@ class RdfCoreFormSubmission
 		$token = RdfCore::getToken();
 
 		// Get data from post if not specified
-		if (!$formData)
-		{
-			$data = array();
-			$data['form_id'] = $app->input->getInt('form_id', 0);
-			$data['module_id'] = $app->input->getInt('module_id', 0);
-			$data['submit_key'] = $app->input->getCmd('submit_key', false);
-			$data['nbactive'] = $app->input->getInt('nbactive', 1);
-			$data['currency'] = $app->input->getCmd('currency', '');
-			$data[$token] = $app->input->getCmd($token, '');
-		}
-		else
-		{
-			$data = $formData;
-		}
+		$data = $formData;
+		$data['form_id']    = isset($data['form_id'])    ? $data['form_id'] : $app->input->getInt('form_id', 0);
+		$data['module_id']  = isset($data['module_id'])  ? $data['module_id'] : $app->input->getInt('module_id', 0);
+		$data['submit_key'] = isset($data['submit_key']) ? $data['submit_key'] : $app->input->getCmd('submit_key', false);
+		$data['nbactive']   = isset($data['nbactive'])   ? $data['nbactive'] : $app->input->getInt('nbactive', 1);
+		$data['currency']   = isset($data['currency'])   ? $data['currency'] : $app->input->getCmd('currency', '');
+		$data[$token]       = isset($data[$token])       ? $data[$token] : $app->input->getCmd($token, '');
 
-		if (!isset($data['submit_key']) || !$data['submit_key'])
+		if (empty($data['submit_key']))
 		{
-			$submit_key = uniqid();
+			$submit_key = $this->submitKey ?: uniqid();
 		}
 		else
 		{
