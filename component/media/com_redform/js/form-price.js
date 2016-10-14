@@ -15,11 +15,22 @@ var redformPrice;
 		var vat = 0.0;
 
 		function updatePrice() {
-			getPrices();
-			displayPrice();
+			var totalElement = formbox.find(".totalprice");
+
+			if (!totalElement)
+			{
+				return;
+			}
+
+			var price = getPrice();
+			var roundedPrice = accounting.formatMoney(price.price + price.vat, {symbol: price.currency, precision: price.precision, thousand: price.thSeparator, decimal: price.decSeparator, format: '%s %v'});
+
+			text = ' <span>' + roundedPrice + '</span>';
+
+			formbox.find(".totalprice").html(text);
 		}
 
-		function getPrices() {
+		function getPrice() {
 			price = 0.0;
 			vat = 0.0;
 
@@ -34,6 +45,21 @@ var redformPrice;
 			if (round_negative_price) {
 				price = Math.max(price, 0);
 				vat = Math.max(vat, 0);
+			}
+
+			var currencyField = form.find('input[name="currency"]');
+			var currency = (currencyField && currencyField.val()) ? currencyField.val() : '';
+			var precision = currencyField ? $(currencyField).attr('precision') : 2;
+			var decSeparator = currencyField ? $(currencyField).attr('decimal') : '.';
+			var thSeparator = currencyField ? $(currencyField).attr('thousands') : ' ';
+
+			return {
+				'price': price,
+				'vat': vat,
+				'currency': currency,
+				'precision': precision,
+				'decSeparator': decSeparator,
+				'thSeparator': thSeparator
 			}
 		}
 
@@ -60,38 +86,14 @@ var redformPrice;
 			}
 		}
 
-		function displayPrice() {
-			var totalElement = formbox.find(".totalprice");
-
-			if (!totalElement)
-			{
-				return;
-			}
-
-			// set the price
-			var text = '';
-
-			var currencyField = form.find('input[name="currency"]');
-			var currency = (currencyField && currencyField.val()) ? currencyField.val() : '';
-			var precision = currencyField ? $(currencyField).attr('precision') : 2;
-			var decSeparator = currencyField ? $(currencyField).attr('decimal') : '.';
-			var thSeparator = currencyField ? $(currencyField).attr('thousands') : ' ';
-
-			var roundedPrice = accounting.formatMoney(price + vat, {symbol: currency, precision: precision, thousand: thSeparator, decimal: decSeparator, format: '%s %v'});
-
-			text += ' <span>' + roundedPrice + '</span>';
-
-			formbox.find(".totalprice").html(text);
-		}
-
 		return {
 			init : function() {
 				formbox.find(':input').change(function() {
 					updatePrice();
 				})
 			},
-
-			updatePrice : updatePrice
+			updatePrice : updatePrice,
+			getPrice: getPrice
 		}
 	};
 
