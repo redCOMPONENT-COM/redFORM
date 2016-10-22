@@ -17,6 +17,23 @@ defined('_JEXEC') or die;
 class RdfEntitySubmitter extends RdfEntityBase
 {
 	/**
+	 * Get answers
+	 *
+	 * @return RdfAnswers
+	 */
+	public function getAnswers()
+	{
+		if (!$this->hasId())
+		{
+			return false;
+		}
+
+		$answers = RdfCore::getInstance()->getSidAnswers($this->id);
+
+		return $answers;
+	}
+
+	/**
 	 * Get any billing associated to sid
 	 *
 	 * @return RdfEntityBilling
