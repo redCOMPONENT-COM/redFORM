@@ -36,6 +36,23 @@ class RdfHelperRoute
 	}
 
 	/**
+	 * Route to payment
+	 *
+	 * @param   int  $cartId  cart id
+	 *
+	 * @return string
+	 */
+	public static function getPaymentCartRoute($cartId)
+	{
+		$parts = array( "option" => "com_redform",
+			"task"   => 'payment.select',
+			"cart_id"   => $cartId,
+		);
+
+		return self::buildUrl($parts);
+	}
+
+	/**
 	 * Route to payment process
 	 *
 	 * @param   string  $cartReference  submit keys

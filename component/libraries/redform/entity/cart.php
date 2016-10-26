@@ -32,6 +32,25 @@ class RdfEntityCart extends RdfEntityBase
 	private $integrationDetails;
 
 	/**
+	 * Init an empty cart
+	 *
+	 * @return void
+	 */
+	public function init()
+	{
+		$cart = RTable::getAdminInstance('Cart', array(), 'com_redform');
+		$cart->reference = uniqid();
+		$cart->created = JFactory::getDate()->toSql();
+		$cart->price = 0;
+		$cart->vat = 0;
+		$cart->currency = '';
+		$cart->store();
+
+		$this->item = $cart;
+		$this->id = $cart->id;
+	}
+
+	/**
 	 * Return instance
 	 *
 	 * @param   string  $reference  cart reference
@@ -75,6 +94,60 @@ class RdfEntityCart extends RdfEntityBase
 		$submitters = $this->getSubmitters();
 
 		return reset($submitters)->getASubmissionBilling();
+	}
+
+	/**
+	 * Add payment request to cart. Run refresh to update the cart price !
+	 *
+	 * @param   int  $paymentRequestId  payment request id
+	 *
+	 * @return void
+	 *
+	 * @throws RuntimeException
+	 */
+	public function addPaymentRequest($paymentRequestId)
+	{
+		if (!$this->hasId())
+		{
+			throw new RuntimeException('Cart must be initialized to add Payment Request');
+		}
+
+		$cartItem = RTable::getAdminInstance('Cartitem', array(), 'com_redform');
+		$cartItem->cart_id = $this->id;
+		$cartItem->payment_request_id = $paymentRequestId;
+		$cartItem->store();
+	}
+
+	/**
+	 * Add submitter to cart. Run refresh to update the cart price !
+	 *
+	 * @param   int  $submitterId  submitter id
+	 *
+	 * @return void
+	 *
+	 * @throws RuntimeException
+	 */
+	public function addSubmitter($submitterId)
+	{
+		if (!$this->hasId())
+		{
+			throw new RuntimeException('Cart must be initialized to add submitters');
+		}
+
+		$submitter = RdfEntitySubmitter::load($submitterId);
+
+		if (!$paymentRequests = $submitter->getPaymentRequests())
+		{
+			return;
+		}
+
+		foreach ($paymentRequests as $paymentRequest)
+		{
+			if (!$paymentRequest->paid)
+			{
+				$this->addPaymentRequest($paymentRequest->id);
+			}
+		}
 	}
 
 	/**
@@ -261,5 +334,36 @@ class RdfEntityCart extends RdfEntityBase
 		$dispatcher->trigger('onRedformPrefillBilling', array($this->reference, &$table, &$prefilled));
 
 		return $prefilled;
+	}
+
+	/**
+	 * Update price, vat, currency, etc... from current cart payment request
+	 *
+	 * @return void
+	 */
+	public function refresh()
+	{
+		if (!$paymentRequests = $this->getPaymentRequests())
+		{
+			return;
+		}
+
+		$price = 0;
+		$vat = 0;
+		$currency = '';
+
+		foreach ($paymentRequests as $pr)
+		{
+			$price += $pr->price;
+			$vat += $pr->vat;
+			$currency = $pr->currency;
+		}
+
+		$item = $this->getItem();
+		$item->price = $price;
+		$item->vat = $vat;
+		$item->currency = $currency;
+
+		$this->save($item);
 	}
 }

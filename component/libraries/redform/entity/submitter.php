@@ -127,6 +127,29 @@ class RdfEntitySubmitter extends RdfEntityBase
 	}
 
 	/**
+	 * Is it paid
+	 *
+	 * @return bool
+	 */
+	public function isPaid()
+	{
+		if (!$paymentRequests = $this->getPaymentRequests())
+		{
+			return true;
+		}
+
+		foreach ($paymentRequests as $paymentRequest)
+		{
+			if (!$paymentRequest->paid)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Return array of RdfEntitySubmitter
 	 *
 	 * @param   string  $submit_key  submit key

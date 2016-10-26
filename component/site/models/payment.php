@@ -63,8 +63,10 @@ class RedFormModelPayment extends JModelLegacy
 			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = ci.payment_request_id')
 			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
 			->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id')
+			->join('LEFT', '#__rwf_billinginfo AS b ON b.cart_id = ci.cart_id')
 			->where('f.requirebilling = 1')
-			->where('ci.cart_id = ' . $cart->id);
+			->where('ci.cart_id = ' . $cart->id)
+			->where('b.id IS NULL');
 		$this->_db->setQuery($query);
 
 		return ($this->_db->loadResult() ? true : false);
