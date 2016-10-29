@@ -214,12 +214,17 @@ class RedformControllerPayment extends JControllerLegacy
 				switch ($first->integration)
 				{
 					case 'redevent':
-						$app->redirect('index.php?option=com_redevent&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v);
+						$app->redirect(
+							'index.php?option=com_redevent&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v
+							. '&cart=' . $key
+						);
 						break;
 
 					default:
 						$app->redirect(
-							'index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v
+							'index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $first->submit_key . '&state=processing'
+							. $lang_v
+							. '&cart=' . $key
 						);
 						break;
 				}
