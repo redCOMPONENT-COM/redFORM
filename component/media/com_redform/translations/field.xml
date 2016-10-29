@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<contentelement type="contentelement">
+	<name>redFORM Form</name>
+	<author>redCOMPONENT</author>
+	<copyright>Copyright (C) 2008 - 2016 redCOMPONENT.com. All rights reserved.</copyright>
+	<version>3.3.14</version>
+	<description>forms Table Definition for the redFORM extension</description>
+	<reference>
+		<table name="rwf_forms">
+			<field name="id" type="referenceid" translate="0" alwaysFallback="false" filter="RAW" description="">ID</field>
+			<field name="formname" type="text" translate="1" alwaysFallback="false" filter="RAW" description="">Form Name</field>
+		</table>
+		<component>
+			<editForm admin="true" option="com_redform" view="form" layout="edit" identifier="id" showbutton="true" htmlposition=".btn-toolbar:first .btn-group:first" checkoriginalid="false"/>
+		</component>
+	</reference>
+</contentelement>
