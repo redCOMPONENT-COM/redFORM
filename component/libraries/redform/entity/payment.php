@@ -16,4 +16,20 @@ defined('_JEXEC') or die;
  */
 class RdfEntityPayment extends RdfEntityBase
 {
+	/**
+	 * Get cart
+	 *
+	 * @return RdfEntityCart
+	 */
+	public function getCart()
+	{
+		if (!$item = $this->getItem())
+		{
+			return false;
+		}
+
+		$cart = RdfEntityCart::load($item->cart_id);
+
+		return $cart;
+	}
 }
