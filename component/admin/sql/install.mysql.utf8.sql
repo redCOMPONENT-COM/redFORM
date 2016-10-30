@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `price` DECIMAL(10, 2) NOT NULL default '0.0',
   `vat` DECIMAL(10, 2) NOT NULL default '0.0',
   `currency` varchar(3) NOT NULL default '',
+  `language` char(7) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `form_id` (`form_id`),
   KEY `answer_id` (`answer_id`)

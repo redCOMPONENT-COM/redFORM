@@ -699,6 +699,7 @@ class RdfAnswers
 		else
 		{
 			$row->submission_ip = getenv('REMOTE_ADDR');
+			$row->language = $mainframe->getLanguage()->getTag();
 		}
 
 		$row->form_id = $this->formId;
