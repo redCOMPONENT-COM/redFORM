@@ -88,6 +88,16 @@ class RdfPaymentInfo
 	}
 
 	/**
+	 * Get associated cart
+	 *
+	 * @return RdfEntityCart
+	 */
+	public function getCart()
+	{
+		return $this->cart;
+	}
+
+	/**
 	 * Return submitters
 	 *
 	 * @return RdfEntitySubmitter[]
