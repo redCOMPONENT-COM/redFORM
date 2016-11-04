@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5" method="upgrade">
 	<name>COM_REDFORM</name>
-	<creationDate>July 8, 2015</creationDate>
+	<creationDate>Nov 2016</creationDate>
 	<author>Redweb.dk</author>
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redweb.dk</authorUrl>
-	<copyright>(c) 2008 - 2011 Redweb.dk</copyright>
+	<copyright>(c) 2008 - 2016 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
-	<version>3.3.13</version>
-	<redcore version="1.8.1" />
+	<version>3.3.15</version>
+	<redcore version="1.8.8" />
 	<tag>##VERSION##</tag>
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
