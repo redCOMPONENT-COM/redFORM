@@ -6,7 +6,7 @@
 	<version>3.3.14</version>
 	<description>Sections Table Definition for the redFORM extension</description>
 	<reference>
-		<table name="rwf_sections">
+		<table name="rwf_section">
 			<field name="id" type="referenceid" translate="0" alwaysFallback="false" filter="RAW" description="">ID</field>
 			<field name="name" type="text" translate="1" alwaysFallback="false" filter="RAW" description="">Section Name</field>
 			<field name="description" type="text" translate="1" alwaysFallback="false" filter="RAW" description="">Section Description</field>
