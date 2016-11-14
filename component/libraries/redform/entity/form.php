@@ -34,6 +34,24 @@ class RdfEntityForm extends RdfEntityBase
 	private $renderOptions;
 
 	/**
+	 * Proxy item properties
+	 *
+	 * @param   string $property Property tried to access
+	 *
+	 * @return  mixed   $this->item->property if it exists
+	 */
+	public function __get($property)
+	{
+		if (null != $this->item && $property == 'params')
+		{
+			return new JRegistry($this->item->params);
+		}
+
+		return parent::__get($property);
+	}
+
+
+	/**
 	 * return form status
 	 *
 	 * @param   JUser  $user  user

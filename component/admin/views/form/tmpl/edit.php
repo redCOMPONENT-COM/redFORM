@@ -162,6 +162,14 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('captchaactive'); ?>
 				</div>
 			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('submit_label', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('submit_label', 'params'); ?>
+				</div>
+			</div>
 		</div>
 
 		<div class="tab-pane" id="notification">

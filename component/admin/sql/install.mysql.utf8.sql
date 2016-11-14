@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `submitterpaymentnotificationsubject` text NOT NULL default '',
   `submitterpaymentnotificationbody` text NOT NULL default '',
   `cond_recipients` text NOT NULL default '',
+  `params` text NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Forms for redFORM';
 
