@@ -81,7 +81,7 @@ var RedFormValidator = function() {
  	 	 	 	}
  	 	 	//If element has class placeholder that means it is empty.
  	 	 	} else if (!$el.val().trim() || $el.hasClass('placeholder') || ($el.attr('type') === 'checkbox' && !$el.is(':checked'))) {
-				setElementError(el, 'required');
+				setElementError(el, Joomla.JText._('LIB_REDFORM_FORM_VALIDATION_ERROR_FIELD_IS_REQUIRED'));
  	 	 	 	handleResponse(false, $el);
  	 	 	 	return false;
  	 	 	}
@@ -237,7 +237,7 @@ var RedFormValidator = function() {
  	 	 	var regex = new RegExp("[\<|\>|\"|\'|\%|\;|\(|\)|\&]", "i");
 			var result = !regex.test(value);
 			if (!result) {
-				setElementError(element, 'wrong username format');
+				setElementError(element, Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_USERNAME_INVALID_FORMAT'));
 			}
 			else {
 				setElementError(element, '');
@@ -248,7 +248,7 @@ var RedFormValidator = function() {
  	 	 	var regex = /^\S[\S ]{2,98}\S$/;
 			var result = regex.test(value);
 			if (!result) {
-				setElementError(element, 'wrong password format');
+				setElementError(element, Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_PASSWORD_INVALID_FORMAT'));
 			}
 			else {
 				setElementError(element, '');
@@ -259,7 +259,7 @@ var RedFormValidator = function() {
  	 		var regex = /^(\d|-)?(\d|,)*\.?\d*$/;
 			var result = regex.test(value);
 			if (!result) {
-				setElementError(element, 'Value must be a numeric');
+				setElementError(element, Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_NUMERIC_INVALID_FORMAT'));
 			}
 			else {
 				setElementError(element, '');
@@ -271,7 +271,7 @@ var RedFormValidator = function() {
  	 	 	var regex = /^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 			var result = regex.test(value);
 			if (!result) {
-				setElementError(element, 'wrong email format');
+				setElementError(element, Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_EMAIL_INVALID_FORMAT'));
 			}
 			else {
 				setElementError(element, '');
