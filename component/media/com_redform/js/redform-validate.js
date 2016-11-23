@@ -12,17 +12,20 @@
  */
 var RedFormValidator = function() {
 	"use strict";
-	var handlers, inputEmail, custom,
 
- 	setHandler = function(name, fn, en) {
+	var inputEmail;
+	var handlers = {};
+	var custom = {};
+
+ 	var setHandler = function(name, fn, en) {
  	 	en = (en === '') ? true : en;
  	 	handlers[name] = {
  	 	 	enabled : en,
  	 	 	exec : fn
  	 	};
- 	},
+ 	};
 
- 	findLabel = function(id, form){
+ 	var findLabel = function(id, form){
  	 	var $label, $form = jQuery(form);
  	 	if (!id) {
  	 	 	return false;
@@ -36,9 +39,9 @@ var RedFormValidator = function() {
  	 	 	return $label;
  	 	}
  	 	return false;
- 	},
+ 	};
 
- 	handleResponse = function(state, $el) {
+ 	var handleResponse = function(state, $el) {
  		// Get a label
  	 	var $label = $el.data('label');
  	 	if ($label === undefined) {
@@ -58,9 +61,10 @@ var RedFormValidator = function() {
  	 	 	 	$label.removeClass('invalid').attr('aria-invalid', 'false');
  	 	 	}
  	 	}
- 	},
+ 	};
 
- 	validate = function(el) {
+ 	var validate = function(el) {
+		setElementError(el, '');
  	 	var $el = jQuery(el), tagName, handler;
  	 	// Ignore the element if its currently disabled, because are not submitted for the http-request. For those case return always true.
  	 	if ($el.attr('disabled')) {
@@ -77,6 +81,7 @@ var RedFormValidator = function() {
  	 	 	 	}
  	 	 	//If element has class placeholder that means it is empty.
  	 	 	} else if (!$el.val().trim() || $el.hasClass('placeholder') || ($el.attr('type') === 'checkbox' && !$el.is(':checked'))) {
+				setElementError(el, 'required');
  	 	 	 	handleResponse(false, $el);
  	 	 	 	return false;
  	 	 	}
@@ -98,9 +103,9 @@ var RedFormValidator = function() {
  	 	// Return validation state
  	 	handleResponse(true, $el);
  	 	return true;
- 	},
+ 	};
 
- 	isValid = function(form) {
+ 	var isValid = function(form) {
  		var fields, valid = true, message, error, label, invalid = [], i, l;
  	 	// Validate form fields
  	 	fields = jQuery(form).find('input, textarea, select, fieldset');
@@ -134,9 +139,9 @@ var RedFormValidator = function() {
  	 	 	Joomla.renderMessages(error);
  	 	}
  	 	return valid;
- 	},
+ 	};
 
- 	attachToForm = function(form) {
+ 	var attachToForm = function(form) {
  	 	var inputFields = [], elements,
  	 		$form = jQuery(form);
  	 	// Iterate through the form object and attach the validate method to all input fields.
@@ -208,12 +213,20 @@ var RedFormValidator = function() {
 		}
 
  	 	$form.data('inputfields', inputFields);
- 	},
+ 	};
 
- 	initialize = function() {
- 	 	handlers = {};
- 	 	custom = custom || {};
+ 	var setElementError = function (el, msg) {
+		if (typeof el.setCustomValidity === "function") {
+			el.setCustomValidity(msg);
 
+			if (msg && typeof el.reportValidity === "function") {
+				el.reportValidity();
+			}
+		}
+	};
+
+	// Initialize handlers and attach validation to form
+ 	$(function() {
  	 	inputEmail = (function() {
  	 	 	var input = document.createElement("input");
  	 	 	input.setAttribute("type", "email");
@@ -222,30 +235,55 @@ var RedFormValidator = function() {
  	 	// Default handlers
  	 	setHandler('username', function(value, element) {
  	 	 	var regex = new RegExp("[\<|\>|\"|\'|\%|\;|\(|\)|\&]", "i");
- 	 	 	return !regex.test(value);
+			var result = !regex.test(value);
+			if (!result) {
+				setElementError(element, 'wrong username format');
+			}
+			else {
+				setElementError(element, '');
+			}
+			return result;
  	 	});
  	 	setHandler('password', function(value, element) {
  	 	 	var regex = /^\S[\S ]{2,98}\S$/;
- 	 	 	return regex.test(value);
+			var result = regex.test(value);
+			if (!result) {
+				setElementError(element, 'wrong password format');
+			}
+			else {
+				setElementError(element, '');
+			}
+			return result;
  	 	});
  	 	setHandler('numeric', function(value, element) {
  	 		var regex = /^(\d|-)?(\d|,)*\.?\d*$/;
- 	 	 	return regex.test(value);
+			var result = regex.test(value);
+			if (!result) {
+				setElementError(element, 'Value must be a numeric');
+			}
+			else {
+				setElementError(element, '');
+			}
+			return result;
  	 	});
  	 	setHandler('email', function(value, element) {
 			value = punycode.toASCII(value);
  	 	 	var regex = /^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
- 	 	 	return regex.test(value);
+			var result = regex.test(value);
+			if (!result) {
+				setElementError(element, 'wrong email format');
+			}
+			else {
+				setElementError(element, '');
+			}
+			return result;
  	 	});
  	 	// Attach to forms with class 'form-validate'
  	 	var forms = jQuery('form.redform-validate');
  	 	for (var i = 0, l = forms.length; i < l; i++) {
  	 	 	attachToForm(forms[i]);
  	 	}
- 	};
-
- 	// Initialize handlers and attach validation to form
- 	initialize();
+ 	});
 
  	return {
  	 	isValid : isValid,
@@ -258,5 +296,5 @@ var RedFormValidator = function() {
 
 document.redformvalidator = null;
 jQuery(function() {
-	document.redformvalidator = new RedFormValidator();
+	document.redformvalidator = RedFormValidator();
 });
