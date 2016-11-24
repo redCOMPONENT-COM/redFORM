@@ -47,20 +47,18 @@ class PaymentCustom extends  RdfPaymentHelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
-		$text = array($this->params->get('instructions'));
-
-		if ($return_url)
-		{
-			$text[] = '<p>' . JHTML::link($return_url, JText::_('Return')) . '</b>';
-		}
+		$intro = $this->params->get('instructions');
+		$params = $this->params;
 
 		$target = $this->params->get('payment_status', 'pending') == 'paid' ? 'notify' : 'processing';
+		$action = $this->getUrl($target, $request->key);
 
-		$text[] = '<form class="custom-payment" method="post" action="' . $this->getUrl($target, $request->key) . '">';
-		$text[] = '<button type="submit">' . $this->params->get('confirmButtonLabel', 'Confirm') . '</button>';
-		$text[] = '</form>';
-
-		echo implode("\n", $text);
+		echo RdfLayoutHelper::render(
+			'redform_payment.custom',
+			compact('request', 'intro', 'params', 'return_url', 'action'),
+			'',
+			array('defaultLayoutsPath' => dirname(__DIR__) . '/layouts')
+		);
 
 		return true;
 	}

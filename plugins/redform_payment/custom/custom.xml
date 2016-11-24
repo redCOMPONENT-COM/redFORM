@@ -16,6 +16,7 @@
 		<folder>helpers</folder>
 		<filename>index.html</filename>
 		<folder>language</folder>
+		<folder>layouts</folder>
 	</files>
 
 	<config>
