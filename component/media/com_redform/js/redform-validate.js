@@ -226,7 +226,7 @@ var RedFormValidator = function() {
 	};
 
 	// Initialize handlers and attach validation to form
- 	$(function() {
+ 	jQuery(function() {
  	 	inputEmail = (function() {
  	 	 	var input = document.createElement("input");
  	 	 	input.setAttribute("type", "email");
