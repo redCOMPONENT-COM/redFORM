@@ -164,36 +164,31 @@ class RdfHelperNotifymaintainer
 
 		$htmlmsg = '<table border="1">';
 
-		foreach ($this->answers->getAnswers() as $key => $answer)
+		foreach ($this->answers->getFields() as $key => $field)
 		{
-			if (is_array($answer['value']))
-			{
-				$answer['value'] = implode("<br/>", $answer['value']);
-			}
-
-			switch ($answer['type'])
+			switch ($field->fieldtype)
 			{
 				case 'recipients':
+				case 'submissionprice':
 					break;
 
 				case 'email':
-					$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
-					$htmlmsg .= '<a href="mailto:' . $answer['value'] . '">' . $answer['value'] . '</a>';
+					$htmlmsg .= '<tr><td>' . $field->name . '</td><td>';
+					$htmlmsg .= '<a href="mailto:' . $field->value . '">' . $field->value . '</a>';
 					$htmlmsg .= '&nbsp;';
 					$htmlmsg .= '</td></tr>' . "\n";
 					break;
 
 				case 'textfield':
-					$userinput = preg_replace($patterns, $replacements, $answer['value']);
-					$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
+					$htmlmsg .= '<tr><td>' . $field->name . '</td><td>';
 
-					if (strpos($answer['value'], 'http://') === 0)
+					if (strpos($field->value, 'http://') === 0)
 					{
-						$htmlmsg .= '<a href="' . $answer['value'] . '">' . $answer['value'] . '</a>';
+						$htmlmsg .= '<a href="' . $field->value . '">' . $field->value . '</a>';
 					}
 					else
 					{
-						$htmlmsg .= $answer['value'];
+						$htmlmsg .= $field->value;
 					}
 
 					$htmlmsg .= '&nbsp;';
@@ -201,15 +196,14 @@ class RdfHelperNotifymaintainer
 					break;
 
 				case 'fileupload':
-					$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
-					$htmlmsg .= ($answer['value'] && file_exists($answer['value'])) ? basename($answer['value']) : '';
+					$htmlmsg .= '<tr><td>' . $field->name . '</td><td>';
+					$htmlmsg .= ($field->value && file_exists($field->value)) ? basename($field->value) : '';
 					$htmlmsg .= '</td></tr>' . "\n";
-
 					break;
 
 				default :
-					$userinput = preg_replace($patterns, $replacements, $answer['value']);
-					$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
+					$userinput = preg_replace($patterns, $replacements, $field->getValueAsString("<br>"));
+					$htmlmsg .= '<tr><td>' . $field->name . '</td><td>';
 					$htmlmsg .= str_replace('~~~', '<br />', $userinput);
 					$htmlmsg .= '&nbsp;';
 					$htmlmsg .= '</td></tr>' . "\n";
