@@ -145,13 +145,11 @@ class RdfPaymentInfo
 			$dispatcher = JDispatcher::getInstance();
 
 			// More fields with integration
-			$paymentDetailFields = null;
+			$paymentDetailFields = new RdfPaymentInfointegration;
 			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($this->integration, $this->submit_key, &$paymentDetailFields));
 
 			if (!$paymentDetailFields)
 			{
-				$paymentDetailFields = new RdfPaymentInfointegration;
-
 				$uniqueid = $this->getForm()->id . '-' . $this->getASubmitter()->id . '-' . $this->cart->reference;
 
 				if ($title = JFactory::getApplication()->input->get('paymenttitle'))

@@ -55,7 +55,7 @@ class RedformControllerPayment extends JControllerLegacy
 			}
 			elseif ($submitKey = $app->input->get('key'))
 			{
-				$cart = $model->getNewCart($submitKey);
+				$cart = $model->getSubmissionCart($submitKey);
 			}
 			else
 			{

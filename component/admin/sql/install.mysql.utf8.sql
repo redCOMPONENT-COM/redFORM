@@ -177,6 +177,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_cart` (
   `currency` varchar(3) NOT NULL default '',
   `paid` tinyint(2) NOT NULL default '0',
   `note` text NOT NULL default '',
+  `invoice_id` VARCHAR(100) NOT NULL default '',
   PRIMARY KEY (`id`),
   KEY `reference` (`reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='payment cart';

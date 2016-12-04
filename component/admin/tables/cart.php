@@ -46,4 +46,75 @@ class RedformTableCart extends RTable
 
 		return parent::afterDelete($pk);
 	}
+
+	/**
+	 * Called before store().
+	 *
+	 * @param   boolean  $updateNulls  True to update null values as well.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	protected function beforeStore($updateNulls = false)
+	{
+		if (!$this->invoice_id)
+		{
+			$this->setInvoiceId();
+		}
+
+		return parent::beforeStore($updateNulls);
+	}
+
+	/**
+	 * get default invoice id, based on prefix and current max value of it
+	 *
+	 * @return void
+	 */
+	protected function getNewInvoiceId()
+	{
+		$config = JComponentHelper::getParams('com_redform');
+		$prefix = $config->get('invoice_prefix', 'INVOICE-');
+		$padding = $config->get('invoice_padding', 4);
+
+		// Get existing prefixes
+		$query = $this->_db->getQuery(true)
+			->select('invoice_id')
+			->from('#__rwf_cart')
+			->where('invoice_id LIKE ' . $this->_db->q($prefix . '%'));
+
+		$this->_db->setQuery($query);
+		$res = $this->_db->loadColumn();
+
+		$max = !$res ? 0 : array_reduce(
+			$res,
+			function($carry, $invoiceId) use ($prefix)
+			{
+				$number = (int) substr($invoiceId, strlen($prefix));
+
+				return max($number, $carry);
+			},
+			0
+		);
+
+		return $prefix . sprintf('%0' . $padding . 'd', $max + 1);
+	}
+
+	/**
+	 * Set invoice id
+	 *
+	 * @return void
+	 */
+	protected function setInvoiceId()
+	{
+		$invoice_id = null;
+
+		JPluginHelper::importPlugin('redform');
+		RFactory::getDispatcher()->trigger('onGetNewInvoiceId', array($this, &$invoice_id));
+
+		if (!$invoice_id)
+		{
+			$invoice_id = $this->getNewInvoiceId();
+		}
+
+		$this->invoice_id = $invoice_id;
+	}
 }
