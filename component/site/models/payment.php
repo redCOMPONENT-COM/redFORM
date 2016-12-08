@@ -420,12 +420,12 @@ class RedFormModelPayment extends JModelLegacy
 	 *
 	 * @param   string  $submitKey  submit key
 	 *
-	 * @return RdfCorePaymentCart
+	 * @return RdfEntityCart
 	 */
 	public function getSubmissionCart($submitKey)
 	{
-		$cart = new RdfCorePaymentCart;
-		$cart->getSubmissionCart($submitKey);
+		$helper = new RdfCorePaymentCart;
+		$cart = $helper->getSubmissionCart($submitKey);
 
 		return $cart;
 	}

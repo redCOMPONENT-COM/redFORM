@@ -19,6 +19,7 @@ $cart = $request->getCart();
 	<form class="custom-payment" method="post" action="<?= $action ?>">
 		<dl>
 			<dt><?= JText::_('PLG_REFORM_PAYMENT_CUSTOM_PAYMENT_TITLE') ?></dt><dd><?= $request->title ?></dd>
+			<dt><?= JText::_('PLG_REFORM_PAYMENT_CUSTOM_PAYMENT_INVOICE_ID') ?></dt><dd><?= $cart->invoice_id ?></dd>
 			<dt><?= JText::_('PLG_REFORM_PAYMENT_CUSTOM_PAYMENT_UNIQUE_ID') ?></dt><dd><?= $request->uniqueid ?></dd>
 			<dt><?= JText::_('PLG_REFORM_PAYMENT_CUSTOM_PAYMENT_AMOUNT') ?></dt><dd><?= RHelperCurrency::getFormattedPrice($cart->price + $cart->vat, $request->currency) ?></dd>
 		</dl>
