@@ -168,6 +168,11 @@ $listDirn = $this->state->get('list.direction');
 						<ul class="unstyled">
 							<?php foreach ($item->paymentrequests as $pr): ?>
 								<li>
+									<?php if ($pr->invoice_id): ?>
+										<?= $pr->invoice_id ?><br>
+									<?php else: ?>
+										<?= JText::_('COM_REDFORM_REGISTRATION_NO_INVOICE_ID_YET') ?>
+									<?php endif; ?>
 									<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&pr=' . $pr->prid), JText::_('COM_REDFORM_history')); ?>
 									<?php if (!$pr->paid): ?>
 										<span class="hasToolTip" title="<?php echo RHtml::tooltipText(JText::_('COM_REDFORM_REGISTRATION_NOT_PAID'), $pr->status); ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
