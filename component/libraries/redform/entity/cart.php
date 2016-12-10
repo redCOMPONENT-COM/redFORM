@@ -398,4 +398,18 @@ class RdfEntityCart extends RdfEntityBase
 
 		$this->save($item);
 	}
+
+	/**
+	 * Replace cart related tags in a string
+	 *
+	 * @param   string  $text  input text
+	 *
+	 * @return string
+	 */
+	public function replaceTags($text)
+	{
+		$replacer = new RdfHelperTagsCart($this);
+
+		return $replacer->replace($text);
+	}
 }

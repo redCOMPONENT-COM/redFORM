@@ -185,6 +185,16 @@ class RdfHelperTagsreplace
 	}
 
 	/**
+	 * replace [paymentdate] tag
+	 *
+	 * @return string
+	 */
+	private function getTagPaymentdate()
+	{
+		return RdfHelper::formatPrice($this->answers->getPrice() + $this->answers->getVat(), $this->answers->getCurrency());
+	}
+
+	/**
 	 * replace [totalvat] tag
 	 *
 	 * @return string
