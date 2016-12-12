@@ -27,6 +27,10 @@ before_script:
 - cd build
 - node --version
 - npm  --version
+- npm cache clean -f
+- npm install -g n
+- n stable
+- node --version
 - npm install gulp -g # install globally so that it's available to robo
 - npm install
 - mv gulp-config.json.dist gulp-config.json
