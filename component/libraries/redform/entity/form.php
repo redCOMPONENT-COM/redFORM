@@ -36,7 +36,7 @@ class RdfEntityForm extends RdfEntityBase
 	/**
 	 * Proxy item properties
 	 *
-	 * @param   string $property Property tried to access
+	 * @param   string  $property  Property tried to access
 	 *
 	 * @return  mixed   $this->item->property if it exists
 	 */
@@ -49,7 +49,6 @@ class RdfEntityForm extends RdfEntityBase
 
 		return parent::__get($property);
 	}
-
 
 	/**
 	 * return form status
