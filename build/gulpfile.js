@@ -11,6 +11,8 @@ var path       	= require('path');
 var ghPages     = require('gulp-gh-pages');
 var del         = require('del');
 var exec        = require('child_process').exec
+var replace     = require('gulp-replace');
+var filter      = require('gulp-filter');
 
 var parser      = new xml2js.Parser();
 
@@ -24,9 +26,10 @@ gulp.task('clean:release', ['git_version'], function(){
 	return del(config.release_dir, {force: true});
 });
 
-gulp.task('git_version', function(){
-	return gitDescribe(function(str) {
+gulp.task('git_version', function(cb){
+	gitDescribe(function(str) {
 		gitshort = str;
+		cb();
 	});
 });
 
@@ -39,7 +42,7 @@ gulp.task('release',
 	], function() {
 		fs.readFile( '../component/redform.xml', function(err, data) {
 			parser.parseString(data, function (err, result) {
-				var version = getVersion(result);
+				var version = gitshort;
 				var fileName = config.skipVersion ? extension.name + '_ALL_UNZIP_FIRST.zip' : extension.name + '-v' + version + '_ALL_UNZIP_FIRST.zip';
 				del.sync(path.join(config.release_dir, fileName), {force: true});
 
@@ -59,7 +62,7 @@ gulp.task('release',
 gulp.task('release:redform', ['clean:release', 'release:prepare-redform', 'release:prepare-redcore'], function (cb) {
 	fs.readFile( '../component/redform.xml', function(err, data) {
 		parser.parseString(data, function (err, result) {
-			var version = getVersion(result);
+			var version = gitshort;
 			var fileName = config.skipVersion ? extension.name + '.zip' : extension.name + '-v' + version + '.zip';
 			var fileNameNoRedcore = config.skipVersion ? extension.name + '_no_redCORE.zip' : extension.name + '-v' + version + '_no_redCORE.zip';
 
@@ -81,10 +84,15 @@ gulp.task('release:redform', ['clean:release', 'release:prepare-redform', 'relea
 	});
 });
 
-gulp.task('release:prepare-redform', function () {
+gulp.task('release:prepare-redform', ['git_version'], function () {
+	var xmlFilter = filter('../**/redform.xml', {restore: true});
+	var version = gitshort;
 	return gulp.src([
 			'../component/**/*'
 		])
+		.pipe(xmlFilter)
+		.pipe(replace(/(##VERSION##)/g, version))
+		.pipe(xmlFilter.restore)
 		.pipe(gulp.dest('tmp'));
 });
 
