@@ -48,6 +48,18 @@
 			   label="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR"
 			   description="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR_DESC"/>
 
+		<field name="invoice_prefix"
+			   type="text"
+			   default="INVOICE-"
+			   label="COM_REDFORM_SETTINGS_INVOICE_PREFIX"
+			   description="COM_REDFORM_SETTINGS_INVOICE_PREFIX_DESC"/>
+
+		<field name="invoice_padding"
+			   type="text"
+			   default="4"
+			   label="COM_REDFORM_SETTINGS_INVOICE_PADDING"
+			   description="COM_REDFORM_SETTINGS_INVOICE_PADDING_DESC"/>
+
 		<field
 				name="allow_negative_total"
 				type="radio"
