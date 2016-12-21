@@ -241,4 +241,14 @@ class RdfHelperTagsreplace
 
 		return JRoute::_($url);
 	}
+
+	/**
+	 * replaces [submitter_id]
+	 *
+	 * @return string
+	 */
+	private function getTagSubmitter_id()
+	{
+		return $this->answers->sid;
+	}
 }
