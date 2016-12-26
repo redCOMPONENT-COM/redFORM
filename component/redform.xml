@@ -95,4 +95,7 @@
         <plugin name="redform" group="content"/>
     </plugins>
 
+	<updateservers>
+		<server type="extension" priority="1" name="redFORM update">http://julien.intern.redweb.dk/updates/redform/com_redform.xml</server>
+	</updateservers>
 </extension>
