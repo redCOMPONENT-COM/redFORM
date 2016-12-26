@@ -149,4 +149,15 @@ file_filter = languages/<lang>/admin/<lang>/<lang>.plg_content_redform.sys.ini
 source_file = component/plugins/content/redform/language/en-GB/en-GB.plg_content_redform.sys.ini
 source_lang = en-GB
 
+[redFORM.redform25-plg_installer_redform-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_installer_redform.ini
+source_file = component/plugins/installer/redform/language/en-GB/en-GB.plg_installer_redform.ini
+source_lang = en-GB
+
+[redFORM.redform25-plg_installer_redform-sys-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_installer_redform.sys.ini
+source_file = component/plugins/installer/redform/language/en-GB/en-GB.plg_installer_redform.sys.ini
+source_lang = en-GB
+
+
 

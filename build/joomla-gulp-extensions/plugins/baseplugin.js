@@ -62,4 +62,29 @@ module.exports.addPlugin = function (group, name) {
 			});
 		});
 	});
-}
+
+	// Update site xml
+	gulp.task('update-sites:' + baseTask, function(){
+		fs.readFile( extPath + '/' + name + '.xml', function(err, data) {
+			parser.parseString(data, function (err, result) {
+				const version = result.extension.version[0];
+
+				fs.readFile('plg_update_site_template.xml', 'utf-8', function(err, content){
+					if (err)
+					{
+						console.log(err);
+
+						return;
+					}
+
+					var text = content
+						.replace(/(##FULLNAME##)/g, 'plg_' + group + '_' + name)
+						.replace(/(##ELEMENT##)/g, name)
+						.replace(/(##FOLDER##)/g, group)
+						.replace(/(##VERSION##)/g, version);
+					fs.writeFileSync('./update_server_xml/' + 'plg_' + group + '_' + name + '.xml', text);
+				});
+			});
+		});
+	});
+};

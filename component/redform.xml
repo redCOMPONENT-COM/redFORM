@@ -93,6 +93,7 @@
     <!-- Plugins to install -->
     <plugins>
         <plugin name="redform" group="content"/>
+		<plugin name="redform" group="installer" />
     </plugins>
 
 	<updateservers>
