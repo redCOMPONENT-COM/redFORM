@@ -19,7 +19,7 @@
   </files>
 
 	<updateservers>
-		<server type="extension" priority="1" name="redFORM update">http://julien.intern.redweb.dk/updates/redform/plg_redform_mailing_jnews.xml</server>
+		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_mailing_jnews.xml</server>
 	</updateservers>
 
 </extension>

@@ -50,6 +50,6 @@
 	</config>
 
 	<updateservers>
-		<server type="extension" priority="1" name="redFORM update">http://julien.intern.redweb.dk/updates/redform/plg_redform_payment_custom.xml</server>
+		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_payment_custom.xml</server>
 	</updateservers>
 </extension>

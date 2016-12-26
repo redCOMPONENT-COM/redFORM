@@ -97,6 +97,6 @@
     </plugins>
 
 	<updateservers>
-		<server type="extension" priority="1" name="redFORM update">http://julien.intern.redweb.dk/updates/redform/com_redform.xml</server>
+		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/com_redform.xml</server>
 	</updateservers>
 </extension>
