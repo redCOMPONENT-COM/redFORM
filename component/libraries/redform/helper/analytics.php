@@ -293,7 +293,7 @@ JS;
 		foreach ($submitters as $s)
 		{
 			$item = new stdclass;
-			$item->id = $s->id;
+			$item->id = $submit_key;
 			$item->productname = $productname ? $productname : 'submitter' . $s->id;
 			$item->sku  = $sku ? $sku : 'submitter' . $s->id;
 			$item->category  = $category ? $category : '';
