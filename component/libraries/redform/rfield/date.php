@@ -77,9 +77,11 @@ class RdfRfieldDate extends RdfRfield
 		$properties['name'] = $this->getFormElementName();
 		$properties['id'] = $this->getFormElementId();
 
-		if ($class = trim($this->getParam('class')))
+		$class = array();
+
+		if (trim($this->getParam('class')))
 		{
-			$properties['class'] = $class;
+			$class = array_merge($class, explode(" ", trim($this->getParam('class'))));
 		}
 
 		$properties['value'] = $this->getValue();
@@ -93,20 +95,20 @@ class RdfRfieldDate extends RdfRfield
 
 		if ($this->load()->validate)
 		{
-			if (isset($properties['class']))
-			{
-				$properties['class'] .= ' required';
-			}
-			else
-			{
-				$properties['class'] = ' required';
-			}
+			$class[] = 'required';
+		}
+
+		if ($this->getParam('future'))
+		{
+			$class[] = 'validate-futuredate';
 		}
 
 		if ($placeholder = $this->getParam('placeholder'))
 		{
 			$properties['placeholder'] = addslashes($placeholder);
 		}
+
+		$properties['class'] = implode(" ", $class);
 
 		return $properties;
 	}

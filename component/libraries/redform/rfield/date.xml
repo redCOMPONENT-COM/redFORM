@@ -6,6 +6,14 @@
                    label="COM_REDFORM_FIELD_DATE_PARAMS_DATE_FORMAT_LABEL"
                    description="COM_REDFORM_FIELD_DATE_PARAMS_DATE_FORMAT_DESC"/>
 
+            <field name="future" type="radio" default="0"
+                   class="btn-group btn-group-yesno"
+                   label="COM_REDFORM_FIELD_DATE_PARAMS_DATE_FUTURE_LABEL"
+                   description="COM_REDFORM_FIELD_DATE_PARAMS_DATE_FUTURE_DESC">
+                <option value="0">JNo</option>
+                <option value="1">JYes</option>
+            </field>
+
             <field type="redformnote" label="COM_REDFORM_note"
                    description="COM_REDFORM_FIELD_DATE_PARAMS_NOTE_TEXT" />
         </fieldset>

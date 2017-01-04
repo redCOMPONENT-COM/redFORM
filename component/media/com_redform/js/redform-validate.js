@@ -122,7 +122,7 @@ var RedFormValidator = function() {
  	 	 	}
  	 	});
  	 	if (!valid && invalid.length > 0) {
- 	 	 	message = Joomla.JText._('JLIB_FORM_FIELD_INVALID');
+ 	 	 	message = Joomla.JText._('LIB_REDFORM_VALIDATION_FIELD_INVALID');
  	 	 	error = {"error": []};
  	 	 	for (i = invalid.length - 1; i >= 0; i--) {
  	 	 		label = jQuery(invalid[i]).data("label");
@@ -232,52 +232,77 @@ var RedFormValidator = function() {
  	 	 	input.setAttribute("type", "email");
  	 	 	return input.type !== "text";
  	 	})();
+
  	 	// Default handlers
  	 	setHandler('username', function(value, element) {
  	 	 	var regex = new RegExp("[\<|\>|\"|\'|\%|\;|\(|\)|\&]", "i");
 			var result = !regex.test(value);
 			if (!result) {
-				setElementError(element, Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_USERNAME_INVALID_FORMAT'));
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_USERNAME_INVALID_FORMAT'));
 			}
 			else {
-				setElementError(element, '');
+				setElementError(element.get(0), '');
 			}
 			return result;
  	 	});
+
  	 	setHandler('password', function(value, element) {
  	 	 	var regex = /^\S[\S ]{2,98}\S$/;
 			var result = regex.test(value);
 			if (!result) {
-				setElementError(element, Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_PASSWORD_INVALID_FORMAT'));
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_PASSWORD_INVALID_FORMAT'));
 			}
 			else {
-				setElementError(element, '');
+				setElementError(element.get(0), '');
 			}
 			return result;
  	 	});
+
  	 	setHandler('numeric', function(value, element) {
  	 		var regex = /^(\d|-)?(\d|,)*\.?\d*$/;
 			var result = regex.test(value);
 			if (!result) {
-				setElementError(element, Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_NUMERIC_INVALID_FORMAT'));
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_NUMERIC_INVALID_FORMAT'));
 			}
 			else {
-				setElementError(element, '');
+				setElementError(element.get(0), '');
 			}
 			return result;
  	 	});
+
  	 	setHandler('email', function(value, element) {
 			value = punycode.toASCII(value);
  	 	 	var regex = /^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 			var result = regex.test(value);
 			if (!result) {
-				setElementError(element, Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_EMAIL_INVALID_FORMAT'));
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_EMAIL_INVALID_FORMAT'));
 			}
 			else {
-				setElementError(element, '');
+				setElementError(element.get(0), '');
 			}
 			return result;
  	 	});
+
+		setHandler('futuredate', function(value, element) {
+			if (!value) {
+				return true;
+			}
+
+			var today = new Date(new Date().toDateString());
+			var val = new Date(value);
+
+			var result = val >= today;
+
+			if (!result) {
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_FUTURE_DATE'));
+			}
+			else {
+				setElementError(element.get(0), '');
+			}
+
+			return result;
+		});
+
  	 	// Attach to forms with class 'form-validate'
  	 	var forms = jQuery('form.redform-validate');
  	 	for (var i = 0, l = forms.length; i < l; i++) {

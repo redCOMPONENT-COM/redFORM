@@ -982,6 +982,7 @@ class RdfCore extends JObject
 	{
 		RHtmlMedia::loadFrameworkJs();
 		RHelperAsset::load('redform-validate.js', 'com_redform');
+		JText::script('LIB_REDFORM_VALIDATION_FIELD_INVALID');
 		JText::script('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED');
 		JText::script('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED');
 		JText::script('LIB_REDFORM_FORM_VALIDATION_ERROR_FIELD_IS_REQUIRED');
@@ -989,7 +990,7 @@ class RdfCore extends JObject
 		JText::script('LIB_REDFORM_VALIDATION_ERROR_PASSWORD_INVALID_FORMAT');
 		JText::script('LIB_REDFORM_VALIDATION_ERROR_NUMERIC_INVALID_FORMAT');
 		JText::script('LIB_REDFORM_VALIDATION_ERROR_EMAIL_INVALID_FORMAT');
-		JText::script('JLIB_FORM_FIELD_INVALID');
+		JText::script('LIB_REDFORM_VALIDATION_ERROR_FUTURE_DATE');
 	}
 
 	/**
