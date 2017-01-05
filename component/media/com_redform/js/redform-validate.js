@@ -218,10 +218,6 @@ var RedFormValidator = function() {
  	var setElementError = function (el, msg) {
 		if (typeof el.setCustomValidity === "function") {
 			el.setCustomValidity(msg);
-
-			if (msg && typeof el.reportValidity === "function") {
-				el.reportValidity();
-			}
 		}
 	};
 
@@ -303,20 +299,20 @@ var RedFormValidator = function() {
 			return result;
 		});
 
- 	 	// Attach to forms with class 'form-validate'
- 	 	var forms = jQuery('form.redform-validate');
- 	 	for (var i = 0, l = forms.length; i < l; i++) {
- 	 	 	attachToForm(forms[i]);
- 	 	}
- 	});
+		// Attach to forms with class 'form-validate'
+		var forms = jQuery('form.redform-validate');
+		for (var i = 0, l = forms.length; i < l; i++) {
+			attachToForm(forms[i]);
+		}
+	});
 
- 	return {
- 	 	isValid : isValid,
- 	 	validate : validate,
- 	 	setHandler : setHandler,
- 	 	attachToForm : attachToForm,
- 	 	custom: custom
- 	};
+	return {
+		isValid : isValid,
+		validate : validate,
+		setHandler : setHandler,
+		attachToForm : attachToForm,
+		custom: custom
+	};
 };
 
 document.redformvalidator = null;
