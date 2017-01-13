@@ -97,6 +97,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_form_field` (
 CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `id` int(11) NOT NULL auto_increment,
   `form_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `submission_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `submission_ip` VARCHAR(50) NOT NULL default '',
   `confirmed_date` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -112,6 +113,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `currency` varchar(3) NOT NULL default '',
   `language` char(7) NOT NULL,
   PRIMARY KEY  (`id`),
+  KEY `user_id` (`user_id`),
   KEY `form_id` (`form_id`),
   KEY `answer_id` (`answer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Submitters for redFORM';

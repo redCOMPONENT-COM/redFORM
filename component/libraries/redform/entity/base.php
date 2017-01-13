@@ -141,6 +141,36 @@ abstract class RdfEntityBase
 	}
 
 	/**
+	 * Load a collection from an array.
+	 *
+	 * @param   array  $items  Array containing entities data
+	 *
+	 * @return  self
+	 *
+	 * @throws  \RuntimeException
+	 */
+	public static function loadArray(array $items)
+	{
+		$entities = array();
+
+		foreach ($items as $item)
+		{
+			$item = (object) $item;
+
+			if (!property_exists($item, 'id'))
+			{
+				throw new \RuntimeException('redform library: entity needs needs an id');
+			}
+
+			$entity = self::getInstance($item->id)->bind($item);
+
+			$entities[] = $entity;
+		}
+
+		return $entities;
+	}
+
+	/**
 	 * Bind an object/array to the entity
 	 *
 	 * @param   mixed  $item  Array/Object containing the item fields

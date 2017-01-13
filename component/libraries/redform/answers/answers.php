@@ -700,6 +700,11 @@ class RdfAnswers
 		{
 			$row->submission_ip = getenv('REMOTE_ADDR');
 			$row->language = $mainframe->getLanguage()->getTag();
+
+			if (!$mainframe->isAdmin())
+			{
+				$row->user_id = JFactory::getUser()->id;
+			}
 		}
 
 		$row->form_id = $this->formId;

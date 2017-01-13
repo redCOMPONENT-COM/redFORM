@@ -19,6 +19,21 @@ defined('_JEXEC') or die;
 class RdfHelperRoute
 {
 	/**
+	 * Route to My submissions
+	 *
+	 * @return string
+	 */
+	public static function getMysubmissionsRoute()
+	{
+		$parts = array(
+			"option" => "com_redform",
+			"view"   => 'mysubmissions',
+		);
+
+		return self::buildUrl($parts);
+	}
+
+	/**
 	 * Route to payment
 	 *
 	 * @param   string  $submit_key  submit keys

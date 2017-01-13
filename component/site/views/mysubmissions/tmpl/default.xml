@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_REDFORM_XML_VIEW_MYSUBMISSIONS_LAYOUT_TITLE">
+		<message>
+			<![CDATA[COM_REDFORM_XML_VIEW_MYSUBMISSIONS_LAYOUT_DESC]]>
+		</message>
+	</layout>
+
+	<fields name="params">
+		<fieldset name="advanced" label="COM_MENUS_LAYOUT_FEATURED_OPTIONS">
+			<field name="introtext"
+				   type="editor"
+				   default=""
+				   label="COM_REDFORM_XML_VIEW_MYSUBMISSIONS_INTROTEXT"
+				   description="COM_REDFORM_XML_VIEW_MYSUBMISSIONS_INTROTEXT_DESC"
+				   filter="raw"/>
+
+			<field name="showintrotext"
+				   type="radio"
+				   default="0"
+				   class="btn-group btn-group-yesno"
+				   label="COM_REDFORM_XML_VIEW_MYSUBMISSIONS_DISPLAY_INTROTEXT"
+				   description="COM_REDFORM_XML_VIEW_MYSUBMISSIONS_DISPLAY_INTROTEXT_DESC">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+
+			<field name="date_format"
+				   type="text"
+				   default="F j, Y, h:i"
+				   label="COM_REDFORM_XML_VIEW_MYSUBMISSIONS_DATE_FORMAT"
+				   description="COM_REDFORM_XML_VIEW_MYSUBMISSIONS_DATE_FORMAT_DESC" />
+
+			<field name="allow_to_edit"
+				   type="radio"
+				   default="0"
+				   class="btn-group btn-group-yesno"
+				   label="COM_REDFORM_XML_VIEW_MYSUBMISSIONS_ALLOW_TO_EDIT"
+				   description="COM_REDFORM_XML_VIEW_MYSUBMISSIONS_ALLOW_TO_EDIT">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+		</fieldset>
+	</fields>
+</metadata>
