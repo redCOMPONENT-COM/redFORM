@@ -67,10 +67,10 @@
 			//display the submit button and remove the Next button
 			if(current >= total -1){
 				$nextLink.hide();
-				formbox.parents('form').find('input[type=submit]').show();
+				formbox.parents('form').find('div.submitform').show();
 			} else {
 				$nextLink.show();
-				formbox.parents('form').find('input[type=submit]').hide();
+				formbox.parents('form').find('div.submitform').hide();
 			}
 		}
 

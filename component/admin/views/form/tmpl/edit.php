@@ -164,6 +164,14 @@ $isNew = (int) $this->item->id <= 0;
 			</div>
 			<div class="control-group">
 				<div class="control-label">
+					<?php echo $this->form->getLabel('allow_frontend_edit', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('allow_frontend_edit', 'params'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
 					<?php echo $this->form->getLabel('submit_label', 'params'); ?>
 				</div>
 				<div class="controls">

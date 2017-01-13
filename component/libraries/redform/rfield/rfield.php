@@ -705,6 +705,20 @@ class RdfRfield extends JObject
 	}
 
 	/**
+	 * Return the 'value' to be displayed to end user,
+	 *
+	 * @param   string  $glue  glue to be used if the value is an array
+	 *
+	 * @return string
+	 *
+	 * @since 3.3.18
+	 */
+	public function renderValue($glue = ", ")
+	{
+		return $this->getValueAsString();
+	}
+
+	/**
 	 * Call back function
 	 *
 	 * @param   string  $property  the property

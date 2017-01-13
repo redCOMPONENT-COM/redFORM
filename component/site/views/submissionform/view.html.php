@@ -9,12 +9,12 @@
 defined('_JEXEC') or die;
 
 /**
- * Front-end view for submitted forms
+ * Front-end view for submitted form
  *
  * @package  Redform.Site
  * @since    3.3.18
  */
-class RedformViewMysubmissions extends RViewSite
+class RedformViewSubmissionform extends RViewSite
 {
 	/**
 	 * Execute and display a template script.
@@ -30,9 +30,8 @@ class RedformViewMysubmissions extends RViewSite
 			JFactory::getApplication()->redirect('index.php', JText::_('COM_REDFORM_VIEW_MYSUBMISSIONS_LOGIN_IS_REQUIRED'));
 		}
 
-		$this->state      = $this->get('State');
-		$this->items      = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
+		$this->item = $this->get('item');
+		$this->state = $this->get('state');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -43,11 +42,6 @@ class RedformViewMysubmissions extends RViewSite
 		}
 
 		$this->params = $this->state->get('params');
-
-		if ($this->showIntro = $this->params->get('showintrotext'))
-		{
-			$this->intro = JHTML::_('content.prepare', $this->params->get('introtext'));
-		}
 
 		// Escape strings for HTML output
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
@@ -68,18 +62,7 @@ class RedformViewMysubmissions extends RViewSite
 		$menus = $app->getMenu();
 		$title = null;
 
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
-		$menu = $menus->getActive();
-
-		if ($menu)
-		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-		}
-		else
-		{
-			$this->params->def('page_heading', JText::_('COM_REDFORM_VIEW_MYSUBMISSIONS_DEFAULT_TITLE'));
-		}
+		$this->params->def('page_heading', JText::_('COM_REDFORM_VIEW_SUBMISSIONFORM_DEFAULT_TITLE'));
 
 		$title = $this->params->get('page_title', '');
 

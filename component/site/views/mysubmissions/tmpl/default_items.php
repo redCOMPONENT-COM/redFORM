@@ -18,7 +18,10 @@ defined('_JEXEC') or die;
 	<tbody>
 		<?php foreach ($this->items as $submission): ?>
 			<tr>
-				<td><?= $submission->getDate('submission_date', $this->params->get('date_format', 'F j, Y, H:i')) ?></td>
+				<td><?= JHtml::link(
+						RdfHelperRoute::getSubmissionRoute($submission->id),
+						$submission->getDate('submission_date', $this->params->get('date_format', 'F j, Y, H:i'))
+						) ?></td>
 				<td><?= $submission->getForm()->formname ?></td>
 			</tr>
 		<?php endforeach; ?>
