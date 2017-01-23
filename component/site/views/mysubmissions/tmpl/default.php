@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
 
 	<?php if ($this->showIntro): ?>
 		<div class="introtext>">
-			<?= $introtext ?>
+			<?= $this->introtext ?>
 		</div>
 	<?php endif; ?>
 

@@ -46,7 +46,7 @@ class RedformViewMysubmissions extends RViewSite
 
 		if ($this->showIntro = $this->params->get('showintrotext'))
 		{
-			$this->intro = JHTML::_('content.prepare', $this->params->get('introtext'));
+			$this->introtext = JHTML::_('content.prepare', $this->params->get('introtext'));
 		}
 
 		// Escape strings for HTML output
