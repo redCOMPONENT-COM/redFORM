@@ -47,8 +47,25 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	{
 		JFactory::getDocument()->addScript('https://www.google.com/recaptcha/api.js', null, true, true);
 
-		$publickey = $this->params->get('public_key');
-		$text = '<div class="g-recaptcha" data-sitekey="' . $publickey . '"></div>';
+		$attributes = array();
+		$attributes['data-sitekey'] = $this->params->get('public_key');
+
+		if ($this->params->get('theme'))
+		{
+			$attributes['data-theme'] = $this->params->get('theme');
+		}
+
+		if ($this->params->get('type'))
+		{
+			$attributes['data-type'] = $this->params->get('type');
+		}
+
+		if ($this->params->get('size'))
+		{
+			$attributes['data-size'] = $this->params->get('size');
+		}
+
+		$text = '<div class="g-recaptcha"' . JArrayHelper::toString($attributes, '=', ' ') . '"></div>';
 
 		return true;
 	}

@@ -21,12 +21,26 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-				<field name="public_key" type="text" default=""
+				<field name="public_key" type="text" default="" required="1"
 					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY"
 					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_DESC" />
-				<field name="private_key" type="text" default=""
+				<field name="private_key" type="text" default="" required="1"
 					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY"
 					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_DESC" />
+				<field name="theme" type="list" default=""
+					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME"
+					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC">
+					<option value="">JDefault</option>
+					<option value="dark">dark</option>
+					<option value="light">light</option>
+				</field>
+				<field name="size" type="list" default=""
+					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE"
+					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE_DESC">
+					<option value="">JDefault</option>
+					<option value="compact">compact</option>
+					<option value="normal">normal</option>
+				</field>
 			</fieldset>
 		</fields>
 	</config>
