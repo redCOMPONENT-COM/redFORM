@@ -14,6 +14,11 @@ if (argv.testRelease)
 	config.release_dir = config.testrelease_dir;
 }
 
+if (argv.gitVersion)
+{
+	config.gitVersion = true;
+}
+
 config.skipVersion = argv.skipVersion ? 1 : 0;
 
 module.exports = config;

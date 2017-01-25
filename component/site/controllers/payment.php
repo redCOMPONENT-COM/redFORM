@@ -37,7 +37,6 @@ class RedformControllerPayment extends JControllerLegacy
 	public function select()
 	{
 		$app = JFactory::getApplication();
-		$submitKey = $app->input->get('key');
 		$lang_v = '';
 
 		if ($app->input->get('lang'))
@@ -50,7 +49,18 @@ class RedformControllerPayment extends JControllerLegacy
 		// We need a cart for this submit key
 		try
 		{
-			$cart = $model->getNewCart($submitKey);
+			if ($cartId = $this->input->get('cart_id'))
+			{
+				$cart = RdfEntityCart::load($cartId);
+			}
+			elseif ($submitKey = $app->input->get('key'))
+			{
+				$cart = $model->getSubmissionCart($submitKey);
+			}
+			else
+			{
+				throw new Exception('invalid cart');
+			}
 		}
 		catch (Exception $e)
 		{
@@ -178,15 +188,15 @@ class RedformControllerPayment extends JControllerLegacy
 	{
 		$app = JFactory::getApplication();
 
-		$key = $app->input->getString('reference', '');
-
-		if ($app->input->get('lang'))
-		{
-			$lang_v = "&lang=" . $app->input->get('lang');
-		}
+		$key = $app->input->getString('reference');
+		$gw = $app->input->get('gw', '');
 
 		$model = $this->getModel('payment');
 		$model->setCartReference($key);
+
+		// Forward to the plugin
+		$helper = $model->getGatewayHelper($gw);
+		$helper->processing();
 
 		$submitters = $model->getSubmitters();
 
@@ -194,17 +204,27 @@ class RedformControllerPayment extends JControllerLegacy
 		{
 			$first = current($submitters);
 
+			if ($app->input->get('lang'))
+			{
+				$lang_v = "&lang=" . $app->input->get('lang');
+			}
+
 			if (!empty($first->integration))
 			{
 				switch ($first->integration)
 				{
 					case 'redevent':
-						$app->redirect('index.php?option=com_redevent&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v);
+						$app->redirect(
+							'index.php?option=com_redevent&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v
+							. '&cart=' . $key
+						);
 						break;
 
 					default:
 						$app->redirect(
-							'index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $first->submit_key . '&state=processing' . $lang_v
+							'index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $first->submit_key . '&state=processing'
+							. $lang_v
+							. '&cart=' . $key
 						);
 						break;
 				}
@@ -330,7 +350,7 @@ class RedformControllerPayment extends JControllerLegacy
 
 					default:
 						$app->redirect('index.php?option=com_' . $first->integration . '&view=payment&submit_key=' . $first->submit_key
-							. '&state=' . ($res ? 'accepted' : 'refused')
+							. '&state=' . ($res ? 'accepted' : 'refused') . '&cart=' . $key
 						);
 						break;
 				}

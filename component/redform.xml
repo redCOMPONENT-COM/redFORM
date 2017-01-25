@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5" method="upgrade">
 	<name>COM_REDFORM</name>
-	<creationDate>July 8, 2015</creationDate>
+	<creationDate>Nov 2016</creationDate>
 	<author>Redweb.dk</author>
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redweb.dk</authorUrl>
-	<copyright>(c) 2008 - 2011 Redweb.dk</copyright>
+	<copyright>(c) 2008 - 2016 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
-	<version>3.3.9</version>
-	<redcore version="1.8.1" />
+	<version>3.3.17</version>
+	<redcore version="1.8.8" />
 	<tag>##VERSION##</tag>
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
@@ -58,7 +58,7 @@
 
 	<administration>
 		<!-- Menu entries -->
-		<menu img="../media/com_redform/images/redform_red_16.png" view="forms">COM_redFORM</menu>
+		<menu img="../media/com_redform/images/redform_red_16.png" view="forms">COM_redFORM_MENU_TITLE</menu>
 		<submenu>
 			<menu img="../media/com_redform/images/redform_red_16.png" view="forms">COM_redFORM_FORMS</menu>
 			<menu img="../media/com_redform/images/redform_quest_16.png" view="fields">COM_redFORM_Fields</menu>
@@ -93,6 +93,10 @@
     <!-- Plugins to install -->
     <plugins>
         <plugin name="redform" group="content"/>
+		<plugin name="redform" group="installer" />
     </plugins>
 
+	<updateservers>
+		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/com_redform.xml</server>
+	</updateservers>
 </extension>

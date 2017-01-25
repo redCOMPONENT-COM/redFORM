@@ -54,9 +54,17 @@ class RdfPaymentTurnsubmission
 				$paymentRequestsItems = $pr->getItems();
 				$this->paidItems = array_merge($this->paidItems, $paymentRequestsItems);
 			}
+			else
+			{
+				// Delete unpaid
+				$pr->delete();
+			}
 		}
 
-		$entity = $this->createPaymentRequest();
+		if (!$entity = $this->createPaymentRequest())
+		{
+			return false;
+		}
 
 		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
@@ -81,6 +89,11 @@ class RdfPaymentTurnsubmission
 		$entity->price = - $this->getTotalPrice();
 		$entity->vat = - $this->getTotalVat();
 		$entity->currency = $this->submission->currency;
+
+		if (!($entity->price || $entity->vat))
+		{
+			return false;
+		}
 
 		$entity->save();
 

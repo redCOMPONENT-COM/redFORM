@@ -71,6 +71,12 @@ class RdfRfield extends JObject
 	protected $formIndex = 1;
 
 	/**
+	 * Form field section id
+	 * @var RdfEntityForm
+	 */
+	protected $form;
+
+	/**
 	 * User associated to submission, for value lookup
 	 *
 	 * @var JUser
@@ -379,6 +385,18 @@ class RdfRfield extends JObject
 	}
 
 	/**
+	 * Form entity
+	 *
+	 * @param   RdfEntityForm  $form  form entity
+	 *
+	 * @return void
+	 */
+	public function setForm(RdfEntityForm $form)
+	{
+		$this->form = $form;
+	}
+
+	/**
 	 * Is hidden ?
 	 *
 	 * @return bool
@@ -684,6 +702,20 @@ class RdfRfield extends JObject
 		$strings = array_map(array($this, 'mapProperties'), array_keys($properties), $properties);
 
 		return implode(' ', $strings);
+	}
+
+	/**
+	 * Return the 'value' to be displayed to end user,
+	 *
+	 * @param   string  $glue  glue to be used if the value is an array
+	 *
+	 * @return string
+	 *
+	 * @since 3.3.18
+	 */
+	public function renderValue($glue = ", ")
+	{
+		return $this->getValueAsString();
 	}
 
 	/**

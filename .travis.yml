@@ -1,16 +1,19 @@
 language: php
-env: TRAVIS_PUBLIC_REPOSITORY=true
 php:
-- 5.5
 - 5.6
-- 7.0
+- 7
 addons:
-  firefox: "44.0.2"
-matrix:
-  allow_failures:
-    - php: 5.6
-    - php: 7.0
+  firefox: "46.0"
+env:
+  global:
+    - GITHUB_TOKEN=4d92f9e8be0eddc0e54445ff45bf1ca5a846b609
+install:
+  - . $HOME/.nvm/nvm.sh
+  - nvm install stable
+  - nvm use stable
+  - npm install
 before_script:
+- sudo sed -i '1s/^/127.0.0.1 localhost\n/' /etc/hosts # forcing localhost to be the 1st alias of 127.0.0.1 in /etc/hosts (https://github.com/seleniumhq/selenium/issues/2074)
 - sudo apt-get update -qq
 - sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 php5-curl php5-mysql php5-intl php5-gd php5-sqlite > /dev/null
 - sudo /etc/init.d/apache2 stop
@@ -28,14 +31,17 @@ before_script:
 - fluxbox &
 - sleep 3 # give fluxbox some time to start
 - cd build
+- node --version
+- npm  --version
 - npm install gulp -g # install globally so that it's available to robo
 - npm install
 - mv gulp-config.json.dist gulp-config.json
 - gulp release --skip-version --testRelease
 - cd ../tests
+- composer config -g github-oauth.github.com $GITHUB_TOKEN
+- composer install --prefer-dist
 
 script:
-- composer install --prefer-dist
 - vendor/bin/robo check:for-missed-debug-code
 - vendor/bin/robo check:for-parse-errors
 - vendor/bin/robo check:codestyle

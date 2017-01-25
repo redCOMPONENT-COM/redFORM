@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 // HTML helpers
 JHtml::_('behavior.keepalive');
-JHtml::_('rbootstrap.tooltip');
+JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('rjquery.chosen', 'select');
 JHtml::_('rsearchtools.main');
 
@@ -162,6 +162,22 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('captchaactive'); ?>
 				</div>
 			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('allow_frontend_edit', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('allow_frontend_edit', 'params'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('submit_label', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('submit_label', 'params'); ?>
+				</div>
+			</div>
 		</div>
 
 		<div class="tab-pane" id="notification">
@@ -188,6 +204,30 @@ $isNew = (int) $this->item->id <= 0;
 					</div>
 					<div class="controls">
 						<?php echo $this->form->getInput('redirect'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('admin_notification_email_mode'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('admin_notification_email_mode'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('admin_notification_email_subject'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('admin_notification_email_subject'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('admin_notification_email_body'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('admin_notification_email_body'); ?>
 					</div>
 				</div>
 				<div class="control-group">

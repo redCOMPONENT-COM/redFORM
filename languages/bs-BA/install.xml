@@ -7,12 +7,15 @@
 	<authorUrl>www.redcomponent.com</authorUrl>
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-	<version>3.3.9</version>
+	<version>3.3.16</version>
 	<tag>##VERSION##</tag>
 	<description>bs-BA language pack for redFORM&lt;br/&gt;Incomplete ? Please &lt;a href="http://www.redcomponent.com/translations"&gt;help us&lt;/a&gt; with translations !</description>
 
 	<fileset>
 		<files folder="admin" target="administrator/language">
+			<folder>bs-BA</folder>
+		</files>
+		<files folder="site" target="language">
 			<folder>bs-BA</folder>
 		</files>
 	</fileset>

@@ -31,6 +31,11 @@
 				label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL"
 				description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
 
+		<field name="defaultsection"
+			   type="redform.section"
+			   label="COM_REDFORM_SETTINGS_DEFAULTSECTION"
+			   description="COM_REDFORM_SETTINGS_DEFAULTSECTION_DESC"/>
+
 		<field name="decimalseparator"
 			   type="text"
 			   default="."
@@ -42,6 +47,18 @@
 			   default=" "
 			   label="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR"
 			   description="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR_DESC"/>
+
+		<field name="invoice_prefix"
+			   type="text"
+			   default="INVOICE-"
+			   label="COM_REDFORM_SETTINGS_INVOICE_PREFIX"
+			   description="COM_REDFORM_SETTINGS_INVOICE_PREFIX_DESC"/>
+
+		<field name="invoice_padding"
+			   type="text"
+			   default="4"
+			   label="COM_REDFORM_SETTINGS_INVOICE_PADDING"
+			   description="COM_REDFORM_SETTINGS_INVOICE_PADDING_DESC"/>
 
 		<field
 				name="allow_negative_total"

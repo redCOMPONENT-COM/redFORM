@@ -185,6 +185,16 @@ class RdfHelperTagsreplace
 	}
 
 	/**
+	 * replace [paymentdate] tag
+	 *
+	 * @return string
+	 */
+	private function getTagPaymentdate()
+	{
+		return RdfHelper::formatPrice($this->answers->getPrice() + $this->answers->getVat(), $this->answers->getCurrency());
+	}
+
+	/**
 	 * replace [totalvat] tag
 	 *
 	 * @return string
@@ -230,5 +240,15 @@ class RdfHelperTagsreplace
 		$url = JURI::root() . 'index.php?option=com_redform&task=redform.confirm&key=' . $this->answers->getSubmitKey();
 
 		return JRoute::_($url);
+	}
+
+	/**
+	 * replaces [submitter_id]
+	 *
+	 * @return string
+	 */
+	private function getTagSubmitter_id()
+	{
+		return $this->answers->sid;
 	}
 }

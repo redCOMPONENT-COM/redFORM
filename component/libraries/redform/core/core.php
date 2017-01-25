@@ -260,6 +260,7 @@ class RdfCore extends JObject
 
 		$model = $this->getFormModel($form_id);
 		$form = $model->getForm();
+		$form->setRenderOptions($options);
 		$fields = $model->getFormFields();
 
 		$this->setReference($reference);
@@ -301,6 +302,12 @@ class RdfCore extends JObject
 			$currency = $form->currency;
 		}
 
+		if ($multi > 1 && $form->hasMultipleSections())
+		{
+			// Multi steps isn't compatible with multiple signup
+			$multi = 1;
+		}
+
 		$this->loadCheckScript();
 
 		if ($multi > 1)
@@ -324,12 +331,6 @@ class RdfCore extends JObject
 		{
 			// Limit to max 30 sumbissions at the same time...
 			$multi = min($multi, 30);
-		}
-
-		if ($multi > 1 && $user->id == 0)
-		{
-			$html .= '<div class="needlogin">' . JText::_('COM_REDFORM_LOGIN_BEFORE_MULTI_SIGNUP') . '</div>';
-			$multi = 1;
 		}
 
 		if ($multi > 1)
@@ -601,16 +602,9 @@ class RdfCore extends JObject
 	 */
 	public function getFormStatus($form_id)
 	{
-		$model = $this->getFormModel($form_id);
+		$form = RdfEntityForm::load($form_id);
 
-		if (!$model->getFormStatus())
-		{
-			$this->setError($model->getError());
-
-			return false;
-		}
-
-		return true;
+		return $form->checkFormStatus();
 	}
 
 	/**
@@ -960,6 +954,7 @@ class RdfCore extends JObject
 	{
 		JText::script('COM_REDFORM_MAX_SIGNUP_REACHED');
 		JText::script('COM_REDFORM_FIELDSET_SIGNUP_NB');
+		JText::script('LIB_REDFORM_REMOVE');
 		RHelperAsset::load('form-multiple.js', 'com_redform');
 	}
 
@@ -987,8 +982,15 @@ class RdfCore extends JObject
 	{
 		RHtmlMedia::loadFrameworkJs();
 		RHelperAsset::load('redform-validate.js', 'com_redform');
+		JText::script('LIB_REDFORM_VALIDATION_FIELD_INVALID');
 		JText::script('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED');
 		JText::script('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED');
+		JText::script('LIB_REDFORM_FORM_VALIDATION_ERROR_FIELD_IS_REQUIRED');
+		JText::script('LIB_REDFORM_VALIDATION_ERROR_USERNAME_INVALID_FORMAT');
+		JText::script('LIB_REDFORM_VALIDATION_ERROR_PASSWORD_INVALID_FORMAT');
+		JText::script('LIB_REDFORM_VALIDATION_ERROR_NUMERIC_INVALID_FORMAT');
+		JText::script('LIB_REDFORM_VALIDATION_ERROR_EMAIL_INVALID_FORMAT');
+		JText::script('LIB_REDFORM_VALIDATION_ERROR_FUTURE_DATE');
 	}
 
 	/**
@@ -1176,7 +1178,7 @@ class RdfCore extends JObject
 			// Set value if editing
 			if ($indexAnswers && $field->id)
 			{
-				$value = $indexAnswers->getFieldAnswer($field->id);
+				$value = $indexAnswers->getFormFieldAnswer($field->id);
 				$field->setValue($value, true);
 			}
 			else

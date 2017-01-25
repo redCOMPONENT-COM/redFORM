@@ -16,6 +16,7 @@ $I->click(['xpath' => "//button[@type='submit' and @data-original-title='Search'
 $I->waitForElement(['id' => 'manageList']);
 $I->click(['xpath' => "//input[@id='cb0']"]);
 $I->click(['xpath' => "//div[@id='toolbar-delete']/button"]);
+$I->acceptPopup();
 $I->waitForText('Uninstalling the component was successful', 30, ['id' => 'system-message-container']);
 $I->see('Uninstalling the component was successful', ['id' => 'system-message-container']);
 $I->fillField(['id' => 'filter_search'], 'redFORM - component');

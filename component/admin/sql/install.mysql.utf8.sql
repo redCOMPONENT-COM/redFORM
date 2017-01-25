@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_billinginfo` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `cart_id` (`cart_id`)
-) COMMENT='billing info for cart';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='billing info for cart';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `id` int(11) NOT NULL auto_increment,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_fields` (
   `tooltip` varchar(255) NOT NULL DEFAULT '',
   `params` text NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
-) COMMENT='Fields for redFORM';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Fields for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `id` int(11) NOT NULL auto_increment,
@@ -48,7 +48,9 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `classname` varchar(45) NOT NULL default '',
   `contactpersoninform` tinyint(1) NOT NULL default '0',
   `contactpersonemail` varchar(255) NOT NULL default '',
-  `contactpersonemailsubject` varchar(255) NOT NULL default '',
+  `admin_notification_email_mode` tinyint(2) NOT NULL default '0',
+  `admin_notification_email_subject` varchar(255) NOT NULL default '',
+  `admin_notification_email_body` text NOT NULL default '',
   `contactpersonfullpost` int(11) NOT NULL default '0',
   `submitterinform` tinyint(1) NOT NULL default '0',
   `submitnotification` tinyint(1) NOT NULL default '0',
@@ -72,8 +74,9 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `submitterpaymentnotificationsubject` text NOT NULL default '',
   `submitterpaymentnotificationbody` text NOT NULL default '',
   `cond_recipients` text NOT NULL default '',
+  `params` text NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
-) COMMENT='Forms for redFORM';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Forms for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_form_field` (
   `id` int(11) NOT NULL auto_increment,
@@ -89,11 +92,12 @@ CREATE TABLE IF NOT EXISTS `#__rwf_form_field` (
   KEY `form_id` (`form_id`),
   KEY `field_id` (`field_id`),
   KEY `section_id` (`section_id`)
-) COMMENT='form field relation';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='form field relation';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `id` int(11) NOT NULL auto_increment,
   `form_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `submission_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `submission_ip` VARCHAR(50) NOT NULL default '',
   `confirmed_date` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -107,10 +111,12 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submitters` (
   `price` DECIMAL(10, 2) NOT NULL default '0.0',
   `vat` DECIMAL(10, 2) NOT NULL default '0.0',
   `currency` varchar(3) NOT NULL default '',
+  `language` char(7) NOT NULL,
   PRIMARY KEY  (`id`),
+  KEY `user_id` (`user_id`),
   KEY `form_id` (`form_id`),
   KEY `answer_id` (`answer_id`)
-) COMMENT='Submitters for redFORM';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Submitters for redFORM';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_submission_price_item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -122,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_submission_price_item` (
   PRIMARY KEY (`id`),
   KEY `submission_id` (`submission_id`),
   KEY `sku` (`sku`)
-) COMMENT='submissions price items';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='submissions price items';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   `id` int(11) NOT NULL auto_increment,
@@ -137,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_values` (
   `sku` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `field_id` (`field_id`)
-) COMMENT='Stores fields options';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores fields options';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -150,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `note` text NOT NULL default '',
   PRIMARY KEY (`id`),
   KEY `submission_id` (`submission_id`)
-) COMMENT='payment requests';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='payment requests';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment_request_item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -162,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment_request_item` (
   PRIMARY KEY (`id`),
   KEY `payment_request_id` (`payment_request_id`),
   KEY `sku` (`sku`)
-) COMMENT='payment request items';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='payment request items';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_cart` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -173,9 +179,10 @@ CREATE TABLE IF NOT EXISTS `#__rwf_cart` (
   `currency` varchar(3) NOT NULL default '',
   `paid` tinyint(2) NOT NULL default '0',
   `note` text NOT NULL default '',
+  `invoice_id` VARCHAR(100) NOT NULL default '',
   PRIMARY KEY (`id`),
   KEY `reference` (`reference`)
-) COMMENT='payment cart';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='payment cart';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_cart_item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -184,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_cart_item` (
   PRIMARY KEY (`id`),
   KEY `cart_id` (`cart_id`),
   KEY `payment_request_id` (`payment_request_id`)
-) COMMENT='payment cart item';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='payment cart item';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -196,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment` (
   `paid` tinyint(2) NOT NULL default '0',
   PRIMARY KEY (`id`),
   KEY `cart_id` (`cart_id`)
-) COMMENT='logging gateway notifications';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='logging gateway notifications';
 
 CREATE TABLE IF NOT EXISTS `#__rwf_section` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -207,5 +214,5 @@ CREATE TABLE IF NOT EXISTS `#__rwf_section` (
   `checked_out` int(11) NOT NULL default '0',
   `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) COMMENT='form sections';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='form sections';
 

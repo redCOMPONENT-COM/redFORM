@@ -1,26 +1,29 @@
-var gulp = require('gulp');
+const gulp = require('gulp');
 
-var config = require('../../config.js');
+const config = require('../../config.js');
 
 // Dependencies
-var browserSync = require('browser-sync');
-var concat      = require('gulp-concat');
-var del         = require('del');
-var fs          = require('fs');
-var less        = require('gulp-less');
-var minifyCSS   = require('gulp-minify-css');
-var rename      = require('gulp-rename');
-var symlink     = require('gulp-symlink');
-var sass        = require('gulp-ruby-sass');
-var uglify      = require('gulp-uglify');
-var zip         = require('gulp-zip');
-var util        = require("gulp-util");
+const browserSync = require('browser-sync');
+const concat      = require('gulp-concat');
+const del         = require('del');
+const fs          = require('fs');
+const less        = require('gulp-less');
+const minifyCSS   = require('gulp-minify-css');
+const rename      = require('gulp-rename');
+const symlink     = require('gulp-symlink');
+const sass        = require('gulp-ruby-sass');
+const uglify      = require('gulp-uglify');
+const zip         = require('gulp-zip');
+const util        = require("gulp-util");
+const xml2js      = require('xml2js');
+const parser      = new xml2js.Parser();
+const replace     = require('gulp-replace');
 
-var baseTask  = 'components.redform';
-var extPath   = '../component';
-var libPath = extPath + '/libraries/redform';
-var mediaPath = extPath + '/media/com_redform';
-var pluginsPath = extPath + '/plugins';
+const baseTask  = 'components.redform';
+const extPath   = '../component';
+const libPath = extPath + '/libraries/redform';
+const mediaPath = extPath + '/media/com_redform';
+const pluginsPath = extPath + '/plugins';
 
 // Clean
 gulp.task('clean:' + baseTask,
@@ -30,34 +33,32 @@ gulp.task('clean:' + baseTask,
 		'clean:' + baseTask + ':libraries',
 		'clean:' + baseTask + ':media',
 		'clean:' + baseTask + ':plugins'
-	],
-	function() {
-		return true;
-});
+	]
+);
 
 // Clean: frontend
 gulp.task('clean:' + baseTask + ':frontend', function() {
-	del.sync(config.wwwDir + '/components/com_redform', {force : true});
+	return del(config.wwwDir + '/components/com_redform', {force : true});
 });
 
 // Clean: backend
 gulp.task('clean:' + baseTask + ':backend', function() {
-	del.sync(config.wwwDir + '/administrator/components/com_redform', {force : true});
+	return del(config.wwwDir + '/administrator/components/com_redform', {force : true});
 });
 
 // Clean: lib
 gulp.task('clean:' + baseTask + ':libraries', function() {
-	del.sync(config.wwwDir + '/libraries/redform', {force : true});
+	return del(config.wwwDir + '/libraries/redform', {force : true});
 });
 
 // Clean: media
 gulp.task('clean:' + baseTask + ':media', function() {
-	del.sync(config.wwwDir + '/media/com_redform', {force : true});
+	return del(config.wwwDir + '/media/com_redform', {force : true});
 });
 
 // Clean: plugins
 gulp.task('clean:' + baseTask + ':plugins', function() {
-	del.sync(config.wwwDir + '/plugins/content/redform', {force : true});
+	return del(config.wwwDir + '/plugins/content/redform', {force : true});
 });
 
 // Copy
@@ -122,20 +123,18 @@ gulp.task('watch:' + baseTask,
 		'watch:' + baseTask + ':plugins'
 		//'watch:' + baseTask + ':scripts',
 		//'watch:' + baseTask + ':less'
-	],
-	function() {
-		return true;
-});
+	]
+);
 
 // Watch: frontend
 gulp.task('watch:' + baseTask + ':frontend', function() {
-	gulp.watch(extPath + '/site/**',
+	return gulp.watch(extPath + '/site/**',
 	['copy:' + baseTask + ':frontend']);
 });
 
 // Watch: backend
 gulp.task('watch:' + baseTask + ':backend', function() {
-	gulp.watch([
+	return gulp.watch([
 		extPath + '/admin/**',
 		extPath + '/redform.xml',
 		extPath + '/install.php'
@@ -145,18 +144,29 @@ gulp.task('watch:' + baseTask + ':backend', function() {
 
 // Watch: libraries
 gulp.task('watch:' + baseTask + ':libraries', function() {
-	gulp.watch(extPath + '/libraries/**',
+	return gulp.watch(extPath + '/libraries/**',
 		['copy:' + baseTask + ':libraries']);
 });
 
 // Watch: media
 gulp.task('watch:' + baseTask + ':media', function() {
-	gulp.watch(extPath + '/media/**',
+	return gulp.watch(extPath + '/media/**',
 		['copy:' + baseTask + ':media']);
 });
 
 // Watch: plugins
 gulp.task('watch:' + baseTask + ':plugins', function() {
-	gulp.watch(extPath + '/plugins/**',
+	return gulp.watch(extPath + '/plugins/**',
 		['copy:' + baseTask + ':plugins']);
+});
+
+gulp.task('update-sites:' + baseTask, function(){
+	fs.readFile( extPath + '/redform.xml', function(err, data) {
+		parser.parseString(data, function (err, result) {
+			const version = result.extension.version[0];
+			gulp.src(['./update_server_xml/com_redform.xml'])
+				.pipe(replace(/<version>(.*)<\/version>/g, "<version>" + version + "</version>"))
+				.pipe(gulp.dest('./update_server_xml'));
+		});
+	});
 });

@@ -63,8 +63,10 @@ class RedFormModelPayment extends JModelLegacy
 			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = ci.payment_request_id')
 			->join('INNER', '#__rwf_submitters AS s ON s.id = pr.submission_id')
 			->join('INNER', '#__rwf_forms AS f ON f.id = s.form_id')
+			->join('LEFT', '#__rwf_billinginfo AS b ON b.cart_id = ci.cart_id')
 			->where('f.requirebilling = 1')
-			->where('ci.cart_id = ' . $cart->id);
+			->where('ci.cart_id = ' . $cart->id)
+			->where('b.id IS NULL');
 		$this->_db->setQuery($query);
 
 		return ($this->_db->loadResult() ? true : false);
@@ -232,7 +234,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * provides information for process function of helpers (object id, title, etc...)
 	 *
-	 * @return object
+	 * @return RdfPaymentInfo
 	 *
 	 * @throws Exception
 	 */
@@ -288,13 +290,15 @@ class RedFormModelPayment extends JModelLegacy
 			? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT')
 			: $form->submitterpaymentnotificationsubject);
 		$subject = $replaceHelper->replace($subject);
+		$subject = $this->getCart()->replaceTags($subject);
 		$mailer->setSubject($subject);
 
 		$body = (empty($form->submitterpaymentnotificationbody)
-			? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_DEFAULT')
+			? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_DEFAULT')
 			: $form->submitterpaymentnotificationbody);
 		$link = JRoute::_(JURI::root() . 'administrator/index.php?option=com_redform&view=submitters&form_id=' . $form->id);
 		$body = $replaceHelper->replace($body, array('[submitters]' => $link));
+		$body = $this->getCart()->replaceTags($body);
 
 		$body = RdfHelper::wrapMailHtmlBody($body, $subject);
 		$mailer->MsgHTML($body);
@@ -307,6 +311,15 @@ class RedFormModelPayment extends JModelLegacy
 		}
 
 		$mailer->addRecipient($contact['email']);
+		$doSend = true;
+
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onBeforeSendPaymentNotificationSubmitter', array(&$mailer, $this->getCart(), &$doSend));
+
+		if (!$doSend)
+		{
+			return true;
+		}
 
 		if (!$mailer->send())
 		{
@@ -402,6 +415,21 @@ class RedFormModelPayment extends JModelLegacy
 		$this->_db->setQuery($query);
 
 		return $this->_db->loadResult() ? true : false;
+	}
+
+	/**
+	 * Get Cart for submission
+	 *
+	 * @param   string  $submitKey  submit key
+	 *
+	 * @return RdfEntityCart
+	 */
+	public function getSubmissionCart($submitKey)
+	{
+		$helper = new RdfCorePaymentCart;
+		$cart = $helper->getSubmissionCart($submitKey);
+
+		return $cart;
 	}
 
 	/**

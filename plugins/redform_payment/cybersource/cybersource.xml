@@ -7,7 +7,7 @@
     <authorUrl>www.redcomponent.com</authorUrl>
     <copyright>(C) 2008 - 2016 redCOMPONENT.com</copyright>
     <license>GNU/GPL</license>
-    <version>3.3.8</version>
+    <version>3.3.17</version>
     <tag>##VERSION##</tag>
     <description>PLG_REDFORM_PAYMENT_CYBERSOURCE_XML_DESCRIPTION</description>
 
@@ -69,4 +69,7 @@
         </fields>
     </config>
 
+    <updateservers>
+        <server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_payment_cybersource.xml</server>
+    </updateservers>
 </extension>

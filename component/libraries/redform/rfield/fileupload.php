@@ -58,7 +58,12 @@ class RdfRfieldFileupload extends RdfRfield
 
 		if ($this->load()->validate)
 		{
-			$properties['class'] = ' required';
+			$properties['class'] .= ' required';
+		}
+
+		if ($maxsize = $this->getParam('maxsize'))
+		{
+			$properties['class'] .= ' validate-custom' . $this->id;
 		}
 
 		if ($placeholder = $this->getParam('placeholder'))
@@ -80,6 +85,43 @@ class RdfRfieldFileupload extends RdfRfield
 	public function getValueAsString($separator = '~~~')
 	{
 		return $this->value ? basename($this->value) : $this->value;
+	}
+
+	/**
+	 * Returns field Input
+	 *
+	 * @return string
+	 */
+	public function getInput()
+	{
+		if ($maxsize = $this->getParam('maxsize'))
+		{
+			$message = JText::sprintf('LIB_REDFORM_VALIDATION_FILE_TOO_BIG', $this->formatSizeUnits($maxsize));
+			$script = <<<JS
+	(function($){
+		$(function() {
+			document.redformvalidator.setHandler('custom{$this->id}', function (value, element) {
+				var file = element[0].files[0];
+				if (file) {
+					var size = file.size;
+					var result = size < {$maxsize};
+
+					if (typeof element[0].setCustomValidity === 'function') {
+						element[0].setCustomValidity(result ? '' : "{$message}");
+					}
+
+					return result;
+				}
+
+				return true;
+			});
+		});
+	})(jQuery);
+JS;
+			JFactory::getDocument()->addScriptDeclaration($script);
+		}
+
+		return parent::getInput();
 	}
 
 	/**

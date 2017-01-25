@@ -96,7 +96,7 @@ class RdfCoreFormSubmission
 	 *
 	 * @throws RdfExceptionSubmission
 	 */
-	public function apisaveform($integration_key = '', $options = array(), $formData = null)
+	public function apisaveform($integration_key = '', $options = array(), $formData = array())
 	{
 		$app = JFactory::getApplication();
 
@@ -104,24 +104,17 @@ class RdfCoreFormSubmission
 		$token = RdfCore::getToken();
 
 		// Get data from post if not specified
-		if (!$formData)
-		{
-			$data = array();
-			$data['form_id'] = $app->input->getInt('form_id', 0);
-			$data['module_id'] = $app->input->getInt('module_id', 0);
-			$data['submit_key'] = $app->input->getCmd('submit_key', false);
-			$data['nbactive'] = $app->input->getInt('nbactive', 1);
-			$data['currency'] = $app->input->getCmd('currency', '');
-			$data[$token] = $app->input->getCmd($token, '');
-		}
-		else
-		{
-			$data = $formData;
-		}
+		$data = $formData;
+		$data['form_id']    = isset($data['form_id'])    ? $data['form_id'] : $app->input->getInt('form_id', 0);
+		$data['module_id']  = isset($data['module_id'])  ? $data['module_id'] : $app->input->getInt('module_id', 0);
+		$data['submit_key'] = isset($data['submit_key']) ? $data['submit_key'] : $app->input->getCmd('submit_key', false);
+		$data['nbactive']   = isset($data['nbactive'])   ? $data['nbactive'] : $app->input->getInt('nbactive', 1);
+		$data['currency']   = isset($data['currency'])   ? $data['currency'] : $app->input->getCmd('currency', '');
+		$data[$token]       = isset($data[$token])       ? $data[$token] : $app->input->getCmd($token, '');
 
-		if (!isset($data['submit_key']) || !$data['submit_key'])
+		if (empty($data['submit_key']))
 		{
-			$submit_key = uniqid();
+			$submit_key = $this->submitKey ?: uniqid();
 		}
 		else
 		{
@@ -300,10 +293,10 @@ class RdfCoreFormSubmission
 			{
 				$this->updateMailingList($answers);
 			}
-		}
 
-		// Send email to maintainers
-		$this->notifymaintainer($allanswers, $answers->isNew());
+			// Send email to maintainers
+			$this->notifymaintainer($answers);
+		}
 
 		/* Send a submission mail to the submitters if set */
 		if ($answers->isNew() && $form->submitterinform)
@@ -371,7 +364,7 @@ class RdfCoreFormSubmission
 		$this->updateMailingList($answers);
 
 		// Send email to maintainers
-		$this->notifymaintainer(array($answers), true);
+		$this->notifymaintainer($answers);
 
 		/* Send a submission mail to the submitters if set */
 		if ($form->submitterinform)
@@ -432,243 +425,15 @@ class RdfCoreFormSubmission
 	/**
 	 * send email to form maintaineers or/and selected recipients
 	 *
-	 * @param   array  $allanswers  answers
-	 * @param   bool   $new         is new ?
+	 * @param   RdfAnswers  $answers  answers
 	 *
 	 * @return bool
 	 */
-	public function notifymaintainer($allanswers, $new = true)
+	public function notifymaintainer($answers)
 	{
-		$mainframe = JFactory::getApplication();
-		$params = JComponentHelper::getParams('com_redform');
-		$form = $this->getForm();
+		$helper = new RdfHelperNotifymaintainer($answers);
 
-		/* Inform contact person if need */
-		// Form recipients
-		$recipients = $allanswers[0]->getRecipients();
-		$cond_recipients = RdfHelperConditionalrecipients::getRecipients($form, $allanswers[0]);
-
-		if ($cond_recipients)
-		{
-			foreach ($cond_recipients as $c)
-			{
-				$recipients[] = $c[0];
-			}
-		}
-
-		if ($form->contactpersoninform || !empty($recipients))
-		{
-			// Init mailer
-			$mailer = RdfHelper::getMailer();
-
-			if ($form->contactpersoninform)
-			{
-				if (strstr($form->contactpersonemail, ';'))
-				{
-					$addresses = explode(";", $form->contactpersonemail);
-				}
-				else
-				{
-					$addresses = explode(",", $form->contactpersonemail);
-				}
-
-				foreach ($addresses as $a)
-				{
-					$a = trim($a);
-
-					if (JMailHelper::isEmailAddress($a))
-					{
-						$mailer->addRecipient($a);
-					}
-				}
-			}
-
-			if (!empty($recipients))
-			{
-				foreach ($recipients AS $r)
-				{
-					$mailer->addRecipient($r);
-				}
-			}
-
-			if (!empty($xref_group_recipients))
-			{
-				foreach ($xref_group_recipients AS $r)
-				{
-					$mailer->addRecipient($r);
-				}
-			}
-
-			// We put the submitter as the email 'from' and reply to.
-			$user = JFactory::getUser();
-
-			if ($params->get('allow_email_aliasing', 1))
-			{
-				if ($user->get('id'))
-				{
-					$sender = array($user->email, $user->name);
-				}
-				elseif ($emails = $allanswers[0]->getSubmitterEmails())
-				{
-					$email = reset($emails);
-					$name = $allanswers[0]->getFullname();
-
-					if ($name)
-					{
-						$sender = array($email, $name);
-					}
-					else
-					{
-						$sender = array($email, null);
-					}
-				}
-				else
-				{
-					// Default to site settings
-					$sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
-				}
-			}
-			else
-			{
-				// Default to site settings
-				$sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
-			}
-
-			$mailer->setSender($sender);
-			$mailer->addReplyTo($sender);
-
-			// Set the email subject
-			$replaceHelper = new RdfHelperTagsreplace($form, $allanswers[0]);
-
-			if (trim($form->contactpersonemailsubject))
-			{
-				$subject = $replaceHelper->replace($form->contactpersonemailsubject);
-			}
-			elseif ($new)
-			{
-				$subject = $replaceHelper->replace(JText::_('COM_REDFORM_CONTACT_NOTIFICATION_EMAIL_SUBJECT'));
-			}
-			else
-			{
-				$subject = $replaceHelper->replace(JText::_('COM_REDFORM_CONTACT_NOTIFICATION_UPDATE_EMAIL_SUBJECT'));
-			}
-
-			$mailer->setSubject($subject);
-
-			// Mail body
-			if ($new)
-			{
-				$htmlmsg = $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_EMAIL_BODY'));
-			}
-			else
-			{
-				$htmlmsg = $replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY'));
-			}
-
-			/* Add user submitted data if set */
-			if ($form->contactpersonfullpost)
-			{
-				foreach ($allanswers as $answers)
-				{
-					$rows = $answers->getAnswers();
-					$patterns[0] = '/\r\n/';
-					$patterns[1] = '/\r/';
-					$patterns[2] = '/\n/';
-					$replacements[2] = '<br />';
-					$replacements[1] = '<br />';
-					$replacements[0] = '<br />';
-
-					$htmlmsg .= '<br /><table border="1">';
-
-					foreach ($rows as $key => $answer)
-					{
-						if (is_array($answer['value']))
-						{
-							$answer['value'] = implode("<br/>", $answer['value']);
-						}
-
-						switch ($answer['type'])
-						{
-							case 'recipients':
-								break;
-
-							case 'email':
-								$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
-								$htmlmsg .= '<a href="mailto:' . $answer['value'] . '">' . $answer['value'] . '</a>';
-								$htmlmsg .= '&nbsp;';
-								$htmlmsg .= '</td></tr>' . "\n";
-								break;
-
-							case 'text':
-								$userinput = preg_replace($patterns, $replacements, $answer['value']);
-								$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
-
-								if (strpos($answer['value'], 'http://') === 0)
-								{
-									$htmlmsg .= '<a href="' . $answer['value'] . '">' . $answer['value'] . '</a>';
-								}
-								else
-								{
-									$htmlmsg .= $answer['value'];
-								}
-
-								$htmlmsg .= '&nbsp;';
-								$htmlmsg .= '</td></tr>' . "\n";
-								break;
-
-							case 'file':
-								$userinput = preg_replace($patterns, $replacements, $answer['value']);
-								$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
-								$htmlmsg .= ($answer['value'] && file_exists($answer['value'])) ? basename($answer['value']) : '';
-								$htmlmsg .= '</td></tr>' . "\n";
-
-								// Attach to mail
-								if ($answer['value'] && file_exists($answer['value']))
-								{
-									$mailer->addAttachment($answer['value']);
-								}
-
-								break;
-
-							default :
-								$userinput = preg_replace($patterns, $replacements, $answer['value']);
-								$htmlmsg .= '<tr><td>' . $answer['field'] . '</td><td>';
-								$htmlmsg .= str_replace('~~~', '<br />', $userinput);
-								$htmlmsg .= '&nbsp;';
-								$htmlmsg .= '</td></tr>' . "\n";
-								break;
-						}
-					}
-
-					if ($p = $answers->getPrice())
-					{
-						$htmlmsg .= '<tr><td>' . JText::_('COM_REDFORM_TOTAL_PRICE') . '</td><td>';
-						$htmlmsg .= $p;
-						$htmlmsg .= '</td></tr>' . "\n";
-					}
-
-					if ($v = $answers->getVat())
-					{
-						$htmlmsg .= '<tr><td>' . JText::_('COM_REDFORM_VAT') . '</td><td>';
-						$htmlmsg .= $v;
-						$htmlmsg .= '</td></tr>' . "\n";
-					}
-
-					$htmlmsg .= "</table><br />";
-				}
-			}
-
-			RdfHelper::wrapMailHtmlBody($htmlmsg, $subject);
-			$mailer->MsgHTML($htmlmsg);
-
-			// Send the mail
-			if (!$mailer->Send())
-			{
-				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (contactpersoninform): ' . $mailer->error);
-			}
-		}
-
-		return true;
+		return $helper->notify();
 	}
 
 	/**
@@ -955,24 +720,6 @@ class RdfCoreFormSubmission
 		$model = $this->getFormModel();
 
 		return $model->getForm();
-	}
-
-	/**
-	 * Replace tags
-	 *
-	 * @param   string      $text     text
-	 * @param   RdfAnswers  $answers  answers to use for substitution
-	 * @param   string      $glue     Glue to use for imploding fields array value
-	 *
-	 * @return mixed
-	 */
-	private function replaceTags($text, RdfAnswers $answers, $glue = ',')
-	{
-		$form = $this->getForm();
-		$replacer = new RdfHelperTagsreplace($form, $answers, $glue);
-		$text = $replacer->replace($text);
-
-		return $text;
 	}
 
 	/**

@@ -23,7 +23,9 @@ class RdfEntityPaymentrequestitem extends RdfEntityBase
 	 */
 	public function getPaymentrequest()
 	{
-		$pr = RdfEntityPaymentrequest::load($this->paymentrequest_id);
+		$item = $this->getItem();
+
+		$pr = RdfEntityPaymentrequest::load($item->payment_request_id);
 
 		return $pr;
 	}

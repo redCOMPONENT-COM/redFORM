@@ -46,6 +46,10 @@
 			$sections.hide();
 			$sections.eq(current).show();
 			showControls(current);
+
+			if ($.isFunction(window.setRedFormProgress)) {
+				setRedFormProgress(formbox, current);
+			}
 		}
 
 		//Show the controls dependent on the forms position.
@@ -63,10 +67,10 @@
 			//display the submit button and remove the Next button
 			if(current >= total -1){
 				$nextLink.hide();
-				formbox.parents('form').find('input[type=submit]').show();
+				formbox.parents('form').find('div.submitform').show();
 			} else {
 				$nextLink.show();
-				formbox.parents('form').find('input[type=submit]').hide();
+				formbox.parents('form').find('div.submitform').hide();
 			}
 		}
 

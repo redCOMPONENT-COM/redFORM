@@ -88,6 +88,16 @@ class RdfPaymentInfo
 	}
 
 	/**
+	 * Get associated cart
+	 *
+	 * @return RdfEntityCart
+	 */
+	public function getCart()
+	{
+		return $this->cart;
+	}
+
+	/**
 	 * Return submitters
 	 *
 	 * @return RdfEntitySubmitter[]
@@ -135,12 +145,12 @@ class RdfPaymentInfo
 			$dispatcher = JDispatcher::getInstance();
 
 			// More fields with integration
-			$paymentDetailFields = null;
+			$paymentDetailFields = new RdfPaymentInfointegration;
 			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($this->integration, $this->submit_key, &$paymentDetailFields));
 
 			if (!$paymentDetailFields)
 			{
-				$paymentDetailFields = new RdfPaymentInfointegration;
+				$uniqueid = $this->getForm()->id . '-' . $this->getASubmitter()->id . '-' . $this->cart->reference;
 
 				if ($title = JFactory::getApplication()->input->get('paymenttitle'))
 				{
@@ -148,11 +158,11 @@ class RdfPaymentInfo
 				}
 				else
 				{
-					$paymentDetailFields->title = JText::_('COM_REDFORM_Form_submission') . ': ' . $this->form;
+					$paymentDetailFields->title = JText::_('COM_REDFORM_Form_submission') . ': ' . $this->form . '(' . $uniqueid . ')';
 				}
 
 				$paymentDetailFields->adminDesc = $paymentDetailFields->title;
-				$paymentDetailFields->uniqueid = $this->cart->reference;
+				$paymentDetailFields->uniqueid = $uniqueid;
 			}
 
 			$this->paymentDetailFields = $paymentDetailFields;

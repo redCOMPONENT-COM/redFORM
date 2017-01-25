@@ -1,0 +1,22 @@
+{
+  "name": "redform",
+  "version": "3.0.0",
+  "description": "redFORM component",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/redCOMPONENT-COM/redFORM.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/redCOMPONENT-COM/redFORM/issues"
+  },
+  "homepage": "https://github.com/redCOMPONENT-COM/redFORM#readme"
+}

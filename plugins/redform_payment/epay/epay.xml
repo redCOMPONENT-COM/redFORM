@@ -7,7 +7,7 @@
     <authorUrl>www.redcomponent.com</authorUrl>
     <copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
     <license>GNU/GPL</license>
-    <version>3.3.1</version>
+    <version>3.3.17</version>
     <tag>##VERSION##</tag>
     <description>PLG_REDFORM_PAYMENT_EPAY_XML_DESCRIPTION</description>
 
@@ -133,4 +133,7 @@
         </fields>
     </config>
 
+    <updateservers>
+        <server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_payment_epay.xml</server>
+    </updateservers>
 </extension>

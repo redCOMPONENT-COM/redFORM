@@ -250,11 +250,21 @@ class RdfAnswers
 	{
 		if (!$this->recipients)
 		{
+			// Check for recipients file type
 			foreach ($this->fields as $field)
 			{
 				if ($field->fieldtype == 'recipients' && count($field->value))
 				{
 					$this->recipients = $this->recipients ? array_merge($this->recipients, $field->value) : $field->value;
+				}
+			}
+
+			// Check for conditional recipients
+			if ($conditional = RdfHelperConditionalrecipients::getRecipients($this->getForm(), $this))
+			{
+				foreach ($conditional as $recipient)
+				{
+					$this->recipients[] = $recipient[0];
 				}
 			}
 		}
@@ -391,7 +401,7 @@ class RdfAnswers
 	/**
 	 * Get fields
 	 *
-	 * @return RdfRfield
+	 * @return RdfRfield[]
 	 */
 	public function getFields()
 	{
@@ -689,6 +699,12 @@ class RdfAnswers
 		else
 		{
 			$row->submission_ip = getenv('REMOTE_ADDR');
+			$row->language = $mainframe->getLanguage()->getTag();
+
+			if (!$mainframe->isAdmin())
+			{
+				$row->user_id = JFactory::getUser()->id;
+			}
 		}
 
 		$row->form_id = $this->formId;
@@ -810,7 +826,27 @@ class RdfAnswers
 	{
 		foreach ($this->fields as $field)
 		{
-			if ($field->id == $field_id)
+			if ($field->field_id == $field_id)
+			{
+				return $field->getValue();
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * return answer for specified form field
+	 *
+	 * @param   int  $form_field_id  form field id
+	 *
+	 * @return string
+	 */
+	public function getFormFieldAnswer($form_field_id)
+	{
+		foreach ($this->fields as $field)
+		{
+			if ($field->id == $form_field_id)
 			{
 				return $field->getValue();
 			}

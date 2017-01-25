@@ -8,14 +8,14 @@
 	"require-dev": {
 		"squizlabs/php_codesniffer": "1.*",
 		"phpmd/phpmd": "*",
-		"codeception/codeception": "~2.1",
+		"codeception/codeception": "2.1.6",
 		"phing/phing": "2.9.*@dev",
-		"joomla-projects/joomla-browser": "v3.4.8.2",
+		"joomla-projects/joomla-browser": "v3.6.0.1",
 		"codegyre/robo": "~0.6",
 		"redcomponent/robo": "dev-master",
 		"flow/jsonpath": "dev-master",
 		"fzaninotto/faker": "^1.5",
-		"joomla-projects/selenium-server-standalone": "v2.51.0",
+		"joomla-projects/selenium-server-standalone": "v2.53.1",
 		"nette/reflection": "~2"
 	}
 }

@@ -12,17 +12,20 @@
  */
 var RedFormValidator = function() {
 	"use strict";
-	var handlers, inputEmail, custom,
 
- 	setHandler = function(name, fn, en) {
+	var inputEmail;
+	var handlers = {};
+	var custom = {};
+
+ 	var setHandler = function(name, fn, en) {
  	 	en = (en === '') ? true : en;
  	 	handlers[name] = {
  	 	 	enabled : en,
  	 	 	exec : fn
  	 	};
- 	},
+ 	};
 
- 	findLabel = function(id, form){
+ 	var findLabel = function(id, form){
  	 	var $label, $form = jQuery(form);
  	 	if (!id) {
  	 	 	return false;
@@ -36,9 +39,9 @@ var RedFormValidator = function() {
  	 	 	return $label;
  	 	}
  	 	return false;
- 	},
+ 	};
 
- 	handleResponse = function(state, $el) {
+ 	var handleResponse = function(state, $el) {
  		// Get a label
  	 	var $label = $el.data('label');
  	 	if ($label === undefined) {
@@ -58,9 +61,10 @@ var RedFormValidator = function() {
  	 	 	 	$label.removeClass('invalid').attr('aria-invalid', 'false');
  	 	 	}
  	 	}
- 	},
+ 	};
 
- 	validate = function(el) {
+ 	var validate = function(el) {
+		setElementError(el, '');
  	 	var $el = jQuery(el), tagName, handler;
  	 	// Ignore the element if its currently disabled, because are not submitted for the http-request. For those case return always true.
  	 	if ($el.attr('disabled')) {
@@ -76,7 +80,8 @@ var RedFormValidator = function() {
  	 	 	 	 	return false;
  	 	 	 	}
  	 	 	//If element has class placeholder that means it is empty.
- 	 	 	} else if (!$el.val() || $el.hasClass('placeholder') || ($el.attr('type') === 'checkbox' && !$el.is(':checked'))) {
+ 	 	 	} else if (!$el.val().trim() || $el.hasClass('placeholder') || ($el.attr('type') === 'checkbox' && !$el.is(':checked'))) {
+				setElementError(el, Joomla.JText._('LIB_REDFORM_FORM_VALIDATION_ERROR_FIELD_IS_REQUIRED'));
  	 	 	 	handleResponse(false, $el);
  	 	 	 	return false;
  	 	 	}
@@ -98,9 +103,9 @@ var RedFormValidator = function() {
  	 	// Return validation state
  	 	handleResponse(true, $el);
  	 	return true;
- 	},
+ 	};
 
- 	isValid = function(form) {
+ 	var isValid = function(form) {
  		var fields, valid = true, message, error, label, invalid = [], i, l;
  	 	// Validate form fields
  	 	fields = jQuery(form).find('input, textarea, select, fieldset');
@@ -117,20 +122,26 @@ var RedFormValidator = function() {
  	 	 	}
  	 	});
  	 	if (!valid && invalid.length > 0) {
- 	 	 	message = Joomla.JText._('JLIB_FORM_FIELD_INVALID');
+ 	 	 	message = Joomla.JText._('LIB_REDFORM_VALIDATION_FIELD_INVALID');
  	 	 	error = {"error": []};
  	 	 	for (i = invalid.length - 1; i >= 0; i--) {
  	 	 		label = jQuery(invalid[i]).data("label");
  	 			if (label) {
- 	 	 			error.error.push(message + label.text().replace("*", ""));
-                		}
+					var fieldmessage = message + label.text().replace("*", "");
+
+					if (invalid[i].validationMessage) {
+						fieldmessage += " - " + invalid[i].validationMessage;
+					}
+
+ 	 	 			error.error.push(fieldmessage);
+				}
  	 	 	}
  	 	 	Joomla.renderMessages(error);
  	 	}
  	 	return valid;
- 	},
+ 	};
 
- 	attachToForm = function(form) {
+ 	var attachToForm = function(form) {
  	 	var inputFields = [], elements,
  	 		$form = jQuery(form);
  	 	// Iterate through the form object and attach the validate method to all input fields.
@@ -202,55 +213,109 @@ var RedFormValidator = function() {
 		}
 
  	 	$form.data('inputfields', inputFields);
- 	},
+ 	};
 
- 	initialize = function() {
- 	 	handlers = {};
- 	 	custom = custom || {};
+ 	var setElementError = function (el, msg) {
+		if (typeof el.setCustomValidity === "function") {
+			el.setCustomValidity(msg);
+		}
+	};
 
+	// Initialize handlers and attach validation to form
+ 	jQuery(function() {
  	 	inputEmail = (function() {
  	 	 	var input = document.createElement("input");
  	 	 	input.setAttribute("type", "email");
  	 	 	return input.type !== "text";
  	 	})();
+
  	 	// Default handlers
  	 	setHandler('username', function(value, element) {
  	 	 	var regex = new RegExp("[\<|\>|\"|\'|\%|\;|\(|\)|\&]", "i");
- 	 	 	return !regex.test(value);
+			var result = !regex.test(value);
+			if (!result) {
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_USERNAME_INVALID_FORMAT'));
+			}
+			else {
+				setElementError(element.get(0), '');
+			}
+			return result;
  	 	});
+
  	 	setHandler('password', function(value, element) {
  	 	 	var regex = /^\S[\S ]{2,98}\S$/;
- 	 	 	return regex.test(value);
+			var result = regex.test(value);
+			if (!result) {
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_PASSWORD_INVALID_FORMAT'));
+			}
+			else {
+				setElementError(element.get(0), '');
+			}
+			return result;
  	 	});
+
  	 	setHandler('numeric', function(value, element) {
  	 		var regex = /^(\d|-)?(\d|,)*\.?\d*$/;
- 	 	 	return regex.test(value);
+			var result = regex.test(value);
+			if (!result) {
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_NUMERIC_INVALID_FORMAT'));
+			}
+			else {
+				setElementError(element.get(0), '');
+			}
+			return result;
  	 	});
+
  	 	setHandler('email', function(value, element) {
 			value = punycode.toASCII(value);
  	 	 	var regex = /^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
- 	 	 	return regex.test(value);
+			var result = regex.test(value);
+			if (!result) {
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_EMAIL_INVALID_FORMAT'));
+			}
+			else {
+				setElementError(element.get(0), '');
+			}
+			return result;
  	 	});
- 	 	// Attach to forms with class 'form-validate'
- 	 	var forms = jQuery('form.redform-validate');
- 	 	for (var i = 0, l = forms.length; i < l; i++) {
- 	 	 	attachToForm(forms[i]);
- 	 	}
- 	};
 
- 	// Initialize handlers and attach validation to form
- 	initialize();
+		setHandler('futuredate', function(value, element) {
+			if (!value) {
+				return true;
+			}
 
- 	return {
- 	 	isValid : isValid,
- 	 	validate : validate,
- 	 	setHandler : setHandler,
- 	 	attachToForm : attachToForm,
- 	 	custom: custom
- 	};
+			var today = new Date(new Date().toDateString());
+			var val = new Date(value);
+
+			var result = val >= today;
+
+			if (!result) {
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_FUTURE_DATE'));
+			}
+			else {
+				setElementError(element.get(0), '');
+			}
+
+			return result;
+		});
+
+		// Attach to forms with class 'form-validate'
+		var forms = jQuery('form.redform-validate');
+		for (var i = 0, l = forms.length; i < l; i++) {
+			attachToForm(forms[i]);
+		}
+	});
+
+	return {
+		isValid : isValid,
+		validate : validate,
+		setHandler : setHandler,
+		attachToForm : attachToForm,
+		custom: custom
+	};
 };
 
 document.redformvalidator = null;
 jQuery(function() {
-	document.redformvalidator = new RedFormValidator();
+	document.redformvalidator = RedFormValidator();
 });

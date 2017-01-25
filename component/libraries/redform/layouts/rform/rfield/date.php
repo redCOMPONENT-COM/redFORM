@@ -16,7 +16,7 @@ $attribs = array();
 
 if (isset($properties['class']))
 {
-	$attribs['class'] = 'class';
+	$attribs['class'] = $properties['class'];
 }
 
 if (isset($properties['readonly']))
