@@ -79,8 +79,8 @@ class RedformControllerPayment extends JControllerLegacy
 		}
 		elseif (count($options) == 1)
 		{
-			$this->setRedirect('index.php?option=com_redform&task=payment.process&reference=' . $cart->reference . '&gw=' . $options[0]->value . $lang_v);
-			$this->redirect();
+			$gateway = reset($options);
+			$this->setRedirect('index.php?option=com_redform&task=payment.process&reference=' . $cart->reference . '&gw=' . $gateway->value . $lang_v);
 		}
 		else
 		{
