@@ -231,6 +231,7 @@ class RdfAnswersUser
 		$message = str_replace('[fullname]', $name, $message);
 		$message = str_replace('[username]', $username, $message);
 		$message = str_replace('[password]', $password, $message);
+		$message = str_replace('[siteurl]', $siteURL, $message);
 
 		$message = html_entity_decode($message, ENT_QUOTES);
 
