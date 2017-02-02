@@ -148,21 +148,27 @@ class RdfPaymentInfo
 			$paymentDetailFields = new RdfPaymentInfointegration;
 			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($this->integration, $this->submit_key, &$paymentDetailFields));
 
-			if (!$paymentDetailFields)
+			if (!$paymentDetailFields->uniqueid)
 			{
-				$uniqueid = $this->getForm()->id . '-' . $this->getASubmitter()->id . '-' . $this->cart->reference;
+				$paymentDetailFields->uniqueid = $this->getForm()->id . '-' . $this->getASubmitter()->id . '-' . $this->cart->reference;
+			}
 
+			if (!$paymentDetailFields->title)
+			{
 				if ($title = JFactory::getApplication()->input->get('paymenttitle'))
 				{
 					$paymentDetailFields->title = $title;
 				}
 				else
 				{
-					$paymentDetailFields->title = JText::_('COM_REDFORM_Form_submission') . ': ' . $this->form . '(' . $uniqueid . ')';
+					$paymentDetailFields->title = JText::_('COM_REDFORM_Form_submission') . ': ' . $this->form
+						. '(' . $paymentDetailFields->uniqueid . ')';
 				}
+			}
 
+			if (!$paymentDetailFields->adminDesc)
+			{
 				$paymentDetailFields->adminDesc = $paymentDetailFields->title;
-				$paymentDetailFields->uniqueid = $uniqueid;
 			}
 
 			$this->paymentDetailFields = $paymentDetailFields;
