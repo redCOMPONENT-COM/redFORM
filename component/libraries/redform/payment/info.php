@@ -150,7 +150,7 @@ class RdfPaymentInfo
 
 			if (!$paymentDetailFields->uniqueid)
 			{
-				$paymentDetailFields->uniqueid = $this->getForm()->id . '-' . $this->getASubmitter()->id . '-' . $this->cart->reference;
+				$paymentDetailFields->uniqueid = $this->cart->invoice_id;
 			}
 
 			if (!$paymentDetailFields->title)
