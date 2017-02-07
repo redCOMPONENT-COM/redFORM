@@ -296,8 +296,7 @@ class RedFormModelPayment extends JModelLegacy
 		$body = (empty($form->submitterpaymentnotificationbody)
 			? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_DEFAULT')
 			: $form->submitterpaymentnotificationbody);
-		$link = JRoute::_(JURI::root() . 'administrator/index.php?option=com_redform&view=submitters&form_id=' . $form->id);
-		$body = $replaceHelper->replace($body, array('[submitters]' => $link));
+		$body = $replaceHelper->replace($body);
 		$body = $this->getCart()->replaceTags($body);
 
 		$body = RdfHelper::wrapMailHtmlBody($body, $subject);
@@ -313,6 +312,7 @@ class RedFormModelPayment extends JModelLegacy
 		$mailer->addRecipient($contact['email']);
 		$doSend = true;
 
+		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onBeforeSendPaymentNotificationSubmitter', array(&$mailer, $this->getCart(), &$doSend));
 
