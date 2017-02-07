@@ -284,8 +284,17 @@ var RedFormValidator = function() {
 				return true;
 			}
 
+			var format = jQuery(element).attr('dateformat');
+
+			if (format) {
+				// parseDate is added to Date prototype by joomla calendar script (dynarch jscal)
+				var val = Date.parseDate(value, format);
+			}
+			else {
+				var val = new Date(value);
+			}
+
 			var today = new Date(new Date().toDateString());
-			var val = new Date(value);
 
 			var result = val >= today;
 

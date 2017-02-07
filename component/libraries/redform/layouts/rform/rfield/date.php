@@ -23,6 +23,11 @@ if (isset($properties['readonly']))
 {
 	$attribs['readonly'] = 'readonly';
 }
+
+if (isset($properties['dateformat']))
+{
+	$attribs['dateformat'] = $properties['dateformat'];
+}
 ?>
 <?php echo JHTML::_('calendar', $data->getValue(), $properties['name'], $properties['id'],
 	$properties['dateformat'],
