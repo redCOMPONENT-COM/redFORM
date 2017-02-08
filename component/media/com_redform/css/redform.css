@@ -43,6 +43,25 @@
   padding-left: 4px;
 }
 
+.fieldline .label-field-tip {
+	white-space: normal;
+	font-style: italic;
+}
+
+.field-inline-error {
+	font-style: italic;
+	color:red;
+}
+
+.control-label .label-field-tip {
+	font-size: 0.9em;
+	font-style: italic;
+}
+
+.redcore fieldset .control-label label {
+	float:none;
+}
+
 label.emptyfield {
 	color:red;
 	font-weight:bold;

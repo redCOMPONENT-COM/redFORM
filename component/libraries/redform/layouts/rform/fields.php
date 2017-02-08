@@ -70,29 +70,18 @@ foreach ($sections as $s)
 
 		if ($field->displayLabel())
 		{
-			$fieldDiv .= '<div class="label">' . $field->getLabel() . '</div>';
-		}
+			$fieldDiv .= '<div class="label">';
+			$fieldDiv .= $field->getLabel();
 
-		$fieldDiv .= '<div class="field">' . $field->getInput() . '</div>';
-
-		if ($field->isRequired() || strlen($field->tooltip))
-		{
-			$fieldDiv .= '<div class="fieldinfo">';
-
-			if ($field->isRequired())
+			if (!empty($field->tooltip))
 			{
-				$img = RHelperAsset::load('warning.png', 'com_redform', array('alt' => JText::_('COM_REDFORM_Required')));
-				$fieldDiv .= ' <span class="editlinktip hasToolTip" title="' . RHtml::tooltipText(JText::_('COM_REDFORM_Required')) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
-			}
-
-			if (strlen($field->tooltip) > 0)
-			{
-				$img = RHelperAsset::load('info.png', 'com_redform', array('alt' => JText::_('COM_REDFORM_ToolTip')));
-				$fieldDiv .= ' <span class="editlinktip hasToolTip" title="' .  RHtml::tooltipText($field->field, $field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
+				$fieldDiv .= '<div class="label-field-tip">' . $field->tooltip . '</div>';
 			}
 
 			$fieldDiv .= '</div>';
 		}
+
+		$fieldDiv .= '<div class="field">' . $field->getInput() . '</div>';
 
 		// Fieldline_ div
 		$fieldDiv .= '</div>';

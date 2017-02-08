@@ -32,4 +32,4 @@ if (isset($properties['dateformat']))
 <?php echo JHTML::_('calendar', $data->getValue(), $properties['name'], $properties['id'],
 	$properties['dateformat'],
 	$attribs
-); ?>
+);

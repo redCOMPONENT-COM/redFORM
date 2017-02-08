@@ -18,6 +18,7 @@ $fields = $data['fields'];
 $answers = $data['answers'];
 $user = $data['user'];
 $index = $data['index'];
+$form = $data['form'];
 
 $html = '';
 
@@ -26,26 +27,53 @@ if (isset($options['extrafields'][$index]))
 	$fields = array_merge($options['extrafields'][$index], $fields);
 }
 
-foreach ($fields as $field)
-{
-	if ($field->isHidden())
-	{
-		$html .= $field->getInput();
+$sections = RdfHelper::sortFieldBySection($fields);
 
-		continue;
-	}
+RHelperAsset::load('punycode.js');
+RHelperAsset::load('formsteps.js', 'com_redform');
+RHelperAsset::load('formsteps.css', 'com_redform');
+RHelperAsset::load('showon.js', 'com_redform');
+?>
+<?php foreach ($sections as $s): ?>
+	<?php $section = RdfEntitySection::load($s->id); ?>
+	<fieldset class="redform-section<?= $section->class ? ' ' . $section->class : '' ?>">
 
-	$html .= '<div class="control-group type-' . $field->fieldtype . $field->getParam('class', '') . '">';
+		<?php foreach ($s->fields as $field): ?>
+			<?php $field->setForm($form); ?>
+			<?php if ($field->isHidden()): ?>
+				<?= $field->getInput() ?>
+			<?php else:
+				$rel = '';
+				$class = "control-group type-" . $field->fieldtype . $field->getParam('class', '');
 
-	if ($field->displayLabel())
-	{
-		$html .= '<div class="control-label">' . $field->getLabel() . '</div>';
-	}
+				if ($showon = $field->getParam('showon'))
+				{
+					$showon = explode(':', $showon, 2);
 
-	$html .= '<div class="controls">' . $field->getInput() . '</div>';
+					// We need the form field id, from the field id given in parameters
+					$targetField = RdfHelper::findFormFieldByFieldId($fields, $showon[0]);
+					$class .= ' rfshowon_' . implode(' showon_', explode(',', $showon[1]));
+					$rel = ' rel="rfshowon_field' . $targetField->id . '_' . $index . '"';
+				}
+				?>
 
+				<div class="<?= $class ?>" <?= $rel ?>>
 
-	$html .= '</div>';
-}
+					<?php if ($field->displayLabel()): ?>
+						<div class="control-label">
+							<?= $field->getLabel() ?>
+							<?php if (!empty($field->tooltip)): ?>
+								<div class="label-field-tip"><?= $field->tooltip ?></div>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
 
-echo $html;
+					<div class="controls field"><?= $field->getInput() ?></div>
+				</div>
+			<?php endif; ?>
+		<?php endforeach; ?>
+
+	</fieldset>
+<?php endforeach; ?>
+
+<?= $this->sublayout('progressbar', $sections) ?>

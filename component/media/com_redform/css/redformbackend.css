@@ -19,3 +19,25 @@
 .redcore #component form .uneditable-input {
     height: 20px;
 }
+
+.fieldline {
+    margin-bottom: 7px;
+}
+
+.fieldline div.label{
+    margin-bottom: 2px;
+}
+
+.redcore fieldset .control-label label {
+    float:none;
+}
+
+.redcore .control-label .label-field-tip {
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.field-inline-error {
+    font-style: italic;
+    color:red;
+}

@@ -196,6 +196,45 @@ class RdfRfield extends JObject
 	}
 
 	/**
+	 * Magic function
+	 *
+	 * @param   string  $name  property to check
+	 *
+	 * @return bool
+	 *
+	 * @since 3.3.18
+	 */
+	public function __isset($name)
+	{
+		switch ($name)
+		{
+			case 'id':
+			case 'fieldId':
+			case 'fieldtype':
+			case 'value':
+			case 'published':
+			case 'tooltip':
+			case 'hasOptions':
+			case 'options':
+			case 'name':
+			case 'field':
+			case 'redmember_field':
+			case 'section_id':
+			case 'required':
+			case 'validate':
+				return true;
+
+			default:
+				$data = $this->load();
+
+				if (property_exists($data, $name))
+				{
+					return true;
+				}
+		}
+	}
+
+	/**
 	 * Get field xml for configuration
 	 *
 	 * @return string
