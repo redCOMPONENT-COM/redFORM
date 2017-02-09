@@ -335,6 +335,7 @@ var RedFormValidator = function($) {
 		isValid : isValid,
 		validate : validate,
 		setHandler : setHandler,
+		setElementError : setElementError,
 		attachToForm : attachToForm,
 		custom: custom
 	};

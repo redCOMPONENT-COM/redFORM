@@ -20,6 +20,17 @@
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
 $rfcore = new RdfCore;
+
+JFactory::getDocument()->addScriptDeclaration(<<<JS
+	Joomla.submitbutton = function(task)
+	{
+		if (task == "submitter.cancel" || document.redformvalidator.isValid(document.getElementById("adminForm")))
+		{
+			Joomla.submitform(task, document.getElementById("adminForm"));
+		}
+	};
+JS
+);
 ?>
 <form action="index.php?option=com_redform&controller=submitters" method="post" name="redform"
       id="adminForm" enctype="multipart/form-data" class="redform-validate form-horizontal">
