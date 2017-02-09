@@ -24,7 +24,12 @@ class plgRedform_PaymentCustom extends RdfPaymentPlugin
 
 	public function onBeforeSendPaymentNotificationSubmitter(RdfHelperMailer &$mailer, RdfEntityCart $cart, &$send)
 	{
-		if ($this->params->get('payment_status') == 'pending')
+		if ($cart->getPayment()->gateway != $this->gateway)
+		{
+			return true;
+		}
+
+		if ($this->params->get('payment_status') == 'pending' || $this->params->get('disable_submitter_payment_notification'))
 		{
 			$send = false;
 		}

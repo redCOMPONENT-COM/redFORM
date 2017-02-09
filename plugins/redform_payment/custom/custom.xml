@@ -41,6 +41,14 @@
 					<option value="paid">PLG_REFORM_PAYMENT_CUSTOM_XML_PAYMENT_STATUS_PAID</option>
 				</field>
 
+				<field name="disable_submitter_payment_notification" type="radio" default="0"
+					   label="PLG_REFORM_PAYMENT_CUSTOM_XML_DISABLE_SUBMITTER_PAYMENT_NOTIFICATION_LABEL"
+					   decription="PLG_REFORM_PAYMENT_CUSTOM_XML_DISABLE_SUBMITTER_PAYMENT_NOTIFICATION_DESC"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+
 				<field name="confirmButtonLabel" type="text"
 					label="PLG_REFORM_PAYMENT_CUSTOM_XML_CONFIRM_BUTTON_LABEL_LABEL"
 					description="PLG_REFORM_PAYMENT_CUSTOM_XML_CONFIRM_BUTTON_LABEL_DESC"
