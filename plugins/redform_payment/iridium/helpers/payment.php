@@ -239,7 +239,7 @@ class PaymentIridium extends RdfPaymentHelper
 			if (strcmp($HashDigest, JRequest::getVar('HashDigest')))
 			{
 				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_HASHDIGEST_MISMATCH', $reference);
-				throw new RedformPaymentException($error);
+				throw new RdfPaymentException($error);
 			}
 
 			// Hash match, record result
@@ -269,7 +269,7 @@ class PaymentIridium extends RdfPaymentHelper
 				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PAYMENT_REFUSED_KEY_S_REASON_S_MESSAGE_M',
 					$reference, $reason, JRequest::getVar('Message')
 				);
-				throw new RedformPaymentException($error);
+				throw new RdfPaymentException($error);
 			}
 
 			$details = $this->getDetails($reference);
@@ -281,7 +281,7 @@ class PaymentIridium extends RdfPaymentHelper
 				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_CURRENCY_MISMATCH_EXPECTED_S_RECEIVED_S',
 					$reference, $currency, RHelperCurrency::getIsoCode(JRequest::getVar('CurrencyCode'))
 				);
-				throw new RedformPaymentException($error);
+				throw new RdfPaymentException($error);
 			}
 
 			if (round($this->getPrice($details) * 100) != JRequest::getVar('Amount'))
@@ -289,7 +289,7 @@ class PaymentIridium extends RdfPaymentHelper
 				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_PRICE_MISMATCH_EXPECTED_S_RECEIVED_S',
 					$reference, $this->getPrice($details) * 100, JRequest::getVar('Amount')
 				);
-				throw new RedformPaymentException($error);
+				throw new RdfPaymentException($error);
 			}
 			else
 			{
@@ -298,7 +298,7 @@ class PaymentIridium extends RdfPaymentHelper
 
 			$this->writeTransaction($reference, $resp, 'SUCCESS', 1);
 		}
-		catch (RedformPaymentException $e)
+		catch (RdfPaymentException $e)
 		{
 			RdfHelperLog::simpleLog($e->getMessage());
 			$this->writeTransaction($reference, $e->getMessage() . $resp, 'FAIL', 0);
