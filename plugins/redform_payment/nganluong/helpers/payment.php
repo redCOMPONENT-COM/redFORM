@@ -103,7 +103,7 @@ class PaymentNganluong extends  RdfPaymentHelper
 		$taxAmount = 0;
 		$feeshipping = 0;
 		$returnUrl = urlencode($input->post->getString('return_url'));
-		$cancelUrl = urlencode($input->post->getString('return_url'));
+		$cancelUrl = urlencode($input->post->getString('cancel_url'));
 
 		$billingInfo = $this->getBillingInfo($details->id);
 
