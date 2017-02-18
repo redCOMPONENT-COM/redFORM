@@ -84,7 +84,7 @@
 
 			var legend = subform.find('legend').empty();
 			var signupTitle = Joomla.JText._("COM_REDFORM_FIELDSET_SIGNUP_NB").replace(/(%d)/, index);
-			var deleteLink = $('<span></span>').addClass('remove-instance').attr('index', index).text(Joomla.JText._("LIB_REDFORM_REMOVE"))
+			var deleteLink = $('<span></span>').addClass('remove-instance btn btn-warning').attr('index', index).text(Joomla.JText._("LIB_REDFORM_REMOVE"))
 				.click(removeInstance);
 
 			legend.text(signupTitle + ' - ');

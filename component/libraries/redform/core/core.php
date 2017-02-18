@@ -308,6 +308,17 @@ class RdfCore extends JObject
 			$multi = 1;
 		}
 
+		if ($answers)
+		{
+			// Set multi to number of answers...
+			$multi = count($answers->getSingleSubmissions());
+		}
+		else
+		{
+			// Limit to max 30 sumbissions at the same time...
+			$multi = min($multi, 30);
+		}
+
 		$this->loadCheckScript();
 
 		if ($multi > 1)
@@ -322,23 +333,12 @@ class RdfCore extends JObject
 			$html .= '<div class="formname">' . $form->formname . '</div>';
 		}
 
-		if ($answers)
-		{
-			// Set multi to number of answers...
-			$multi = count($answers->getSingleSubmissions());
-		}
-		else
-		{
-			// Limit to max 30 sumbissions at the same time...
-			$multi = min($multi, 30);
-		}
-
 		if ($multi > 1)
 		{
 			if (!$answers)
 			{
 				// Link to add signups
-				$html .= '<div class="add-instance">' . JText::_('COM_REDFORM_SIGN_UP_USER') . '</div>';
+				$html .= RdfLayoutHelper::render('rform.addsignup', null, '', array('component' => 'com_redform'));
 			}
 		}
 
@@ -358,11 +358,6 @@ class RdfCore extends JObject
 			/* Make a collapsable box */
 			$html .= '<div class="formbox">';
 
-			if ($multi > 1)
-			{
-				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
-			}
-
 			$indexedFields = $this->prepareFieldsForIndex($fields, $formIndex, $indexAnswers);
 
 			$html .= RdfLayoutHelper::render(
@@ -373,16 +368,12 @@ class RdfCore extends JObject
 					'user' => $user,
 					'options' => $options,
 					'answers' => $indexAnswers,
-					'form' => $form
+					'form' => $form,
+					'multi' => $multi
 				),
 				'',
 				array('component' => 'com_redform')
 			);
-
-			if ($multi > 1)
-			{
-				$html .= '</fieldset>';
-			}
 
 			if (isset($this->_rwfparams['uid']))
 			{
@@ -412,12 +403,14 @@ class RdfCore extends JObject
 
 			if (count($results))
 			{
-				$html .= '<div class="fieldline">';
-				$html .= '<div class="label"><label>' . JText::_('COM_REDFORM_CAPTCHA_LABEL') . '</label></div>';
-				$html .= '<div id="redformcaptcha">';
-				$html .= $captcha;
-				$html .= '</div>';
-				$html .= '</div>';
+				$html .= RdfLayoutHelper::render(
+					'rform.captcha',
+					array(
+						'captcha_html' => $captcha
+					),
+					'',
+					array('component' => 'com_redform')
+				);
 
 				JFactory::getSession()->set('checkcaptcha' . $uniq, 1);
 			}
@@ -910,12 +903,7 @@ class RdfCore extends JObject
 		}
 		else
 		{
-			$select = JHtml::_('select.genericlist', $options, 'gw');
-
-			$html = '<div class="fieldline gateway-select">';
-			$html .= '<div class="label">' . JText::_('COM_REDFORM_SELECT_PAYMENT_METHOD') . '</div>';
-			$html .= '<div class="field">' . $select . '</div>';
-			$html .= '</div>';
+			$html = RdfHelperLayout::render('rform.gateway', compact('options'), '', array('component' => 'com_redform'));
 		}
 
 		return $html;

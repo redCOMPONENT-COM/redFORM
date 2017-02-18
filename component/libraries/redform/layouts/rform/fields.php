@@ -19,6 +19,7 @@ $answers = $data['answers'];
 $user = $data['user'];
 $index = $data['index'];
 $form = $data['form'];
+$multi = $data['multi'];
 
 $html = '';
 
@@ -34,6 +35,11 @@ RHelperAsset::load('showon.js', 'com_redform');
 if (isset($options['extrafields'][$index]))
 {
 	$fields = array_merge($options['extrafields'][$index], $fields);
+}
+
+if ($multi > 1)
+{
+	$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $index) . '</legend>';
 }
 
 $sections = RdfHelper::sortFieldBySection($fields);
@@ -94,5 +100,10 @@ foreach ($sections as $s)
 }
 
 $html .= $this->sublayout('progressbar', $sections);
+
+if ($multi > 1)
+{
+	$html .= '</fieldset>';
+}
 
 echo $html;

@@ -97,3 +97,11 @@ div#signedusers > ul {
 	border:1px solid red;
 	background-color:pink;
 }
+
+div.add-instance {
+	cursor: pointer;
+}
+
+span.remove-instance {
+	cursor: pointer;
+}

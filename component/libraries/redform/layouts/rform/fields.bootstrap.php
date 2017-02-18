@@ -19,6 +19,7 @@ $answers = $data['answers'];
 $user = $data['user'];
 $index = $data['index'];
 $form = $data['form'];
+$multi = $data['multi'];
 
 $html = '';
 
@@ -34,6 +35,10 @@ RHelperAsset::load('formsteps.js', 'com_redform');
 RHelperAsset::load('formsteps.css', 'com_redform');
 RHelperAsset::load('showon.js', 'com_redform');
 ?>
+<?php if ($multi > 1): ?>
+	<fieldset><legend><?= JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $index) ?></legend>
+<?php endif; ?>
+
 <?php foreach ($sections as $s): ?>
 	<?php $section = RdfEntitySection::load($s->id); ?>
 	<fieldset class="redform-section<?= $section->class ? ' ' . $section->class : '' ?>">
@@ -77,3 +82,7 @@ RHelperAsset::load('showon.js', 'com_redform');
 <?php endforeach; ?>
 
 <?= $this->sublayout('progressbar', $sections) ?>
+
+<?php if ($multi > 1): ?>
+	</fieldset>
+<?php endif;
