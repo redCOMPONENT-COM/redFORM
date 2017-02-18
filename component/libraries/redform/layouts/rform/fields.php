@@ -39,7 +39,8 @@ if (isset($options['extrafields'][$index]))
 
 if ($multi > 1)
 {
-	$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $index) . '</legend>';
+	$html .= '<fieldset><legend class="subform-legend">' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $index) . '</legend>';
+	$html .= '<div class="subform-fields">';
 }
 
 $sections = RdfHelper::sortFieldBySection($fields);
@@ -103,6 +104,7 @@ $html .= $this->sublayout('progressbar', $sections);
 
 if ($multi > 1)
 {
+	$html .= '</div>';
 	$html .= '</fieldset>';
 }
 

@@ -943,6 +943,8 @@ class RdfCore extends JObject
 		JText::script('COM_REDFORM_MAX_SIGNUP_REACHED');
 		JText::script('COM_REDFORM_FIELDSET_SIGNUP_NB');
 		JText::script('LIB_REDFORM_REMOVE');
+		JText::script('COM_REDFORM_SHOW_ALL_USERS');
+		JText::script('COM_REDFORM_HIDE_ALL_USERS');
 		RHelperAsset::load('form-multiple.js', 'com_redform');
 	}
 

@@ -36,7 +36,8 @@ RHelperAsset::load('formsteps.css', 'com_redform');
 RHelperAsset::load('showon.js', 'com_redform');
 ?>
 <?php if ($multi > 1): ?>
-	<fieldset><legend><?= JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $index) ?></legend>
+	<fieldset><legend class="subform-legend"><?= JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $index) ?></legend>
+		<div class="subform-fields">
 <?php endif; ?>
 
 <?php foreach ($sections as $s): ?>
@@ -84,5 +85,6 @@ RHelperAsset::load('showon.js', 'com_redform');
 <?= $this->sublayout('progressbar', $sections) ?>
 
 <?php if ($multi > 1): ?>
+		</div>
 	</fieldset>
 <?php endif;
