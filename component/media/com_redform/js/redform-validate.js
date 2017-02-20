@@ -139,7 +139,9 @@ var RedFormValidator = function($) {
  	 	 			error.error.push(fieldmessage);
 				}
  	 	 	}
- 	 	 	// Joomla.renderMessages(error);
+
+ 	 	 	// Scroll to first invalid field
+			$(form).find('.invalid').get(0).scrollIntoView(true);
  	 	}
  	 	return valid;
  	};
