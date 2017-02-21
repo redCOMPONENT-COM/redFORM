@@ -205,7 +205,7 @@ class RdfAnswersUser
 	 *
 	 * @return void
 	 */
-	protected function sendUserCreatedMail($user, $password)
+	public static function sendUserCreatedMail($user, $password)
 	{
 		$lang = JFactory::getLanguage();
 		$lang->load('com_user');
