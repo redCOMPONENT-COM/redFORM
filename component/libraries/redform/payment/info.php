@@ -146,6 +146,11 @@ class RdfPaymentInfo
 
 			// More fields with integration
 			$paymentDetailFields = new RdfPaymentInfointegration;
+
+			// Current method
+			$dispatcher->trigger('getCartRdfPaymentInfointegration', array($this->cart, &$paymentDetailFields));
+
+			// Legacy
 			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($this->integration, $this->submit_key, &$paymentDetailFields));
 
 			if (!$paymentDetailFields->uniqueid)

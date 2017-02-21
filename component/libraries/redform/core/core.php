@@ -1107,8 +1107,10 @@ class RdfCore extends JObject
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('pr.*')
+		$query->select('pr.*, c.invoice_id')
 			->from('#__rwf_payment_request AS pr')
+			->join('LEFT', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+			->join('LEFT', '#__rwf_cart AS c ON c.id = ci.cart_id')
 			->where('pr.submission_id IN (' . implode(', ', $sids) . ')')
 			->order('pr.id DESC');
 
