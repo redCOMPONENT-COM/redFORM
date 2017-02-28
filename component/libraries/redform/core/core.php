@@ -472,11 +472,12 @@ class RdfCore extends JObject
 	/**
 	 * adds extra fields from redmember to user object
 	 *
-	 * @param   object  &$user  object user
+	 * @param   object  &$user   object user
+	 * @param   int     $org_id  organization id
 	 *
 	 * @return object user
 	 */
-	protected function getRedmemberfields(&$user)
+	protected function getRedmemberfields(&$user, $org_id)
 	{
 		if (!REDFORM_REDMEMBER_INTEGRATION)
 		{
@@ -484,16 +485,25 @@ class RdfCore extends JObject
 		}
 
 		$rmUser = RedmemberApi::getUser($user->id);
+		$rmOrganization = null;
 
 		foreach ($rmUser->fields as $rmField)
 		{
 			$user->{$rmField->fieldcode} = $rmField->value;
 		}
 
-		if ($organizations = $rmUser->getOrganizations())
+		if ($org_id)
+		{
+			$rmOrganization = RedmemberApi::getOrganization($org_id);
+		}
+		elseif ($organizations = $rmUser->getOrganizations())
 		{
 			$firstOrg = reset($organizations);
 			$rmOrganization = RedmemberApi::getOrganization($firstOrg['organization_id']);
+		}
+
+		if ($rmOrganization)
+		{
 			$user->organization = $rmOrganization->name;
 
 			foreach ($rmOrganization->fields as $rmField)
@@ -806,7 +816,7 @@ class RdfCore extends JObject
 		}
 
 		// Get User data
-		$userData = $this->getUserData($user_id);
+		$userData = $this->getUserData($user_id, isset($options['organization_id']) ? $options['organization_id'] : null);
 
 		$fields = $this->prepareUserData($userData);
 
@@ -828,13 +838,14 @@ class RdfCore extends JObject
 	 * should get it from redmember
 	 *
 	 * @param   int  $user_id  user id
+	 * @param   int  $org_id   organization id
 	 *
 	 * @return JUser
 	 */
-	protected function getUserData($user_id)
+	protected function getUserData($user_id, $org_id = null)
 	{
 		$user = JFactory::getUser($user_id);
-		$this->getRedmemberfields($user);
+		$this->getRedmemberfields($user, $org_id);
 
 		return $user;
 	}
