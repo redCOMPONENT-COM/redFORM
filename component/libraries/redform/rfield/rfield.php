@@ -241,7 +241,9 @@ class RdfRfield extends JObject
 	 */
 	public function getXmlPath()
 	{
-		return __DIR__ . '/' . $this->type . '.xml';
+		$currentDir = dirname((new ReflectionClass(static::class))->getFileName());
+
+		return $currentDir . '/' . $this->type . '.xml';
 	}
 
 	/**

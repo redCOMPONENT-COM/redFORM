@@ -342,6 +342,12 @@
 					<option value="1">JYES</option>
 				</field>
 
+				<field name="notification_extra"
+					   type="textarea"
+					   filter="raw"
+					   label="COM_REDFORM_FORM_NOTIFICATION_EXTRA"
+					   description="COM_REDFORM_FORM_NOTIFICATION_EXTRA_DESC"/>
+
 			</fieldset>
 		</fields>
 	</fieldset>

@@ -120,6 +120,7 @@ class RedformViewPayment extends JViewLegacy
 	 */
 	private function displayFinal($tpl = null)
 	{
+		$settings = JComponentHelper::getParams('com_redform');
 		$document   = JFactory::getDocument();
 		$document->setTitle($document->getTitle() . ' - ' . JText::_('COM_REDFORM'));
 
@@ -134,6 +135,15 @@ class RedformViewPayment extends JViewLegacy
 			case 'processing':
 				$text = $form->paymentprocessing;
 				break;
+		}
+
+		if (!empty($form->params->get('notification_extra')))
+		{
+			$text .= $form->params->get('notification_extra');
+		}
+		elseif (!empty($settings->get('notification_extra')))
+		{
+			$text .= $settings->get('notification_extra');
 		}
 
 		$this->assign('text',  $text);

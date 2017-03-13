@@ -24,6 +24,12 @@
 			<option value="1">JYes</option>
 		</field>
 
+		<field name="notification_extra"
+			   type="textarea"
+			   filter="raw"
+			   label="COM_REDFORM_SETTINGS_NOTIFICATION_EXTRA"
+			   description="COM_REDFORM_SETTINGS_NOTIFICATION_EXTRA_DESC"/>
+
 		<field
 				name="upload_path"
 				type="text"
