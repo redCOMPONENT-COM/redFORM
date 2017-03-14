@@ -326,7 +326,15 @@ class RdfCore extends JObject
 			$this->loadMultipleFormScript();
 		}
 
-		$html = '<div class="redform-form ' . $form->classname . '">';
+		$formClass = $form->classname ?: '';
+
+		if (!empty($options['ajax_submission']))
+		{
+			RHelperAsset::load('ajax-submit.js', 'com_redform');
+			$formClass .= ($formClass ? ' ' : '' ) . 'redform-ajaxsubmit';
+		}
+
+		$html = '<div class="redform-form ' . $formClass . '">';
 
 		if ($form->showname)
 		{

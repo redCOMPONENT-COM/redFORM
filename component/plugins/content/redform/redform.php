@@ -94,34 +94,25 @@ class PlgContentRedform extends JPlugin
 
 		/* Get the form details */
 		$form = $this->getForm($parts[0]);
-		$check = $this->checkFormIsActive($form);
 
-		if (!($check === true))
+		if (!($form->checkFormStatus()))
 		{
-			return $check;
-		}
-
-		/* Check if the user is allowed to access the form */
-		$user = JFactory::getUser();
-
-		if (!in_array($form->access, $user->getAuthorisedViewLevels()))
-		{
-			return JText::_('PLG_CONTENT_REDFORM_FORM_DISPLAY_NOT_ALLOWED');
+			return $form->getStatusMessage();
 		}
 
 		/* Check if the number of sign ups is set, otherwise default to 1 */
 		$multiple = isset($parts[1]) ? $parts[1] : 1;
-
-		if (!isset($form->id))
-		{
-			return JText::_('COM_REDFORM_No_active_form_found');
-		}
 
 		$options = array();
 
 		if (isset($this->rwfparams['module_id']))
 		{
 			$options['module_id'] = $this->rwfparams['module_id'];
+		}
+
+		if ($form->params->get('ajax_submission') && !$form->activatepayment)
+		{
+			$options['ajax_submission'] = true;
 		}
 
 		return $this->rfcore->displayForm($form->id, null, $multiple, $options);
@@ -132,21 +123,11 @@ class PlgContentRedform extends JPlugin
 	 *
 	 * @param   int  $form_id  form id
 	 *
-	 * @return object
+	 * @return RdfEntityForm
 	 */
 	protected function getForm($form_id)
 	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('id, access, published')
-			->select('startdate, formexpires, enddate')
-			->from('#__rwf_forms')
-			->where('id = ' . $db->Quote($form_id));
-
-		$db->setQuery($query);
-
-		return $db->loadObject();
+		return RdfEntityForm::load($form_id);
 	}
 
 	/**

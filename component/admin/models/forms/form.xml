@@ -348,6 +348,18 @@
 					   label="COM_REDFORM_FORM_NOTIFICATION_EXTRA"
 					   description="COM_REDFORM_FORM_NOTIFICATION_EXTRA_DESC"/>
 
+
+				<field
+						name="ajax_submission"
+						type="radio"
+						class="btn-group btn-group-yesno"
+						default="0"
+						label="COM_REDFORM_FORM_AJAX_SUBMISSION"
+						description="COM_REDFORM_FORM_AJAX_SUBMISSION_DESC"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
 			</fieldset>
 		</fields>
 	</fieldset>

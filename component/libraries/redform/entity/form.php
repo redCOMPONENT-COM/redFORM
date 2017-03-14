@@ -89,16 +89,9 @@ class RdfEntityForm extends RdfEntityBase
 			return false;
 		}
 
-		if ($this->access > 1 && !$user->get('id'))
-		{
-			$this->statusMessage = JText::_('COM_REDFORM_STATUS_REGISTERED_ONLY');
-
-			return false;
-		}
-
 		if (!in_array($this->access, $user->getAuthorisedViewLevels()))
 		{
-			$this->statusMessage = JText::_('COM_REDFORM_STATUS_SPECIAL_ONLY');
+			$this->statusMessage = JText::_('LIB_REDFORM_FORM_ACCESS_CHECK_DENIED');
 
 			return false;
 		}

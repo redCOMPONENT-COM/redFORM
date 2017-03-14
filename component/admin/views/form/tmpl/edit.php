@@ -178,6 +178,15 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('submit_label', 'params'); ?>
 				</div>
 			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('ajax_submission', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('ajax_submission', 'params'); ?>
+				</div>
+			</div>
 		</div>
 
 		<div class="tab-pane" id="notification">
@@ -200,10 +209,10 @@ $isNew = (int) $this->item->id <= 0;
 				</div>
 				<div class="control-group">
 					<div class="control-label">
-                        <?php echo $this->form->getLabel('notification_extra', 'params'); ?>
+						<?php echo $this->form->getLabel('notification_extra', 'params'); ?>
 					</div>
 					<div class="controls">
-                        <?php echo $this->form->getInput('notification_extra', 'params'); ?>
+						<?php echo $this->form->getInput('notification_extra', 'params'); ?>
 					</div>
 				</div>
 				<div class="control-group">
