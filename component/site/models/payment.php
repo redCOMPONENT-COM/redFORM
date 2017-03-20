@@ -344,7 +344,7 @@ class RedFormModelPayment extends JModelLegacy
 
 		$form = $this->getForm();
 
-		if ($form->contactpersoninform)
+		if ($form->params->get('enable_contact_payment_notification'))
 		{
 			$addresses = RdfHelper::extractEmails($form->contactpersonemail, true);
 
