@@ -233,6 +233,18 @@ class RdfHelperTagsreplace
 	}
 
 	/**
+	 * replaces [paymentlink]
+	 *
+	 * @return string
+	 */
+	private function getTagPaymentlink()
+	{
+		$url = JURI::root() . RdfHelperRoute::getPaymentRoute($this->answers->getSubmitKey());
+
+		return JRoute::_($url);
+	}
+
+	/**
 	 * replaces [submitter_id]
 	 *
 	 * @return string
