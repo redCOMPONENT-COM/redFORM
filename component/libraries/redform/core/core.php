@@ -485,7 +485,7 @@ class RdfCore extends JObject
 	 *
 	 * @return object user
 	 */
-	protected function getRedmemberfields(&$user, $org_id)
+	protected function getRedmemberfields(&$user, $org_id = null)
 	{
 		if (!REDFORM_REDMEMBER_INTEGRATION)
 		{
