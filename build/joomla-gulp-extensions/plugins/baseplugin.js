@@ -18,22 +18,39 @@ var path       	= require('path');
 module.exports.addPlugin = function (group, name) {
 	var baseTask  = 'plugins.' + group + '.' + name;
 	var extPath   = '../plugins/' + group + '/' + name;
+	var mediaPath = extPath + '/media/plg_' + group + '_' + name;
 
 	// Clean
 	gulp.task('clean:' + baseTask, function() {
 		del.sync(config.wwwDir + '/plugins/' + group + '/' + name, {force : true});
 	});
 
+	// Clean: Media
+	gulp.task('clean:' + baseTask + ':media', function() {
+		del.sync(config.wwwDir + '/media/' + name, {force: true});
+	});
+
 	// Copy
-	gulp.task('copy:' + baseTask, ['clean:' + baseTask], function() {
+	gulp.task('copy:' + baseTask, ['clean:' + baseTask, 'copy:' + baseTask + ':media'], function() {
 		return gulp.src( extPath + '/**')
 			.pipe(gulp.dest(config.wwwDir + '/plugins/' + group + '/' + name));
+	});
+
+	// Copy: media
+	gulp.task('copy:' + baseTask + ':media', ['clean:' + baseTask + ':media'], function() {
+		console.log(mediaPath);
+		return gulp.src([
+			mediaPath + '/**'
+		])
+			.pipe(gulp.dest(config.wwwDir + '/media/plg_' + group + '_' + name))
+			.pipe(browserSync.reload({stream:true}));
 	});
 
 	// Watch
 	gulp.task('watch:' + baseTask,
 		[
-			'watch:' + baseTask + ':plugin'
+			'watch:' + baseTask + ':plugin',
+			'watch:' + baseTask + ':media'
 		],
 		function() {
 		});
@@ -41,6 +58,13 @@ module.exports.addPlugin = function (group, name) {
 	// Watch: plugin
 	gulp.task('watch:' + baseTask + ':plugin', function() {
 		gulp.watch(extPath + '/**', ['copy:' + baseTask]);
+	});
+
+	// Watch: media
+	gulp.task('watch:' + baseTask + ':media', function() {
+		gulp.watch([
+			extPath + '/media/**'
+		], ['copy:' + baseTask + ':media']);
 	});
 
 	// Release: plugin
