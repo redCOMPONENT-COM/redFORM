@@ -108,7 +108,7 @@ class RdfAnswers
 	/**
 	 * get form id
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	public function getFormId()
 	{
@@ -130,7 +130,7 @@ class RdfAnswers
 	/**
 	 * Get answer id
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	public function getAnswerId()
 	{
@@ -355,7 +355,7 @@ class RdfAnswers
 	/**
 	 * Is it a new submission
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isNew()
 	{
@@ -503,7 +503,7 @@ class RdfAnswers
 
 			if (!$db->execute())
 			{
-				/* We cannot save the answers, do not continue */
+				// We cannot save the answers, do not continue
 				if (stristr($db->getError(), 'duplicate entry'))
 				{
 					$mainframe->input->set('ALREADY_ENTERED', true);
@@ -514,7 +514,7 @@ class RdfAnswers
 					throw new Exception(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getError());
 				}
 
-				/* We cannot save the answers, do not continue */
+				// We cannot save the answers, do not continue
 				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_Cannot_save_form_answers') . ' ' . $db->getError());
 
 				return false;
@@ -532,7 +532,7 @@ class RdfAnswers
 	/**
 	 * Send notification to submitter
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function sendSubmitterNotification()
 	{
@@ -554,19 +554,19 @@ class RdfAnswers
 
 			if (JMailHelper::isEmailAddress($submitter_email))
 			{
-				/* Add the email address */
+				// Add the email address
 				$mailer->AddAddress($submitter_email);
 
 				$subject = $this->replaceTags($form->submissionsubject);
 				$mailer->setSubject($subject);
 
-				/* Mail submitter */
+				// Mail submitter
 				$submission_body = $form->submissionbody;
 				$submission_body = $this->replaceTags($submission_body);
 				$htmlmsg = RdfHelper::wrapMailHtmlBody($submission_body, $subject);
 				$mailer->MsgHTML($htmlmsg);
 
-				/* Send the mail */
+				// Send the mail
 				if (!$mailer->Send())
 				{
 					JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter)');
@@ -581,7 +581,7 @@ class RdfAnswers
 	/**
 	 * Send confirmation notification
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function sendConfirmationNotification()
 	{
@@ -609,7 +609,7 @@ class RdfAnswers
 		$htmlmsg = RdfHelper::wrapMailHtmlBody($body, $subject);
 		$mailer->MsgHTML($htmlmsg);
 
-		/* Send the mail */
+		// Send the mail
 		if (!$mailer->Send())
 		{
 			JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (confirmation notification)');
@@ -654,7 +654,7 @@ class RdfAnswers
 	/**
 	 * Fields validation
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	protected function validate()
 	{
@@ -677,7 +677,7 @@ class RdfAnswers
 	/**
 	 * Update submitters table
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	protected function updateSubmitter()
 	{
@@ -689,7 +689,7 @@ class RdfAnswers
 			throw new RuntimeException(JText::_('COM_REDFORM_ERROR_SUBMIT_KEY_MISSING'));
 		}
 
-		/* Prepare the submitter details */
+		// Prepare the submitter details
 		$row = RTable::getInstance('Submitter', 'RedformTable');
 
 		if ($this->sid)
@@ -714,14 +714,14 @@ class RdfAnswers
 		$row->submission_date = date('Y-m-d H:i:s', time());
 		$row->submitternewsletter = ($this->listnames && count($this->listnames)) ? 1 : 0;
 
-		/* pre-save checks */
+		// Pre-save checks
 		if (!$row->check())
 		{
 			RdfHelperLog::simpleLog(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data') . ': ' . $row->getError());
 			throw new RuntimeException(JText::_('COM_REDFORM_There_was_a_problem_checking_the_submitter_data'));
 		}
 
-		/* save the changes */
+		// Save the changes
 		if (!$row->store())
 		{
 			if (stristr($db->getError(), 'Duplicate entry'))
@@ -744,7 +744,7 @@ class RdfAnswers
 	/**
 	 * Write price corresponding to answers in submitters table
 	 *
-	 * @return bool|mixed
+	 * @return boolean|mixed
 	 */
 	protected function updateSubmitterPrice()
 	{
@@ -972,7 +972,7 @@ class RdfAnswers
 	/**
 	 * Get sid
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	public function getSid()
 	{

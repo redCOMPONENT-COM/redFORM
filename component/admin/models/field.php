@@ -175,7 +175,7 @@ class RedformModelField extends RModelAdmin
 	 *
 	 * @param   int  $id  value id
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function removeValue($id)
 	{
@@ -213,7 +213,7 @@ class RedformModelField extends RModelAdmin
 			$row->id = null;
 			$row->field = Jtext::_('COM_REDFORM_COPY_OF') . ' ' . $row->field;
 
-			/* pre-save checks */
+			// Pre-save checks
 			if (!$row->check())
 			{
 				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_checking_the_field_data'), 'error');
@@ -221,7 +221,7 @@ class RedformModelField extends RModelAdmin
 				return false;
 			}
 
-			/* save the changes */
+			// Save the changes
 			if (!$row->store())
 			{
 				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_field_data'), 'error');
@@ -239,13 +239,13 @@ class RedformModelField extends RModelAdmin
 
 			foreach ($res as $r)
 			{
-				/* Load the table */
+				// Load the table
 				$valuerow = $this->getTable('Value', 'RedformTable');
 				$valuerow->bind(get_object_vars($r));
 				$valuerow->id = null;
 				$valuerow->field_id = $row->id;
 
-				/* save the changes */
+				// Save the changes
 				if (!$valuerow->store())
 				{
 					$this->setError(JText::_('COM_REDFORM_There_was_a_problem_copying_field_options') . ' ' . $row->getError(), 'error');

@@ -352,7 +352,7 @@ class RdfCore extends JObject
 
 		$initialActive = $answers ? $multi : 1;
 
-		/* Loop through here for as many forms there are */
+		// Loop through here for as many forms there are
 		for ($formIndex = 1; $formIndex <= $initialActive; $formIndex++)
 		{
 			$indexAnswers = $answers ? $answers->getSingleSubmission($formIndex - 1) : false;
@@ -363,7 +363,7 @@ class RdfCore extends JObject
 				$html .= '<input type="hidden" name="submitter_id' . $formIndex . '" value="' . $submitter_id . '" />';
 			}
 
-			/* Make a collapsable box */
+			// Make a collapsable box
 			$html .= '<div class="formbox">';
 
 			$indexedFields = $this->prepareFieldsForIndex($fields, $formIndex, $indexAnswers);
@@ -401,7 +401,7 @@ class RdfCore extends JObject
 		// Get an unique id just for the submission
 		$uniq = uniqid();
 
-		/* Add the captcha, only if initial submit */
+		// Add the captcha, only if initial submit
 		if ($form->captchaactive && empty($submit_key))
 		{
 			JPluginHelper::importPlugin('redform_captcha');
@@ -480,7 +480,7 @@ class RdfCore extends JObject
 	/**
 	 * adds extra fields from redmember to user object
 	 *
-	 * @param   object  &$user   object user
+	 * @param   object  $user    object user
 	 * @param   int     $org_id  organization id
 	 *
 	 * @return object user
@@ -709,7 +709,7 @@ class RdfCore extends JObject
 	 * @param   mixed  $reference       submit_key or array of sids
 	 * @param   bool   $requires_email  email required, returns false if no email field
 	 *
-	 * @return bool|mixed
+	 * @return boolean|mixed
 	 */
 	public function getSubmissionContactEmail($reference, $requires_email = true)
 	{
@@ -899,7 +899,7 @@ class RdfCore extends JObject
 	 *
 	 * @param   string  $currency  currency to use as filtering
 	 *
-	 * @return bool|string
+	 * @return boolean|string
 	 */
 	protected function getGatewaySelect($currency)
 	{

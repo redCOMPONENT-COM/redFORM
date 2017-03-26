@@ -135,7 +135,7 @@ class RdfPaymentInfo
 	/**
 	 * Return payment info from integration
 	 *
-	 * @return null|Object|RdfPaymentInfointegration
+	 * @return null|object|RdfPaymentInfointegration
 	 */
 	protected function getPaymentInfointegration()
 	{

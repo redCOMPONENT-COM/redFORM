@@ -129,7 +129,7 @@ class RdfEntitySubmitter extends RdfEntityBase
 	/**
 	 * Is it paid
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isPaid()
 	{
@@ -173,7 +173,7 @@ class RdfEntitySubmitter extends RdfEntityBase
 		}
 
 		$submitters = array_map(
-			function($item)
+			function ($item)
 			{
 				$submitter = RdfEntitySubmitter::getInstance($item->id);
 				$submitter->bind($item);

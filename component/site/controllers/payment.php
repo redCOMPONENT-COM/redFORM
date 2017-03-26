@@ -80,7 +80,9 @@ class RedformControllerPayment extends JControllerLegacy
 		elseif (count($options) == 1)
 		{
 			$gateway = reset($options);
-			$this->setRedirect('index.php?option=com_redform&task=payment.process&reference=' . $cart->reference . '&gw=' . $gateway->value . $lang_v);
+			$this->setRedirect(
+				'index.php?option=com_redform&task=payment.process&reference=' . $cart->reference . '&gw=' . $gateway->value . $lang_v
+			);
 		}
 		else
 		{
@@ -294,13 +296,13 @@ class RedformControllerPayment extends JControllerLegacy
 		$key = $app->input->get('reference');
 		$gw = $app->input->get('gw', '');
 
-		RdfHelperLog::simpleLog('PAYMENT NOTIFICATION RECEIVED' . ': ' . $gw);
+		RdfHelperLog::simpleLog('PAYMENT NOTIFICATION RECEIVED: ' . $gw);
 
 		if (empty($gw))
 		{
-			RdfHelperLog::simpleLog('PAYMENT NOTIFICATION MISSING GATEWAY' . ': ' . $gw);
+			RdfHelperLog::simpleLog('PAYMENT NOTIFICATION MISSING GATEWAY: ' . $gw);
 
-			throw new Exception('PAYMENT NOTIFICATION MISSING GATEWAY' . ': ' . $gw, 404);
+			throw new Exception('PAYMENT NOTIFICATION MISSING GATEWAY: ' . $gw, 404);
 		}
 
 		$model = $this->getModel('payment');

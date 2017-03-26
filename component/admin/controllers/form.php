@@ -49,7 +49,8 @@ class RedformControllerForm extends RdfControllerForm
 					'showToolbar' => true,
 					'action' => 'index.php?option=com_redform&view=form&model=formfields',
 					'return' => base64_encode('index.php?option=com_redform&view=form&layout=edit&id='
-						. $formId . '&tab=fields&from_form=1')
+						. $formId . '&tab=fields&from_form=1'
+					)
 				)
 			);
 		}

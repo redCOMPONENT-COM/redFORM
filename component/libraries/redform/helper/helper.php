@@ -92,7 +92,7 @@ class RdfHelper
 	 *
 	 * @param   string  $date  date string to check
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public static function isNonNullDate($date)
 	{

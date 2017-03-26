@@ -327,7 +327,7 @@ abstract class RdfEntityBase
 	/**
 	 * Delete item
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function delete()
 	{

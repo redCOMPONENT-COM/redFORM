@@ -105,12 +105,12 @@ class RdfCoreFormSubmission
 
 		// Get data from post if not specified
 		$data = $formData;
-		$data['form_id']    = isset($data['form_id'])    ? $data['form_id'] : $app->input->getInt('form_id', 0);
-		$data['module_id']  = isset($data['module_id'])  ? $data['module_id'] : $app->input->getInt('module_id', 0);
+		$data['form_id']    = isset($data['form_id']) ? $data['form_id'] : $app->input->getInt('form_id', 0);
+		$data['module_id']  = isset($data['module_id']) ? $data['module_id'] : $app->input->getInt('module_id', 0);
 		$data['submit_key'] = isset($data['submit_key']) ? $data['submit_key'] : $app->input->getCmd('submit_key', false);
-		$data['nbactive']   = isset($data['nbactive'])   ? $data['nbactive'] : $app->input->getInt('nbactive', 1);
-		$data['currency']   = isset($data['currency'])   ? $data['currency'] : $app->input->getCmd('currency', '');
-		$data[$token]       = isset($data[$token])       ? $data[$token] : $app->input->getCmd($token, '');
+		$data['nbactive']   = isset($data['nbactive']) ? $data['nbactive'] : $app->input->getInt('nbactive', 1);
+		$data['currency']   = isset($data['currency']) ? $data['currency'] : $app->input->getCmd('currency', '');
+		$data[$token]       = isset($data[$token]) ? $data[$token] : $app->input->getCmd($token, '');
 
 		if (empty($data['submit_key']))
 		{
@@ -128,13 +128,13 @@ class RdfCoreFormSubmission
 			$this->moduleId = $data['module_id'];
 		}
 
-		/* Get the form details */
+		// Get the form details
 		$this->formId = $data['form_id'];
 		$form = $this->getForm();
 
 		$currency = $data['currency'] ? $data['currency'] : $form->currency;
 
-		/* Load the fields */
+		// Load the fields
 		$fieldlist = $this->getfields($form->id);
 
 		// Number of submitted active forms (min is 1)
@@ -142,7 +142,7 @@ class RdfCoreFormSubmission
 
 		$allanswers = array();
 
-		/* Loop through the different forms */
+		// Loop through the different forms
 		for ($signup = 1; $signup <= $totalforms; $signup++)
 		{
 			// New answers object
@@ -178,7 +178,7 @@ class RdfCoreFormSubmission
 				}
 			}
 
-			/* Create an array of values to store */
+			// Create an array of values to store
 			$postvalues = array();
 
 			if ($formData)
@@ -197,12 +197,12 @@ class RdfCoreFormSubmission
 				}
 			}
 
-			/* Build up field list */
+			// Build up field list
 			foreach ($fieldlist as $field)
 			{
 				$clone = clone $field;
 
-				/* Get the answers */
+				// Get the answers
 				if (isset($postvalues['field' . $field->id]))
 				{
 					$clone->setValue($postvalues['field' . $clone->id]);
@@ -298,7 +298,7 @@ class RdfCoreFormSubmission
 			$this->notifymaintainer($answers);
 		}
 
-		/* Send a submission mail to the submitters if set */
+		// Send a submission mail to the submitters if set
 		if ($answers->isNew() && $form->submitterinform)
 		{
 			foreach ($allanswers as $answers)
@@ -342,7 +342,7 @@ class RdfCoreFormSubmission
 			$answers->setCurrency($options['currency']);
 		}
 
-		/* Build up field list */
+		// Build up field list
 		foreach ($fields as $field)
 		{
 			$answers->addField($field);
@@ -366,7 +366,7 @@ class RdfCoreFormSubmission
 		// Send email to maintainers
 		$this->notifymaintainer($answers);
 
-		/* Send a submission mail to the submitters if set */
+		// Send a submission mail to the submitters if set
 		if ($form->submitterinform)
 		{
 			$this->notifysubmitter($answers);
@@ -382,7 +382,7 @@ class RdfCoreFormSubmission
 	 *
 	 * @param   string  $submitKey  submit key
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function hasActivePayment($submitKey = null)
 	{
@@ -427,7 +427,7 @@ class RdfCoreFormSubmission
 	 *
 	 * @param   RdfAnswers  $answers  answers
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function notifymaintainer($answers)
 	{
@@ -644,7 +644,7 @@ class RdfCoreFormSubmission
 	 *
 	 * @param   RdfAnswers  $answers  answers
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	protected function notifysubmitter(RdfAnswers $answers)
 	{
@@ -656,7 +656,7 @@ class RdfCoreFormSubmission
 	 *
 	 * @param   RdfAnswers  $answers  answers
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	protected function updateMailingList(RdfAnswers $answers)
 	{

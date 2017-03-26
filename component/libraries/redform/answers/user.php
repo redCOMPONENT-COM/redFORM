@@ -23,7 +23,7 @@ class RdfAnswersUser
 	 *
 	 * @param   int  $submitterId  submitter id
 	 *
-	 * @return bool|JUser
+	 * @return boolean|JUser
 	 *
 	 * @throws RdfExceptionCreateuser
 	 */
@@ -108,7 +108,7 @@ class RdfAnswersUser
 	 *
 	 * @param   int  $submitterId  submitter id
 	 *
-	 * @return bool|JUser
+	 * @return boolean|JUser
 	 *
 	 * @throws RdfExceptionCreateuser
 	 */

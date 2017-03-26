@@ -83,7 +83,7 @@ class RdfHelperNotifymaintainer
 				$replaceHelper->replace(JText::_('COM_REDFORM_MAINTAINER_NOTIFICATION_UPDATE_EMAIL_BODY'));
 		}
 
-		/* Add user submitted data if set */
+		// Add user submitted data if set
 		if ($form->contactpersonfullpost)
 		{
 			$htmlmsg .= $this->getAnswersHtmlTable();
