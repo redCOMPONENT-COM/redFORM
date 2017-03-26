@@ -28,8 +28,8 @@ class PlgInstallerRedform extends JPlugin
 	/**
 	 * Intercepts redevent update url
 	 *
-	 * @param   string  &$url      download url
-	 * @param   array   &$headers  headers
+	 * @param   string  $url      download url
+	 * @param   array   $headers  headers
 	 *
 	 * @return boolean
 	 */

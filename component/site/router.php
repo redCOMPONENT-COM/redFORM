@@ -11,7 +11,7 @@ defined('_JEXEC') or die('Restricted access');
 /**
  * Build sef route
  *
- * @param   array  &$query  query parts
+ * @param   array  $query  query parts
  *
  * @return array
  */

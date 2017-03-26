@@ -167,7 +167,7 @@ class RedFormModelPayment extends JModelLegacy
 			}
 		}
 
-		RdfHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND' . ': ' . $name);
+		RdfHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND: ' . $name);
 
 		return false;
 	}

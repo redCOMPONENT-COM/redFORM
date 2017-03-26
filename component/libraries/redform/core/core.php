@@ -480,7 +480,7 @@ class RdfCore extends JObject
 	/**
 	 * adds extra fields from redmember to user object
 	 *
-	 * @param   object  &$user   object user
+	 * @param   object  $user    object user
 	 * @param   int     $org_id  organization id
 	 *
 	 * @return object user

@@ -35,7 +35,7 @@ class RedformViewPayments extends RdfView
 		$this->state = $model->getState();
 		$this->pagination = $model->getPagination();
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**

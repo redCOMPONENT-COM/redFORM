@@ -48,13 +48,13 @@ class RedformViewSubmissionform extends RViewSite
 
 		$this->prepareDocument();
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**
 	 * Prepares the document.
 	 *
-	 * @return  void.
+	 * @return  void
 	 */
 	protected function prepareDocument()
 	{

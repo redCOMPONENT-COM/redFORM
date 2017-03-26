@@ -47,8 +47,8 @@ class PlgContentRedform extends JPlugin
 	 * looks for tags in the form {redform}1{/redform}, or {redform}2,3{/redform} (3 times form 2)
 	 *
 	 * @param   string  $context  The context of the content being passed to the plugin.
-	 * @param   object  &$row     The article object.  Note $article->text is also available
-	 * @param   object  &$params  The article params
+	 * @param   object  $row      The article object.  Note $article->text is also available
+	 * @param   object  $params   The article params
 	 * @param   int     $page     The 'page' number
 	 *
 	 * @return boolean true on success

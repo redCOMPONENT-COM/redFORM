@@ -330,7 +330,7 @@ class RdfEntityCart extends RdfEntityBase
 	/**
 	 * Prefill billing table
 	 *
-	 * @param   RedformTableBilling  &$table  table
+	 * @param   RedformTableBilling  $table  table
 	 *
 	 * @return true if some fields were filled
 	 */
