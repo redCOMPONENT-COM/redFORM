@@ -268,7 +268,7 @@ JS;
 
 		$price = array_reduce(
 			$submitters,
-			function($carry, $item)
+			function ($carry, $item)
 			{
 				$carry += $item->price;
 

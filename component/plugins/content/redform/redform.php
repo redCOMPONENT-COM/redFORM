@@ -86,13 +86,13 @@ class PlgContentRedform extends JPlugin
 	 */
 	protected function buildForm($match)
 	{
-		/* Load the language file as Joomla doesn't do it */
+		// Load the language file as Joomla doesn't do it
 		$language = JFactory::getLanguage();
 		$language->load('plg_content_redform');
 
 		$parts = explode(',', $match);
 
-		/* Get the form details */
+		// Get the form details
 		$form = $this->getForm($parts[0]);
 
 		if (!($form->checkFormStatus()))
@@ -100,7 +100,7 @@ class PlgContentRedform extends JPlugin
 			return $form->getStatusMessage();
 		}
 
-		/* Check if the number of sign ups is set, otherwise default to 1 */
+		// Check if the number of sign ups is set, otherwise default to 1
 		$multiple = isset($parts[1]) ? $parts[1] : 1;
 
 		$options = array();

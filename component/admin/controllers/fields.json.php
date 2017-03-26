@@ -40,7 +40,7 @@ class RedformControllerFields extends RControllerAdmin
 		$fields = $model->getItems();
 
 		$fields = array_map(
-			function($field)
+			function ($field)
 			{
 				return array('value' => $field->id, 'text' => $field->field);
 			},

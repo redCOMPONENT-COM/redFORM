@@ -52,7 +52,7 @@ abstract class RdfPaymentPlugin extends RPlugin
 	 * @param   array   &$gateways  array of current gateways
 	 * @param   object  $details    details for payment
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function onGetGateway(&$gateways, $details = null)
 	{

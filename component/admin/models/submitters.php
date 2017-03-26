@@ -228,7 +228,7 @@ class RedformModelSubmitters extends RModelList
 	/**
 	 * Get a default form id
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	protected function getDefaultFormId()
 	{
@@ -250,7 +250,7 @@ class RedformModelSubmitters extends RModelList
 	 *
 	 * @param   int  $id  form id
 	 *
-	 * @return bool|mixed
+	 * @return boolean|mixed
 	 */
 	public function getFormInfo($id = null)
 	{

@@ -135,7 +135,7 @@ class RdfPaymentTurnsubmission
 	{
 		return array_reduce(
 			$this->paidItems,
-			function($total, $item)
+			function ($total, $item)
 			{
 				return $total += $item->price;
 			}
@@ -151,7 +151,7 @@ class RdfPaymentTurnsubmission
 	{
 		return array_reduce(
 			$this->paidItems,
-			function($total, $item)
+			function ($total, $item)
 			{
 				return $total += $item->vat;
 			}

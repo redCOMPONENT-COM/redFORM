@@ -64,7 +64,6 @@ codecept.phar
 selenium.log
 selenium-errors.log
 tests/_support/_generated/*
-tests/checkers/phpcs/*
 
 # Never ignore
 !.gitignore

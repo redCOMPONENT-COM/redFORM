@@ -31,7 +31,7 @@ class PlgInstallerRedform extends JPlugin
 	 * @param   string  &$url      download url
 	 * @param   array   &$headers  headers
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function onInstallerBeforePackageDownload(&$url, &$headers)
 	{

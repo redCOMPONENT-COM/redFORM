@@ -50,7 +50,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * Is billing required ?
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isRequiredBilling()
 	{
@@ -207,7 +207,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * return submitters
 	 *
-	 * @return bool|mixed|null
+	 * @return boolean|mixed|null
 	 */
 	public function getSubmitters()
 	{
@@ -254,7 +254,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * send notification on payment received
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function notifyPaymentReceived()
 	{
@@ -267,7 +267,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * send email to submitter on payment received
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	private function _notifySubmitter()
 	{
@@ -332,7 +332,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * send email to form contact on payment received
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	private function _notifyFormContact()
 	{

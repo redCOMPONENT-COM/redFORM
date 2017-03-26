@@ -129,7 +129,7 @@ JS;
 	 *
 	 * @param   int  $signup  signup id
 	 *
-	 * @return bool|string
+	 * @return boolean|string
 	 *
 	 * @throws RuntimeException
 	 */
@@ -169,7 +169,7 @@ JS;
 		// Make sure we have a unique name for file
 		$dest_filename = uniqid() . '_' . basename(JFile::makeSafe($upload['name']));
 
-		/* Start processing uploaded file */
+		// Start processing uploaded file
 		if (is_uploaded_file($src_file))
 		{
 			if (move_uploaded_file($src_file, $fullpath . '/' . $dest_filename))
@@ -188,13 +188,13 @@ JS;
 	/**
 	 * Return path to storage folder, create if necessary
 	 *
-	 * @return bool|string
+	 * @return boolean|string
 	 *
 	 * @throws RuntimeException
 	 */
 	private function getStoragePath()
 	{
-		/* Check if the folder exists */
+		// Check if the folder exists
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 

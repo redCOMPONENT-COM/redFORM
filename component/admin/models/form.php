@@ -95,14 +95,14 @@ class RedformModelForm extends RModelAdmin
 	{
 		$db = JFactory::getDBO();
 
-		/* construct form name */
+		// Construct form name
 		$q = "SHOW TABLES LIKE " . $db->Quote($db->getPrefix() . 'rwf_forms_' . $formid);
 		$db->setQuery($q);
 		$result = $db->loadColumn();
 
 		if (count($result) == 0)
 		{
-			/* Table doesn't exist, need to create it */
+			// Table doesn't exist, need to create it
 			$q = "CREATE TABLE " . $db->quoteName('#__rwf_forms_' . $formid) . " (";
 			$q .= $db->quoteName('id') . " INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ";
 			$q .= ") COMMENT = " . $db->Quote('redFORMS Form ' . $formid);
@@ -122,7 +122,7 @@ class RedformModelForm extends RModelAdmin
 	 *
 	 * @param   array  $cids  id(s) of form(s) to clone
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @throws Exception
 	 */
@@ -143,7 +143,7 @@ class RedformModelForm extends RModelAdmin
 				throw new Exception('Failed copying form');
 			}
 
-			/* Add form table */
+			// Add form table
 			$this->AddFormTable($form->id);
 
 			// Get associated fields
