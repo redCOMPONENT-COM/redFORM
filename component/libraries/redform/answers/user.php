@@ -233,10 +233,13 @@ class RdfAnswersUser
 		$message = str_replace('[password]', $password, $message);
 		$message = str_replace('[siteurl]', $siteURL, $message);
 
-		$message = html_entity_decode($message, ENT_QUOTES);
-
 		$mail = RdfHelper::getMailer();
-		$mail->sendMail($mailfrom, $fromname, $email, $subject, $message);
+		$mail->setSender(array($mailfrom, $fromname));
+		$mail->addAddress($email);
+		$mail->setSubject($subject);
+		$htmlmsg = RdfHelper::wrapMailHtmlBody($message, $subject);
+		$mail->MsgHTML($htmlmsg);
+		$mail->Send();
 
 		// Send notification to all administrators
 		$subject2 = JText::sprintf('LIB_REDFORM_CREATE_USER_EMAIL_SUBJECT', $name, $sitename);
@@ -258,8 +261,14 @@ class RdfAnswersUser
 				$name,
 				$sitename
 			);
-			$message2 = html_entity_decode($emailBody, ENT_QUOTES);
-			$mail->sendMail($mailfrom, $fromname, $row->email, $subject2, $message2);
+
+			$mail->clearAddresses();
+			$mail->setSender(array($mailfrom, $fromname));
+			$mail->addAddress($row->email);
+			$mail->setSubject($subject2);
+			$htmlmsg = RdfHelper::wrapMailHtmlBody($emailBody, $subject2);
+			$mail->MsgHTML($htmlmsg);
+			$mail->Send();
 		}
 	}
 }
