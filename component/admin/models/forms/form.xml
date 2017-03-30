@@ -49,6 +49,7 @@
 				format="%Y-%m-%d  %H:%M:%S"
 				label="COM_REDFORM_FORM_START_DATE"
 				description="COM_REDFORM_FORM_START_DATE_TIP"
+				filter="user_utc"
 				/>
 		<field
 				name="formexpires"
@@ -67,6 +68,7 @@
                 format="%Y-%m-%d  %H:%M:%S"
 				label="COM_REDFORM_FORM_END_DATE"
 				description="COM_REDFORM_FORM_END_DATE_TIP"
+				filter="user_utc"
 				showon="formexpires:1"
 				/>
 		<field
