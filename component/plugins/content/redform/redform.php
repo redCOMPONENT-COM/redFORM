@@ -129,29 +129,4 @@ class PlgContentRedform extends JPlugin
 	{
 		return RdfEntityForm::load($form_id);
 	}
-
-	/**
-	 * checks if the form is active
-	 *
-	 * @param   object  $form  form object
-	 *
-	 * @return true if active, error message if not
-	 */
-	protected function checkFormIsActive($form)
-	{
-		if (!$form->published)
-		{
-			return JText::_('PLG_CONTENT_REDFORMFORM_NOT_PUBLISHED');
-		}
-		elseif (strtotime($form->startdate) > time())
-		{
-			return JText::_('PLG_CONTENT_REDFORM_FORM_NOT_STARTED');
-		}
-		elseif ($form->formexpires && strtotime($form->enddate) < time())
-		{
-			return JText::_('PLG_CONTENT_REDFORM_FORM_EXPIRED');
-		}
-
-		return true;
-	}
 }

@@ -75,14 +75,16 @@ class RdfEntityForm extends RdfEntityBase
 			return false;
 		}
 
-		if (strtotime($this->startdate) > time())
+		$now = JFactory::getDate();
+
+		if (JFactory::getDate($this->startdate) > $now)
 		{
 			$this->statusMessage = JText::_('COM_REDFORM_STATUS_NOT_STARTED');
 
 			return false;
 		}
 
-		if ($this->formexpires && strtotime($this->enddate) < time())
+		if ($this->formexpires && JFactory::getDate($this->enddate) < $now)
 		{
 			$this->statusMessage = JText::_('COM_REDFORM_STATUS_EXPIRED');
 

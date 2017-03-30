@@ -109,14 +109,16 @@ class RdfCoreModelForm extends RModel
 			return false;
 		}
 
-		if (strtotime($form->startdate) > time())
+		$now = JFactory::getDate();
+
+		if (JFactory::getDate($form->startdate) > $now)
 		{
 			$this->setError(JText::_('COM_REDFORM_STATUS_NOT_STARTED'));
 
 			return false;
 		}
 
-		if ($form->formexpires && strtotime($form->enddate) < time())
+		if ($form->formexpires && JFactory::getDate($form->enddate) < $now)
 		{
 			$this->setError(JText::_('COM_REDFORM_STATUS_EXPIRED'));
 
