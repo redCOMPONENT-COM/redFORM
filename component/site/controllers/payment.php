@@ -318,15 +318,23 @@ class RedformControllerPayment extends JControllerLegacy
 			// The payment was received !
 			$app->input->set('state', 'accepted');
 
-			if (!$alreadypaid)
+			if ($alreadypaid)
 			{
-				$model->setPaymentRequestAsPaid();
+				// Dont' forward to integration, to prevent side effects. This should only happen for async callbacks anyway.
+				$app->enqueueMessage('COM_REDFORM_PAYMENT_NOTIFICATION_RECEIVED_ALREADY_PAID', 'notice');
 
-				// Built-in notifications
-				if (!$model->notifyPaymentReceived())
-				{
-					$app->enqueueMessage($model->getError(), 'error');
-				}
+				$app->input->set('view', 'payment');
+				$app->input->set('layout', 'final');
+
+				return $this->display();
+			}
+
+			$model->setPaymentRequestAsPaid();
+
+			// Built-in notifications
+			if (!$model->notifyPaymentReceived())
+			{
+				$app->enqueueMessage($model->getError(), 'error');
 			}
 		}
 		else
