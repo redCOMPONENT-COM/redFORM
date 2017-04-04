@@ -84,6 +84,8 @@ class plgRedformEconomic extends JPlugin
 	/**
 	 * Create invoice from payment request
 	 *
+	 * use: index.php?option=com_ajax&group=redform&plugin=Createinvoice&format=raw&id=<prid>
+	 *
 	 * @return void
 	 */
 	public function onAjaxCreateinvoice()

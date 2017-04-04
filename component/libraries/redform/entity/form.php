@@ -75,30 +75,25 @@ class RdfEntityForm extends RdfEntityBase
 			return false;
 		}
 
-		if (strtotime($this->startdate) > time())
+		$now = JFactory::getDate();
+
+		if (JFactory::getDate($this->startdate) > $now)
 		{
 			$this->statusMessage = JText::_('COM_REDFORM_STATUS_NOT_STARTED');
 
 			return false;
 		}
 
-		if ($this->formexpires && strtotime($this->enddate) < time())
+		if ($this->formexpires && JFactory::getDate($this->enddate) < $now)
 		{
 			$this->statusMessage = JText::_('COM_REDFORM_STATUS_EXPIRED');
 
 			return false;
 		}
 
-		if ($this->access > 1 && !$user->get('id'))
-		{
-			$this->statusMessage = JText::_('COM_REDFORM_STATUS_REGISTERED_ONLY');
-
-			return false;
-		}
-
 		if (!in_array($this->access, $user->getAuthorisedViewLevels()))
 		{
-			$this->statusMessage = JText::_('COM_REDFORM_STATUS_SPECIAL_ONLY');
+			$this->statusMessage = JText::_('LIB_REDFORM_FORM_ACCESS_CHECK_DENIED');
 
 			return false;
 		}
@@ -163,7 +158,7 @@ class RdfEntityForm extends RdfEntityBase
 	/**
 	 * Check if form has fields in multiple sections
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function hasMultipleSections()
 	{

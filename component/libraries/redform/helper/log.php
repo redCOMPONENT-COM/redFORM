@@ -40,7 +40,7 @@ class RdfHelperLog
 	/**
 	 * Clear the logs
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public static function clear()
 	{

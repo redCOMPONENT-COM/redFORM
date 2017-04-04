@@ -154,6 +154,16 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('enddate'); ?>
 				</div>
 			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('contactpersonemail'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('contactpersonemail'); ?>
+				</div>
+			</div>
+
 			<div class="control-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('captchaactive'); ?>
@@ -178,6 +188,15 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('submit_label', 'params'); ?>
 				</div>
 			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('ajax_submission', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('ajax_submission', 'params'); ?>
+				</div>
+			</div>
 		</div>
 
 		<div class="tab-pane" id="notification">
@@ -200,10 +219,26 @@ $isNew = (int) $this->item->id <= 0;
 				</div>
 				<div class="control-group">
 					<div class="control-label">
+						<?php echo $this->form->getLabel('notification_extra', 'params'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('notification_extra', 'params'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
 						<?php echo $this->form->getLabel('redirect'); ?>
 					</div>
 					<div class="controls">
 						<?php echo $this->form->getInput('redirect'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('contactpersoninform'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('contactpersoninform'); ?>
 					</div>
 				</div>
 				<div class="control-group">
@@ -228,22 +263,6 @@ $isNew = (int) $this->item->id <= 0;
 					</div>
 					<div class="controls">
 						<?php echo $this->form->getInput('admin_notification_email_body'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('contactpersoninform'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('contactpersoninform'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('contactpersonemail'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('contactpersonemail'); ?>
 					</div>
 				</div>
 				<div class="control-group">
@@ -355,6 +374,14 @@ $isNew = (int) $this->item->id <= 0;
 				</div>
 				<div class="controls">
 					<?php echo $this->form->getInput('requirebilling'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('enable_contact_payment_notification', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('enable_contact_payment_notification', 'params'); ?>
 				</div>
 			</div>
 			<div class="control-group">

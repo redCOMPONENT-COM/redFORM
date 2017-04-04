@@ -24,6 +24,12 @@
 			<option value="1">JYes</option>
 		</field>
 
+		<field name="notification_extra"
+			   type="textarea"
+			   filter="raw"
+			   label="COM_REDFORM_SETTINGS_NOTIFICATION_EXTRA"
+			   description="COM_REDFORM_SETTINGS_NOTIFICATION_EXTRA_DESC"/>
+
 		<field
 				name="upload_path"
 				type="text"
@@ -72,10 +78,11 @@
 		</field>
 		<field
 				name="form_layout"
-				type="list" default="j25" label="COM_REDFORM_SETTINGS_FORM_LAYOUT"
+				type="list" default="" label="COM_REDFORM_SETTINGS_FORM_LAYOUT"
 				description="COM_REDFORM_SETTINGS_FORM_LAYOUT_DESC">
 			<option value="">COM_REDFORM_SETTINGS_FORM_LAYOUT_REGULAR</option>
 			<option value="bootstrap">COM_REDFORM_SETTINGS_FORM_LAYOUT_BOOTSTRAP</option>
+			<option value="legacy">COM_REDFORM_SETTINGS_FORM_LAYOUT_LEGACY</option>
 		</field>
 
 		<field type="spacer" hr="true"/>

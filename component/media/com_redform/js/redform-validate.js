@@ -10,7 +10,7 @@
  *
  * @since  3.0
  */
-var RedFormValidator = function() {
+var RedFormValidator = function($) {
 	"use strict";
 
 	var inputEmail;
@@ -26,7 +26,7 @@ var RedFormValidator = function() {
  	};
 
  	var findLabel = function(id, form){
- 	 	var $label, $form = jQuery(form);
+ 	 	var $label, $form = $(form);
  	 	if (!id) {
  	 	 	return false;
  	 	}
@@ -64,8 +64,7 @@ var RedFormValidator = function() {
  	};
 
  	var validate = function(el) {
-		setElementError(el, '');
- 	 	var $el = jQuery(el), tagName, handler;
+ 	 	var $el = $(el), tagName, handler;
  	 	// Ignore the element if its currently disabled, because are not submitted for the http-request. For those case return always true.
  	 	if ($el.attr('disabled')) {
  	 	 	handleResponse(true, $el);
@@ -73,6 +72,8 @@ var RedFormValidator = function() {
  	 	}
  	 	// If the field is required make sure it has a value
  	 	if ($el.attr('required') || $el.hasClass('required')) {
+ 	 		// Reset state before check
+			setElementError(el, '');
  	 	 	tagName = $el.prop("tagName").toLowerCase();
  	 	 	if (tagName === 'fieldset' && ($el.hasClass('radio') || $el.hasClass('checkboxes'))) {
  	 	 	 	if (!$el.find('input:checked').length){
@@ -80,7 +81,7 @@ var RedFormValidator = function() {
  	 	 	 	 	return false;
  	 	 	 	}
  	 	 	//If element has class placeholder that means it is empty.
- 	 	 	} else if (!$el.val().trim() || $el.hasClass('placeholder') || ($el.attr('type') === 'checkbox' && !$el.is(':checked'))) {
+ 	 	 	} else if ($el.val().trim() === "" || $el.hasClass('placeholder') || ($el.attr('type') === 'checkbox' && !$el.is(':checked'))) {
 				setElementError(el, Joomla.JText._('LIB_REDFORM_FORM_VALIDATION_ERROR_FIELD_IS_REQUIRED'));
  	 	 	 	handleResponse(false, $el);
  	 	 	 	return false;
@@ -94,6 +95,8 @@ var RedFormValidator = function() {
  	 	}
  	 	// Check the additional validation types
  	 	if ((handler) && (handler !== 'none') && (handlers[handler]) && $el.val()) {
+			// Reset state before check
+			setElementError(el, '');
  	 	 	// Execute the validation handler and return result
  	 	 	if (handlers[handler].exec($el.val(), $el) !== true) {
  	 	 	 	handleResponse(false, $el);
@@ -108,7 +111,7 @@ var RedFormValidator = function() {
  	var isValid = function(form) {
  		var fields, valid = true, message, error, label, invalid = [], i, l;
  	 	// Validate form fields
- 	 	fields = jQuery(form).find('input, textarea, select, fieldset');
+ 	 	fields = $(form).find('input, textarea, select, fieldset');
  	 	for (i = 0, l = fields.length; i < l; i++) {
  	 	 	if (validate(fields[i]) === false) {
  	 	 	 	valid = false;
@@ -116,7 +119,7 @@ var RedFormValidator = function() {
  	 	 	}
  	 	}
  	 	// Run custom form validators if present
- 	 	jQuery.each(custom, function(key, validator) {
+ 	 	$.each(custom, function(key, validator) {
  	 	 	if (validator.exec() !== true) {
  	 	 	 	valid = false;
  	 	 	}
@@ -125,7 +128,7 @@ var RedFormValidator = function() {
  	 	 	message = Joomla.JText._('LIB_REDFORM_VALIDATION_FIELD_INVALID');
  	 	 	error = {"error": []};
  	 	 	for (i = invalid.length - 1; i >= 0; i--) {
- 	 	 		label = jQuery(invalid[i]).data("label");
+ 	 	 		label = $(invalid[i]).data("label");
  	 			if (label) {
 					var fieldmessage = message + label.text().replace("*", "");
 
@@ -136,18 +139,20 @@ var RedFormValidator = function() {
  	 	 			error.error.push(fieldmessage);
 				}
  	 	 	}
- 	 	 	Joomla.renderMessages(error);
+
+ 	 	 	// Scroll to first invalid field
+			$(form).find('.invalid').get(0).scrollIntoView(true);
  	 	}
  	 	return valid;
  	};
 
  	var attachToForm = function(form) {
  	 	var inputFields = [], elements,
- 	 		$form = jQuery(form);
+ 	 		$form = $(form);
  	 	// Iterate through the form object and attach the validate method to all input fields.
  	 	elements = $form.find('input, textarea, select, fieldset, button');
  	 	for (var i = 0, l = elements.length; i < l; i++) {
- 	 	 	var $el = jQuery(elements[i]), tagName = $el.prop("tagName").toLowerCase();
+ 	 	 	var $el = $(elements[i]), tagName = $el.prop("tagName").toLowerCase();
  	 	 	// Attach isValid method to submit button
  	 	 	if ((tagName === 'input' || tagName === 'button') && ($el.attr('type') === 'submit' || $el.attr('type') === 'image')) {
  	 	 	 	if ($el.hasClass('validate')) {
@@ -177,9 +182,9 @@ var RedFormValidator = function() {
 		if ($form.find('.checkboxes.required')) {
 
 			$form.find('.checkboxes.required input').change(function(){
-				var fieldset = jQuery(this).parents('fieldset').first();
+				var fieldset = $(this).parents('fieldset').first();
 				fieldset.removeClass('invalid');
-				jQuery(fieldset).find('input').get().each(function(input){
+				$(fieldset).find('input').get().each(function(input){
 					input.setCustomValidity('');
 				});
 			});
@@ -188,7 +193,7 @@ var RedFormValidator = function() {
 				var valid = true;
 
 				$form.find('.checkboxes.required').get().each(function(fieldset){
-					var $fieldset = jQuery(fieldset);
+					var $fieldset = $(fieldset);
 					if ($fieldset.find(':checked').length === 0) {
 						$fieldset.addClass('invalid');
 						var boxes = $fieldset.find('input').get();
@@ -219,10 +224,16 @@ var RedFormValidator = function() {
 		if (typeof el.setCustomValidity === "function") {
 			el.setCustomValidity(msg);
 		}
+
+		$(el).closest('.field').find('.field-inline-error').remove();
+
+		if (msg) {
+			$(el).closest('.field').append('<div class="field-inline-error">' + msg + '</div>');
+		}
 	};
 
 	// Initialize handlers and attach validation to form
- 	jQuery(function() {
+ 	$(function() {
  	 	inputEmail = (function() {
  	 	 	var input = document.createElement("input");
  	 	 	input.setAttribute("type", "email");
@@ -284,8 +295,24 @@ var RedFormValidator = function() {
 				return true;
 			}
 
+			var format = $(element).attr('dateformat');
+
+			if (format) {
+				// parseDate is added to Date prototype by joomla calendar script (dynarch jscal)
+				var val = Date.parseDate(value, format);
+			}
+			else {
+				var val = new Date(value);
+			}
+
+			// Check it was parse properly
+			if (!val.getTime()) {
+				setElementError(element.get(0), Joomla.JText._('LIB_REDFORM_VALIDATION_ERROR_FUTURE_DATE'));
+
+				return false;
+			}
+
 			var today = new Date(new Date().toDateString());
-			var val = new Date(value);
 
 			var result = val >= today;
 
@@ -300,7 +327,7 @@ var RedFormValidator = function() {
 		});
 
 		// Attach to forms with class 'form-validate'
-		var forms = jQuery('form.redform-validate');
+		var forms = $('form.redform-validate');
 		for (var i = 0, l = forms.length; i < l; i++) {
 			attachToForm(forms[i]);
 		}
@@ -310,6 +337,7 @@ var RedFormValidator = function() {
 		isValid : isValid,
 		validate : validate,
 		setHandler : setHandler,
+		setElementError : setElementError,
 		attachToForm : attachToForm,
 		custom: custom
 	};
@@ -317,5 +345,5 @@ var RedFormValidator = function() {
 
 document.redformvalidator = null;
 jQuery(function() {
-	document.redformvalidator = RedFormValidator();
+	document.redformvalidator = RedFormValidator(jQuery);
 });

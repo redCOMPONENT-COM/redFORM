@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
-/* No direct access */
+// No direct access
 defined('_JEXEC') or die('Restricted access');
 
 /**
@@ -35,7 +35,7 @@ class RedformViewPayments extends RdfView
 		$this->state = $model->getState();
 		$this->pagination = $model->getPagination();
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**

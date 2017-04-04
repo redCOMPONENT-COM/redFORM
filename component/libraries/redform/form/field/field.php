@@ -63,7 +63,7 @@ class RedformFormFieldField extends JFormFieldList
 			if ($fields)
 			{
 				$excludeFields = array_map(
-					function($item)
+					function ($item)
 					{
 						return $item->field_id;
 					},

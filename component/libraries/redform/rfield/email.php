@@ -139,7 +139,7 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	/**
 	 * Check that data is valid
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function validate()
 	{

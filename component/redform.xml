@@ -8,7 +8,7 @@
 	<copyright>(c) 2008 - 2016 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
 	<version>3.3.17</version>
-	<redcore version="1.8.8" />
+	<redcore version="1.8.9" />
 	<tag>##VERSION##</tag>
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
@@ -42,6 +42,7 @@
 		<filename>index.html</filename>
 		<filename>redform.php</filename>
 		<filename>redform.defines.php</filename>
+		<filename>router.php</filename>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
 		<folder>language</folder>

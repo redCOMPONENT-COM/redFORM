@@ -38,7 +38,7 @@ class RedformViewPayment extends JViewLegacy
 			return $this->displayFinal($tpl);
 		}
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**
@@ -64,7 +64,7 @@ class RedformViewPayment extends JViewLegacy
 		{
 			echo JText::_('COM_REDFORM_PAYMENT_ERROR_MISSING_REFERENCE');
 
-			return;
+			return false;
 		}
 
 		$document->setTitle($document->getTitle() . ' - ' . JText::_('COM_REDFORM'));
@@ -108,7 +108,7 @@ class RedformViewPayment extends JViewLegacy
 			RdfHelperAnalytics::trackEvent($event);
 		}
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**
@@ -120,6 +120,7 @@ class RedformViewPayment extends JViewLegacy
 	 */
 	private function displayFinal($tpl = null)
 	{
+		$settings = JComponentHelper::getParams('com_redform');
 		$document   = JFactory::getDocument();
 		$document->setTitle($document->getTitle() . ' - ' . JText::_('COM_REDFORM'));
 
@@ -136,8 +137,17 @@ class RedformViewPayment extends JViewLegacy
 				break;
 		}
 
+		if (!empty($form->params->get('notification_extra')))
+		{
+			$text .= $form->params->get('notification_extra');
+		}
+		elseif (!empty($settings->get('notification_extra')))
+		{
+			$text .= $settings->get('notification_extra');
+		}
+
 		$this->assign('text',  $text);
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 }

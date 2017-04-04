@@ -30,10 +30,23 @@ class RedformModelNotification extends RModel
 			$submitKey = JFactory::getApplication()->input->get('submitKey');
 		}
 
+		$settings = JComponentHelper::getParams('com_redform');
+
 		$rdfCore = new RdfCore;
 		$answers = $rdfCore->getAnswers($submitKey)->getSingleSubmission();
-		$form = $rdfCore->getForm($answers->getFormId());
+		$form = RdfEntityForm::load($answers->getFormId());
 
-		return $answers->replaceTags($form->notificationtext);
+		$notification = $form->notificationtext;
+
+		if (!empty($form->params->get('notification_extra')))
+		{
+			$notification .= $form->params->get('notification_extra');
+		}
+		elseif (!empty($settings->get('notification_extra')))
+		{
+			$notification .= $settings->get('notification_extra');
+		}
+
+		return $answers->replaceTags($notification);
 	}
 }

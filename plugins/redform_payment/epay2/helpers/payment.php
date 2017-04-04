@@ -48,7 +48,7 @@ class PaymentEpay2 extends RdfPaymentHelper
 			'merchantnumber' => $this->params->get('EPAY_MERCHANTNUMBER'),
 			'currency' => $currency,
 			'amount' => round($price * 100),
-			'orderid' => $request->uniqueid,
+			'orderid' => $request->invoice_id,
 			'windowstate' => $this->params->get('windowstate'),
 			'paymentcollection' => $this->params->get('paymentcollection'),
 			'lockpaymentcollection' => $this->params->get('lockpaymentcollection'),

@@ -23,7 +23,7 @@ class RdfAnswersUser
 	 *
 	 * @param   int  $submitterId  submitter id
 	 *
-	 * @return bool|JUser
+	 * @return boolean|JUser
 	 *
 	 * @throws RdfExceptionCreateuser
 	 */
@@ -108,7 +108,7 @@ class RdfAnswersUser
 	 *
 	 * @param   int  $submitterId  submitter id
 	 *
-	 * @return bool|JUser
+	 * @return boolean|JUser
 	 *
 	 * @throws RdfExceptionCreateuser
 	 */
@@ -205,7 +205,7 @@ class RdfAnswersUser
 	 *
 	 * @return void
 	 */
-	protected function sendUserCreatedMail($user, $password)
+	public static function sendUserCreatedMail($user, $password)
 	{
 		$lang = JFactory::getLanguage();
 		$lang->load('com_user');
@@ -231,11 +231,15 @@ class RdfAnswersUser
 		$message = str_replace('[fullname]', $name, $message);
 		$message = str_replace('[username]', $username, $message);
 		$message = str_replace('[password]', $password, $message);
-
-		$message = html_entity_decode($message, ENT_QUOTES);
+		$message = str_replace('[siteurl]', $siteURL, $message);
 
 		$mail = RdfHelper::getMailer();
-		$mail->sendMail($mailfrom, $fromname, $email, $subject, $message);
+		$mail->setSender(array($mailfrom, $fromname));
+		$mail->addAddress($email);
+		$mail->setSubject($subject);
+		$htmlmsg = RdfHelper::wrapMailHtmlBody($message, $subject);
+		$mail->MsgHTML($htmlmsg);
+		$mail->Send();
 
 		// Send notification to all administrators
 		$subject2 = JText::sprintf('LIB_REDFORM_CREATE_USER_EMAIL_SUBJECT', $name, $sitename);
@@ -257,8 +261,14 @@ class RdfAnswersUser
 				$name,
 				$sitename
 			);
-			$message2 = html_entity_decode($emailBody, ENT_QUOTES);
-			$mail->sendMail($mailfrom, $fromname, $row->email, $subject2, $message2);
+
+			$mail->clearAddresses();
+			$mail->setSender(array($mailfrom, $fromname));
+			$mail->addAddress($row->email);
+			$mail->setSubject($subject2);
+			$htmlmsg = RdfHelper::wrapMailHtmlBody($emailBody, $subject2);
+			$mail->MsgHTML($htmlmsg);
+			$mail->Send();
 		}
 	}
 }

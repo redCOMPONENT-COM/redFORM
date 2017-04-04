@@ -81,7 +81,7 @@ class RedformViewSubmitters extends RdfView
 		$this->activeFilters = $model->getActiveFilters();
 		$this->stoolsOptions['searchField'] = 'search_fields';
 
-		/* Get the fields list */
+		// Get the fields list
 		$this->fields = $model->getFields();
 
 		$this->formInfo = $model->getFormInfo();
@@ -89,7 +89,7 @@ class RedformViewSubmitters extends RdfView
 		$this->integration = $app->input->get('integration', '');
 		$this->params = $params;
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**

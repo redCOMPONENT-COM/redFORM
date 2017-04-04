@@ -308,20 +308,6 @@ class RdfCore extends JObject
 			$multi = 1;
 		}
 
-		$this->loadCheckScript();
-
-		if ($multi > 1)
-		{
-			$this->loadMultipleFormScript();
-		}
-
-		$html = '<div class="redform-form ' . $form->classname . '">';
-
-		if ($form->showname)
-		{
-			$html .= '<div class="formname">' . $form->formname . '</div>';
-		}
-
 		if ($answers)
 		{
 			// Set multi to number of answers...
@@ -333,18 +319,40 @@ class RdfCore extends JObject
 			$multi = min($multi, 30);
 		}
 
+		$this->loadCheckScript();
+
+		if ($multi > 1)
+		{
+			$this->loadMultipleFormScript();
+		}
+
+		$formClass = $form->classname ?: '';
+
+		if (!empty($options['ajax_submission']))
+		{
+			RHelperAsset::load('ajax-submit.js', 'com_redform');
+			$formClass .= ($formClass ? ' ' : '' ) . 'redform-ajaxsubmit';
+		}
+
+		$html = '<div class="redform-form ' . $formClass . '">';
+
+		if ($form->showname)
+		{
+			$html .= '<div class="formname">' . $form->formname . '</div>';
+		}
+
 		if ($multi > 1)
 		{
 			if (!$answers)
 			{
 				// Link to add signups
-				$html .= '<div class="add-instance">' . JText::_('COM_REDFORM_SIGN_UP_USER') . '</div>';
+				$html .= RdfLayoutHelper::render('rform.addsignup', null, '', array('component' => 'com_redform'));
 			}
 		}
 
 		$initialActive = $answers ? $multi : 1;
 
-		/* Loop through here for as many forms there are */
+		// Loop through here for as many forms there are
 		for ($formIndex = 1; $formIndex <= $initialActive; $formIndex++)
 		{
 			$indexAnswers = $answers ? $answers->getSingleSubmission($formIndex - 1) : false;
@@ -355,13 +363,8 @@ class RdfCore extends JObject
 				$html .= '<input type="hidden" name="submitter_id' . $formIndex . '" value="' . $submitter_id . '" />';
 			}
 
-			/* Make a collapsable box */
+			// Make a collapsable box
 			$html .= '<div class="formbox">';
-
-			if ($multi > 1)
-			{
-				$html .= '<fieldset><legend>' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $formIndex) . '</legend>';
-			}
 
 			$indexedFields = $this->prepareFieldsForIndex($fields, $formIndex, $indexAnswers);
 
@@ -373,16 +376,12 @@ class RdfCore extends JObject
 					'user' => $user,
 					'options' => $options,
 					'answers' => $indexAnswers,
-					'form' => $form
+					'form' => $form,
+					'multi' => $multi
 				),
 				'',
 				array('component' => 'com_redform')
 			);
-
-			if ($multi > 1)
-			{
-				$html .= '</fieldset>';
-			}
 
 			if (isset($this->_rwfparams['uid']))
 			{
@@ -402,7 +401,7 @@ class RdfCore extends JObject
 		// Get an unique id just for the submission
 		$uniq = uniqid();
 
-		/* Add the captcha, only if initial submit */
+		// Add the captcha, only if initial submit
 		if ($form->captchaactive && empty($submit_key))
 		{
 			JPluginHelper::importPlugin('redform_captcha');
@@ -412,12 +411,14 @@ class RdfCore extends JObject
 
 			if (count($results))
 			{
-				$html .= '<div class="fieldline">';
-				$html .= '<div class="label"><label>' . JText::_('COM_REDFORM_CAPTCHA_LABEL') . '</label></div>';
-				$html .= '<div id="redformcaptcha">';
-				$html .= $captcha;
-				$html .= '</div>';
-				$html .= '</div>';
+				$html .= RdfLayoutHelper::render(
+					'rform.captcha',
+					array(
+						'captcha_html' => $captcha
+					),
+					'',
+					array('component' => 'com_redform')
+				);
 
 				JFactory::getSession()->set('checkcaptcha' . $uniq, 1);
 			}
@@ -479,11 +480,12 @@ class RdfCore extends JObject
 	/**
 	 * adds extra fields from redmember to user object
 	 *
-	 * @param   object  &$user  object user
+	 * @param   object  $user    object user
+	 * @param   int     $org_id  organization id
 	 *
 	 * @return object user
 	 */
-	protected function getRedmemberfields(&$user)
+	protected function getRedmemberfields(&$user, $org_id = null)
 	{
 		if (!REDFORM_REDMEMBER_INTEGRATION)
 		{
@@ -491,16 +493,25 @@ class RdfCore extends JObject
 		}
 
 		$rmUser = RedmemberApi::getUser($user->id);
+		$rmOrganization = null;
 
 		foreach ($rmUser->fields as $rmField)
 		{
 			$user->{$rmField->fieldcode} = $rmField->value;
 		}
 
-		if ($organizations = $rmUser->getOrganizations())
+		if ($org_id)
+		{
+			$rmOrganization = RedmemberApi::getOrganization($org_id);
+		}
+		elseif ($organizations = $rmUser->getOrganizations())
 		{
 			$firstOrg = reset($organizations);
 			$rmOrganization = RedmemberApi::getOrganization($firstOrg['organization_id']);
+		}
+
+		if ($rmOrganization)
+		{
 			$user->organization = $rmOrganization->name;
 
 			foreach ($rmOrganization->fields as $rmField)
@@ -698,7 +709,7 @@ class RdfCore extends JObject
 	 * @param   mixed  $reference       submit_key or array of sids
 	 * @param   bool   $requires_email  email required, returns false if no email field
 	 *
-	 * @return bool|mixed
+	 * @return boolean|mixed
 	 */
 	public function getSubmissionContactEmail($reference, $requires_email = true)
 	{
@@ -813,7 +824,7 @@ class RdfCore extends JObject
 		}
 
 		// Get User data
-		$userData = $this->getUserData($user_id);
+		$userData = $this->getUserData($user_id, isset($options['organization_id']) ? $options['organization_id'] : null);
 
 		$fields = $this->prepareUserData($userData);
 
@@ -835,13 +846,14 @@ class RdfCore extends JObject
 	 * should get it from redmember
 	 *
 	 * @param   int  $user_id  user id
+	 * @param   int  $org_id   organization id
 	 *
 	 * @return JUser
 	 */
-	protected function getUserData($user_id)
+	protected function getUserData($user_id, $org_id = null)
 	{
 		$user = JFactory::getUser($user_id);
-		$this->getRedmemberfields($user);
+		$this->getRedmemberfields($user, $org_id);
 
 		return $user;
 	}
@@ -887,7 +899,7 @@ class RdfCore extends JObject
 	 *
 	 * @param   string  $currency  currency to use as filtering
 	 *
-	 * @return bool|string
+	 * @return boolean|string
 	 */
 	protected function getGatewaySelect($currency)
 	{
@@ -910,12 +922,7 @@ class RdfCore extends JObject
 		}
 		else
 		{
-			$select = JHtml::_('select.genericlist', $options, 'gw');
-
-			$html = '<div class="fieldline gateway-select">';
-			$html .= '<div class="label">' . JText::_('COM_REDFORM_SELECT_PAYMENT_METHOD') . '</div>';
-			$html .= '<div class="field">' . $select . '</div>';
-			$html .= '</div>';
+			$html = RdfHelperLayout::render('rform.gateway', compact('options'), '', array('component' => 'com_redform'));
 		}
 
 		return $html;
@@ -955,6 +962,8 @@ class RdfCore extends JObject
 		JText::script('COM_REDFORM_MAX_SIGNUP_REACHED');
 		JText::script('COM_REDFORM_FIELDSET_SIGNUP_NB');
 		JText::script('LIB_REDFORM_REMOVE');
+		JText::script('COM_REDFORM_SHOW_ALL_USERS');
+		JText::script('COM_REDFORM_HIDE_ALL_USERS');
 		RHelperAsset::load('form-multiple.js', 'com_redform');
 	}
 
@@ -1117,8 +1126,10 @@ class RdfCore extends JObject
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('pr.*')
+		$query->select('pr.*, c.invoice_id')
 			->from('#__rwf_payment_request AS pr')
+			->join('LEFT', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+			->join('LEFT', '#__rwf_cart AS c ON c.id = ci.cart_id')
 			->where('pr.submission_id IN (' . implode(', ', $sids) . ')')
 			->order('pr.id DESC');
 

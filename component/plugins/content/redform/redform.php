@@ -47,8 +47,8 @@ class PlgContentRedform extends JPlugin
 	 * looks for tags in the form {redform}1{/redform}, or {redform}2,3{/redform} (3 times form 2)
 	 *
 	 * @param   string  $context  The context of the content being passed to the plugin.
-	 * @param   object  &$row     The article object.  Note $article->text is also available
-	 * @param   object  &$params  The article params
+	 * @param   object  $row      The article object.  Note $article->text is also available
+	 * @param   object  $params   The article params
 	 * @param   int     $page     The 'page' number
 	 *
 	 * @return boolean true on success
@@ -86,42 +86,33 @@ class PlgContentRedform extends JPlugin
 	 */
 	protected function buildForm($match)
 	{
-		/* Load the language file as Joomla doesn't do it */
+		// Load the language file as Joomla doesn't do it
 		$language = JFactory::getLanguage();
 		$language->load('plg_content_redform');
 
 		$parts = explode(',', $match);
 
-		/* Get the form details */
+		// Get the form details
 		$form = $this->getForm($parts[0]);
-		$check = $this->checkFormIsActive($form);
 
-		if (!($check === true))
+		if (!($form->checkFormStatus()))
 		{
-			return $check;
+			return $form->getStatusMessage();
 		}
 
-		/* Check if the user is allowed to access the form */
-		$user = JFactory::getUser();
-
-		if (!in_array($form->access, $user->getAuthorisedViewLevels()))
-		{
-			return JText::_('PLG_CONTENT_REDFORM_FORM_DISPLAY_NOT_ALLOWED');
-		}
-
-		/* Check if the number of sign ups is set, otherwise default to 1 */
+		// Check if the number of sign ups is set, otherwise default to 1
 		$multiple = isset($parts[1]) ? $parts[1] : 1;
-
-		if (!isset($form->id))
-		{
-			return JText::_('COM_REDFORM_No_active_form_found');
-		}
 
 		$options = array();
 
 		if (isset($this->rwfparams['module_id']))
 		{
 			$options['module_id'] = $this->rwfparams['module_id'];
+		}
+
+		if ($form->params->get('ajax_submission') && !$form->activatepayment)
+		{
+			$options['ajax_submission'] = true;
 		}
 
 		return $this->rfcore->displayForm($form->id, null, $multiple, $options);
@@ -132,45 +123,10 @@ class PlgContentRedform extends JPlugin
 	 *
 	 * @param   int  $form_id  form id
 	 *
-	 * @return object
+	 * @return RdfEntityForm
 	 */
 	protected function getForm($form_id)
 	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('id, access, published')
-			->select('startdate, formexpires, enddate')
-			->from('#__rwf_forms')
-			->where('id = ' . $db->Quote($form_id));
-
-		$db->setQuery($query);
-
-		return $db->loadObject();
-	}
-
-	/**
-	 * checks if the form is active
-	 *
-	 * @param   object  $form  form object
-	 *
-	 * @return true if active, error message if not
-	 */
-	protected function checkFormIsActive($form)
-	{
-		if (!$form->published)
-		{
-			return JText::_('PLG_CONTENT_REDFORMFORM_NOT_PUBLISHED');
-		}
-		elseif (strtotime($form->startdate) > time())
-		{
-			return JText::_('PLG_CONTENT_REDFORM_FORM_NOT_STARTED');
-		}
-		elseif ($form->formexpires && strtotime($form->enddate) < time())
-		{
-			return JText::_('PLG_CONTENT_REDFORM_FORM_EXPIRED');
-		}
-
-		return true;
+		return RdfEntityForm::load($form_id);
 	}
 }

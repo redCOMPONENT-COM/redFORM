@@ -7,6 +7,20 @@
 
 	var redformMultiple = (function() {
 
+		function updateLinks(form) {
+			var $divAdd = form.find('.add-instance');
+			$divAdd.find('.subform-links').remove();
+
+			var links = $('<span class="subform-links"></span>');
+
+			form.find('.formbox').each(function(index, element){
+				links.append('<button type="button" class="subform-link btn btn-primary" ref="' + index +'" href="#">' + (index + 1) + '</button>');
+			});
+
+			$divAdd.append(links);
+		}
+
+
 		function addInstance(event)
 		{
 			var element = $(event.target);
@@ -36,6 +50,8 @@
 				updater.init();
 				updater.updatePrice();
 			}
+
+			updateLinks(form);
 		}
 
 		function removeInstance(event) {
@@ -61,6 +77,8 @@
 			{
 				redformPrice(form);
 			}
+
+			updateLinks(form);
 		}
 
 		function updateIndex(subform, index, resetValue)
@@ -84,7 +102,7 @@
 
 			var legend = subform.find('legend').empty();
 			var signupTitle = Joomla.JText._("COM_REDFORM_FIELDSET_SIGNUP_NB").replace(/(%d)/, index);
-			var deleteLink = $('<span></span>').addClass('remove-instance').attr('index', index).text(Joomla.JText._("LIB_REDFORM_REMOVE"))
+			var deleteLink = $('<span></span>').addClass('remove-instance btn btn-danger').attr('index', index).text(Joomla.JText._("LIB_REDFORM_REMOVE"))
 				.click(removeInstance);
 
 			legend.text(signupTitle + ' - ');
@@ -104,7 +122,27 @@
 
 		return {
 			init: function() {
-				$('.add-instance').click(addInstance);
+				$('.add-instance .button-add').click(addInstance);
+
+				$('.redform-form').each(function(index, element) {
+					updateLinks($(element));
+				});
+
+				$('.redform-form').on('click', '.subform-link', function(){
+					$(this).parents('form').find('.formbox').get($(this).attr('ref')).scrollIntoView();
+				});
+
+				$('.subform-toggle .show-signups').click(function(){
+					$(this).parents('form').find('.subform-fields').show();
+				});
+
+				$('.subform-toggle .hide-signups').click(function(){
+					$(this).parents('form').find('.subform-fields').hide();
+				});
+
+				$('.redform-form').on('click', '.subform-legend', function(){
+					$(this).parents('.formbox').find('.subform-fields').toggle();
+				});
 			}
 		}
 	})();

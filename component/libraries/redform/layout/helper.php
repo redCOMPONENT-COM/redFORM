@@ -33,15 +33,16 @@ class RdfLayoutHelper extends RLayoutHelper
 		if (empty($options['suffixes']))
 		{
 			$options = is_null($options) ? array() : $options;
+			$layoutSuffix = JComponentHelper::getParams('com_redform')->get('form_layout');
 
-			if (JComponentHelper::getParams('com_redform')->get('form_layout') == 'bootstrap'
+			if ($layoutSuffix == 'bootstrap'
 				|| (JFactory::getApplication()->isAdmin() && JFactory::getApplication()->input->get('options') == 'com_redform'))
 			{
 				$options['suffixes'] = array('bootstrap');
 			}
-			else
+			elseif ($layoutSuffix)
 			{
-				$options['suffixes'] = array('j25');
+				$options['suffixes'] = array($layoutSuffix);
 			}
 		}
 

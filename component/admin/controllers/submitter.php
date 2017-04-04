@@ -38,7 +38,7 @@ class RedformControllerSubmitter extends RdfControllerForm
 			$result = $rfcore->saveAnswers('');
 			$this->setMessage(JText::_('COM_REDFORM_SUBMISSION_SAVE_SUCCESS'));
 		}
-		catch (RdfExceptionSubmission $e)
+		catch (Exception $e)
 		{
 			$msg = JText::_('COM_REDFORM_SUBMISSION_SAVE_FAILED');
 			$this->setMessage($msg . ' - ' . $e->getMessage(), 'error');

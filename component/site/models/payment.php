@@ -50,7 +50,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * Is billing required ?
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isRequiredBilling()
 	{
@@ -167,7 +167,7 @@ class RedFormModelPayment extends JModelLegacy
 			}
 		}
 
-		RdfHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND' . ': ' . $name);
+		RdfHelperLog::simpleLog('NOTIFICATION GATEWAY NOT FOUND: ' . $name);
 
 		return false;
 	}
@@ -207,7 +207,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * return submitters
 	 *
-	 * @return bool|mixed|null
+	 * @return boolean|mixed|null
 	 */
 	public function getSubmitters()
 	{
@@ -254,7 +254,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * send notification on payment received
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function notifyPaymentReceived()
 	{
@@ -267,7 +267,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * send email to submitter on payment received
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	private function _notifySubmitter()
 	{
@@ -296,8 +296,7 @@ class RedFormModelPayment extends JModelLegacy
 		$body = (empty($form->submitterpaymentnotificationbody)
 			? JText::_('COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_BODY_DEFAULT')
 			: $form->submitterpaymentnotificationbody);
-		$link = JRoute::_(JURI::root() . 'administrator/index.php?option=com_redform&view=submitters&form_id=' . $form->id);
-		$body = $replaceHelper->replace($body, array('[submitters]' => $link));
+		$body = $replaceHelper->replace($body);
 		$body = $this->getCart()->replaceTags($body);
 
 		$body = RdfHelper::wrapMailHtmlBody($body, $subject);
@@ -313,6 +312,7 @@ class RedFormModelPayment extends JModelLegacy
 		$mailer->addRecipient($contact['email']);
 		$doSend = true;
 
+		JPluginHelper::importPlugin('redform_payment');
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onBeforeSendPaymentNotificationSubmitter', array(&$mailer, $this->getCart(), &$doSend));
 
@@ -332,7 +332,7 @@ class RedFormModelPayment extends JModelLegacy
 	/**
 	 * send email to form contact on payment received
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	private function _notifyFormContact()
 	{
@@ -344,7 +344,7 @@ class RedFormModelPayment extends JModelLegacy
 
 		$form = $this->getForm();
 
-		if ($form->contactpersoninform)
+		if ($form->params->get('enable_contact_payment_notification'))
 		{
 			$addresses = RdfHelper::extractEmails($form->contactpersonemail, true);
 

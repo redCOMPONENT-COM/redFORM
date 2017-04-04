@@ -19,6 +19,7 @@ $answers = $data['answers'];
 $user = $data['user'];
 $index = $data['index'];
 $form = $data['form'];
+$multi = $data['multi'];
 
 $html = '';
 
@@ -34,6 +35,12 @@ RHelperAsset::load('showon.js', 'com_redform');
 if (isset($options['extrafields'][$index]))
 {
 	$fields = array_merge($options['extrafields'][$index], $fields);
+}
+
+if ($multi > 1)
+{
+	$html .= '<fieldset><legend class="subform-legend">' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $index) . '</legend>';
+	$html .= '<div class="subform-fields">';
 }
 
 $sections = RdfHelper::sortFieldBySection($fields);
@@ -70,29 +77,18 @@ foreach ($sections as $s)
 
 		if ($field->displayLabel())
 		{
-			$fieldDiv .= '<div class="label">' . $field->getLabel() . '</div>';
-		}
+			$fieldDiv .= '<div class="label">';
+			$fieldDiv .= $field->getLabel();
 
-		$fieldDiv .= '<div class="field">' . $field->getInput() . '</div>';
-
-		if ($field->isRequired() || strlen($field->tooltip))
-		{
-			$fieldDiv .= '<div class="fieldinfo">';
-
-			if ($field->isRequired())
+			if (!empty($field->tooltip))
 			{
-				$img = RHelperAsset::load('warning.png', 'com_redform', array('alt' => JText::_('COM_REDFORM_Required')));
-				$fieldDiv .= ' <span class="editlinktip hasToolTip" title="' . RHtml::tooltipText(JText::_('COM_REDFORM_Required')) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
-			}
-
-			if (strlen($field->tooltip) > 0)
-			{
-				$img = RHelperAsset::load('info.png', 'com_redform', array('alt' => JText::_('COM_REDFORM_ToolTip')));
-				$fieldDiv .= ' <span class="editlinktip hasToolTip" title="' .  RHtml::tooltipText($field->field, $field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
+				$fieldDiv .= '<div class="label-field-tip">' . $field->tooltip . '</div>';
 			}
 
 			$fieldDiv .= '</div>';
 		}
+
+		$fieldDiv .= '<div class="field">' . $field->getInput() . '</div>';
 
 		// Fieldline_ div
 		$fieldDiv .= '</div>';
@@ -105,5 +101,11 @@ foreach ($sections as $s)
 }
 
 $html .= $this->sublayout('progressbar', $sections);
+
+if ($multi > 1)
+{
+	$html .= '</div>';
+	$html .= '</fieldset>';
+}
 
 echo $html;

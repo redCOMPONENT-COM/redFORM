@@ -49,6 +49,7 @@
 				format="%Y-%m-%d  %H:%M:%S"
 				label="COM_REDFORM_FORM_START_DATE"
 				description="COM_REDFORM_FORM_START_DATE_TIP"
+				filter="user_utc"
 				/>
 		<field
 				name="formexpires"
@@ -67,6 +68,7 @@
                 format="%Y-%m-%d  %H:%M:%S"
 				label="COM_REDFORM_FORM_END_DATE"
 				description="COM_REDFORM_FORM_END_DATE_TIP"
+				filter="user_utc"
 				showon="formexpires:1"
 				/>
 		<field
@@ -79,6 +81,16 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
+
+		<field
+				name="contactpersonemail"
+				type="text"
+				class="btn-group btn-group-yesno"
+				label="COM_REDFORM_CONTACTPERSON_EMAIL"
+				description="COM_REDFORM_CONTACTPERSON_EMAIL_TIP"
+				maxlength="255"
+				showon="contactpersoninform:1"
+		/>
 	</fieldset>
 
 	<fieldset addfieldpath="/libraries/redform/form/fields" name="notifications">
@@ -107,6 +119,18 @@
 				description="COM_REDFORM_REDIRECT_URL_TIP"
 				maxlength="255"
 				/>
+
+		<field
+				name="contactpersoninform"
+				type="radio"
+				class="btn-group btn-group-yesno"
+				label="COM_REDFORM_NOTIFY_CONTACTPERSON"
+				description="COM_REDFORM_NOTIFY_CONTACTPERSON_TIP"
+				default="0"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 		<field
 				name="admin_notification_email_mode"
 				type="radio"
@@ -114,6 +138,7 @@
 				label="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_LABEL"
 				description="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_DESC"
 				default="0"
+				showon="contactpersoninform:1"
 		>
 			<option value="0">COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_DEFAULT</option>
 			<option value="1">COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_CUSTOM</option>
@@ -135,26 +160,6 @@
 				filter="raw"
 				showon="admin_notification_email_mode:1"
 		/>
-		<field
-				name="contactpersoninform"
-				type="radio"
-				class="btn-group btn-group-yesno"
-				label="COM_REDFORM_NOTIFY_CONTACTPERSON"
-				description="COM_REDFORM_NOTIFY_CONTACTPERSON_TIP"
-				default="0"
-				>
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-		<field
-				name="contactpersonemail"
-				type="text"
-				class="btn-group btn-group-yesno"
-				label="COM_REDFORM_CONTACTPERSON_EMAIL"
-				description="COM_REDFORM_CONTACTPERSON_EMAIL_TIP"
-				maxlength="255"
-				showon="contactpersoninform:1"
-				/>
 		<field
 				name="contactpersonfullpost"
 				type="radio"
@@ -342,6 +347,34 @@
 					<option value="1">JYES</option>
 				</field>
 
+				<field name="notification_extra"
+					   type="textarea"
+					   filter="raw"
+					   label="COM_REDFORM_FORM_NOTIFICATION_EXTRA"
+					   description="COM_REDFORM_FORM_NOTIFICATION_EXTRA_DESC"/>
+
+				<field name="enable_contact_payment_notification"
+					   type="radio"
+					   class="btn-group btn-group-yesno"
+					   default="1"
+					   label="COM_REDFORM_FORM_ENABLE_CONTACT_PAYMENT_NOTIFICATION"
+					   description="COM_REDFORM_FORM_ENABLE_CONTACT_PAYMENT_NOTIFICATION_DESC"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+
+				<field
+						name="ajax_submission"
+						type="radio"
+						class="btn-group btn-group-yesno"
+						default="0"
+						label="COM_REDFORM_FORM_AJAX_SUBMISSION"
+						description="COM_REDFORM_FORM_AJAX_SUBMISSION_DESC"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
 			</fieldset>
 		</fields>
 	</fieldset>

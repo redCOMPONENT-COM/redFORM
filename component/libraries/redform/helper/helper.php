@@ -92,7 +92,7 @@ class RdfHelper
 	 *
 	 * @param   string  $date  date string to check
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public static function isNonNullDate($date)
 	{
@@ -328,5 +328,22 @@ class RdfHelper
 		}
 
 		return $mail;
+	}
+
+	/**
+	 * Get user timezone
+	 *
+	 * @param   JUser  $user  user
+	 *
+	 * @return DateTimeZone
+	 *
+	 * @since 3.3.18
+	 */
+	public static function getUserTimeZone($user = null)
+	{
+		$user = $user ?: JFactory::getUser();
+		$timezone = $user->getParam('timezone', JFactory::getApplication()->get('offset', 'GMT'));
+
+		return new DateTimeZone($timezone);
 	}
 }

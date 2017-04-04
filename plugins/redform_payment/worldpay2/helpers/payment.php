@@ -61,6 +61,8 @@ class PaymentWorldpay2 extends RdfPaymentHelper
 
 		$date = JFactory::getDate();
 
+		$adminDesc = strlen($request->adminDesc) > 255 ? substr($request->adminDesc, 0, 250) . '...' : $request->adminDesc;
+
 		$req_params = array(
 			'MerchantID' => $this->params->get('merchantid'),
 			'Amount' => round($price * 100),
@@ -73,7 +75,7 @@ class PaymentWorldpay2 extends RdfPaymentHelper
 			'TransactionType' => "SALE",
 			'TransactionDateTime' => $date->format('Y-m-d H:i:s O'),
 			'CallbackURL' => $this->getUrl('notify', $reference),
-			'OrderDescription' => $request->adminDesc,
+			'OrderDescription' => $adminDesc,
 			'EmailAddressEditable' => 'true',
 			'PhoneNumberEditable' => 'true',
 			'DateOfBirthEditable' => 'true',
@@ -100,7 +102,7 @@ class PaymentWorldpay2 extends RdfPaymentHelper
 			'TransactionType'     => $req_params['TransactionType'],
 			'TransactionDateTime' => $req_params['TransactionDateTime'],
 			'CallbackURL'       => $req_params['CallbackURL'],
-			'OrderDescription' => $request->adminDesc,
+			'OrderDescription' => $adminDesc,
 			'CustomerName'  => '',
 			'Address1'  => '',
 			'Address2'  => '',

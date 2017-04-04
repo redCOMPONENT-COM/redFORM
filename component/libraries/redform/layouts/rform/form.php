@@ -32,7 +32,7 @@ $referer64 = $data['referer64'];
 
 	<?php if (!$sid): ?>
 		<div id="submit_button" style="display: block;" class="submitform <?php echo $form->classname; ?>">
-			<input type="submit" id="regularsubmit" name="submit" value="<?php echo $form->params->get('submit_label') ?: JText::_('COM_REDFORM_Submit'); ?>" />
+			<input type="submit" id="regularsubmit" name="submit" class="validate" value="<?php echo $form->params->get('submit_label') ?: JText::_('COM_REDFORM_Submit'); ?>" />
 		</div>
 	<?php else: ?>
 		<input type="hidden" name="submitter_id" value="<?php echo $sid; ?>" />
