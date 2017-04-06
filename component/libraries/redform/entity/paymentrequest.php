@@ -64,4 +64,33 @@ class RdfEntityPaymentrequest extends RdfEntityBase
 
 		return $items;
 	}
+
+	/**
+	 * Get associated payment
+	 *
+	 * @return RdfEntityPayment
+	 *
+	 * @since __deploy_version__
+	 */
+	public function getPayment()
+	{
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('p.*')
+			->from('#__rwf_payment AS p')
+			->innerJoin('#__rwf_cart_item AS ci ON ci.cart_id = p.cart_id')
+			->where('ci.payment_request_id = ' . $this->id)
+			->where('p.paid = 1');
+
+		$db->setQuery($query);
+
+		if (!$res = $db->loadObject())
+		{
+			return false;
+		}
+
+		$entity = RdfEntityPayment::getInstance($res->id)->bind($res);
+
+		return $entity;
+	}
 }

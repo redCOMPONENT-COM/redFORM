@@ -70,6 +70,12 @@ class RdfPaymentTurnsubmission
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onRedformAfterTurnSubmission', array($entity));
 
+		if ($entity->price < 0 && $previousPayment = $this->getPreviousPayment())
+		{
+			JPluginHelper::importPlugin('redform_payment');
+			$dispatcher->trigger('onRedformCreditPaymentRequest', array($entity, $previousPayment));
+		}
+
 		return $entity->id;
 	}
 
@@ -156,5 +162,32 @@ class RdfPaymentTurnsubmission
 				return $total += $item->vat;
 			}
 		);
+	}
+
+	/**
+	 * Get a previous payment
+	 *
+	 * @return RdfEntityPayment
+	 *
+	 * @since __deploy_version__
+	 */
+	private function getPreviousPayment()
+	{
+		if (!$paymentRequests = $this->submission->getPaymentRequests())
+		{
+			return false;
+		}
+
+		$paid = array_filter(
+			$paymentRequests,
+			function ($paymentRequest)
+			{
+				return $paymentRequest->paid && $paymentRequest->price > 0;
+			}
+		);
+
+		$latest = reset($paid);
+
+		return $latest->getPayment();
 	}
 }
