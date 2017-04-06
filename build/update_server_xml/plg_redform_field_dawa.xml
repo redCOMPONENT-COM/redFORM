@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
 	<update>
-		<name>redFORM plg_redform_payment_pagseguro</name>
+		<name>redFORM plg_redform_field_dawa</name>
 		<description>redFORM plugin update</description>
-		<element>pagseguro</element>
+		<element>dawa</element>
 		<type>plugin</type>
-		<folder>redform_payment</folder>
+		<folder>redform_field</folder>
 		<version>3.3.18</version>
 		<infourl title="redFORM">https://www.redcomponent.com/index.php/redcomponent/redform</infourl>
 		<downloads>
