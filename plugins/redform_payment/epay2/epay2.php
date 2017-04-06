@@ -46,7 +46,7 @@ class PlgRedform_PaymentEpay2 extends RdfPaymentPlugin
 	 *
 	 * @return boolean
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	public function onRedformCreditPaymentRequest(RdfEntityPaymentrequest $paymentRequest, RdfEntityPayment $previousPayment)
 	{

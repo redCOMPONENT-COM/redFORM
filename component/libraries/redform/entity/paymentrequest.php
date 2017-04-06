@@ -70,7 +70,7 @@ class RdfEntityPaymentrequest extends RdfEntityBase
 	 *
 	 * @return RdfEntityPayment
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	public function getPayment()
 	{

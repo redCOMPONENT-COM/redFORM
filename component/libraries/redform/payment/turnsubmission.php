@@ -169,7 +169,7 @@ class RdfPaymentTurnsubmission
 	 *
 	 * @return RdfEntityPayment
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	private function getPreviousPayment()
 	{

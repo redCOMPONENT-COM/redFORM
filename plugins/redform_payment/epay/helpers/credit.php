@@ -13,7 +13,7 @@ defined('_JEXEC') or die('Restricted access');
  *
  * @package     Redform
  * @subpackage  Payment.epay
- * @since       __deploy_version__
+ * @since       3.3.18
  */
 class PaymentEpayCredit
 {
@@ -21,25 +21,25 @@ class PaymentEpayCredit
 
 	/**
 	 * @var RdfEntityPaymentrequest
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	private $paymentRequest;
 
 	/**
 	 * @var RdfEntityPayment
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	private $previousPayment;
 
 	/**
 	 * @var JRegistry
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	private $params;
 
 	/**
 	 * @var SoapClient
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	private $client;
 
@@ -50,7 +50,7 @@ class PaymentEpayCredit
 	 * @param   RdfEntityPayment         $previousPayment  a previous payment for same submitter
 	 * @param   JRegistry                $pluginParams     plugin parameters
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	public function __construct(RdfEntityPaymentrequest $paymentRequest, RdfEntityPayment $previousPayment, JRegistry $pluginParams)
 	{
@@ -64,7 +64,7 @@ class PaymentEpayCredit
 	 *
 	 * @return boolean
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	public function process()
 	{
@@ -99,7 +99,7 @@ class PaymentEpayCredit
 	 *
 	 * @return SoapClient
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	private function getClient()
 	{
@@ -116,7 +116,7 @@ class PaymentEpayCredit
 	 *
 	 * @return string
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.18
 	 */
 	private function getTransactionId()
 	{
