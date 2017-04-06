@@ -118,6 +118,15 @@
 
 	            <field name="extrafee" type="text" label="PLG_REDFORM_PAYMENT_EPAY_EXTRAFEE"
 	                   description="PLG_REDFORM_PAYMENT_EPAY_EXTRAFEE_DESC" />
+
+
+                <field name="auto_credit" type="list" default="0"
+                       label="PLG_REDFORM_PAYMENT_EPAY_AUTO_CREDIT"
+                       description="PLG_REDFORM_PAYMENT_EPAY_AUTO_CREDIT_DESC">
+                    <option value="0">JNo</option>
+                    <option value="1">JYes</option>
+                </field>
+
             </fieldset>
 
             <fieldset name="extra" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_EXTRA">
