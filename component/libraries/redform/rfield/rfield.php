@@ -169,6 +169,9 @@ class RdfRfield extends JObject
 			case 'validate':
 				return $this->load()->validate;
 
+			case 'user':
+				return $this->user;
+
 			default:
 				$data = $this->load();
 
@@ -560,11 +563,17 @@ class RdfRfield extends JObject
 	/**
 	 * Try to get a default value from integrations
 	 *
-	 * @return void
+	 * @return mixed default value
 	 */
 	public function lookupDefaultValue()
 	{
-		if ($this->load()->redmember_field)
+		$default = $this->getLookupDefaultValueIntegration();
+
+		if (!is_null($default))
+		{
+			$this->value = $default;
+		}
+		elseif ($this->load()->redmember_field)
 		{
 			$this->value = $this->user->get($this->load()->redmember_field);
 		}
@@ -572,8 +581,6 @@ class RdfRfield extends JObject
 		{
 			$this->value = $this->load()->default;
 		}
-
-		return $this->value;
 	}
 
 	/**
@@ -591,6 +598,23 @@ class RdfRfield extends JObject
 		}
 
 		return $name;
+	}
+
+	/**
+	 * Get default value from integration
+	 *
+	 * @return null
+	 *
+	 * @since __deploy_version__
+	 */
+	protected function getLookupDefaultValueIntegration()
+	{
+		$default = null;
+
+		JPluginHelper::importPlugin('redform');
+		RFactory::getDispatcher()->trigger('onRedformFieldLookupDefaultValue', array($this, &$default));
+
+		return $default;
 	}
 
 	/**

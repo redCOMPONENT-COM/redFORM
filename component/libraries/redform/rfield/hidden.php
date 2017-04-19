@@ -44,7 +44,13 @@ class RdfRfieldHidden extends RdfRfieldTextfield
 	{
 		$app = JFactory::getApplication();
 
-		if ($this->load()->redmember_field)
+		$default = $this->getLookupDefaultValueIntegration();
+
+		if (!is_null($default))
+		{
+			$this->value = $default;
+		}
+		elseif ($this->load()->redmember_field)
 		{
 			$this->value = $this->user->get($this->load()->redmember_field);
 		}
