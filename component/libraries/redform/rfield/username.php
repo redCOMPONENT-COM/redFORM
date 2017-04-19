@@ -27,7 +27,13 @@ class RdfRfieldUsername extends RdfRfieldTextfield
 	 */
 	public function lookupDefaultValue()
 	{
-		if ($this->formIndex == 1 && $this->user->username)
+		$default = $this->getLookupDefaultValueIntegration();
+
+		if (!is_null($default))
+		{
+			$this->value = $default;
+		}
+		elseif ($this->formIndex == 1 && $this->user->username)
 		{
 			$this->value = $this->user->username;
 		}
