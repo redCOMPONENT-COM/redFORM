@@ -46,10 +46,8 @@ class RedformModelField extends RModelAdmin
 	 *
 	 * @return  void
 	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	protected function preprocessForm(JForm $form, $data, $group = 'redform')
 	{
-		parent::preprocessForm($form, $data, $group);
-
 		if (is_object($data))
 		{
 			$data = get_object_vars($data);
@@ -62,6 +60,8 @@ class RedformModelField extends RModelAdmin
 			$xml = RdfRfieldFactory::getFieldType($data['fieldtype'])->getXmlPath();
 			$form->loadFile($xml, false);
 		}
+
+		parent::preprocessForm($form, $data, $group);
 	}
 
 	/**
