@@ -563,7 +563,7 @@ class RdfRfield extends JObject
 	/**
 	 * Try to get a default value from integrations
 	 *
-	 * @return mixed default value
+	 * @return void
 	 */
 	public function lookupDefaultValue()
 	{
