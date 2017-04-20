@@ -13,6 +13,7 @@
 
 	<files>
 		<filename plugin="aesirmember">aesirmember.php</filename>
+		<filename>field.xml</filename>
 		<folder>language</folder>
 	</files>
 
