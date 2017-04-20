@@ -32,6 +32,35 @@ class RedformControllerSubmitters extends RControllerAdmin
 	}
 
 	/**
+	 * confirm a submission
+	 *
+	 * @return void
+	 */
+	public function confirm()
+	{
+		// Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+
+		$model = $this->getModel();
+
+		// Confirm the items.
+		if ($model->confirm($cid))
+		{
+			$this->setMessage(JText::plural($this->text_prefix . '_N_SUBMITTERS_CONFIRMED', count($cid)));
+		}
+		else
+		{
+			$this->setMessage($model->getError(), 'error');
+		}
+
+		// Set redirect
+		$this->setRedirect($this->getRedirectToListRoute());
+	}
+
+	/**
 	 * Send the notification email again
 	 *
 	 * @return void

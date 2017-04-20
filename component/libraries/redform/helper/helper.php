@@ -346,4 +346,26 @@ class RdfHelper
 
 		return new DateTimeZone($timezone);
 	}
+
+	/**
+	 * Get a date to user timezone
+	 *
+	 * @param   mixed  $date  date string or JDate
+	 * @param   JUser  $user  user
+	 *
+	 * @return JDate
+	 *
+	 * @since  __deploy_version__
+	 */
+	public static function getDateToUserTimezone($date, $user= null)
+	{
+		$timezone = static::getUserTimeZone($user);
+
+		if (is_string($date))
+		{
+			$date = JFactory::getDate($date, 'UTC');
+		}
+
+		return $date->setTimezone($timezone);
+	}
 }
