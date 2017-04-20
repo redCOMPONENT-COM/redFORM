@@ -134,7 +134,7 @@ class RedformViewSubmitters extends RdfView
 			);
 			$firstGroup->addButton($button);
 
-			if ($this->formInfo->enable_confirmation)
+			if ($this->formInfo && $this->formInfo->enable_confirmation)
 			{
 				$button = RToolbarBuilder::createStandardButton(
 					'submitters.confirm',
