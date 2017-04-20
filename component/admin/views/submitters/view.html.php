@@ -133,6 +133,17 @@ class RedformViewSubmitters extends RdfView
 				'icon-envelope'
 			);
 			$firstGroup->addButton($button);
+
+			if ($this->formInfo && $this->formInfo->enable_confirmation)
+			{
+				$button = RToolbarBuilder::createStandardButton(
+					'submitters.confirm',
+					JText::_('COM_REDFORM_SUBMITTER_BUTTON_CONFIRM'),
+					'',
+					'icon-ok'
+				);
+				$firstGroup->addButton($button);
+			}
 		}
 
 		// Delete / Trash

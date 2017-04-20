@@ -20,11 +20,11 @@
 
 			targetEl.each(function(i, conditionElement){
 				if (conditionElementType == 'checkbox' || conditionElementType == 'radio') {
-					visible |= $(conditionElement).is(':checked') && element.hasClass('rfshowon_' + $(conditionElement).val());
+					visible |= $(conditionElement).is(':checked') && $(element).hasClass('rfshowon_' + $(conditionElement).val());
 				}
 
 				if ($(conditionElement).prop('tagName') == 'SELECT') {
-					visible |= element.hasClass('rfshowon_' + $(conditionElement).val());
+					visible |= $(element).hasClass('rfshowon_' + $(conditionElement).val());
 				}
 			});
 

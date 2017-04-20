@@ -67,7 +67,7 @@ JFactory::getDocument()->addScriptDeclaration($script);
 	<?php if ($required) : ?>
 		<input class="<?php echo $class ?>" name="<?php echo $name ?>_v" type="text"
 		       id="<?php echo $id ?>_v" value="<?php echo $value ?>" />
-		<input class="required <?php echo $class ?> " name="<?php echo $name ?>_alt" type="hidden"
+		<input class="required <?php echo $class ?> " name="<?php echo $name ?>" type="hidden"
 		       id="<?php echo $id ?>" required="required" value="<?php echo $value ?>" />
 	<?php else : ?>
 		<input class="<?php echo $class ?>" name="<?php echo $name ?>_v" type="text"

@@ -116,7 +116,13 @@ class RdfRfieldCheckbox extends RdfRfield
 	 */
 	public function lookupDefaultValue()
 	{
-		if ($this->load()->redmember_field)
+		$default = $this->getLookupDefaultValueIntegration();
+
+		if (!is_null($default))
+		{
+			$this->value = $default;
+		}
+		elseif ($this->load()->redmember_field)
 		{
 			$this->value = explode(',', $this->user->get($this->load()->redmember_field));
 		}

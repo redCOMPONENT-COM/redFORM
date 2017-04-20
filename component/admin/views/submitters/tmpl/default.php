@@ -119,7 +119,12 @@ $listDirn = $this->state->get('list.direction');
 				<td>
 					<?php if (RdfHelper::isNonNullDate($item->confirmed_date)): ?>
 						<i class="icon-ok hasToolTip" title="<?php
-						echo RHtml::tooltipText(JText::sprintf('COM_REDFORM_COMFIRMATION_INFO', $item->confirmed_date, $item->confirmed_type, $item->confirmed_ip));
+						echo RHtml::tooltipText(
+								JText::sprintf(
+										'COM_REDFORM_COMFIRMATION_INFO', RdfHelper::getDateToUserTimezone($item->confirmed_date),
+										$item->confirmed_type, $item->confirmed_ip
+								)
+						);
 						?>"/>
 					<?php endif; ?>
 				</td>

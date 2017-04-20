@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<fieldset name="aesir">
+	<field
+			name="aesir_field"
+			type="reditem.customfield"
+			default=""
+			label="PLG_REDFORM_AESIRMEMBER_AESIR_FIELD"
+			description="PLG_REDFORM_AESIRMEMBER_AESIR_FIELD_DESC">
+		<option value="">JSELECT</option>
+	</field>
+</fieldset>
+
