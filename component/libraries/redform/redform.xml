@@ -24,6 +24,7 @@
 		<folder>layouts</folder>
 		<folder>payment</folder>
 		<folder>rfield</folder>
+		<folder>src</folder>
 		<folder>view</folder>
 		<filename>bootstrap.php</filename>
 		<filename>redform.xml</filename>
