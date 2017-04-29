@@ -28,21 +28,6 @@ class RedformFormFieldTag extends JFormField
 	public $type = 'tag';
 
 	/**
-	 * Method to get the field options.
-	 *
-	 * @return  array  The field option objects.
-	 */
-	protected function getOptions()
-	{
-		$model = RModel::getAdminInstance('tags', ['ignore_request' => true], 'com_redform');
-
-		if ($targetField = $this->element['target_field'] ? (string) $this->element['target_field'] : null)
-		{
-			$model->setState('filter.field', $targetField);
-		}
-	}
-
-	/**
 	 * Method to get the field input markup.
 	 *
 	 * @return  string  The field input markup.
