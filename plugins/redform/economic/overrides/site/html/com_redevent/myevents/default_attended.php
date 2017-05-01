@@ -29,7 +29,7 @@ $sids = array_map(
 	function ($registration) {
 		return $registration->sid;
 	},
-	$this->attending
+	$this->attended
 );
 
 JPluginHelper::importPlugin('redform');
