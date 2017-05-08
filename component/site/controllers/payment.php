@@ -315,15 +315,11 @@ class RedformControllerPayment extends JControllerLegacy
 
 		if ($res)
 		{
-			RdfHelperLog::simpleLog('Gateway accepted');
-
 			// The payment was received !
 			$app->input->set('state', 'accepted');
 
 			if ($alreadypaid)
 			{
-				RdfHelperLog::simpleLog('Already paid');
-
 				// Dont' forward to integration, to prevent side effects. This should only happen for async callbacks anyway.
 				$app->enqueueMessage('COM_REDFORM_PAYMENT_NOTIFICATION_RECEIVED_ALREADY_PAID', 'notice');
 
@@ -348,7 +344,6 @@ class RedformControllerPayment extends JControllerLegacy
 		}
 		else
 		{
-			RdfHelperLog::simpleLog('Gateway returned false');
 			$app->input->set('state', 'failed');
 		}
 
@@ -363,9 +358,6 @@ class RedformControllerPayment extends JControllerLegacy
 				switch ($first->integration)
 				{
 					case 'redevent':
-						RdfHelperLog::simpleLog('Redirect to redevent, ' . $first->submit_key);
-						RdfHelperLog::simpleLog('index.php?option=com_redevent&view=payment&submit_key=' . $first->submit_key
-							. '&state=' . ($res ? 'accepted' : 'refused'));
 						$app->redirect('index.php?option=com_redevent&view=payment&submit_key=' . $first->submit_key
 							. '&state=' . ($res ? 'accepted' : 'refused')
 						);
