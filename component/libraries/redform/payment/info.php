@@ -77,6 +77,9 @@ class RdfPaymentInfo
 			case 'uniqueid':
 				return $this->getPaymentInfointegration()->uniqueid;
 
+			case 'invoice_id':
+				return $this->cart->invoice_id;
+
 			case 'processIntroText':
 				if (isset($this->getPaymentInfointegration()->paymentIntroText))
 				{
