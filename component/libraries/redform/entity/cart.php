@@ -410,6 +410,12 @@ class RdfEntityCart extends RdfEntityBase
 	{
 		$replacer = new RdfHelperTagsCart($this);
 
-		return $replacer->replace($text);
+		$text = $replacer->replace($text);
+
+		$submitters = $this->getSubmitters();
+		$firstSubmitter = reset($submitters);
+		$text = $firstSubmitter->replaceTags($text);
+
+		return $text;
 	}
 }
