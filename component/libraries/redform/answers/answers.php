@@ -526,6 +526,8 @@ class RdfAnswers
 
 		$this->updateSubmitterPrice();
 
+		RFactory::getDispatcher()->trigger('onAfterRedformSubmitterSaved', array($this));
+
 		return $this->sid;
 	}
 

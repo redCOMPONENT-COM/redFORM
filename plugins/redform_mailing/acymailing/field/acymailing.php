@@ -10,16 +10,16 @@
 defined('JPATH_BASE') or die;
 
 /**
- * Class PlgRedform_FieldDawaFieldDawa_Address
+ * Class RdfRfieldAcymailinglist
  *
- * @since  3.0
+ * @since  __deploy_version__
  */
-class PlgRedform_FieldDawaFieldDawa_Address extends RdfRfieldTextfield
+class RdfRfieldAcymailinglist extends \RdfRfieldCheckbox
 {
 	/**
 	 * @var string
 	 */
-	protected $type = 'dawa_address';
+	protected $type = 'acymailing';
 
 	/**
 	 * @var JRegistry
@@ -33,7 +33,7 @@ class PlgRedform_FieldDawaFieldDawa_Address extends RdfRfieldTextfield
 	 */
 	public function getInput()
 	{
-		$element = RdfLayoutHelper::render(
+		$element = \RdfLayoutHelper::render(
 			'rform.rfield.' . $this->type,
 			$this,
 			null,
@@ -48,12 +48,36 @@ class PlgRedform_FieldDawaFieldDawa_Address extends RdfRfieldTextfield
 	 *
 	 * @param   JRegistry  $params  params
 	 *
-	 * @return PlgRedform_FieldDawaFieldDawa_Address
+	 * @return RdfRfieldAcymailinglist
 	 */
 	public function setPluginParams(JRegistry $params)
 	{
 		$this->pluginParams = $params;
 
 		return $this;
+	}
+
+	/**
+	 * Return field options (for select, radio, etc...)
+	 *
+	 * @return mixed
+	 */
+	protected function getOptions()
+	{
+		$lists = json_decode($this->getParam('lists'));
+
+		if (empty($lists))
+		{
+			return false;
+		}
+
+		$options = array();
+
+		foreach ($lists->id as $i => $id)
+		{
+			$options[] = JHtml::_('select.option', $lists->id[$i], $lists->label[$i]);
+		}
+
+		return $options;
 	}
 }

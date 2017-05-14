@@ -657,6 +657,8 @@ class RdfCoreFormSubmission
 	 * @param   RdfAnswers  $answers  answers
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated it's better to use the dedicated fields than integration directly in email field
 	 */
 	protected function updateMailingList(RdfAnswers $answers)
 	{

@@ -7,7 +7,12 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Redform\Plugin\AbstractFieldPlugin;
+
 defined('_JEXEC') or die( 'Restricted access');
+
+require_once __DIR__ . '/field/acymailing.php';
+require_once __DIR__ . '/form/field/acymailinglist.php';
 
 // Import library dependencies
 jimport('joomla.plugin.plugin');
@@ -19,7 +24,7 @@ jimport('joomla.plugin.plugin');
  * @subpackage  mailing
  * @since       2.5
  */
-class plgRedform_mailingAcymailing extends JPlugin
+class plgRedform_mailingAcymailing extends AbstractFieldPlugin
 {
 	/**
 	 * Constructor
@@ -50,6 +55,103 @@ class plgRedform_mailingAcymailing extends JPlugin
 	}
 
 	/**
+	 * Add supported field type(s)
+	 *
+	 * @param   string[]  &$types  types
+	 *
+	 * @return void
+	 */
+	public function onRedformGetFieldTypes(&$types)
+	{
+		$types[] = 'acymailing';
+	}
+
+	/**
+	 * Add supported field type(s) as option(s)
+	 *
+	 * @param   object[]  &$options  options
+	 *
+	 * @return void
+	 */
+	public function onRedformGetFieldTypesOptions(&$options)
+	{
+		$options[] = \JHtml::_('select.option', 'acymailing', JText::_('PLG_REDFORM_MAILING_ACYMAILING_FIELD_ACYMAILING'));
+	}
+
+	/**
+	 * Return an instance of supported types, if matches.
+	 *
+	 * @param   string     $type       type of field
+	 * @param   RdfRfield  &$instance  instance of field
+	 *
+	 * @return void
+	 */
+	public function onRedformGetFieldInstance($type, &$instance)
+	{
+		if ('acymailing' === $type)
+		{
+			$instance = new RdfRfieldAcymailinglist;
+			$instance->setPluginParams($this->params);
+		}
+	}
+
+	/**
+	 * Callback
+	 *
+	 * @param   RdfAnswers  $answers  answers saved
+	 *
+	 * @return void
+	 *
+	 * @since version
+	 */
+	public function onAfterRedformSubmitterSaved(\RdfAnswers $answers)
+	{
+		if (!$answers->isNew())
+		{
+			return;
+		}
+
+		foreach ($answers->getFields() as $field)
+		{
+			if ($field->fieldtype !== 'acymailing')
+			{
+				continue;
+			}
+
+			include_once JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php';
+
+			$emailFieldId = $field->getParam('email_field');
+
+			if (!$email = $answers->getFieldAnswer($emailFieldId))
+			{
+				continue;
+			}
+
+			$lists = $field->getValue();
+
+			if (empty($lists))
+			{
+				continue;
+			}
+
+			$fullname  = $answers->getFullname() ?: ($answers->getUsername() ?: $email);
+			$subid = $this->getSubId($email, $fullname);
+
+			$subscriberClass = acymailing_get('class.subscriber');
+
+			$newSubscription = array();
+
+			foreach ($lists as $listId)
+			{
+				// Add to the mailing list
+				$newSubscription[$listId] = array('status' => 1);
+			}
+
+			$subscriberClass->saveSubscription($subid, $newSubscription);
+		}
+	}
+
+	/**
 	 * Subscribe to list
 	 *
 	 * @param   string  $integration  integration name
@@ -57,17 +159,19 @@ class plgRedform_mailingAcymailing extends JPlugin
 	 * @param   object  $listname     list name
 	 *
 	 * @return bool
+	 *
+	 * @deprecated it's better to use the acymailing field than integration directly in email field
 	 */
 	public function subscribe($integration, $subscriber, $listname)
 	{
-		$app = JFactory::getApplication();
+		$app = \JFactory::getApplication();
 
 		if (strtolower($integration) != 'acymailing')
 		{
 			return true;
 		}
 
-		$db = JFactory::getDBO();
+		$db = \JFactory::getDBO();
 		$fullname        = $subscriber->name;
 		$submitter_email = $subscriber->email;
 
@@ -92,19 +196,10 @@ class plgRedform_mailingAcymailing extends JPlugin
 			return false;
 		}
 
-		// First, add user to acymailing
-		$myUser = new stdclass;
-		$myUser->email = $subscriber->email;
-		$myUser->name  = $subscriber->name;
-
-		$subscriberClass = acymailing_get('class.subscriber');
-
-		// This function will return you the ID of the user inserted in the AcyMailing table
-		$subid = $subscriberClass->save($myUser);
+		$subid = $this->getSubId($subscriber->email, $subscriber->name);
 
 		// Then add to the mailing list
 		$subscribe = array($listid);
-		$memberid  = $subid;
 
 		$newSubscription = array();
 
@@ -124,6 +219,7 @@ class plgRedform_mailingAcymailing extends JPlugin
 			return;
 		}
 
+		$subscriberClass = acymailing_get('class.subscriber');
 		$subscriberClass->saveSubscription($subid, $newSubscription);
 
 		return true;
@@ -136,7 +232,7 @@ class plgRedform_mailingAcymailing extends JPlugin
 	 */
 	public function getLists()
 	{
-		$app = JFactory::getApplication();
+		$app = \JFactory::getApplication();
 
 		include_once JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php';
 
@@ -145,5 +241,19 @@ class plgRedform_mailingAcymailing extends JPlugin
 		$allLists = $listClass->getLists();
 
 		return $allLists;
+	}
+
+	private function getSubId($email, $name)
+	{
+		$myUser = new \Stdclass;
+		$myUser->email = $email;
+		$myUser->name  = $name;
+
+		$subscriberClass = acymailing_get('class.subscriber');
+
+		// This function will return you the ID of the user inserted in the AcyMailing table
+		$subid = $subscriberClass->save($myUser);
+
+		return $subid;
 	}
 }

@@ -10,11 +10,11 @@
 defined('JPATH_BASE') or die;
 
 /**
- * Class PlgRedform_FieldEventacymailinglistsFieldDawa_City
+ * Class PlgRedform_FieldDawaFieldDawa_City
  *
  * @since  3.0
  */
-class PlgRedform_FieldEventacymailinglistsFieldDawa_city extends RdfRfieldTextfield
+class PlgRedform_FieldDawaFieldDawa_city extends RdfRfieldTextfield
 {
 	/**
 	 * @var string
@@ -48,7 +48,7 @@ class PlgRedform_FieldEventacymailinglistsFieldDawa_city extends RdfRfieldTextfi
 	 *
 	 * @param   JRegistry  $params  params
 	 *
-	 * @return EventacymailinglistsFieldEventacymailinglists
+	 * @return Field
 	 */
 	public function setPluginParams(JRegistry $params)
 	{
