@@ -142,19 +142,21 @@ if ($this->item->hasOptions && $this->item->id)
 				</div>
 			</div>
 
-			<?php foreach ($this->form->getGroup('params') as $field) : ?>
-				<div class="control-group">
-					<?php if ($field->type == 'Spacer') : ?>
-						<?php echo $field->label; ?>
-					<?php else : ?>
-						<div class="control-label">
+			<?php foreach ($this->form->getFieldsets('params') as $fieldset) : ?>
+				<?php foreach ($this->form->getFieldset($fieldset->name) as $field) : ?>
+					<div class="control-group">
+						<?php if ($field->type == 'Spacer') : ?>
 							<?php echo $field->label; ?>
-						</div>
-						<div class="controls">
-							<?php echo $field->input; ?>
-						</div>
-					<?php endif; ?>
-				</div>
+						<?php else : ?>
+							<div class="control-label">
+								<?php echo $field->label; ?>
+							</div>
+							<div class="controls">
+								<?php echo $field->input; ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
 			<?php endforeach; ?>
 
 			<!-- hidden fields -->

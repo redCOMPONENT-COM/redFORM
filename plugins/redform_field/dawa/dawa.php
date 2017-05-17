@@ -14,7 +14,7 @@ jimport('joomla.plugin.plugin');
 
 jimport('redevent.bootstrap');
 
-RLoader::registerPrefix('PlgRedform_FieldEventacymailinglists', __DIR__);
+RLoader::registerPrefix('PlgRedform_FieldDawa', __DIR__);
 
 /**
  * redFORM custom acymailing lists from redEVENT event
@@ -89,17 +89,17 @@ class PlgRedform_FieldDawa extends JPlugin
 		switch ($type)
 		{
 			case 'dawa_address':
-				$instance = new PlgRedform_FieldEventacymailinglistsFieldDawa_Address;
+				$instance = new PlgRedform_FieldDawaFieldDawa_Address;
 				$instance->setPluginParams($this->params);
 				break;
 
 			case 'dawa_city':
-				$instance = new PlgRedform_FieldEventacymailinglistsFieldDawa_City;
+				$instance = new PlgRedform_FieldDawaFieldDawa_City;
 				$instance->setPluginParams($this->params);
 				break;
 
 			case 'dawa_zip':
-				$instance = new PlgRedform_FieldEventacymailinglistsFieldDawa_Zip;
+				$instance = new PlgRedform_FieldDawaFieldDawa_Zip;
 				$instance->setPluginParams($this->params);
 				break;
 		}

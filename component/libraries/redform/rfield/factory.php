@@ -31,6 +31,7 @@ abstract class RdfRfieldFactory extends JObject
 
 		// Add types from plugins
 		JPluginHelper::importPlugin('redform_field');
+		JPluginHelper::importPlugin('redform_mailing');
 		RFactory::getDispatcher()->trigger('onRedformGetFieldTypes', array(&$types));
 
 		return $types;
@@ -52,6 +53,7 @@ abstract class RdfRfieldFactory extends JObject
 
 		// Add types options from plugins
 		JPluginHelper::importPlugin('redform_field');
+		JPluginHelper::importPlugin('redform_mailing');
 		RFactory::getDispatcher()->trigger('onRedformGetFieldTypesOptions', array(&$options));
 
 		return $options;
@@ -101,6 +103,7 @@ abstract class RdfRfieldFactory extends JObject
 
 		// Add types options from plugins
 		JPluginHelper::importPlugin('redform_field');
+		JPluginHelper::importPlugin('redform_mailing');
 		RFactory::getDispatcher()->trigger('onRedformGetFieldInstance', array($type, &$instance));
 
 		if ($instance)

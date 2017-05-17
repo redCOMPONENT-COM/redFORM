@@ -43,11 +43,8 @@ class RedformFormFieldField extends JFormFieldList
 	{
 		$options = array();
 
-		// Filter by state
-		$state = $this->element['state'] ? (int) $this->element['state'] : null;
-
 		// Get the forms
-		$items = $this->getFields($state);
+		$items = $this->getFields();
 
 		$excludeFields = array();
 		$excludeFormFields = isset($this->element['excludeFormFields']) ?
@@ -90,11 +87,9 @@ class RedformFormFieldField extends JFormFieldList
 	/**
 	 * Method to get the list of forms.
 	 *
-	 * @param   integer  $state  The companies state
-	 *
-	 * @return  array  An array of company names.
+	 * @return  array
 	 */
-	protected function getFields($state = null)
+	protected function getFields()
 	{
 		if (empty($this->cache))
 		{
@@ -104,6 +99,14 @@ class RedformFormFieldField extends JFormFieldList
 				->select(array($db->qn('a.id', 'value'), $db->qn('a.field', 'text')))
 				->from($db->qn('#__rwf_fields', 'a'))
 				->order('a.field ASC');
+
+			// Filter by state
+			$type = $this->element['field_type'] ? (string) $this->element['field_type'] : null;
+
+			if ($type)
+			{
+				$query->where('a.fieldtype = ' . $db->q($type));
+			}
 
 			$db->setQuery($query);
 
