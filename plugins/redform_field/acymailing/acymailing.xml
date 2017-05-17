@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="redform_mailing" method="upgrade">
+<extension version="2.5" type="plugin" group="redform_field" method="upgrade">
 	<name>PLG_REDFORM_MAILING_ACYMAILING</name>
 	<creationDate>July 8, 2015</creationDate>
 	<author>redWEB Aps</author>
@@ -21,6 +21,6 @@
 	</files>
 
 	<updateservers>
-		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_mailing_acymailing.xml</server>
+		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_field_acymailing.xml</server>
 	</updateservers>
 </extension>
