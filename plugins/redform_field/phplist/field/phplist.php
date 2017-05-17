@@ -9,16 +9,16 @@
 defined('JPATH_BASE') or die;
 
 /**
- * Class RdfRfieldJnewslist
+ * Class RdfRfieldPhplist
  *
  * @since  __deploy_version__
  */
-class RdfRfieldJnews extends \RdfRfieldCheckbox
+class RdfRfieldPhplist extends \RdfRfieldCheckbox
 {
 	/**
 	 * @var string
 	 */
-	protected $type = 'jnews';
+	protected $type = 'phplist';
 
 	/**
 	 * @var JRegistry
@@ -47,7 +47,7 @@ class RdfRfieldJnews extends \RdfRfieldCheckbox
 	 *
 	 * @param   JRegistry  $params  params
 	 *
-	 * @return RdfRfieldJnews
+	 * @return RdfRfieldAcymailinglist
 	 */
 	public function setPluginParams(JRegistry $params)
 	{

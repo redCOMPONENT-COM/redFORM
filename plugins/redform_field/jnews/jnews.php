@@ -57,7 +57,7 @@ class plgRedform_fieldJnews extends AbstractFieldPlugin
 	{
 		if ('jnews' === $type)
 		{
-			$instance = new RdfRfieldJnewslist;
+			$instance = new RdfRfieldJnews;
 			$instance->setPluginParams($this->params);
 		}
 	}
@@ -142,7 +142,7 @@ class plgRedform_fieldJnews extends AbstractFieldPlugin
 				}
 			}
 
-			/* Check if the mailinglist exists, add the user to it */
+			// Check if the mailinglist exists, add the user to it
 			foreach ($lists as $listId)
 			{
 				// Add to subscriber list table
@@ -157,7 +157,7 @@ class plgRedform_fieldJnews extends AbstractFieldPlugin
 				if ($res)
 				{
 					// Already susbscribed to this list
-					return true;
+					continue;
 				}
 
 				$query = $db->getQuery(true)
@@ -173,8 +173,6 @@ class plgRedform_fieldJnews extends AbstractFieldPlugin
 					$app->enqueueMessage(JText::_('PLG_REDFORM_MAILING_jnews_SUBSCRIBE_ERROR') . ' ' . $db->getErrorMsg(), 'error');
 				}
 			}
-
-			return true;
 		}
 	}
 

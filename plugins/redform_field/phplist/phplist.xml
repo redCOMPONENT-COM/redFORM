@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="redform_mailing" method="upgrade">
-  <name>PLG_REDFORM_MAILING_PHPLIST</name>
+<extension version="2.5" type="plugin" group="redform_field" method="upgrade">
+	<name>PLG_REDFORM_MAILING_PHPLIST</name>
 	<creationDate>July 8, 2015</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
@@ -9,14 +9,15 @@
 	<license>GNU/GPL</license>
 	<version>3.3.17</version>
 	<tag>##VERSION##</tag>
-  <description>PLG_REDFORM_MAILING_PHPLIST_XML_DESCRIPTION</description>
+	<description>PLG_REDFORM_MAILING_PHPLIST_XML_DESCRIPTION</description>
 
-  <files>
-    <filename plugin="phplist">phplist.php</filename>
-    <folder>phplist</folder>
-    <filename>index.html</filename>
-    <folder>language</folder>
-  </files>
+	<files>
+		<filename plugin="phplist">phplist.php</filename>
+		<folder>phplist</folder>
+		<folder>field</folder>
+		<folder>language</folder>
+		<folder>layouts</folder>
+	</files>
 
 	<config>
 		<fields name="params">
