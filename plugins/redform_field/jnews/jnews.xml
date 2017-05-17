@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<extension version="2.5" type="plugin" group="redform_mailing" method="upgrade">
+	<extension version="2.5" type="plugin" group="redform_field" method="upgrade">
   <name>PLG_REDFORM_MAILING_JNEWS</name>
 	<creationDate>July 8, 2015</creationDate>
 	<author>redWEB Aps</author>
@@ -13,8 +13,10 @@
 
   <files>
     <filename plugin="jnews">jnews.php</filename>
-    <filename>index.html</filename>
-    <folder>language</folder>
+	  <folder>field</folder>
+	  <folder>form</folder>
+	  <folder>language</folder>
+	  <folder>layouts</folder>
     <folder>lib</folder>
   </files>
 

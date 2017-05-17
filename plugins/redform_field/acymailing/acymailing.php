@@ -14,9 +14,6 @@ defined('_JEXEC') or die( 'Restricted access');
 require_once __DIR__ . '/field/acymailing.php';
 require_once __DIR__ . '/form/field/acymailinglist.php';
 
-// Import library dependencies
-jimport('joomla.plugin.plugin');
-
 /**
  * Class plgRedform_mailingAcymailing
  *

@@ -16,19 +16,14 @@ defined('_JEXEC') or die( 'Restricted access');
  * @subpackage  mailing
  * @since       2.5
  */
-class TableJNews_subscribers extends JTable
+class TableJnews_subscribers extends RTable
 {
 	/**
-	 * Object constructor
+	 * The table name without the prefix.
 	 *
-	 * @param   string     $table  Name of the table to model.
-	 * @param   string     $key    Name of the primary key field in the table.
-	 * @param   JDatabase  &$db    JDatabase connector object.
+	 * @var  string
 	 */
-	public function __construct($table, $key, &$db)
-	{
-		parent::__construct('#__jnews_subscribers', 'id', $db);
-	}
+	protected $_tableName = 'jnews_subscribers';
 
 	/**
 	 * returns the subscriber having this email, otherwise returns false
