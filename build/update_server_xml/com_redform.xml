@@ -4,7 +4,7 @@
         <description>redFORM component update</description>
         <element>com_redform</element>
         <type>component</type>
-        <version>3.3.18</version>
+        <version>3.3.19</version>
         <infourl title="redEVENT">https://www.redcomponent.com/index.php/redcomponent/redform</infourl>
         <downloads>
             <downloadurl type="full" format="zip">https://www.redcomponent.com/index.php/redcomponent/redform</downloadurl>
