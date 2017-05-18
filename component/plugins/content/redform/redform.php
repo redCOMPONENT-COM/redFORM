@@ -95,6 +95,15 @@ class PlgContentRedform extends JPlugin
 		// Get the form details
 		$form = $this->getForm($parts[0]);
 
+		if (!$form->isValid())
+		{
+			$msg = JText::sprintf('PLG_CONTENT_REDFORM_FORM_ID_NOT_FOUND', $parts[0]);
+
+			JFactory::getApplication()->enqueueMessage($msg, 'error');
+
+			return $msg;
+		}
+
 		if (!($form->checkFormStatus()))
 		{
 			return $form->getStatusMessage();
