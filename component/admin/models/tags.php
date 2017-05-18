@@ -13,7 +13,7 @@ use Redform\Tag\Info;
  * redform Component tags Model
  *
  * @package  Redform.admin
- * @since    __deploy_version__
+ * @since    3.3.19
  */
 class RedformModelTags extends RModel
 {
@@ -21,7 +21,7 @@ class RedformModelTags extends RModel
 	 * Get items
 	 *
 	 * @return array
-	 * @since    __deploy_version__
+	 * @since    3.3.19
 	 */
 	public function getItems()
 	{
@@ -41,7 +41,7 @@ class RedformModelTags extends RModel
 	 * Method to auto-populate the model state.
 	 *
 	 * @return  void
-	 * @since    __deploy_version__
+	 * @since    3.3.19
 	 */
 	protected function populateState()
 	{
@@ -55,7 +55,7 @@ class RedformModelTags extends RModel
 	 * Core tags
 	 *
 	 * @return Info[]
-	 * @since    __deploy_version__
+	 * @since    3.3.19
 	 */
 	private function getStandardTags()
 	{
@@ -77,7 +77,7 @@ class RedformModelTags extends RModel
 	 * Get custom fields tags
 	 *
 	 * @return Info[]
-	 * @since    __deploy_version__
+	 * @since    3.3.19
 	 */
 	private function getFieldsTags()
 	{
@@ -112,7 +112,7 @@ class RedformModelTags extends RModel
 	 * @param   array  $tags  all tags
 	 *
 	 * @return array
-	 * @since    __deploy_version__
+	 * @since    3.3.19
 	 */
 	private function tagsBySection($tags)
 	{

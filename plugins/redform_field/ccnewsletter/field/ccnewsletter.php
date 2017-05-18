@@ -11,7 +11,7 @@ defined('JPATH_BASE') or die;
 /**
  * Class RdfRfieldCcnewsletterlist
  *
- * @since  __deploy_version__
+ * @since  3.3.19
  */
 class RdfRfieldCcnewsletterlist extends \RdfRfieldCheckbox
 {

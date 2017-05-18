@@ -13,7 +13,7 @@ JFormHelper::loadFieldClass('list');
 /**
  * Ccnewsletter list Field
  *
- * @since  __deploy_version__
+ * @since  3.3.19
  */
 class RedformFormFieldCcnewsletterlist extends JFormFieldList
 {

@@ -605,7 +605,7 @@ class RdfRfield extends JObject
 	 *
 	 * @return null
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.19
 	 */
 	protected function getLookupDefaultValueIntegration()
 	{

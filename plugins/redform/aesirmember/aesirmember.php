@@ -23,7 +23,7 @@ class plgRedformAesirmember extends JPlugin
 	 * Affects constructor behavior. If true, language files will be loaded automatically.
 	 *
 	 * @var    boolean
-	 * @since __deploy_version__
+	 * @since 3.3.19
 	 */
 	protected $autoloadLanguage = true;
 
@@ -35,7 +35,7 @@ class plgRedformAesirmember extends JPlugin
 	 *
 	 * @return boolean
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.19
 	 */
 	public function onContentPrepareForm(JForm $form, $data)
 	{

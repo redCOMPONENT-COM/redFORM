@@ -355,7 +355,7 @@ class RdfHelper
 	 *
 	 * @return JDate
 	 *
-	 * @since  __deploy_version__
+	 * @since  3.3.19
 	 */
 	public static function getDateToUserTimezone($date, $user= null)
 	{

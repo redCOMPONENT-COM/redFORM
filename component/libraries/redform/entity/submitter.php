@@ -238,7 +238,7 @@ class RdfEntitySubmitter extends RdfEntityBase
 	 *
 	 * @return  string text with tags substituted
 	 *
-	 * @since   __deploy_version__
+	 * @since   3.3.19
 	 */
 	public function replaceTags($text)
 	{

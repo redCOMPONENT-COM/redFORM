@@ -14,7 +14,7 @@ JFormHelper::loadFieldClass('list');
 /**
  * Jnews list Field
  *
- * @since  __deploy_version__
+ * @since  3.3.19
  */
 class RedformFormFieldJnewslist extends JFormFieldList
 {

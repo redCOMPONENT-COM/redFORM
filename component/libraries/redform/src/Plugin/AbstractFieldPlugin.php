@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * Tag container
  *
  * @package  Redform.Library
- * @since    __deploy_version__
+ * @since    3.3.19
  */
 abstract class AbstractFieldPlugin extends \JPlugin
 {
