@@ -57,8 +57,8 @@ class PaymentEpay2 extends RdfPaymentHelper
 			'callbackurl' => $this->getUrl('notify', $reference),
 			'accepturl' => $this->getUrl('notify', $reference),
 			'cancelurl' => $this->getUrl('cancel', $reference),
-				'ordertext' => $request->title, // Shown in the payment window + receipt
-		'group' => $this->params->get('group'),
+			'ordertext' => $request->title, // Shown in the payment window + receipt
+			'group' => $this->params->get('group'),
 			'description' => $request->adminDesc, // This description can be seen in the ePay administration
 			'opacity' => 50,
 		);
@@ -69,24 +69,15 @@ class PaymentEpay2 extends RdfPaymentHelper
 			$params['paymenttype'] = $types;
 		}
 
+		if ($this->params->get('md5'))
+		{
+			$params['hash'] = md5(implode("", array_values($params)));
+		}
+
 		?>
 		<div id="payment-div"></div>
 		<script>
-			paymentwindow = new PaymentWindow({
-				<?php
-
-				foreach ($params as $key => $value)
-				{
-					echo "'" . $key . "': \"" . $value . "\",\n";
-				}
-
-				if ($this->params->get('md5'))
-				{
-					$hash = md5(implode("", array_values($params)));
-					echo "'hash': \"" . $hash . "\"\n";
-				}
-				?>
-			});
+			paymentwindow = new PaymentWindow(<?= json_encode($params); ?>);
 			<?php if ($this->params->get('windowstate') != '1'): ?>
 			paymentwindow.append('payment-div');
 			<?php endif; ?>

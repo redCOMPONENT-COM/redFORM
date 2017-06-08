@@ -69,24 +69,15 @@ class PaymentEpay extends RdfPaymentHelper
 			$params['paymenttype'] = $types;
 		}
 
+		if ($this->params->get('md5'))
+		{
+			$params['hash'] = md5(implode("", array_values($params)));
+		}
+
 		?>
 		<div id="payment-div"></div>
 		<script>
-			paymentwindow = new PaymentWindow({
-				<?php
-
-				foreach ($params as $key => $value)
-				{
-					echo "'" . $key . "': \"" . $value . "\",\n";
-				}
-
-				if ($this->params->get('md5'))
-				{
-					$hash = md5(implode("", array_values($params)));
-					echo "'hash': \"" . $hash . "\"\n";
-				}
-				?>
-			});
+			paymentwindow = new PaymentWindow(<?= json_encode($params); ?>);
 			<?php if ($this->params->get('windowstate') != '1'): ?>
 			paymentwindow.append('payment-div');
 			<?php endif; ?>
