@@ -321,7 +321,7 @@ class RedformControllerPayment extends JControllerLegacy
 			if ($alreadypaid)
 			{
 				// Dont' forward to integration, to prevent side effects. This should only happen for async callbacks anyway.
-				$app->enqueueMessage('COM_REDFORM_PAYMENT_NOTIFICATION_RECEIVED_ALREADY_PAID', 'notice');
+				$app->enqueueMessage(JText::_('COM_REDFORM_PAYMENT_NOTIFICATION_RECEIVED_ALREADY_PAID'), 'notice');
 
 				$app->input->set('view', 'payment');
 				$app->input->set('layout', 'final');
