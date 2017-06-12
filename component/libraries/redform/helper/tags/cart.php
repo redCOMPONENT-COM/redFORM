@@ -87,10 +87,11 @@ class RdfHelperTagsCart
 	 */
 	public function replacePayment_date(RdfHelperTagsParsed $parsedTag)
 	{
-		$date = JFactory::getDate($this->cart->getPayment()->date);
+		$date = JFactory::getDate($this->cart->getPayment()->date, 'UTC');
+		$date->setTimezone(new DateTimeZone(JFactory::getConfig('offset')));
 		$format = $parsedTag->getParam('format');
 
-		return $format ? $date->format($format) : $date->toSql();
+		return $format ? $date->format($format, true) : $date->toSql(true);
 	}
 
 	/**
