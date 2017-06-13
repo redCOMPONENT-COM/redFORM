@@ -33,7 +33,7 @@ class RedformeconomicSoapClient
 	/**
 	 * @var string service url
 	 */
-	private $url = 'https://www.e-conomic.com/secure/api1/EconomicWebservice.asmx?WSDL';
+	private $url = 'https://api.e-conomic.com/secure/api1/EconomicWebService.asmx?wsdl';
 
 	/**
 	 * @var JRegistry
