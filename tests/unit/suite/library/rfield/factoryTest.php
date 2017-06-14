@@ -9,6 +9,7 @@
 
 // Register library prefix
 JLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
+JLoader::registerPrefix('R', JPATH_LIBRARIES . '/redcore');
 
 /**
  * Test class library rfield factory

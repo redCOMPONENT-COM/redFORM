@@ -101,9 +101,7 @@ class RdfRfieldTextfield extends RdfRfield
 					var regexP = $(element).attr('regex');
 					var result = value.match(regexP) ? true : false;
 
-					if (typeof element[0].setCustomValidity === 'function') {
-						element[0].setCustomValidity(result ? '' : $(element).attr('regex_info'));
-					}
+					document.redformvalidator.setElementError(element.get(0), result ? '' : $(element).attr('regex_info'));
 
 					return result;
 				}
@@ -122,7 +120,7 @@ JS;
 	/**
 	 * Check that data is valid
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function validate()
 	{

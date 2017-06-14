@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<updates>
+	<update>
+		<!-- Must match 'name' column from #__extensions, it's 'name' tag from manifest -->
+		<name>redFORM cs-CZ</name>
+		<description>redFORM cs-CZ update</description>
+		<!-- Must match 'element' column from #__extensions, it is manifest filename (without extension) for file type -->
+		<element>install</element>
+		<!-- Must match 'type' column from #__extensions, it's 'file' from file type -->
+		<type>file</type>
+		<!-- Must match 'client' column from #__extensions, it's 0 for file type -->
+		<client>0</client>
+		<version>3.3.18</version>
+		<infourl title="redFORM">https://www.redcomponent.com/index.php/redcomponent/redform</infourl>
+		<downloads>
+			<downloadurl type="full" format="zip">https://www.redcomponent.com/index.php/redcomponent/redform</downloadurl>
+		</downloads>
+		<maintainer>redCOMPONENT</maintainer>
+		<maintainerurl>http://www.redcomponent.com</maintainerurl>
+		<targetplatform name="joomla" version="3.[0123456789]"/>
+	</update>
+</updates>

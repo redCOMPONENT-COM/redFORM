@@ -16,15 +16,20 @@ $attribs = array();
 
 if (isset($properties['class']))
 {
-	$attribs['class'] = 'class';
+	$attribs['class'] = $properties['class'];
 }
 
 if (isset($properties['readonly']))
 {
 	$attribs['readonly'] = 'readonly';
 }
+
+if (isset($properties['dateformat']))
+{
+	$attribs['dateformat'] = $properties['dateformat'];
+}
 ?>
 <?php echo JHTML::_('calendar', $data->getValue(), $properties['name'], $properties['id'],
 	$properties['dateformat'],
 	$attribs
-); ?>
+);

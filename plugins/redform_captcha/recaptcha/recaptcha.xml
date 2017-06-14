@@ -7,7 +7,7 @@
 	<authorUrl>www.redcomponent.com</authorUrl>
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-	<version>3.3.1</version>
+	<version>3.3.18</version>
 	<tag>##VERSION##</tag>
 	<description>PLG_REDFORM_CAPTCHA_RECAPTCHA_XML_DESCRIPTION</description>
 
@@ -21,13 +21,30 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-				<field name="public_key" type="text" default=""
+				<field name="public_key" type="text" default="" required="1"
 					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY"
 					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_DESC" />
-				<field name="private_key" type="text" default=""
+				<field name="private_key" type="text" default="" required="1"
 					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY"
 					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_DESC" />
+				<field name="theme" type="list" default=""
+					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME"
+					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC">
+					<option value="">JDefault</option>
+					<option value="dark">dark</option>
+					<option value="light">light</option>
+				</field>
+				<field name="size" type="list" default=""
+					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE"
+					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE_DESC">
+					<option value="">JDefault</option>
+					<option value="compact">compact</option>
+					<option value="normal">normal</option>
+				</field>
 			</fieldset>
 		</fields>
 	</config>
+	<updateservers>
+		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_captcha_recaptcha.xml</server>
+	</updateservers>
 </extension>

@@ -54,13 +54,27 @@ class RdfPaymentTurnsubmission
 				$paymentRequestsItems = $pr->getItems();
 				$this->paidItems = array_merge($this->paidItems, $paymentRequestsItems);
 			}
+			else
+			{
+				// Delete unpaid
+				$pr->delete();
+			}
 		}
 
-		$entity = $this->createPaymentRequest();
+		if (!$entity = $this->createPaymentRequest())
+		{
+			return false;
+		}
 
 		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger('onRedformAfterTurnSubmission', array($entity));
+
+		if ($entity->price < 0 && $previousPayment = $this->getPreviousPayment())
+		{
+			JPluginHelper::importPlugin('redform_payment');
+			$dispatcher->trigger('onRedformCreditPaymentRequest', array($entity, $previousPayment));
+		}
 
 		return $entity->id;
 	}
@@ -81,6 +95,11 @@ class RdfPaymentTurnsubmission
 		$entity->price = - $this->getTotalPrice();
 		$entity->vat = - $this->getTotalVat();
 		$entity->currency = $this->submission->currency;
+
+		if (!($entity->price || $entity->vat))
+		{
+			return false;
+		}
 
 		$entity->save();
 
@@ -122,7 +141,7 @@ class RdfPaymentTurnsubmission
 	{
 		return array_reduce(
 			$this->paidItems,
-			function($total, $item)
+			function ($total, $item)
 			{
 				return $total += $item->price;
 			}
@@ -138,10 +157,37 @@ class RdfPaymentTurnsubmission
 	{
 		return array_reduce(
 			$this->paidItems,
-			function($total, $item)
+			function ($total, $item)
 			{
 				return $total += $item->vat;
 			}
 		);
+	}
+
+	/**
+	 * Get a previous payment
+	 *
+	 * @return RdfEntityPayment
+	 *
+	 * @since 3.3.18
+	 */
+	private function getPreviousPayment()
+	{
+		if (!$paymentRequests = $this->submission->getPaymentRequests())
+		{
+			return false;
+		}
+
+		$paid = array_filter(
+			$paymentRequests,
+			function ($paymentRequest)
+			{
+				return $paymentRequest->paid && $paymentRequest->price > 0;
+			}
+		);
+
+		$latest = reset($paid);
+
+		return $latest->getPayment();
 	}
 }

@@ -10,9 +10,13 @@
 defined('_JEXEC') or die;
 
 $answers = $displayData;
+$pass = array('submissionprice', 'recipients');
 ?>
 <table>
 	<?php foreach ($answers->getFields() as $field): ?>
+		<?php if (in_array($field->fieldtype, $pass)): ?>
+			<?php continue; ?>
+		<?php endif; ?>
 	<tr>
 		<th><?php echo $field->field; ?></th>
 		<td><?php echo $field->getValueAsString('<br/>'); ?></td>

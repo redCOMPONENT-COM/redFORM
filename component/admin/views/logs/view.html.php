@@ -40,7 +40,7 @@ class RedformViewLogs extends RdfView
 		// Get data from the model
 		$this->items = $this->get('Items');
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 
 	/**

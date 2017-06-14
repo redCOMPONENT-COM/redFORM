@@ -33,10 +33,10 @@ abstract class RdfPaymentPlugin extends RPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
-	 *                             Recognized key values include 'name', 'group', 'params', 'language'
-	 *                             (this list is not meant to be comprehensive).
+	 * @param   object  $subject  The object to observe
+	 * @param   array   $config   An optional associative array of configuration settings.
+	 *                            Recognized key values include 'name', 'group', 'params', 'language'
+	 *                            (this list is not meant to be comprehensive).
 	 *
 	 * @since   2.0
 	 */
@@ -49,10 +49,10 @@ abstract class RdfPaymentPlugin extends RPlugin
 	/**
 	 * Adds Gateway to list if available for payment
 	 *
-	 * @param   array   &$gateways  array of current gateways
-	 * @param   object  $details    details for payment
+	 * @param   array   $gateways  array of current gateways
+	 * @param   object  $details   details for payment
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function onGetGateway(&$gateways, $details = null)
 	{

@@ -140,8 +140,8 @@ if (!empty($this->items))
 				<?php if ($this->formInfo->enable_confirmation): ?>
 				<td>
 					<?php if (RdfHelper::isNonNullDate($item->confirmed_date)): ?>
-						<i class="icon-ok hasTip" title="<?php
-						echo $this->escape(JText::sprintf('COM_REDFORM_COMFIRMATION_INFO', $item->confirmed_date, $item->confirmed_type, $item->confirmed_ip));
+						<i class="icon-ok hasToolTip" title="<?php
+						echo RHtml::tooltipText(JText::sprintf('COM_REDFORM_COMFIRMATION_INFO', $item->confirmed_date, $item->confirmed_type, $item->confirmed_ip));
 						?>"/>
 					<?php endif; ?>
 				</td>
@@ -193,10 +193,10 @@ if (!empty($this->items))
 									<?php echo RdfHelper::formatPrice($pr->price + $pr->vat, $pr->currency); ?>
 									<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&pr=' . $pr->prid), JText::_('COM_REDFORM_history')); ?>
 									<?php if (!$pr->paid): ?>
-										<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID') . '::' . $pr->status; ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
+										<span class="hasToolTip" title="<?php echo RHtml::tooltipText(JText::_('COM_REDFORM_REGISTRATION_NOT_PAID'), $pr->status); ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
 										<?php echo ' '.JHTML::link(JURI::root().'index.php?option=com_redform&task=payment.select&key=' . $item->submit_key, JText::_('COM_REDFORM_link')); ?>
 									<?php else: ?>
-										<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID') . '::' . $pr->status; ?>"><i class="icon-ok"></i><?php echo $link; ?></span>
+										<span class="hasToolTip" title="<?php echo RHtml::tooltipText(JText::_('COM_REDFORM_REGISTRATION_PAID'), $pr->status); ?>"><i class="icon-ok"></i><?php echo $link; ?></span>
 									<?php endif; ?>
 
 									<?php if (isset($invoices[$item->id][$pr->prid])): ?>

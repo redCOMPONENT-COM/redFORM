@@ -77,7 +77,7 @@ class RedformModelPayment extends RModelAdmin
 	 *
 	 * @param   object  $table  current table
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	protected function getNewCartId($table)
 	{

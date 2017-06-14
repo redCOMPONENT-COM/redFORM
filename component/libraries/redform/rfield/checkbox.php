@@ -70,6 +70,11 @@ class RdfRfieldCheckbox extends RdfRfield
 
 		foreach ($this->getOptions() as $option)
 		{
+			if (empty($option->price))
+			{
+				continue;
+			}
+
 			if (in_array($option->value, $this->value))
 			{
 				$price += $option->price;
@@ -111,7 +116,13 @@ class RdfRfieldCheckbox extends RdfRfield
 	 */
 	public function lookupDefaultValue()
 	{
-		if ($this->load()->redmember_field)
+		$default = $this->getLookupDefaultValueIntegration();
+
+		if (!is_null($default))
+		{
+			$this->value = $default;
+		}
+		elseif ($this->load()->redmember_field)
 		{
 			$this->value = explode(',', $this->user->get($this->load()->redmember_field));
 		}
@@ -160,7 +171,7 @@ class RdfRfieldCheckbox extends RdfRfield
 		$properties['class'] = trim($this->getParam('class'));
 		$properties['value'] = $option->value;
 
-		if ($option->price)
+		if (!empty($option->price))
 		{
 			$properties['price'] = $option->price;
 
@@ -213,5 +224,30 @@ class RdfRfieldCheckbox extends RdfRfield
 		$this->value = $input->get($postName, '', 'array');
 
 		return $this->value;
+	}
+
+	/**
+	 * Return the 'value' to be displayed to end user.
+	 * For a select list, should rather be the 'text' than the value
+	 *
+	 * @param   string  $glue  glue to be used if the value is an array
+	 *
+	 * @return mixed
+	 *
+	 * @since 3.3.18
+	 */
+	public function renderValue($glue = ", ")
+	{
+		$labels = array();
+
+		foreach ($this->getOptions() as $option)
+		{
+			if (in_array($option->value, $this->value))
+			{
+				$labels[] = $option->label;
+			}
+		}
+
+		return implode($glue, $labels);
 	}
 }

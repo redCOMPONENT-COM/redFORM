@@ -35,23 +35,23 @@ class PaymentQuickpay extends  RdfPaymentHelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
-		$details = $this->getDetails($request->key);
+		$cart = $this->getDetails($request->key);
 		$reference = $request->key;
-		$currency = $details->currency;
+		$currency = $cart->currency;
 
 		if (!$this->checkParameters())
 		{
 			return false;
 		}
 
-		$orderId = str_replace("-", "", $request->uniqueid) . strftime("%H%M%S");
+		$orderId = $cart->id . strftime("%H%M%S");;
 
 		$req_params = array(
 			'version' => 'v10',
 			'merchant_id' => $this->params->get('merchant_id'),
 			'agreement_id' => $this->params->get('agreement_id'),
 			'order_id' => $orderId,
-			'amount' => round($this->getPrice($details) * 100),
+			'amount' => round($this->getPrice($cart) * 100),
 			'currency' => $currency,
 			'continueurl' => $this->getUrl('processing', $reference),
 			'cancelurl' => $this->getUrl('paymentcancelled', $reference),

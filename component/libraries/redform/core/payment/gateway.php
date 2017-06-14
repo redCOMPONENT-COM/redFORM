@@ -18,14 +18,20 @@ defined('_JEXEC') or die;
  */
 class RdfCorePaymentGateway
 {
+	/**
+	 * @var array
+	 */
 	protected $gateways;
 
+	/**
+	 * @var RdfPaymentInfo
+	 */
 	protected $paymentDetails;
 
 	/**
 	 * Constructor
 	 *
-	 * @param   object  $paymentDetails  payment details data to filter the gateways
+	 * @param   RdfPaymentInfo  $paymentDetails  payment details data to filter the gateways
 	 */
 	public function __construct($paymentDetails = null)
 	{

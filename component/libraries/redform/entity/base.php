@@ -107,6 +107,18 @@ abstract class RdfEntityBase
 	}
 
 	/**
+	 * Proxy item properties isset. This needs to be implemented for proper result when doing empty() check
+	 *
+	 * @param   string  $property  Property tried to access
+	 *
+	 * @return  mixed   $this->item->property if it exists
+	 */
+	public function __isset($property)
+	{
+		return null != $this->item && property_exists($this->item, $property);
+	}
+
+	/**
 	 * Proxy item properties
 	 *
 	 * @param   string  $property  Property tried to access
@@ -126,6 +138,36 @@ abstract class RdfEntityBase
 		$this->item->$property = $value;
 
 		return $this;
+	}
+
+	/**
+	 * Load a collection from an array.
+	 *
+	 * @param   array  $items  Array containing entities data
+	 *
+	 * @return  self
+	 *
+	 * @throws  \RuntimeException
+	 */
+	public static function loadArray(array $items)
+	{
+		$entities = array();
+
+		foreach ($items as $item)
+		{
+			$item = (object) $item;
+
+			if (!property_exists($item, 'id'))
+			{
+				throw new \RuntimeException('redform library: entity needs needs an id');
+			}
+
+			$entity = self::getInstance($item->id)->bind($item);
+
+			$entities[] = $entity;
+		}
+
+		return $entities;
 	}
 
 	/**
@@ -280,6 +322,28 @@ abstract class RdfEntityBase
 		$class = get_called_class();
 
 		unset(static::$instances[$class][$id]);
+	}
+
+	/**
+	 * Delete item
+	 *
+	 * @return boolean
+	 */
+	public function delete()
+	{
+		if ($this->isValid())
+		{
+			$table = $this->getTable();
+
+			if ($table->delete($this->id))
+			{
+				$this->clearInstance($this->id);
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

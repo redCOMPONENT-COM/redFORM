@@ -25,6 +25,8 @@ defined('_JEXEC') or die('Restricted access');
 // Register library prefix
 RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
+require_once __DIR__ . '/../epay/helpers/credit.php';
+
 /**
  * Epay payment plugin
  *
@@ -35,4 +37,26 @@ RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 class PlgRedform_PaymentEpay2 extends RdfPaymentPlugin
 {
 	protected $gateway = 'epay2';
+
+	/**
+	 * Callback handler to credit a payment
+	 *
+	 * @param   RdfEntityPaymentrequest  $paymentRequest   payment request to credit
+	 * @param   RdfEntityPayment         $previousPayment  a previous payment for same submitter
+	 *
+	 * @return boolean
+	 *
+	 * @since 3.3.18
+	 */
+	public function onRedformCreditPaymentRequest(RdfEntityPaymentrequest $paymentRequest, RdfEntityPayment $previousPayment)
+	{
+		if (!$previousPayment->gateway == $this->gateway && $this->params->get('auto_credit', 0))
+		{
+			return true;
+		}
+
+		$helper = new PaymentEpayCredit($paymentRequest, $previousPayment, $this->params);
+
+		return $helper->process();
+	}
 }

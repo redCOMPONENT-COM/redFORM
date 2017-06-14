@@ -58,7 +58,12 @@ class RdfRfieldFileupload extends RdfRfield
 
 		if ($this->load()->validate)
 		{
-			$properties['class'] = ' required';
+			$properties['class'] .= ' required';
+		}
+
+		if ($maxsize = $this->getParam('maxsize'))
+		{
+			$properties['class'] .= ' validate-custom' . $this->id;
 		}
 
 		if ($placeholder = $this->getParam('placeholder'))
@@ -83,11 +88,48 @@ class RdfRfieldFileupload extends RdfRfield
 	}
 
 	/**
+	 * Returns field Input
+	 *
+	 * @return string
+	 */
+	public function getInput()
+	{
+		if ($maxsize = $this->getParam('maxsize'))
+		{
+			$message = JText::sprintf('LIB_REDFORM_VALIDATION_FILE_TOO_BIG', $this->formatSizeUnits($maxsize));
+			$script = <<<JS
+	(function($){
+		$(function() {
+			document.redformvalidator.setHandler('custom{$this->id}', function (value, element) {
+				var file = element[0].files[0];
+				if (file) {
+					var size = file.size;
+					var result = size < {$maxsize};
+
+					if (typeof element[0].setCustomValidity === 'function') {
+						element[0].setCustomValidity(result ? '' : "{$message}");
+					}
+
+					return result;
+				}
+
+				return true;
+			});
+		});
+	})(jQuery);
+JS;
+			JFactory::getDocument()->addScriptDeclaration($script);
+		}
+
+		return parent::getInput();
+	}
+
+	/**
 	 * Check if there was a file uploaded
 	 *
 	 * @param   int  $signup  signup id
 	 *
-	 * @return bool|string
+	 * @return boolean|string
 	 *
 	 * @throws RuntimeException
 	 */
@@ -127,7 +169,7 @@ class RdfRfieldFileupload extends RdfRfield
 		// Make sure we have a unique name for file
 		$dest_filename = uniqid() . '_' . basename(JFile::makeSafe($upload['name']));
 
-		/* Start processing uploaded file */
+		// Start processing uploaded file
 		if (is_uploaded_file($src_file))
 		{
 			if (move_uploaded_file($src_file, $fullpath . '/' . $dest_filename))
@@ -146,13 +188,13 @@ class RdfRfieldFileupload extends RdfRfield
 	/**
 	 * Return path to storage folder, create if necessary
 	 *
-	 * @return bool|string
+	 * @return boolean|string
 	 *
 	 * @throws RuntimeException
 	 */
 	private function getStoragePath()
 	{
-		/* Check if the folder exists */
+		// Check if the folder exists
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.file');
 

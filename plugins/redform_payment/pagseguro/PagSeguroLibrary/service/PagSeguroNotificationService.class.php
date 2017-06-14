@@ -48,7 +48,7 @@ class PagSeguroNotificationService {
 			
 			$connection = new PagSeguroHttpConnection();
 			$connection->get(
-				self::buildTransactionNotificationUrl($connectionData, $notificationCode), // URL + parâmetros de busca
+				self::buildTransactionNotificationUrl($connectionData, $notificationCode), // URL + parï¿½metros de busca
 				$connectionData->getServiceTimeout(), // Timeout
 				$connectionData->getCharset() // charset
 			);

@@ -36,10 +36,10 @@ $return = '&return=' . base64_encode($uri->toString());
 			<?php echo RdfHelper::formatPrice($pr->price + $pr->vat, $pr->currency); ?>
 			<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&pr=' . $pr->id . $return), JText::_('COM_REDEVENT_history')); ?>
 			<?php if (!$pr->paid): ?>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDEVENT_REGISTRATION_NOT_PAID'); ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
+				<span class="hasToolTip" title="<?php echo RHtml::tooltipText(JText::_('COM_REDEVENT_REGISTRATION_NOT_PAID')); ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
 				<?php echo ' '.JHTML::link(JURI::root().'index.php?option=com_redform&task=payment.select&key=' . $row->submit_key . $return, JText::_('COM_REDEVENT_link')); ?>
 			<?php else: ?>
-				<span class="hasTip" title="<?php echo JText::_('COM_REDEVENT_REGISTRATION_PAID'); ?>"><i class="icon-ok"></i><?php echo $link; ?></span>
+				<span class="hasToolTip" title="<?php echo RHtml::tooltipText(JText::_('COM_REDEVENT_REGISTRATION_PAID')); ?>"><i class="icon-ok"></i><?php echo $link; ?></span>
 			<?php endif; ?>
 
 			<?php if (isset($invoices[$row->sid][$pr->id])): ?>

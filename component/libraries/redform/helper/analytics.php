@@ -82,21 +82,26 @@ JS;
 	{
 		$params = JComponentHelper::getParams('com_redform');
 
+		$id = json_encode($trans->id);
+		$affiliation = json_encode($trans->affiliation);
+		$revenue = json_encode($trans->revenue);
+		$currency = json_encode($trans->currency);
+
 		$js_ua = <<<JS
 		  	ga('require', 'ecommerce', 'ecommerce.js');
 			ga('ecommerce:addTransaction', {
-			'id' : '{$trans->id}',           // transaction ID - required
-			'affiliation' : '{$trans->affiliation}',  // affiliation or store name
-			'revenue' : '{$trans->revenue}',          // total - required
-  			'currency': '{$trans->currency}'  // local currency code.
+			'id' : {$id},           // transaction ID - required
+			'affiliation' : {$affiliation},  // affiliation or store name
+			'revenue' : {$revenue},          // total - required
+  			'currency': {$currency}  // local currency code.
 			});
 JS;
 
 		$js_classic = <<<JS
 		_gaq.push(['_addTrans',
-			'{$trans->id}',           // transaction ID - required
-			'{$trans->affiliation}',  // affiliation or store name
-			'{$trans->revenue}'          // total - required
+			{$id},           // transaction ID - required
+			{$affiliation},  // affiliation or store name
+			{$revenue}          // total - required
 			]);
 JS;
 		$js = $params->get('ga_mode', 0) ? $js_classic : $js_ua;
@@ -117,26 +122,31 @@ JS;
 	{
 		$params = JComponentHelper::getParams('com_redform');
 
+		$id = json_encode($item->id);
+		$productName = json_encode($item->productname);
+		$sku = json_encode($item->sku);
+		$category = json_encode($item->category);
+
 		$js_ua = <<<JS
 			ga('ecommerce:addItem', {
-			'id' : '{$item->id}',  // Transaction ID. Required.
-			'name' : '{$item->productname}',      // Product name. Required.
-			'sku' : '{$item->sku}',        // SKU/code - required			.
-			'category' : '{$item->category}',      // Product name. Required.
+			'id' : {$id},  // Transaction ID. Required.
+			'name' : {$productName},      // Product name. Required.
+			'sku' : {$sku},        // SKU/code - required			.
+			'category' : {$category},      // Product name. Required.
 			'price' : '{$item->price}',    // Unit price.
 			'currency' : '{$item->currency}',
-			'quantity' : '{$quantity}'    // Unit quantity.
+			'quantity' : {$quantity}    // Unit quantity.
 			});
 JS;
 
 		$js_classic = <<<JS
 			_gaq.push(['_addItem',
-				'{$item->id}',  // TTransaction ID. Required.
-				'{$item->sku}',        // SKU/code - required			.
-				'{$item->productname}',        // Product name.		.
-				'{$item->category}',        // Category.
+				{$id},  // TTransaction ID. Required.
+				{$sku},        // SKU/code - required			.
+				{$productName},        // Product name.		.
+				{$category},        // Category.
 				'{$item->price}',       // Unit price - required
-				'{$quantity}'    // Unit quantity- required
+				{$quantity}    // Unit quantity- required
 				]);
 			_gaq.push(['_set', 'currencyCode', '{$item->currency}']);
 JS;
@@ -210,20 +220,24 @@ JS;
 
 		$value = $event->value ? $event->value : 1;
 
+		$category = json_encode($event->category);
+		$action = json_encode($event->action);
+		$label = json_encode($event->label);
+
 		$js_ua = <<<JS
 			ga('send', 'event',
-			'{$event->category}',
-			'{$event->action}',
-			'{$event->label}',
+			{$category},
+			{$action},
+			{$label},
 			$value
 			);
 JS;
 
 		$js_classic = <<<JS
 			_gaq.push(['_trackEvent',
-				'{$event->category}',
-				'{$event->action}',
-				'{$event->label}',
+				{$category},
+				{$action},
+				{$label},
 				$value
 				]);
 JS;
@@ -254,7 +268,7 @@ JS;
 
 		$price = array_reduce(
 			$submitters,
-			function($carry, $item)
+			function ($carry, $item)
 			{
 				$carry += $item->price;
 
@@ -265,7 +279,7 @@ JS;
 		// Add transaction
 		$trans = new stdclass;
 		$trans->id = $submit_key;
-		$trans->affiliation = isset($options['affiliate']) ? $options['affiliate'] : $first->getForm()->formname;
+		$trans->affiliation = isset($options['affiliation']) ? $options['affiliation'] : $first->getForm()->formname;
 		$trans->revenue = $price;
 		$trans->currency = $first->currency;
 
@@ -279,7 +293,7 @@ JS;
 		foreach ($submitters as $s)
 		{
 			$item = new stdclass;
-			$item->id = $s->id;
+			$item->id = $submit_key;
 			$item->productname = $productname ? $productname : 'submitter' . $s->id;
 			$item->sku  = $sku ? $sku : 'submitter' . $s->id;
 			$item->category  = $category ? $category : '';

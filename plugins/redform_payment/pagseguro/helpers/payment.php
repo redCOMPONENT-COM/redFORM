@@ -28,7 +28,7 @@ class PaymentPagseguro extends RdfPaymentHelper
 	 * @param   string  $return_url  return url
 	 * @param   string  $cancel_url  cancel url
 	 *
-	 * @throws RedformPaymentException
+	 * @throws RdfPaymentException
 	 * @return bool
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
@@ -102,7 +102,7 @@ class PaymentPagseguro extends RdfPaymentHelper
 		}
 		catch (PagSeguroServiceException $e)
 		{
-			throw new RedformPaymentException('Pagseguro error: ' . $e->getMessage());
+			throw new RdfPaymentException('Pagseguro error: ' . $e->getMessage());
 		}
 
 		JHtml::_('behavior.mootools');
@@ -120,7 +120,7 @@ class PaymentPagseguro extends RdfPaymentHelper
 	/**
 	 * Handle the reception of notification
 	 *
-	 * @throws RedformPaymentException
+	 * @throws RdfPaymentException
 	 * @return bool paid status
 	 */
 	public function notify()
@@ -148,13 +148,13 @@ class PaymentPagseguro extends RdfPaymentHelper
 
 				default:
 					$error = "Unknown notification type [" . $notificationType->getValue() . "] for cart " . $reference;
-					throw new RedformPaymentException($error);
+					throw new RdfPaymentException($error);
 			}
 		}
 		else
 		{
 			$error = "Invalid notification parameters for cart " . $reference;
-			throw new RedformPaymentException($error);
+			throw new RdfPaymentException($error);
 		}
 
 		try
@@ -185,7 +185,7 @@ class PaymentPagseguro extends RdfPaymentHelper
 				}
 
 				$error = JText::sprintf('PLG_REDFORM_IRIDIUM_NOT_PAID_KEY_S_REASON_S', $reference, $reason);
-				throw new RedformPaymentException($error);
+				throw new RdfPaymentException($error);
 			}
 
 			$resp = array();
@@ -196,7 +196,7 @@ class PaymentPagseguro extends RdfPaymentHelper
 
 			$this->writeTransaction($reference, $resp, 'SUCCESS', 1);
 		}
-		catch (RedformPaymentException $e) // Just easier for debugging...
+		catch (RdfPaymentException $e) // Just easier for debugging...
 		{
 			RdfHelperLog::simpleLog($e->getMessage());
 			$this->writeTransaction($reference, $e->getMessage() . $resp, 'FAIL', 0);
@@ -214,7 +214,7 @@ class PaymentPagseguro extends RdfPaymentHelper
 	 *
 	 * @return PagSeguroTransaction
 	 *
-	 * @throws RedformPaymentException
+	 * @throws RdfPaymentException
 	 */
 	private function TransactionNotification($notificationCode)
 	{
@@ -226,7 +226,7 @@ class PaymentPagseguro extends RdfPaymentHelper
 		}
 		catch (PagSeguroServiceException $e)
 		{
-			throw new RedformPaymentException($e->getMessage());
+			throw new RdfPaymentException($e->getMessage());
 		}
 
 		return $transaction;

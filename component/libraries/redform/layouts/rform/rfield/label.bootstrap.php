@@ -11,21 +11,17 @@ defined('_JEXEC') or die;
 
 $field = $displayData;
 
-$class = array();
-
-$text = $field->field;
+$class = '';
 
 if ($field->required && !$field->readonly)
 {
-	$text .= ' <span class="star">*</span>';
-	$class[] = 'required';
+	$class = 'class = "required"';
 }
 
-if ($tooltip = $field->tooltip)
-{
-	$text = RHtml::tooltip($field->tooltip, '', null, $text);
-}
-
-$class = implode(" ", $class);
 ?>
-<label for="<?php echo $field->getFormElementName(); ?>" <?php echo $class; ?>><?php echo $text; ?></label>
+<label for="<?php echo $field->getFormElementName(); ?>" <?= $class ?>>
+	<?= $field->field; ?>
+	<?php if ($field->required && !$field->readonly): ?>
+		<span class="label-field-required"><?= JText::_('LIB_REDFORM_FIELD_REQUIRED') ?></span>
+	<?php endif; ?>
+</label>

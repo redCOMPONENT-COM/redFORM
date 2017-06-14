@@ -58,18 +58,15 @@ class RdfCoreModelForm extends RModel
 	}
 
 	/**
-	 * Get form data
+	 * Get form entity
 	 *
-	 * @return mixed|object
+	 * @return RdfEntityForm
 	 */
 	public function getForm()
 	{
 		if (!$this->form)
 		{
-			$table = RTable::getInstance('Form', 'RedformTable');
-			$table->load($this->id);
-
-			$this->form = $table;
+			$this->form = RdfEntityForm::load($this->id);
 		}
 
 		return $this->form;
@@ -112,14 +109,16 @@ class RdfCoreModelForm extends RModel
 			return false;
 		}
 
-		if (strtotime($form->startdate) > time())
+		$now = JFactory::getDate();
+
+		if (JFactory::getDate($form->startdate) > $now)
 		{
 			$this->setError(JText::_('COM_REDFORM_STATUS_NOT_STARTED'));
 
 			return false;
 		}
 
-		if ($form->formexpires && strtotime($form->enddate) < time())
+		if ($form->formexpires && JFactory::getDate($form->enddate) < $now)
 		{
 			$this->setError(JText::_('COM_REDFORM_STATUS_EXPIRED'));
 

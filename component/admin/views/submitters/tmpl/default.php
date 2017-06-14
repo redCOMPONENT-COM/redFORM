@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-JHtml::_('rbootstrap.tooltip');
+JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('rjquery.chosen', 'select');
 
 $action = JRoute::_('index.php?option=com_redform&view=submitters');
@@ -118,8 +118,13 @@ $listDirn = $this->state->get('list.direction');
 				<?php if ($this->formInfo->enable_confirmation): ?>
 				<td>
 					<?php if (RdfHelper::isNonNullDate($item->confirmed_date)): ?>
-						<i class="icon-ok hasTip" title="<?php
-						echo $this->escape(JText::sprintf('COM_REDFORM_COMFIRMATION_INFO', $item->confirmed_date, $item->confirmed_type, $item->confirmed_ip));
+						<i class="icon-ok hasToolTip" title="<?php
+						echo RHtml::tooltipText(
+								JText::sprintf(
+										'COM_REDFORM_COMFIRMATION_INFO', RdfHelper::getDateToUserTimezone($item->confirmed_date),
+										$item->confirmed_type, $item->confirmed_ip
+								)
+						);
 						?>"/>
 					<?php endif; ?>
 				</td>
@@ -168,12 +173,17 @@ $listDirn = $this->state->get('list.direction');
 						<ul class="unstyled">
 							<?php foreach ($item->paymentrequests as $pr): ?>
 								<li>
+									<?php if ($pr->invoice_id): ?>
+										<?= $pr->invoice_id ?><br>
+									<?php else: ?>
+										<?= JText::_('COM_REDFORM_REGISTRATION_NO_INVOICE_ID_YET') ?>
+									<?php endif; ?>
 									<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&pr=' . $pr->prid), JText::_('COM_REDFORM_history')); ?>
 									<?php if (!$pr->paid): ?>
-										<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_NOT_PAID') . '::' . $pr->status; ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
+										<span class="hasToolTip" title="<?php echo RHtml::tooltipText(JText::_('COM_REDFORM_REGISTRATION_NOT_PAID'), $pr->status); ?>"><i class="icon-remove"></i><?php echo $link; ?></span>
 										<?php echo ' '.JHTML::link(JURI::root().'index.php?option=com_redform&task=payment.select&key=' . $item->submit_key, JText::_('COM_REDFORM_link')); ?>
 									<?php else: ?>
-										<span class="hasTip" title="<?php echo JText::_('COM_REDFORM_REGISTRATION_PAID') . '::' . $pr->status; ?>"><i class="icon-ok"></i><?php echo $link; ?></span>
+										<span class="hasToolTip" title="<?php echo RHtml::tooltipText(JText::_('COM_REDFORM_REGISTRATION_PAID'), $pr->status); ?>"><i class="icon-ok"></i><?php echo $link; ?></span>
 									<?php endif; ?>
 								</li>
 							<?php endforeach; ?>

@@ -19,12 +19,11 @@ $answers = $data['answers'];
 $user = $data['user'];
 $index = $data['index'];
 $form = $data['form'];
+$multi = $data['multi'];
 
 $html = '';
 
-// Custom tooltip
-$toolTipArray = array('className' => 'redformtip' . $form->classname);
-JHTML::_('behavior.tooltip', '.hasTipField', $toolTipArray);
+JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('behavior.keepalive');
 
 RHelperAsset::load('punycode.js');
@@ -38,13 +37,23 @@ if (isset($options['extrafields'][$index]))
 	$fields = array_merge($options['extrafields'][$index], $fields);
 }
 
-foreach (RdfHelper::sortFieldBySection($fields) as $s)
+if ($multi > 1)
+{
+	$html .= '<fieldset><legend class="subform-legend">' . JText::sprintf('COM_REDFORM_FIELDSET_SIGNUP_NB', $index) . '</legend>';
+	$html .= '<div class="subform-fields">';
+}
+
+$sections = RdfHelper::sortFieldBySection($fields);
+
+foreach ($sections as $s)
 {
 	$section = RdfEntitySection::load($s->id);
 	$section = '<fieldset class="redform-section' . ($section->class ? ' ' . $section->class : '') . '">';
 
 	foreach ($s->fields as $field)
 	{
+		$field->setForm($form);
+
 		if ($field->isHidden())
 		{
 			$section .= $field->getInput();
@@ -68,29 +77,18 @@ foreach (RdfHelper::sortFieldBySection($fields) as $s)
 
 		if ($field->displayLabel())
 		{
-			$fieldDiv .= '<div class="label">' . $field->getLabel() . '</div>';
-		}
+			$fieldDiv .= '<div class="label">';
+			$fieldDiv .= $field->getLabel();
 
-		$fieldDiv .= '<div class="field">' . $field->getInput() . '</div>';
-
-		if ($field->isRequired() || strlen($field->tooltip))
-		{
-			$fieldDiv .= '<div class="fieldinfo">';
-
-			if ($field->isRequired())
+			if (!empty($field->tooltip))
 			{
-				$img = JHTML::image(JURI::root() . 'media/com_redform/images/warning.png', JText::_('COM_REDFORM_Required'));
-				$fieldDiv .= ' <span class="editlinktip hasTipField" title="' . JText::_('COM_REDFORM_Required') . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
-			}
-
-			if (strlen($field->tooltip) > 0)
-			{
-				$img = JHTML::image(JURI::root() . 'media/com_redform/images/info.png', JText::_('COM_REDFORM_ToolTip'));
-				$fieldDiv .= ' <span class="editlinktip hasTipField" title="' . htmlspecialchars($field->field) . '::' . htmlspecialchars($field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
+				$fieldDiv .= '<div class="label-field-tip">' . $field->tooltip . '</div>';
 			}
 
 			$fieldDiv .= '</div>';
 		}
+
+		$fieldDiv .= '<div class="field">' . $field->getInput() . '</div>';
 
 		// Fieldline_ div
 		$fieldDiv .= '</div>';
@@ -100,6 +98,14 @@ foreach (RdfHelper::sortFieldBySection($fields) as $s)
 	$section .= '</fieldset>';
 
 	$html .= $section;
+}
+
+$html .= $this->sublayout('progressbar', $sections);
+
+if ($multi > 1)
+{
+	$html .= '</div>';
+	$html .= '</fieldset>';
 }
 
 echo $html;

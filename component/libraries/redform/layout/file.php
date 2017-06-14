@@ -17,52 +17,54 @@ defined('_JEXEC') or die;
 class RdfLayoutFile extends RLayoutFile
 {
 	/**
+	 * Get the default array of include paths
+	 *
+	 * @return  array
+	 *
+	 * @since   3.5
+	 */
+	public function getDefaultIncludePaths()
+	{
+		$paths = parent::getDefaultIncludePaths();
+
+		// Comes after redcore base layouts
+		array_splice($paths, count($paths) - 2, 0, JPATH_LIBRARIES . '/redform/layouts');
+
+		// (lowest priority) custom defaultLayoutsPath
+		if ($path = $this->options->get('defaultLayoutsPath'))
+		{
+			$paths[] = $path;
+		}
+
+		return $paths;
+	}
+
+	/**
 	 * Refresh the list of include paths
 	 *
 	 * @return  void
-	 *
-	 * @since   3.2
 	 */
 	protected function refreshIncludePaths()
 	{
-		// Reset includePaths
-		$this->includePaths = array();
+		parent::refreshIncludePaths();
 
-		// (0 - lower priority) Frontend base layouts
-		$this->addIncludePaths(JPATH_ROOT . '/layouts');
-
-		// (1) Redcore Library path
-		$this->addIncludePaths(JPATH_LIBRARIES . '/redcore/layouts');
-
-		// (1) Redform Library path
-		$this->addIncludePaths(JPATH_LIBRARIES . '/redform/layouts');
-
-		// (2) Standard Joomla! layouts overriden
-		$this->addIncludePaths(JPATH_THEMES . '/' . JFactory::getApplication()->getTemplate() . '/html/layouts');
-
-		// Component layouts & overrides if exist
-		$component = $this->options->get('component', null);
-
-		if (!empty($component))
+		// If method getDefaultIncludePaths does not exists we are in old Layout system
+		if (version_compare(JVERSION, '3.0', '>') && version_compare(JVERSION, '3.5', '<'))
 		{
-			// (3) Component path
-			if ($this->options->get('client') == 0)
+			$redFormLayoutPath = JPATH_LIBRARIES . '/redform/layouts';
+
+			// If we already added the path, then do not add it again
+			if ($this->includePaths[count($this->includePaths) - 2] != $redFormLayoutPath)
 			{
-				$this->addIncludePaths(JPATH_SITE . '/components/' . $component . '/layouts');
-			}
-			else
-			{
-				$this->addIncludePaths(JPATH_ADMINISTRATOR . '/components/' . $component . '/layouts');
+				// Comes after (1 - lower priority) Frontend base layouts
+				array_splice($this->includePaths, count($this->includePaths) - 2, 0, $redFormLayoutPath);
 			}
 
-			// (4) Component template overrides path
-			$this->addIncludePath(JPATH_THEMES . '/' . JFactory::getApplication()->getTemplate() . '/html/layouts/' . $component);
-		}
-
-		// (5 - highest priority) Received a custom high priority path ?
-		if (!is_null($this->basePath))
-		{
-			$this->addIncludePath(rtrim($this->basePath, DIRECTORY_SEPARATOR));
+			// (lowest priority) custom defaultLayoutsPath
+			if ($path = $this->options->get('defaultLayoutsPath'))
+			{
+				$this->includePaths[] = $path;
+			}
 		}
 	}
 }

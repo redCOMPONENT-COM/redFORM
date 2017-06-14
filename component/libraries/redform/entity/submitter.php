@@ -17,6 +17,23 @@ defined('_JEXEC') or die;
 class RdfEntitySubmitter extends RdfEntityBase
 {
 	/**
+	 * Get answers
+	 *
+	 * @return RdfAnswers
+	 */
+	public function getAnswers()
+	{
+		if (!$this->hasId())
+		{
+			return false;
+		}
+
+		$answers = RdfCore::getInstance()->getSidAnswers($this->id);
+
+		return $answers;
+	}
+
+	/**
 	 * Get any billing associated to sid
 	 *
 	 * @return RdfEntityBilling
@@ -110,6 +127,29 @@ class RdfEntitySubmitter extends RdfEntityBase
 	}
 
 	/**
+	 * Is it paid
+	 *
+	 * @return boolean
+	 */
+	public function isPaid()
+	{
+		if (!$paymentRequests = $this->getPaymentRequests())
+		{
+			return true;
+		}
+
+		foreach ($paymentRequests as $paymentRequest)
+		{
+			if (!$paymentRequest->paid)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Return array of RdfEntitySubmitter
 	 *
 	 * @param   string  $submit_key  submit key
@@ -133,7 +173,7 @@ class RdfEntitySubmitter extends RdfEntityBase
 		}
 
 		$submitters = array_map(
-			function($item)
+			function ($item)
 			{
 				$submitter = RdfEntitySubmitter::getInstance($item->id);
 				$submitter->bind($item);
@@ -189,5 +229,19 @@ class RdfEntitySubmitter extends RdfEntityBase
 		$js .= self::trackTrans();
 
 		return $js;
+	}
+
+	/**
+	 * replace tags
+	 *
+	 * @param   string  $text  text to parse
+	 *
+	 * @return  string text with tags substituted
+	 *
+	 * @since   3.3.19
+	 */
+	public function replaceTags($text)
+	{
+		return $this->getAnswers()->replaceTags($text);
 	}
 }

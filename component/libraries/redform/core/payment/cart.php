@@ -69,7 +69,7 @@ class RdfCorePaymentCart
 	 *
 	 * @param   string  $submitKey  submitkey for which we want a payment
 	 *
-	 * @return RTable
+	 * @return RdfEntityCart
 	 *
 	 * @throws Exception
 	 */
@@ -114,7 +114,51 @@ class RdfCorePaymentCart
 
 		$this->data = $cart;
 
-		return $this;
+		$entity = RdfEntityCart::getInstance($cart->id);
+		$entity->loadFromTable($cart);
+
+		return $entity;
+	}
+
+	/**
+	 * return a new cart for payment
+	 *
+	 * @param   string  $submitKey  submitkey for which we want a payment
+	 *
+	 * @return RdfEntityCart
+	 *
+	 * @throws Exception
+	 */
+	public function getSubmissionCart($submitKey)
+	{
+		$paymentRequests = $this->getUnpaidSubmitKeyPaymentRequests($submitKey);
+
+		if (!$paymentRequests)
+		{
+			throw new Exception('Nothing to pay');
+		}
+
+		$ids = JArrayHelper::getColumn($paymentRequests, 'id');
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('c.*')
+			->from('#__rwf_cart AS c')
+			->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = c.id')
+			->join('INNER', '#__rwf_payment_request AS pr ON pr.id = ci.payment_request_id')
+			->where('ci.payment_request_id IN (' . implode(", ", $ids) . ')');
+
+		$db->setQuery($query);
+
+		if ($res = $db->loadObject())
+		{
+			$cart = RdfEntityCart::getInstance($res->id);
+			$cart->bind($res);
+
+			return $cart;
+		}
+
+		return $this->getNewCart($submitKey);
 	}
 
 	/**

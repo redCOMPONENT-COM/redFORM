@@ -77,6 +77,9 @@ class RdfPaymentInfo
 			case 'uniqueid':
 				return $this->getPaymentInfointegration()->uniqueid;
 
+			case 'invoice_id':
+				return $this->cart->invoice_id;
+
 			case 'processIntroText':
 				if (isset($this->getPaymentInfointegration()->paymentIntroText))
 				{
@@ -85,6 +88,16 @@ class RdfPaymentInfo
 
 				return false;
 		}
+	}
+
+	/**
+	 * Get associated cart
+	 *
+	 * @return RdfEntityCart
+	 */
+	public function getCart()
+	{
+		return $this->cart;
 	}
 
 	/**
@@ -125,7 +138,7 @@ class RdfPaymentInfo
 	/**
 	 * Return payment info from integration
 	 *
-	 * @return null|Object|RdfPaymentInfointegration
+	 * @return null|object|RdfPaymentInfointegration
 	 */
 	protected function getPaymentInfointegration()
 	{
@@ -135,24 +148,35 @@ class RdfPaymentInfo
 			$dispatcher = JDispatcher::getInstance();
 
 			// More fields with integration
-			$paymentDetailFields = null;
+			$paymentDetailFields = new RdfPaymentInfointegration;
+
+			// Current method
+			$dispatcher->trigger('getCartRdfPaymentInfointegration', array($this->cart, &$paymentDetailFields));
+
+			// Legacy
 			$dispatcher->trigger('getRFSubmissionPaymentDetailFields', array($this->integration, $this->submit_key, &$paymentDetailFields));
 
-			if (!$paymentDetailFields)
+			if (!$paymentDetailFields->uniqueid)
 			{
-				$paymentDetailFields = new RdfPaymentInfointegration;
+				$paymentDetailFields->uniqueid = $this->cart->invoice_id;
+			}
 
+			if (!$paymentDetailFields->title)
+			{
 				if ($title = JFactory::getApplication()->input->get('paymenttitle'))
 				{
 					$paymentDetailFields->title = $title;
 				}
 				else
 				{
-					$paymentDetailFields->title = JText::_('COM_REDFORM_Form_submission') . ': ' . $this->form;
+					$paymentDetailFields->title = JText::_('COM_REDFORM_Form_submission') . ': ' . $this->form
+						. '(' . $paymentDetailFields->uniqueid . ')';
 				}
+			}
 
+			if (!$paymentDetailFields->adminDesc)
+			{
 				$paymentDetailFields->adminDesc = $paymentDetailFields->title;
-				$paymentDetailFields->uniqueid = $this->cart->reference;
 			}
 
 			$this->paymentDetailFields = $paymentDetailFields;

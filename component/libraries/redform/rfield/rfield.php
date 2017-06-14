@@ -71,6 +71,12 @@ class RdfRfield extends JObject
 	protected $formIndex = 1;
 
 	/**
+	 * Form field section id
+	 * @var RdfEntityForm
+	 */
+	protected $form;
+
+	/**
 	 * User associated to submission, for value lookup
 	 *
 	 * @var JUser
@@ -163,6 +169,9 @@ class RdfRfield extends JObject
 			case 'validate':
 				return $this->load()->validate;
 
+			case 'user':
+				return $this->user;
+
 			default:
 				$data = $this->load();
 
@@ -190,13 +199,55 @@ class RdfRfield extends JObject
 	}
 
 	/**
+	 * Magic function
+	 *
+	 * @param   string  $name  property to check
+	 *
+	 * @return boolean
+	 *
+	 * @since 3.3.18
+	 */
+	public function __isset($name)
+	{
+		switch ($name)
+		{
+			case 'id':
+			case 'fieldId':
+			case 'fieldtype':
+			case 'value':
+			case 'published':
+			case 'tooltip':
+			case 'hasOptions':
+			case 'options':
+			case 'name':
+			case 'field':
+			case 'redmember_field':
+			case 'section_id':
+			case 'required':
+			case 'validate':
+				return true;
+
+			default:
+				$data = $this->load();
+
+				if (property_exists($data, $name))
+				{
+					return true;
+				}
+		}
+	}
+
+	/**
 	 * Get field xml for configuration
 	 *
 	 * @return string
 	 */
 	public function getXmlPath()
 	{
-		return __DIR__ . '/' . $this->type . '.xml';
+		$ref = new ReflectionClass(get_called_class());
+		$currentDir = dirname($ref->getFileName());
+
+		return $currentDir . '/' . $this->type . '.xml';
 	}
 
 	/**
@@ -214,7 +265,7 @@ class RdfRfield extends JObject
 	/**
 	 * Get field id
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	public function getId()
 	{
@@ -379,9 +430,21 @@ class RdfRfield extends JObject
 	}
 
 	/**
+	 * Form entity
+	 *
+	 * @param   RdfEntityForm  $form  form entity
+	 *
+	 * @return void
+	 */
+	public function setForm(RdfEntityForm $form)
+	{
+		$this->form = $form;
+	}
+
+	/**
 	 * Is hidden ?
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isHidden()
 	{
@@ -391,7 +454,7 @@ class RdfRfield extends JObject
 	/**
 	 * Is required ?
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isRequired()
 	{
@@ -401,7 +464,7 @@ class RdfRfield extends JObject
 	/**
 	 * Show the label ?
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function displayLabel()
 	{
@@ -504,7 +567,13 @@ class RdfRfield extends JObject
 	 */
 	public function lookupDefaultValue()
 	{
-		if ($this->load()->redmember_field)
+		$default = $this->getLookupDefaultValueIntegration();
+
+		if (!is_null($default))
+		{
+			$this->value = $default;
+		}
+		elseif ($this->load()->redmember_field)
 		{
 			$this->value = $this->user->get($this->load()->redmember_field);
 		}
@@ -512,8 +581,6 @@ class RdfRfield extends JObject
 		{
 			$this->value = $this->load()->default;
 		}
-
-		return $this->value;
 	}
 
 	/**
@@ -531,6 +598,23 @@ class RdfRfield extends JObject
 		}
 
 		return $name;
+	}
+
+	/**
+	 * Get default value from integration
+	 *
+	 * @return null
+	 *
+	 * @since 3.3.19
+	 */
+	protected function getLookupDefaultValueIntegration()
+	{
+		$default = null;
+
+		JPluginHelper::importPlugin('redform');
+		RFactory::getDispatcher()->trigger('onRedformFieldLookupDefaultValue', array($this, &$default));
+
+		return $default;
 	}
 
 	/**
@@ -580,7 +664,7 @@ class RdfRfield extends JObject
 	/**
 	 * Check that data is valid
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function validate()
 	{
@@ -684,6 +768,20 @@ class RdfRfield extends JObject
 		$strings = array_map(array($this, 'mapProperties'), array_keys($properties), $properties);
 
 		return implode(' ', $strings);
+	}
+
+	/**
+	 * Return the 'value' to be displayed to end user,
+	 *
+	 * @param   string  $glue  glue to be used if the value is an array
+	 *
+	 * @return string
+	 *
+	 * @since 3.3.18
+	 */
+	public function renderValue($glue = ", ")
+	{
+		return $this->getValueAsString();
 	}
 
 	/**

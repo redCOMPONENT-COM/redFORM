@@ -11,14 +11,14 @@
 				description=""
 				readonly="true"
 				/>
-        <field
-                name="form_id"
-                type="redformform"
-                label="COM_REDFORM_FORMS_XML_FIELD_FORM"
-                description="COM_REDFORM_FORMS_XML_FIELD_FORM_DESC"
-                >
-            <option value="">COM_REDFORM_FORMS_XML_FIELD_FORM_SELECT</option>
-        </field>
+		<field
+				name="form_id"
+				type="redformform"
+				label="COM_REDFORM_FORMS_XML_FIELD_FORM"
+				description="COM_REDFORM_FORMS_XML_FIELD_FORM_DESC"
+				>
+			<option value="">COM_REDFORM_FORMS_XML_FIELD_FORM_SELECT</option>
+		</field>
 		<field
 				name="field"
 				type="text"

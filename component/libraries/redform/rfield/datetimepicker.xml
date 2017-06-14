@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="extra" label="extra">
+            <field name="picker" type="list" default="date"
+                   label="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_PICKER_LABEL"
+                   description="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_PICKER_DESC">
+                <option value="date">LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_PICKER_OPTION_DATE</option>
+                <option value="time">LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_PICKER_OPTION_TIME</option>
+                <option value="datetime">LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_PICKER_OPTION_DATETIME</option>
+            </field>
+
+            <field name="dateformat" type="text" default="yy-mm-dd"
+                   label="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_DATE_FORMAT_LABEL"
+                   description="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_DATE_FORMAT_DESC"/>
+
+            <field name="altDateformat" type="text" default=""
+                   label="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_ALT_DATE_FORMAT_LABEL"
+                   description="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_ALT_DATE_FORMAT_DESC"/>
+
+            <field name="timeformat" type="text" default="HH:mm:ss"
+                   label="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_TIME_FORMAT_LABEL"
+                   description="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_TIME_FORMAT_DESC"/>
+
+            <field name="altTimeformat" type="text" default=""
+                   label="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_ALT_TIME_FORMAT_LABEL"
+                   description="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_ALT_TIME_FORMAT_DESC"/>
+
+            <field name="minDate" type="text" default=""
+                   label="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_MIN_DATE_LABEL"
+                   description="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_MIN_DATE_DESC"/>
+
+            <field name="maxDate" type="text" default=""
+                   label="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_MAX_DATE_LABEL"
+                   description="LIB_REDFORM_FIELD_DATETIMEPICKER_PARAMS_MAX_DATE_DESC"/>
+        </fieldset>
+    </fields>
+</form>

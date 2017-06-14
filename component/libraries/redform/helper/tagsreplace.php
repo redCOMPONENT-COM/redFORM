@@ -134,7 +134,7 @@ class RdfHelperTagsreplace
 	 *
 	 * @return mixed
 	 */
-	private function  getAnswerReplace($tag)
+	private function getAnswerReplace($tag)
 	{
 		if (!preg_match('/^\[answer_([0-9]+)\]$/', $tag, $match))
 		{
@@ -221,7 +221,7 @@ class RdfHelperTagsreplace
 	}
 
 	/**
-	 * replaces [confirmemail]
+	 * replaces [confirmlink]
 	 *
 	 * @return string
 	 */
@@ -230,5 +230,27 @@ class RdfHelperTagsreplace
 		$url = JURI::root() . 'index.php?option=com_redform&task=redform.confirm&key=' . $this->answers->getSubmitKey();
 
 		return JRoute::_($url);
+	}
+
+	/**
+	 * replaces [paymentlink]
+	 *
+	 * @return string
+	 */
+	private function getTagPaymentlink()
+	{
+		$url = JURI::root() . RdfHelperRoute::getPaymentRoute($this->answers->getSubmitKey());
+
+		return JRoute::_($url);
+	}
+
+	/**
+	 * replaces [submitter_id]
+	 *
+	 * @return string
+	 */
+	private function getTagSubmitter_id()
+	{
+		return $this->answers->sid;
 	}
 }

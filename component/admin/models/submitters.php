@@ -228,7 +228,7 @@ class RedformModelSubmitters extends RModelList
 	/**
 	 * Get a default form id
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	protected function getDefaultFormId()
 	{
@@ -250,7 +250,7 @@ class RedformModelSubmitters extends RModelList
 	 *
 	 * @param   int  $id  form id
 	 *
-	 * @return bool|mixed
+	 * @return boolean|mixed
 	 */
 	public function getFormInfo($id = null)
 	{
@@ -353,8 +353,10 @@ class RedformModelSubmitters extends RModelList
 
 		$query->select('pr.id AS prid, pr.submission_id, pr.price, pr.vat, pr.vat, pr.created, pr.currency')
 			->select('p.id AS payment_id, p.paid, p.status, p.date')
+			->select('c.id AS cart_id, c.invoice_id')
 			->from('#__rwf_payment_request AS pr')
 			->join('LEFT', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
+			->join('LEFT', '#__rwf_cart AS c ON c.id = ci.cart_id')
 			->join('LEFT', '#__rwf_payment AS p ON p.cart_id = ci.cart_id')
 			->where('pr.submission_id IN (' . implode(', ', array_unique($keys)) . ')')
 			->order('pr.id ASC, p.id ASC');
@@ -440,6 +442,8 @@ class RedformModelSubmitters extends RModelList
 			$payment->paid = $result->paid;
 			$payment->status = $result->status;
 			$payment->date = $result->date;
+			$payment->cart_id = $result->cart_id;
+			$payment->invoice_id = $result->invoice_id;
 
 			$paymentrequests[$result->submission_id][$result->prid]->paid = $payment->paid ? 1 : 0;
 			$paymentrequests[$result->submission_id][$result->prid]->status = $payment->status ? $payment->status : '';

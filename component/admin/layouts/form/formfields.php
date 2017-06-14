@@ -28,7 +28,7 @@ if (isset($data['action']))
 
 JHtml::_('behavior.keepalive');
 JHtml::_('rdropdown.init');
-JHtml::_('rbootstrap.tooltip');
+JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('rjquery.chosen', 'select');
 
 $formId = JFactory::getApplication()->input->getInt('id');
@@ -124,6 +124,9 @@ $searchToolsOptions = array(
 					<th class="nowrap" data-toggle="true">
 						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_FIELD', 'f.field', $listDirn, $listOrder, null, 'asc', '', null, $formName); ?>
 					</th>
+					<th class="nowrap" data-toggle="true">
+						<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Type', 'f.fieldtype', $listDirn, $listOrder, null, 'asc', '', null, $formName); ?>
+					</th>
 					<?php if ($search == ''): ?>
 						<th width="20" class="nowrap">
 							<?php echo JHTML::_('rsearchtools.sort', 'COM_REDFORM_ORDERING', 'ff.ordering', $listDirn, $listOrder); ?>
@@ -172,6 +175,10 @@ $searchToolsOptions = array(
 								<a href="<?php echo $itemUrl; ?>">
 									<?php echo $item->field; ?>
 								</a>
+							</td>
+
+							<td>
+								<?php echo $item->fieldtype; ?>
 							</td>
 
 							<?php if ($search == ''): ?>

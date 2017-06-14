@@ -4,9 +4,9 @@
 	"libraries"  : ["redcore"],
 	"media"      : ["redcore"],
 	"plugins" : {
-		"redform" : ["economic", "helpscout", "redmemberbillinginfo", "salesforce", "smsgatewaydk"],
+		"redform" : ["economic", "helpscout", "redmemberbillinginfo", "salesforce", "aesirmember", "smsgatewaydk"],
 		"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
-		"redform_mailing" : ["acymailing", "ccnewsletter", "jnews", "phplist"],
+		"redform_field" : ["dawa", "acymailing", "ccnewsletter", "jnews", "phplist"],
 		"redform_payment" : [
 			"custom",
 			"cybersource",
@@ -14,6 +14,7 @@
 			"epay2",
 			"ideal",
 			"iridium",
+			"nganluong",
 			"pagseguro",
 			"paypal",
 			"quickpay",

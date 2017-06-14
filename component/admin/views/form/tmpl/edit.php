@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 // HTML helpers
 JHtml::_('behavior.keepalive');
-JHtml::_('rbootstrap.tooltip');
+JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('rjquery.chosen', 'select');
 JHtml::_('rsearchtools.main');
 
@@ -154,12 +154,47 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getInput('enddate'); ?>
 				</div>
 			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('contactpersonemail'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('contactpersonemail'); ?>
+				</div>
+			</div>
+
 			<div class="control-group">
 				<div class="control-label">
 					<?php echo $this->form->getLabel('captchaactive'); ?>
 				</div>
 				<div class="controls">
 					<?php echo $this->form->getInput('captchaactive'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('allow_frontend_edit', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('allow_frontend_edit', 'params'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('submit_label', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('submit_label', 'params'); ?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('ajax_submission', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('ajax_submission', 'params'); ?>
 				</div>
 			</div>
 		</div>
@@ -179,7 +214,16 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getLabel('notificationtext'); ?>
 					</div>
 					<div class="controls">
+						<div class="tags-info"><?php echo $this->form->getInput('notificationtext_tags'); ?></div>
 						<?php echo $this->form->getInput('notificationtext'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('notification_extra', 'params'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('notification_extra', 'params'); ?>
 					</div>
 				</div>
 				<div class="control-group">
@@ -188,6 +232,14 @@ $isNew = (int) $this->item->id <= 0;
 					</div>
 					<div class="controls">
 						<?php echo $this->form->getInput('redirect'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('contactpersoninform'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('contactpersoninform'); ?>
 					</div>
 				</div>
 				<div class="control-group">
@@ -211,23 +263,8 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getLabel('admin_notification_email_body'); ?>
 					</div>
 					<div class="controls">
+						<div class="tags-info"><?php echo $this->form->getInput('admin_notification_email_body_tags'); ?></div>
 						<?php echo $this->form->getInput('admin_notification_email_body'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('contactpersoninform'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('contactpersoninform'); ?>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo $this->form->getLabel('contactpersonemail'); ?>
-					</div>
-					<div class="controls">
-						<?php echo $this->form->getInput('contactpersonemail'); ?>
 					</div>
 				</div>
 				<div class="control-group">
@@ -259,6 +296,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getLabel('submissionbody'); ?>
 					</div>
 					<div class="controls">
+						<div class="tags-info"><?php echo $this->form->getInput('submissionbody_tags'); ?></div>
 						<?php echo $this->form->getInput('submissionbody'); ?>
 					</div>
 				</div>
@@ -327,6 +365,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getLabel('confirmation_contactperson_body'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('confirmation_contactperson_body_tags'); ?></div>
 					<?php echo $this->form->getInput('confirmation_contactperson_body'); ?>
 				</div>
 			</div>
@@ -359,9 +398,18 @@ $isNew = (int) $this->item->id <= 0;
 			</div>
 			<div class="control-group">
 				<div class="control-label">
+					<?php echo $this->form->getLabel('enable_contact_payment_notification', 'params'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('enable_contact_payment_notification', 'params'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
 					<?php echo $this->form->getLabel('paymentprocessing'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('paymentprocessing_tags'); ?></div>
 					<?php echo $this->form->getInput('paymentprocessing'); ?>
 				</div>
 			</div>
@@ -370,6 +418,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getLabel('paymentaccepted'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('paymentaccepted_tags'); ?></div>
 					<?php echo $this->form->getInput('paymentaccepted'); ?>
 				</div>
 			</div>
@@ -386,6 +435,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getLabel('contactpaymentnotificationbody'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('contactpaymentnotificationbody_tags'); ?></div>
 					<?php echo $this->form->getInput('contactpaymentnotificationbody'); ?>
 				</div>
 			</div>
@@ -402,6 +452,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getLabel('submitterpaymentnotificationbody'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('submitterpaymentnotificationbody_tags'); ?></div>
 					<?php echo $this->form->getInput('submitterpaymentnotificationbody'); ?>
 				</div>
 			</div>

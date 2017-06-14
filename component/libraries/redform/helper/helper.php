@@ -19,6 +19,35 @@ defined('_JEXEC') or die;
 class RdfHelper
 {
 	/**
+	 * Mailer object
+	 *
+	 * @var    JMail
+	 */
+	public static $mailer = null;
+
+	/**
+	 * Get global parameters
+	 *
+	 * @return \Joomla\Registry\Registry|JRegistry
+	 */
+	public static function getConfig()
+	{
+		static $config;
+
+		if (empty($config))
+		{
+			$config = JComponentHelper::getParams('com_redform');
+
+			// See if there are any plugins that wish to alter the configuration (client specific demands !)
+			JPluginHelper::importPlugin('redform');
+			$dispatcher = JDispatcher::getInstance();
+			$dispatcher->trigger('onGetRedformConfig', array(&$config));
+		}
+
+		return $config;
+	}
+
+	/**
 	 * Return array of emails from comma or semicolon separated emails
 	 *
 	 * @param   string  $string    string to parse
@@ -63,7 +92,7 @@ class RdfHelper
 	 *
 	 * @param   string  $date  date string to check
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public static function isNonNullDate($date)
 	{
@@ -94,7 +123,13 @@ class RdfHelper
 	 */
 	public static function getMailer()
 	{
-		$mailer = JFactory::getMailer();
+		if (!self::$mailer)
+		{
+			self::$mailer = self::createMailer();
+		}
+
+		$mailer = clone self::$mailer;
+
 		$params = JComponentHelper::getParams('com_redform');
 
 		if ($encoding = $params->get('email_encoding', ''))
@@ -246,5 +281,103 @@ class RdfHelper
 		}
 
 		return false;
+	}
+
+	/**
+	 * Create a mailer object
+	 *
+	 * @return  JMail object
+	 *
+	 * @see     JMail
+	 * @since   11.1
+	 */
+	protected static function createMailer()
+	{
+		$conf = JFactory::getConfig();
+
+		$smtpauth = ($conf->get('smtpauth') == 0) ? null : 1;
+		$smtpuser = $conf->get('smtpuser');
+		$smtppass = $conf->get('smtppass');
+		$smtphost = $conf->get('smtphost');
+		$smtpsecure = $conf->get('smtpsecure');
+		$smtpport = $conf->get('smtpport');
+		$mailfrom = $conf->get('mailfrom');
+		$fromname = $conf->get('fromname');
+		$mailer = $conf->get('mailer');
+
+		// Create a JMail object
+		$mail = RdfHelperMailer::getInstance();
+
+		// Set default sender without Reply-to
+		$mail->SetFrom(JMailHelper::cleanLine($mailfrom), JMailHelper::cleanLine($fromname), 0);
+
+		// Default mailer is to use PHP's mail function
+		switch ($mailer)
+		{
+			case 'smtp':
+				$mail->useSmtp($smtpauth, $smtphost, $smtpuser, $smtppass, $smtpsecure, $smtpport);
+				break;
+
+			case 'sendmail':
+				$mail->IsSendmail();
+				break;
+
+			default:
+				$mail->IsMail();
+				break;
+		}
+
+		return $mail;
+	}
+
+	/**
+	 * Get user timezone
+	 *
+	 * @param   JUser  $user  user
+	 *
+	 * @return DateTimeZone
+	 *
+	 * @since 3.3.18
+	 */
+	public static function getUserTimeZone($user = null)
+	{
+		$user = $user ?: JFactory::getUser();
+		$timezone = $user->getParam('timezone', JFactory::getApplication()->get('offset', 'GMT'));
+
+		return new DateTimeZone($timezone);
+	}
+
+	/**
+	 * Get a date to user timezone
+	 *
+	 * @param   mixed  $date  date string or JDate
+	 * @param   JUser  $user  user
+	 *
+	 * @return JDate
+	 *
+	 * @since  3.3.19
+	 */
+	public static function getDateToUserTimezone($date, $user= null)
+	{
+		$timezone = static::getUserTimeZone($user);
+
+		if (is_string($date))
+		{
+			$date = JFactory::getDate($date, 'UTC');
+		}
+
+		return $date->setTimezone($timezone);
+	}
+
+	/**
+	 * return the code for tags display
+	 *
+	 * @param   JFormField  $field  field to use tag for, allows filtering
+	 *
+	 * @return html
+	 */
+	public static function getTagsEditorInsertModal(JFormField $field)
+	{
+		return RdfLayoutHelper::render('redform.modal.tags', compact('field'));
 	}
 }

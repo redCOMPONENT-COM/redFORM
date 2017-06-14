@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ruleset name="redFORM Custom Standard">
+
+	<rule ref="../../vendor/joomla/coding-standards/Joomla">
+		<exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
+		<exclude name="Joomla.NamingConventions.ValidVariableName.NotCamelCaps"/>
+		<exclude name="Joomla.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
+		<exclude name="Joomla.NamingConventions.ValidFunctionName.FunctionNoCapital"/>
+		<!-- Exclude rule for class members doc bloc -->
+		<exclude name="Squiz.Commenting.VariableComment" />
+
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+
+		<exclude name="Joomla.NamingConventions.ValidFunctionName.MethodUnderscore"/>
+		<exclude name="Joomla.NamingConventions.ValidVariableName.ClassVarHasUnderscore"/>
+	</rule>
+
+	<exclude-pattern>*/tmpl/*</exclude-pattern>
+	<exclude-pattern>component/admin/falang/*</exclude-pattern>
+	<exclude-pattern>component/admin/layouts/*</exclude-pattern>
+	<exclude-pattern>component/admin/tables/*</exclude-pattern>
+	<exclude-pattern>component/libraries/redform/layouts/*</exclude-pattern>
+	<exclude-pattern>component/libraries/redform/vendor/*</exclude-pattern>
+	<exclude-pattern>component/site/views/*/tmpl/*</exclude-pattern>
+	<exclude-pattern>component/site/layouts/*</exclude-pattern>
+	<exclude-pattern>component/media</exclude-pattern>
+
+</ruleset>

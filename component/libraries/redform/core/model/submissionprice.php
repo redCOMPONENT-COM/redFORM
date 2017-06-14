@@ -70,7 +70,7 @@ class RdfCoreModelSubmissionprice extends RModel
 	/**
 	 * Update submission price and price items
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function updatePrice()
 	{

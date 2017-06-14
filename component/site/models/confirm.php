@@ -62,7 +62,7 @@ class RedformModelConfirm extends RModel
 	/**
 	 * Send notification for updated ids
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function sendNotification()
 	{

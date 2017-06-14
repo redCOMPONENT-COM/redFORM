@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="extra" label="extra">
+            <field
+                name="email_field"
+                type="redform.field"
+                field_type="email"
+                label="PLG_REDFORM_MAILING_ACYMAILING_FIELD_EMAIL_FIELD"
+                description="PLG_REDFORM_MAILING_ACYMAILING_FIELD_EMAIL_FIELD_DESC"
+                required="true"
+            >
+            </field>
+            <field name="lists"
+                   type="repeatable"
+                   icon="list"
+                   description="PLG_REDFORM_MAILING_ACYMAILING_FIELD_PARAMS_LISTS_DESC"
+                   label="PLG_REDFORM_MAILING_ACYMAILING_FIELD_PARAMS_LISTS">
+                <fieldset hidden="true" name="list_templates_modal" repeat="true">
+                    <field name="id"
+                           label="PLG_REDFORM_MAILING_ACYMAILING_FIELD_PARAMS_LISTS_ID"
+                           required="true"
+                           type="text" />
+                    <field name="label"
+                           label="PLG_REDFORM_MAILING_ACYMAILING_FIELD_PARAMS_LISTS_ID_LABEL"
+                           description="PLG_REDFORM_MAILING_ACYMAILING_FIELD_PARAMS_LISTS_ID_LABEL_DESC"
+                           required="true"
+                           size="30"
+                           type="text" />
+                </fieldset>
+            </field>
+            <field name="multiple" type="radio" default="1" label="COM_REDFORM_FIELD_RECIPIENTS_PARAMS_MULTIPLE"
+                   description="COM_REDFORM_FIELD_RECIPIENTS_PARAMS_MULTIPLE_DESC">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </field>
+        </fieldset>
+    </fields>
+</form>

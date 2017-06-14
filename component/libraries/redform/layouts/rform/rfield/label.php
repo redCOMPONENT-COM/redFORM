@@ -11,4 +11,9 @@ defined('_JEXEC') or die;
 
 $field = $displayData;
 ?>
-<label for="<?php echo $field->getFormElementName(); ?>"><?php echo $field->field; ?></label>
+<label for="<?php echo $field->getFormElementName(); ?>">
+	<?= $field->field; ?>
+	<?php if ($field->required && !$field->readonly): ?>
+		<span class="label-field-required"><?= JText::_('LIB_REDFORM_FIELD_REQUIRED') ?></span>
+	<?php endif; ?>
+</label>

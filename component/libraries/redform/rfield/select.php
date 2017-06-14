@@ -150,7 +150,13 @@ class RdfRfieldSelect extends RdfRfield
 	 */
 	public function lookupDefaultValue()
 	{
-		if ($this->load()->redmember_field)
+		$default = $this->getLookupDefaultValueIntegration();
+
+		if (!is_null($default))
+		{
+			$this->value = $default;
+		}
+		elseif ($this->load()->redmember_field)
 		{
 			$this->value = explode(',', $this->user->get($this->load()->redmember_field));
 		}
@@ -247,5 +253,30 @@ class RdfRfieldSelect extends RdfRfield
 		}
 
 		return $properties;
+	}
+
+	/**
+	 * Return the 'value' to be displayed to end user.
+	 * For a select list, should rather be the 'text' than the value
+	 *
+	 * @param   string  $glue  glue to be used if the value is an array
+	 *
+	 * @return mixed
+	 *
+	 * @since 3.3.18
+	 */
+	public function renderValue($glue = ", ")
+	{
+		$labels = array();
+
+		foreach ($this->getOptions() as $option)
+		{
+			if (in_array($option->value, $this->value))
+			{
+				$labels[] = $option->label;
+			}
+		}
+
+		return implode($glue, $labels);
 	}
 }

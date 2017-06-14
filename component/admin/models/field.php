@@ -46,22 +46,22 @@ class RedformModelField extends RModelAdmin
 	 *
 	 * @return  void
 	 */
-	protected function preprocessForm(JForm $form, $data, $group = 'content')
+	protected function preprocessForm(JForm $form, $data, $group = 'redform')
 	{
-		parent::preprocessForm($form, $data, $group);
-
 		if (is_object($data))
 		{
 			$data = get_object_vars($data);
 		}
 
-		$form->loadFile(JPATH_LIBRARIES . '/redform/rfield/baseparams.xml', false);
+		$form->loadFile(JPATH_LIBRARIES . '/redform/rfield/xml/baseparams.xml', false);
 
 		if (isset($data['fieldtype']))
 		{
 			$xml = RdfRfieldFactory::getFieldType($data['fieldtype'])->getXmlPath();
 			$form->loadFile($xml, false);
 		}
+
+		parent::preprocessForm($form, $data, $group);
 	}
 
 	/**
@@ -84,11 +84,23 @@ class RedformModelField extends RModelAdmin
 		if (isset($data['form_id']) && $data['form_id'])
 		{
 			$formfield = $this->getTable('Formfield', 'RedformTable');
+			$form = RdfEntityForm::load($data['form_id']);
+			$formfields = $form->getFormFields();
 
 			$data = array(
 				'field_id' => $this->getState($this->getName() . '.id'),
-				'form_id' => (int) $data['form_id']
+				'form_id' => (int) $data['form_id'],
+				'published' => 1
 			);
+
+			if ($formfields)
+			{
+				$data['section_id'] = reset($formfields)->section_id;
+			}
+			else
+			{
+				$data['section_id'] = RdfHelper::getConfig()->get('defaultsection', 1);
+			}
 
 			if (!$formfield->save($data))
 			{
@@ -163,7 +175,7 @@ class RedformModelField extends RModelAdmin
 	 *
 	 * @param   int  $id  value id
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function removeValue($id)
 	{
@@ -201,7 +213,7 @@ class RedformModelField extends RModelAdmin
 			$row->id = null;
 			$row->field = Jtext::_('COM_REDFORM_COPY_OF') . ' ' . $row->field;
 
-			/* pre-save checks */
+			// Pre-save checks
 			if (!$row->check())
 			{
 				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_checking_the_field_data'), 'error');
@@ -209,7 +221,7 @@ class RedformModelField extends RModelAdmin
 				return false;
 			}
 
-			/* save the changes */
+			// Save the changes
 			if (!$row->store())
 			{
 				$this->setError(JText::_('COM_REDFORM_There_was_a_problem_storing_the_field_data'), 'error');
@@ -227,13 +239,13 @@ class RedformModelField extends RModelAdmin
 
 			foreach ($res as $r)
 			{
-				/* Load the table */
+				// Load the table
 				$valuerow = $this->getTable('Value', 'RedformTable');
 				$valuerow->bind(get_object_vars($r));
 				$valuerow->id = null;
 				$valuerow->field_id = $row->id;
 
-				/* save the changes */
+				// Save the changes
 				if (!$valuerow->store())
 				{
 					$this->setError(JText::_('COM_REDFORM_There_was_a_problem_copying_field_options') . ' ' . $row->getError(), 'error');

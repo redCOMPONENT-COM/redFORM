@@ -41,7 +41,7 @@ $options = array(
 		REPO_BASE . '/component',
 //	REPO_BASE . '/plugins'
 	),
-	'standard'     => array( REPO_BASE . '/tests/checkers/phpcs/Joomla'),
+	'standard'     => array( __DIR__ . '/phpcs/ruleset.xml'),
 	'ignored'      => $ignored,
 	'showProgress' => true,
 	'verbosity' => false,

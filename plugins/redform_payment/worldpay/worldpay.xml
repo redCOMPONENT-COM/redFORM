@@ -7,7 +7,7 @@
     <authorUrl>www.redcomponent.com</authorUrl>
     <copyright>(C) 2008 - 2016 redCOMPONENT.com</copyright>
     <license>GNU/GPL</license>
-    <version>3.3.8</version>
+    <version>3.3.18</version>
     <tag>##VERSION##</tag>
     <description>PLG_REDFORM_WORLDPAY_XML_DESC</description>
 
@@ -62,4 +62,7 @@
         </fields>
     </config>
 
+    <updateservers>
+        <server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_payment_worldpay.xml</server>
+    </updateservers>
 </extension>

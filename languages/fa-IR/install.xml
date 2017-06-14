@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="file" version="1.7.0" method="upgrade">
+	<name>redFORM fa-IR</name>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2008 - 2015 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<creationDate>August 9, 2015</creationDate>
+	<version>3.3.18</version>
+	<tag>##VERSION##</tag>
+	<description>fa-IR language pack for redFORM&lt;br/&gt;Incomplete ? Please &lt;a href="http://www.redcomponent.com/translations"&gt;help us&lt;/a&gt; with translations !</description>
+
+	<fileset>
+		<files folder="admin" target="administrator/language">
+			<folder>fa-IR</folder>
+		</files>
+        <files folder="site" target="language">
+            <folder>fa-IR</folder>
+        </files>
+	</fileset>
+</extension>

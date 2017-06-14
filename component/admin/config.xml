@@ -24,12 +24,23 @@
 			<option value="1">JYes</option>
 		</field>
 
+		<field name="notification_extra"
+			   type="textarea"
+			   filter="raw"
+			   label="COM_REDFORM_SETTINGS_NOTIFICATION_EXTRA"
+			   description="COM_REDFORM_SETTINGS_NOTIFICATION_EXTRA_DESC"/>
+
 		<field
 				name="upload_path"
 				type="text"
 				default="images/redform"
 				label="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_LABEL"
 				description="COM_REDFORM_SETTINGS_FILE_UPLOAD_FOLDER_DESC"/>
+
+		<field name="defaultsection"
+			   type="redform.section"
+			   label="COM_REDFORM_SETTINGS_DEFAULTSECTION"
+			   description="COM_REDFORM_SETTINGS_DEFAULTSECTION_DESC"/>
 
 		<field name="decimalseparator"
 			   type="text"
@@ -43,6 +54,18 @@
 			   label="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR"
 			   description="COM_REDFORM_SETTINGS_PRICEFORMAT_THOUSANDSEPARATOR_DESC"/>
 
+		<field name="invoice_prefix"
+			   type="text"
+			   default="INVOICE-"
+			   label="COM_REDFORM_SETTINGS_INVOICE_PREFIX"
+			   description="COM_REDFORM_SETTINGS_INVOICE_PREFIX_DESC"/>
+
+		<field name="invoice_padding"
+			   type="text"
+			   default="4"
+			   label="COM_REDFORM_SETTINGS_INVOICE_PADDING"
+			   description="COM_REDFORM_SETTINGS_INVOICE_PADDING_DESC"/>
+
 		<field
 				name="allow_negative_total"
 				type="radio"
@@ -55,10 +78,11 @@
 		</field>
 		<field
 				name="form_layout"
-				type="list" default="j25" label="COM_REDFORM_SETTINGS_FORM_LAYOUT"
+				type="list" default="" label="COM_REDFORM_SETTINGS_FORM_LAYOUT"
 				description="COM_REDFORM_SETTINGS_FORM_LAYOUT_DESC">
 			<option value="">COM_REDFORM_SETTINGS_FORM_LAYOUT_REGULAR</option>
 			<option value="bootstrap">COM_REDFORM_SETTINGS_FORM_LAYOUT_BOOTSTRAP</option>
+			<option value="legacy">COM_REDFORM_SETTINGS_FORM_LAYOUT_LEGACY</option>
 		</field>
 
 		<field type="spacer" hr="true"/>

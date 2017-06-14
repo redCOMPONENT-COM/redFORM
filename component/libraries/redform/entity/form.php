@@ -24,6 +24,84 @@ class RdfEntityForm extends RdfEntityBase
 	protected $formFields;
 
 	/**
+	 * @var string
+	 */
+	private $statusMessage;
+
+	/**
+	 * @var array
+	 */
+	private $renderOptions;
+
+	/**
+	 * Proxy item properties
+	 *
+	 * @param   string  $property  Property tried to access
+	 *
+	 * @return  mixed   $this->item->property if it exists
+	 */
+	public function __get($property)
+	{
+		if (null != $this->item && $property == 'params')
+		{
+			return new JRegistry($this->item->params);
+		}
+
+		return parent::__get($property);
+	}
+
+	/**
+	 * return form status
+	 *
+	 * @param   JUser  $user  user
+	 *
+	 * @return boolean
+	 */
+	public function checkFormStatus($user = null)
+	{
+		if (!$this->isValid())
+		{
+			throw new InvalidArgumentException('entity has no valid id');
+		}
+
+		$this->statusMessage = null;
+
+		$user = $user instanceof JUSer ? $user : JFactory::getUser();
+
+		if (!$this->published)
+		{
+			$this->statusMessage = JText::_('COM_REDFORM_STATUS_NOT_PUBLISHED');
+
+			return false;
+		}
+
+		$now = JFactory::getDate();
+
+		if (JFactory::getDate($this->startdate) > $now)
+		{
+			$this->statusMessage = JText::_('COM_REDFORM_STATUS_NOT_STARTED');
+
+			return false;
+		}
+
+		if ($this->formexpires && JFactory::getDate($this->enddate) < $now)
+		{
+			$this->statusMessage = JText::_('COM_REDFORM_STATUS_EXPIRED');
+
+			return false;
+		}
+
+		if (!in_array($this->access, $user->getAuthorisedViewLevels()))
+		{
+			$this->statusMessage = JText::_('LIB_REDFORM_FORM_ACCESS_CHECK_DENIED');
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get form fields
 	 *
 	 * @return RdfRfieldFactory[]
@@ -48,12 +126,73 @@ class RdfEntityForm extends RdfEntityBase
 
 			foreach ($ids as $formfieldId)
 			{
-				$fields[] = RdfRfieldFactory::getFormField($formfieldId);
+				$fields[] = RdfRfieldFactory::getFormField($formfieldId, $this);
 			}
 
 			$this->formFields = $fields;
 		}
 
 		return $this->formFields;
+	}
+
+	/**
+	 * Set options for rendering (passed from integration when calling RdfCore->getFormFields())
+	 *
+	 * @return RdfEntityForm
+	 */
+	public function getRenderOptions()
+	{
+		return $this->renderOptions;
+	}
+
+	/**
+	 * Return status message after a checkFormStatus
+	 *
+	 * @return string
+	 */
+	public function getStatusMessage()
+	{
+		return $this->statusMessage;
+	}
+
+	/**
+	 * Check if form has fields in multiple sections
+	 *
+	 * @return boolean
+	 */
+	public function hasMultipleSections()
+	{
+		$fields = $this->getFormFields();
+
+		$sections = array();
+
+		foreach ($fields as $field)
+		{
+			if (!in_array($field->section_id, $sections))
+			{
+				$sections[] = $field->section_id;
+
+				if (count($sections) > 1)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Set options for rendering (passed from integration when calling RdfCore->getFormFields())
+	 *
+	 * @param   array  $options  options
+	 *
+	 * @return RdfEntityForm
+	 */
+	public function setRenderOptions($options)
+	{
+		$this->renderOptions = $options;
+
+		return $this;
 	}
 }

@@ -1,50 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<extension version="2.5" type="plugin" group="redform_payment" method="upgrade">
-  <name>PLG_REDFORM_PAYMENT_CUSTOM</name>
+<extension version="2.5" type="plugin" group="redform_payment" method="upgrade">
+	<name>PLG_REDFORM_PAYMENT_CUSTOM</name>
 	<creationDate>July 8, 2015</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redcomponent.com</authorUrl>
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-    <version>3.3.1</version>
-    <tag>##VERSION##</tag>
-  <description>PLG_REDFORM_PAYMENT_CUSTOM_XML_DESCRIPTION</description>
+	<version>3.3.18</version>
+	<tag>##VERSION##</tag>
+	<description>PLG_REDFORM_PAYMENT_CUSTOM_XML_DESCRIPTION</description>
 
-  <files>
-    <filename plugin="custom">custom.php</filename>
-    <folder>helpers</folder>
-    <filename>index.html</filename>
-    <folder>language</folder>
-  </files>
+	<files>
+		<filename plugin="custom">custom.php</filename>
+		<folder>helpers</folder>
+		<filename>index.html</filename>
+		<folder>language</folder>
+		<folder>layouts</folder>
+	</files>
 
-  <config>
-	  <fields name="params">
-		  <fieldset name="extra" label="extra">
-			    <field name="gatewaylabel" type="text" default="Bank transfer, check..." label="CUSTOM_CFG_GATEWAY_LABEL" description="CUSTOM_CFG_GATEWAY_LABEL_DESC" />
-			    <field name="instructions" type="editor" label="CUSTOM_CFG_INSTRUCTIONS" description="CUSTOM_CFG_INSTRUCTIONS_DESC"
-                        filter="raw"/>
+	<config>
+		<fields name="params">
+			<fieldset name="basic" label="extra">
+				<field name="gatewaylabel" type="text" default="Bank transfer, check..." label="CUSTOM_CFG_GATEWAY_LABEL"
+					description="CUSTOM_CFG_GATEWAY_LABEL_DESC"/>
+				<field name="instructions" type="editor" label="CUSTOM_CFG_INSTRUCTIONS" description="CUSTOM_CFG_INSTRUCTIONS_DESC"
+					filter="raw"/>
 
-			  <field name="allowed_currencies" type="textarea"
-					 label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
-					 description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
-					 rows="10"
-					  />
+				<field name="allowed_currencies" type="textarea"
+					label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
+					description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
+					rows="10"
+				/>
 
-              <field name="payment_status" type="radio" default="pending"
-                      label="PLG_REFORM_PAYMENT_CUSTOM_XML_PAYMENT_STATUS_LABEL"
-                      decription="PLG_REFORM_PAYMENT_CUSTOM_XML_PAYMENT_STATUS_DESC"
-                      >
-                  <option value="pending">PLG_REFORM_PAYMENT_CUSTOM_XML_PAYMENT_STATUS_PENDING</option>
-                  <option value="paid">PLG_REFORM_PAYMENT_CUSTOM_XML_PAYMENT_STATUS_PAID</option>
-              </field>
+				<field name="payment_status" type="radio" default="pending"
+					label="PLG_REFORM_PAYMENT_CUSTOM_XML_PAYMENT_STATUS_LABEL"
+					decription="PLG_REFORM_PAYMENT_CUSTOM_XML_PAYMENT_STATUS_DESC"
+				>
+					<option value="pending">PLG_REFORM_PAYMENT_CUSTOM_XML_PAYMENT_STATUS_PENDING</option>
+					<option value="paid">PLG_REFORM_PAYMENT_CUSTOM_XML_PAYMENT_STATUS_PAID</option>
+				</field>
 
-              <field name="confirmButtonLabel" type="text"
-                      label="PLG_REFORM_PAYMENT_CUSTOM_XML_CONFIRM_BUTTON_LABEL_LABEL"
-                      description="PLG_REFORM_PAYMENT_CUSTOM_XML_CONFIRM_BUTTON_LABEL_DESC"
-                      default="Confirm"/>
-		  </fieldset>
-	  </fields>
-  </config>
+				<field name="disable_submitter_payment_notification" type="radio" default="0"
+					   label="PLG_REFORM_PAYMENT_CUSTOM_XML_DISABLE_SUBMITTER_PAYMENT_NOTIFICATION_LABEL"
+					   decription="PLG_REFORM_PAYMENT_CUSTOM_XML_DISABLE_SUBMITTER_PAYMENT_NOTIFICATION_DESC"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
 
+				<field name="confirmButtonLabel" type="text"
+					label="PLG_REFORM_PAYMENT_CUSTOM_XML_CONFIRM_BUTTON_LABEL_LABEL"
+					description="PLG_REFORM_PAYMENT_CUSTOM_XML_CONFIRM_BUTTON_LABEL_DESC"
+					default="Confirm"/>
+			</fieldset>
+		</fields>
+	</config>
+
+	<updateservers>
+		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_payment_custom.xml</server>
+	</updateservers>
 </extension>

@@ -17,6 +17,12 @@ if (!file_exists($redcoreLoader) || !JPluginHelper::isEnabled('system', 'redcore
 
 include_once $redcoreLoader;
 
+require_once __DIR__ . '/vendor/autoload.php';
+
+// Load library language
+$lang = JFactory::getLanguage();
+$lang->load('lib_redform', __DIR__);
+
 /**
  * Redform bootstrap class
  *

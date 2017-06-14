@@ -7,7 +7,7 @@
     <authorUrl>www.redcomponent.com</authorUrl>
     <copyright>(C) 2014 redCOMPONENT.com</copyright>
     <license>GNU/GPL</license>
-    <version>3.3.1</version>
+    <version>3.3.17</version>
     <tag>##VERSION##</tag>
     <description>PLG_REDFORM_SALESFORCE_XML_DESC</description>
 
@@ -47,5 +47,9 @@
             </fieldset>
         </fields>
     </config>
+
+    <updateservers>
+        <server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_salesforce.xml</server>
+    </updateservers>
 
 </extension>

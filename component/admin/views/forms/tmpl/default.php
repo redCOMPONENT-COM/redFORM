@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-JHtml::_('rbootstrap.tooltip');
+JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('rjquery.chosen', 'select');
 
 $action = JRoute::_('index.php?option=com_redform&view=forms');
@@ -104,7 +104,8 @@ $saveOrder = $listOrder == 'ordering';
 							if (RdfHelper::isNonNullDate($item->startdate))
 							{
 								$date = JFactory::getDate($item->startdate);
-								echo $date->toSql();
+								$date->setTimezone(RdfHelper::getUserTimeZone());
+								echo $date->toSql(true);
 							}
 							?>
 						</td>
@@ -113,7 +114,8 @@ $saveOrder = $listOrder == 'ordering';
 							if ($item->formexpires && RdfHelper::isNonNullDate($item->enddate))
 							{
 								$date = JFactory::getDate($item->enddate);
-								echo $date->toSql();
+								$date->setTimezone(RdfHelper::getUserTimeZone());
+								echo $date->toSql(true);
 							}
 							?>
 						</td>

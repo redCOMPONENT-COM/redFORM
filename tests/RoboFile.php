@@ -270,28 +270,31 @@ class RoboFile extends \Robo\Tasks
 		$this->_exec("vendor/bin/codecept build");
 
 		$this->taskCodecept()
-		     ->arg('--steps')
-		     ->arg('--debug')
-		     ->arg('--fail-fast')
-		     ->arg($this->testsFolder . 'acceptance/install/')
-		     ->run()
-		     ->stopOnFail();
+			->arg('--steps')
+			->arg('--debug')
+			->arg('--tap')
+			->arg('--fail-fast')
+			->arg($this->testsFolder . 'acceptance/install/')
+			->run()
+			->stopOnFail();
 
 		$this->taskCodecept()
-		     ->arg('--steps')
-		     ->arg('--debug')
-		     ->arg('--fail-fast')
-		     ->arg($this->testsFolder . 'acceptance/administrator/')
-		     ->run()
-		     ->stopOnFail();
+			->arg('--steps')
+			->arg('--debug')
+			->arg('--tap')
+			->arg('--fail-fast')
+			->arg($this->testsFolder . 'acceptance/administrator/')
+			->run()
+			->stopOnFail();
 
 		$this->taskCodecept()
-		     ->arg('--steps')
-		     ->arg('--debug')
-		     ->arg('--fail-fast')
-		     ->arg($this->testsFolder . 'acceptance/uninstall/')
-		     ->run()
-		     ->stopOnFail();
+			->arg('--steps')
+			->arg('--debug')
+			->arg('--tap')
+			->arg('--fail-fast')
+			->arg($this->testsFolder . 'acceptance/uninstall/')
+			->run()
+			->stopOnFail();
 
 		$this->killSelenium();
 	}
@@ -383,6 +386,112 @@ class RoboFile extends \Robo\Tasks
 	}
 
 	/**
+	 * Sends a message to Github with the Error found in tests and a Image attached. Require Github and Cloudinary tokens
+	 *
+	 * @param $cloudName
+	 * @param $apiKey
+	 * @param $apiSecret
+	 * @param $GithubToken
+	 * @param $repoOwner
+	 * @param $repo
+	 * @param $pull
+	 */
+	public function sendScreenshotFromTravisToGithub($cloudName, $apiKey, $apiSecret, $GithubToken, $repoOwner, $repo, $pull = null)
+	{
+		$errorSelenium = true;
+		$reportError = false;
+		$reportFile = 'selenium.log';
+		$body = 'Selenium log:' . chr(10). chr(10);
+
+		$this->say("checking _output");
+
+		// Loop throught Codeception snapshots
+		if (file_exists(__DIR__ . '/_output') && $handler = opendir(__DIR__ . '/_output'))
+		{
+			$reportFile = __DIR__ . '/_output/report.tap.log';
+			$body = 'Codeception tap log:' . chr(10). chr(10);
+			$errorSelenium = false;
+			$this->say("reportFile: $reportFile");
+		}
+
+		if (file_exists($reportFile))
+		{
+			if ($reportFile)
+			{
+				$body .= file_get_contents($reportFile, null, null, 15);
+			}
+
+			if (!$errorSelenium)
+			{
+				$handler = opendir(__DIR__ . '/_output');
+
+				while (false !== ($errorSnapshot = readdir($handler)))
+				{
+					$this->say("errorSnapshot: $errorSnapshot");
+					// Avoid sending system files or html files
+					if (!('png' === pathinfo($errorSnapshot, PATHINFO_EXTENSION)))
+					{
+						continue;
+					}
+
+					$reportError = true;
+					$this->say("Uploading screenshots: $errorSnapshot");
+
+					Cloudinary::config(
+						array(
+							'cloud_name' => $cloudName,
+							'api_key'    => $apiKey,
+							'api_secret' => $apiSecret
+						)
+					);
+
+					$result = \Cloudinary\Uploader::upload(realpath(__DIR__ . '/_output/' . $errorSnapshot));
+					$this->say($errorSnapshot . 'Image sent');
+					$body .= '![Screenshot](' . $result['secure_url'] . ')';
+				}
+			}
+
+			// If it's a Selenium error log, it prints it in the regular output
+			if ($errorSelenium)
+			{
+				$this->say($body);
+			}
+
+			if (!$reportError)
+			{
+				$this->say("nothing to report");
+
+				return;
+			}
+
+			if (is_numeric($pull))
+			{
+				// Creates the error log in a Github comment
+				$this->say('Creating Github issue');
+				$client = new \Github\Client;
+				$client->authenticate($GithubToken, \Github\Client::AUTH_HTTP_TOKEN);
+				$client
+					->api('issue')
+					->comments()->create(
+						$repoOwner, $repo, $pull,
+						array(
+							'body' => $body
+						)
+					);
+			}
+			else
+			{
+				// Not a pull request, so just output in console
+				$this->say($body);
+			}
+		}
+		else
+		{
+			$this->say("reportFile not found");
+		}
+	}
+
+	/**
 	 * Clone joomla from official repo
 	 *
 	 * @return void
@@ -395,7 +504,7 @@ class RoboFile extends \Robo\Tasks
 		 * When joomla Staging branch has a bug you can uncomment the following line as a tmp fix for the tests layer.
 		 * Use as $version value the latest tagged stable version at: https://github.com/joomla/joomla-cms/releases
 		 */
-		$version = '3.4.8';
+		$version = '3.6.2';
 
 		$this->_exec("git clone -b $version --single-branch --depth 1 https://github.com/joomla/joomla-cms.git joomla-cms3");
 
