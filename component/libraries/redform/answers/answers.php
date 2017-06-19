@@ -574,6 +574,11 @@ class RdfAnswers
 					JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter)');
 					RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter):' . $mailer->error);
 				}
+
+				if (RdfHelper::getConfig()->get('debug_email', 0))
+				{
+					RdfHelperLog::simpleLog('Sent submitter notification to ' . $submitter_email);
+				}
 			}
 		}
 
@@ -616,6 +621,11 @@ class RdfAnswers
 		{
 			JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (confirmation notification)');
 			RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (confirmation notification):' . $mailer->error);
+		}
+
+		if (RdfHelper::getConfig()->get('debug_email', 0))
+		{
+			RdfHelperLog::simpleLog('Sent confirmation notification to ' . implode(", ", $addresses));
 		}
 
 		return true;

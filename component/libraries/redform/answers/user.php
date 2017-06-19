@@ -241,6 +241,11 @@ class RdfAnswersUser
 		$mail->MsgHTML($htmlmsg);
 		$mail->Send();
 
+		if (RdfHelper::getConfig()->get('debug_email', 0))
+		{
+			RdfHelperLog::simpleLog('Sent user created email to ' . $email);
+		}
+
 		// Send notification to all administrators
 		$subject2 = JText::sprintf('LIB_REDFORM_CREATE_USER_EMAIL_SUBJECT', $name, $sitename);
 		$subject2 = html_entity_decode($subject2, ENT_QUOTES);
@@ -269,6 +274,11 @@ class RdfAnswersUser
 			$htmlmsg = RdfHelper::wrapMailHtmlBody($emailBody, $subject2);
 			$mail->MsgHTML($htmlmsg);
 			$mail->Send();
+
+			if (RdfHelper::getConfig()->get('debug_email', 0))
+			{
+				RdfHelperLog::simpleLog('Sent user created notification email to ' . $row->email);
+			}
 		}
 	}
 }

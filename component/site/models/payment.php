@@ -389,6 +389,11 @@ class RedFormModelPayment extends JModelLegacy
 			{
 				return false;
 			}
+
+			if (RdfHelper::getConfig()->get('debug_email', 0))
+			{
+				RdfHelperLog::simpleLog('Sent form contact payment notification to ' . print_r($mailer->getToAddresses(), true));
+			}
 		}
 
 		return true;
