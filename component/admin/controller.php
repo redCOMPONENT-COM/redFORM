@@ -30,7 +30,7 @@ class RedformController extends JControllerLegacy
 	public function display($cachable = false, $urlparams = array())
 	{
 		$input = JFactory::getApplication()->input;
-		$input->set('view', $input->get('view', 'forms'));
+		$input->set('view', $input->get('view', 'dashboard'));
 		$input->set('task', $input->get('task', 'display'));
 
 		return parent::display($cachable, $urlparams);

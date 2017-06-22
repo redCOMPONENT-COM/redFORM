@@ -159,12 +159,12 @@ class RedformModelSubmitters extends RModelList
 		$query->select('f.formname');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON s.form_id = f.id');
-		$query->where("s.form_id = " . $form_id);
 
 		if ($form_id)
 		{
 			$query->select('a.*');
 			$query->join('INNER', '#__rwf_forms_' . $form_id . ' AS a ON s.answer_id = a.id');
+			$query->where('s.form_id = ' . (int) $form_id);
 		}
 
 		if ($from = $this->getState('filter.from'))
