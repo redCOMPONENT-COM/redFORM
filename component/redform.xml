@@ -97,6 +97,12 @@
 		<plugin name="redform" group="installer" />
     </plugins>
 
+	<!-- Modules to install with the component -->
+	<modules>
+		<!-- Admin -->
+		<module name="mod_redform_latest_submissions" client="admin"/>
+	</modules>
+
 	<updateservers>
 		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/com_redform.xml</server>
 	</updateservers>

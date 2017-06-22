@@ -102,6 +102,11 @@ class RdfHelperNotifymaintainer
 			return false;
 		}
 
+		if (RdfHelper::getConfig()->get('debug_email', 0))
+		{
+			RdfHelperLog::simpleLog('Sent notify maintainer email');
+		}
+
 		return true;
 	}
 
