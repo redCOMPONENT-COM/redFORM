@@ -58,7 +58,7 @@ RHelperAsset::load('showon.js', 'com_redform');
 
 					// We need the form field id, from the field id given in parameters
 					$targetField = RdfHelper::findFormFieldByFieldId($fields, $showon[0]);
-					$class .= ' rfshowon_' . implode(' showon_', explode(',', $showon[1]));
+					$class .= ' rfshowon_' . implode(' rfshowon_', explode(',', $showon[1]));
 					$rel = ' rel="rfshowon_field' . $targetField->id . '_' . $index . '"';
 				}
 				?>
