@@ -4,7 +4,7 @@
 	version="2.5"
 	client="site"
 	method="upgrade">
-	<name>mod_orders_reports</name>
+	<name>mod_orders_stats</name>
 	<creationDate>##DATE##</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
@@ -12,10 +12,10 @@
 	<copyright>(C) 2014 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
 	<version>##VERSION##</version>
-	<description>Mod_orders_reports_XML_DESCRIPTION</description>
+	<description>MOD_ORDERS_STATS_XML_DESCRIPTION</description>
 
 	<files>
-		<filename module="mod_orders_reports">mod_orders_reports.php</filename>
+		<filename module="mod_orders_stats">mod_orders_stats.php</filename>
 		<folder>language</folder>
 		<folder>lib</folder>
 		<folder>media</folder>
@@ -25,12 +25,33 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic" addfieldpath="/libraries/redform/form/fields">
-				<field name="rows"
+				<field name="formIds"
 				       type="textarea"
-				       cols="50"
-				       rows="40"
-				       label="Mod_orders_reports_XML_ROWS_LABEL"
-				       description="Mod_orders_reports_XML_ROWS_DESC">
+				       cols="30"
+				       rows="15"
+					label="MOD_ORDERS_STATS_XML_FORMS_LABEL"
+					description="MOD_ORDERS_STATS_XML_FORMS_DESC">
+				</field>
+
+				<field name="nameFields"
+				       type="redform.field"
+				       multiple="1"
+				       label="MOD_ORDERS_STATS_XML_NAME_FIELDS_LABEL"
+				       description="MOD_ORDERS_STATS_XML_NAME_FIELDS_DESC">
+				</field>
+
+				<field name="elFields"
+					   type="redform.field"
+				       multiple="1"
+				       label="MOD_ORDERS_STATS_XML_ELECTRICITY_FIELDS_LABEL"
+				       description="MOD_ORDERS_STATS_XML_ELECTRICITY_FIELDS_DESC">
+				</field>
+
+				<field name="gasFields"
+					   type="redform.field"
+				       multiple="1"
+				       label="MOD_ORDERS_STATS_XML_GAS_FIELDS_LABEL"
+				       description="MOD_ORDERS_STATS_XML_GAS_FIELDS_DESC">
 				</field>
 			</fieldset>
 

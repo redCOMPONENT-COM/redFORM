@@ -6,6 +6,11 @@
 	"modules" : {
 		"backend": [
 			"latest_submissions"
+		],
+		"frontend": [
+			"mod_orders_company",
+			"mod_orders_reports",
+			"mod_orders_stats"
 		]
 	},
 	"plugins" : {

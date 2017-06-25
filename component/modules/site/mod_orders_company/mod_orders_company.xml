@@ -26,7 +26,7 @@
 		<fields name="params">
 			<fieldset name="basic" addfieldpath="/libraries/redform/form/fields">
 				<field name="formIds"
-				       type="redformform"
+				       type="redform.form"
 				       multiple="1"
 					label="Mod_orders_company_XML_FORMS_LABEL"
 					description="Mod_orders_company_XML_FORMS_DESC">
@@ -39,7 +39,7 @@
 				</field>
 
 				<field name="elFields"
-				       type="redformfield"
+					   type="redform.field"
 				       multiple="1"
 				       label="Mod_orders_company_XML_ELECTRICITY_FIELDS_LABEL"
 				       description="Mod_orders_company_XML_ELECTRICITY_FIELDS_DESC">
@@ -52,7 +52,7 @@
 				</field>
 
 				<field name="gasFields"
-				       type="redformfield"
+					   type="redform.field"
 				       multiple="1"
 				       label="Mod_orders_company_XML_GAS_FIELDS_LABEL"
 				       description="Mod_orders_company_XML_GAS_FIELDS_DESC">

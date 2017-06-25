@@ -45,6 +45,7 @@ class ModordersstatsLibHelper
 			}
 
 			$orders = array_merge($orders, $model->getOrders((int) $parts[0], $parts[1]));
+			echo '<pre>'; echo print_r($orders, true); echo '</pre>'; //exit;
 		}
 
 		$model = new ModordersstatsLibStats($orders);

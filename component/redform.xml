@@ -101,6 +101,11 @@
 	<modules>
 		<!-- Admin -->
 		<module name="mod_redform_latest_submissions" client="admin"/>
+
+		<!-- Site -->
+		<module name="mod_orders_company" client="site"/>
+		<module name="mod_orders_reports" client="site"/>
+		<module name="mod_orders_stats" client="site"/>
 	</modules>
 
 	<updateservers>
