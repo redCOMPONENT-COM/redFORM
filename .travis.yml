@@ -4,9 +4,6 @@ php:
 - 7
 addons:
   firefox: "47.0.2"
-  apt:
-    packages:
-      - oracle-java8-set-default
 env:
   global:
     - CLOUD_NAME=redcomponent
