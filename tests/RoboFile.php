@@ -17,27 +17,12 @@ require_once 'vendor/autoload.php';
 class RoboFile extends \Robo\Tasks
 {
 	// Load tasks from composer, see composer.json
-	use \redcomponent\robo\loadTasks;
+	use Joomla\Testing\Robo\Tasks\loadTasks;
 
 	/**
 	 * Current root folder
 	 */
 	private $testsFolder = './';
-
-	/**
-	 * Hello World example task.
-	 *
-	 * @see  https://github.com/redCOMPONENT-COM/robo/blob/master/src/HelloWorld.php
-	 * @link https://packagist.org/packages/redcomponent/robo
-	 *
-	 * @return object Result
-	 */
-	public function sayHelloWorld()
-	{
-		$result = $this->taskHelloWorld()->run();
-
-		return $result;
-	}
 
 	/**
 	 * Sends Codeception errors to Slack
@@ -133,9 +118,11 @@ class RoboFile extends \Robo\Tasks
 
 		$this->taskComposerInstall()->run();
 
-		$this->runSelenium();
+		$this->taskSeleniumStandaloneServer()
 
-		$this->taskWaitForSeleniumStandaloneServer()
+			->runSelenium()
+			->waitForSelenium()
+
 			->run()
 			->stopOnFail();
 
@@ -226,9 +213,11 @@ class RoboFile extends \Robo\Tasks
 
 		$this->taskComposerInstall()->run();
 
-		$this->runSelenium();
+		$this->taskSeleniumStandaloneServer()
 
-		$this->taskWaitForSeleniumStandaloneServer()
+			->runSelenium()
+			->waitForSelenium()
+
 			->run()
 			->stopOnFail();
 
@@ -260,9 +249,11 @@ class RoboFile extends \Robo\Tasks
 
 		$this->taskComposerInstall()->run();
 
-		$this->runSelenium();
+		$this->taskSeleniumStandaloneServer()
 
-		$this->taskWaitForSeleniumStandaloneServer()
+			->runSelenium()
+			->waitForSelenium()
+
 			->run()
 			->stopOnFail();
 
@@ -333,16 +324,6 @@ class RoboFile extends \Robo\Tasks
 		{
 			$this->_exec('curl --retry 3 --retry-delay 5 -sS https://getcomposer.org/installer | php');
 		}
-	}
-
-	/**
-	 * Runs Selenium Standalone Server.
-	 *
-	 * @return void
-	 */
-	public function runSelenium()
-	{
-		$this->_exec("vendor/bin/selenium-server-standalone >> selenium.log 2>&1 &");
 	}
 
 	/**
