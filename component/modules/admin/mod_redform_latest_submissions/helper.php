@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 /**
  * Module helper class
  *
- * @since       __deploy_version__
+ * @since       3.3.20
  */
 class ModRedformLatestSubmissionHelper
 {
@@ -23,7 +23,7 @@ class ModRedformLatestSubmissionHelper
 	 *
 	 * @return mixed
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.20
 	 */
 	public static function getList($params)
 	{

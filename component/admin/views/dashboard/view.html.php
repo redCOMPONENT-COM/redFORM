@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  *
  * @package     Redform.Backend
  * @subpackage  Views
- * @since       __deploy_version__
+ * @since       3.3.20
  */
 class RedformViewDashboard extends RdfView
 {
