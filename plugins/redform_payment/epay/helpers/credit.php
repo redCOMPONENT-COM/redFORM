@@ -89,6 +89,13 @@ class PaymentEpayCredit
 		catch (Exception $e)
 		{
 			RdfHelperLog::simpleLog('EPAY CREDIT ERROR:' . $e->getMessage());
+
+			$app = JFactory::getApplication();
+
+			if ($app->isAdmin())
+			{
+				$app->enqueueMessage('EPAY CREDIT ERROR:' . $e->getMessage(), 'warning');
+			}
 		}
 
 		return true;
