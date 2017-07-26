@@ -922,7 +922,7 @@ class RdfCore extends JObject
 		}
 		else
 		{
-			$html = RdfHelperLayout::render('rform.gateway', compact('options'), '', array('component' => 'com_redform'));
+			$html = RdfLayoutHelper::render('rform.gateway', compact('options'), '', array('component' => 'com_redform'));
 		}
 
 		return $html;
