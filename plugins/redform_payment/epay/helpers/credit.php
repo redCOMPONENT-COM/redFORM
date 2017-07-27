@@ -20,10 +20,10 @@ class PaymentEpayCredit
 	private $wsdl = "https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx?WSDL";
 
 	/**
-	 * @var RdfEntityPaymentrequest
+	 * @var RdfEntityPaymentrequest[]
 	 * @since 3.3.18
 	 */
-	private $paymentRequest;
+	private $paymentRequests;
 
 	/**
 	 * @var RdfEntityPayment
@@ -53,15 +53,15 @@ class PaymentEpayCredit
 	/**
 	 * constructor
 	 *
-	 * @param   RdfEntityPaymentrequest  $paymentRequest   payment request to credit
-	 * @param   RdfEntityPayment         $previousPayment  a previous payment for same submitter
-	 * @param   JRegistry                $pluginParams     plugin parameters
+	 * @param   RdfEntityPaymentrequests[]  $paymentRequests  payment request to credit
+	 * @param   RdfEntityPayment            $previousPayment  a previous payment for same submitter
+	 * @param   JRegistry                   $pluginParams     plugin parameters
 	 *
 	 * @since 3.3.18
 	 */
-	public function __construct(RdfEntityPaymentrequest $paymentRequest, RdfEntityPayment $previousPayment, JRegistry $pluginParams)
+	public function __construct($paymentRequests, RdfEntityPayment $previousPayment, JRegistry $pluginParams)
 	{
-		$this->paymentRequest = $paymentRequest;
+		$this->paymentRequests = $paymentRequests;
 		$this->previousPayment = $previousPayment;
 		$this->params = $pluginParams;
 	}
@@ -78,9 +78,17 @@ class PaymentEpayCredit
 		try
 		{
 			$previousTransactionId = $this->getTransactionId();
-			$amount                = round(abs($this->paymentRequest->price + $this->paymentRequest->vat) * 100);
 
-			$this->createCart($this->paymentRequest);
+			$amount = 0;
+
+			foreach ($this->paymentRequests as $paymentRequest)
+			{
+				$amount += $paymentRequest->price + $paymentRequest->vat;
+			}
+
+			$amount = round(abs($amount) * 100);
+
+			$this->createCart($this->paymentRequests);
 
 			$response = $this->creditTransaction($previousTransactionId, $amount);
 
@@ -299,22 +307,30 @@ class PaymentEpayCredit
 
 		$payment->save();
 
-		$this->paymentRequest->paid = 1;
-		$this->paymentRequest->save();
+		foreach ($this->paymentRequests as $paymentRequest)
+		{
+			$paymentRequest->paid = 1;
+			$paymentRequest->save();
+		}
 	}
 
 	/**
 	 * Creates cart
 	 *
-	 * @param   RdfEntityPaymentrequest  $paymentRequest  payment request
+	 * @param   RdfEntityPaymentrequest[]  $paymentRequests  payment request
 	 *
 	 * @return RdfEntityCart
 	 */
-	private function createCart(RdfEntityPaymentrequest $paymentRequest)
+	private function createCart($paymentRequests)
 	{
 		$this->cart = new RdfEntityCart;
 		$this->cart->init();
-		$this->cart->addPaymentRequest($paymentRequest->id);
+
+		foreach ($paymentRequests as $paymentRequest)
+		{
+			$this->cart->addPaymentRequest($paymentRequest->id);
+		}
+
 		$this->cart->refresh();
 
 		return $this->cart;

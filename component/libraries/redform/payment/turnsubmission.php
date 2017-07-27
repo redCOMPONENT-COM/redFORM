@@ -20,15 +20,31 @@ class RdfPaymentTurnsubmission
 {
 	/**
 	 * @var RdfEntitySubmitter
+	 *
+	 * @since 3.0
 	 */
 	private $submission;
 
+	/**
+	 * @var RdfEntityPaymentrequest[]
+	 *
+	 * @since __deploy_version__
+	 */
 	private $paidItems;
+
+	/**
+	 * @var RdfEntityPaymentrequest[]
+	 *
+	 * @since __deploy_version__
+	 */
+	private $creditRequest;
 
 	/**
 	 * RedformeconomicTurnsubmission constructor.
 	 *
 	 * @param   int  $submissionId  submission id
+	 *
+	 * @since 3.0
 	 */
 	public function __construct($submissionId)
 	{
@@ -37,9 +53,11 @@ class RdfPaymentTurnsubmission
 	}
 
 	/**
-	 * Turn a submission
+	 * Turn a submission, creating a negative payment (ie credit) request
 	 *
 	 * @return int id of created payment request
+	 *
+	 * @since 3.0
 	 */
 	public function turn()
 	{
@@ -61,30 +79,47 @@ class RdfPaymentTurnsubmission
 			}
 		}
 
-		if (!$entity = $this->createPaymentRequest())
+		if (!$this->creditRequest = $this->createCreditRequest())
 		{
 			return false;
 		}
 
 		JPluginHelper::importPlugin('redform');
 		$dispatcher = JDispatcher::getInstance();
-		$dispatcher->trigger('onRedformAfterTurnSubmission', array($entity));
+		$dispatcher->trigger('onRedformAfterTurnSubmission', array($this->creditRequest));
 
-		if ($entity->price < 0 && $previousPayment = $this->getPreviousPayment())
+		return $this->creditRequest->id;
+	}
+
+	/**
+	 * Try to process the refund
+	 *
+	 * @return void
+	 *
+	 * @since __deploy_version__
+	 */
+	public function processRefund()
+	{
+		if ($this->creditRequest->price < 0 && $previousPayment = $this->getPreviousPayment())
 		{
-			JPluginHelper::importPlugin('redform_payment');
-			$dispatcher->trigger('onRedformCreditPaymentRequest', array($entity, $previousPayment));
-		}
+			JPluginHelper::importPlugin('redform');
+			$dispatcher = JDispatcher::getInstance();
 
-		return $entity->id;
+			JPluginHelper::importPlugin('redform_payment');
+			$dispatcher->trigger(
+				'onRedformCreditPaymentRequests', array(array($this->creditRequest), $previousPayment)
+			);
+		}
 	}
 
 	/**
 	 * create Payment Request
 	 *
 	 * @return RdfEntityPaymentrequest
+	 *
+	 * @since 3.0
 	 */
-	private function createPaymentRequest()
+	private function createCreditRequest()
 	{
 		// Create payment request
 		$entity = RdfEntityPaymentrequest::getInstance();
@@ -114,6 +149,8 @@ class RdfPaymentTurnsubmission
 	 * @param   int  $paymentRequestId  payment request id
 	 *
 	 * @return void
+	 *
+	 * @since 3.0
 	 */
 	private function createPaymentRequestItems($paymentRequestId)
 	{
@@ -136,6 +173,8 @@ class RdfPaymentTurnsubmission
 	 * Get total price of paid items
 	 *
 	 * @return mixed
+	 *
+	 * @since 3.0
 	 */
 	private function getTotalPrice()
 	{
@@ -152,6 +191,8 @@ class RdfPaymentTurnsubmission
 	 * Get total vat of paid items
 	 *
 	 * @return mixed
+	 *
+	 * @since 3.0
 	 */
 	private function getTotalVat()
 	{

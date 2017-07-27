@@ -27,21 +27,21 @@ class PlgRedform_PaymentEpay extends RdfPaymentPlugin
 	/**
 	 * Callback handler to credit a payment
 	 *
-	 * @param   RdfEntityPaymentrequest  $paymentRequest   payment request to credit
-	 * @param   RdfEntityPayment         $previousPayment  a previous payment for same submitter
+	 * @param   RdfEntityPaymentrequest[]  $paymentRequests  payment request to credit
+	 * @param   RdfEntityPayment           $previousPayment  a previous payment for same submitter
 	 *
 	 * @return boolean
 	 *
 	 * @since 3.3.18
 	 */
-	public function onRedformCreditPaymentRequest(RdfEntityPaymentrequest $paymentRequest, RdfEntityPayment $previousPayment)
+	public function onRedformCreditPaymentRequests($paymentRequests, RdfEntityPayment $previousPayment)
 	{
 		if (!$previousPayment->gateway == $this->gateway && $this->params->get('auto_credit', 0))
 		{
 			return true;
 		}
 
-		$helper = new PaymentEpayCredit($paymentRequest, $previousPayment, $this->params);
+		$helper = new PaymentEpayCredit($paymentRequests, $previousPayment, $this->params);
 
 		return $helper->process();
 	}
