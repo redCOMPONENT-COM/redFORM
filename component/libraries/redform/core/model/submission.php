@@ -64,12 +64,8 @@ class RdfCoreModelSubmission extends RModel
 	 */
 	public function getSubmission($sids = null)
 	{
-		if (!$this->submission)
-		{
-			$submission = new RdfCoreFormSubmission;
-			$submission->setSubmitKey($this->submitKey);
-			$this->submission = $submission;
-		}
+		$this->submission = new RdfCoreFormSubmission;
+		$this->submission->setSubmitKey($this->submitKey);
 
 		if (is_array($sids))
 		{
@@ -83,11 +79,8 @@ class RdfCoreModelSubmission extends RModel
 
 		foreach ($sids as $sid)
 		{
-			if (!$this->submission->getSubmissionBySid($sid))
-			{
-				$answers = $this->getSubSubmission($sid);
-				$this->submission->addSubSubmission($answers);
-			}
+			$answers = $this->getSubSubmission($sid);
+			$this->submission->addSubSubmission($answers);
 		}
 
 		return $this->submission;
