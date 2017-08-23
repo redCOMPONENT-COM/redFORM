@@ -46,7 +46,7 @@ class PaymentEpayCredit
 	/**
 	 * @var RdfEntityCart
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	private $cart;
 

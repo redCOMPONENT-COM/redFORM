@@ -28,14 +28,14 @@ class RdfPaymentTurnsubmission
 	/**
 	 * @var RdfEntityPaymentrequest[]
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	private $paidItems;
 
 	/**
 	 * @var RdfEntityPaymentrequest[]
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	private $creditRequest;
 
@@ -96,7 +96,7 @@ class RdfPaymentTurnsubmission
 	 *
 	 * @return void
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	public function processRefund()
 	{

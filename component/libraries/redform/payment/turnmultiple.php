@@ -14,21 +14,21 @@ defined('JPATH_BASE') or die;
  *
  * @package     Redform.Libraries
  * @subpackage  Payment
- * @since       __deploy_version__
+ * @since       3.3.21
  */
 class RdfPaymentTurnmultiple
 {
 	/**
 	 * @var RdfEntitySubmitter[]
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	private $submissions;
 
 	/**
 	 * @var integer[]
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	private $creditRequestsIds;
 
@@ -37,7 +37,7 @@ class RdfPaymentTurnmultiple
 	 *
 	 * @param   string  $submitKey  submit key
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	public function __construct($submitKey)
 	{
@@ -50,7 +50,7 @@ class RdfPaymentTurnmultiple
 	 *
 	 * @return int id of created payment request
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	public function turn()
 	{
@@ -74,7 +74,7 @@ class RdfPaymentTurnmultiple
 	 *
 	 * @return void
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	public function processRefund()
 	{
@@ -108,7 +108,7 @@ class RdfPaymentTurnmultiple
 	 *
 	 * @return RdfEntityPayment
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.21
 	 */
 	private function getPreviousPayment()
 	{
