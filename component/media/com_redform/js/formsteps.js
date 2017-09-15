@@ -21,7 +21,11 @@
 		$sections.not(':first').hide();
 
 		//Append the form controls to the button
-		formbox.append('<div class="form-controls"><input type="button" value="PREVIOUS" id="previous-section" class="section-button" /><input type="button" value="NEXT" id="next-section" class="section-button" /><div class="clear"></div></div>');
+		formbox.append('<div class="form-controls">' +
+			'<input type="button" value="' + Joomla.JText._('LIB_REFORM_STEPS_PREVIOUS') + '" id="previous-section" class="section-button" />' +
+			'<input type="button" value="' + Joomla.JText._('LIB_REFORM_STEPS_NEXT') + '" id="next-section" class="section-button" />' +
+			'<div class="clear"></div>' +
+			'</div>');
 
 		var $controls = formbox.find('.form-controls');
 		var $previousLink = formbox.find('#previous-section');

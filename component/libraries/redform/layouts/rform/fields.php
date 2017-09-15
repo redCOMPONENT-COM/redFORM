@@ -30,6 +30,9 @@ RHelperAsset::load('punycode.js');
 
 RHelperAsset::load('formsteps.js', 'com_redform');
 RHelperAsset::load('formsteps.css', 'com_redform');
+JText::script('LIB_REFORM_STEPS_PREVIOUS');
+JText::script('LIB_REFORM_STEPS_NEXT');
+
 RHelperAsset::load('showon.js', 'com_redform');
 
 if (isset($options['extrafields'][$index]))
