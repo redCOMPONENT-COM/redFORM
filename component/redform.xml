@@ -7,8 +7,8 @@
 	<authorUrl>www.redweb.dk</authorUrl>
 	<copyright>(c) 2008 - 2016 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
-	<version>3.3.21</version>
-	<redcore version="1.10.3" />
+	<version>3.3.22</version>
+	<redcore version="1.10.4" />
 	<tag>##VERSION##</tag>
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
