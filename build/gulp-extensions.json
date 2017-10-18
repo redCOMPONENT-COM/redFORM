@@ -4,7 +4,15 @@
 	"libraries"  : ["redcore"],
 	"media"      : ["redcore"],
 	"plugins" : {
-		"redform" : ["economic", "helpscout", "redmemberbillinginfo", "salesforce", "nikkbautopaycreditnote", "nikkbbilling", "aesirmember"],
+		"redform" : [
+			"economic",
+			"helpscout",
+			"redmemberbillinginfo",
+			"salesforce",
+			"nikkbautopaycreditnote",
+			"nikkbbilling",
+			"nikkbconfirmextern",
+			"aesirmember"],
 		"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
 		"redform_field" : ["dawa"],
 		"redform_mailing" : ["acymailing", "ccnewsletter", "jnews", "phplist"],
