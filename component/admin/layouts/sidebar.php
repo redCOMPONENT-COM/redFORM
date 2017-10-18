@@ -18,6 +18,7 @@ if (isset($data['active']))
 	$active = $data['active'];
 }
 
+$dashboardClass = ($active === 'dashboard' || !$active) ? 'active' : '';
 $formsClass = ($active === 'forms') ? 'active' : '';
 $fieldsClass = ($active === 'fields') ? 'active' : '';
 $sectionsClass = ($active === 'sections') ? 'active' : '';
@@ -34,6 +35,13 @@ RHelperAsset::load('redformbackend.css', 'com_redform');
 ?>
 
 <ul class="nav nav-tabs nav-stacked">
+	<li>
+		<a class="<?php echo $dashboardClass; ?>"
+		   href="<?php echo JRoute::_('index.php?option=com_redform') ?>">
+			<i class="icon-th"></i>
+			<?php echo JText::_('COM_REDFORM_VIEW_TITLE_DASHBOARD') ?>
+		</a>
+	</li>
 	<li>
 		<a class="<?php echo $formsClass; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=forms') ?>">

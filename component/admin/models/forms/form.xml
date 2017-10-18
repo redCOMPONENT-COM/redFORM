@@ -105,6 +105,12 @@
 			<option value="1">JYES</option>
 		</field>
 		<field
+				name="notificationtext_tags"
+				type="redform.tag"
+				target_field="notificationtext"
+				form_id_field="id"
+		/>
+		<field
 				name="notificationtext"
 				type="editor"
 				label="COM_REDFORM_FORM_POST_SUBMISSION_TEXT"
@@ -151,6 +157,12 @@
 				maxlength="255"
 				size="100"
 				showon="admin_notification_email_mode:1"
+		/>
+		<field
+				name="admin_notification_email_body_tags"
+				type="redform.tag"
+				target_field="admin_notification_email_body"
+				form_id_field="id"
 		/>
 		<field
 				name="admin_notification_email_body"
@@ -208,6 +220,12 @@
 				maxlength="255"
 				size="100"
 				/>
+		<field
+				name="confirmation_contactperson_body_tags"
+				type="redform.tag"
+				target_field="confirmation_contactperson_body"
+				form_id_field="id"
+		/>
         <field
 				name="confirmation_contactperson_body"
 				type="editor"
@@ -233,6 +251,12 @@
 				description="COM_REDFORM_NOTIFY_SUBMITTER_EMAIL_SUBJECT_TIP"
 				maxlength="255"
 				/>
+		<field
+				name="submissionbody_tags"
+				type="redform.tag"
+				target_field="submissionbody"
+				form_id_field="id"
+		/>
 		<field
 				name="submissionbody"
 				type="editor"
@@ -282,12 +306,24 @@
 			<option value="1">JYES</option>
 		</field>
 		<field
+				name="paymentprocessing_tags"
+				type="redform.tag"
+				target_field="paymentprocessing"
+				form_id_field="id"
+		/>
+		<field
 				name="paymentprocessing"
 				type="editor"
 				label="COM_REDFORM_PAYMENTPROCESSING"
 				description="COM_REDFORM_PAYMENTPROCESSING_TIP"
                 filter="raw"
 				/>
+		<field
+				name="paymentaccepted_tags"
+				type="redform.tag"
+				target_field="paymentaccepted"
+				form_id_field="id"
+		/>
 		<field
 				name="paymentaccepted"
 				type="editor"
@@ -303,6 +339,12 @@
 				maxlength="255"
 				/>
 		<field
+				name="contactpaymentnotificationbody_tags"
+				type="redform.tag"
+				target_field="contactpaymentnotificationbody"
+				form_id_field="id"
+		/>
+		<field
 				name="contactpaymentnotificationbody"
 				type="editor"
 				label="COM_REDFORM_PAYMENT_CONTACT_NOTIFICATION_EMAIL_BODY"
@@ -316,6 +358,12 @@
 				description="COM_REDFORM_PAYMENT_SUBMITTER_NOTIFICATION_EMAIL_SUBJECT_TIP"
 				maxlength="255"
 				/>
+		<field
+				name="submitterpaymentnotificationbody_tags"
+				type="redform.tag"
+				target_field="submitterpaymentnotificationbody"
+				form_id_field="id"
+		/>
 		<field
 				name="submitterpaymentnotificationbody"
 				type="editor"

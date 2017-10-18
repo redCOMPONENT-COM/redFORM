@@ -230,4 +230,18 @@ class RdfEntitySubmitter extends RdfEntityBase
 
 		return $js;
 	}
+
+	/**
+	 * replace tags
+	 *
+	 * @param   string  $text  text to parse
+	 *
+	 * @return  string text with tags substituted
+	 *
+	 * @since   3.3.19
+	 */
+	public function replaceTags($text)
+	{
+		return $this->getAnswers()->replaceTags($text);
+	}
 }

@@ -221,7 +221,7 @@ class RdfHelperTagsreplace
 	}
 
 	/**
-	 * replaces [confirmemail]
+	 * replaces [confirmlink]
 	 *
 	 * @return string
 	 */

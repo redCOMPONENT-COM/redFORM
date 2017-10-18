@@ -7,8 +7,8 @@
 	<authorUrl>www.redweb.dk</authorUrl>
 	<copyright>(c) 2008 - 2016 Redweb.dk</copyright>
 	<license>GNU/GPL</license>
-	<version>3.3.18</version>
-	<redcore version="1.8.9" />
+	<version>3.3.22</version>
+	<redcore version="1.10.4" />
 	<tag>##VERSION##</tag>
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
@@ -96,6 +96,12 @@
         <plugin name="redform" group="content"/>
 		<plugin name="redform" group="installer" />
     </plugins>
+
+	<!-- Modules to install with the component -->
+	<modules>
+		<!-- Admin -->
+		<module name="mod_redform_latest_submissions" client="admin"/>
+	</modules>
 
 	<updateservers>
 		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/com_redform.xml</server>

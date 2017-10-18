@@ -25,7 +25,7 @@ class RedformModelSubmitter extends RModelAdmin
 	 *
 	 * @return  boolean  True if successful, false if an error occurs.
 	 *
-	 * @since   __deploy_version__
+	 * @since   3.3.19
 	 */
 	public function confirm(&$pks)
 	{

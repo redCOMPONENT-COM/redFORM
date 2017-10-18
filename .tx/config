@@ -39,34 +39,34 @@ file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_captcha_simplemat
 source_file = plugins/redform_captcha/simplemath/language/en-GB/en-GB.plg_redform_captcha_simplemath.sys.ini
 source_lang = en-GB
 
-[redFORM.redform25-plg_redform_mailing_jnews-ini]
-file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_jnews.ini
-source_file = plugins/redform_mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.ini
+[redFORM.redform25-plg_redform_field_jnews-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_field_jnews.ini
+source_file = plugins/redform_field/jnews/language/en-GB/en-GB.plg_redform_field_jnews.ini
 source_lang = en-GB
 
-[redFORM.redform25-plg_redform_mailing_jnews-sys-ini]
-file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_jnews.sys.ini
-source_file = plugins/redform_mailing/jnews/language/en-GB/en-GB.plg_redform_mailing_jnews.sys.ini
+[redFORM.redform25-plg_redform_field_jnews-sys-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_field_jnews.sys.ini
+source_file = plugins/redform_field/jnews/language/en-GB/en-GB.plg_redform_field_jnews.sys.ini
 source_lang = en-GB
 
-[redFORM.redform25-plg_redform_mailing_acymailing-ini]
-file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_acymailing.ini
-source_file = plugins/redform_mailing/acymailing/language/en-GB/en-GB.plg_redform_mailing_acymailing.ini
+[redFORM.redform25-plg_redform_field_acymailing-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_field_acymailing.ini
+source_file = plugins/redform_field/acymailing/language/en-GB/en-GB.plg_redform_field_acymailing.ini
 source_lang = en-GB
 
-[redFORM.redform25-plg_redform_mailing_acymailing-sys-ini]
-file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_acymailing.sys.ini
-source_file = plugins/redform_mailing/acymailing/language/en-GB/en-GB.plg_redform_mailing_acymailing.sys.ini
+[redFORM.redform25-plg_redform_field_acymailing-sys-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_field_acymailing.sys.ini
+source_file = plugins/redform_field/acymailing/language/en-GB/en-GB.plg_redform_field_acymailing.sys.ini
 source_lang = en-GB
 
-[redFORM.redform25-plg_redform_mailing_phplist-ini]
-file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_phplist.ini
-source_file = plugins/redform_mailing/phplist/language/en-GB/en-GB.plg_redform_mailing_phplist.ini
+[redFORM.redform25-plg_redform_field_phplist-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_field_phplist.ini
+source_file = plugins/redform_field/phplist/language/en-GB/en-GB.plg_redform_field_phplist.ini
 source_lang = en-GB
 
-[redFORM.redform25-plg_redform_mailing_phplist-sys-ini]
-file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_mailing_phplist.sys.ini
-source_file = plugins/redform_mailing/phplist/language/en-GB/en-GB.plg_redform_mailing_phplist.sys.ini
+[redFORM.redform25-plg_redform_field_phplist-sys-ini]
+file_filter = languages/<lang>/admin/<lang>/<lang>.plg_redform_field_phplist.sys.ini
+source_file = plugins/redform_field/phplist/language/en-GB/en-GB.plg_redform_field_phplist.sys.ini
 source_lang = en-GB
 
 [redFORM.redform25-plg_redform_payment_custom-ini]

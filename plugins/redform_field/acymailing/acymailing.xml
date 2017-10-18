@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="redform_field" method="upgrade">
+	<name>PLG_REDFORM_MAILING_ACYMAILING</name>
+	<creationDate>July 8, 2015</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2008 - 2017 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>3.3.19</version>
+	<tag>##VERSION##</tag>
+	<description>PLG_REDFORM_MAILING_ACYMAILING_XML_DESCRIPTION</description>
+
+	<files>
+		<filename plugin="acymailing">acymailing.php</filename>
+		<filename>index.html</filename>
+		<folder>field</folder>
+		<folder>form</folder>
+		<folder>language</folder>
+		<folder>layouts</folder>
+	</files>
+
+	<updateservers>
+		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_field_acymailing.xml</server>
+	</updateservers>
+</extension>

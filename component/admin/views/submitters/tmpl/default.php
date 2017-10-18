@@ -38,7 +38,7 @@ $listDirn = $this->state->get('list.direction');
 	?>
 
 	<hr/>
-	<?php if (empty($this->items)) : ?>
+	<?php if (empty($this->items) || !$this->formInfo) : ?>
 		<div class="alert alert-info">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			<div class="pagination-centered">

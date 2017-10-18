@@ -214,6 +214,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getLabel('notificationtext'); ?>
 					</div>
 					<div class="controls">
+						<div class="tags-info"><?php echo $this->form->getInput('notificationtext_tags'); ?></div>
 						<?php echo $this->form->getInput('notificationtext'); ?>
 					</div>
 				</div>
@@ -262,6 +263,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getLabel('admin_notification_email_body'); ?>
 					</div>
 					<div class="controls">
+						<div class="tags-info"><?php echo $this->form->getInput('admin_notification_email_body_tags'); ?></div>
 						<?php echo $this->form->getInput('admin_notification_email_body'); ?>
 					</div>
 				</div>
@@ -294,6 +296,7 @@ $isNew = (int) $this->item->id <= 0;
 						<?php echo $this->form->getLabel('submissionbody'); ?>
 					</div>
 					<div class="controls">
+						<div class="tags-info"><?php echo $this->form->getInput('submissionbody_tags'); ?></div>
 						<?php echo $this->form->getInput('submissionbody'); ?>
 					</div>
 				</div>
@@ -346,6 +349,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getLabel('confirmation_contactperson_body'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('confirmation_contactperson_body_tags'); ?></div>
 					<?php echo $this->form->getInput('confirmation_contactperson_body'); ?>
 				</div>
 			</div>
@@ -389,6 +393,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getLabel('paymentprocessing'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('paymentprocessing_tags'); ?></div>
 					<?php echo $this->form->getInput('paymentprocessing'); ?>
 				</div>
 			</div>
@@ -397,6 +402,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getLabel('paymentaccepted'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('paymentaccepted_tags'); ?></div>
 					<?php echo $this->form->getInput('paymentaccepted'); ?>
 				</div>
 			</div>
@@ -413,6 +419,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getLabel('contactpaymentnotificationbody'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('contactpaymentnotificationbody_tags'); ?></div>
 					<?php echo $this->form->getInput('contactpaymentnotificationbody'); ?>
 				</div>
 			</div>
@@ -429,6 +436,7 @@ $isNew = (int) $this->item->id <= 0;
 					<?php echo $this->form->getLabel('submitterpaymentnotificationbody'); ?>
 				</div>
 				<div class="controls">
+					<div class="tags-info"><?php echo $this->form->getInput('submitterpaymentnotificationbody_tags'); ?></div>
 					<?php echo $this->form->getInput('submitterpaymentnotificationbody'); ?>
 				</div>
 			</div>

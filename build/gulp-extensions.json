@@ -3,6 +3,11 @@
 	"components" : ["redform", "redcore"],
 	"libraries"  : ["redcore"],
 	"media"      : ["redcore"],
+	"modules" : {
+		"backend": [
+			"latest_submissions"
+		]
+	},
 	"plugins" : {
 		"redform" : [
 			"economic",
@@ -14,8 +19,7 @@
 			"nikkbconfirmextern",
 			"aesirmember"],
 		"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
-		"redform_field" : ["dawa"],
-		"redform_mailing" : ["acymailing", "ccnewsletter", "jnews", "phplist"],
+		"redform_field" : ["dawa", "acymailing", "ccnewsletter", "jnews", "phplist"],
 		"redform_payment" : [
 			"custom",
 			"cybersource",

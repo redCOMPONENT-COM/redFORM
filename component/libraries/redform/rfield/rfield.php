@@ -551,7 +551,7 @@ class RdfRfield extends JObject
 		if ($showon = $this->getParam('showon'))
 		{
 			$showon   = explode(':', $showon, 2);
-			$properties['class'] .= ' showon_' . implode(' showon_', explode(',', $showon[1]));
+			$properties['class'] .= ' showon_' . implode(' rfshowon_', explode(',', $showon[1]));
 			$id = $this->getName($showon[0]);
 			$properties['rel'] = ' rel="showon_' . $id . '"';
 			$options['showonEnabled'] = true;
@@ -605,7 +605,7 @@ class RdfRfield extends JObject
 	 *
 	 * @return null
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.19
 	 */
 	protected function getLookupDefaultValueIntegration()
 	{

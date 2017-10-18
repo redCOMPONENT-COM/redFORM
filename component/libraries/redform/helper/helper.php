@@ -355,7 +355,7 @@ class RdfHelper
 	 *
 	 * @return JDate
 	 *
-	 * @since  __deploy_version__
+	 * @since  3.3.19
 	 */
 	public static function getDateToUserTimezone($date, $user= null)
 	{
@@ -367,5 +367,17 @@ class RdfHelper
 		}
 
 		return $date->setTimezone($timezone);
+	}
+
+	/**
+	 * return the code for tags display
+	 *
+	 * @param   JFormField  $field  field to use tag for, allows filtering
+	 *
+	 * @return html
+	 */
+	public static function getTagsEditorInsertModal(JFormField $field)
+	{
+		return RdfLayoutHelper::render('redform.modal.tags', compact('field'));
 	}
 }

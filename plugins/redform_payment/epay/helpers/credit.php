@@ -20,10 +20,10 @@ class PaymentEpayCredit
 	private $wsdl = "https://ssl.ditonlinebetalingssystem.dk/remote/payment.asmx?WSDL";
 
 	/**
-	 * @var RdfEntityPaymentrequest
+	 * @var RdfEntityPaymentrequest[]
 	 * @since 3.3.18
 	 */
-	private $paymentRequest;
+	private $paymentRequests;
 
 	/**
 	 * @var RdfEntityPayment
@@ -44,17 +44,24 @@ class PaymentEpayCredit
 	private $client;
 
 	/**
+	 * @var RdfEntityCart
+	 *
+	 * @since 3.3.21
+	 */
+	private $cart;
+
+	/**
 	 * constructor
 	 *
-	 * @param   RdfEntityPaymentrequest  $paymentRequest   payment request to credit
-	 * @param   RdfEntityPayment         $previousPayment  a previous payment for same submitter
-	 * @param   JRegistry                $pluginParams     plugin parameters
+	 * @param   RdfEntityPaymentrequests[]  $paymentRequests  payment request to credit
+	 * @param   RdfEntityPayment            $previousPayment  a previous payment for same submitter
+	 * @param   JRegistry                   $pluginParams     plugin parameters
 	 *
 	 * @since 3.3.18
 	 */
-	public function __construct(RdfEntityPaymentrequest $paymentRequest, RdfEntityPayment $previousPayment, JRegistry $pluginParams)
+	public function __construct($paymentRequests, RdfEntityPayment $previousPayment, JRegistry $pluginParams)
 	{
-		$this->paymentRequest = $paymentRequest;
+		$this->paymentRequests = $paymentRequests;
 		$this->previousPayment = $previousPayment;
 		$this->params = $pluginParams;
 	}
@@ -71,24 +78,32 @@ class PaymentEpayCredit
 		try
 		{
 			$previousTransactionId = $this->getTransactionId();
-			$amount                = round(abs($this->paymentRequest->price + $this->paymentRequest->vat) * 100);
 
-			$transaction = $this->getTransaction($previousTransactionId);
+			$amount = 0;
 
-			if ($transaction->transactionInformation->capturedamount == 0)
+			foreach ($this->paymentRequests as $paymentRequest)
 			{
-				$response = $this->deleteTransaction($previousTransactionId);
+				$amount += $paymentRequest->price + $paymentRequest->vat;
 			}
-			else
-			{
-				$response = $this->creditTransaction($previousTransactionId, $amount);
-			}
+
+			$amount = round(abs($amount) * 100);
+
+			$this->createCart($this->paymentRequests);
+
+			$response = $this->creditTransaction($previousTransactionId, $amount);
 
 			$this->setAsPaid($response);
 		}
 		catch (Exception $e)
 		{
 			RdfHelperLog::simpleLog('EPAY CREDIT ERROR:' . $e->getMessage());
+
+			$app = JFactory::getApplication();
+
+			if ($app->isAdmin())
+			{
+				$app->enqueueMessage('EPAY CREDIT ERROR:' . $e->getMessage(), 'warning');
+			}
 		}
 
 		return true;
@@ -137,6 +152,13 @@ class PaymentEpayCredit
 		return $first[1];
 	}
 
+	/**
+	 * Get epayresponse error
+	 *
+	 * @param   string  $code  error code
+	 *
+	 * @return mixed
+	 */
 	private function getEpayError($code)
 	{
 		$client = $this->getClient();
@@ -151,6 +173,13 @@ class PaymentEpayCredit
 		return $client->__soapCall("getEpayError", array($params));
 	}
 
+	/**
+	 * Get pbs error
+	 *
+	 * @param   string  $code  code
+	 *
+	 * @return mixed
+	 */
 	private function getPbsError($code)
 	{
 		$client = $this->getClient();
@@ -165,6 +194,13 @@ class PaymentEpayCredit
 		return $client->__soapCall("getPbsError", array($params));
 	}
 
+	/**
+	 * Get transaction from epay
+	 *
+	 * @param   integer  $id  Transaction
+	 *
+	 * @return mixed
+	 */
 	private function getTransaction($id)
 	{
 		$client = $this->getClient();
@@ -186,6 +222,13 @@ class PaymentEpayCredit
 		return $response;
 	}
 
+	/**
+	 * Delete a transaction on epay
+	 *
+	 * @param   integer  $id  Transaction id
+	 *
+	 * @return mixed
+	 */
 	private function deleteTransaction($id)
 	{
 		$client = $this->getClient();
@@ -207,6 +250,14 @@ class PaymentEpayCredit
 		return $response;
 	}
 
+	/**
+	 * Credit transaction
+	 *
+	 * @param   integer  $id      transaction id
+	 * @param   integer  $amount  amount
+	 *
+	 * @return mixed
+	 */
 	private function creditTransaction($id, $amount)
 	{
 		$client = $this->getClient();
@@ -223,19 +274,24 @@ class PaymentEpayCredit
 
 		if (!$response->creditResult)
 		{
-			throw new RuntimeException('Couldn\'t credit transaction ' . $id);
+			$error = array('Couldn\'t credit transaction ' . $id . "");
+			$error = array_merge($error, $this->getReponseErrorStrings($response));
+
+			throw new RuntimeException(implode(" / ", $error));
 		}
 
 		return $response;
 	}
 
+	/**
+	 * Set as paid
+	 *
+	 * @param   mixed  $response  soap response
+	 *
+	 * @return void
+	 */
 	private function setAsPaid($response)
 	{
-		$cart = new RdfEntityCart;
-		$cart->init();
-		$cart->addPaymentRequest($this->paymentRequest->id);
-		$cart->refresh();
-
 		$data = array(
 			'tid:' . $this->getTransactionId(),
 			'operation:' . (isset($response->deleteResult) ? 'delete' : 'credit')
@@ -244,14 +300,73 @@ class PaymentEpayCredit
 		$payment = new RdfEntityPayment;
 		$payment->date = JFactory::getDate()->toSql();
 		$payment->data = implode("\n", $data);
-		$payment->cart_id = $cart->id;
+		$payment->cart_id = $this->cart->id;
 		$payment->status = 'SUCCESS';
 		$payment->gateway = 'epay';
 		$payment->paid = 1;
 
 		$payment->save();
 
-		$this->paymentRequest->paid = 1;
-		$this->paymentRequest->save();
+		foreach ($this->paymentRequests as $paymentRequest)
+		{
+			$paymentRequest->paid = 1;
+			$paymentRequest->save();
+		}
+	}
+
+	/**
+	 * Creates cart
+	 *
+	 * @param   RdfEntityPaymentrequest[]  $paymentRequests  payment request
+	 *
+	 * @return RdfEntityCart
+	 */
+	private function createCart($paymentRequests)
+	{
+		$this->cart = new RdfEntityCart;
+		$this->cart->init();
+
+		foreach ($paymentRequests as $paymentRequest)
+		{
+			$this->cart->addPaymentRequest($paymentRequest->id);
+		}
+
+		$this->cart->refresh();
+
+		return $this->cart;
+	}
+
+	/**
+	 * Get error strings from soap call in array
+	 *
+	 * @param   object  $response  response from soap call
+	 *
+	 * @return array
+	 */
+	private function getReponseErrorStrings($response)
+	{
+		$error = array();
+
+		if (!empty($response->pbsresponse))
+		{
+			$pbsresponse = $this->getPbsError($response->pbsresponse);
+
+			if (!empty($pbsresponse->pbsresponsestring))
+			{
+				$error[] = $pbsresponse->pbsresponsestring;
+			}
+		}
+
+		if (!empty($response->epayresponse))
+		{
+			$epayresponse = $this->getEpayError($response->epayresponse);
+
+			if (!empty($epayresponse->epayresponsestring))
+			{
+				$error[] = $epayresponse->epayresponsestring;
+			}
+		}
+
+		return $error;
 	}
 }

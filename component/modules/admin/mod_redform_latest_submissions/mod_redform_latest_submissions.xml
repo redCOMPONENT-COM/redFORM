@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.1" client="administrator" method="upgrade">
+	<name>MOD_REDFORM_LATEST_SUBMISSIONS</name>
+	<creationDate>June 2017</creationDate>
+	<author>redCOMPONENT</author>
+	<authorEmail>email@redcomponent.com</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>Copyright (C) 2008 - 2017 redCOMPONENT.com. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later, see LICENSE.</license>
+	<version>3.3.20</version>
+	<description>MOD_REDFORM_LATEST_SUBMISSIONS_XML_DESCRIPTION</description>
+
+	<files>
+		<folder>language</folder>
+		<folder>tmpl</folder>
+		<filename>LICENSE</filename>
+		<filename module="mod_redform_latest_submissions">mod_redform_latest_submissions.php</filename>
+		<filename>helper.php</filename>
+		<filename>mod_redform_latest_submissions.xml</filename>
+	</files>
+
+	<media folder="media">
+		<folder>mod_redform_latest_submissions</folder>
+	</media>
+
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="limit" type="number" default="10" label="MOD_REDFORM_LATEST_SUBMISSIONS_CONFIG_LIMIT" description="MOD_REDFORM_LATEST_SUBMISSIONS_CONFIG_LIMIT_DESC" />
+			</fieldset>
+
+			<fieldset
+					name="advanced">
+				<field
+						name="layout"
+						type="modulelayout"
+						label="JFIELD_ALT_LAYOUT_LABEL"
+						description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+				<field
+						name="moduleclass_sfx"
+						type="text"
+						label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+						description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+				<field
+						name="cache"
+						type="list"
+						default="0"
+						label="COM_MODULES_FIELD_CACHING_LABEL"
+						description="COM_MODULES_FIELD_CACHING_DESC">
+					<option
+							value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

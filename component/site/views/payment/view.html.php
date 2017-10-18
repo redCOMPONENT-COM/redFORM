@@ -125,6 +125,7 @@ class RedformViewPayment extends JViewLegacy
 		$document->setTitle($document->getTitle() . ' - ' . JText::_('COM_REDFORM'));
 
 		$form = $this->get('form');
+		$cart = $this->get('cart');
 		$text = '';
 
 		switch (JRequest::getVar('state'))
@@ -146,7 +147,9 @@ class RedformViewPayment extends JViewLegacy
 			$text .= $settings->get('notification_extra');
 		}
 
-		$this->assign('text',  $text);
+		$text = $cart->replaceTags($text);
+
+		$this->text = $text;
 
 		return parent::display($tpl);
 	}
