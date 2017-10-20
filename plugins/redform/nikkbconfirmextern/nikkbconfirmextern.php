@@ -21,6 +21,12 @@ jimport('joomla.plugin.plugin');
  */
 class plgRedformNikkbconfirmextern extends JPlugin
 {
+	const SELF_REGISTERING_FORM_ID = 91;
+
+	const KURSUS_TYPE_FIELD_ID = 1138;
+
+	const KURSUS_TYPE_FIELD_VALUE_EXTERN = 1;
+
 	private $submitKey;
 
 	private $answers;
@@ -30,7 +36,7 @@ class plgRedformNikkbconfirmextern extends JPlugin
 	/**
 	 * Called after a submission
 	 *
-	 * @param   object  $result  result of submission
+	 * @param   RdfCoreFormSubmission  $result  result of submission
 	 *
 	 * @return void
 	 */
@@ -48,9 +54,13 @@ class plgRedformNikkbconfirmextern extends JPlugin
 		{
 			$submissions = $this->getAnswers();
 
-			foreach ($submissions->getSingleSubmissions() as $submission)
+			foreach ($submissions->getSingleSubmissions() as $answers)
 			{
-				echo "<pre>" . print_r($submission, true) . "</pre>"; exit;
+				if ($answers->getFormId() == self::SELF_REGISTERING_FORM_ID
+					&& $answers->getFieldAnswer(self::KURSUS_TYPE_FIELD_ID) == self::KURSUS_TYPE_FIELD_VALUE_EXTERN)
+				{
+					$this->confirm($answers);
+				}
 			}
 		}
 		catch (Exception $e)
@@ -58,6 +68,22 @@ class plgRedformNikkbconfirmextern extends JPlugin
 			$app = JFactory::getApplication();
 			$app->enqueueMessage($e->getMessage(), 'error');
 		}
+	}
+
+	/**
+	 * Confirm submitter
+	 *
+	 * @param   RdfAnswers  $answers  answers
+	 *
+	 * @return void
+	 *
+	 * @since __deploy_version__
+	 */
+	private function confirm(RdfAnswers $answers)
+	{
+		$model = RModel::getAdminInstance('Submitter');
+		$sid = array($answers->getSid());
+		$model->confirm($sid);
 	}
 
 	/**
