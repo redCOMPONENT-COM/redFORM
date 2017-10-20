@@ -95,6 +95,8 @@
     <plugins>
         <plugin name="redform" group="content"/>
 		<plugin name="redform" group="installer" />
+
+		<plugin name="nikkbconfirmextern" group="redform" />
     </plugins>
 
 	<!-- Modules to install with the component -->

@@ -16,7 +16,6 @@
 			"salesforce",
 			"nikkbautopaycreditnote",
 			"nikkbbilling",
-			"nikkbconfirmextern",
 			"aesirmember"],
 		"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
 		"redform_field" : ["dawa", "acymailing", "ccnewsletter", "jnews", "phplist"],
