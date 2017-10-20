@@ -12,31 +12,14 @@ use Redform\Plugin\AbstractFieldPlugin;
 defined('_JEXEC') or die( 'Restricted access');
 
 require_once __DIR__ . '/field/daterange.php';
-require_once __DIR__ . '/form/field/daterangelist.php';
 
 /**
- * Class plgRedform_mailingDaterange
+ * Class plgRedform_fieldDaterange
  *
  * @since       __deploy_version__
  */
 class plgRedform_fieldDaterange extends AbstractFieldPlugin
 {
-	/**
-	 * Add to integration names
-	 *
-	 * @param   array  &$names  names to add to
-	 *
-	 * @return bool
-	 *
-	 * @deprecated
-	 */
-	public function getIntegrationName(&$names)
-	{
-		$names[] = 'daterange';
-
-		return true;
-	}
-
 	/**
 	 * Add supported field type(s)
 	 *
@@ -58,7 +41,7 @@ class plgRedform_fieldDaterange extends AbstractFieldPlugin
 	 */
 	public function onRedformGetFieldTypesOptions(&$options)
 	{
-		$options[] = \JHtml::_('select.option', 'daterange', JText::_('PLG_REDFORM_MAILING_DATERANGE_FIELD_DATERANGE'));
+		$options[] = \JHtml::_('select.option', 'daterange', JText::_('PLG_REDFORM_FIELD_DATERANGE_FIELD_DATERANGE'));
 	}
 
 	/**

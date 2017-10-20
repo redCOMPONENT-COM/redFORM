@@ -13,7 +13,7 @@ defined('JPATH_BASE') or die;
  *
  * @since  3.3.19
  */
-class RdfRfieldDaterangelist extends \RdfRfieldCheckbox
+class RdfRfieldDaterange extends \RdfRfield
 {
 	/**
 	 * @var string
@@ -57,26 +57,41 @@ class RdfRfieldDaterangelist extends \RdfRfieldCheckbox
 	}
 
 	/**
-	 * Return field options (for select, radio, etc...)
+	 * Get properties
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	protected function getOptions()
+	public function getInputProperties()
 	{
-		$lists = json_decode($this->getParam('lists'));
+		$properties = parent::getInputProperties();
 
-		if (empty($lists))
+		$properties['data-format'] = $this->params->get('format', 'YYYY-MM-DD');
+
+		$excluded = $this->params->get('excluded_dates');
+
+		if (!empty($excluded))
 		{
-			return false;
+			$lines = explode("\n", $excluded);
+			$dates = array();
+
+			foreach ($lines as $l)
+			{
+				$l = trim($l);
+
+				if (empty($l))
+				{
+					continue;
+				}
+
+				$dates[]= JFactory::getDate($l)->format('Y-m-d');
+			}
+
+			if (!empty($dates))
+			{
+				$properties['data-excluded'] = implode(",", $dates);
+			}
 		}
 
-		$options = array();
-
-		foreach ($lists->id as $i => $id)
-		{
-			$options[] = JHtml::_('select.option', $lists->id[$i], $lists->label[$i]);
-		}
-
-		return $options;
+		return $properties;
 	}
 }

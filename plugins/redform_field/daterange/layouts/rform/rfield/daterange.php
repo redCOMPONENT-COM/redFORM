@@ -10,14 +10,17 @@
 defined('_JEXEC') or die;
 
 $data = $displayData;
+
+$properties = $data->getInputProperties();
+$properties['class'] = (empty($properties['class']) ? "" : $properties['class'] . " ") . "rfdaterange";
+
+$doc = JFactory::getDocument();
+$doc->addScript("//cdn.jsdelivr.net/momentjs/latest/moment.min.js");
+$doc->addScript("//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js");
+$doc->addStyleSheet("//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css");
+
+RHelperAsset::load('script.js', 'plg_redform_field_daterange');
+
+JText::script('PLG_REDFORM_FIELD_DATERANGE_JS_CLEAR');
 ?>
-<div class="fieldoptions">
-	<fieldset class="checkboxes<?php echo $data->required ? ' required' : ''; ?>">
-		<?php foreach ($data->options as $option): ?>
-			<?php $properties = $data->getOptionsProperties($option); ?>
-			<div class="fieldoption">
-				<input <?php echo $data->propertiesToString($properties); ?>/> <?php echo $option->text; ?>
-			</div>
-		<?php endforeach; ?>
-	</fieldset>
-</div>
+<input <?php echo $data->propertiesToString($properties); ?>/>

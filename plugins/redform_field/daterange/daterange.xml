@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="3.7" type="plugin" group="redform_field" method="upgrade">
-	<name>PLG_REDFORM_MAILING_DATERANGE</name>
+	<name>PLG_REDFORM_FIELD_DATERANGE</name>
 	<creationDate>October 2017</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
@@ -9,12 +9,11 @@
 	<license>GNU/GPL</license>
 	<version>__deploy_version__</version>
 	<tag>##VERSION##</tag>
-	<description>PLG_REDFORM_MAILING_DATERANGE_XML_DESCRIPTION</description>
+	<description>PLG_REDFORM_FIELD_DATERANGE_XML_DESCRIPTION</description>
 
 	<files>
 		<filename plugin="daterange">daterange.php</filename>
 		<folder>field</folder>
-		<folder>form</folder>
 		<folder>language</folder>
 		<folder>layouts</folder>
 	</files>
