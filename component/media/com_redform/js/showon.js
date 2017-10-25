@@ -34,7 +34,13 @@
 			}
 			else {
 				$(element).slideUp();
-                $(element).find('.required, [required]').removeAttr('required').removeClass('required');
+                $(element).find('.required, [required]').removeAttr('required').removeClass('required')
+					.each(function(index, el) {
+                        if (typeof el.setCustomValidity === "function") {
+                            el.setCustomValidity('');
+                        }
+					}
+				);
 			}
 		});
 	};
