@@ -16,6 +16,8 @@
                 description="PLG_REDFORM_FIELD_DATERANGE_XML_FIELD_FORMAT_DESC"
                 default="YYYY-MM-DD"
                 />
+            <field name="placeholder" type="text" default="" label="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_LABEL"
+                   description="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_DESC"/>
         </fieldset>
     </fields>
 </form>

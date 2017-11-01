@@ -92,6 +92,11 @@ class RdfRfieldDaterange extends \RdfRfield
 			}
 		}
 
+		if ($placeholder = $this->getParam('placeholder'))
+		{
+			$properties['placeholder'] = addslashes($placeholder);
+		}
+
 		return $properties;
 	}
 }
