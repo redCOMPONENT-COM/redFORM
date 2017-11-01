@@ -30,9 +30,17 @@
 
 			if (visible) {
 				$(element).slideDown();
+				$(element).find('.showon-required').attr('required', 'required');
 			}
 			else {
 				$(element).slideUp();
+                $(element).find('.required, [required]').removeAttr('required').removeClass('required')
+					.each(function(index, el) {
+                        if (typeof el.setCustomValidity === "function") {
+                            el.setCustomValidity('');
+                        }
+					}
+				);
 			}
 		});
 	};
@@ -40,10 +48,14 @@
 	$(function() {
 		$('[rel^=\"rfshowon_\"]').each(function(){
 			var el = $(this);
+			// Save inputs required attribute
+            el.find('.required, [required]').addClass('showon-required');
+
 			var target = el.attr('rel').replace('rfshowon_', '');
 			var targetEl = $('[name=\"' + target+'\"]');
 
 			if (!conditionElements[target]) {
+
 				if (!targetEl.length)
 				{
 					// for "multiple" select and checkboxes

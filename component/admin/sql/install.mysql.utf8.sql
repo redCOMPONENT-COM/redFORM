@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_forms` (
   `confirmation_contactperson_body` text NOT NULL default '',
   `redirect` VARCHAR( 300 ) NOT NULL default '',
   `notificationtext` text NOT NULL,
-  `formexpires` tinyint(1) NOT NULL default '1',
+  `formexpires` tinyint(1) NOT NULL default '0',
   `captchaactive` tinyint(1) NOT NULL default '0',
   `access` tinyint(3) NOT NULL default '0',
   `activatepayment` tinyint(2) NOT NULL DEFAULT '0',
