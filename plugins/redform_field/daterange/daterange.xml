@@ -18,6 +18,10 @@
 		<folder>layouts</folder>
 	</files>
 
+	<media folder="media">
+		<folder>plg_redform_field_daterange</folder>
+	</media>
+
 	<updateservers>
 		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_field_daterange.xml</server>
 	</updateservers>
