@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="extra" label="extra">
+            <field
+                name="excluded_dates"
+                type="textarea"
+                label="PLG_REDFORM_FIELD_DATERANGE_XML_FIELD_EXCLUDED_DATES_LABEL"
+                description="PLG_REDFORM_FIELD_DATERANGE_XML_FIELD_EXCLUDED_DATES_DESC"
+                >
+            </field>
+            <field
+                name="format"
+                type="text"
+                label="PLG_REDFORM_FIELD_DATERANGE_XML_FIELD_FORMAT_LABEL"
+                description="PLG_REDFORM_FIELD_DATERANGE_XML_FIELD_FORMAT_DESC"
+                default="YYYY-MM-DD"
+                />
+            <field name="placeholder" type="text" default="" label="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_LABEL"
+                   description="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_DESC"/>
+        </fieldset>
+    </fields>
+</form>
