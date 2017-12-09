@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * Html grid helper
  *
  * @package  Redform.Library
- * @since    __deploy_version__
+ * @since    3.3.23
  */
 abstract class Grid extends \JHtmlRgrid
 {
@@ -30,7 +30,7 @@ abstract class Grid extends \JHtmlRgrid
 	 *
 	 * @return  string  The HTML code
 	 *
-	 * @since    __deploy_version__
+	 * @since    3.3.23
 	 */
 	public static function isRequired($value, $i, $prefix = '', $enabled = true, $checkbox = 'cb', $formId)
 	{

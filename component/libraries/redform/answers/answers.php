@@ -1061,7 +1061,7 @@ class RdfAnswers
 	 *
 	 * @return boolean
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.23
 	 */
 	private function isFieldDisabledByShowon($field)
 	{

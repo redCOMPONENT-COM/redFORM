@@ -7,7 +7,7 @@
 	<authorUrl>www.redcomponent.com</authorUrl>
 	<copyright>(C) 2008 - 2017 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-	<version>__deploy_version__</version>
+	<version>3.3.23</version>
 	<tag>##VERSION##</tag>
 	<description>PLG_REDFORM_FIELD_DATERANGE_XML_DESCRIPTION</description>
 

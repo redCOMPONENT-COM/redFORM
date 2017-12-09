@@ -108,7 +108,7 @@ class RdfEntityForm extends RdfEntityBase
 	 *
 	 * @return RdfRfield or false if not found
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.23
 	 */
 	public function getField($id)
 	{
@@ -132,7 +132,7 @@ class RdfEntityForm extends RdfEntityBase
 	 *
 	 * @return RdfRfield or false if not found
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.23
 	 */
 	public function getFormField($formFieldId)
 	{
