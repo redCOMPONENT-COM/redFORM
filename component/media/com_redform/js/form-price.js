@@ -10,14 +10,23 @@ var redformPrice;
 	redformPrice = function(formbox) {
 
 		var form = formbox.parents('form').first();
+		var formIndex = formbox.index();
+		var formId = form.find('input[name="form_id"]').val();
+		var totalElement = formbox.find(".totalprice");
+
+		var externalTotalSelector = '.totalprice' + formId + '_' + (formIndex + 1);
+
+		if (formIndex == 0) {
+			externalTotalSelector += ', .totalprice' + formId;
+		}
+
+		var externalTotal = $(externalTotalSelector);
 
 		var price = 0.0;
 		var vat = 0.0;
 
 		function updatePrice() {
-			var totalElement = formbox.find(".totalprice");
-
-			if (!totalElement)
+			if (!totalElement && !externalTotal)
 			{
 				return;
 			}
@@ -27,7 +36,13 @@ var redformPrice;
 
 			text = ' <span>' + roundedPrice + '</span>';
 
-			formbox.find(".totalprice").html(text);
+			if (totalElement) {
+				totalElement.html(text);
+			}
+
+			if (externalTotal) {
+                externalTotal.html(text);
+			}
 		}
 
 		function getPrice() {
