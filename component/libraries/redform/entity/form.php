@@ -19,7 +19,7 @@ class RdfEntityForm extends RdfEntityBase
 	/**
 	 * Form fields
 	 *
-	 * @var array
+	 * @var RdfRfield[]
 	 */
 	protected $formFields;
 
@@ -102,9 +102,57 @@ class RdfEntityForm extends RdfEntityBase
 	}
 
 	/**
+	 * Get a specific field of the form
+	 *
+	 * @param   integer  $id  field id
+	 *
+	 * @return RdfRfield or false if not found
+	 *
+	 * @since 3.3.23
+	 */
+	public function getField($id)
+	{
+		$fields = $this->getFormFields();
+
+		foreach ($fields as $field)
+		{
+			if ($field->fieldId == $id)
+			{
+				return $field;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get a specific field of the form
+	 *
+	 * @param   integer  $formFieldId  field id
+	 *
+	 * @return RdfRfield or false if not found
+	 *
+	 * @since 3.3.23
+	 */
+	public function getFormField($formFieldId)
+	{
+		$fields = $this->getFormFields();
+
+		foreach ($fields as $field)
+		{
+			if ($field->id == $formFieldId)
+			{
+				return $field;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get form fields
 	 *
-	 * @return RdfRfieldFactory[]
+	 * @return RdfRfield[]
 	 */
 	public function getFormFields()
 	{

@@ -18,7 +18,14 @@
 			"nikkbbilling",
 			"aesirmember"],
 		"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
-		"redform_field" : ["dawa", "acymailing", "ccnewsletter", "jnews", "phplist"],
+		"redform_field" : [
+			"dawa",
+			"acymailing",
+			"ccnewsletter",
+			"jnews",
+			"phplist",
+			"daterange"
+		],
 		"redform_payment" : [
 			"custom",
 			"cybersource",

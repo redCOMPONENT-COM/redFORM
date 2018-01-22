@@ -320,6 +320,7 @@ class RdfCore extends JObject
 		}
 
 		$this->loadCheckScript();
+		$this->loadPriceScript();
 
 		if ($multi > 1)
 		{
@@ -974,12 +975,14 @@ class RdfCore extends JObject
 	 */
 	protected function loadPriceScript()
 	{
-		$params = JComponentHelper::getParams('com_redform');
-
-		JText::script('COM_REDFORM_Total_Price');
-		$doc = JFactory::getDocument();
-		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
 		RHelperAsset::load('form-price.js', 'com_redform');
+		RHelperAsset::load('accounting.min.js', 'com_redform');
+
+		$params = JComponentHelper::getParams('com_redform');
+		$doc = JFactory::getDocument();
+		$doc->addScriptDeclaration(
+			'var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n"
+		);
 	}
 
 	/**

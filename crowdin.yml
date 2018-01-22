@@ -1,0 +1,264 @@
+"preserve_hierarchy": true
+
+"files": [
+  {
+    "source": "/component/admin/language/en-GB/en-GB.com_redform.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.com_redform.ini"
+  },
+  {
+    "source": "/component/libraries/redform/language/en-GB/en-GB.lib_redform.ini",
+    "translation": "/languages/%locale%/site/%locale%/%locale%.lib_redform.ini"
+  },
+  {
+    "source": "/component/admin/language/en-GB/en-GB.com_redform.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.com_redform.sys.ini"
+  },
+  {
+    "source": "/component/modules/admin/mod_redform_latest_submissions/language/en-GB/en-GB.mod_redform_latest_submissions.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.mod_redform_latest_submissions.ini"
+  },
+  {
+    "source": "/component/modules/admin/mod_redform_latest_submissions/language/en-GB/en-GB.mod_redform_latest_submissions.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.mod_redform_latest_submissions.sys.ini"
+  },
+  {
+    "source": "/component/plugins/content/redform/language/en-GB/en-GB.plg_content_redform.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_content_redform.ini"
+  },
+  {
+    "source": "/component/plugins/content/redform/language/en-GB/en-GB.plg_content_redform.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_content_redform.sys.ini"
+  },
+  {
+    "source": "/component/plugins/installer/redform/language/en-GB/en-GB.plg_installer_redform.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_installer_redform.ini"
+  },
+  {
+    "source": "/component/plugins/installer/redform/language/en-GB/en-GB.plg_installer_redform.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_installer_redform.sys.ini"
+  },
+  {
+    "source": "/plugins/redform/aesirmember/language/en-GB/en-GB.plg_redform_aesirmember.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_aesirmember.ini"
+  },
+  {
+    "source": "/plugins/redform/aesirmember/language/en-GB/en-GB.plg_redform_aesirmember.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_aesirmember.sys.ini"
+  },
+  {
+    "source": "/plugins/redform/economic/language/da-DK/da-DK.plg_redform_integration_economic.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_integration_economic.ini"
+  },
+  {
+    "source": "/plugins/redform/economic/language/da-DK/da-DK.plg_redform_integration_economic.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_integration_economic.sys.ini"
+  },
+  {
+    "source": "/plugins/redform/economic/language/en-GB/en-GB.plg_redform_economic.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_economic.ini"
+  },
+  {
+    "source": "/plugins/redform/economic/language/en-GB/en-GB.plg_redform_economic.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_economic.sys.ini"
+  },
+  {
+    "source": "/plugins/redform/helpscout/language/en-GB/en-GB.plg_redform_helpscout.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_helpscout.ini"
+  },
+  {
+    "source": "/plugins/redform/helpscout/language/en-GB/en-GB.plg_redform_helpscout.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_helpscout.sys.ini"
+  },
+  {
+    "source": "/plugins/redform/redmemberbillinginfo/language/en-GB/en-GB.plg_redform_redmemberbillinginfo.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_redmemberbillinginfo.ini"
+  },
+  {
+    "source": "/plugins/redform/redmemberbillinginfo/language/en-GB/en-GB.plg_redform_redmemberbillinginfo.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_redmemberbillinginfo.sys.ini"
+  },
+  {
+    "source": "/plugins/redform/salesforce/language/en-GB/en-GB.plg_redform_salesforce.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_salesforce.ini"
+  },
+  {
+    "source": "/plugins/redform/salesforce/language/en-GB/en-GB.plg_redform_salesforce.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_salesforce.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_captcha/hiddencaptcha/language/en-GB/en-GB.plg_redform_captcha_hiddencaptcha.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_captcha_hiddencaptcha.ini"
+  },
+  {
+    "source": "/plugins/redform_captcha/hiddencaptcha/language/en-GB/en-GB.plg_redform_captcha_hiddencaptcha.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_captcha_hiddencaptcha.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha_recaptcha.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_captcha_recaptcha.ini"
+  },
+  {
+    "source": "/plugins/redform_captcha/recaptcha/language/en-GB/en-GB.plg_redform_captcha_recaptcha.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_captcha_recaptcha.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_captcha/simplemath/language/en-GB/en-GB.plg_redform_captcha_simplemath.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_captcha_simplemath.ini"
+  },
+  {
+    "source": "/plugins/redform_captcha/simplemath/language/en-GB/en-GB.plg_redform_captcha_simplemath.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_captcha_simplemath.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_field/acymailing/language/en-GB/en-GB.plg_redform_field_acymailing.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_acymailing.ini"
+  },
+  {
+    "source": "/plugins/redform_field/acymailing/language/en-GB/en-GB.plg_redform_field_acymailing.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_acymailing.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_field/ccnewsletter/language/en-GB/en-GB.plg_redform_field_ccnewsletter.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_ccnewsletter.ini"
+  },
+  {
+    "source": "/plugins/redform_field/ccnewsletter/language/en-GB/en-GB.plg_redform_field_ccnewsletter.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_ccnewsletter.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_field/dawa/language/en-GB/en-GB.plg_redform_field_dawa.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_dawa.ini"
+  },
+  {
+    "source": "/plugins/redform_field/dawa/language/en-GB/en-GB.plg_redform_field_dawa.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_dawa.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_field/jnews/language/en-GB/en-GB.plg_redform_field_jnews.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_jnews.ini"
+  },
+  {
+    "source": "/plugins/redform_field/jnews/language/en-GB/en-GB.plg_redform_field_jnews.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_jnews.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_field/phplist/language/en-GB/en-GB.plg_redform_field_phplist.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_phplist.ini"
+  },
+  {
+    "source": "/plugins/redform_field/phplist/language/en-GB/en-GB.plg_redform_field_phplist.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_field_phplist.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/custom/language/en-GB/en-GB.plg_redform_payment_custom.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_custom.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/custom/language/en-GB/en-GB.plg_redform_payment_custom.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_custom.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/cybersource/language/en-GB/en-GB.plg_redform_payment_cybersource.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_cybersource.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/cybersource/language/en-GB/en-GB.plg_redform_payment_cybersource.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_cybersource.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/epay/language/en-GB/en-GB.plg_redform_payment_epay.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_epay.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/epay/language/en-GB/en-GB.plg_redform_payment_epay.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_epay.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/epay2/language/en-GB/en-GB.plg_redform_payment_epay2.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_epay2.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/epay2/language/en-GB/en-GB.plg_redform_payment_epay2.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_epay2.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/ideal/language/en-GB/en-GB.plg_redform_payment_ideal.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_ideal.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/ideal/language/en-GB/en-GB.plg_redform_payment_ideal.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_ideal.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/iridium/language/en-GB/en-GB.plg_redform_payment_iridium.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_iridium.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/iridium/language/en-GB/en-GB.plg_redform_payment_iridium.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_iridium.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/nganluong/language/en-GB/en-GB.plg_redform_payment_nganluong.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_nganluong.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/nganluong/language/en-GB/en-GB.plg_redform_payment_nganluong.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_nganluong.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/nganluong/language/vi-VN/vi-VN.plg_redform_payment_nganluong.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_nganluong.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/nganluong/language/vi-VN/vi-VN.plg_redform_payment_nganluong.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_nganluong.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/pagseguro/language/en-GB/en-GB.plg_redform_payment_pagseguro.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_pagseguro.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/pagseguro/language/en-GB/en-GB.plg_redform_payment_pagseguro.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_pagseguro.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/paypal/language/en-GB/en-GB.plg_redform_payment_paypal.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_paypal.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/paypal/language/en-GB/en-GB.plg_redform_payment_paypal.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_paypal.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/quickpay/language/en-GB/en-GB.plg_redform_payment_quickpay.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_quickpay.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/quickpay/language/en-GB/en-GB.plg_redform_payment_quickpay.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_quickpay.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/stripe/language/en-GB/en-GB.plg_redform_payment_stripe.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_stripe.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/stripe/language/en-GB/en-GB.plg_redform_payment_stripe.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_stripe.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/worldpay/language/en-GB/en-GB.plg_redform_payment_worldpay.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_worldpay.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/worldpay/language/en-GB/en-GB.plg_redform_payment_worldpay.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_worldpay.sys.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/worldpay2/language/en-GB/en-GB.plg_redform_payment_worldpay2.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_worldpay2.ini"
+  },
+  {
+    "source": "/plugins/redform_payment/worldpay2/language/en-GB/en-GB.plg_redform_payment_worldpay2.sys.ini",
+    "translation": "/languages/%locale%/admin/%locale%/%locale%.plg_redform_payment_worldpay2.sys.ini"
+  }
+]

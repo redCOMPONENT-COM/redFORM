@@ -20,32 +20,74 @@ defined('_JEXEC') or die;
  */
 class RdfAnswers
 {
+	/**
+	 * @var integer
+	 */
 	private $answerId = 0;
 
+	/**
+	 * @var RdfRfield[]
+	 */
 	private $fields = null;
 
+	/**
+	 * @var integer
+	 */
 	private $formId = 0;
 
+	/**
+	 * @var RdfForm
+	 */
 	private $form;
 
+	/**
+	 * @var array
+	 */
 	private $submitter_email = array();
 
+	/**
+	 * @var array
+	 */
 	private $listnames = array();
 
+	/**
+	 * @var array
+	 */
 	private $recipients = array();
 
+	/**
+	 * @var float
+	 */
 	private $basePrice = 0;
 
+	/**
+	 * @var float
+	 */
 	private $baseVat = 0;
 
+	/**
+	 * @var boolean
+	 */
 	private $isnew = true;
 
+	/**
+	 * @var integer
+	 */
 	private $sid = 0;
 
+	/**
+	 * @var string
+	 */
 	private $submitKey;
 
+	/**
+	 * @var string
+	 */
 	private $integration;
 
+	/**
+	 * @var string
+	 */
 	private $currency;
 
 	/**
@@ -674,7 +716,7 @@ class RdfAnswers
 
 		foreach ($this->fields as $field)
 		{
-			if ($field->published)
+			if ($field->published && !$this->isFieldDisabledByShowon($field))
 			{
 				if (!$field->validate())
 				{
@@ -1010,5 +1052,30 @@ class RdfAnswers
 		}
 
 		return $answers;
+	}
+
+	/**
+	 * Check if field is disabled by show on
+	 *
+	 * @param   RdfRField  $field  field
+	 *
+	 * @return boolean
+	 *
+	 * @since 3.3.23
+	 */
+	private function isFieldDisabledByShowon($field)
+	{
+		// Do not validate field if disabled by showon
+		if (!strstr($field->getParam('showon'), ':'))
+		{
+			return false;
+		}
+
+		list($targetFieldId, $values) = explode(':', $field->getParam('showon'));
+		$values = explode(',', $values);
+
+		$targetValue = $this->getFieldAnswer($targetFieldId);
+
+		return !in_array($targetValue, $values);
 	}
 }

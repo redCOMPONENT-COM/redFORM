@@ -9,6 +9,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Field Model
  *
@@ -40,5 +42,24 @@ class RedformModelFormfield extends RModelAdmin
 		}
 
 		return $item;
+	}
+
+	/**
+	 * set/unset required fields
+	 *
+	 * @param   mixed    $pks    id or array of ids of items to be published/unpublished
+	 * @param   integer  $state  New desired state
+	 *
+	 * @return  boolean
+	 *
+	 * @since    3.3.23
+	 */
+	public function setRequired($pks = null, $state = 1)
+	{
+		// Initialise variables.
+		$table = $this->getTable();
+		$table->setRequired($pks, $state);
+
+		return true;
 	}
 }

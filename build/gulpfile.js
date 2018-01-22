@@ -23,6 +23,7 @@ const dir = requireDir('./joomla-gulp-extensions', {recurse: true});
 
 const update_sites = require('./update-sites.js');
 const bump_version = require('./bump-version.js');
+const crowdin_conf = require('./crowdin-conf.js');
 
 var gitshort = '';
 

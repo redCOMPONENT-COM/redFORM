@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 ?>
 
-<div class="row">
+<div class="row-fluid">
 	<?php foreach (JModuleHelper::getModules('redform_dashboard_widget') as $module) : ?>
 		<div class="col-md-3 col-sm-6 col-xs-12">
 			<?= JModuleHelper::renderModule($module) ?>
@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
 	<?php endforeach ?>
 </div>
 
-<div class="row">
+<div class="row-fluid">
 	<?php foreach (JModuleHelper::getModules('redform_dashboard_chart') as $module) : ?>
 		<div class="col-xs-12 col-md-6">
 			<?= JModuleHelper::renderModule($module, ['hideGrid' => true, 'showViewAllBtn' => true]) ?>

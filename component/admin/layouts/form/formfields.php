@@ -9,6 +9,8 @@
 
 defined('_JEXEC') or die;
 
+use Redform\Helper\Html\Grid;
+
 $data = $displayData;
 
 $state = $data['state'];
@@ -196,10 +198,8 @@ $searchToolsOptions = array(
 							</td>
 
 							<td>
-								<?php echo $item->validate ?
-									JHTML::_('image', 'admin/tick.png', JText::_('JYES'), null, true) :
-									JHTML::_('image', 'admin/publish_x.png', JText::_('JNO'), null, true); ?>
-							</td>
+                                <?= Grid::isRequired($item->validate, $i, 'formfields.', $canChange, 'cb', $formName) ?>
+                            </td>
 
 							<td>
 								<?php echo $item->unique ?
