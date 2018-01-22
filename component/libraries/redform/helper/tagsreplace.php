@@ -120,7 +120,7 @@ class RdfHelperTagsreplace
 		{
 			if ($field->field_id === $id)
 			{
-				return $field->getValueAsString($this->glue);
+				return $field->renderValue($this->glue);
 			}
 		}
 
@@ -147,7 +147,7 @@ class RdfHelperTagsreplace
 		{
 			if ($field->id == $id)
 			{
-				return $field->getValueAsString($this->glue);
+				return $field->renderValue($this->glue);
 			}
 		}
 
