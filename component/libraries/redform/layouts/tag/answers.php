@@ -19,7 +19,7 @@ $pass = array('submissionprice', 'recipients');
 		<?php endif; ?>
 	<tr>
 		<th><?php echo $field->field; ?></th>
-		<td><?php echo $field->getValueAsString('<br/>'); ?></td>
+		<td><?php echo $field->renderValue('<br/>'); ?></td>
 	</tr>
 	<?php endforeach; ?>
 

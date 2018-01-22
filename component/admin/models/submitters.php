@@ -61,6 +61,7 @@ class RedformModelSubmitters extends RModelList
 				'date', 's.date',
 				'submission_date', 's.submission_date',
 				'confirmed_date', 's.confirmed_date',
+				's.user_id', 'u.name'
 			);
 		}
 
@@ -157,8 +158,10 @@ class RedformModelSubmitters extends RModelList
 		$query->select('s.confirmed_date, s.confirmed_ip, s.confirmed_type');
 		$query->select('s.integration');
 		$query->select('f.formname');
+		$query->select('u.username, u.name AS user_name');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON s.form_id = f.id');
+		$query->join('LEFT', '#__users AS u ON u.id = s.user_id');
 
 		if ($form_id)
 		{

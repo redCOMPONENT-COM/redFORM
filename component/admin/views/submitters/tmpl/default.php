@@ -56,6 +56,9 @@ $listDirn = $this->state->get('list.direction');
 			<th width="1%" class="nowrap hidden-phone">
 				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_ID', 's.id', $listDirn, $listOrder); ?>
 			</th>
+            <th class="nowrap">
+				<?php echo JHtml::_('rsearchtools.sort', 'JGLOBAL_USERNAME', 'u.username', $listDirn, $listOrder); ?>
+            </th>
 			<th class="nowrap hidden-phone">
 				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Submission_date', 's.submission_date', $listDirn, $listOrder); ?>
 			</th>
@@ -109,6 +112,9 @@ $listDirn = $this->state->get('list.direction');
 				<td>
 					<?php echo $item->id; ?>
 				</td>
+                <td>
+					<?php echo $item->username; ?>
+                </td>
 				<td>
 					<a href="<?php echo JRoute::_('index.php?option=com_redform&task=submitter.edit&id=' . $item->id); ?>">
 						<?php echo $this->escape($item->submission_date); ?>
