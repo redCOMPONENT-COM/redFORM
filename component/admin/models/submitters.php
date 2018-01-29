@@ -214,6 +214,8 @@ class RedformModelSubmitters extends RModelList
 				}
 			}
 
+			$lookup[] = 'u.username LIKE ' . $search;
+
 			$query->where('(' . implode(' OR ', $lookup) . ')');
 		}
 
