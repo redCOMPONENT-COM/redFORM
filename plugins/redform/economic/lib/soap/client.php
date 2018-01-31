@@ -108,11 +108,10 @@ class RedformeconomicSoapClient
 		try
 		{
 			$conn = array(
-				'agreementNumber' => $this->params->get('economic_agreement_number', ''),
-				'userName' => $this->params->get('economic_username', ''),
-				'password' => $this->params->get('economic_password', '')
+				'token' => $this->params->get('agreement_grant_token', ''),
+				'appToken' => $this->params->get('app_secret_token', '')
 			);
-			$this->_conn = $this->client->Connect($conn);
+			$this->_conn = $this->client->ConnectWithToken($conn);
 		}
 		catch (Exception $exception)
 		{
