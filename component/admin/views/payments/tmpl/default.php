@@ -90,6 +90,9 @@ $payment_request_id = $this->state->get('payment_request');
 				<th class="nowrap hidden-phone">
 					<?php echo JText::_('COM_REDFORM_PAYMENT_DATA'); ?>
 				</th>
+				<th class="nowrap hidden-phone">
+					<?php echo JText::_('COM_REDFORM_PAYMENT_CART_ID'); ?>
+				</th>
 				<th width="15%" class="nowrap">
 					<?php echo JText::_('COM_REDFORM_Paid'); ?>
 				</th>
@@ -120,6 +123,9 @@ $payment_request_id = $this->state->get('payment_request');
 						</td>
 						<td>
 							<?php echo str_replace("\n", "<br />",$item->data); ?>
+						</td>
+						<td>
+							<?php echo $item->cart_id; ?>
 						</td>
 						<td>
 							<?php echo $item->paid; ?>
