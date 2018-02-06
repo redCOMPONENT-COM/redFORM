@@ -190,6 +190,9 @@ if (!empty($this->items))
 						<ul class="unstyled">
 							<?php foreach ($item->paymentrequests as $pr): ?>
 								<li>
+									<?php if ($pr->invoice_id): ?>
+										<span class="invoice-id"><?= $pr->invoice_id ?></span>
+									<?php endif; ?>
 									<?php echo RdfHelper::formatPrice($pr->price + $pr->vat, $pr->currency); ?>
 									<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&pr=' . $pr->prid), JText::_('COM_REDFORM_history')); ?>
 									<?php if (!$pr->paid): ?>
