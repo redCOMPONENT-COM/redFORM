@@ -147,7 +147,7 @@ class RdfRfieldRadio extends RdfRfield
 
 		foreach ($this->getOptions() as $option)
 		{
-			if (in_array($option->value, $this->value))
+			if ($option->value == $this->value)
 			{
 				$labels[] = $option->label;
 			}
