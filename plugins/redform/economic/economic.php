@@ -448,7 +448,7 @@ class plgRedformEconomic extends JPlugin
 		$helper->CurrentInvoice_SetOtherReference(
 			array(
 				'currentInvoiceHandle' => $invoice,
-				'value' => ($cart->getIntegrationInfo()->uniqueid ?: $cart->reference) . ' / ' . $cart->id
+				'value' => ($cart->invoice_id ?: $cart->id)
 			)
 		);
 
