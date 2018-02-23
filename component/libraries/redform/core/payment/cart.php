@@ -117,6 +117,9 @@ class RdfCorePaymentCart
 		$entity = RdfEntityCart::getInstance($cart->id);
 		$entity->loadFromTable($cart);
 
+		JPluginHelper::importPlugin('redform');
+		RFactory::getDispatcher()->trigger('onAfterRedformCartCreated', array(&$entity));
+
 		return $entity;
 	}
 
