@@ -4,6 +4,10 @@
  */
 
 (function($){
+	// Do not allow ajax submit if browser doesn't support formData
+	if (!("FormData" in window)) {
+		return true;
+	}
 
 	// dom ready
 	$(function() {
@@ -11,11 +15,15 @@
 			$('.redform-ajaxsubmit').parents('form').submit(function(event){
 				event.preventDefault();
 				var $form = $(this);
+				var formData = new FormData($form[0]);
+
 				$.ajax({
 					url: 'index.php?option=com_redform&task=redform.save&format=json',
 					type: "post",
 					dataType: "json",
-					data: $form.serialize()
+					data: formData,
+					contentType: false,
+					processData: false
 				})
 				.done(function(response){
 					if (!response.success) {
