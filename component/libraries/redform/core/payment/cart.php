@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
 class RdfCorePaymentCart
 {
 	/**
-	 * @var  array
+	 * @var  RTable
 	 */
 	protected $data;
 
