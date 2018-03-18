@@ -32,7 +32,8 @@ var redformPrice;
 			}
 
 			var price = getPrice();
-			var roundedPrice = accounting.formatMoney(price.price + price.vat, {symbol: price.currency, precision: price.precision, thousand: price.thSeparator, decimal: price.decSeparator, format: '%s %v'});
+			var currencyFormat = price.symbolAfter ? '%v %s' : '%s %v';
+			var roundedPrice = accounting.formatMoney(price.price + price.vat, {symbol: price.symbol, precision: price.precision, thousand: price.thSeparator, decimal: price.decSeparator, format: currencyFormat});
 
 			text = ' <span>' + roundedPrice + '</span>';
 
@@ -64,6 +65,8 @@ var redformPrice;
 
 			var currencyField = form.find('input[name="currency"]');
 			var currency = (currencyField && currencyField.val()) ? currencyField.val() : '';
+			var symbol = currencyField ? $(currencyField).attr('symbol') : currency;
+			var symbolAfter = currencyField ? $(currencyField).attr('symbolAfter') : 0;
 			var precision = currencyField ? $(currencyField).attr('precision') : 2;
 			var decSeparator = currencyField ? $(currencyField).attr('decimal') : '.';
 			var thSeparator = currencyField ? $(currencyField).attr('thousands') : ' ';
@@ -73,6 +76,8 @@ var redformPrice;
 				'vat': vat,
 				'currency': currency,
 				'precision': precision,
+				'symbol': symbol,
+				'symbolAfter': symbolAfter,
 				'decSeparator': decSeparator,
 				'thSeparator': thSeparator
 			}
