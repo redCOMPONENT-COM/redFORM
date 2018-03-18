@@ -444,11 +444,14 @@ class RdfCore extends JObject
 
 		if ($currency)
 		{
+			$currencyData = RHelperCurrency::getCurrency($currency);
 			$html .= '<input
 				type="hidden"
 				name="currency"
 				value="' . $currency . '"
 				precision="' . RHelperCurrency::getPrecision($currency) . '"
+				symbol="' . $currencyData->symbol . '"
+				symbolAfter="' . $currencyData->symbol_position . '"
 				decimal="' . JComponentHelper::getParams('com_redform')->get('decimalseparator', '.') . '"
 				thousands="' . JComponentHelper::getParams('com_redform')->get('thousandseparator', ' ') . '"
 			/>';
