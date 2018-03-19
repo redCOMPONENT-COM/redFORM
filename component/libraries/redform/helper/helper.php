@@ -175,14 +175,12 @@ class RdfHelper
 	 * @param   string  $subject  subject of the email
 	 *
 	 * @return string
+	 *
+	 * @deprecated use RdfHelperMailer::wrapMailHtmlBody()
 	 */
 	public static function wrapMailHtmlBody($body, $subject)
 	{
-		return RdfLayoutHelper::render('email.bodywrapper',
-			array('body' => $body, 'subject' => $subject),
-			'',
-			array('component' => 'com_redform')
-		);
+		return RdfHelperMailer::wrapMailHtmlBody($body, $subject);
 	}
 
 	/**

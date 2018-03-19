@@ -19,6 +19,23 @@ defined('_JEXEC') or die;
 class RdfHelperMailer extends JMail
 {
 	/**
+	 * Wrap email content in proper html
+	 *
+	 * @param   string  $body     content of body tag
+	 * @param   string  $subject  subject of the email
+	 *
+	 * @return string
+	 */
+	public static function wrapMailHtmlBody($body, $subject)
+	{
+		return RdfLayoutHelper::render('email.bodywrapper',
+			array('body' => $body, 'subject' => $subject),
+			'',
+			array('component' => 'com_redform')
+		);
+	}
+
+	/**
 	 * Override for 3.5.1 new behavior
 	 *
 	 * @param   mixed   $replyto  reply to
