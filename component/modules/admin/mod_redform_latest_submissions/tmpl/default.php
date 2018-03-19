@@ -56,7 +56,7 @@ $moduleSelector = 'mod_redform_latest_submissions_' . $moduleId;
 					<tr>
 						<td><a href="index.php?option=com_redform&view=submitters&filter[form_id]=<?= $item->form_id ?>"><?= $item->formname ?></a></td>
 						<td><?= $item->id ?></td>
-						<td><?= $item->submission_date ?></td>
+						<td><?= JHTML::Date($item->submission_date, 'Y-m-d H:i:s') ?></td>
 						<td><?= $item->confirmed_date ?></td>
 						<td><?= $item->submit_key ?></td>
 						<?php if ($params->get('showintegration', true)): ?>

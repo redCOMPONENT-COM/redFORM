@@ -104,6 +104,7 @@ $listDirn = $this->state->get('list.direction');
 			$canChange = 1;
 			$canEdit = 1;
 			$canCheckin = 1;
+			$displaydate = JHTML::Date($item->submission_date, 'Y-m-d H:i:s');
 			?>
 			<tr>
 				<td>
@@ -117,7 +118,7 @@ $listDirn = $this->state->get('list.direction');
                 </td>
 				<td>
 					<a href="<?php echo JRoute::_('index.php?option=com_redform&task=submitter.edit&id=' . $item->id); ?>">
-						<?php echo $this->escape($item->submission_date); ?>
+						<?php echo $displaydate; ?>
 					</a>
 				</td>
 
