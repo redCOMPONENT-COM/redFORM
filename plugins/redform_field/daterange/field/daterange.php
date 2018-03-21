@@ -71,7 +71,7 @@ class RdfRfieldDaterange extends \RdfRfield
 
 		if (!empty($excluded))
 		{
-			$lines = explode("\n", $excluded);
+			$lines = preg_split("/\R/", $excluded);
 			$dates = array();
 
 			foreach ($lines as $l)

@@ -55,7 +55,7 @@ class RedformModelLogs extends RModelAdmin
 		}
 		else
 		{
-			$contents = explode("\n", $contents);
+			$contents = preg_split("/\R/", $contents);
 			array_shift($contents);
 		}
 
