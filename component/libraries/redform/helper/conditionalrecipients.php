@@ -34,11 +34,20 @@ Class RdfHelperConditionalrecipients
 		}
 
 		$recipients = array();
-		$conds = explode("\n", $form->cond_recipients);
+		$conds = preg_split("/\R/", $form->cond_recipients);
 
 		foreach ($conds as $c)
 		{
-			if ($res = static::parseCondition($c, $answers))
+			trim($c);
+
+			if (empty($c))
+			{
+				continue;
+			}
+
+			$res = static::parseCondition($c, $answers);
+
+			if ($res)
 			{
 				$recipients[] = $res;
 			}
@@ -98,16 +107,14 @@ Class RdfHelperConditionalrecipients
 		// Then, we should get the field
 		$field_id = intval($parts[2]);
 
-		$answer = $answers->getFieldAnswer($field_id);
+		$value = $answers->getFieldAnswer($field_id);
 
-		if ($answer === false)
+		if ($value === false)
 		{
 			RdfHelperLog::simpleLog('invalid field id for conditional recipient: ' . $parts[1]);
 
 			return false;
 		}
-
-		$value = $answer['value'];
 
 		$isvalid = false;
 

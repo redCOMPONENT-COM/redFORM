@@ -181,7 +181,7 @@ class plgRedformSalesforce extends JPlugin
 				throw new Exception('invalid mapping');
 			}
 
-			$lines = explode("\n", $mapping);
+			$lines = preg_split("/\R/", $mapping);
 
 			foreach ($lines as $l)
 			{

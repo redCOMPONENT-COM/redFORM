@@ -128,7 +128,7 @@ class RdfRfieldCheckbox extends RdfRfield
 		}
 		elseif ($this->load()->default)
 		{
-			$values = explode("\n", $this->load()->default);
+			$values = preg_split("/\R/", $this->load()->default);
 			$this->value = array_map('trim', $values);
 		}
 

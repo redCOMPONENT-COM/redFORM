@@ -135,7 +135,7 @@ class PaymentEpayCredit
 	 */
 	private function getTransactionId()
 	{
-		$lines = explode("\n", $this->previousPayment->data);
+		$lines = preg_split("/\R/", $this->previousPayment->data);
 
 		if (!count($lines))
 		{

@@ -841,7 +841,7 @@ final class ApiClient {
 	private function getIdFromLocation($response, $headerSize) {
 		$location = false;
 		$headerText = substr($response, 0, $headerSize);
-		$headerLines = explode("\r\n", $headerText);
+		$headerLines = preg_split("/\R/", $headerText);
 
 		foreach($headerLines as $line) {
 			$parts = explode(': ',$line);
