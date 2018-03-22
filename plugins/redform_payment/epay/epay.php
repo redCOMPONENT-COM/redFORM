@@ -36,7 +36,7 @@ class PlgRedform_PaymentEpay extends RdfPaymentPlugin
 	 */
 	public function onRedformCreditPaymentRequests($paymentRequests, RdfEntityPayment $previousPayment)
 	{
-		if (!$previousPayment->gateway == $this->gateway && $this->params->get('auto_credit', 0))
+		if (!($previousPayment->gateway == $this->gateway && $this->params->get('auto_credit', 0)))
 		{
 			return true;
 		}
