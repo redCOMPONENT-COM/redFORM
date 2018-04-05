@@ -136,6 +136,9 @@ class RedformViewPayment extends JViewLegacy
 			case 'processing':
 				$text = $form->paymentprocessing;
 				break;
+			case 'failed':
+				$text = $form->params->get('paymentfailed', JText::_('COM_REDFORM_PAYMENT_FAILED_DEFAULT'));
+				break;
 		}
 
 		if (!empty($form->params->get('notification_extra')))
