@@ -149,11 +149,20 @@ class PaymentCybersource extends RdfPaymentHelper
 	{
 		if ($billingInfo->address)
 		{
-			$params['bill_address1'] = $billingInfo->address;
-			$params['bill_city'] = $billingInfo->city;
-			$params['bill_country'] = $billingInfo->country;
-			$params['customer_email'] = $billingInfo->email;
-			$params['customer_lastname'] = $billingInfo->fullname;
+			$params['bill_to_surname'] = substr($billingInfo->fullname, 0, 60);
+			$params['bill_to_address_line1'] = substr($billingInfo->address, 0, 60);
+			$params['bill_to_address_postal_code'] = substr($billingInfo->zipcode, 0, 10);
+			$params['bill_to_address_city'] = substr($billingInfo->city, 0, 50);
+
+			if (strlen($billingInfo->country) == 2
+				&& !is_numeric($billingInfo->country)
+				&& RHelperCountry::isValid($billingInfo->country))
+			{
+				$params['bill_to_address_country'] = $billingInfo->country;
+			}
+
+			$params['bill_to_email'] = substr($billingInfo->email, 0, 255);
+			$params['bill_to_company_name'] = substr($billingInfo->company, 0, 40);
 		}
 
 		return $params;
