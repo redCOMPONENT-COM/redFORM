@@ -423,6 +423,13 @@
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>
 				</field>
+
+				<field name="paymentfailed"
+					   type="editor"
+					   label="COM_REDFORM_PAYMENTFAILED"
+					   description="COM_REDFORM_PAYMENTFAILED_TIP"
+					   filter="raw"
+				/>
 			</fieldset>
 		</fields>
 	</fieldset>
