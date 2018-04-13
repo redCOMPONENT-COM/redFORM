@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="redform" method="upgrade">
+	<name>PLG_REDFORM_ECOMMERCE</name>
+	<creationDate>April, 2018</creationDate>
+	<author>redWEB Aps</author>
+	<authorEmail>email@redweb.dk</authorEmail>
+	<authorUrl>www.redcomponent.com</authorUrl>
+	<copyright>(C) 2018 redCOMPONENT.com</copyright>
+	<license>GNU/GPL</license>
+	<version>3.3.23</version>
+	<tag>##VERSION##</tag>
+	<description>PLG_REDFORM_AESIRECOMMERCE_XML_DESC</description>
+
+	<files>
+		<filename plugin="aesirecommerce">aesirecommerce.php</filename>
+		<filename>field.xml</filename>
+		<folder>language</folder>
+	</files>
+
+	<updateservers>
+		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_aesirecommerce.xml</server>
+	</updateservers>
+</extension>
