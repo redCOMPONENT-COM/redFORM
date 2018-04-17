@@ -22,25 +22,6 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic" label="basic">
-				<field name="introduction" type="editor" label="PLG_REDFORM_QUICKPAY_INTRODUCTION_LABEL" description="PLG_REDFORM_QUICKPAY_INTRODUCTION_DESC"
-					   filter="raw"/>
-
-				<field name="auto_open"
-					   type="radio"
-					   label="PLG_REDFORM_QUICKPAY_AUTO_OPEN_LABEL"
-					   description="PLG_REDFORM_QUICKPAY_AUTO_OPEN_DESC"
-					   default="0"
-				>
-					<option value="0">JNO</option>
-					<option value="1">JYES</option>
-				</field>
-
-				<field name="allowed_currencies" type="textarea"
-					   label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
-					   description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
-					   rows="10"
-						/>
-
 				<field name="merchant_id" type="text" default=""
 					   label="PLG_REDFORM_QUICKPAY_MERCHANT_ID_LABEL"
 					   description="PLG_REDFORM_QUICKPAY_MERCHANT_ID_DESC"/>
@@ -64,9 +45,32 @@
 					<option value="1">JYES</option>
 				</field>
 
-				<field type="spacer"/>
-				<field type="spacer" default="PLG_REDFORM_QUICKPAY_PAYMENT_METHODS"/>
+				<field name="introduction" type="editor" label="PLG_REDFORM_QUICKPAY_INTRODUCTION_LABEL" description="PLG_REDFORM_QUICKPAY_INTRODUCTION_DESC"
+					   filter="raw"/>
 
+				<field name="auto_open"
+					   type="radio"
+					   label="PLG_REDFORM_QUICKPAY_AUTO_OPEN_LABEL"
+					   description="PLG_REDFORM_QUICKPAY_AUTO_OPEN_DESC"
+					   default="0"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+
+				<field name="allowed_currencies" type="textarea"
+					   label="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES"
+					   description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
+					   rows="10"
+						/>
+
+				<field name="branding_id" type="text" default=""
+					   label="PLG_REDFORM_QUICKPAY_BRANDING_ID_LABEL"
+					   description="PLG_REDFORM_QUICKPAY_BRANDING_ID_DESC"/>
+			</fieldset>
+
+			<fieldset name="payment_methods" label="PLG_REDFORM_QUICKPAY_FIELDSET_PAYMENT_METHODS">
+				<field type="spacer" default="PLG_REDFORM_QUICKPAY_PAYMENT_METHODS"/>
 				<field type="radio" name="american-express" default="1"
 					   label="PLG_REDFORM_QUICKPAY_CARDTYPE_AMERICAN_EXPRESS_LABEL"
 					   description="PLG_REDFORM_QUICKPAY_CARDTYPE_AMERICAN_EXPRESS_DESC">

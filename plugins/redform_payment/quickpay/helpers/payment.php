@@ -65,6 +65,12 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			'description' => $request->title,
 			'language' => $quickpayLang
 		);
+
+		if ($this->params->get('branding_id'))
+		{
+			$req_params['branding_id'] = (int) $this->params->get('branding_id');
+		}
+
 		$req_params['checksum'] = $this->checksum($req_params);
 
 		$action = "https://payment.quickpay.net";
