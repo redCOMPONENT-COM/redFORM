@@ -47,7 +47,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 
 		$orderId = $cart->id . strftime("%H%M%S");
 
-		$language = \Joomla\CMS\Factory::getLanguage();
+		$language = JFactory::getLanguage();
 		$quickpayLang = substr($language->getTag(), 0, 2);
 
 		$req_params = array(
