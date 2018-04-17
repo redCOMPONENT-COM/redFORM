@@ -38,13 +38,17 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		$cart = $this->getDetails($request->key);
 		$reference = $request->key;
 		$currency = $cart->currency;
+		$params = $this->params;
 
 		if (!$this->checkParameters())
 		{
 			return false;
 		}
 
-		$orderId = $cart->id . strftime("%H%M%S");;
+		$orderId = $cart->id . strftime("%H%M%S");
+
+		$language = JFactory::getLanguage();
+		$quickpayLang = substr($language->getTag(), 0, 2);
 
 		$req_params = array(
 			'version' => 'v10',
@@ -59,19 +63,24 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			'autocapture' => 0,
 			'payment_methods' => $this->_getAllowedCard(),
 			'description' => $request->title,
+			'language' => $quickpayLang
 		);
+
+		if ($this->params->get('branding_id'))
+		{
+			$req_params['branding_id'] = (int) $this->params->get('branding_id');
+		}
+
 		$req_params['checksum'] = $this->checksum($req_params);
 
-		?>
-		<h3><?php echo JText::_('Quickpay Payment Gateway'); ?></h3>
-		<form action="https://payment.quickpay.net" method="post">
-			<p><?php echo $request->title; ?></p>
-			<?php foreach ($req_params as $key => $val): ?>
-				<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $val; ?>"/>
-			<?php endforeach; ?>
-			<input type="submit" value="Open Quickpay payment window"/>
-		</form>
-		<?php
+		$action = "https://payment.quickpay.net";
+
+		echo RdfLayoutHelper::render(
+			'redform_payment.quickpay',
+			compact('params', 'request', 'intro', 'req_params', 'return_url', 'action', 'cart'),
+			'',
+			array('defaultLayoutsPath' => dirname(__DIR__) . '/layouts')
+		);
 
 		return true;
 	}
