@@ -134,6 +134,13 @@ class RedformModelSubmitters extends RModelList
 
 		$items = $this->addPaymentinfo($items);
 
+		if ($this->getState('streamOutput') == 'csv')
+		{
+			JPluginHelper::importPlugin('redform');
+			$dispatcher = RFactory::getDispatcher();
+			$dispatcher->trigger('onRdfSubmittersCsvExport', array(&$items, $this->getState('filter.form_id')));
+		}
+
 		// Add the items to the internal cache.
 		$this->cache[$store] = $items;
 
