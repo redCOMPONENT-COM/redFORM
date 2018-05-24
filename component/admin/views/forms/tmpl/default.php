@@ -17,6 +17,29 @@ $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 $saveOrder = $listOrder == 'ordering';
 ?>
+<script type="text/javascript">
+    Joomla.submitbutton = function (pressbutton)
+    {
+        var form = document.adminForm;
+
+        if (pressbutton)
+        {
+            form.task.value = pressbutton;
+        }
+
+        if (pressbutton == 'forms.delete')
+        {
+            if (confirm('<?php echo JText::_("COM_REDFORM_FORMS_DELETE_WARNING")?>') == true) {
+                form.submit();
+            }
+            else {
+                return false;
+            }
+        }
+
+        form.submit();
+    }
+</script>
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
 	<?php

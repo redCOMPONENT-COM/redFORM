@@ -25,6 +25,29 @@ if ($saveOrder)
 	JHTML::_('rsortablelist.sortable', 'fieldList', 'adminForm', strtolower($listDirn), $tableSortLink, true, true);
 }
 ?>
+<script type="text/javascript">
+    Joomla.submitbutton = function (pressbutton)
+    {
+        var form = document.adminForm;
+
+        if (pressbutton)
+        {
+            form.task.value = pressbutton;
+        }
+
+        if (pressbutton == 'fields.delete')
+        {
+            if (confirm('<?php echo JText::_("COM_REDFORM_FIELDS_DELETE_WARNING")?>') == true) {
+                form.submit();
+            }
+            else {
+                return false;
+            }
+        }
+
+        form.submit();
+    }
+</script>
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
 	<?php
