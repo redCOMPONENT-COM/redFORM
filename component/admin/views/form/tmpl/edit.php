@@ -14,6 +14,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('rjquery.chosen', 'select');
 JHtml::_('rsearchtools.main');
+JHTML::_('behavior.formvalidation');
 
 $action = JRoute::_('index.php?option=com_redform&view=form');
 $input = JFactory::getApplication()->input;
@@ -26,9 +27,35 @@ $isNew = (int) $this->item->id <= 0;
 	JHTML::_('rsortablelist.main');
 	?>
 	<script type="text/javascript">
+		Joomla.submitbutton = function(pressbutton) {
+			var form = document.adminForm;
+
+			if (pressbutton == 'form.cancel') {
+			    submitform(pressbutton);
+			    return true;
+			}
+
+			if (document.formvalidator.isValid(form)) {
+			    submitform(pressbutton);
+			    return true;
+			}
+			else {
+			    return false;
+			}
+		};
+
 		(function ($) {
 			$(document).ready(function () {
-				// Perform the ajax request
+				$('#jform_params_auto_delete').change(function() {
+					if ($(this).val() == -1) {
+					    $('#auto_delete_custom_group').show();
+					}
+					else {
+					    $('#auto_delete_custom_group').hide();
+					}
+				}).trigger('change');
+
+				// Perform the ajax request for fields in tab
 				$.ajax({
 					url: 'index.php?option=com_redform&task=form.ajaxfields&view=form&id=<?php echo $this->item->id ?>',
 					cache: false,
@@ -48,7 +75,7 @@ $isNew = (int) $this->item->id <= 0;
 
 					var sortableList = new $.JSortableList('#fieldList tbody','fieldsForm','asc' , '<?php echo $tableSortLink; ?>','','false');
 				});
-			});;
+			});
 		})(jQuery);
 	</script>
 	<?php if ($tab) : ?>
@@ -96,105 +123,130 @@ $isNew = (int) $this->item->id <= 0;
       class="form-validate form-horizontal">
 <div class="tab-content">
 		<div class="tab-pane active" id="details">
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('formname'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('formname'); ?>
-				</div>
-			</div>
+			<div class="row-fluid">
+				<div class="span6">
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('formname'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('formname'); ?>
+						</div>
+					</div>
 
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('showname'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('showname'); ?>
-				</div>
-			</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('showname'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('showname'); ?>
+						</div>
+					</div>
 
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('access'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('access'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('classname'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('classname'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('startdate'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('startdate'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('formexpires'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('formexpires'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('enddate'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('enddate'); ?>
-				</div>
-			</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('contactpersonemail'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('contactpersonemail'); ?>
+						</div>
+					</div>
 
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('contactpersonemail'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('contactpersonemail'); ?>
-				</div>
-			</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('captchaactive'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('captchaactive'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('allow_frontend_edit', 'params'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('allow_frontend_edit', 'params'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('submit_label', 'params'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('submit_label', 'params'); ?>
+						</div>
+					</div>
 
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('captchaactive'); ?>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('ajax_submission', 'params'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('ajax_submission', 'params'); ?>
+						</div>
+					</div>
 				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('captchaactive'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('allow_frontend_edit', 'params'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('allow_frontend_edit', 'params'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('submit_label', 'params'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('submit_label', 'params'); ?>
-				</div>
-			</div>
 
-			<div class="control-group">
-				<div class="control-label">
-					<?php echo $this->form->getLabel('ajax_submission', 'params'); ?>
-				</div>
-				<div class="controls">
-					<?php echo $this->form->getInput('ajax_submission', 'params'); ?>
+				<div class="span6">
+
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('access'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('access'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('classname'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('classname'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('startdate'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('startdate'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('formexpires'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('formexpires'); ?>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('enddate'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('enddate'); ?>
+						</div>
+					</div>
+
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('auto_delete', 'params'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('auto_delete', 'params'); ?>
+						</div>
+					</div>
+
+					<div class="control-group" id="auto_delete_custom_group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('auto_delete_custom', 'params'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('auto_delete_custom', 'params'); ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
