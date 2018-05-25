@@ -143,4 +143,26 @@ class RedformControllerRedform extends RedformController
 
 		parent::display();
 	}
+
+	/**
+	 * Auto delete old submissions
+	 *
+	 * @return void
+	 *
+	 * @since    __deploy_version__
+	 */
+	public function autodelete()
+	{
+		try {
+			$helper = new \Redform\Helper\Autodelete;
+			$helper->process();
+			echo 'done';
+		}
+		catch (\Exception $e) {
+			RdfHelperLog::simpleLog($e->getMessage());
+			echo 'error';
+		}
+
+		JFactory::getApplication()->close();
+	}
 }

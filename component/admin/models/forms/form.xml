@@ -440,9 +440,9 @@
 					   description="COM_REDFORM_SETTINGS_AUTO_DELETE_DESC">
 					<option value="-2">JDEFAULT</option>
 					<option value="0">JNo</option>
-					<option value="1">COM_REDFORM_SETTINGS_AUTO_DELETE_1_MONTH</option>
-					<option value="3">COM_REDFORM_SETTINGS_AUTO_DELETE_3_MONTHS</option>
-					<option value="6">COM_REDFORM_SETTINGS_AUTO_DELETE_6_MONTHS</option>
+					<option value="1 month">COM_REDFORM_SETTINGS_AUTO_DELETE_1_MONTH</option>
+					<option value="3 months">COM_REDFORM_SETTINGS_AUTO_DELETE_3_MONTHS</option>
+					<option value="6 months">COM_REDFORM_SETTINGS_AUTO_DELETE_6_MONTHS</option>
 					<option value="-1">COM_REDFORM_SETTINGS_AUTO_DELETE_CUSTOM</option>
 				</field>
 				<field name="auto_delete_custom"

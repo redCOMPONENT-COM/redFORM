@@ -110,16 +110,17 @@
 		<field name="ga_code" type="text" default="UA-1111111-22" label="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE" description="COM_REDFORM_SETTINGS_GOOGLE_ANALYTICS_UA_CODE_DESC"/>
 		 -->
 	</fieldset>
-	<fieldset name="gdpr" label="EU GDPR">
+	<fieldset name="gdpr" label="EU GDPR" desc="COM_REDFORM_SETTINGS_EU_GDPR_DESC">
+		<field type="spacer" label="COM_REDFORM_SETTINGS_EU_GDPR_DESC"/>
 		<field name="auto_delete"
 			   type="list"
 			   default="0"
 			   label="COM_REDFORM_SETTINGS_AUTO_DELETE_LABEL"
 			   description="COM_REDFORM_SETTINGS_AUTO_DELETE_DESC">
 			<option value="0">JNo</option>
-			<option value="1">COM_REDFORM_SETTINGS_AUTO_DELETE_1_MONTH</option>
-			<option value="3">COM_REDFORM_SETTINGS_AUTO_DELETE_3_MONTHS</option>
-			<option value="6">COM_REDFORM_SETTINGS_AUTO_DELETE_6_MONTHS</option>
+			<option value="1 month">COM_REDFORM_SETTINGS_AUTO_DELETE_1_MONTH</option>
+			<option value="3 months">COM_REDFORM_SETTINGS_AUTO_DELETE_3_MONTHS</option>
+			<option value="6 months">COM_REDFORM_SETTINGS_AUTO_DELETE_6_MONTHS</option>
 			<option value="-1">COM_REDFORM_SETTINGS_AUTO_DELETE_CUSTOM</option>
 		</field>
 		<field name="auto_delete_custom"
