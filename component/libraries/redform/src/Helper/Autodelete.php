@@ -49,6 +49,7 @@ class Autodelete
 				. ' FROM #__rwf_submitters AS s'
 				. ' LEFT JOIN #__rwf_forms_' . $form->id . ' AS f ON f.id = s.answer_id'
 				. ' WHERE s.form_id = ' . $form->id
+				. ' AND LENGTH(s.integration) = 0'
 				. ' AND s.submission_date < ' . $db->q($date->format('Y-m-d'));
 
 			$db->setQuery($query);
