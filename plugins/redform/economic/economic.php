@@ -256,7 +256,26 @@ class plgRedformEconomic extends JPlugin
 		$invoice = $this->confirmReference($invoiceId, $reference);
 		$this->getCart($invoice->cart_id);
 
+		// Just in case user clicked the link multiple time
+		$turning = $app->getUserState('turning' . $invoiceId);
+		$now = time();
+
+		if ($turning && ($now - $turning < 20) || $invoice->turned)
+		{
+			$app->redirect(
+				'index.php?option=com_redform&view=submitters',
+				JText::_('PLG_REDFORM_ECONOMIC_ERROR_THROTTLING_TURN_INVOICE'),
+				'error'
+			);
+
+			return;
+		}
+
+		$app->setUserState('turning' . $invoiceId, $now);
+
 		$this->turnInvoice($reference);
+
+		$app->setUserState('turning' . $invoiceId, null);
 
 		if ($return)
 		{
