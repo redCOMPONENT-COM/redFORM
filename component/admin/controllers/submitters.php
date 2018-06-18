@@ -81,8 +81,10 @@ class RedformControllerSubmitters extends RControllerAdmin
 			$answers->sendSubmitterNotification();
 		}
 
+		$msg = JText::sprintf('COM_REDFORM_D_CONFIRMATION_EMAIL_RESENT', count($cid));
+
 		// Set redirect
-		$this->setRedirect($this->getRedirectToListRoute());
+		$this->setRedirect($this->getRedirectToListRoute(), $msg, 'success');
 	}
 
 	/**
