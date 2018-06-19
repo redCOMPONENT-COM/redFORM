@@ -180,11 +180,14 @@ $listDirn = $this->state->get('list.direction');
 
 					if (isset($item->{$fieldname}))
 					{
-						$data = str_replace('~~~', '<br />', $item->$fieldname);
+						$myField = clone $field;
+						$myField->setValueFromDatabase($item->{$fieldname});
 
-						if (stristr($data, JPATH_ROOT))
+						$data = $myField->renderValue('<br />');
+
+						if (stristr($item->{$fieldname}, JPATH_ROOT))
 						{
-							$data = '<a href="' . str_replace(JPATH_ROOT, JURI::root(true), $data) . '" target="_blank">' . $data . '</a>';
+							$data = '<a href="' . str_replace(JPATH_ROOT, JURI::root(true), $item->{$fieldname}) . '" target="_blank">' . $data . '</a>';
 						}
 
 						echo '<td>' . $data . '</td>';

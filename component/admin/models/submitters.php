@@ -299,23 +299,16 @@ class RedformModelSubmitters extends RModelList
 		if (!$this->fields)
 		{
 			$form_id = $this->getState('filter.form_id');
-			$query = $this->_db->getQuery(true);
+			$form = RdfEntityForm::load($form_id);
 
-			$query->select('f.id AS field_id, f.field')
-				->select('CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header')
-				->from('#__rwf_fields AS f')
-				->join('INNER', '#__rwf_form_field AS ff ON ff.field_id = f.id')
-				->where('f.fieldtype NOT IN ("info", "submissionprice")')
-				->group('f.id')
-				->order('ff.ordering');
-
-			if ($form_id)
+			if (!$form->isValid())
 			{
-				$query->where('ff.form_id = ' . $this->_db->Quote($form_id));
+				$this->fields = array();
+
+				return;
 			}
 
-			$this->_db->setQuery($query);
-			$this->fields = $this->_db->loadObjectList();
+			$this->fields = $form->getFormFields();
 		}
 
 		return $this->fields;
