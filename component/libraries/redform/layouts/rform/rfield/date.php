@@ -28,6 +28,11 @@ if (isset($properties['dateformat']))
 {
 	$attribs['dateformat'] = $properties['dateformat'];
 }
+
+if (isset($properties['placeholder']))
+{
+	$attribs['placeholder'] = $properties['placeholder'];
+}
 ?>
 <?php echo JHTML::_('calendar', $data->getValue(), $properties['name'], $properties['id'],
 	$properties['dateformat'],
