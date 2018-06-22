@@ -14,6 +14,9 @@
                 <option value="1">JYes</option>
             </field>
 
+            <field name="placeholder" type="text" default="" label="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_LABEL"
+                   description="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_DESC"/>
+
             <field type="redformnote" label="COM_REDFORM_note"
                    description="COM_REDFORM_FIELD_DATE_PARAMS_NOTE_TEXT" />
         </fieldset>
