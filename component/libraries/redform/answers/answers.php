@@ -1019,6 +1019,7 @@ class RdfAnswers
 	public function setSid($sid)
 	{
 		$this->sid = $sid;
+		$this->isnew = false;
 
 		return $this;
 	}
