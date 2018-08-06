@@ -491,4 +491,80 @@ class RoboFile extends \Robo\Tasks
 
 		$this->say("Joomla CMS ($version) site created at joomla-cms3/");
 	}
+	
+	/**
+	 * @param int $use_htaccess
+	 */
+	public function prepareSiteForSystemTesting($use_htaccess = 1)
+	{
+		// Get Joomla Clean Testing sites
+		if (is_dir('joomla-cms'))
+		{
+			$this->taskDeleteDir('joomla-cms')->run();
+		}
+		
+		$version = 'staging';
+		
+		/*
+		 * When joomla Staging branch has a bug you can uncomment the following line as a tmp fix for the tests layer.
+		 * Use as $version value the latest tagged stable version at: https://github.com/joomla/joomla-cms/releases
+		 */
+		$version = '3.8.11';
+		
+		$this->_exec("git clone -b $version --single-branch --depth 1 https://github.com/joomla/joomla-cms.git joomla-cms");
+		
+		$this->say("Joomla CMS ($version) site created at tests/joomla-cms");
+		
+		// Optionally uses Joomla default htaccess file
+		if ($use_htaccess == 1)
+		{
+			$this->_copy('joomla-cms/htaccess.txt', 'joomla-cms/.htaccess');
+			$this->_exec('sed -e "s,# RewriteBase /,RewriteBase /tests/joomla-cms/,g" --in-place joomla-cms/.htaccess');
+		}
+	}
+	
+	/**
+	 * @param $githubToken
+	 * @param $repoOwner
+	 * @param $repo
+	 * @param $pull
+	 */
+	public function uploadPatchFromJenkinsToTestServer($githubToken, $repoOwner, $repo, $pull)
+	{
+		$body = 'Please Download the Patch Package for testing from the following Path: http://test.redcomponent.com/vanir/PR/' . $pull . '/redform.zip';
+		
+		$this->say('Creating Github Comment');
+		$client = new \Github\Client;
+		$client->authenticate($githubToken, \Github\Client::AUTH_HTTP_TOKEN);
+		$client
+			->api('issue')
+			->comments()->create(
+				$repoOwner, $repo, $pull,
+				array(
+					'body' => $body
+				)
+			);
+	}
+	
+	/**
+	 *
+	 */
+	public function runTestSetupJenkins()
+	{
+		$this->taskSeleniumStandaloneServer()
+			->setURL("http://localhost:4444")
+			->runSelenium()
+			->waitForSelenium()
+			->run()
+			->stopOnFail();
+		
+		$this->_exec("vendor/bin/codecept build");
+		
+		$this->taskCodecept()
+			->arg('--tap')
+			->arg('--fail-fast')
+			->arg('./acceptance/install/')
+			->run()
+			->stopOnFail();
+	}
 }
