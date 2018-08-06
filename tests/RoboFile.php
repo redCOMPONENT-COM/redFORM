@@ -531,7 +531,7 @@ class RoboFile extends \Robo\Tasks
 	 */
 	public function uploadPatchFromJenkinsToTestServer($githubToken, $repoOwner, $repo, $pull)
 	{
-		$body = 'Please Download the Patch Package for testing from the following Path: http://test.redcomponent.com/vanir/PR/' . $pull . '/redshopb.zip';
+		$body = 'Please Download the Patch Package for testing from the following Path: http://test.redcomponent.com/vanir/PR/' . $pull . '/redform.zip';
 		
 		$this->say('Creating Github Comment');
 		$client = new \Github\Client;
