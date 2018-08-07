@@ -64,7 +64,7 @@ sed -i "s/{dbhostname}/db-$BUILD_TAG/g" tests/acceptance.suite.yml
 chown -R www-data:www-data tests/joomla-cms
 
 # Start Running Tests
-cd $WORKSPACE
+cd $WORKSPACE/tests/
 vendor/bin/robo run:jenkins $1
 
 if [ $? -eq 0 ]
