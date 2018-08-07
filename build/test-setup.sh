@@ -69,6 +69,7 @@ cd $WORKSPACE/tests/
 composer install
 vendor/bin/robo run:test-setup-jenkins
 
+
 if [ $? -eq 0 ]
 then
 	echo "Tests Run were sucessful"
