@@ -21,7 +21,7 @@ cd /tests/www
 mkdir tests
 mkdir repo
 cd tests
-mkdir releases-redform
+mkdir releases
 
 # cd $WORKSPACE and link for tests/joomla-cms
 cd $WORKSPACE
@@ -42,8 +42,8 @@ git submodule update
 gulp release --skip-version --testRelease
 cd ../tests
 ls
-cp /tests/www/tests/releases-redfom/redform.zip .
-zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.log 2>&1
+cp /tests/www/tests/releases/redform.zip .
+zip --symlinks -r gulp-release.zip /tests/www/tests/releases > output.log 2>&1
 
 # back to tests for run codeception
 cd tests
