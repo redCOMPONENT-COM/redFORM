@@ -23,7 +23,7 @@ pipeline {
 				CLOUDINARY_API_KEY='365447364384436'
 				CLOUDINARY_API_SECRET='Q94UM5kjZkZIrau8MIL93m0dN6U'
 				SLACK_WEBHOOK='https://hooks.slack.com/services/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'
-				SLACK_CHANNEL='#aesir-ec-builds'
+				SLACK_CHANNEL='#redform'
 				GITHUB_REPO_OWNER='redCOMPONENT-COM'
 				REPO='redform'
 			}
@@ -75,10 +75,10 @@ pipeline {
 				CLOUDINARY_API_KEY='365447364384436'
 				CLOUDINARY_API_SECRET='Q94UM5kjZkZIrau8MIL93m0dN6U'
 				SLACK_WEBHOOK='https://hooks.slack.com/services/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'
-				SLACK_CHANNEL='#aesir-ec-builds'
+				SLACK_CHANNEL='#redform'
 			}
 			parallel {
-				stage('orders') {
+				stage('administrator') {
 					agent {
 						docker {
 							image 'jatitoam/docker-systemtests'
@@ -95,7 +95,7 @@ pipeline {
 						unstash 'redform'
 						unstash 'database-dump'
 						retry(2) {
-							sh "build/system-tests.sh acceptance/frontend/Orders"
+							sh "build/system-tests.sh acceptance/administrator"
 						}
 					}
 				}
