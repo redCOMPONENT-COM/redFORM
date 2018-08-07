@@ -18,14 +18,14 @@ pipeline {
 		stage ('Tests Setup') {
 			environment {
 				GITHUB_TOKEN='4d92f9e8be0eddc0e54445ff45bf1ca5a846b609'
-				GITHUB_REPO='redCOMPONENT-COM/redform'
+				GITHUB_REPO='redCOMPONENT-COM/redFORM'
 				CLOUDINARY_CLOUD_NAME='redcomponent'
 				CLOUDINARY_API_KEY='365447364384436'
 				CLOUDINARY_API_SECRET='Q94UM5kjZkZIrau8MIL93m0dN6U'
 				SLACK_WEBHOOK='https://hooks.slack.com/services/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'
-				SLACK_CHANNEL='#aesir-ec-builds'
+				SLACK_CHANNEL='#redform'
 				GITHUB_REPO_OWNER='redCOMPONENT-COM'
-				REPO='redform'
+				REPO='redFORM'
 			}
 			agent {
 				docker {
@@ -54,12 +54,12 @@ pipeline {
 			environment {
 				GITHUB_TOKEN='4d92f9e8be0eddc0e54445ff45bf1ca5a846b609'
 				GITHUB_REPO_OWNER='redCOMPONENT-COM'
-				REPO='vanir'
+				REPO='redFORM'
 			}
 			steps {
 				unstash 'redform'
-				sh 'ssh -p4975 installers@test.redcomponent.com "mkdir -p public_html/vanir/PR/$CHANGE_ID"'
-				sh 'scp -P4975 redform.zip installers@test.redcomponent.com:/home/installers/public_html/vanir/PR/$CHANGE_ID/redform.zip'
+				sh 'ssh -p4975 installers@test.redcomponent.com "mkdir -p public_html/redFORM/PR/$CHANGE_ID"'
+				sh 'scp -P4975 redform.zip installers@test.redcomponent.com:/home/installers/public_html/redFORM/PR/$CHANGE_ID/redform.zip'
 			}
 			post {
 				always {
@@ -70,15 +70,15 @@ pipeline {
 		stage('Automated Tests - Batch 1') {
 			environment {
 				GITHUB_TOKEN='4d92f9e8be0eddc0e54445ff45bf1ca5a846b609'
-				GITHUB_REPO='redCOMPONENT-COM/vanir'
+				GITHUB_REPO='redCOMPONENT-COM/redFORM'
 				CLOUDINARY_CLOUD_NAME='redcomponent'
 				CLOUDINARY_API_KEY='365447364384436'
 				CLOUDINARY_API_SECRET='Q94UM5kjZkZIrau8MIL93m0dN6U'
 				SLACK_WEBHOOK='https://hooks.slack.com/services/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'
-				SLACK_CHANNEL='#aesir-ec-builds'
+				SLACK_CHANNEL='#redform'
 			}
 			parallel {
-				stage('orders') {
+				stage('administrator') {
 					agent {
 						docker {
 							image 'jatitoam/docker-systemtests'
@@ -87,7 +87,7 @@ pipeline {
 					}
 					steps {
 						script {
-							env.STAGE = 'orders'
+							env.STAGE = 'administrator'
 						}
 						unstash 'vendor'
 						unstash 'joomla-cms'
@@ -95,7 +95,7 @@ pipeline {
 						unstash 'redform'
 						unstash 'database-dump'
 						retry(2) {
-							sh "build/system-tests.sh acceptance/frontend/Orders"
+							sh "build/system-tests.sh acceptance/administrator"
 						}
 					}
 				}
@@ -109,7 +109,6 @@ pipeline {
 				}
 			}
 		}
-
 	}
 	post {
 		always {
