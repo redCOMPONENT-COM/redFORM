@@ -36,13 +36,16 @@ node --version
 npm  --version
 npm install gulp -g # install globally so that it's available to robo
 npm install
-mv gulp-config.json.dist gulp-config.json
+mv gulp-config.json.jenkins.dist gulp-config.json
 git submodule init
 git submodule update
 
 gulp release --skip-version --testRelease
 cd ../tests
 ls
+cd releases
+ls
+pwd
 cp /tests/www/tests/releases/redform.zip .
 zip --symlinks -r gulp-release.zip /tests/www/tests/releases > output.log 2>&1
 
