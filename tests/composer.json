@@ -13,6 +13,7 @@
 		"joomla-projects/joomla-browser": "v3.8.10",
 		"consolidation/robo": "~1",
 		"joomla-projects/joomla-testing-robo": "dev-container-test",
+		"joomla-projects/joomla-testing": "dev-container-test",
 		"flow/jsonpath": "dev-master",
 		"cloudinary/cloudinary_php": "1.1.1",
 		"knplabs/github-api": "1.4.12",
