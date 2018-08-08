@@ -9,6 +9,7 @@ composer install --prefer-dist > output.log 2>&1
 vendor/bin/robo prepare:site-for-system-testing > output.log 2>&1
 cd ..
 wget "https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip" > output.log 2>&1
+ls
 ln -s /usr/bin/nodejs /usr/bin/node > output.log 2>&1
 
 # Get Chrome Headless
