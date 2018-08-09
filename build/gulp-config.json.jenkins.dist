@@ -1,6 +1,6 @@
 {
 	"wwwDir"           : "/tests/www/tests/joomla-cms/",
-	"release_dir"   : "../releases/",
+	"release_dir"   : "../tests/releases/",
 	"browserConfig" : {
 		"proxy": "localhost",
 		"browser" : "default"
