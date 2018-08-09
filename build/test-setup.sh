@@ -40,14 +40,14 @@ mv gulp-config.json.jenkins.dist gulp-config.json
 git submodule init
 git submodule update
 
-gulp release --skip-version --testRelease
+gulp release --skip-version
 cd ../tests
 ls
-cd releases
+cd releases-redform
 ls
 pwd
-cp /tests/www/tests/releases/redform.zip .
-zip --symlinks -r gulp-release.zip /tests/www/tests/releases > output.log 2>&1
+cp /tests/www/tests/releases-redform/redform.zip .
+zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.log 2>&1
 
 # back to tests for run codeception
 cd tests

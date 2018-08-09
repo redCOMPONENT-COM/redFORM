@@ -1,8 +1,11 @@
 {
-	"wwwDir"        : "/tests/www/tests/joomla-cms",
-	 "browserConfig" : {
-            "proxy" : "redform.local"
-        },
-	"release_dir"   : "/tests/www/tests/releases/",
-	"php_dir" : "php"
+    "wwwDir"        : "/tests/www/tests/joomla-cms3/",
+    "browserConfig" : {
+        "proxy" : "localhost"
+    },
+    "releaseDir"   : "/tests/www/tests/releases-redform/",
+    "basePaths": {
+        "plugins" : "./plugins",
+        "modules" : "./modules"
+    }
 }
