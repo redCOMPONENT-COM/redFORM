@@ -6,6 +6,6 @@
     "releaseDir"   : "/tests/www/tests/releases-redform/",
     "basePaths": {
         "plugins" : "./plugins",
-        "modules" : "./modules"
+        "modules" : "./language"
     }
 }
