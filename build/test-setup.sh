@@ -43,11 +43,11 @@ git submodule update
 gulp release --skip-version
 cd ../tests
 ls
-cd releases-redform
+cd releases
 ls
 pwd
-cp /tests/www/tests/releases-redform/redform.zip .
-zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.log 2>&1
+cp /tests/www/tests/releases/redform.zip .
+zip --symlinks -r gulp-release.zip /tests/www/tests/releases > output.log 2>&1
 
 # back to tests for run codeception
 cd tests
