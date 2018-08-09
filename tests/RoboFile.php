@@ -589,32 +589,35 @@ class RoboFile extends \Robo\Tasks
 	/**
 	 * Sends the build report error back to Slack
 	 *
-	 * @param   string $cloudinaryName      Cloudinary cloud name
-	 * @param   string $cloudinaryApiKey    Cloudinary API key
+	 * @param   string $cloudinaryName Cloudinary cloud name
+	 * @param   string $cloudinaryApiKey Cloudinary API key
 	 * @param   string $cloudinaryApiSecret Cloudinary API secret
-	 * @param   string $githubRepository    GitHub repository (owner/repo)
-	 * @param   string $githubPRNo          GitHub PR #
-	 * @param   string $slackWebhook        Slack Webhook URL
-	 * @param   string $slackChannel        Slack channel
-	 * @param   string $buildURL            Build URL
+	 * @param   string $githubRepository GitHub repository (owner/repo)
+	 * @param   string $githubPRNo GitHub PR #
+	 * @param   string $slackWebhook Slack Webhook URL
+	 * @param   string $slackChannel Slack channel
+	 * @param   string $buildURL Build URL
 	 *
 	 * @return  void
 	 *
 	 * @since   5.1
 	 */
-	public function sendBuildReportErrorSlack($cloudinaryName, $cloudinaryApiKey, $cloudinaryApiSecret, $githubRepository, $githubPRNo, $slackWebhook, $slackChannel, $buildURL)
+	public function sendBuildReportErrorSlack($cloudinaryName, $cloudinaryApiKey, $cloudinaryApiSecret, $githubRepository, $githubPRNo, $slackWebhook, $slackChannel, $buildURL = '')
 	{
 		$errorSelenium = true;
-		$reportError   = false;
-		$reportFile    = 'tests/selenium.log';
-		$errorLog      = 'Selenium log:' . chr(10) . chr(10);
+		$reportError = false;
+		$reportFile = 'selenium.log';
+		$errorLog = 'Selenium log:' . chr(10) . chr(10);
 		
 		// Loop through Codeception snapshots
-		if (file_exists('tests/_output') && $handler = opendir('tests/_output'))
+		if (file_exists('_output') && $handler = opendir('_output'))
 		{
-			$reportFile    = 'tests/_output/report.tap.log';
-			$errorLog      = 'Codeception tap log:' . chr(10) . chr(10);
+			
+			
+			$reportFile = '_output/report.tap.log';
+			$errorLog = 'Codeception tap log:' . chr(10) . chr(10);
 			$errorSelenium = false;
+			$this->_exec($reportFile);
 		}
 		
 		if (file_exists($reportFile))
@@ -626,7 +629,7 @@ class RoboFile extends \Robo\Tasks
 			
 			if (!$errorSelenium)
 			{
-				$handler    = opendir('tests/_output');
+				$handler = opendir('_output');
 				$errorImage = '';
 				
 				while (!$reportError && false !== ($errorSnapshot = readdir($handler)))
@@ -638,11 +641,23 @@ class RoboFile extends \Robo\Tasks
 					}
 					
 					$reportError = true;
-					$errorImage  = __DIR__ . '/tests/_output/' . $errorSnapshot;
+					
+					Cloudinary::config(
+						array(
+							'cloud_name' => $cloudinaryName,
+							'api_key' => $cloudinaryApiKey,
+							'api_secret' => $cloudinaryApiSecret
+						)
+					);
+					
+					$result = \Cloudinary\Uploader::upload(realpath(dirname(__FILE__) . '/_output/' . $errorSnapshot));
+					
+					$this->say($errorSnapshot . 'Image sent');
+					
+					$errorLog .=  $result['secure_url'] ;
 				}
 			}
 			
-			echo $errorImage;
 			
 			if ($reportError || $errorSelenium)
 			{
@@ -659,8 +674,9 @@ class RoboFile extends \Robo\Tasks
 					->setTapLog($errorLog);
 				
 				if (!empty($errorImage))
+				
 				{
-					$reportingTask->setImagesToUpload($errorImage)
+					$reportingTask->setImagesToUpload($errorLog)
 						->publishCloudinaryImages();
 				}
 				

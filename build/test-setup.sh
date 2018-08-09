@@ -9,6 +9,7 @@ composer install --prefer-dist > output.log 2>&1
 vendor/bin/robo prepare:site-for-system-testing > output.log 2>&1
 cd ..
 wget "https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip" > output.log 2>&1
+ls
 ln -s /usr/bin/nodejs /usr/bin/node > output.log 2>&1
 
 # Get Chrome Headless
@@ -21,7 +22,7 @@ cd /tests/www
 mkdir tests
 mkdir repo
 cd tests
-mkdir releases-redform
+mkdir releases
 
 # cd $WORKSPACE and link for tests/joomla-cms
 cd $WORKSPACE
@@ -35,15 +36,18 @@ node --version
 npm  --version
 npm install gulp -g # install globally so that it's available to robo
 npm install
-mv gulp-config.json.dist gulp-config.json
+mv gulp-config.json.jenkins.dist gulp-config.json
 git submodule init
 git submodule update
 
-gulp release --skip-version --testRelease
+gulp release --skip-version
 cd ../tests
 ls
-cp /tests/www/tests/releases-redfom/redform.zip .
-zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.log 2>&1
+cd releases
+ls
+pwd
+cp /tests/www/tests/releases/redform.zip .
+zip --symlinks -r gulp-release.zip /tests/www/tests/releases > output.log 2>&1
 
 # back to tests for run codeception
 cd tests
