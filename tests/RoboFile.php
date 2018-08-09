@@ -12,7 +12,7 @@ require_once 'vendor/autoload.php';
 /**
  * Class RoboFile
  *
- * @since  1.6.14
+ * @since  1.6
  */
 class RoboFile extends \Robo\Tasks
 {
@@ -753,6 +753,7 @@ class RoboFile extends \Robo\Tasks
 					$result = \Cloudinary\Uploader::upload(realpath(dirname(__FILE__) . '/_output/' . $errorSnapshot));
 					
 					$this->say($errorSnapshot . 'Image sent');
+					$this->say($result);
 					
 					$errorLog .=  $result['secure_url'];
 					
