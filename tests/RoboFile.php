@@ -557,9 +557,9 @@ class RoboFile extends \Robo\Tasks
 			->waitForSelenium()
 			->run()
 			->stopOnFail();
-
+		
 		$this->_exec("vendor/bin/codecept build");
-
+		
 		$this->taskCodecept()
 			->arg('--steps')
 			->arg('--debug')
