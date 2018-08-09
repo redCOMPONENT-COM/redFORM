@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e174124b6510ff0b325cc6469eb34a0d",
+    "content-hash": "48179d55e506c6eb6b8dc730d91b8ac1",
     "packages": [],
     "packages-dev": [
         {
@@ -1261,81 +1261,30 @@
             "time": "2018-06-28T07:41:43+00:00"
         },
         {
-            "name": "joomla-projects/joomla-testing",
-            "version": "dev-container-test",
+            "name": "joomla-projects/joomla-testing-robo",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/joomla-projects/joomla-testing.git",
-                "reference": "705c7aeed75c181f3b7ad15a7af419173c867923"
+                "url": "https://github.com/joomla-projects/joomla-testing-robo.git",
+                "reference": "9c85447e6011d8f955568a7648fc8ce640be04ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joomla-projects/joomla-testing/zipball/705c7aeed75c181f3b7ad15a7af419173c867923",
-                "reference": "705c7aeed75c181f3b7ad15a7af419173c867923",
+                "url": "https://api.github.com/repos/joomla-projects/joomla-testing-robo/zipball/9c85447e6011d8f955568a7648fc8ce640be04ee",
+                "reference": "9c85447e6011d8f955568a7648fc8ce640be04ee",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
-            "require-dev": {
-                "consolidation/robo": "~1",
-                "joomla-projects/joomla-testing-robo": "dev-container-test",
-                "joomla-projects/virtualisation": "dev-container-test",
-                "symfony/process": "~3",
-                "symfony/yaml": "^3.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Joomla\\Testing\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Tito Alvarez",
-                    "email": "tito.alvarez@community.joomla.org"
-                }
-            ],
-            "description": "Joomla automated testing scripts with container capabilities",
-            "keywords": [
-                "containers",
-                "docker",
-                "qa",
-                "robo",
-                "task",
-                "tests"
-            ],
-            "time": "2017-08-24T14:09:45+00:00"
-        },
-        {
-            "name": "joomla-projects/joomla-testing-robo",
-            "version": "dev-container-test",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/joomla-projects/joomla-testing-robo.git",
-                "reference": "8a44d557f43357f6da3d440bd2689949a9424129"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/joomla-projects/joomla-testing-robo/zipball/8a44d557f43357f6da3d440bd2689949a9424129",
-                "reference": "8a44d557f43357f6da3d440bd2689949a9424129",
-                "shasum": ""
-            },
-            "require": {
-                "cloudinary/cloudinary_php": "~1",
-                "consolidation/robo": "~1",
-                "guzzlehttp/guzzle": "~6.3",
-                "joomla-projects/joomla-testing": "dev-container-test",
-                "knplabs/github-api": "~1",
-                "php": ">=5.4.0",
-                "squizlabs/php_codesniffer": "~2"
-            },
             "replace": {
                 "joomla-projects/robo": "< 1.0"
+            },
+            "require-dev": {
+                "cloudinary/cloudinary_php": "~1",
+                "consolidation/robo": "~1",
+                "knplabs/github-api": "~1",
+                "squizlabs/php_codesniffer": "~1"
             },
             "type": "library",
             "autoload": {
@@ -1350,7 +1299,7 @@
             "authors": [
                 {
                     "name": "Tito Alvarez",
-                    "email": "tito.alvarez@community.joomla.org"
+                    "email": "augustoalvarez@gmail.com"
                 }
             ],
             "description": "Joomla automated testing swiss knife",
@@ -1360,7 +1309,7 @@
                 "task",
                 "tests"
             ],
-            "time": "2018-01-05T05:43:27+00:00"
+            "time": "2016-12-10T16:28:49+00:00"
         },
         {
             "name": "joomla-projects/selenium-server-standalone",
@@ -4454,8 +4403,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "phing/phing": 20,
-        "joomla-projects/joomla-testing-robo": 20,
-        "joomla-projects/joomla-testing": 20,
         "flow/jsonpath": 20,
         "joomla/coding-standards": 20
     },
