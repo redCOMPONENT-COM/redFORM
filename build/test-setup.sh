@@ -83,6 +83,7 @@ else
 	echo "Tests Runs Failed" >&2
 	#send screenshot of failed test to Slack
 	vendor/bin/robo send:system-build-report-error-slack $CLOUDINARY_CLOUD_NAME $CLOUDINARY_API_KEY $CLOUDINARY_API_SECRET $GITHUB_REPO $CHANGE_ID "$SLACK_WEBHOOK" "$SLACK_CHANNEL" "$BUILD_URL"
+	ls
 	rm -r _output/
 	cd ../
 	exit 1
