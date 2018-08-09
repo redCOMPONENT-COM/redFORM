@@ -1,9 +1,11 @@
 {
-	"wwwDir"           : "/tests/www/tests/joomla-cms/",
-	"release_dir"   : "../tests/releases/",
-	"browserConfig" : {
-		"proxy": "localhost",
-		"browser" : "default"
-	},
-	"testrelease_dir": "../tests/releases/"
+    "wwwDir"        : "/tests/www/tests/joomla-cms/",
+    "browserConfig" : {
+        "proxy" : "localhost"
+    },
+    "releaseDir"   : "/tests/www/tests/releases-redform/",
+    "basePaths": {
+        "plugins" : "./plugins",
+        "modules" : "./language"
+    }
 }
