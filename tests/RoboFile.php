@@ -563,7 +563,6 @@ class RoboFile extends \Robo\Tasks
 		$this->taskCodecept()
 			->arg('--steps')
 			->arg('--debug')
-			->arg('--tap')
 			->arg('./acceptance/install/')
 			->run()
 			->stopOnFail();
