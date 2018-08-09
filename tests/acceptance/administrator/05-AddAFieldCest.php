@@ -20,7 +20,7 @@ class AddAFieldCest
 				'tooltip' => 'a test'
 			)
 		);
-		$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
+		$I->waitForText('Item saved', 30, ['id' => 'system-message-container']);
 		$I->seeElement('//*[@id="fieldList"]//td//*[contains(., "Text 1")]');
 	}
 
