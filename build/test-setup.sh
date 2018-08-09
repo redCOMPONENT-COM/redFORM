@@ -35,18 +35,17 @@ node --version
 npm  --version
 npm install gulp -g # install globally so that it's available to robo
 npm install
-mv gulp-config.json.dist gulp-config.json
+mv gulp-config.json.jenkins.dist gulp-config.json
 git submodule init
 git submodule update
 
-gulp release --skip-version --testRelease
+gulp release --skip-version
 cd ../tests
 ls
-cp /tests/www/tests/releases-redfom/redform.zip .
+cp /tests/www/tests/releases-redform/redform.zip  .
 zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.log 2>&1
 
 # back to tests for run codeception
-cd tests
 vendor/bin/robo upload:patch-from-jenkins-to-test-server $GITHUB_TOKEN $GITHUB_REPO_OWNER $REPO $CHANGE_ID
 
 #setting php configuration
