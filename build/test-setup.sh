@@ -85,6 +85,7 @@ else
 	vendor/bin/robo send:system-build-report-error-slack $CLOUDINARY_CLOUD_NAME $CLOUDINARY_API_KEY $CLOUDINARY_API_SECRET $GITHUB_REPO $CHANGE_ID "$SLACK_WEBHOOK" "$SLACK_CHANNEL" "$BUILD_URL"
 	ls
 	cd _output
+
 	ls
 	rm -r _output/
 	cd ../
