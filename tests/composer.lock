@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e78468e93626794e40af450caece86f1",
+    "content-hash": "c360d95c4c7bbe4d17ffb40e494feebe",
     "packages": [],
     "packages-dev": [
         {
@@ -1259,6 +1259,57 @@
                 "joomla"
             ],
             "time": "2018-03-19T10:31:50+00:00"
+        },
+        {
+            "name": "joomla-projects/joomla-testing",
+            "version": "dev-container-test",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla-projects/joomla-testing.git",
+                "reference": "705c7aeed75c181f3b7ad15a7af419173c867923"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla-projects/joomla-testing/zipball/705c7aeed75c181f3b7ad15a7af419173c867923",
+                "reference": "705c7aeed75c181f3b7ad15a7af419173c867923",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "consolidation/robo": "~1",
+                "joomla-projects/joomla-testing-robo": "dev-container-test",
+                "joomla-projects/virtualisation": "dev-container-test",
+                "symfony/process": "~3",
+                "symfony/yaml": "^3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Joomla\\Testing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Tito Alvarez",
+                    "email": "tito.alvarez@community.joomla.org"
+                }
+            ],
+            "description": "Joomla automated testing scripts with container capabilities",
+            "keywords": [
+                "containers",
+                "docker",
+                "qa",
+                "robo",
+                "task",
+                "tests"
+            ],
+            "time": "2017-08-24T14:09:45+00:00"
         },
         {
             "name": "joomla-projects/joomla-testing-robo",
@@ -4403,6 +4454,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "phing/phing": 20,
+        "joomla-projects/joomla-testing": 20,
         "flow/jsonpath": 20,
         "joomla/coding-standards": 20
     },
