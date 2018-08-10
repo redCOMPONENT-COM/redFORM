@@ -16,7 +16,7 @@ class AddAFieldCest
 			array(
 				'name' => 'Text 1',
 				'field_header' => 'Text 1',
-				'fieldtype' => 'Textfield',
+				'fieldtype' => 'Date',
 				'tooltip' => 'a test'
 			)
 		);
@@ -36,7 +36,7 @@ class AddAFieldCest
 				'tooltip' => 'a test email field'
 			)
 		);
-		$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
+		$I->waitForText('Item saved', 30, ['id' => 'system-message-container']);
 		$I->seeElement('//*[@id="fieldList"]//td//*[contains(., "Email 1")]');
 	}
 }
