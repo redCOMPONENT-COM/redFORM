@@ -41,7 +41,6 @@ git submodule update
 
 gulp release --skip-version
 cd ../tests
-ls
 cp /tests/www/tests/releases-redform/redform.zip  .
 zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.log 2>&1
 
@@ -83,11 +82,9 @@ else
 	echo "Tests Runs Failed" >&2
 	#send screenshot of failed test to Slack
 	vendor/bin/robo send:system-build-report-error-slack $CLOUDINARY_CLOUD_NAME $CLOUDINARY_API_KEY $CLOUDINARY_API_SECRET $GITHUB_REPO $CHANGE_ID "$SLACK_WEBHOOK" "$SLACK_CHANNEL" "$BUILD_URL"
-	ls
 	cd _output
-
 	ls
-	rm -r _output/
+	rm -r _output
 	cd ../
 	exit 1
 fi
