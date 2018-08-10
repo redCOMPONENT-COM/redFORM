@@ -37,8 +37,7 @@ npm  --version
 npm install gulp -g # install globally so that it's available to robo
 npm install
 mv gulp-config.json.jenkins.dist gulp-config.json
-git submodule init
-git submodule update
+git submodule update --init --recursive
 
 gulp release --skip-version
 cd ../tests
