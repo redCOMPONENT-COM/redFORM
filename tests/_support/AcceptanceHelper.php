@@ -35,7 +35,21 @@ class AcceptanceHelper extends \Codeception\Module
 
         return $this->config[$element];
     }
-
+	
+	/**
+	 * 	 * Function to Return value of desired Configuration
+	 *
+	 * @param  String   $configurationName  Name of the Configuration Parameter Needed
+	 *
+	 * @return mixed
+	 */
+	public function getConfig($configurationName)
+	{
+		$configuration = $this->config[$configurationName];
+		
+		return $configuration;
+	}
+	
 	/**
 	 * Function to Verify State of an Object
 	 *
