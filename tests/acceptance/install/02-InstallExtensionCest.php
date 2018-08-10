@@ -16,7 +16,9 @@ class InstallExtensionCest
 		$I->wantToTest('redFORM installation in Joomla 3');
 		$I->doAdministratorLogin();
 		
-		$path = "http://localhost/tests/releases-redform/ ";
+		$path = $I->getConfig(' install packages url') . 'redform.zip';
+		$I->wantToTest('Path for get redform.zip');
+		$I->wantToTest($path);
 		$I->comment($path);
 		$I->installExtensionFromUrl($path . 'redform.zip');
 	}
