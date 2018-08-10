@@ -5,6 +5,7 @@ touch output.log
 cd tests
 composer config -g github-oauth.github.com "${GITHUB_TOKEN}"
 composer install --prefer-dist > output.log 2>&1
+composer update
 
 vendor/bin/robo prepare:site-for-system-testing > output.log 2>&1
 cd ..
