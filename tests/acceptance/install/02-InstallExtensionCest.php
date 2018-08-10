@@ -1,25 +1,19 @@
 <?php
-	
-	/**
-	 * Class InstallExtensionCest
-	 *
-	 * @package  AcceptanceTester
-	 *
-	 * @link     http://codeception.com/docs/07-AdvancedUsage
-	 *
-	 * @since    2.1
-	 */
+/**
+* @package     redFORM
+* @subpackage  Cept
+* @copyright   Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+* @license     GNU General Public License version 2 or later; see LICENSE.txt
+*/
+
 class InstallExtensionCest
 {
 	public function install(\AcceptanceTester $I)
 	{
 		$I->wantToTest('redFORM installation in Joomla 3');
 		$I->doAdministratorLogin();
-		
-		$path = $I->getConfig(' install packages url') . 'redform.zip';
-		$I->wantToTest('Path for get redform.zip');
-		$I->wantToTest($path);
-		$I->comment($path);
+
+		$path = $I->getConfiguration('install packages url');
 		$I->installExtensionFromUrl($path . 'redform.zip');
 	}
 }
