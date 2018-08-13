@@ -40,7 +40,7 @@ mv gulp-config.json.jenkins.dist gulp-config.json
 git submodule update --init --recursive
 
 gulp release --skip-version
-cd ../tests
+cd ..
 cp /tests/www/tests/releases-redform/redform.zip .
 zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.log 2>&1
 
