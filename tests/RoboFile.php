@@ -279,9 +279,15 @@
 				->stopOnFail();
 		}
 		
+		/**
+		 * @param $githubToken
+		 * @param $repoOwner
+		 * @param $repo
+		 * @param $pull
+		 */
 		public function uploadPatchFromJenkinsToTestServer($githubToken, $repoOwner, $repo, $pull)
 		{
-			$body = 'Please Download the Patch Package for testing from the following Path: http://test.redcomponent.com/vanir/PR/' . $pull . '/redshopb.zip';
+			$body = 'Please Download the Patch Package for testing from the following Path: http://test.redcomponent.com/redform/PR/' . $pull . '/redform.zip';
 			
 			$this->say('Creating Github Comment');
 			$client = new \Github\Client;
@@ -314,15 +320,6 @@
 				->run()
 				->stopOnFail();
 		}
-		
-		/**
-		 * Prepares the .zip packages of the extension to be installed in Joomla
-		 */
-		public function prepareReleasePackages()
-		{
-			$this->_exec("gulp release --skip-version --testRelease --gulpfile ../build/gulpfile.js");
-		}
-		
 		/**
 		 * Looks for PHP Parse errors in core
 		 */
@@ -353,5 +350,17 @@
 			$this->taskExec('php checkers/phpcs.php')
 				->printed(true)
 				->run();
+		}
+		
+		/**
+		 * Function to run unit tests
+		 *
+		 * @return void
+		 */
+		public function runUnitTests()
+		{
+			$this->prepareSiteForUnitTests();
+			$this->_exec("joomla-cms3/libraries/vendor/phpunit/phpunit/phpunit")
+				->stopOnFail();
 		}
 	}

@@ -65,6 +65,12 @@ chown -R www-data:www-data tests/joomla-cms
 
 # Start Running Tests
 cd $WORKSPACE/tests/
+vendor/bin/robo check:for-missed-debug-code
+vendor/bin/robo check:for-parse-errors
+endor/bin/robo check:codestyle
+vendor/bin/robo run:unit-tests
+
+# Run codeception test
 vendor/bin/robo run:jenkins $1
 
 if [ $? -eq 0 ]
