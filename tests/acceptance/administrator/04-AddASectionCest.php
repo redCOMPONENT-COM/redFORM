@@ -19,7 +19,7 @@ class AddASectionCest
 				'description' => '<p>The description goes here</p>'
 			)
 		);
-		$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
+		$I->waitForText('Item saved', 30, ['id' => 'system-message-container']);
 		$I->seeElement('//*[@id="sectionList"]//td//*[contains(., "Section 1")]');
 	}
 }

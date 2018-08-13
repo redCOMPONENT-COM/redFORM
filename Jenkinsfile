@@ -99,6 +99,27 @@ pipeline {
 						}
 					}
 				}
+				stage('uninstall') {
+					agent {
+						docker {
+							image 'jatitoam/docker-systemtests'
+							args   "--network tn-${BUILD_TAG} --user 0 --privileged=true"
+						}
+					}
+					steps {
+						script {
+							env.STAGE = 'administrator'
+						}
+						unstash 'vendor'
+						unstash 'joomla-cms'
+						unstash 'chromeD'
+						unstash 'redform'
+						unstash 'database-dump'
+						retry(2) {
+							sh "build/system-tests.sh acceptance/uninstall"
+						}
+					}
+				}
 			}
 			post {
 				always {

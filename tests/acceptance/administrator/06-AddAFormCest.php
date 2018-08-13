@@ -19,7 +19,7 @@ class AddAFormCest
 				'fields' => ['Text 1', 'Email 1']
 			)
 		);
-		$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
+		$I->waitForText('Item saved', 30, ['id' => 'system-message-container']);
 		$I->seeElement('//*[@id="formList"]//td//*[contains(., "' . $name . '")]');
 	}
 }

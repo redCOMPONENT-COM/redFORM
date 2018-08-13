@@ -68,7 +68,7 @@ class Adminredform extends \AcceptanceTester
 		$I->click(['xpath' => '//button[contains(@onclick, "field.add")]']);
 		$I->waitForText('Name', 30, ['css' => 'label']);
 		$I->fillField(['id' => 'jform_field'], $params['name']);
-		$I->selectOptionInChosenById('jform_fieldtype', $params['fieldtype']);
+		$I->selectOptionInChosen('Field type', $params['fieldtype']);
 
 		if (isset($params['field_header']))
 		{
@@ -150,7 +150,7 @@ class Adminredform extends \AcceptanceTester
 
 		if (!empty($params['fields']))
 		{
-			$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
+			$I->waitForText('Item saved', 30, ['id' => 'system-message-container']);
 			$I->click('//*[@id="formList"]//td//*[contains(., "' . $params['name'] . '")]');
 			$I->waitForText('Form name', 30, ['css' => 'label']);
 
@@ -163,7 +163,7 @@ class Adminredform extends \AcceptanceTester
 				$I->selectOptionInChosenByIdUsingJs('jform_field_id', $fieldName);
 				$I->click(['xpath' => '//button[contains(@onclick, "formfield.save")]']);
 
-				$I->waitForText('Item successfully saved', 30, ['id' => 'system-message-container']);
+				$I->waitForText('Item saved', 30, ['id' => 'system-message-container']);
 			}
 		}
 

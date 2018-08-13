@@ -64,7 +64,8 @@ sed -i "s/{dbhostname}/db-$BUILD_TAG/g" tests/acceptance.suite.yml
 chown -R www-data:www-data tests/joomla-cms
 
 # Start Running Tests
-cd $WORKSPACE
+cd $WORKSPACE/tests/
+# Run codeception test
 vendor/bin/robo run:jenkins $1
 
 if [ $? -eq 0 ]
@@ -75,7 +76,7 @@ then
 else
   echo "Tests Runs Failed" >&2
   #send screenshot of failed test to Slack
-  vendor/bin/robo send:build-report-error-slack $CLOUDINARY_CLOUD_NAME $CLOUDINARY_API_KEY $CLOUDINARY_API_SECRET $GITHUB_REPO $CHANGE_ID $SLACK_WEBHOOK $SLACK_CHANNEL $BUILD_URL
+  vendor/bin/robo send:system-build-report-error-slack $CLOUDINARY_CLOUD_NAME $CLOUDINARY_API_KEY $CLOUDINARY_API_SECRET $GITHUB_REPO $CHANGE_ID "$SLACK_WEBHOOK" "$SLACK_CHANNEL" "$BUILD_URL"
   mysql --host=db-$BUILD_TAG -uroot -proot -e "DROP DATABASE IF EXISTS ${dbName}${STAGE}${fetch};"
   cd ../
   exit 1
