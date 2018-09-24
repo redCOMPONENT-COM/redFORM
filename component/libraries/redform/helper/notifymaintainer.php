@@ -255,35 +255,30 @@ class RdfHelperNotifymaintainer
 		$mainframe = JFactory::getApplication();
 		$params = JComponentHelper::getParams('com_redform');
 
-		if ($params->get('allow_email_aliasing', 1))
+		// Default to site settings
+		$sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
+		$this->mailer->setSender($sender);
+
+		if ($params->get('set_submitter_as_reply_to', 1))
 		{
-			if ($emails = $this->answers->getSubmitterEmails())
+			$emails = $this->answers->getSubmitterEmails();
+
+			if (!empty($emails))
 			{
-				$sender = array(reset($emails));
+				$replyTo = array(reset($emails));
 
 				if ($name = $this->answers->getFullname())
 				{
-					$sender[] = $name;
+					$replyTo[] = $name;
 				}
 				else
 				{
-					$sender[] = '';
+					$replyTo[] = '';
 				}
-			}
-			else
-			{
-				// Default to site settings
-				$sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
-			}
-		}
-		else
-		{
-			// Default to site settings
-			$sender = array($mainframe->getCfg('mailfrom'), $mainframe->getCfg('sitename'));
-		}
 
-		$this->mailer->setSender($sender);
-		$this->mailer->addReplyTo($sender);
+				$this->mailer->addReplyTo($replyTo);
+			}
+		}
 	}
 
 	/**
