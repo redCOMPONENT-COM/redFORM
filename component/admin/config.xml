@@ -14,12 +14,12 @@
 		</field>
 
 		<field
-				name="allow_email_aliasing"
+				name="set_submitter_as_reply_to"
 				type="radio"
 				default="1"
 				class="btn-group btn-group-yesno"
-				label="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING"
-				description="COM_REDFORM_SETTINGS_ALLOW_EMAIL_ALIASING_DESC">
+				label="COM_REDFORM_SETTINGS_SET_SUBMITTER_AS_REPLY_TO"
+				description="COM_REDFORM_SETTINGS_SET_SUBMITTER_AS_REPLY_TO_DESC">
 			<option value="0">JNo</option>
 			<option value="1">JYes</option>
 		</field>
