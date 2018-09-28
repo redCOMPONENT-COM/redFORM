@@ -58,4 +58,26 @@ class RedformControllerForms extends RControllerAdmin
 		// Set redirect
 		$this->setRedirect($this->getRedirectToListRoute());
 	}
+
+	public function autodelete()
+	{
+		// Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get forms to clean
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+
+		try {
+			$helper = new \Redform\Helper\Autodelete;
+			$helper->process($cid);
+			$this->setMessage(JText::plural($this->text_prefix . '_N_FORMS_SUBMITTERS_AUTODELETED', count($cid)));
+		}
+		catch (\Exception $e) {
+			RdfHelperLog::simpleLog($e->getMessage());
+			$this->setMessage($e->getMessage(), 'error');
+		}
+
+		// Set redirect
+		$this->setRedirect($this->getRedirectToListRoute());
+	}
 }

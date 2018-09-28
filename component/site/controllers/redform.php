@@ -154,8 +154,9 @@ class RedformControllerRedform extends RedformController
 	public function autodelete()
 	{
 		try {
+			$formId = $this->input->get('cid', array(), 'array');
 			$helper = new \Redform\Helper\Autodelete;
-			$helper->process();
+			$helper->process($formId);
 			echo 'done';
 		}
 		catch (\Exception $e) {

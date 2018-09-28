@@ -25,12 +25,14 @@ class Autodelete
 	/**
 	 * Process submissions
 	 *
+	 * @var   integer[]   $formIds  form ids
+	 *
 	 * @return void
 	 * @since  __deploy_version__
 	 */
-	public function process()
+	public function process($formIds = null)
 	{
-		$forms = $this->getForms();
+		$forms = $this->getForms($formIds);
 
 		foreach ($forms as $form)
 		{
@@ -60,14 +62,21 @@ class Autodelete
 	/**
 	 * Get all forms
 	 *
+	 * @var   integer[]   $formIds  form ids
+	 *
 	 * @return \RdfEntityForm[]
 	 */
-	private function getForms()
+	private function getForms($formIds = null)
 	{
 		$db = \JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
 			->from('#__rwf_forms');
+
+		if (!empty($formIds))
+		{
+			$query->where('id IN (' . implode(', ', $formIds) . ')');
+		}
 
 		$db->setQuery($query);
 		$res = $db->loadObjectList();
