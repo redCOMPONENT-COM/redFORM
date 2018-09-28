@@ -15,8 +15,18 @@ JHtml::_('rjquery.chosen', 'select');
 $action = JRoute::_('index.php?option=com_redform&view=submitters');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
-?>
 
+$hasIntegration = false;
+
+foreach ($this->items as $item)
+{
+	if (!empty($item->integration))
+	{
+		$hasIntegration = true;
+		continue;
+	}
+}
+?>
 <script type="text/javascript">
     Joomla.submitbutton = function (pressbutton)
     {
@@ -97,7 +107,7 @@ $listDirn = $this->state->get('list.direction');
 				<?php echo JText::_('COM_REDFORM_Unique_id'); ?>
 			</th>
 
-			<?php if ($this->integration && $this->params->get('showintegration', false)): ?>
+			<?php if ($hasIntegration && $this->params->get('showintegration', false)): ?>
 				<th class="nowrap hidden-phone">
 					<?php echo JText::_('COM_REDFORM_Integration'); ?>
 				</th>
@@ -167,7 +177,7 @@ $listDirn = $this->state->get('list.direction');
 					<?php echo $this->escape($item->submit_key); ?>
 				</td>
 
-				<?php if ($this->integration && $this->params->get('showintegration', false)): ?>
+				<?php if ($hasIntegration && $this->params->get('showintegration', false)): ?>
 					<td>
 						<?php echo $this->escape($item->integration); ?></td>
 					</td>
