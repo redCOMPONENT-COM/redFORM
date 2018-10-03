@@ -61,7 +61,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			'cancelurl' => $this->getUrl('paymentcancelled', $reference),
 			'callbackurl' => $this->getUrl('notify', $reference),
 			'autocapture' => 0,
-			'payment_methods' => $this->_getAllowedCard(),
+			'payment_methods' => $this->params->get('payment_methods', '3d-creditcard'),
 			'description' => $request->title,
 			'language' => $quickpayLang
 		);
@@ -200,56 +200,6 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		$this->writeTransaction($reference, $resp, 'SUCCESS', 1);
 
 		return $paid;
-	}
-
-	/**
-	 * returns allowed card types
-	 *
-	 * @return string
-	 */
-	private function _getAllowedCard()
-	{
-		$allowed = array();
-		$methods = array(
-			'american-express',
-			'american-express-dk',
-			'dankort',
-			'danske-dk',
-			'diners',
-			'diners-dk',
-			'edankort',
-			'fbg1886',
-			'jcb',
-			'mastercard',
-			'mastercard-dk',
-			'mastercard-debet-dk',
-			'nordea-dk',
-			'visa',
-			'visa-dk',
-			'visa-electron',
-			'visa-electron-dk',
-			'paypal',
-			'3d-jcb',
-			'3d-maestro',
-			'3d-maestro-dk',
-			'3d-mastercard',
-			'3d-mastercard-dk',
-			'3d-mastercard-debet-dk',
-			'3d-visa',
-			'3d-visa-dk',
-			'3d-visa-electron',
-			'3d-visa-electron-dk',
-		);
-
-		foreach ($methods as $type)
-		{
-			if ($this->params->get($type))
-			{
-				$allowed[] = $type;
-			}
-		}
-
-		return implode(",", $allowed);
 	}
 
 	/**
