@@ -38,6 +38,14 @@
 					   label="PLG_REDFORM_QUICKPAY_private_key_LABEL"
 					   description="PLG_REDFORM_QUICKPAY_private_key_DESC"/>
 
+				<field name="payment_methods" type="text" default="3d-creditcard"
+					   label="PLG_REDFORM_QUICKPAY_payment_methods_LABEL"
+					   description="PLG_REDFORM_QUICKPAY_payment_methods_DESC"/>
+
+				<field name="branding_id" type="text" default=""
+					   label="PLG_REDFORM_QUICKPAY_BRANDING_ID_LABEL"
+					   description="PLG_REDFORM_QUICKPAY_BRANDING_ID_DESC"/>
+
 				<field type="radio" name="testmode" default="0"
 					   label="PLG_REDFORM_QUICKPAY_TESTMODE_LABEL"
 					   description="PLG_REDFORM_QUICKPAY_TESTMODE_DESC">
@@ -63,14 +71,6 @@
 					   description="COM_REDFORM_XML_PLUGIN_PAYMENT_ALLOWED_CURRENCIES_DESC"
 					   rows="10"
 						/>
-
-				<field name="branding_id" type="text" default=""
-					   label="PLG_REDFORM_QUICKPAY_BRANDING_ID_LABEL"
-					   description="PLG_REDFORM_QUICKPAY_BRANDING_ID_DESC"/>
-
-				<field name="payment_methods" type="text" default="3d-creditcard"
-					   label="PLG_REDFORM_QUICKPAY_payment_methods_LABEL"
-					   description="PLG_REDFORM_QUICKPAY_payment_methods_DESC"/>
 			</fieldset>
 
 			<fieldset name="extra" label="PLG_REDFORM_PAYMENT_XML_FIELDSET_EXTRA">
