@@ -22,6 +22,12 @@ include_once 'vendor/autoload.php';
  */
 class PlgRedform_captchaRecaptcha extends JPlugin
 {
+	private $version;
+
+	private $publicKey;
+
+	private $privateKey;
+
 	/**
 	 * Constructor
 	 *
@@ -34,6 +40,20 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
+
+		$this->version   = $this->params->get('version');
+
+		if ($this->version == 2)
+		{
+			$this->publicKey = $this->params->get('public_key_v2');
+			$this->privateKey = $this->params->get('private_key_v2');
+		}
+
+		if ($this->version == 3)
+		{
+			$this->publicKey = $this->params->get('public_key_v3');
+			$this->privateKey = $this->params->get('private_key_v3');
+		}
 	}
 
 	/**
@@ -48,7 +68,7 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 		JFactory::getDocument()->addScript('https://www.google.com/recaptcha/api.js', null, true, true);
 
 		$attributes = array();
-		$attributes['data-sitekey'] = $this->params->get('public_key');
+		$attributes['data-sitekey'] = $this->publicKey;
 
 		if ($this->params->get('theme'))
 		{
@@ -80,7 +100,7 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	public function onCheckCaptcha(&$result)
 	{
 		require_once 'vendor/autoload.php';
-		$privatekey = $this->params->get('private_key');
+		$privatekey = $this->privateKey;
 		$gRecaptchaResponse = JFactory::getApplication()->input->get('g-recaptcha-response');
 
 		$recaptcha = new \ReCaptcha\ReCaptcha($privatekey);
@@ -88,6 +108,6 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 
 		$result = $resp->isSuccess();
 
-		return true;
+		return $result;
 	}
 }
