@@ -86,17 +86,39 @@
 						showon="version:3"
 				/>
 
-				<field name="theme" type="list" default=""
-					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME"
-					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC">
+				<field
+						name="expected_action_v3"
+						type="list"
+						default="homepage"
+						label="PLG_REDFORM_CAPTCHA_EXPECTED_ACTION_V3"
+						description="PLG_REDFORM_CAPTCHA_EXPECTED_ACTION_V3_DESC"
+						showon="version:3"
+				>
+					<option value="homepage">homepage</option>
+					<option value="login">login</option>
+					<option value="social">social</option>
+					<option value="e-commerce">e-commerce</option>
+				</field>
+
+				<field
+						name="theme"
+						type="list"
+						default=""
+						label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME"
+						description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC"
+				>
 					<option value="">JDefault</option>
 					<option value="dark">dark</option>
 					<option value="light">light</option>
 				</field>
 
-				<field name="size" type="list" default=""
-					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE"
-					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE_DESC">
+				<field
+						name="size"
+						type="list"
+						default=""
+						label="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE"
+						description="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE_DESC"
+				>
 					<option value="">JDefault</option>
 					<option value="compact">compact</option>
 					<option value="normal">normal</option>

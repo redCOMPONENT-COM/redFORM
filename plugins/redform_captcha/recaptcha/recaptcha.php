@@ -28,6 +28,12 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 
 	private $privateKey;
 
+	private $apiScript = 'https://www.google.com/recaptcha/api.js';
+
+	private $expectedAction = 'homepage';
+
+	private $thresholdScore;
+
 	/**
 	 * Constructor
 	 *
@@ -41,18 +47,19 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
 
-		$this->version   = $this->params->get('version');
+		$this->version = $this->params->get('version');
 
 		if ($this->version == 2)
 		{
-			$this->publicKey = $this->params->get('public_key_v2');
+			$this->publicKey  = $this->params->get('public_key_v2');
 			$this->privateKey = $this->params->get('private_key_v2');
 		}
 
 		if ($this->version == 3)
 		{
-			$this->publicKey = $this->params->get('public_key_v3');
-			$this->privateKey = $this->params->get('private_key_v3');
+			$this->publicKey      = $this->params->get('public_key_v3');
+			$this->privateKey     = $this->params->get('private_key_v3');
+			$this->thresholdScore = $this->params->get('min_accepted_score_v3');
 		}
 	}
 
@@ -65,9 +72,30 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	 */
 	public function onGetCaptchaField(&$text)
 	{
-		JFactory::getDocument()->addScript('https://www.google.com/recaptcha/api.js', null, true, true);
+		$document = JFactory::getDocument();
+
+		if ($this->version == 2)
+		{
+			$document->addScript($this->apiScript);
+		}
+
+		if ($this->version == 3)
+		{
+			$document->addScript($this->apiScript . '?render=' . $this->publicKey);
+
+			$document->addScriptDeclaration('
+				grecaptcha.ready(function() 
+				{
+					grecaptcha.execute("' . $this->publicKey . '", {action: "' . $this->expectedAction . '"}).then(function(token)
+					{
+						document.getElementById("g-recaptcha-response").value = token;
+					});
+				});
+			');
+		}
 
 		$attributes = array();
+
 		$attributes['data-sitekey'] = $this->publicKey;
 
 		if ($this->params->get('theme'))
@@ -75,17 +103,20 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 			$attributes['data-theme'] = $this->params->get('theme');
 		}
 
-		if ($this->params->get('type'))
-		{
-			$attributes['data-type'] = $this->params->get('type');
-		}
-
 		if ($this->params->get('size'))
 		{
 			$attributes['data-size'] = $this->params->get('size');
 		}
 
-		$text = '<div class="g-recaptcha"' . JArrayHelper::toString($attributes, '=', ' ') . '"></div>';
+		if ($this->version == 2)
+		{
+			$text = '<div class="g-recaptcha"' . JArrayHelper::toString($attributes, '=', ' ') . '"></div>';
+		}
+
+		if ($this->version == 3)
+		{
+			$text = '<input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">';
+		}
 
 		return true;
 	}
@@ -104,6 +135,15 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 		$gRecaptchaResponse = JFactory::getApplication()->input->get('g-recaptcha-response');
 
 		$recaptcha = new \ReCaptcha\ReCaptcha($privatekey);
+
+		if ($this->version == 3)
+		{
+			$recaptcha
+				->setExpectedHostname($_SERVER['SERVER_NAME'])
+				->setExpectedAction($this->expectedAction)
+				->setScoreThreshold($this->thresholdScore);
+		}
+
 		$resp = $recaptcha->verify($gRecaptchaResponse, $_SERVER["REMOTE_ADDR"]);
 
 		$result = $resp->isSuccess();
