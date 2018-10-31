@@ -50,6 +50,10 @@ class RedformModelSubmitter extends RModelAdmin
 			}
 		}
 
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = RFactory::getDispatcher();
+		$dispatcher->trigger('onSubmissionConfirmed', array($pks));
+
 		return true;
 	}
 }
