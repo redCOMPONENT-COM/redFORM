@@ -27,8 +27,6 @@ class AddAFieldCest
 			'fieldtype' => 'E-mail',
 			'tooltip' => $this->faker->bothify('Test mail #####')
 		);
-		$this->delete1 = "Text 1";
-		$this->delete2 = "Email 1";
 	}
 	/**
 	 * @param AcceptanceTester $I
