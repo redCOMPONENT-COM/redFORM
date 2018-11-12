@@ -37,7 +37,8 @@ class AddAFormPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $fields = "//*[@id=\"formTabs\"]/li/a[normalize-space(text()) = \"Fields\"]";
+	public static $fields = "//li/a[normalize-space(text()) = \"Fields\"]";
+
 	/**
 	 * @var string
 	 */
