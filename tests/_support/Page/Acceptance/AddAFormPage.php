@@ -53,7 +53,7 @@ class AddAFormPage extends RedFormAdminPage
 	 */
 	public static function formList($value)
 	{
-		$formList = "//[@id=\"formList\"]//td//*[contains(., \"' . $value . '\")]";
+		$formList = "//[@id=\"formList\"]//td//[contains(., \"' . $value . '\")]";
 		return $formList;
 	}
 }

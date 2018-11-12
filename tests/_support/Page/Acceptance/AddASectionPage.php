@@ -60,7 +60,7 @@ class AddASectionPage extends RedFormAdminPage
 	 */
 	public static function sectionItem($value)
 	{
-		$sectionItem = "//[@id=\"table-items\"]//td//*[contains(., \"' . $value . '\")]";
+		$sectionItem = "//[@id=\"table-items\"]//td//[contains(., \"' . $value . '\")]";
 		return $sectionItem;
 	}
 }

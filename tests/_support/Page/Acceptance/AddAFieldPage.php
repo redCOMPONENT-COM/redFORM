@@ -80,7 +80,7 @@ class AddAFieldPage extends RedFormAdminPage
 	 */
 	public static function fieldList($value)
 	{
-		$fieldList = "//[@id=\"fieldList\"]//td//*[contains(., \"' . $value . '\")]";
+		$fieldList = "//[@id=\"fieldList\"]//td//[contains(., \"' . $value . '\")]";
 		return $fieldList;
 	}
 }
