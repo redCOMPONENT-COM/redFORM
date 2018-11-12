@@ -2,7 +2,7 @@
 /**
  * @package     redCORE
  * @subpackage  Cept
- * @copyright   Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @copyright   Copyright (C) 2008 - 2018 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -52,7 +52,7 @@ class AddAFormPage extends RedFormAdminPage
 	 */
 	public static function formList($value)
 	{
-		$formList = "//*[@id=\"formList\"]//td//*[contains(., \"' . $value . '\")]";
+		$formList = "//[@id=\"formList\"]//td//*[contains(., \"' . $value . '\")]";
 		return $formList;
 	}
 }

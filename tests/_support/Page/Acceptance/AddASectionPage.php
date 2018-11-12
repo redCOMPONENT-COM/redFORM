@@ -2,7 +2,7 @@
 /**
  * @package     redCORE
  * @subpackage  Cept
- * @copyright   Copyright (C) 2008 - 2015 redCOMPONENT.com. All rights reserved.
+ * @copyright   Copyright (C) 2008 - 2018 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -60,7 +60,7 @@ class AddASectionPage extends RedFormAdminPage
 	 */
 	public static function sectionItem($value)
 	{
-		$sectionItem = "//*[@id=\"table-items\"]//td//*[contains(., \"' . $value . '\")]";
+		$sectionItem = "//[@id=\"table-items\"]//td//*[contains(., \"' . $value . '\")]";
 		return $sectionItem;
 	}
 }
