@@ -60,7 +60,7 @@ class AddASectionPage extends RedFormAdminPage
 	 */
 	public static function sectionItem($value)
 	{
-		$sectionItem = "//tbody/tr/td/a[normalize-space(text()) = \"' . $value . '\"]";
+		$sectionItem = "//a[normalize-space(text()) = \"' . $value . '\"]";
 		return $sectionItem;
 	}
 }

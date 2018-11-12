@@ -53,7 +53,7 @@ class AddAFormPage extends RedFormAdminPage
 	 */
 	public static function formList($value)
 	{
-		$formList = "//tbody/tr/td/a[normalize-space(text()) = \"' . $value . '\"]";
+		$formList = "//a[normalize-space(text()) = \"' . $value . '\"]";
 
 		return $formList;
 	}
