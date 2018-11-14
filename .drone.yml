@@ -17,13 +17,6 @@ pipeline:
       - mv /opt/cache/joomla-cms tests
       - touch tests/.cache.joomla-cms.tmp
 
-      # redCORE
-      - mkdir -p tests/extension/redCORE
-      - gpg --pinentry-mode loopback --passphrase "6f8f19c330a0f899458e4b0670824deb8cdfe391" -o /opt/cache/redCORE.tgz --decrypt /opt/cache/redCORE.tgz.gpg
-      - tar -xzf /opt/cache/redCORE.tgz -C build/redCORE
-      - touch tests/.cache.redCORE.tmp
-
-
   00-setup:
     group: 00-setup
     image: redwebaps/testbox-chromedriver:2.38
