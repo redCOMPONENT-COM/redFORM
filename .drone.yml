@@ -5,7 +5,7 @@ pipeline:
     pull: true
     commands:
       # redFORM Composer cache
-      # - mv /opt/cache/redFORM/tests/vendor .
+      - mv /opt/cache/redFORM/tests/vendor .
       - touch tests/.cache.composer.tmp
       # redFORM npm cache
       - mv /opt/cache/redFORM/build/node_modules .
