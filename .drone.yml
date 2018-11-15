@@ -14,6 +14,7 @@ pipeline:
       - mv /opt/cache/joomla-cms tests
       - touch tests/.cache.joomla-cms.tmp
       - mv node_modules build
+      - cd build
       - ls
       - pwd
 
