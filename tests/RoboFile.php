@@ -441,7 +441,7 @@
 		public function runUnitTests()
 		{
 			$this->testsSitePreparation();
-			$this->_exec("joomla-cms/libraries/vendor/phpunit/phpunit/phpunit")
+			$this->_exec("joomla-cms3/libraries/vendor/phpunit/phpunit/phpunit")
 				->stopOnFail();
 		}
 	}
