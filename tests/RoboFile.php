@@ -18,10 +18,7 @@
 	{
 		// Load tasks from composer, see composer.json
 		use Joomla\Testing\Robo\Tasks\LoadTasks;
-		
-		// Load tasks from composer, see composer.json
-		use Joomla\Testing\Robo\Tasks\LoadTasks;
-		
+
 		/**
 		 * Downloads and prepares a Joomla CMS site for testing
 		 *
@@ -56,7 +53,35 @@
 				$this->_exec('sed -e "s,# RewriteBase /,RewriteBase /tests/joomla-cms/,g" --in-place joomla-cms/.htaccess');
 			}
 		}
-		
+
+		/**
+		 * Downloads and Install redCORE for Integration Testing testing
+		 *
+		 * @param   integer  $cleanUp  Clean up the directory when present (or skip the cloning process)
+		 *
+		 * @return  void
+		 * @since   1.0.0
+		 */
+		protected function getredCOREExtensionForIntegrationTests($cleanUp = 1)
+		{
+			// Get redCORE Clean Testing sites
+			if (is_dir('tests/extension/redCORE'))
+			{
+				if (!$cleanUp)
+				{
+					$this->say('Using cached version of redCORE and skipping clone process');
+
+					return;
+				}
+
+				$this->taskDeleteDir('tests/extension/redCORE')->run();
+			}
+
+			$version = '3.3.15';
+			$this->_exec("git clone -b $version --single-branch --depth 1 https://redJOHNNY:redjohnnyredweb2013github@github.com/redCOMPONENT-COM/redCORE.git tests/extension/redCORE");
+
+			$this->say("redCORE ($version) cloned at tests/extension/");
+		}
 		/**
 		 * Sends the build report error back to Slack
 		 *
@@ -260,17 +285,30 @@
 		/**
 		 * Clone joomla
 		 */
-		public function runTestSetupJenkins()
+		public function runTestSetupDrone()
 		{
+			// Gets redCORE
+			$this->getredCOREExtensionForIntegrationTests(0);
+
+			// Sets the output_append variable in case it's not yet
+			if (getenv('output_append') === false)
+			{
+				$this->say('Setting output_append');
+				putenv('output_append=');
+			}
+
+			// Run selenium
 			$this->taskSeleniumStandaloneServer()
 				->setURL("http://localhost:4444")
 				->runSelenium()
 				->waitForSelenium()
 				->run()
 				->stopOnFail();
-			
+
+			// Builds codeception
 			$this->_exec("vendor/bin/codecept build");
-			
+
+			// Executes the initial set up
 			$this->taskCodecept()
 				->arg('--tap')
 				->arg('--fail-fast')
@@ -285,7 +323,7 @@
 		 * @param $repo
 		 * @param $pull
 		 */
-		public function uploadPatchFromJenkinsToTestServer($githubToken, $repoOwner, $repo, $pull)
+		public function uploadPatchFromDroneToTestServer($githubToken, $repoOwner, $repo, $pull)
 		{
 			$body = 'Please Download the Patch Package for testing from the following Path: http://test.redcomponent.com/redform/PR/' . $pull . '/redform.zip';
 			
@@ -302,7 +340,7 @@
 				);
 		}
 		
-		public function runJenkins($folder)
+		public function runDrone($folder)
 		{
 			$this->taskSeleniumStandaloneServer()
 				->setURL("http://localhost:4444")
@@ -351,7 +389,50 @@
 				->printed(true)
 				->run();
 		}
-		
+
+		/**
+		 * Downloads and prepares a Joomla CMS site for testing
+		 *
+		 * @param   integer  $use_htaccess  (1/0) Rename and enable embedded Joomla .htaccess file
+		 * @param   integer  $cleanUp       Clean up the directory when present (or skip the cloning process)
+		 *
+		 * @return  void
+		 * @since   1.0.0
+		 */
+		public function testsSitePreparation($use_htaccess = 1, $cleanUp = 1)
+		{
+			$skipCleanup = false;
+			// Get Joomla Clean Testing sites
+			if (is_dir('tests/joomla-cms'))
+			{
+				if (!$cleanUp)
+				{
+					$skipCleanup = true;
+					$this->say('Using cached version of Joomla CMS and skipping clone process');
+				}
+				else
+				{
+					$this->taskDeleteDir('tests/joomla-cms')->run();
+				}
+			}
+			if (!$skipCleanup)
+			{
+				$version = 'staging';
+				/*
+				* When joomla Staging branch has a bug you can uncomment the following line as a tmp fix for the tests layer.
+				* Use as $version value the latest tagged stable version at: https://github.com/joomla/joomla-cms/releases
+				*/
+				$version = '3.9.0';
+				$this->_exec("git clone -b $version --single-branch --depth 1 https://github.com/joomla/joomla-cms.git tests/joomla-cms");
+				$this->say("Joomla CMS ($version) site created at tests/joomla-cms");
+			}
+			// Optionally uses Joomla default htaccess file
+			if ($use_htaccess == 1)
+			{
+				$this->_copy('tests/joomla-cms/htaccess.txt', 'tests/joomla-cms/.htaccess');
+				$this->_exec('sed -e "s,# RewriteBase /,RewriteBase /tests/joomla-cms/,g" --in-place tests/joomla-cms/.htaccess');
+			}
+		}
 		/**
 		 * Function to run unit tests
 		 *
@@ -359,8 +440,8 @@
 		 */
 		public function runUnitTests()
 		{
-			$this->prepareSiteForUnitTests();
-			$this->_exec("joomla-cms3/libraries/vendor/phpunit/phpunit/phpunit")
+			$this->testsSitePreparation();
+			$this->_exec("joomla-cms/libraries/vendor/phpunit/phpunit/phpunit")
 				->stopOnFail();
 		}
 	}
