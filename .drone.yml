@@ -37,7 +37,9 @@ pipeline:
       # Aesir installer release
       # - while [ ! -f tests/.cache.composer.library.tmp ]; do sleep 1; done  # Comment if not using composer cache for libraries
       - mv build/gulp-config.json.dist gulp-config.json
-      - build/gulp release:redform --skip-version
+      - cd build
+      - gulp release:redform --skip-version
+      - cd ../
 
       # Codeception setup
       - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
