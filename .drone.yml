@@ -1,7 +1,7 @@
 pipeline:
   00-cache:
     group: 00-setup
-    image: redwebaps/redform-cache:dev
+    image: redwebaps/redshop-cache:dev
     pull: true
     commands:
       # redFORM Composer cache
