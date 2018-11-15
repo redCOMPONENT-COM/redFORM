@@ -5,10 +5,10 @@ pipeline:
     pull: true
     commands:
       # Aesir Composer cache
-      - mv /opt/cache/redform/vendor .
+      - mv /opt/cache/redFORM/vendor .
       - touch tests/.cache.composer.tmp
       # Aesir npm cache
-      - mv /opt/cache/redform/node_modules .
+      - mv /opt/cache/redFORM/build/node_modules .
       - touch tests/.cache.npm.tmp
       # Joomla CMS
       - mv /opt/cache/joomla-cms tests
