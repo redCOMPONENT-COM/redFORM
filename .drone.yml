@@ -14,8 +14,6 @@ pipeline:
       - mv /opt/cache/joomla-cms tests
       - touch tests/.cache.joomla-cms.tmp
       - mv node_modules build
-      - cd build
-      - cd node_modules
       - mv vendor tests
       - ls
       - pwd
@@ -61,6 +59,7 @@ pipeline:
       - rsync -a tests/joomla-cms/ tests/$tests_suite/joomla-cms
       # Creates the database (required because of the Codeception Db module)
       - mysql -u root -proot -h db -e "CREATE DATABASE $tests_db"
+      - cd tests
       - su www-data -c 'vendor/bin/robo tests:setup 0 0'
 
   00-setup-stages:
