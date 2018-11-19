@@ -4,20 +4,21 @@ pipeline:
     image: redwebaps/redform-cache:dev
     pull: true
     commands:
-      # Aesir Composer cache
+      # redFORM Composer cache
       - mv /opt/cache/redFORM/vendor .
       - touch tests/.cache.composer.tmp
-      # Aesir npm cache
+      # redFORM npm cache
       - mv /opt/cache/redFORM/build/node_modules .
       - touch tests/.cache.npm.tmp
       # Joomla CMS
       - mv /opt/cache/joomla-cms tests
       - touch tests/.cache.joomla-cms.tmp
       - mv node_modules build
-      - mv vendor tests
-      - cd tests
+      - cd build
+      - cd node_modules
       - ls
       - pwd
+      - mv vendor tests
 
   00-setup:
     group: 00-setup
@@ -38,8 +39,8 @@ pipeline:
       #- composer install --prefer-dist                                    # Uncomment if not using composer cache
       # NPM setup
       - while [ ! -f tests/.cache.npm.tmp ]; do sleep 1; done               # Comment if not using npm cache
-      # - npm install                                                       # Uncomment if not using npm cache
-      # Aesir installer release
+      - npm install                                                       # Uncomment if not using npm cache
+      # redFORM installer release
       # - while [ ! -f tests/.cache.composer.library.tmp ]; do sleep 1; done  # Comment if not using composer cache for libraries
       - mv build/gulp-config.json.dist build/gulp-config.json
       - cd build
