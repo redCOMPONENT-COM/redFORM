@@ -14,10 +14,10 @@ pipeline:
     - mv /opt/cache/joomla-cms tests
     - touch tests/.cache.joomla-cms.tmp
     - mv node_modules build
-    - pwd
-    - mv vendor tests
+    - cd tests
     - ls
     - pwd
+    - cd ..
   00-setup:
     group: 00-setup
     image: redwebaps/testbox-chromedriver:2.38
