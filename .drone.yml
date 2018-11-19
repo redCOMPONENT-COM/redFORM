@@ -17,6 +17,7 @@ pipeline:
       - cd build
       - cd node_modules
       - cd joomla-gulp
+      - ls
       - cd ../../..
       - mv vendor tests
       - ls
