@@ -16,9 +16,9 @@ pipeline:
       - mv node_modules build
       - cd build
       - cd node_modules
+      - mv vendor tests
       - ls
       - pwd
-      - mv vendor tests
 
   00-setup:
     group: 00-setup
@@ -43,6 +43,7 @@ pipeline:
       # redFORM installer release
       # - while [ ! -f tests/.cache.composer.library.tmp ]; do sleep 1; done  # Comment if not using composer cache for libraries
       - mv build/gulp-config.json.dist build/gulp-config.json
+      - pwd
       - cd build
       - gulp release --skip-version
       - cd ..
