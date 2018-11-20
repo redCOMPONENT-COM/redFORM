@@ -64,34 +64,6 @@
 		}
 
 		/**
-		 * Downloads and Install redCORE for Integration Testing testing
-		 *
-		 * @param   integer  $cleanUp  Clean up the directory when present (or skip the cloning process)
-		 *
-		 * @return  void
-		 * @since   1.0.0
-		 */
-		protected function getredCOREExtensionForIntegrationTests($cleanUp = 1)
-		{
-			// Get redCORE Clean Testing sites
-			if (is_dir('tests/extension/redCORE'))
-			{
-				if (!$cleanUp)
-				{
-					$this->say('Using cached version of redCORE and skipping clone process');
-
-					return;
-				}
-
-				$this->taskDeleteDir('tests/extension/redCORE')->run();
-			}
-
-			$version = '3.3.15';
-			$this->_exec("git clone -b $version --single-branch --depth 1 https://redJOHNNY:redjohnnyredweb2013github@github.com/redCOMPONENT-COM/redCORE.git tests/extension/redCORE");
-
-			$this->say("redCORE ($version) cloned at tests/extension/");
-		}
-		/**
 		 * Sends the build report error back to Slack
 		 *
 		 * @param   string $cloudinaryName Cloudinary cloud name
@@ -292,9 +264,8 @@
 		}
 
 		/**
-		 * Individual test folder execution
+		 * Tests setup
 		 *
-		 * @param   string   $folder  Folder to execute codecept run to
 		 * @param   boolean  $debug   Add debug to the parameters
 		 * @param   boolean  $steps   Add steps to the parameters
 		 *
@@ -319,8 +290,6 @@
 				$args,
 				$this->defaultArgs
 			);
-			// Gets redCORE
-			$this->getredCOREExtensionForIntegrationTests(0);
 
 			// Sets the output_append variable in case it's not yet
 			if (getenv('output_append') === false)
