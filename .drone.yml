@@ -51,7 +51,7 @@ pipeline:
     # Codeception setup
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
     # Test setup
-    # - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done        # Comment if not using Joomla CMS cache
+    - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done        # Comment if not using Joomla CMS cache
     - pwd
     - cd tests
     - vendor/bin/robo tests:site-preparation 0 0
@@ -78,7 +78,7 @@ pipeline:
     - sed -i "s/db = '$tests_db'/db = 'tests_db'/g" tests/joomla-cms/configuration.php
     - sed -i "s,$tests_suite/joomla-cms/,joomla-cms/,g" tests/joomla-cms/configuration.php
     - mysqldump -u root -proot -h db $tests_db > tests/dbdump.sql.tmp
-    
+
     # Stages setup
     - sh tests/drone/setup-stages.sh "administrator"    "01-administrator"
   01-administrator:
