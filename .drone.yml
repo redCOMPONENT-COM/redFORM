@@ -37,9 +37,9 @@ pipeline:
     # redFORM installer release
     # - while [ ! -f tests/.cache.composer.library.tmp ]; do sleep 1; done  # Comment if not using composer cache for libraries
     - mv build/gulp-config.json.dist build/gulp-config.json
-    - cd tests
-    - composer update
-    - cd ..
+    # - cd tests
+    # - composer update
+    # - cd ..
     - cd build
     - gulp release --skip-version
     - cd ..
@@ -47,8 +47,8 @@ pipeline:
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
     # Test setup
     - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done        # Comment if not using Joomla CMS cache
-    # - cd tests
-    # - vendor/bin/robo tests:site-preparation 0 0
+    - cd tests
+    - vendor/bin/robo tests:site-preparation 1 0
     - pwd
     # Ownership for uid 82
     - chown -R www-data:www-data .
