@@ -7,13 +7,16 @@ pipeline:
     # redFORM Composer cache
     - mv /opt/cache/redFORM/vendor .
     - touch tests/.cache.composer.tmp
+
     # redFORM npm cache
     - mv /opt/cache/redFORM/build/node_modules .
     - touch tests/.cache.npm.tmp
+
     # Joomla CMS
     - mv /opt/cache/joomla-cms tests
     - touch tests/.cache.joomla-cms.tmp
     - mv node_modules build
+
   00-setup:
     group: 00-setup
     image: redwebaps/testbox-chromedriver:2.38
@@ -41,14 +44,14 @@ pipeline:
     - composer update
     - cd ..
     - cd build
-    - gulp release --skip-version
+    - gulp release:redform --skip-version
     - cd ..
     # Codeception setup
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
     # Test setup
     - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done        # Comment if not using Joomla CMS cache
     - cd tests
-    - vendor/bin/robo tests:site-preparation 1 0
+    - vendor/bin/robo tests:site-preparation 0 0
     - pwd
     # Ownership for uid 82
     - chown -R www-data:www-data .
@@ -58,6 +61,10 @@ pipeline:
     - rsync -a tests/joomla-cms/ tests/$tests_suite/joomla-cms
     # Creates the database (required because of the Codeception Db module)
     - mysql -u root -proot -h db -e "CREATE DATABASE $tests_db"
+    # Execution under uid 82 (www / www-data)
+    # - while [ ! -f tests/.cache.aesir-core.tmp ]; do sleep 1; done        # Comment if not using redFORM Core cache
+    - cd tests
+    - vendor/bin/robo tests:setup 0 0
 
   00-setup-stages:
     group: tests

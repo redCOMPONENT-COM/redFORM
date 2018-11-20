@@ -20,6 +20,15 @@
 		use Joomla\Testing\Robo\Tasks\LoadTasks;
 
 		/**
+		 * @var   array
+		 * @var   array
+		 * @since 5.6.0
+		 */
+		private $defaultArgs = [
+			'--tap',
+			'--fail-fast'
+		];
+		/**
 		 * Downloads and prepares a Joomla CMS site for testing
 		 *
 		 * @param   int $use_htaccess (1/0) Rename and enable embedded Joomla .htaccess file
@@ -432,6 +441,53 @@
 				$this->_copy('tests/joomla-cms/htaccess.txt', 'tests/joomla-cms/.htaccess');
 				$this->_exec('sed -e "s,# RewriteBase /,RewriteBase /tests/joomla-cms/,g" --in-place tests/joomla-cms/.htaccess');
 			}
+		}
+
+		/**
+		 * Tests setup
+		 *
+		 * @param   boolean  $debug   Add debug to the parameters
+		 * @param   boolean  $steps   Add steps to the parameters
+		 *
+		 * @return  void
+		 * @since   5.6.0
+		 */
+		public function testsSetup($debug = true, $steps = true)
+		{
+			$args = [];
+
+			if ($debug)
+			{
+				$args[] = '--debug';
+			}
+
+			if ($steps)
+			{
+				$args[] = '--steps';
+			}
+
+			$args = array_merge(
+				$args,
+				$this->defaultArgs
+			);
+
+			// Sets the output_append variable in case it's not yet
+			if (getenv('output_append') === false)
+			{
+				$this->say('Setting output_append');
+				putenv('output_append=');
+			}
+
+			// Builds codeception
+			$this->_exec("tests/vendor/bin/codecept build");
+
+			// Executes the initial set up
+			$this->taskCodecept()
+				->args($args)
+				->arg('tests/acceptance/install/')
+				->run()
+				->stopOnFail();
+
 		}
 		/**
 		 * Function to run unit tests
