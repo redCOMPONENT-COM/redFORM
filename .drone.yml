@@ -44,7 +44,7 @@ pipeline:
     - composer update
     - cd ..
     - cd build
-    - gulp release:redform --skip-version
+    - gulp release --skip-version
     - cd ..
     # Codeception setup
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
