@@ -479,7 +479,7 @@
 			}
 
 			// Builds codeception
-			$this->_exec("tests/vendor/bin/codecept build");
+			$this->_exec("vendor/bin/codecept build");
 
 			// Executes the initial set up
 			$this->taskCodecept()
