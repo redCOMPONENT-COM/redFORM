@@ -78,6 +78,8 @@ pipeline:
 
     # Stages setup
     - sh tests/drone/setup-stages.sh "administrator"    "01-administrator"
+    - pwd
+    - ls
   01-administrator:
     group: tests
     image: redwebaps/testbox-chromedriver:2.38
