@@ -71,6 +71,7 @@ pipeline:
     commands:
     # Final DB dump with full Joomla/extension setup
     - rsync -a --delete tests/$tests_suite/joomla-cms/ tests/joomla-cms
+    - cd tests
     - pwd
     - ls
     - sed -i "s/db = '$tests_db'/db = 'tests_db'/g" tests/joomla-cms/configuration.php
