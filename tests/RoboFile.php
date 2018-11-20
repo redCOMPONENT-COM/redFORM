@@ -344,7 +344,7 @@
 			$this->taskCodecept()
 				->arg('--tap')
 				->arg('--fail-fast')
-				->arg('tests/acceptance/install/')
+				->arg('./acceptance/install/')
 				->run()
 				->stopOnFail();
 		}
