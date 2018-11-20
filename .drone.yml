@@ -18,6 +18,7 @@ pipeline:
     - touch tests/.cache.joomla-cms.tmp
     - mv node_modules build
     - cd build
+    - cd node_modules
     - ls
 
   00-setup:
@@ -45,8 +46,6 @@ pipeline:
     - mv build/gulp-config.json.dist build/gulp-config.json
     - pwd
     - cd build
-    - ls
-    - cd ..
     - gulp release --skip-version
     - cd ..
     # Codeception setup
