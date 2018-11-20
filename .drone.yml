@@ -40,8 +40,8 @@ pipeline:
     # redFORM installer release
     # - while [ ! -f tests/.cache.composer.library.tmp ]; do sleep 1; done  # Comment if not using composer cache for libraries
     - mv build/gulp-config.json.dist build/gulp-config.json
+    - pwd
     - cd build
-    - cd node_modules
     - ls
     - cd ..
     - gulp release --skip-version
