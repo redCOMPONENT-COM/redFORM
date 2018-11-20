@@ -481,10 +481,11 @@
 			// Builds codeception
 			$this->_exec("vendor/bin/codecept build");
 
-			// Executes the initial set up
+			// Executes the setup joomla
 			$this->taskCodecept()
 				->args($args)
-				->arg('tests/acceptance/install/')
+				->arg('tests/acceptance/install/01-InstallJoomlaCest.php')
+				->arg('tests/acceptance/install/01-InstallExtensionCest.php')
 				->run()
 				->stopOnFail();
 
