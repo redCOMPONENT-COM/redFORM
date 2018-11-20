@@ -19,6 +19,7 @@ pipeline:
     - mv node_modules build
     - cd build
     - cd node_modules
+    - cd joomla-gulp
     - ls
 
   00-setup:
