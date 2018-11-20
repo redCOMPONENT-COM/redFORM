@@ -298,14 +298,6 @@
 				putenv('output_append=');
 			}
 
-			// Run selenium
-			$this->taskSeleniumStandaloneServer()
-				->setURL("http://localhost:4444")
-				->runSelenium()
-				->waitForSelenium()
-				->run()
-				->stopOnFail();
-
 			// Builds codeception
 			$this->_exec("vendor/bin/codecept build");
 
