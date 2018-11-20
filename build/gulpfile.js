@@ -17,7 +17,7 @@ const merge       = require('merge-stream');
 
 const parser      = new xml2js.Parser();
 
-const jgulp   = requireDir('./node_modules/joomla-gulp', {recurse: true});
+const jgulp   = requireDir('./build/node_modules/joomla-gulp', {recurse: true});
 const redcore = requireDir('./redCORE/build/gulp-redcore', {recurse: true});
 const dir = requireDir('./joomla-gulp-extensions', {recurse: true});
 
