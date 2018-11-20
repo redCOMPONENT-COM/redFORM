@@ -485,7 +485,7 @@
 			$this->taskCodecept()
 				->args($args)
 				->arg('tests/acceptance/install/01-InstallJoomlaCest.php')
-				->arg('tests/acceptance/install/01-InstallExtensionCest.php')
+				->arg('tests/acceptance/install/02-InstallExtensionCest.php')
 				->run()
 				->stopOnFail();
 
