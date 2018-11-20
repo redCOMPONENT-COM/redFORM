@@ -290,12 +290,35 @@
 				}
 			}
 		}
-		
+
 		/**
-		 * Clone joomla
+		 * Individual test folder execution
+		 *
+		 * @param   string   $folder  Folder to execute codecept run to
+		 * @param   boolean  $debug   Add debug to the parameters
+		 * @param   boolean  $steps   Add steps to the parameters
+		 *
+		 * @return  void
+		 * @since   5.6.0
 		 */
-		public function runTestSetupDrone()
+		public function testsSetup($debug = true, $steps = true)
 		{
+			$args = [];
+
+			if ($debug)
+			{
+				$args[] = '--debug';
+			}
+
+			if ($steps)
+			{
+				$args[] = '--steps';
+			}
+
+			$args = array_merge(
+				$args,
+				$this->defaultArgs
+			);
 			// Gets redCORE
 			$this->getredCOREExtensionForIntegrationTests(0);
 
@@ -321,7 +344,7 @@
 			$this->taskCodecept()
 				->arg('--tap')
 				->arg('--fail-fast')
-				->arg('./acceptance/install/')
+				->arg('tests/acceptance/install/')
 				->run()
 				->stopOnFail();
 		}
@@ -443,57 +466,6 @@
 			}
 		}
 
-		/**
-		 * Tests setup
-		 *
-		 * @param   boolean  $debug   Add debug to the parameters
-		 * @param   boolean  $steps   Add steps to the parameters
-		 *
-		 * @return  void
-		 * @since   5.6.0
-		 */
-		public function testsSetup($debug = true, $steps = true)
-		{
-			$args = [];
-
-			if ($debug)
-			{
-				$args[] = '--debug';
-			}
-
-			if ($steps)
-			{
-				$args[] = '--steps';
-			}
-
-			$args = array_merge(
-				$args,
-				$this->defaultArgs
-			);
-
-			// Sets the output_append variable in case it's not yet
-			if (getenv('output_append') === false)
-			{
-				$this->say('Setting output_append');
-				putenv('output_append=');
-			}
-
-			// Builds codeception
-			$this->_exec("vendor/bin/codecept build");
-
-			// Executes the setup joomla
-			$this->taskCodecept()
-				->args($args)
-				->arg('tests/acceptance/install/01-InstallJoomlaCest.php')
-				->run()
-				->stopOnFail();
-			$this->taskCodecept()
-				->args($args)
-				->arg('tests/acceptance/install/02-InstallExtensionCest.php')
-				->run()
-				->stopOnFail();
-
-		}
 		/**
 		 * Function to run unit tests
 		 *
