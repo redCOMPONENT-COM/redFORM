@@ -51,7 +51,7 @@ pipeline:
     # Test setup
     - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done        # Comment if not using Joomla CMS cache
     - pwd
-    - cd tests
+    # - cd tests
     - vendor/bin/robo tests:site-preparation 0 0
     # Ownership for uid 82
     - chown -R www-data:www-data .
