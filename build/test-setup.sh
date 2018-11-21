@@ -49,7 +49,6 @@ zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.lo
 
 # back to tests for run codeception
 cd tests
-ls
 vendor/bin/robo upload:patch-from-jenkins-to-test-server $GITHUB_TOKEN $GITHUB_REPO_OWNER $REPO $CHANGE_ID
 cd ..
 
