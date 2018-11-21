@@ -6,6 +6,9 @@ pipeline:
     commands:
     # redFORM Composer cache
     - mv /opt/cache/redFORM/vendor .
+    - cd tests
+    - cd vendor
+    - ls
     - touch tests/.cache.composer.tmp
 
     # redFORM npm cache
@@ -16,10 +19,6 @@ pipeline:
     - mv /opt/cache/joomla-cms tests
     - touch tests/.cache.joomla-cms.tmp
     - mv node_modules build
-    - cd build
-    - cd node_modules
-    - cd joomla-gulp
-    - ls
 
   00-setup:
     group: 00-setup
@@ -46,7 +45,6 @@ pipeline:
     - mv build/gulp-config.json.dist build/gulp-config.json
     - pwd
     - cd build
-    - npm install joomla-gulp --save-dev
     - gulp release --skip-version
     - cd ..
     # Codeception setup
