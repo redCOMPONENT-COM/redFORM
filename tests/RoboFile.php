@@ -276,7 +276,7 @@
 				->arg('--fail-fast')
 				->arg('./acceptance/install/')
 				->run()
-				->stopOnFail();
+				->stopOnail();
 		}
 		
 		/**
