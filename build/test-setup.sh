@@ -48,7 +48,10 @@ cp /tests/www/tests/releases-redform/redform.zip .
 zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.log 2>&1
 
 # back to tests for run codeception
+cd tests
+ls
 vendor/bin/robo upload:patch-from-jenkins-to-test-server $GITHUB_TOKEN $GITHUB_REPO_OWNER $REPO $CHANGE_ID
+cd ..
 
 #setting php configuration
 sed -e 's/max_input_time = 60/max_input_time = 6000/' -i /etc/php/7.1/apache2/php.ini
@@ -68,6 +71,7 @@ mysql --host=db-$BUILD_TAG -uroot -proot -e "DROP DATABASE IF EXISTS redformSetu
 chown -R www-data:www-data joomla-cms
 cd $WORKSPACE/tests/
 composer install
+pwd
 #check code
 vendor/bin/robo check:for-missed-debug-code
 vendor/bin/robo check:for-parse-errors
