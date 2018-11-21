@@ -11,6 +11,9 @@ vendor/bin/robo prepare:site-for-system-testing > output.log 2>&1
 cd ..
 wget "https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip" > output.log 2>&1
 ln -s /usr/bin/nodejs /usr/bin/node > output.log 2>&1
+npm cache clean -f  > output.log 2>&1
+npm install -g n  > output.log 2>&1
+n 9  > output.log 2>&1
 
 # Get Chrome Headless
 mkdir -p /usr/local/bin
