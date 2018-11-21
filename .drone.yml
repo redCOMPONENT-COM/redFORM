@@ -7,7 +7,6 @@ pipeline:
     # redFORM Composer cache
     - mv /opt/cache/redFORM/vendor .
     - cd tests
-    - cd vendor
     - ls
     - touch tests/.cache.composer.tmp
 
