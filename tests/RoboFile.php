@@ -304,7 +304,7 @@
 			// Executes the initial set up
 			$this->taskCodecept()
 				->args($args)
-				->arg('tests/acceptance/install/')
+				->arg('acceptance/install/')
 				->run()
 				->stopOnFail();
 		}
