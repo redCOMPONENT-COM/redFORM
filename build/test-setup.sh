@@ -74,7 +74,6 @@ vendor/bin/robo check:for-missed-debug-code
 vendor/bin/robo check:for-parse-errors
 vendor/bin/robo check:codestyle
 vendor/bin/robo run:unit-tests
-vendor/bin/robo prepare:site-for-system-testing
 vendor/bin/robo run:test-setup-jenkins
 
 if [ $? -eq 0 ]
