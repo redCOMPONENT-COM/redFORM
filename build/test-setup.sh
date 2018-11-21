@@ -71,11 +71,11 @@ mysql --host=db-$BUILD_TAG -uroot -proot -e "DROP DATABASE IF EXISTS redformSetu
 chown -R www-data:www-data joomla-cms
 cd $WORKSPACE/tests/
 composer install
-pwd
+
 #check code
 vendor/bin/robo check:for-missed-debug-code
 vendor/bin/robo check:for-parse-errors
-endor/bin/robo check:codestyle
+vendor/bin/robo check:codestyle
 vendor/bin/robo run:unit-tests
 
 vendor/bin/robo run:test-setup-jenkins
