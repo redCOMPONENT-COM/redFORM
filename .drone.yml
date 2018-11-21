@@ -44,7 +44,7 @@ pipeline:
     # - while [ ! -f tests/.cache.composer.library.tmp ]; do sleep 1; done  # Comment if not using composer cache for libraries
     - mv build/gulp-config.json.dist build/gulp-config.json
     - cd build
-    - npm install joomla-gulp --save-dev
+    # - npm install joomla-gulp --save-dev
     - gulp release --skip-version
     - cd ..
     # Codeception setup
