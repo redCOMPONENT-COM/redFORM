@@ -41,7 +41,6 @@ npm install gulp -g # install globally so that it's available to robo
 npm install
 mv gulp-config.json.jenkins.dist gulp-config.json
 git submodule update --init --recursive
-
 gulp release --skip-version
 cd ..
 cp /tests/www/tests/releases-redform/redform.zip .
@@ -50,7 +49,6 @@ zip --symlinks -r gulp-release.zip /tests/www/tests/releases-redform > output.lo
 # back to tests for run codeception
 cd tests
 vendor/bin/robo upload:patch-from-jenkins-to-test-server $GITHUB_TOKEN $GITHUB_REPO_OWNER $REPO $CHANGE_ID
-cd ..
 
 #setting php configuration
 sed -e 's/max_input_time = 60/max_input_time = 6000/' -i /etc/php/7.1/apache2/php.ini
@@ -76,7 +74,7 @@ vendor/bin/robo check:for-missed-debug-code
 vendor/bin/robo check:for-parse-errors
 vendor/bin/robo check:codestyle
 vendor/bin/robo run:unit-tests
-
+vendor/bin/robo prepare:site-for-system-testing
 vendor/bin/robo run:test-setup-jenkins
 
 if [ $? -eq 0 ]
