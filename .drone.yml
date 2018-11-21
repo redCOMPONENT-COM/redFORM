@@ -5,7 +5,7 @@ pipeline:
     pull: true
     commands:
     # redFORM Composer cache
-    - mv /opt/cache/redFORM/vendor /opt/cache/redFORM/tests
+    - mv /opt/cache/redFORM/vendor tests
     - cd tests
     - ls
     - cd ..
