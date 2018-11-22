@@ -116,6 +116,7 @@ pipeline:
     image: redwebaps/testbox-chromedriver:2.38
     commands:
     - if [ -z "${CI_PULL_REQUEST}" ]; then export CI_PULL_REQUEST=1; fi
+    - cd tests
     - vendor/bin/robo send:build-report-error-slack redcomponent 365447364384436 Q94UM5kjZkZIrau8MIL93m0dN6U "$CI_REPO" "$CI_PULL_REQUEST" "https://hooks.slack.com/services/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" "#redform" "$CI_BUILD_URL"
     when:
       status: [ failure ]
