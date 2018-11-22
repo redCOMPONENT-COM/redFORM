@@ -48,7 +48,7 @@ pipeline:
     # Test setup
     - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done        # Comment if not using Joomla CMS cache
     - cd tests
-    - vendor/bin/robo tests:site-preparation 0 0
+    - vendor/bin/robo tests:site-preparation 1 1
     # Ownership for uid 82
     - chown -R www-data:www-data .
     # Creating first clone for tests setup
@@ -81,8 +81,6 @@ pipeline:
 
     # Stages setup
     - sh tests/drone/setup-stages.sh "administrator"    "01-administrator"
-    - pwd
-    - ls
   01-administrator:
     group: tests
     image: redwebaps/testbox-chromedriver:2.38
@@ -98,10 +96,10 @@ pipeline:
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
     # Performs test
-    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/03-CheckForWarningsAndNoticesCept.php 0 0'
-    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddAFieldCest.php 0 0'
-    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddAFormCest.php 0 0'
-    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddASectionCest.php 0 0'
+    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/03-CheckForWarningsAndNoticesCept.php 1 1'
+    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddAFieldCest.php 1 1'
+    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddAFormCest.php 1 1'
+    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddASectionCest.php 1 1'
   slack:
     image: plugins/slack
     webhook: https://hooks.slack.com/services/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
