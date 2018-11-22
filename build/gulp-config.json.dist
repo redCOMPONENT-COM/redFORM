@@ -1,6 +1,6 @@
 {
 	"wwwDir"           : "/home/travis/build/redCOMPONENT-COM/redFORM/tests/joomla-cms3",
-	"release_dir"   : "../releases/",
+	"release_dir"   : "./tests/releases/",
 	"browserConfig" : {
 		"proxy": "localhost",
 		"browser" : "default"
