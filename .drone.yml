@@ -13,17 +13,11 @@ pipeline:
 
     # redFORM npm cache
     - mv /opt/cache/redFORM/build/node_modules .
-    - pwd
-    - ls
     - touch tests/.cache.npm.tmp
 
     # Joomla CMS
     - mv /opt/cache/joomla-cms tests
     - touch tests/.cache.joomla-cms.tmp
-    - pwd
-    - cd build
-    - ls
-    - mv node_modules build
 
   00-setup:
     group: 00-setup
