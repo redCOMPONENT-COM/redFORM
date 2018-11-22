@@ -14,9 +14,11 @@ pipeline:
 
     # Joomla CMS
     - mv /opt/cache/joomla-cms tests
-    - pwd
+    - cd tests
     - ls
+    - cd ..
     - touch tests/.cache.joomla-cms.tmp
+    - pwd
 
   00-setup:
     group: 00-setup
