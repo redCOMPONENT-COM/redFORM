@@ -22,7 +22,7 @@ modules:
         JoomlaBrowser:
             url: 'http://php/tests/%tests_suite%/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
             browser: 'chrome'
-            window_size: false
+            window_size: 1920x1080
             restart: true
             port: 9515
             capabilities:
@@ -30,7 +30,7 @@ modules:
                 args: ["--headless", "--disable-gpu", "--no-sandbox", "window-size=1920x1080"]
             username: '%tests_user%'               # UserName for the Administrator
             password: 'admin'                      # Password for the Administrator
-            database host: '{dbhostname}'             # place where the Application is Hosted #server Address
+            database host: 'db'             # place where the Application is Hosted #server Address
             database user: 'root'                  # MySQL Server user ID, usually root
             database password: 'root'                  # MySQL Server password, usually empty or root
             database name: '%tests_db%'            # DB Name, at the Server
@@ -43,6 +43,8 @@ modules:
             joomla folder: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation where tests are executed in the apache server
             joomla folder local: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation in the local machine (where Codeception is running)
         AcceptanceHelper:
-            install packages url: 'http://localhost/tests/releases/'     # the url that points to the extension .zip package defined in your gulp-config.json file at the /build/ folder
+            packages url: 'http://php/tests/releases/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
+            packages previous: 'http://php/tests/extension/previous/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
             extension folder: '%build_path%/'      # Path on the CI for Extension
+            install demo data: 'No'                # If you wish to Install the Extension Demo Data then Keep this to Yes
 error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
