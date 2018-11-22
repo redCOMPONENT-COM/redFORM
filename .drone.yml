@@ -96,7 +96,7 @@ pipeline:
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
     # Performs test
-    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/03-CheckForWarningsAndNoticesCept.php 1 1'
+    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/03-CheckForWarningsAndNoticesCept.php 0 0'
     - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddAFieldCest.php 1 1'
     - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddAFormCest.php 1 1'
     - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddASectionCest.php 1 1'
