@@ -52,7 +52,6 @@ pipeline:
     - chown -R www-data:www-data .
     # Creating first clone for tests setup
     - mkdir -p tests/$tests_suite/joomla-cms
-    - pwd
     - ls
     # - rsync -a tests/joomla-cms/ tests/$tests_suite/joomla-cms
     # Creates the database (required because of the Codeception Db module)
