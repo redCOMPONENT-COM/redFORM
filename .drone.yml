@@ -42,8 +42,8 @@ pipeline:
     - cd build
     - npm install joomla-gulp --save-dev
     - gulp release --skip-version
-    - cd ..
-    - cd tests
+    # - cd ..
+    # - cd tests
     - cd releases
     - ls
     - pwd
