@@ -90,6 +90,23 @@
 			}
 		}
 
+		/**
+		 * Sends the build report error back to Slack
+		 *
+		 * @param   string  $directory            Directory to explore
+		 * @param   string  $cloudinaryName       Cloudinary cloud name
+		 * @param   string  $cloudinaryApiKey     Cloudinary API key
+		 * @param   string  $cloudinaryApiSecret  Cloudinary API secret
+		 * @param   string  $githubRepository     GitHub repository (owner/repo)
+		 * @param   string  $githubPRNo           GitHub PR #
+		 * @param   string  $slackWebhook         Slack Webhook URL
+		 * @param   string  $slackChannel         Slack channel
+		 * @param   string  $buildURL             Build URL
+		 *
+		 * @return  void
+		 *
+		 * @since   5.1
+		 */
 		public function sendBuildReportErrorSlackDirectory($directory, $cloudinaryName, $cloudinaryApiKey, $cloudinaryApiSecret, $githubRepository, $githubPRNo, $slackWebhook, $slackChannel, $buildURL = '')
 		{
 			$errorSelenium = true;
@@ -161,6 +178,7 @@
 			}
 		}
 
+		
 		/**
 		 * Tests setup
 		 *
