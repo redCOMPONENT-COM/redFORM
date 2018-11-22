@@ -24,7 +24,8 @@ modules:
         - Asserts
     config:
         JoomlaBrowser:
-            url: 'http://php/tests/%tests_suite%/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
+            # url: 'http://php/tests/%tests_suite%/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
+            url: 'http://php/tests/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
             browser: 'chrome'
             window_size: 1920x1080
             restart: true
