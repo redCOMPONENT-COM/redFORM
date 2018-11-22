@@ -43,6 +43,6 @@ modules:
             joomla folder: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation where tests are executed in the apache server
             joomla folder local: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation in the local machine (where Codeception is running)
         AcceptanceHelper:
-            install packages url: 'http://localhost/tests/releases-redform/'     # the url that points to the extension .zip package defined in your gulp-config.json file at the /build/ folder
+            install packages url: 'http://localhost/tests/releases/'     # the url that points to the extension .zip package defined in your gulp-config.json file at the /build/ folder
             extension folder: '%build_path%/'      # Path on the CI for Extension
 error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"

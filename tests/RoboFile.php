@@ -63,17 +63,18 @@
 			}
 		}
 
+
 		/**
 		 * Sends the build report error back to Slack
 		 *
-		 * @param   string $cloudinaryName Cloudinary cloud name
-		 * @param   string $cloudinaryApiKey Cloudinary API key
-		 * @param   string $cloudinaryApiSecret Cloudinary API secret
-		 * @param   string $githubRepository GitHub repository (owner/repo)
-		 * @param   string $githubPRNo GitHub PR #
-		 * @param   string $slackWebhook Slack Webhook URL
-		 * @param   string $slackChannel Slack channel
-		 * @param   string $buildURL Build URL
+		 * @param   string  $cloudinaryName       Cloudinary cloud name
+		 * @param   string  $cloudinaryApiKey     Cloudinary API key
+		 * @param   string  $cloudinaryApiSecret  Cloudinary API secret
+		 * @param   string  $githubRepository     GitHub repository (owner/repo)
+		 * @param   string  $githubPRNo           GitHub PR #
+		 * @param   string  $slackWebhook         Slack Webhook URL
+		 * @param   string  $slackChannel         Slack channel
+		 * @param   string  $buildURL             Build URL
 		 *
 		 * @return  void
 		 *
@@ -81,134 +82,44 @@
 		 */
 		public function sendBuildReportErrorSlack($cloudinaryName, $cloudinaryApiKey, $cloudinaryApiSecret, $githubRepository, $githubPRNo, $slackWebhook, $slackChannel, $buildURL = '')
 		{
-			$errorSelenium = true;
-			$reportError = false;
-			$reportFile = 'selenium.log';
-			$errorLog = 'Selenium log:' . chr(10) . chr(10);
-			
-			// Loop through Codeception snapshots
-			if (file_exists('_output') && $handler = opendir('_output'))
+			$directories = glob('tests/_output/*' , GLOB_ONLYDIR);
+
+			foreach ($directories as $directory)
 			{
-				
-				
-				$reportFile = '_output/report.tap.log';
-				$errorLog = 'Codeception tap log:' . chr(10) . chr(10);
-				$errorSelenium = false;
-				$this->_exec($reportFile);
-			}
-			
-			if (file_exists($reportFile))
-			{
-				if ($reportFile)
-				{
-					$errorLog .= file_get_contents($reportFile, null, null, 15);
-				}
-				
-				if (!$errorSelenium)
-				{
-					$handler = opendir('_output');
-					$errorImage = '';
-					
-					while (!$reportError && false !== ($errorSnapshot = readdir($handler)))
-					{
-						// Avoid sending system files or html files
-						if (!('png' === pathinfo($errorSnapshot, PATHINFO_EXTENSION)))
-						{
-							continue;
-						}
-						
-						$reportError = true;
-						
-						Cloudinary::config(
-							array(
-								'cloud_name' => $cloudinaryName,
-								'api_key' => $cloudinaryApiKey,
-								'api_secret' => $cloudinaryApiSecret
-							)
-						);
-						
-						$result = \Cloudinary\Uploader::upload(realpath(dirname(__FILE__) . '/_output/' . $errorSnapshot));
-						
-						$this->say($errorSnapshot . 'Image sent');
-						
-						$errorLog .=  $result['secure_url'] ;
-					}
-				}
-				
-				
-				if ($reportError || $errorSelenium)
-				{
-					// Sends the error report to Slack
-					$reportingTask = $this->taskReporting()
-						->setCloudinaryCloudName($cloudinaryName)
-						->setCloudinaryApiKey($cloudinaryApiKey)
-						->setCloudinaryApiSecret($cloudinaryApiSecret)
-						->setGithubRepo($githubRepository)
-						->setGithubPR($githubPRNo)
-						->setBuildURL($buildURL . 'display/redirect')
-						->setSlackWebhook($slackWebhook)
-						->setSlackChannel($slackChannel)
-						->setTapLog($errorLog);
-					
-					if (!empty($errorImage))
-					
-					{
-						$reportingTask->setImagesToUpload($errorLog)
-							->publishCloudinaryImages();
-					}
-					
-					$reportingTask->publishBuildReportToSlack()
-						->run()
-						->stopOnFail();
-				}
+				$this->sendBuildReportErrorSlackDirectory($directory, $cloudinaryName, $cloudinaryApiKey, $cloudinaryApiSecret, $githubRepository, $githubPRNo, $slackWebhook, $slackChannel, $buildURL);
 			}
 		}
-		
-		/**
-		 * Sends the build report error back to Slack
-		 *
-		 * @param   string $cloudinaryName Cloudinary cloud name
-		 * @param   string $cloudinaryApiKey Cloudinary API key
-		 * @param   string $cloudinaryApiSecret Cloudinary API secret
-		 * @param   string $githubRepository GitHub repository (owner/repo)
-		 * @param   string $githubPRNo GitHub PR #
-		 * @param   string $slackWebhook Slack Webhook URL
-		 * @param   string $slackChannel Slack channel
-		 * @param   string $buildURL Build URL
-		 *
-		 * @return  void
-		 *
-		 * @since   5.1
-		 */
-		public function sendSystemBuildReportErrorSlack($cloudinaryName, $cloudinaryApiKey, $cloudinaryApiSecret, $githubRepository, $githubPRNo, $slackWebhook, $slackChannel, $buildURL = '')
+
+		public function sendBuildReportErrorSlackDirectory($directory, $cloudinaryName, $cloudinaryApiKey, $cloudinaryApiSecret, $githubRepository, $githubPRNo, $slackWebhook, $slackChannel, $buildURL = '')
 		{
 			$errorSelenium = true;
 			$reportError = false;
-			$reportFile = 'selenium.log';
-			$errorLog = 'Selenium log:' . chr(10) . chr(10);
-			
+			$reportFile = $directory . '/selenium.log';
+			$errorLog = 'Selenium log in ' . $directory . ':' . chr(10). chr(10);
+			$this->say('Starting to Prepare Build Report');
+
+			$this->say('Exploring folder ' . $directory . ' for error reports');
 			// Loop through Codeception snapshots
-			if (file_exists('_output') && $handler = opendir('_output'))
+			if (file_exists($directory) && $handler = opendir($directory))
 			{
-				$reportFile = '_output';
-				$errorLog = 'Codeception tap log:' . chr(10) . chr(10);
+				$reportFile = $directory . '/report.tap.log';
+				$errorLog = 'Codeception tap log in ' . $directory . ':' . chr(10). chr(10);
 				$errorSelenium = false;
-				$this->_exec($reportFile);
 			}
-			
+
 			if (file_exists($reportFile))
 			{
-				
+				$this->say('Report File Prepared');
 				if ($reportFile)
 				{
 					$errorLog .= file_get_contents($reportFile, null, null, 15);
 				}
-				
+
 				if (!$errorSelenium)
 				{
-					$handler = opendir('_output');
+					$handler = opendir($directory);
 					$errorImage = '';
-					
+
 					while (!$reportError && false !== ($errorSnapshot = readdir($handler)))
 					{
 						// Avoid sending system files or html files
@@ -216,29 +127,16 @@
 						{
 							continue;
 						}
-						
+
 						$reportError = true;
-						
-						Cloudinary::config(
-							array(
-								'cloud_name' => $cloudinaryName,
-								'api_key' => $cloudinaryApiKey,
-								'api_secret' => $cloudinaryApiSecret
-							)
-						);
-						
-						$result = \Cloudinary\Uploader::upload(realpath(dirname(__FILE__) . '/_output/' . $errorSnapshot));
-						
-						$this->say($errorSnapshot . 'Image sent');
-						
-						$errorLog .=  $result['secure_url'];
-						
+						$errorImage = $directory . '/' . $errorSnapshot;
 					}
 				}
-				
+
 				if ($reportError || $errorSelenium)
 				{
 					// Sends the error report to Slack
+					$this->say('Sending Error Report');
 					$reportingTask = $this->taskReporting()
 						->setCloudinaryCloudName($cloudinaryName)
 						->setCloudinaryApiKey($cloudinaryApiKey)
@@ -249,13 +147,13 @@
 						->setSlackWebhook($slackWebhook)
 						->setSlackChannel($slackChannel)
 						->setTapLog($errorLog);
-					
+
 					if (!empty($errorImage))
 					{
-						$reportingTask->setImagesToUpload($errorLog)
+						$reportingTask->setImagesToUpload($errorImage)
 							->publishCloudinaryImages();
 					}
-					
+
 					$reportingTask->publishBuildReportToSlack()
 						->run()
 						->stopOnFail();
