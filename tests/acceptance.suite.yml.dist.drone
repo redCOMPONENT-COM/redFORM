@@ -49,7 +49,7 @@ modules:
             joomla folder: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation where tests are executed in the apache server
             joomla folder local: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation in the local machine (where Codeception is running)
         AcceptanceHelper:
-            packages url: 'http://php/tests/releases/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
+            install packages url: 'http://php/tests/releases/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
             packages previous: 'http://php/tests/extension/previous/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
             extension folder: '%build_path%/'      # Path on the CI for Extension
             install demo data: 'No'                # If you wish to Install the Extension Demo Data then Keep this to Yes
