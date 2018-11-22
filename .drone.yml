@@ -43,6 +43,11 @@ pipeline:
     - npm install joomla-gulp --save-dev
     - gulp release --skip-version
     - cd ..
+    - cd tests
+    - cd releases
+    - ls
+    - pwd
+    - cd ../..
     # Codeception setup
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
     # Test setup
