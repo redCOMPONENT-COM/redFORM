@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9ee2f19b79b9ed041bfc3e1f4915475e",
+    "content-hash": "60d7e6d5eecc5f884f49e52e5e354fcc",
     "packages": [],
     "packages-dev": [
         {
@@ -1307,24 +1307,30 @@
         },
         {
             "name": "joomla-projects/joomla-browser",
-            "version": "v3.8.1",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/joomla-projects/joomla-browser.git",
-                "reference": "9dea2d39e0b98c86097001652b9255f2f726d1d7"
+                "reference": "b3099f181ce79b0dedd92dc14cf03388bb6c6c67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joomla-projects/joomla-browser/zipball/9dea2d39e0b98c86097001652b9255f2f726d1d7",
-                "reference": "9dea2d39e0b98c86097001652b9255f2f726d1d7",
+                "url": "https://api.github.com/repos/joomla-projects/joomla-browser/zipball/b3099f181ce79b0dedd92dc14cf03388bb6c6c67",
+                "reference": "b3099f181ce79b0dedd92dc14cf03388bb6c6c67",
                 "shasum": ""
             },
             "require": {
-                "consolidation/robo": "~1",
-                "php": ">=5.5.9"
+                "consolidation/robo": "^1",
+                "php": ">=5.5.9",
+                "symfony/console": "~3|~4",
+                "symfony/filesystem": "~3|~4",
+                "symfony/finder": "~3|~4",
+                "symfony/process": "~3|~4",
+                "symfony/yaml": "~3|~4"
             },
             "require-dev": {
-                "joomla-projects/joomla-testing-robo": "~1.0"
+                "codeception/codeception": "~2.4",
+                "joomla-projects/joomla-testing-robo": "dev-container-test"
             },
             "type": "library",
             "autoload": {
@@ -1354,7 +1360,7 @@
                 "acceptance testing",
                 "joomla"
             ],
-            "time": "2018-03-19T10:31:50+00:00"
+            "time": "2018-11-01T13:11:06+00:00"
         },
         {
             "name": "joomla-projects/joomla-testing",
@@ -3017,16 +3023,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
                 "shasum": ""
             },
             "require": {
@@ -3060,7 +3066,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2018-11-20T15:27:04+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -4550,6 +4556,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "phing/phing": 20,
+        "joomla-projects/joomla-browser": 20,
         "joomla-projects/joomla-testing-robo": 20,
         "joomla-projects/joomla-testing": 20,
         "flow/jsonpath": 20,
