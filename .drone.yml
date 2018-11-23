@@ -53,6 +53,9 @@ pipeline:
     # Creating first clone for tests setup
     - mkdir -p tests/$tests_suite/joomla-cms
     - rsync -a tests/joomla-cms/ tests/$tests_suite/joomla-cms
+    - cd test
+    - cd 00-setup
+    - ls
     - pwd
     # Creates the database (required because of the Codeception Db module)
     - mysql -u root -proot -h db -e "CREATE DATABASE $tests_db"
