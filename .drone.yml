@@ -86,8 +86,8 @@ pipeline:
     image: redwebaps/testbox-chromedriver:2.38
     environment:
     - tests_user=admin
-    - tests_suite=01-visit-patterns
-    - tests_db=visitpatterns
+    - tests_suite=01-administrator
+    - tests_db=administrator
     - build_path=/drone/src/github.com/${DRONE_REPO}
     - output_append=-01-administrator
     commands:
