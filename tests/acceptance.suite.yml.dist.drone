@@ -21,7 +21,6 @@ modules:
         - JoomlaBrowser
         - AcceptanceHelper
         - Asserts
-        - DbHelper
     config:
         JoomlaBrowser:
             # url: 'http://php/tests/%tests_suite%/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
