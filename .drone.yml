@@ -75,7 +75,7 @@ pipeline:
     # Final DB dump with full Joomla/extension setup
     - rsync -a --delete tests/$tests_suite/joomla-cms/ joomla-cms
     - pwd
-    - cd test
+    - cd tests
     - ls
     - cd joomla-cms
     - ls
