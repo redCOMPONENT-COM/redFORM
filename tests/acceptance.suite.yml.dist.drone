@@ -31,6 +31,7 @@ modules:
             capabilities:
               chromeOptions:
                 args: ["--headless", "--disable-gpu", "--no-sandbox", "window-size=1920x1080"]
+              unexpectedAlertBehaviour: 'accept'
             username: '%tests_user%'               # UserName for the Administrator
             password: 'admin'                      # Password for the Administrator
             database host: 'db'                    # MySQL Server host name / address
@@ -49,5 +50,5 @@ modules:
             install packages url: 'http://php/build/releases/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
             packages previous: 'http://php/tests/extension/previous/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
             extension folder: '%build_path%/'      # Path on the CI for Extension
-            install demo data: 'No'                # If you wish to Install the Extension Demo Data then Keep this to Yes
+            install demo data: 'Yes'                # If you wish to Install the Extension Demo Data then Keep this to Yes
 error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
