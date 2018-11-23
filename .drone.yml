@@ -21,11 +21,11 @@ pipeline:
     image: redwebaps/testbox-chromedriver:2.38
     # pull: true
     environment:
-    - tests_user=admin
-    - tests_suite=00-setup
-    - tests_db=setup
-    - build_path=/drone/src/github.com/${DRONE_REPO}
-    - output_append=-00-a-setup
+    - $tests_user=admin
+    - $tests_suite=00-setup
+    - $tests_db=setup
+    - $build_path=/drone/src/github.com/${DRONE_REPO}
+    - $output_append=-00-a-setup
     commands:
     # Regular entry point
     - /entrypoint.sh &
