@@ -82,7 +82,7 @@
 		 */
 		public function sendBuildReportErrorSlack($cloudinaryName, $cloudinaryApiKey, $cloudinaryApiSecret, $githubRepository, $githubPRNo, $slackWebhook, $slackChannel, $buildURL = '')
 		{
-			$directories = glob('tests/_output/*' , GLOB_ONLYDIR);
+			$directories = glob('tests/./_output/*' , GLOB_ONLYDIR);
 
 			foreach ($directories as $directory)
 			{
