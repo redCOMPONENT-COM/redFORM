@@ -59,6 +59,7 @@ pipeline:
     - cd tests
     - cd 00-setup
     - ls
+    - cd ../..
     # Creates the database (required because of the Codeception Db module)
     - mysql -u root -proot -h db -e "CREATE DATABASE $tests_db"
     # Execution under uid 82 (www / www-data)
