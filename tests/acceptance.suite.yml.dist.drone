@@ -32,9 +32,10 @@ modules:
               chromeOptions:
                 args: ["--headless", "--disable-gpu"]
               unexpectedAlertBehaviour: 'accept'
-            username: '%tests_user%'               # UserName for the Administrator
+            # username: '%tests_user%'               # UserName for the Administrator
+            username: 'admin'               # UserName for the Administrator
             password: 'admin'                      # Password for the Administrator
-            database host: 'db'                    # MySQL Server host name / address
+            database host: 'localhost'                    # MySQL Server host name / address
             database user: 'root'                  # MySQL Server user ID, usually root
             database password: 'root'              # MySQL Server password, usually empty or root
             database name: '%tests_db%'            # DB Name, at the Server
