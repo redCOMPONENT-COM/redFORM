@@ -11,7 +11,6 @@
 # perform tests in browser using the WebDriver or PhpBrowser.
 # If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
-
 class_name: AcceptanceTester
 settings:
     webservice:
@@ -22,10 +21,15 @@ modules:
         - JoomlaBrowser
         - AcceptanceHelper
         - Asserts
+        - Db
+        - DbHelper
     config:
+        Db:
+            dsn: 'mysql:host=db;dbname=%tests_db%'
+            user: 'root'
+            password: 'root'
         JoomlaBrowser:
             url: 'http://php/tests/%tests_suite%/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
-            # url: 'http://php/tests/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
             browser: 'chrome'
             window_size: 1920x1080
             restart: true
@@ -34,17 +38,16 @@ modules:
               chromeOptions:
                 args: ["--headless", "--disable-gpu", "--no-sandbox", "window-size=1920x1080"]
             username: '%tests_user%'               # UserName for the Administrator
-            # username: 'admin'               # UserName for the Administrator
             password: 'admin'                      # Password for the Administrator
-            database host: 'db'             # place where the Application is Hosted #server Address
+            database host: 'db'                    # MySQL Server host name / address
             database user: 'root'                  # MySQL Server user ID, usually root
-            database password: 'root'                  # MySQL Server password, usually empty or root
+            database password: 'root'              # MySQL Server password, usually empty or root
             database name: '%tests_db%'            # DB Name, at the Server
             database type: 'mysqli'                # type in lowercase one of the options: MySQL\MySQLi\PDO
             database prefix: 'jos_'                # DB Prefix for tables
             install sample data: 'No'              # Do you want to Download the Sample Data Along with Joomla Installation, then keep it Yes
             sample data: 'Default English (GB) Sample Data'    # Default Sample Data
-            admin email: 'admin@mydomain.com'      # email Id of the Admin
+            admin email: 'admin@mydomain.com'      # Email Id of the Admin
             language: 'English (United Kingdom)'   # Language in which you want the Application to be Installed
             joomla folder: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation where tests are executed in the apache server
             joomla folder local: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation in the local machine (where Codeception is running)
