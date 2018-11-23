@@ -4,7 +4,7 @@ paths:
     log: /_output/output%output_append%
     data: /_data
     support: /_support
-    envs: _envs
+    envs: /_envs
 settings:
     bootstrap: _bootstrap.php
     colors: true
