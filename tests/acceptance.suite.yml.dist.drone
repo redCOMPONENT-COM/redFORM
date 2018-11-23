@@ -31,11 +31,9 @@ modules:
             capabilities:
               chromeOptions:
                 args: ["--headless", "--disable-gpu"]
-              unexpectedAlertBehaviour: 'accept'
-            # username: '%tests_user%'               # UserName for the Administrator
-            username: 'admin'               # UserName for the Administrator
+            username: '%tests_user%'               # UserName for the Administrator
             password: 'admin'                      # Password for the Administrator
-            database host: 'localhost'                    # MySQL Server host name / address
+            database host: 'db'                    # MySQL Server host name / address
             database user: 'root'                  # MySQL Server user ID, usually root
             database password: 'root'              # MySQL Server password, usually empty or root
             database name: '%tests_db%'            # DB Name, at the Server
@@ -45,11 +43,11 @@ modules:
             sample data: 'Default English (GB) Sample Data'    # Default Sample Data
             admin email: 'admin@mydomain.com'      # Email Id of the Admin
             language: 'English (United Kingdom)'   # Language in which you want the Application to be Installed
-            joomla folder: '/home/travis/build/redCOMPONENT-COM/redFORM/tests/joomla-cms/' # Path to Joomla installation where tests are executed in the apache server
+            joomla folder: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation where tests are executed in the apache server
+            joomla folder local: '%build_path%/tests/%tests_suite%/joomla-cms/' # Path to Joomla installation in the local machine (where Codeception is running)
         AcceptanceHelper:
             install packages url: 'http://php/build/releases/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
-            repo folder: '/home/travis/build/redCOMPONENT-COM/redFORM/' # Path to the Extension to be installed via Install from folder
-            folder: '/home/travis/build/redCOMPONENT-COM/redFORM/' # Path to the Extension to be installed via Install from folder
-            install demo data: 'Yes'              # If you wish to Download Demo Data for the Extension then Keep this to Yes
-            host: 'http://localhost/tests/joomla-cms'  #Something important
+            packages previous: 'http://php/tests/extension/previous/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
+            extension folder: '%build_path%/'      # Path on the CI for Extension
+            install demo data: 'No'                # If you wish to Install the Extension Demo Data then Keep this to Yes
 error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
