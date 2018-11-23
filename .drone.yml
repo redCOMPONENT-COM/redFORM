@@ -22,7 +22,7 @@ pipeline:
     # pull: true
     environment:
     - tests_user=admin
-    - $tests_suite=00-setup
+    - tests_suite=00-setup
     - tests_db=setup
     - build_path=/drone/src/github.com/${DRONE_REPO}
     - output_append=-00-a-setup
@@ -46,8 +46,10 @@ pipeline:
     # Codeception setup
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
     # Test setup
-    # - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done        # Comment if not using Joomla CMS cache
-    # - vendor/bin/robo tests:site-preparation 1 1
+    - cd tests
+    - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done        # Comment if not using Joomla CMS cache
+    - vendor/bin/robo tests:site-preparation 1 1
+    - cd ..
     # Ownership for uid 82
     - chown -R www-data:www-data .
     # Creating first clone for tests setup

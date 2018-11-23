@@ -321,7 +321,7 @@
 		{
 			$skipCleanup = false;
 			// Get Joomla Clean Testing sites
-			if (is_dir('tests/joomla-cms'))
+			if (is_dir('joomla-cms'))
 			{
 				if (!$cleanUp)
 				{
@@ -330,7 +330,7 @@
 				}
 				else
 				{
-					$this->taskDeleteDir('tests/joomla-cms')->run();
+					$this->taskDeleteDir('joomla-cms')->run();
 				}
 			}
 			if (!$skipCleanup)
@@ -341,14 +341,14 @@
 				* Use as $version value the latest tagged stable version at: https://github.com/joomla/joomla-cms/releases
 				*/
 				$version = '3.9.0';
-				$this->_exec("git clone -b $version --single-branch --depth 1 https://github.com/joomla/joomla-cms.git tests/joomla-cms");
-				$this->say("Joomla CMS ($version) site created at tests/joomla-cms");
+				$this->_exec("git clone -b $version --single-branch --depth 1 https://github.com/joomla/joomla-cms.git joomla-cms");
+				$this->say("Joomla CMS ($version) site created at joomla-cms");
 			}
 			// Optionally uses Joomla default htaccess file
 			if ($use_htaccess == 1)
 			{
-				$this->_copy('tests/joomla-cms/htaccess.txt', 'tests/joomla-cms/.htaccess');
-				$this->_exec('sed -e "s,# RewriteBase /,RewriteBase /tests/joomla-cms/,g" --in-place tests/joomla-cms/.htaccess');
+				$this->_copy('joomla-cms/htaccess.txt', 'joomla-cms/.htaccess');
+				$this->_exec('sed -e "s,# RewriteBase /,RewriteBase /joomla-cms/,g" --in-place joomla-cms/.htaccess');
 			}
 		}
 
