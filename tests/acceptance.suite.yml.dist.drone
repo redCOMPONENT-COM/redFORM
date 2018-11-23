@@ -21,6 +21,7 @@ modules:
         - JoomlaBrowser
         - AcceptanceHelper
         - Asserts
+        - DbHelper
     config:
         JoomlaBrowser:
             # url: 'http://php/tests/%tests_suite%/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
@@ -32,15 +33,13 @@ modules:
             capabilities:
               chromeOptions:
                 args: ["--headless", "--disable-gpu", "--no-sandbox", "window-size=1920x1080"]
-              unexpectedAlertBehaviour: 'accept'
             # username: '%tests_user%'               # UserName for the Administrator
             username: 'admin'               # UserName for the Administrator
             password: 'admin'                      # Password for the Administrator
-            database host: 'localhost'                    # MySQL Server host name / address
+            database host: 'db'                    # MySQL Server host name / address
             database user: 'root'                  # MySQL Server user ID, usually root
             database password: 'root'              # MySQL Server password, usually empty or root
-            # database name: '%tests_db%'            # DB Name, at the Server
-            database name: 'setup'            # DB Name, at the Server
+            database name: '%tests_db%'            # DB Name, at the Server
             database type: 'mysqli'                # type in lowercase one of the options: MySQL\MySQLi\PDO
             database prefix: 'jos_'                # DB Prefix for tables
             install sample data: 'No'              # Do you want to Download the Sample Data Along with Joomla Installation, then keep it Yes
@@ -53,5 +52,5 @@ modules:
             install packages url: 'http://php/build/releases/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
             packages previous: 'http://php/tests/extension/previous/'     # URL that points to the extension .zip package defined in your gulp-config.json file at the root of the repo
             extension folder: '%build_path%/'      # Path on the CI for Extension
-            install demo data: 'Yes'                # If you wish to Install the Extension Demo Data then Keep this to Yes
+            install demo data: 'No'                # If you wish to Install the Extension Demo Data then Keep this to Yes
 error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
