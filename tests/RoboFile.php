@@ -247,16 +247,43 @@
 					)
 				);
 		}
-		
-		public function runDrone($folder)
+
+		/**
+		 * Individual test folder execution
+		 *
+		 * @param   string   $folder  Folder to execute codecept run to
+		 * @param   boolean  $debug   Add debug to the parameters
+		 * @param   boolean  $steps   Add steps to the parameters
+		 *
+		 * @return  void
+		 * @since   5.6.0
+		 */
+		public function runDrone($folder, $debug = true, $steps = true)
 		{
-			$this->taskSeleniumStandaloneServer()
-				->setURL("http://localhost:4444")
-				->runSelenium()
-				->waitForSelenium()
-				->run()
-				->stopOnFail();
-			
+			$args = [];
+
+			if ($debug)
+			{
+				$args[] = '--debug';
+			}
+
+			if ($steps)
+			{
+				$args[] = '--steps';
+			}
+
+			$args = array_merge(
+				$args,
+				$this->defaultArgs
+			);
+
+			// Sets the output_append variable in case it's not yet
+			if (getenv('output_append') === false)
+			{
+				putenv('output_append=');
+			}
+
+
 			$this->_exec("vendor/bin/codecept build");
 			
 			$this->taskCodecept()

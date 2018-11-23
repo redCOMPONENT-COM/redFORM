@@ -97,10 +97,10 @@ pipeline:
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
     # Performs test
     - cd tests
-    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/03-CheckForWarningsAndNoticesCept.php 1 1'
-    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddAFieldCest.php 1 1'
-    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddAFormCest.php 1 1'
-    - su www-data -c 'vendor/bin/robo tests:run acceptance/administrator/AddASectionCest.php 1 1'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/03-CheckForWarningsAndNoticesCept.php 1 1'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/AddAFieldCest.php 1 1'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/AddAFormCest.php 1 1'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/AddASectionCest.php 1 1'
   slack:
     image: plugins/slack
     webhook: https://hooks.slack.com/services/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
