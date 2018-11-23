@@ -226,16 +226,6 @@
 		}
 
 		/**
-		 * Stops Selenium Standalone Server
-		 *
-		 * @return void
-		 */
-		public function killSelenium()
-		{
-			$this->_exec('curl http://localhost:4444/selenium-server/driver/?cmd=shutDownSeleniumServer');
-		}
-
-		/**
 		 * @param $githubToken
 		 * @param $repoOwner
 		 * @param $repo
