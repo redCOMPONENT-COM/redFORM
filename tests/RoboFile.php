@@ -289,7 +289,7 @@
 			$this->taskCodecept()
 				->arg('--tap')
 				->arg('--fail-fast')
-				->arg($folder)
+				->arg($folder . '/')
 				->run()
 				->stopOnFail();
 		}
