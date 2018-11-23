@@ -1,7 +1,7 @@
 actor: Tester
 paths:
     tests: .
-    log: ./_output
+    log: ./_output/output%output_append%
     data: ./_data
     support: ./_support
     envs: ./_envs
@@ -11,3 +11,5 @@ settings:
     memory_limit: 1024M
 groups:
     installation: [acceptance/01-InstallJoomlaCept.php, acceptance/02-InstallExtensionCept.php, acceptance/99-UninstallExtensionCept.php]
+params:
+- env
