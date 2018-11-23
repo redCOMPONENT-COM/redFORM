@@ -21,12 +21,12 @@ class AddAFieldCest
 			'tooltip' => $this->faker->bothify('Test text #####')
 		);
 
-//		$this->paramsEmailField = array(
-//			'name' => $this->faker->bothify('Email ?##?'),
-//			'field_header' => $this->faker->bothify('Email ?##?'),
-//			'fieldtype' => 'E-mail',
-//			'tooltip' => $this->faker->bothify('Test mail #####')
-//		);
+		$this->paramsEmailField = array(
+			'name' => $this->faker->bothify('Email ?##?'),
+			'field_header' => $this->faker->bothify('Email ?##?'),
+			'fieldtype' => 'E-mail',
+			'tooltip' => $this->faker->bothify('Test mail #####')
+		);
 	}
 	/**
 	 * @param AcceptanceTester $I
