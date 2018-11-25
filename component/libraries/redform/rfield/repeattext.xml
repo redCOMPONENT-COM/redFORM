@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="params">
+		<fieldset name="extra" label="extra">
+			<field name="placeholder" type="text" default="" label="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_LABEL"
+				   description="COM_REDFORM_FIELD_PARAMS_PLACEHOLDER_DESC"/>
+			<field name="field" type="redform.field"
+				   label="LIB_REDFORM_FIELD_REPEATTEXT_PARAMS_FIELD"
+				   description="LIB_REDFORM_FIELD_REPEATTEXT_PARAMS_FIELD_DESC"/>
+		</fieldset>
+	</fields>
+</form>

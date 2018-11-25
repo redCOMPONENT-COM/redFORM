@@ -718,7 +718,7 @@ class RdfAnswers
 		{
 			if ($field->published && !$this->isFieldDisabledByShowon($field))
 			{
-				if (!$field->validate())
+				if (!$field->validate($this->fields))
 				{
 					throw new RuntimeException($field->getError());
 				}
