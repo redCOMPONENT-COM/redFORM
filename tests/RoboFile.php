@@ -28,7 +28,8 @@
 			'--tap',
 			'--fail-fast'
 		];
-		/**
+
+    /**
 		 * Downloads and prepares a Joomla CMS site for testing
 		 *
 		 * @param   int $use_htaccess (1/0) Rename and enable embedded Joomla .htaccess file
@@ -62,7 +63,6 @@
 				$this->_exec('sed -e "s,# RewriteBase /,RewriteBase /tests/joomla-cms/,g" --in-place joomla-cms/.htaccess');
 			}
 		}
-
 
 		/**
 		 * Sends the build report error back to Slack
@@ -360,6 +360,7 @@
 				$version = '3.9.0';
 				$this->_exec("git clone -b $version --single-branch --depth 1 https://github.com/joomla/joomla-cms.git joomla-cms");
 				$this->say("Joomla CMS ($version) site created at joomla-cms");
+
 			}
 			// Optionally uses Joomla default htaccess file
 			if ($use_htaccess == 1)
@@ -368,7 +369,7 @@
 				$this->_exec('sed -e "s,# RewriteBase /,RewriteBase /joomla-cms/,g" --in-place joomla-cms/.htaccess');
 			}
 		}
-
+  
 		/**
 		 * Function to run unit tests
 		 *

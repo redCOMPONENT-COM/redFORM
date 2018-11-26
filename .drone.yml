@@ -94,6 +94,7 @@ pipeline:
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator 1 1'
+
   slack:
     image: plugins/slack
     webhook: https://hooks.slack.com/services/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
