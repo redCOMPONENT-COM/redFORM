@@ -25,6 +25,7 @@ class AddAFieldSteps extends Adminredform
 	{
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
+		$I->see('agjsgjasg');
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 		$I->click(AddAFieldPage::$newButton);
 		$I->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
