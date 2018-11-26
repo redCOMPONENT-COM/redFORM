@@ -71,9 +71,9 @@ pipeline:
     - output_append=-00-b-setup-stages
     commands:
     # Final DB dump with full Joomla/extension setup
-    - rsync -a --delete tests/$tests_suite/joomla-cms/ joomla-cms
-    - sed -i "s/db = '$tests_db'/db = 'tests_db'/g" tests/joomla-cms/configuration.php
-    - sed -i "s,$tests_suite/joomla-cms/,joomla-cms/,g" tests/joomla-cms/configuration.php
+    - rsync -a --delete tests/$tests_suite/joomla-cms/ $tests_suite/joomla-cms
+    - sed -i "s/db = '$tests_db'/db = 'tests_db'/g" tests/$tests_suite/joomla-cms/configuration.php
+    - sed -i "s,$tests_suite/joomla-cms/,joomla-cms/,g" tests/$tests_suite/joomla-cms/configuration.php
     - mysqldump -u root -proot -h db $tests_db > tests/dbdump.sql.tmp
     # Stages setup
     - sh tests/drone/setup-stages.sh "administrator"    "01-administrator"
