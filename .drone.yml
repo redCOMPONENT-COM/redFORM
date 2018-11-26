@@ -37,7 +37,7 @@ pipeline:
     - while [ ! -f tests/.cache.npm.tmp ]; do sleep 1; done               # Comment if not using npm cache
     #- npm install                                                       # Uncomment if not using npm cache
     # redFORM installer release
-    - while [ ! -f tests/.cache.composer.library.tmp ]; do sleep 1; done  # Comment if not using composer cache for libraries
+    # - while [ ! -f tests/.cache.composer.library.tmp ]; do sleep 1; done  # Comment if not using composer cache for libraries
     - mv build/gulp-config.json.dist build/gulp-config.json
     - cd build
     # - npm install joomla-gulp --save-dev
