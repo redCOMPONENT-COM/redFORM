@@ -18,14 +18,15 @@ modules:
         - AcceptanceHelper
         - Asserts
         - Db
+        - DbHelper
     config:
         Db:
             dsn: 'mysql:host=db;dbname=%tests_db%'
             user: 'root'
             password: 'root'
         JoomlaBrowser:
-            # url: 'http://php/tests/%tests_suite%/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
-            url: 'http://php/tests/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
+            url: 'http://php/tests/%tests_suite%/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
+            # url: 'http://php/tests/joomla-cms'     # the url that points to the joomla installation at /tests/system/joomla-cms
             browser: 'chrome'
             window_size: 1920x1080
             restart: true
@@ -33,8 +34,8 @@ modules:
             capabilities:
               chromeOptions:
                 args: ["--headless", "--disable-gpu", "--no-sandbox", "window-size=1920x1080"]
-            # username: '%tests_user%'               # UserName for the Administrator
-            username: 'admin'               # UserName for the Administrator
+            username: '%tests_user%'               # UserName for the Administrator
+            # username: 'admin'               # UserName for the Administrator
             password: 'admin'                      # Password for the Administrator
             database host: 'db'                    # MySQL Server host name / address
             database user: 'root'                  # MySQL Server user ID, usually root
