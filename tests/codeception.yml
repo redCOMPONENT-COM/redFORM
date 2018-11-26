@@ -1,7 +1,7 @@
 actor: Tester
 paths:
     tests: .
-    log: ./_output/output%output_append%
+    log: /_output/output%output_append%
     data: ./_data
     support: ./_support
     envs: ./_envs
