@@ -89,7 +89,7 @@ class RedformModelSections extends RModelList
 			->from('#__rwf_section as obj');
 
 		// Filter search
-		$search = $this->getState('filter.search_fields');
+		$search = $this->getState('filter.search_sections');
 
 		if (!empty($search))
 		{
