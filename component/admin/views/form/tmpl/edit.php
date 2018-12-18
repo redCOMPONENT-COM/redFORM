@@ -75,6 +75,14 @@ $isNew = (int) $this->item->id <= 0;
 
 					var sortableList = new $.JSortableList('#fieldList tbody','fieldsForm','asc' , '<?php echo $tableSortLink; ?>','','false');
 				});
+
+				$('#fields').on('keydown', '.js-enter-submits', function(event) {
+					// Key is enter?
+					if (event.which === 13) {
+						// Submit parent form
+						$(this).closest("form").submit();
+					}
+				})
 			});
 		})(jQuery);
 	</script>
