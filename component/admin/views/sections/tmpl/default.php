@@ -33,7 +33,7 @@ if ($saveOrder)
 		array(
 			'view' => $this,
 			'options' => array(
-				'filterButton' => true,
+				'filterButton' => false,
 				'filtersHidden' => false,
 				'searchField' => 'search_sections',
 				'searchFieldSelector' => '#filter_search_sections',

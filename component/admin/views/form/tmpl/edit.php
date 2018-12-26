@@ -71,7 +71,13 @@ $isNew = (int) $this->item->id <= 0;
 						"selector": false, "title": "", "trigger": "hover focus", "delay": 0, "container": false});
 
 					// Auto submit search fields after loading AJAX
-					$('.js-enter-submits').enterSubmits();
+					$('.fields-content .js-enter-submits').keydown(function(event) {
+						// Key is enter?
+						if (event.which === 13) {
+							event.preventDefault();
+							$(this).closest("form").submit();
+						}
+					});
 
 					var sortableList = new $.JSortableList('#fieldList tbody','fieldsForm','asc' , '<?php echo $tableSortLink; ?>','','false');
 				});
