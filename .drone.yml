@@ -2,7 +2,7 @@ pipeline:
   00-cache:
     group: 00-setup
     image: redwebaps/redform-cache:dev
-    pull: true
+    # pull: true
     commands:
     # redFORM Composer cache
     - mv /opt/cache/redFORM/vendor tests
@@ -30,12 +30,12 @@ pipeline:
     # Regular entry point
     - /entrypoint.sh &
     # Composer setup
-    # - while [ ! -f tests/.cache.composer.tmp ]; do sleep 1; done          # Comment if not using composer cache
+    - while [ ! -f tests/.cache.composer.tmp ]; do sleep 1; done            # Comment if not using composer cache
     - composer config -g github-oauth.github.com 6f8f19c330a0f899458e4b0670824deb8cdfe391
-    #- composer install --prefer-dist                                    # Uncomment if not using composer cache
+    #- composer install --prefer-dist                                       # Uncomment if not using composer cache
     # NPM setup
-    - while [ ! -f tests/.cache.npm.tmp ]; do sleep 1; done               # Comment if not using npm cache
-    #- npm install                                                       # Uncomment if not using npm cache
+    - while [ ! -f tests/.cache.npm.tmp ]; do sleep 1; done                 # Comment if not using npm cache
+    #- npm install                                                          # Uncomment if not using npm cache
     # redFORM installer release
     # - while [ ! -f tests/.cache.composer.library.tmp ]; do sleep 1; done  # Comment if not using composer cache for libraries
     - mv build/gulp-config.json.dist build/gulp-config.json
@@ -46,7 +46,7 @@ pipeline:
     # Codeception setup
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
     # Test setup
-    - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done        # Comment if not using Joomla CMS cache
+    - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done          # Comment if not using Joomla CMS cache
     - cd tests
     - vendor/bin/robo tests:site-preparation 1 1
     - cd ..
@@ -79,6 +79,7 @@ pipeline:
     - mysqldump -u root -proot -h db $tests_db > tests/dbdump.sql.tmp
     # Stages setup
     - sh tests/drone/setup-stages.sh "administrator"    "01-administrator"
+
   01-administrator:
     group: tests
     image: redwebaps/testbox-chromedriver:2.38
@@ -117,6 +118,7 @@ pipeline:
     - vendor/bin/robo send:build-report-error-slack redcomponent 365447364384436 Q94UM5kjZkZIrau8MIL93m0dN6U "$CI_REPO" "$CI_PULL_REQUEST" "https://hooks.slack.com/services/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" "#redform" "$CI_BUILD_URL"
     when:
       status: [ failure ]
+
 services:
   db:
     image: mysql/mysql-server:5.7
@@ -130,5 +132,6 @@ services:
     environment:
     - WEB_DOCUMENT_ROOT=/drone/src/github.com/${DRONE_REPO}
     - JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK=1
+
 branches:
   exclude: [ crowdin ]
