@@ -655,9 +655,11 @@ class RdfRfield extends JObject
 	/**
 	 * Check that data is valid
 	 *
+	 * @param   RdfRfield[]  $fields  all fields with value
+	 *
 	 * @return boolean
 	 */
-	public function validate()
+	public function validate($fields)
 	{
 		$data = $this->load();
 

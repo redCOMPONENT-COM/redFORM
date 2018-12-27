@@ -27,7 +27,7 @@
 				})
 				.done(function(response){
 					if (!response.success) {
-						alert(Joomla.JText._('LIB_REDFORM_AJAX_SUBMIT_ERROR'));
+						alert(response.message);
 
 						return;
 					}
