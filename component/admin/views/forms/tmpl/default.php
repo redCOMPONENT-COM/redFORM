@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 JHtml::_('rbootstrap.tooltip', '.hasToolTip');
@@ -102,6 +104,7 @@ $saveOrder = $listOrder == 'ordering';
 				<tbody>
 				<?php foreach ($this->items as $i => $item): ?>
 					<?php
+					$entity = RdfEntityForm::load($item->id);
 					$canChange = 1;
 					$canEdit = 1;
 					$canCheckin = 1;
@@ -121,6 +124,10 @@ $saveOrder = $listOrder == 'ordering';
 							<a href="<?php echo JRoute::_('index.php?option=com_redform&task=form.edit&id=' . $item->id); ?>">
 								<?php echo $this->escape($item->formname); ?>
 							</a>
+							<?php if (!$entity->hasEmailContactField()): ?>
+								<i class="icon icon-warning-sign" style="color:darkorange" data-toggle="tooltip"
+								   title="<?php echo Text::_('COM_REDFORM_FORM_MISSING_EMAIL_CONTACT_FIELD') ?>"></i>
+							<?php endif; ?>
 						</td>
 						<td>
 							<?php

@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 // HTML helpers
@@ -20,7 +22,13 @@ $action = JRoute::_('index.php?option=com_redform&view=form');
 $input = JFactory::getApplication()->input;
 $tab = $input->getString('tab');
 $isNew = (int) $this->item->id <= 0;
+$showEmailNotice = false;
 
+if (!$isNew)
+{
+	$formEntity = RdfEntityForm::load($this->item->id);
+	$showEmailNotice = !$formEntity->hasEmailContactField();
+}
 ?>
 <?php if ($this->item->id) :
 	$tableSortLink = 'index.php?option=com_redform&task=formfields.saveOrderAjax&tmpl=component';
@@ -125,6 +133,13 @@ $isNew = (int) $this->item->id <= 0;
 	</li>
 	<?php endif; ?>
 </ul>
+
+<?php if ($showEmailNotice): ?>
+	<div class="alert alert-warning alert-dismissible" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<?php echo Text::_('COM_REDFORM_FORM_MISSING_EMAIL_CONTACT_FIELD'); ?>
+	</div>
+<?php endif; ?>
 <form action="<?php echo $action; ?>" method="post" name="adminForm" id="adminForm"
       class="form-validate form-horizontal">
 <div class="tab-content">

@@ -204,6 +204,26 @@ class RdfEntityForm extends RdfEntityBase
 	}
 
 	/**
+	 * Check if form has an email field with notification enabled
+	 *
+	 * @return boolean
+	 */
+	public function hasEmailContactField()
+	{
+		$fields = $this->getFormFields();
+
+		foreach ($fields as $field)
+		{
+			if ($field->fieldtype == 'email' && $field->getParam('notify', 1))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Check if form has fields in multiple sections
 	 *
 	 * @return boolean
