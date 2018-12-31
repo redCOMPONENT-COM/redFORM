@@ -9,8 +9,6 @@ use Redform\Plugin\AbstractReplaceconditionPlugin;
 
 defined('_JEXEC') or die;
 
-jimport('joomla.plugin.plugin');
-
 /**
  * redFORM Selected Replace condition plugin
  *

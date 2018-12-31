@@ -9,8 +9,6 @@ use Redform\Plugin\AbstractReplaceconditionPlugin;
 
 defined('_JEXEC') or die;
 
-jimport('joomla.plugin.plugin');
-
 /**
  * redFORM Contains Replace condition plugin
  *
@@ -47,7 +45,7 @@ class PlgRedform_ReplaceconditionContains extends AbstractReplaceconditionPlugin
 			throw new \InvalidArgumentException('Invalid argument for contains condition');
 		}
 
-		$fieldId = substr($condition[1], strlen('field_'));
+		$fieldId = (int) substr($condition[1], strlen('field_'));
 
 		$value = $answers->getFieldAnswer($fieldId);
 

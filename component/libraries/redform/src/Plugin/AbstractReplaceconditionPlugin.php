@@ -27,7 +27,7 @@ abstract class AbstractReplaceconditionPlugin extends \JPlugin
 	/**
 	 * Add supported condition(s)
 	 *
-	 * @param   []  $conditions  conditions
+	 * @param   array  $conditions  conditions
 	 *
 	 * @return void
 	 */
