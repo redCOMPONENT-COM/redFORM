@@ -42,6 +42,8 @@ class PlgRedform_ReplaceconditionIsset extends AbstractReplaceconditionPlugin
 			return;
 		}
 
+		$isValid = false;
+
 		if (!strstr($condition[1], 'field_'))
 		{
 			throw new \InvalidArgumentException('Invalid argument for isset condition');
@@ -53,10 +55,12 @@ class PlgRedform_ReplaceconditionIsset extends AbstractReplaceconditionPlugin
 		{
 			if ($field->fieldId == $fieldId)
 			{
-				return true;
+				$isValid = true;
+
+				break;
 			}
 		}
 
-		return false;
+		return;
 	}
 }

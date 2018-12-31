@@ -56,6 +56,6 @@ class PlgRedform_ReplaceconditionSelected extends AbstractReplaceconditionPlugin
 			return false;
 		}
 
-		return in_array($condition[2], $value);
+		$isValid = in_array($condition[2], $value);
 	}
 }

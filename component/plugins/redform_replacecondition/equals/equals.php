@@ -51,6 +51,6 @@ class PlgRedform_ReplaceconditionEquals extends AbstractReplaceconditionPlugin
 
 		$value = $answers->getFieldAnswer($fieldId);
 
-		return $value == $condition[2];
+		$isValid = $value == $condition[2];
 	}
 }

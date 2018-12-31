@@ -43,7 +43,7 @@ RHelperAsset::load('redform-backend.css');
 		<?php $active = false; ?>
 	<?php endforeach; ?>
 
-	<li<?php echo ($active ? ' class="active"' : ''); ?>>
+	<li>
 		<a href="#tags-advanced" data-toggle="tab">
 			<strong><?php echo JText::_('COM_REDFORM_TAGS_ADVANCED'); ?></strong>
 		</a>
@@ -74,7 +74,7 @@ RHelperAsset::load('redform-backend.css');
 			</table>
 		</div>
 	<?php endforeach; ?>
-	<div class="tab-pane <?php echo ($active ? ' active' : ''); ?>" id="tags-advanced">
+	<div class="tab-pane" id="tags-advanced">
 		<h3>RDFIF</h3>
 
 		<p><?php echo JText::_('COM_REDFORM_TAGS_RDFIF_INTRO')?></p>
