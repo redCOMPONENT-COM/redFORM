@@ -874,7 +874,7 @@ class RdfAnswers
 	 *
 	 * @param   int  $field_id  field id
 	 *
-	 * @return string
+	 * @return mixed
 	 */
 	public function getFieldAnswer($field_id)
 	{
@@ -894,7 +894,7 @@ class RdfAnswers
 	 *
 	 * @param   int  $form_field_id  form field id
 	 *
-	 * @return string
+	 * @return mixed
 	 */
 	public function getFormFieldAnswer($form_field_id)
 	{

@@ -19,6 +19,8 @@ defined('_JEXEC') or die('Restricted access');
  */
 class RdfHelperLog
 {
+	static protected $logtime = array();
+
 	/**
 	 * Simple log
 	 *
@@ -54,5 +56,15 @@ class RdfHelperLog
 		}
 
 		return true;
+	}
+
+	public static function logTime($name, $label)
+	{
+		if (empty(self::$logtime[$name]))
+		{
+			self::$logtime[$name] = microtime(true);
+		}
+
+		self::simpleLog($label . ' ' . round(microtime(true) - self::$logtime[$name], 3));
 	}
 }

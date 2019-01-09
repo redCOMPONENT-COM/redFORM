@@ -35,13 +35,19 @@ RHelperAsset::load('redform-backend.css');
 <?php $active = true; ?>
 <ul class="nav nav-tabs" id="tagsTab">
 	<?php foreach ($this->items as $section => $tags): ?>
-	<li<?php echo ($active ? ' class="active"' : ''); ?>>
-		<a href="#tags<?php echo $section; ?>" data-toggle="tab">
-			<strong><?php echo JText::_($section); ?></strong>
-		</a>
-	</li>
+		<li<?php echo ($active ? ' class="active"' : ''); ?>>
+			<a href="#tags<?php echo $section; ?>" data-toggle="tab">
+				<strong><?php echo JText::_($section); ?></strong>
+			</a>
+		</li>
 		<?php $active = false; ?>
 	<?php endforeach; ?>
+
+	<li>
+		<a href="#tags-advanced" data-toggle="tab">
+			<strong><?php echo JText::_('COM_REDFORM_TAGS_ADVANCED'); ?></strong>
+		</a>
+	</li>
 </ul>
 
 <?php $active = true; ?>
@@ -68,4 +74,18 @@ RHelperAsset::load('redform-backend.css');
 			</table>
 		</div>
 	<?php endforeach; ?>
+	<div class="tab-pane" id="tags-advanced">
+		<h3>RDFIF</h3>
+
+		<p><?php echo JText::_('COM_REDFORM_TAGS_RDFIF_INTRO')?></p>
+		<h4><?php echo JText::_('COM_REDFORM_TAGS_RDFIF_TITLE_USAGE')?></h4>
+		<p>[rdfif:&lt;condition&gt;;&lt;operand&gt;(;&lt;operand&gt;)....]...[rdfendif]</p>
+		<p><?php echo JText::_('COM_REDFORM_TAGS_RDFIF_SUPPORTED_CONDITIONS')?></p>
+		<dl>
+			<?php foreach(RdfHelperTagsreplace::getConditions() as $condition):  ?>
+				<dt><?php echo $condition['usage'] ?></dt>
+				<dd><?php echo $condition['description'] ?></dd>
+			<?php endforeach; ?>
+		</dl>
+	</div>
 </div>
