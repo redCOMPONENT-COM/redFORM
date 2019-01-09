@@ -1,6 +1,10 @@
 <?php
 namespace Step\Acceptance;
 
+use Page\Acceptance\AddAFieldPage;
+use Page\Acceptance\AddAFormPage;
+use Page\Acceptance\AddASectionPage;
+
 class Adminredform extends \AcceptanceTester
 {
 	/**
@@ -9,83 +13,23 @@ class Adminredform extends \AcceptanceTester
 	 * @param   array  $params  section fields
 	 *
 	 * @return void
+	 *
+	 * @throws \Exception
 	 */
-	public function createSection($params)
+	public function createSectionIfNotExists($params, $scenario)
 	{
 		$I = $this;
-		$I->amOnPage('administrator/index.php?option=com_redform&view=sections');
-		$I->waitForText('Sections', 30, ['css' => 'H1']);
-		$I->click(['xpath' => '//button[contains(@onclick, "section.add")]']);
-		$I->waitForText('Name', 30, ['css' => 'label']);
-		$I->fillField(['id' => 'jform_name'], $params['name']);
+		$I->amOnPage(AddASectionPage::$URL);
+		$I->waitForText(AddASectionPage::$section, 30, AddASectionPage::$headPage);
 
-		if (!empty($params['class']))
-		{
-			$I->fillField(['id' => 'jform_class'], $params['class']);
-		}
-
-		if (!empty($params['description']))
-		{
-			$I->fillTinyMceEditorById('jform_description', $params['description']);
-		}
-
-		$I->click(['xpath' => '//button[contains(@onclick, "section.save")]']);
-	}
-
-	/**
-	 * Create a section
-	 *
-	 * @param   array  $params  section fields
-	 *
-	 * @return void
-	 */
-	public function createSectionIfNotExists($params)
-	{
-		$I = $this;
-		$I->amOnPage('administrator/index.php?option=com_redform&view=sections');
-		$I->waitForText('Sections', 30, ['css' => 'H1']);
-
-		if ($I->isElementPresent('//*[@id="table-items"]//td//*[contains(., "' . $params['name'] . '")]'))
+		$user = new AddASectionPage();
+		if ($I->isElementPresent($user->sectionItem($params['name'])))
 		{
 			return;
 		}
 
+		$I = new AddASectionSteps($scenario);
 		$I->createSection($params);
-	}
-
-	/**
-	 * Create a field
-	 *
-	 * @param   array  $params  section fields
-	 *
-	 * @return void
-	 */
-	public function createField($params)
-	{
-		$I = $this;
-		$I->amOnPage('administrator/index.php?option=com_redform&view=fields');
-		$I->waitForText('Fields', 30, ['css' => 'H1']);
-		$I->click(['xpath' => '//button[contains(@onclick, "field.add")]']);
-		$I->waitForText('Name', 30, ['css' => 'label']);
-		$I->fillField(['id' => 'jform_field'], $params['name']);
-		$I->selectOptionInChosen('Field type', $params['fieldtype']);
-
-		if (isset($params['field_header']))
-		{
-			$I->fillField(['id' => 'jform_field_header'], $params['field_header']);
-		}
-
-		if (isset($params['tooltip']))
-		{
-			$I->fillField(['id' => 'jform_tooltip'], $params['tooltip']);
-		}
-
-		if (isset($params['default']))
-		{
-			$I->fillField(['id' => 'jform_default'], $params['default']);
-		}
-
-		$I->click(['xpath' => '//button[contains(@onclick, "field.save")]']);
 	}
 
 	/**
@@ -94,18 +38,22 @@ class Adminredform extends \AcceptanceTester
 	 * @param   array  $params  section fields
 	 *
 	 * @return void
+	 *
+	 * @throws \Exception
 	 */
-	public function createFieldIfNotExists($params)
+	public function createFieldIfNotExists($params, $scenario)
 	{
 		$I = $this;
-		$I->amOnPage('administrator/index.php?option=com_redform&view=fields');
-		$I->waitForText('Fields', 30, ['css' => 'H1']);
+		$I->amOnPage(AddAFieldPage::$URL);
+		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 
-		if ($I->isElementPresent('//*[@id="fieldList"]//td//*[contains(., "' . $params['name'] . '")]'))
+		$user = new AddAFieldPage();
+		if ($I->isElementPresent($user->fieldList($params['name'])))
 		{
 			return;
 		}
 
+		$I = new AddAFieldSteps($scenario);
 		$I->createField($params);
 	}
 
@@ -115,59 +63,22 @@ class Adminredform extends \AcceptanceTester
 	 * @param   array  $params  section fields
 	 *
 	 * @return void
+	 *
+	 * @throws \Exception
 	 */
-	public function createFormIfNotExists($params)
+	public function createFormIfNotExists($params, $scenario)
 	{
 		$I = $this;
-		$I->amOnPage('administrator/index.php?option=com_redform&view=forms');
-		$I->waitForText('Forms', 30, ['css' => 'H1']);
+		$I->amOnPage(AddAFormPage::$url);
+		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 
-		if ($I->isElementPresent('//*[@id="formList"]//td//*[contains(., "' . $params['name'] . '")]'))
+		$user = new AddAFormPage();
+		if ($I->isElementPresent($user->formList($params['name'])))
 		{
 			return;
 		}
-
+		$I = new AddAFormSteps($scenario);
 		$I->createForm($params);
-	}
-
-	/**
-	 * Create a form
-	 *
-	 * @param   array  $params  section fields
-	 *
-	 * @return void
-	 */
-	public function createForm($params)
-	{
-		$I = $this;
-		$I->amOnPage('administrator/index.php?option=com_redform&view=forms');
-		$I->waitForText('Forms', 30, ['css' => 'H1']);
-		$I->click(['xpath' => '//button[contains(@onclick, "form.add")]']);
-		$I->waitForText('Form name', 30, ['css' => 'label']);
-		$I->fillField(['id' => 'jform_formname'], $params['name']);
-
-		$I->click(['xpath' => '//button[contains(@onclick, "form.save")]']);
-
-		if (!empty($params['fields']))
-		{
-			$I->waitForText('Item saved', 30, ['id' => 'system-message-container']);
-			$I->click('//*[@id="formList"]//td//*[contains(., "' . $params['name'] . '")]');
-			$I->waitForText('Form name', 30, ['css' => 'label']);
-
-			foreach ($params['fields'] as $fieldName)
-			{
-				$I->click(['xpath' => '//*[@id="formTabs"]/li/a[normalize-space(text()) = "Fields"]']);
-
-				$I->click(['xpath' => '//button[contains(@onclick, "formfield.add")]']);
-				$I->waitForText('Form field', 30, ['css' => 'h1']);
-				$I->selectOptionInChosenByIdUsingJs('jform_field_id', $fieldName);
-				$I->click(['xpath' => '//button[contains(@onclick, "formfield.save")]']);
-
-				$I->waitForText('Item saved', 30, ['id' => 'system-message-container']);
-			}
-		}
-
-		$I->click(['xpath' => '//button[contains(@onclick, "form.save")]']);
 	}
 
 	/**
@@ -177,6 +88,7 @@ class Adminredform extends \AcceptanceTester
 	 *
 	 * @return bool
 	 */
+
 	protected function isElementPresent($element)
 	{
 		$I = $this;

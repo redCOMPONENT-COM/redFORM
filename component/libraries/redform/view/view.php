@@ -7,6 +7,9 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 /**
@@ -102,5 +105,37 @@ abstract class RdfView extends RViewAdmin
 		{
 			RHelperAsset::load('joomla25_bs3.css');
 		}
+	}
+
+	/**
+	 * Execute and display a template script.
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  mixed  A string if successful, otherwise a Error object.
+	 */
+	public function display($tpl = null)
+	{
+		$title = !empty($this->getTitle()) ? 'redFORM: ' . $this->getTitle() : 'redFORM';
+		$this->setTitle($title);
+
+		return parent::display($tpl);
+	}
+
+
+	/**
+	 * Set document title
+	 *
+	 * @param   string  $title  title
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 */
+	protected function setTitle($title)
+	{
+		$app = Factory::getApplication();
+		Factory::getDocument()
+			->setTitle(strip_tags($title) . ' - ' . $app->get('sitename') . ' - ' . Text::_('JADMINISTRATION'));
 	}
 }
