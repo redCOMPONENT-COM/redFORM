@@ -58,7 +58,15 @@ gulp.task('clean:' + baseTask + ':media', function() {
 
 // Clean: plugins
 gulp.task('clean:' + baseTask + ':plugins', function() {
-	return del(config.wwwDir + '/plugins/content/redform', {force : true});
+	var paths = [];
+
+	fs.readdirSync(extPath + '/plugins').forEach(function(group){
+		fs.readdirSync(extPath + '/plugins/' + group).forEach(function(plugin){
+			paths.push(config.wwwDir + '/plugins/' + group + '/' + plugin);
+		});
+	});
+
+	return del(paths, {force : true})
 });
 
 // Copy

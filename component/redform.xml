@@ -91,11 +91,16 @@
 		<library name="redform"/>
 	</libraries>
 
-    <!-- Plugins to install -->
-    <plugins>
-        <plugin name="redform" group="content"/>
+	<!-- Plugins to install -->
+	<plugins>
+		<plugin name="redform" group="content"/>
 		<plugin name="redform" group="installer" />
-    </plugins>
+
+		<plugin group="redform_replacecondition" name="contains"/>
+		<plugin group="redform_replacecondition" name="equals"/>
+		<plugin group="redform_replacecondition" name="isset"/>
+		<plugin group="redform_replacecondition" name="selected"/>
+	</plugins>
 
 	<!-- Modules to install with the component -->
 	<modules>
