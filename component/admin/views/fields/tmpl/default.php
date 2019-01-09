@@ -80,7 +80,7 @@ if ($saveOrder)
 		<table class="table table-striped table-hover" id="fieldList">
 			<thead>
 			<tr>
-				<th width="10" align="center">
+				<th width="1%" align="center">
 					<?php echo '#'; ?>
 				</th>
 				<th width="1%" class="hidden-phone">
@@ -90,11 +90,14 @@ if ($saveOrder)
 				<th class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Field', 'f.field', $listDirn, $listOrder); ?>
 				</th>
-				<th width="18%" class="nowrap hidden-phone">
+				<th width="15%" class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_FIELD_HEADER', 'f.field_header', $listDirn, $listOrder); ?>
 				</th>
-				<th width="18%" class="nowrap hidden-phone">
+				<th width="15%" class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Type', 'f.fieldtype', $listDirn, $listOrder); ?>
+				</th>
+				<th class="nowrap hidden-phone">
+					<?php echo JText::_('COM_REDFORM_FORMS'); ?>
 				</th>
 				<th width="1%" class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_ID', 'f.id', $listDirn, $listOrder); ?>
@@ -129,6 +132,13 @@ if ($saveOrder)
 						</td>
 						<td>
 							<?php echo $this->escape($item->fieldtype); ?>
+						</td>
+						<td>
+							<?php foreach ($item->forms as $form): ?>
+							<div class="field__form">
+								<?= $form->formname ?>
+							</div>
+							<?php endforeach; ?>
 						</td>
 						<td>
 							<?php echo $item->id; ?>

@@ -142,4 +142,49 @@ class RedformModelFields extends RModelList
 
 		return $query;
 	}
+
+	/**
+	 * Gets an array of objects from the results of database query.
+	 *
+	 * @param   string   $query       The query.
+	 * @param   integer  $limitstart  Offset.
+	 * @param   integer  $limit       The number of records.
+	 *
+	 * @return  object[]  An array of results.
+	 *
+	 * @since   3.0
+	 * @throws  \RuntimeException
+	 */
+	protected function _getList($query, $limitstart = 0, $limit = 0)
+	{
+		$items = parent::_getList($query, $limitstart, $limit);
+
+		if (empty($items))
+		{
+			return $items;
+		}
+
+		$db = \JFactory::getDbo();
+
+		foreach ($items as &$field)
+		{
+			$query = $db->getQuery(true)
+				->select('form_id')
+				->from('#__rwf_form_field')
+				->where('field_id = ' . $field->id);
+
+			$db->setQuery($query);
+			$formIds = $db->loadColumn();
+
+			$field->forms = array_map(
+				function ($formId)
+				{
+					return RdfEntityForm::load($formId);
+				},
+				$formIds
+			);
+		}
+
+		return $items;
+	}
 }
