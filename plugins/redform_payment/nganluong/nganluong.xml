@@ -7,7 +7,7 @@
 	<authorUrl>www.redcomponent.com</authorUrl>
 	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-	<version>3.3.17</version>
+	<version>3.3.1</version>
 	<tag>##VERSION##</tag>
 	<description>PLG_REDFORM_PAYMENT_NGANLUONG_XML_DESCRIPTION</description>
 
@@ -23,6 +23,8 @@
 	<config>
 		<fields name="params">
 			<fieldset name="extra" label="extra">
+				<field name="gatewaylabel" type="text" default="Nganluong" label="NGANLUONG_GATEWAY_LABEL"
+					description="NGANLUONG_GATEWAY_LABEL_DESC"/>
 				<field name="nganluong_url_api" type="text" default="" label="NGANLUONG_URL_API"
 					description="NGANLUONG_URL_API_DESC"/>
 				<field name="nganluong_email" type="text" default="" label="NGANLUONG_EMAIL"
@@ -31,11 +33,19 @@
 					description="NGANLUONG_MERCHANT_ID_DESC"/>
 				<field name="nganluong_merchant_password" type="password" default="" label="NGANLUONG_MERCHANT_PASS"
 					description="NGANLUONG_MERCHANT_PASS_DESC"/>
+				<field name="payment_type" type="list"
+                       multiple="true"
+                       label="NGANLUONG_CHOOSE_PAYMENT_TYPE"
+                       description="NGANLUONG_CHOOSE_PAYMENT_TYPE_DESC">
+                    <option value="wallet">NGANLUONG_CHOOSE_PAYMENT_TYPE_WALLET</option>
+                    <option value="online">NGANLUONG_CHOOSE_PAYMENT_TYPE_ATM_ONLINE</option>
+                    <option value="ib">NGANLUONG_CHOOSE_PAYMENT_TYPE_INTERNET_BANKING</option>
+                    <option value="offline">NGANLUONG_CHOOSE_PAYMENT_TYPE_ATM_OFFLINE</option>
+                    <option value="office">NGANLUONG_CHOOSE_PAYMENT_TYPE_BANK_OFFICE</option>
+                    <option value="credit">NGANLUONG_CHOOSE_PAYMENT_TYPE_VISA_MASTER</option>
+                </field>
 			</fieldset>
 		</fields>
 	</config>
 
-	<updateservers>
-		<server type="extension" priority="1" name="redFORM update">http://updates.redcomponent.com/redform/plg_redform_payment_nganluong.xml</server>
-	</updateservers>
 </extension>

@@ -46,7 +46,7 @@ class PaymentNganluong extends  RdfPaymentHelper
 
 		if (empty($return_url))
 		{
-			$return_url = $this->getUrl('processing', $reference);
+			$return_url = $this->getUrl('notify', $reference);
 		}
 
 		if (empty($cancel_url))
@@ -57,13 +57,14 @@ class PaymentNganluong extends  RdfPaymentHelper
 		echo RdfLayoutHelper::render(
 			'notify',
 			array(
-				'action' => $this->getUrl('notify', $reference),
+				'action' => $this->getUrl('processing', $reference),
 				'details' => $details,
 				'request' => $request,
 				'price' => $price,
 				'params' => $this->params,
-				"return" => $return_url,
-				"cancel_return" => $cancel_url,
+				'return' => $return_url,
+				'cancel_return' => $cancel_url,
+				'payment_type' => $this->params->get('payment_type', array())
 			),
 			dirname(__DIR__) . '/layouts'
 		);
@@ -76,7 +77,7 @@ class PaymentNganluong extends  RdfPaymentHelper
 	 *
 	 * @return bool paid status
 	 */
-	public function notify()
+	public function processing()
 	{
 		$app = JFactory::getApplication();
 		$input = $app->input;
@@ -94,26 +95,22 @@ class PaymentNganluong extends  RdfPaymentHelper
 		$totalAmount = $price;
 		$items = array();
 		$paymentMethod = $input->post->get('option_payment');
-		$bankCode = @$input->post->get('bankcode');
+		$bankCode = $input->post->get('bankcode');
 		$orderCode = $this->getOrderID($details->id);
 		$paymentType = '';
 		$discountAmount = 0;
 		$orderDescription = '';
 		$taxAmount = 0;
 		$feeshipping = 0;
-		$returnUrl = $input->post->get('return_url');
-		$cancelUrl = urlencode($input->post->get('cancel_url'));
+		$returnUrl = urlencode($input->post->getString('return_url'));
+		$cancelUrl = urlencode($input->post->getString('cancel_url'));
 
-		$buyerFullname = $input->post->get('buyer_fullname');
-		$buyerEmail = $input->post->get('buyer_email');
-		$buyerMobile = $input->post->get('buyer_mobile');
-		$buyerAddress = '';
+		$billingInfo = $this->getBillingInfo($details->id);
 
-		$resp = array();
-		$resp[] = 'id:' . $orderCode;
-		$resp[] = 'bank: ' . $bankCode;
-		$resp[] = 'amount: ' . $price;
-		$resp[] = 'currency: ' . $details->currency;
+		$buyerFullname = $billingInfo->fullname;
+		$buyerEmail = $billingInfo->email;
+		$buyerMobile = $billingInfo->phone;
+		$buyerAddress = $billingInfo->address;
 
 		if (!empty($paymentMethod) && !empty($buyerEmail) && !empty($buyerMobile) && !empty($buyerFullname))
 		{
@@ -145,16 +142,66 @@ class PaymentNganluong extends  RdfPaymentHelper
 
 		if ($nlResult->error_code == '00')
 		{
-			$this->writeTransaction($reference, implode("\n", $resp), 'SUCCESS', 1);
-			$return = $app->redirect((string) $nlResult->checkout_url);
+			return $app->redirect((string) $nlResult->checkout_url);
 		}
 		else
 		{
-			$this->writeTransaction($reference, implode("\n", $resp), 'FAIL', 0);
-			$return = $nlResult->error_message;
+			$this->writeTransaction($reference, implode("\n", $resp), $nlResult->error_message, 0);
+			return $app->enqueueMessage($msg);
+		}
+	}
+
+	/**
+	 * handle the reception of notification
+	 *
+	 * @return bool paid status
+	 */
+	public function notify()
+	{
+		$app          = JFactory::getApplication();
+		$input        = $app->input;
+		$app          = JFactory::getApplication();
+		$input        = $app->input;
+		$reference    = $input->get('reference');
+		$details      = $this->getDetails($reference);
+		$token        = $input->getString('token');
+		$merchantId   = $this->params->get('nganluong_merchant_id');
+		$merchantPass = $this->params->get('nganluong_merchant_password');
+		$email        = $this->params->get('nganluong_email');
+		$url          = $this->params->get('nganluong_url_api');
+
+		$nlCheckout = new NL_CheckOutV3($merchantId, $merchantPass, $email, $url);
+		$nlResult   = $nlCheckout->GetTransactionDetail($token);
+		$orderCode  = $this->getOrderID($details->id);
+		$paid       = 0;
+
+		$resp   = array();
+		$resp[] = 'id:' . $nlResult->order_code;
+		$resp[] = 'bank: ' . $nlResult->bank_code;
+		$resp[] = 'amount: ' . $nlResult->total_amount;
+		$resp[] = 'currency: ' . $details->currency;
+
+		if ($nlResult)
+		{
+			$nlErrorCode         = (string) $nlResult->error_code;
+			$nlTransactionStatus = (string) $nlResult->transaction_status;
+			$dealId = JFactory::getSession()->get('deal_id');
+
+			if ($nlResult->error_code == '00' && $nlTransactionStatus == '00')
+			{
+				$paid = 1;
+				$this->writeTransaction($reference, implode("\n", $resp), 'SUCCESS', 1);
+				$this->updateDeal($dealId, "Won");
+			}
+			else
+			{
+				$paid = 0;
+				$this->writeTransaction($reference, implode("\n", $resp), 'FAIL', 0);
+				$this->updateDeal($dealId, "Lost");
+			}
 		}
 
-		return $return;
+		return $paid;
 	}
 
 	/**
@@ -175,5 +222,115 @@ class PaymentNganluong extends  RdfPaymentHelper
 			->where($db->qn('ci.cart_id') . ' = ' . $db->q((int) $cartId));
 
 		return $db->setQuery($query)->loadResult();
+	}
+
+	/**
+	 * get order id
+	 *
+	 * @param   int  $cartId  cart ID
+	 *
+	 * @return object
+	 */
+	protected function getBillingInfo($cartId)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true)
+			->select('b.*')
+			->from($db->qn('#__rwf_billinginfo', 'b'))
+			->where($db->qn('b.cart_id') . ' = ' . $db->q((int) $cartId));
+
+		return $db->setQuery($query)->loadObject();
+	}
+
+	/**
+	 * update Deal from Agile CRM
+	 *
+	 * @param   int     $dealId  deal ID
+	 * @param   string  $status  status
+	 *
+	 * @return object
+	 */
+	protected function updateDeal($dealId, $status)
+	{
+		$opportunityJson = array(
+			"id" => $dealId,
+			"milestone" => $status
+		);
+
+		$opportunityJson = json_encode($opportunityJson);
+
+		$return = $this->curlWrap("opportunity/partial-update", $opportunityJson, "PUT", "application/json");
+	}
+
+	/**
+	 * Triggered after a form submissin has been saved.
+	 *
+	 * @param   RdfCoreFormSubmission  $result  The result
+	 *
+	 * @return  void
+	 */
+	public function curlWrap($entity, $data, $method, $contentType) 
+	{
+		if ($contentType == NULL) 
+		{
+		    $contentType = "application/json";
+		}
+
+		$plugin = JPluginHelper::getPlugin('redform', 'agile_crm');
+
+		if (empty($plugin))
+		{
+			return false;
+		}
+
+		$params = new JRegistry($plugin->params);
+
+		$agileUrl = "https://" . $params->get('domain') . ".agilecrm.com/dev/api/" . $entity;
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+		curl_setopt($ch, CURLOPT_UNRESTRICTED_AUTH, true);
+
+		switch ($method) 
+		{
+			case "POST":
+				$url = $agileUrl;
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+				break;
+			case "GET":
+				$url = $agileUrl;
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+				break;
+			case "PUT":
+				$url = $agileUrl;
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+				break;
+			case "DELETE":
+				$url = $agileUrl;
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+				break;
+			default:
+				break;
+		}
+
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		    "Content-type : $contentType;", 'Accept : application/json'
+		));
+
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_USERPWD, $params->get('email') . ':' . $params->get('api_key'));
+		curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		$output = curl_exec($ch);
+		curl_close($ch);
+
+		return $output;
 	}
 }
