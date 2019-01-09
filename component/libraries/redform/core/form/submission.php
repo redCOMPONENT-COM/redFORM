@@ -130,7 +130,7 @@ class RdfCoreFormSubmission
 
 		// Get the form details
 		$this->formId = $data['form_id'];
-		$form = $this->getForm();
+		$form         = $this->getForm();
 
 		$currency = $data['currency'] ? $data['currency'] : $form->currency;
 
@@ -294,8 +294,11 @@ class RdfCoreFormSubmission
 				$this->updateMailingList($answers);
 			}
 
-			// Send email to maintainers
-			$this->notifymaintainer($answers);
+			if ($form->getParam('enable_admin_notification', 1))
+			{
+				// Send email to maintainers
+				$this->notifymaintainer($answers);
+			}
 		}
 
 		// Send a submission mail to the submitters if set
@@ -363,8 +366,11 @@ class RdfCoreFormSubmission
 
 		$this->updateMailingList($answers);
 
-		// Send email to maintainers
-		$this->notifymaintainer($answers);
+		if ($form->getParam('enable_admin_notification', 1))
+		{
+			// Send email to maintainers
+			$this->notifymaintainer($answers);
+		}
 
 		// Send a submission mail to the submitters if set
 		if ($form->submitterinform)
@@ -715,7 +721,7 @@ class RdfCoreFormSubmission
 	/**
 	 * Get form info
 	 *
-	 * @return mixed|object
+	 * @return RdfEntityForm
 	 */
 	protected function getForm()
 	{

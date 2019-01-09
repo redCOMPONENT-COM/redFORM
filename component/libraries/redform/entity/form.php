@@ -16,6 +16,8 @@ defined('_JEXEC') or die;
  */
 class RdfEntityForm extends RdfEntityBase
 {
+	use \Redform\Entity\Traits\HasParams;
+
 	/**
 	 * Form fields
 	 *
