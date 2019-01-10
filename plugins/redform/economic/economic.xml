@@ -7,7 +7,7 @@
 	<authorUrl>www.redcomponent.com</authorUrl>
 	<copyright>(C) 2015 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-	<version>3.3.20</version>
+	<version>3.3.24</version>
 	<tag>##VERSION##</tag>
 	<description>PLG_REDFORM_ECONOMIC_XML_DESC</description>
 
@@ -24,12 +24,10 @@
 		<fields name="params">
 			<fieldset name="basic" label="basic">
 
-				<field name="economic_agreement_number" type="text" default="" label="PLG_REDFORM_ECONOMIC_AGREEMENT_NUMBER_LBL"
-					   description="PLG_REDFORM_ECONOMIC_DESC_ECONOMIC_AGREEMENT_NUMBER_LBL"/>
-				<field name="economic_username" type="text" default="" label="PLG_REDFORM_ECONOMIC_USERNAME_LBL"
-					   description="PLG_REDFORM_ECONOMIC_DESC_ECONOMIC_USERNAME_LBL"/>
-				<field name="economic_password" type="password" default="" label="PLG_REDFORM_ECONOMIC_PASSWORD_LBL"
-					   description="PLG_REDFORM_ECONOMIC_DESC_ECONOMIC_PASSWORD_LBL"/>
+				<field name="agreement_grant_token" type="text" default="" label="PLG_REDFORM_ECONOMIC_AGREEMENT_GRANT_TOKEN"
+					   description="PLG_REDFORM_ECONOMIC_AGREEMENT_GRANT_TOKEN_DESC"/>
+				<field name="app_secret_token" type="text" default="" label="PLG_REDFORM_ECONOMIC_APP_SECRET_TOKEN"
+					   description="PLG_REDFORM_ECONOMIC_APP_SECRET_TOKEN_DESC"/>
 				<field name="economic_template" type="text" default="" label="PLG_REDFORM_ECONOMIC_TEMPLATE_COLLECTION_LABEL"
 					   description="PLG_REDFORM_ECONOMIC_TEMPLATE_COLLECTION_DESC"/>
 				<field name="economic_vat_account" type="text" default="" label="PLG_REDFORM_ECONOMIC_VAT_ACCOUNT_ID_LABEL"

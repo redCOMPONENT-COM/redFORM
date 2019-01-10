@@ -27,7 +27,7 @@ class RedformControllerFormfields extends RControllerAdmin
 	 *
 	 * @throws  Exception
 	 *
-	 * @since    __deploy_version__
+	 * @since    3.3.23
 	 */
 	public function __construct(array $config = array())
 	{

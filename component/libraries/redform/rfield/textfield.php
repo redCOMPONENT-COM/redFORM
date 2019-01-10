@@ -69,7 +69,7 @@ class RdfRfieldTextfield extends RdfRfield
 		if ($regex = $this->getParam('regexformat'))
 		{
 			$properties['regex'] = addslashes($regex);
-			$properties['regex_info'] = addslashes($this->getParam('regexformat_desc'));
+			$properties['regex_info'] = addslashes(JText::_($this->getParam('regexformat_desc')));
 
 			if (isset($properties['class']))
 			{
@@ -120,11 +120,13 @@ JS;
 	/**
 	 * Check that data is valid
 	 *
+	 * @param   RdfRfield[]  $fields  all fields with value
+	 *
 	 * @return boolean
 	 */
-	public function validate()
+	public function validate($fields)
 	{
-		if (!parent::validate())
+		if (!parent::validate($fields))
 		{
 			return false;
 		}

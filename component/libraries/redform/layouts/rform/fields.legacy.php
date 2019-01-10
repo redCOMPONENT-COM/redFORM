@@ -22,7 +22,7 @@ $form = $data['form'];
 
 $html = '';
 
-JHtml::_('rbootstrap.tooltip', '.hasToolTip');
+JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.keepalive');
 
 RHelperAsset::load('punycode.js');
@@ -85,13 +85,13 @@ foreach ($sections as $s)
 			if ($field->isRequired())
 			{
 				$img = RHelperAsset::load('warning.png', 'com_redform', array('alt' => JText::_('COM_REDFORM_Required')));
-				$fieldDiv .= ' <span class="editlinktip hasToolTip" title="' . RHtml::tooltipText(JText::_('COM_REDFORM_Required')) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
+				$fieldDiv .= ' <span class="editlinktip hasTooltip" title="' . RHtml::tooltipText(JText::_('COM_REDFORM_Required')) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 			}
 
 			if (strlen($field->tooltip) > 0)
 			{
 				$img = RHelperAsset::load('info.png', 'com_redform', array('alt' => JText::_('COM_REDFORM_ToolTip')));
-				$fieldDiv .= ' <span class="editlinktip hasToolTip" title="' .  RHtml::tooltipText($field->field, $field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
+				$fieldDiv .= ' <span class="editlinktip hasTooltip" title="' .  RHtml::tooltipText($field->field, $field->tooltip) . '" style="text-decoration: none; color: #333;">' . $img . '</span>';
 			}
 
 			$fieldDiv .= '</div>';

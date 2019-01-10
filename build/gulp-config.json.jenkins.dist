@@ -1,0 +1,8 @@
+{
+	"wwwDir"           : "/tests/www/tests/joomla-cms/",
+	"release_dir"   : "/tests/www/tests/releases-redform/",
+	"browserConfig" : {
+		"proxy": "localhost",
+		"browser" : "default"
+	}
+}

@@ -111,7 +111,7 @@ class RdfRfieldDate extends RdfRfield
 
 		if ($placeholder = $this->getParam('placeholder'))
 		{
-			$properties['placeholder'] = addslashes($placeholder);
+			$properties['placeholder'] = $placeholder;
 		}
 
 		$properties['class'] = implode(" ", $class);

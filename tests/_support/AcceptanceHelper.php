@@ -35,7 +35,7 @@ class AcceptanceHelper extends \Codeception\Module
 
         return $this->config[$element];
     }
-
+	
 	/**
 	 * Function to Verify State of an Object
 	 *

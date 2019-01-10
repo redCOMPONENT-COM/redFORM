@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
 class RdfCorePaymentCart
 {
 	/**
-	 * @var  array
+	 * @var  RTable
 	 */
 	protected $data;
 
@@ -116,6 +116,9 @@ class RdfCorePaymentCart
 
 		$entity = RdfEntityCart::getInstance($cart->id);
 		$entity->loadFromTable($cart);
+
+		JPluginHelper::importPlugin('redform');
+		RFactory::getDispatcher()->trigger('onAfterRedformCartCreated', array(&$entity));
 
 		return $entity;
 	}

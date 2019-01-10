@@ -52,7 +52,7 @@ class RedformModelFormfield extends RModelAdmin
 	 *
 	 * @return  boolean
 	 *
-	 * @since    __deploy_version__
+	 * @since    3.3.23
 	 */
 	public function setRequired($pks = null, $state = 1)
 	{

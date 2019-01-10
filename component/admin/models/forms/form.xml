@@ -144,7 +144,7 @@
 				label="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_LABEL"
 				description="COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_DESC"
 				default="0"
-				showon="contactpersoninform:1"
+				showon="enable_admin_notification:1"
 		>
 			<option value="0">COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_DEFAULT</option>
 			<option value="1">COM_REDFORM_ADMIN_NOTIFICATION_EMAIL_MODE_CUSTOM</option>
@@ -395,6 +395,18 @@
 					<option value="1">JYES</option>
 				</field>
 
+				<field
+						name="enable_admin_notification"
+						type="radio"
+						class="btn-group btn-group-yesno"
+						label="COM_REDFORM_FORM_ENABLE_ADMIN_NOTIFICATION"
+						description="COM_REDFORM_FORM_ENABLE_ADMIN_NOTIFICATION_DESC"
+						default="1"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+
 				<field name="notification_extra"
 					   type="textarea"
 					   filter="raw"
@@ -423,6 +435,34 @@
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>
 				</field>
+
+				<field name="paymentfailed"
+					   type="editor"
+					   label="COM_REDFORM_PAYMENTFAILED"
+					   description="COM_REDFORM_PAYMENTFAILED_TIP"
+					   filter="raw"
+				/>
+			</fieldset>
+
+			<fieldset name="gdpr" label="EU GDPR">
+				<field name="auto_delete"
+					   type="list"
+					   default="-2"
+					   label="COM_REDFORM_SETTINGS_AUTO_DELETE_LABEL"
+					   description="COM_REDFORM_SETTINGS_AUTO_DELETE_DESC">
+					<option value="-2">JDEFAULT</option>
+					<option value="0">JNo</option>
+					<option value="1 month">COM_REDFORM_SETTINGS_AUTO_DELETE_1_MONTH</option>
+					<option value="3 months">COM_REDFORM_SETTINGS_AUTO_DELETE_3_MONTHS</option>
+					<option value="6 months">COM_REDFORM_SETTINGS_AUTO_DELETE_6_MONTHS</option>
+					<option value="-1">COM_REDFORM_SETTINGS_AUTO_DELETE_CUSTOM</option>
+				</field>
+				<field name="auto_delete_custom"
+					   type="redform.timeinterval"
+					   showon="auto_delete:-1"
+					   default="1 month"
+					   label="COM_REDFORM_SETTINGS_AUTO_DELETE_CUSTOM_LABEL"
+					   description="COM_REDFORM_SETTINGS_AUTO_DELETE_CUSTOM_DESC"/>
 			</fieldset>
 		</fields>
 	</fieldset>

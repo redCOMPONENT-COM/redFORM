@@ -320,6 +320,7 @@ class RdfCore extends JObject
 		}
 
 		$this->loadCheckScript();
+		$this->loadPriceScript();
 
 		if ($multi > 1)
 		{
@@ -443,11 +444,14 @@ class RdfCore extends JObject
 
 		if ($currency)
 		{
+			$currencyData = RHelperCurrency::getCurrency($currency);
 			$html .= '<input
 				type="hidden"
 				name="currency"
 				value="' . $currency . '"
 				precision="' . RHelperCurrency::getPrecision($currency) . '"
+				symbol="' . $currencyData->symbol . '"
+				symbolAfter="' . $currencyData->symbol_position . '"
 				decimal="' . JComponentHelper::getParams('com_redform')->get('decimalseparator', '.') . '"
 				thousands="' . JComponentHelper::getParams('com_redform')->get('thousandseparator', ' ') . '"
 			/>';
@@ -974,12 +978,14 @@ class RdfCore extends JObject
 	 */
 	protected function loadPriceScript()
 	{
-		$params = JComponentHelper::getParams('com_redform');
-
-		JText::script('COM_REDFORM_Total_Price');
-		$doc = JFactory::getDocument();
-		$doc->addScriptDeclaration('var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n");
 		RHelperAsset::load('form-price.js', 'com_redform');
+		RHelperAsset::load('accounting.min.js', 'com_redform');
+
+		$params = JComponentHelper::getParams('com_redform');
+		$doc = JFactory::getDocument();
+		$doc->addScriptDeclaration(
+			'var round_negative_price = ' . ($params->get('allow_negative_total', 1) ? 0 : 1) . ";\n"
+		);
 	}
 
 	/**

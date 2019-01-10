@@ -123,7 +123,12 @@ class RedformViewForms extends RdfView
 		if ($canDoCore->get('core.delete'))
 		{
 			$delete = RToolbarBuilder::createDeleteButton('forms.delete');
+			$auto = RToolbarBuilder::createStandardButton(
+				'forms.autodelete', JText::_('COM_REDFORM_FORMS_BUTTON_AUTODELETE'),
+				'btn-danger', 'icon-remove'
+			);
 			$secondGroup->addButton($delete);
+			$secondGroup->addButton($auto);
 		}
 
 		$toolbar = new RToolbar;

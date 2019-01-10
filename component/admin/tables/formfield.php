@@ -149,7 +149,7 @@ class RedformTableFormField extends RTable
 	 *
 	 * @return  boolean  True on success; false if $pks is empty.
 	 *
-	 * @since    __deploy_version__
+	 * @since    3.3.23
 	 */
 	public function setRequired($pks = null, $state = 1, $userId = 0)
 	{

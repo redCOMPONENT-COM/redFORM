@@ -15,8 +15,41 @@ JHtml::_('rjquery.chosen', 'select');
 $action = JRoute::_('index.php?option=com_redform&view=submitters');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
-?>
 
+$hasIntegration = false;
+
+foreach ($this->items as $item)
+{
+	if (!empty($item->integration))
+	{
+		$hasIntegration = true;
+		continue;
+	}
+}
+?>
+<script type="text/javascript">
+    Joomla.submitbutton = function (pressbutton)
+    {
+        var form = document.adminForm;
+
+        if (pressbutton)
+        {
+            form.task.value = pressbutton;
+        }
+
+        if (pressbutton == 'submitters.delete')
+        {
+            if (confirm('<?php echo JText::_("COM_REDFORM_SUBMITTERS_DELETE_WARNING")?>') == true) {
+                form.submit();
+            }
+            else {
+                return false;
+            }
+        }
+
+        form.submit();
+    }
+</script>
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 
 	<?php
@@ -56,6 +89,9 @@ $listDirn = $this->state->get('list.direction');
 			<th width="1%" class="nowrap hidden-phone">
 				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_ID', 's.id', $listDirn, $listOrder); ?>
 			</th>
+            <th class="nowrap">
+				<?php echo JHtml::_('rsearchtools.sort', 'JGLOBAL_USERNAME', 'u.username', $listDirn, $listOrder); ?>
+            </th>
 			<th class="nowrap hidden-phone">
 				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Submission_date', 's.submission_date', $listDirn, $listOrder); ?>
 			</th>
@@ -71,7 +107,7 @@ $listDirn = $this->state->get('list.direction');
 				<?php echo JText::_('COM_REDFORM_Unique_id'); ?>
 			</th>
 
-			<?php if ($this->integration && $this->params->get('showintegration', false)): ?>
+			<?php if ($hasIntegration && $this->params->get('showintegration', false)): ?>
 				<th class="nowrap hidden-phone">
 					<?php echo JText::_('COM_REDFORM_Integration'); ?>
 				</th>
@@ -101,6 +137,7 @@ $listDirn = $this->state->get('list.direction');
 			$canChange = 1;
 			$canEdit = 1;
 			$canCheckin = 1;
+			$displaydate = JHTML::Date($item->submission_date, 'Y-m-d H:i:s');
 			?>
 			<tr>
 				<td>
@@ -109,9 +146,12 @@ $listDirn = $this->state->get('list.direction');
 				<td>
 					<?php echo $item->id; ?>
 				</td>
+                <td>
+					<?php echo $item->username; ?>
+                </td>
 				<td>
 					<a href="<?php echo JRoute::_('index.php?option=com_redform&task=submitter.edit&id=' . $item->id); ?>">
-						<?php echo $this->escape($item->submission_date); ?>
+						<?php echo $displaydate; ?>
 					</a>
 				</td>
 
@@ -137,7 +177,7 @@ $listDirn = $this->state->get('list.direction');
 					<?php echo $this->escape($item->submit_key); ?>
 				</td>
 
-				<?php if ($this->integration && $this->params->get('showintegration', false)): ?>
+				<?php if ($hasIntegration && $this->params->get('showintegration', false)): ?>
 					<td>
 						<?php echo $this->escape($item->integration); ?></td>
 					</td>
@@ -150,11 +190,14 @@ $listDirn = $this->state->get('list.direction');
 
 					if (isset($item->{$fieldname}))
 					{
-						$data = str_replace('~~~', '<br />', $item->$fieldname);
+						$myField = clone $field;
+						$myField->setValueFromDatabase($item->{$fieldname});
 
-						if (stristr($data, JPATH_ROOT))
+						$data = $myField->renderValue('<br />');
+
+						if (stristr($item->{$fieldname}, JPATH_ROOT))
 						{
-							$data = '<a href="' . str_replace(JPATH_ROOT, JURI::root(true), $data) . '" target="_blank">' . $data . '</a>';
+							$data = '<a href="' . str_replace(JPATH_ROOT, JURI::root(true), $item->{$fieldname}) . '" target="_blank">' . $data . '</a>';
 						}
 
 						echo '<td>' . $data . '</td>';

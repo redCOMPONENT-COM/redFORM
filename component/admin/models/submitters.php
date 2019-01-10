@@ -61,6 +61,7 @@ class RedformModelSubmitters extends RModelList
 				'date', 's.date',
 				'submission_date', 's.submission_date',
 				'confirmed_date', 's.confirmed_date',
+				's.user_id', 'u.name'
 			);
 		}
 
@@ -133,6 +134,13 @@ class RedformModelSubmitters extends RModelList
 
 		$items = $this->addPaymentinfo($items);
 
+		if ($this->getState('streamOutput') == 'csv')
+		{
+			JPluginHelper::importPlugin('redform');
+			$dispatcher = RFactory::getDispatcher();
+			$dispatcher->trigger('onRdfSubmittersCsvExport', array(&$items, $this->getState('filter.form_id')));
+		}
+
 		// Add the items to the internal cache.
 		$this->cache[$store] = $items;
 
@@ -157,8 +165,10 @@ class RedformModelSubmitters extends RModelList
 		$query->select('s.confirmed_date, s.confirmed_ip, s.confirmed_type');
 		$query->select('s.integration');
 		$query->select('f.formname');
+		$query->select('u.username, u.name AS user_name');
 		$query->from('#__rwf_submitters AS s');
 		$query->join('INNER', '#__rwf_forms AS f ON s.form_id = f.id');
+		$query->join('LEFT', '#__users AS u ON u.id = s.user_id');
 
 		if ($form_id)
 		{
@@ -210,6 +220,8 @@ class RedformModelSubmitters extends RModelList
 					$lookup[] = 'a.field_' . $field->field_id . ' LIKE ' . $search;
 				}
 			}
+
+			$lookup[] = 'u.username LIKE ' . $search;
 
 			$query->where('(' . implode(' OR ', $lookup) . ')');
 		}
@@ -287,23 +299,16 @@ class RedformModelSubmitters extends RModelList
 		if (!$this->fields)
 		{
 			$form_id = $this->getState('filter.form_id');
-			$query = $this->_db->getQuery(true);
+			$form = RdfEntityForm::load($form_id);
 
-			$query->select('f.id AS field_id, f.field')
-				->select('CASE WHEN (CHAR_LENGTH(f.field_header) > 0) THEN f.field_header ELSE f.field END AS field_header')
-				->from('#__rwf_fields AS f')
-				->join('INNER', '#__rwf_form_field AS ff ON ff.field_id = f.id')
-				->where('f.fieldtype NOT IN ("info", "submissionprice")')
-				->group('f.id')
-				->order('ff.ordering');
-
-			if ($form_id)
+			if (!$form->isValid())
 			{
-				$query->where('ff.form_id = ' . $this->_db->Quote($form_id));
+				$this->fields = array();
+
+				return;
 			}
 
-			$this->_db->setQuery($query);
-			$this->fields = $this->_db->loadObjectList();
+			$this->fields = $form->getFormFields();
 		}
 
 		return $this->fields;

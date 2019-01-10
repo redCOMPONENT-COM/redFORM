@@ -16,6 +16,8 @@ defined('_JEXEC') or die;
  */
 class RdfEntityForm extends RdfEntityBase
 {
+	use \Redform\Entity\Traits\HasParams;
+
 	/**
 	 * Form fields
 	 *
@@ -108,7 +110,7 @@ class RdfEntityForm extends RdfEntityBase
 	 *
 	 * @return RdfRfield or false if not found
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.23
 	 */
 	public function getField($id)
 	{
@@ -132,7 +134,7 @@ class RdfEntityForm extends RdfEntityBase
 	 *
 	 * @return RdfRfield or false if not found
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.23
 	 */
 	public function getFormField($formFieldId)
 	{
@@ -201,6 +203,26 @@ class RdfEntityForm extends RdfEntityBase
 	public function getStatusMessage()
 	{
 		return $this->statusMessage;
+	}
+
+	/**
+	 * Check if form has an email field with notification enabled
+	 *
+	 * @return boolean
+	 */
+	public function hasEmailContactField()
+	{
+		$fields = $this->getFormFields();
+
+		foreach ($fields as $field)
+		{
+			if ($field->fieldtype == 'email' && $field->getParam('notify', 1))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

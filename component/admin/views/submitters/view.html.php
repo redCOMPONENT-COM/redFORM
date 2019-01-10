@@ -86,7 +86,6 @@ class RedformViewSubmitters extends RdfView
 
 		$this->formInfo = $model->getFormInfo();
 
-		$this->integration = $app->input->get('integration', '');
 		$this->params = $params;
 
 		return parent::display($tpl);

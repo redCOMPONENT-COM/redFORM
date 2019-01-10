@@ -10,24 +10,40 @@ var redformPrice;
 	redformPrice = function(formbox) {
 
 		var form = formbox.parents('form').first();
+		var formIndex = formbox.index();
+		var formId = form.find('input[name="form_id"]').val();
+		var totalElement = formbox.find(".totalprice");
+
+		var externalTotalSelector = '.totalprice' + formId + '_' + (formIndex + 1);
+
+		if (formIndex == 0) {
+			externalTotalSelector += ', .totalprice' + formId;
+		}
+
+		var externalTotal = $(externalTotalSelector);
 
 		var price = 0.0;
 		var vat = 0.0;
 
 		function updatePrice() {
-			var totalElement = formbox.find(".totalprice");
-
-			if (!totalElement)
+			if (!totalElement && !externalTotal)
 			{
 				return;
 			}
 
 			var price = getPrice();
-			var roundedPrice = accounting.formatMoney(price.price + price.vat, {symbol: price.currency, precision: price.precision, thousand: price.thSeparator, decimal: price.decSeparator, format: '%s %v'});
+			var currencyFormat = price.symbolAfter ? '%v %s' : '%s %v';
+			var roundedPrice = accounting.formatMoney(price.price + price.vat, {symbol: price.symbol, precision: price.precision, thousand: price.thSeparator, decimal: price.decSeparator, format: currencyFormat});
 
 			text = ' <span>' + roundedPrice + '</span>';
 
-			formbox.find(".totalprice").html(text);
+			if (totalElement) {
+				totalElement.html(text);
+			}
+
+			if (externalTotal) {
+                externalTotal.html(text);
+			}
 		}
 
 		function getPrice() {
@@ -49,6 +65,8 @@ var redformPrice;
 
 			var currencyField = form.find('input[name="currency"]');
 			var currency = (currencyField && currencyField.val()) ? currencyField.val() : '';
+			var symbol = currencyField ? $(currencyField).attr('symbol') : currency;
+			var symbolAfter = currencyField ? $(currencyField).attr('symbolAfter') : 0;
 			var precision = currencyField ? $(currencyField).attr('precision') : 2;
 			var decSeparator = currencyField ? $(currencyField).attr('decimal') : '.';
 			var thSeparator = currencyField ? $(currencyField).attr('thousands') : ' ';
@@ -58,6 +76,8 @@ var redformPrice;
 				'vat': vat,
 				'currency': currency,
 				'precision': precision,
+				'symbol': symbol,
+				'symbolAfter': symbolAfter,
 				'decSeparator': decSeparator,
 				'thSeparator': thSeparator
 			}

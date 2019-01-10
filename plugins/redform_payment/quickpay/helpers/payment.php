@@ -38,13 +38,17 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		$cart = $this->getDetails($request->key);
 		$reference = $request->key;
 		$currency = $cart->currency;
+		$params = $this->params;
 
 		if (!$this->checkParameters())
 		{
 			return false;
 		}
 
-		$orderId = $cart->id . strftime("%H%M%S");;
+		$orderId = $cart->id . strftime("%H%M%S");
+
+		$language = JFactory::getLanguage();
+		$quickpayLang = substr($language->getTag(), 0, 2);
 
 		$req_params = array(
 			'version' => 'v10',
@@ -57,21 +61,26 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			'cancelurl' => $this->getUrl('paymentcancelled', $reference),
 			'callbackurl' => $this->getUrl('notify', $reference),
 			'autocapture' => 0,
-			'payment_methods' => $this->_getAllowedCard(),
+			'payment_methods' => $this->params->get('payment_methods', '3d-creditcard'),
 			'description' => $request->title,
+			'language' => $quickpayLang
 		);
+
+		if ($this->params->get('branding_id'))
+		{
+			$req_params['branding_id'] = (int) $this->params->get('branding_id');
+		}
+
 		$req_params['checksum'] = $this->checksum($req_params);
 
-		?>
-		<h3><?php echo JText::_('Quickpay Payment Gateway'); ?></h3>
-		<form action="https://payment.quickpay.net" method="post">
-			<p><?php echo $request->title; ?></p>
-			<?php foreach ($req_params as $key => $val): ?>
-				<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $val; ?>"/>
-			<?php endforeach; ?>
-			<input type="submit" value="Open Quickpay payment window"/>
-		</form>
-		<?php
+		$action = "https://payment.quickpay.net";
+
+		echo RdfLayoutHelper::render(
+			'redform_payment.quickpay',
+			compact('params', 'request', 'intro', 'req_params', 'return_url', 'action', 'cart'),
+			'',
+			array('defaultLayoutsPath' => dirname(__DIR__) . '/layouts')
+		);
 
 		return true;
 	}
@@ -191,56 +200,6 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		$this->writeTransaction($reference, $resp, 'SUCCESS', 1);
 
 		return $paid;
-	}
-
-	/**
-	 * returns allowed card types
-	 *
-	 * @return string
-	 */
-	private function _getAllowedCard()
-	{
-		$allowed = array();
-		$methods = array(
-			'american-express',
-			'american-express-dk',
-			'dankort',
-			'danske-dk',
-			'diners',
-			'diners-dk',
-			'edankort',
-			'fbg1886',
-			'jcb',
-			'mastercard',
-			'mastercard-dk',
-			'mastercard-debet-dk',
-			'nordea-dk',
-			'visa',
-			'visa-dk',
-			'visa-electron',
-			'visa-electron-dk',
-			'paypal',
-			'3d-jcb',
-			'3d-maestro',
-			'3d-maestro-dk',
-			'3d-mastercard',
-			'3d-mastercard-dk',
-			'3d-mastercard-debet-dk',
-			'3d-visa',
-			'3d-visa-dk',
-			'3d-visa-electron',
-			'3d-visa-electron-dk',
-		);
-
-		foreach ($methods as $type)
-		{
-			if ($this->params->get($type))
-			{
-				$allowed[] = $type;
-			}
-		}
-
-		return implode(",", $allowed);
 	}
 
 	/**

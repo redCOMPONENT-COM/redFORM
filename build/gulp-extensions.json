@@ -9,7 +9,7 @@
 		]
 	},
 	"plugins" : {
-		"redform" : ["economic", "helpscout", "redmemberbillinginfo", "salesforce", "aesirmember"],
+		"redform" : ["economic", "helpscout", "redmemberbillinginfo", "salesforce", "aesirmember", "aesirecommerce"],
 		"redform_captcha" : ["hiddencaptcha", "recaptcha", "simplemath"],
 		"redform_field" : [
 			"dawa",

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<fieldset name="aesir">
+	<field
+			name="aesir_ec_field"
+			type="list"
+			default=""
+			label="PLG_REDFORM_AESIRECOMMERCE_AESIR_FIELD"
+			description="PLG_REDFORM_AESIRECOMMERCE_AESIR_FIELD_DESC">
+		<option value="">JSELECT</option>
+		<option value="company">PLG_REDFORM_AESIRECOMMERCE_AESIR_FIELD_OPTION_COMPANY</option>
+		<option value="name">PLG_REDFORM_AESIRECOMMERCE_AESIR_FIELD_OPTION_NAME</option>
+	</field>
+</fieldset>
+

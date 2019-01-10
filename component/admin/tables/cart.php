@@ -67,7 +67,7 @@ class RedformTableCart extends RTable
 	/**
 	 * get default invoice id, based on prefix and current max value of it
 	 *
-	 * @return void
+	 * @return string
 	 */
 	protected function getNewInvoiceId()
 	{
@@ -75,6 +75,22 @@ class RedformTableCart extends RTable
 		$prefix = $config->get('invoice_prefix', 'INVOICE-');
 		$padding = $config->get('invoice_padding', 4);
 
+		$nextId = $this->getNextId($prefix);
+
+		return $prefix . sprintf('%0' . $padding . 'd', $nextId);
+	}
+
+	/**
+	 * Get next id for a prefix
+	 *
+	 * @param   string  $prefix  the prefix
+	 *
+	 * @return integer
+	 *
+	 * @since __deploy_version__
+	 */
+	public function getNextId($prefix)
+	{
 		// Get existing prefixes
 		$query = $this->_db->getQuery(true)
 			->select('invoice_id')
@@ -95,7 +111,7 @@ class RedformTableCart extends RTable
 			0
 		);
 
-		return $prefix . sprintf('%0' . $padding . 'd', $max + 1);
+		return $max + 1;
 	}
 
 	/**

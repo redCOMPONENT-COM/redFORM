@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 /**
@@ -36,6 +38,28 @@ class RdfHelperTagsreplace
 	private $glue;
 
 	/**
+	 * Return supported conditions
+	 *
+	 * @return array
+	 */
+	public static function getConditions()
+	{
+		static $conditions;
+
+		if (is_null($conditions))
+		{
+			$conditions = [];
+
+			// Plugins integration
+			JPluginHelper::importPlugin('redform_replacecondition');
+			$dispatcher = JDispatcher::getInstance();
+			$dispatcher->trigger('onRedformGetConditions', array(&$conditions));
+		}
+
+		return $conditions;
+	}
+
+	/**
 	 * Contructor
 	 *
 	 * @param   object      $formdata  form data
@@ -59,6 +83,8 @@ class RdfHelperTagsreplace
 	 */
 	public function replace($text, $extra = array())
 	{
+		$text = $this->processStructure($text);
+
 		if (!preg_match_all('/\[([^\]\[\s]+)(?:\s*)([^\]]*)\]/i', $text, $alltags, PREG_SET_ORDER))
 		{
 			return $text;
@@ -99,6 +125,67 @@ class RdfHelperTagsreplace
 	}
 
 	/**
+	 * Process supported structures
+	 *
+	 * @param   string  $text  the text to parse
+	 *
+	 * @return string
+	 */
+	private function processStructure($text)
+	{
+		if (!preg_match_all('/\[rdfif:([^\]\[\s]+)\]((?:(?!\[rdfendif\]|\[rdfif\]).)*)\[rdfendif\]/is', $text, $alltags, PREG_SET_ORDER))
+		{
+			return $text;
+		}
+
+		$loop = false;
+
+		foreach ($alltags as $parts)
+		{
+			$isValid = $this->isConditionValid($parts[1]);
+
+			if (is_null($isValid))
+			{
+				continue;
+			}
+
+			if ($isValid)
+			{
+				$text = str_replace($parts[0], $parts[2], $text);
+			}
+			else
+			{
+				$text = str_replace($parts[0], '', $text);
+			}
+
+			$loop = true;
+		}
+
+		// Pass again in case this was an inner rdfif
+		return $loop ? $this->processStructure($text) : $text;
+	}
+
+	/**
+	 * Check if condition is valid
+	 *
+	 * @param   string  $condition  condition
+	 *
+	 * @return boolean
+	 */
+	private function isConditionValid($condition)
+	{
+		$parts = explode(';', $condition);
+		$isValid = null;
+
+		// Plugins integration
+		JPluginHelper::importPlugin('redform_replacecondition');
+		$dispatcher = JDispatcher::getInstance();
+		$dispatcher->trigger('onRedformProcessReplaceCondition', array($parts, $this->answers, &$isValid));
+
+		return $isValid;
+	}
+
+	/**
 	 * Replace field_xx tag with it's field value
 	 *
 	 * @param   string  $tag  the tag to replace
@@ -120,7 +207,7 @@ class RdfHelperTagsreplace
 		{
 			if ($field->field_id === $id)
 			{
-				return $field->getValueAsString($this->glue);
+				return $field->renderValue($this->glue);
 			}
 		}
 
@@ -147,7 +234,7 @@ class RdfHelperTagsreplace
 		{
 			if ($field->id == $id)
 			{
-				return $field->getValueAsString($this->glue);
+				return $field->renderValue($this->glue);
 			}
 		}
 

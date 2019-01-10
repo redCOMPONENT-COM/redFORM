@@ -33,6 +33,9 @@ $return = '&return=' . base64_encode($uri->toString());
 	<ul class="paymentrequest unstyled">
 		<?php foreach ($row->paymentRequests as $pr): ?>
 		<li>
+			<?php if ($pr->invoice_id): ?>
+				<span class="invoice-id"><?= $pr->invoice_id ?></span>
+			<?php endif; ?>
 			<?php echo RdfHelper::formatPrice($pr->price + $pr->vat, $pr->currency); ?>
 			<?php $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&pr=' . $pr->id . $return), JText::_('COM_REDEVENT_history')); ?>
 			<?php if (!$pr->paid): ?>

@@ -139,11 +139,13 @@ class RdfRfieldEmail extends RdfRfieldTextfield
 	/**
 	 * Check that data is valid
 	 *
+	 * @param   RdfRfield[]  $fields  all fields with value
+	 *
 	 * @return boolean
 	 */
-	public function validate()
+	public function validate($fields)
 	{
-		if (!parent::validate())
+		if (!parent::validate($fields))
 		{
 			return false;
 		}

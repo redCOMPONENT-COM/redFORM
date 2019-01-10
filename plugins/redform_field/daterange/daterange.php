@@ -16,7 +16,7 @@ require_once __DIR__ . '/field/daterange.php';
 /**
  * Class plgRedform_fieldDaterange
  *
- * @since       __deploy_version__
+ * @since       3.3.23
  */
 class plgRedform_fieldDaterange extends AbstractFieldPlugin
 {

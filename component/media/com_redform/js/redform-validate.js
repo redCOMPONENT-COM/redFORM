@@ -179,7 +179,7 @@ var RedFormValidator = function($) {
  	 	 	}
  	 	}
 
-		if ($form.find('.checkboxes.required')) {
+		if ($form.find('.checkboxes.required').length) {
 
 			$form.find('.checkboxes.required input').change(function(){
 				var fieldset = $(this).parents('fieldset').first();

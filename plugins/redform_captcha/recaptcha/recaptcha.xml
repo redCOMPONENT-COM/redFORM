@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="redform_captcha" method="upgrade">
+<extension version="3.56789" type="plugin" group="redform_captcha" method="upgrade">
 	<name>PLG_REDFORM_CAPTCHA_RECAPTCHA</name>
 	<creationDate>July 8, 2015</creationDate>
 	<author>redWEB Aps</author>
 	<authorEmail>email@redweb.dk</authorEmail>
 	<authorUrl>www.redcomponent.com</authorUrl>
-	<copyright>(C) 2008 - 2012 redCOMPONENT.com</copyright>
+	<copyright>(C) 2008 - 2018 redCOMPONENT.com</copyright>
 	<license>GNU/GPL</license>
-	<version>3.3.18</version>
+	<version>3.3.25</version>
 	<tag>##VERSION##</tag>
 	<description>PLG_REDFORM_CAPTCHA_RECAPTCHA_XML_DESCRIPTION</description>
 
@@ -15,28 +15,110 @@
 		<filename plugin="recaptcha">recaptcha.php</filename>
 		<filename>index.html</filename>
 		<folder>language</folder>
+		<folder>rules</folder>
 		<folder>vendor</folder>
 	</files>
 
 	<config>
 		<fields name="params">
-			<fieldset name="basic">
-				<field name="public_key" type="text" default="" required="1"
-					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY"
-					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_DESC" />
-				<field name="private_key" type="text" default="" required="1"
-					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY"
-					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_DESC" />
-				<field name="theme" type="list" default=""
-					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME"
-					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC">
+			<fieldset name="basic" addrulepath="plugins/redform_captcha/recaptcha/rules">
+				<field
+						name="version"
+						type="list"
+						default=""
+						required="true"
+						label="PLG_REDFORM_CAPTCHA_VERSION"
+						description="PLG_REDFORM_CAPTCHA_VERSION_DESC"
+				>
+					<option value="2">2.0</option>
+					<option value="3">3.0</option>
+				</field>
+
+				<field
+						name="public_key_v2"
+						type="text"
+						default=""
+						validate="requirekeyv2"
+						label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_V2"
+						description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_V2_DESC"
+						showon="version:2"
+				/>
+
+				<field
+						name="private_key_v2"
+						type="text"
+						default=""
+						validate="requiresecretv2"
+						label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_V2"
+						description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_V2_DESC"
+						showon="version:2"
+				/>
+
+				<field
+						name="public_key_v3"
+						type="text"
+						default=""
+						validate="requirekeyv3"
+						label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_V3"
+						description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PUBLICKEY_V3_DESC"
+						showon="version:3"
+				/>
+
+				<field
+						name="private_key_v3"
+						type="text"
+						default=""
+						validate="requiresecretv3"
+						label="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_V3"
+						description="PLG_REDFORM_CAPTCHA_RECAPTCHA_PRIVATEKEY_V3_DESC"
+						showon="version:3"
+				/>
+
+				<field
+						name="min_accepted_score_v3"
+						type="number"
+						default="0.5"
+						min="0" max="1"
+						step="0.05"
+						validate="requirethresholdv3"
+						label="PLG_REDFORM_CAPTCHA_MIN_ACCEPTED_SCORE_V3"
+						description="PLG_REDFORM_CAPTCHA_MIN_ACCEPTED_SCORE_V3_DESC"
+						showon="version:3"
+				/>
+
+				<field
+						name="expected_action_v3"
+						type="list"
+						default="homepage"
+						label="PLG_REDFORM_CAPTCHA_EXPECTED_ACTION_V3"
+						description="PLG_REDFORM_CAPTCHA_EXPECTED_ACTION_V3_DESC"
+						showon="version:3"
+				>
+					<option value="homepage">homepage</option>
+					<option value="login">login</option>
+					<option value="social">social</option>
+					<option value="e-commerce">e-commerce</option>
+				</field>
+
+				<field
+						name="theme"
+						type="list"
+						default=""
+						label="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME"
+						description="PLG_REDFORM_CAPTCHA_RECAPTCHA_THEME_DESC"
+				>
 					<option value="">JDefault</option>
 					<option value="dark">dark</option>
 					<option value="light">light</option>
 				</field>
-				<field name="size" type="list" default=""
-					   label="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE"
-					   description="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE_DESC">
+
+				<field
+						name="size"
+						type="list"
+						default=""
+						label="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE"
+						description="PLG_REDFORM_CAPTCHA_RECAPTCHA_SIZE_DESC"
+				>
 					<option value="">JDefault</option>
 					<option value="compact">compact</option>
 					<option value="normal">normal</option>

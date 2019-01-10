@@ -718,7 +718,7 @@ class RdfAnswers
 		{
 			if ($field->published && !$this->isFieldDisabledByShowon($field))
 			{
-				if (!$field->validate())
+				if (!$field->validate($this->fields))
 				{
 					throw new RuntimeException($field->getError());
 				}
@@ -874,7 +874,7 @@ class RdfAnswers
 	 *
 	 * @param   int  $field_id  field id
 	 *
-	 * @return string
+	 * @return mixed
 	 */
 	public function getFieldAnswer($field_id)
 	{
@@ -894,7 +894,7 @@ class RdfAnswers
 	 *
 	 * @param   int  $form_field_id  form field id
 	 *
-	 * @return string
+	 * @return mixed
 	 */
 	public function getFormFieldAnswer($form_field_id)
 	{
@@ -1019,6 +1019,7 @@ class RdfAnswers
 	public function setSid($sid)
 	{
 		$this->sid = $sid;
+		$this->isnew = false;
 
 		return $this;
 	}
@@ -1061,7 +1062,7 @@ class RdfAnswers
 	 *
 	 * @return boolean
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.23
 	 */
 	private function isFieldDisabledByShowon($field)
 	{
