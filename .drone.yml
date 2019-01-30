@@ -13,8 +13,8 @@ pipeline:
     - touch tests/.cache.npm.tmp
 
     # Joomla CMS
-    - mv /opt/cache/joomla-cms tests
-    - touch tests/.cache.joomla-cms.tmp
+    # - mv /opt/cache/joomla-cms tests
+    # - touch tests/.cache.joomla-cms.tmp
 
   00-setup:
     group: 00-setup
@@ -46,7 +46,7 @@ pipeline:
     # Codeception setup
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
     # Test setup
-    - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done          # Comment if not using Joomla CMS cache
+    # - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done          # Comment if not using Joomla CMS cache
     - cd tests
     - vendor/bin/robo tests:site-preparation 1 1
     - cd ..
