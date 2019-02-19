@@ -30,6 +30,7 @@ class AddAFieldCest
 	}
 	/**
 	 * @param AcceptanceTester $I
+	 * @throws Exception
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -42,7 +43,9 @@ class AddAFieldCest
 	public function addField(AddAFieldSteps $I)
 	{
 		$I->wantToTest('Add fields in redFORM');
-		$I->createField($this->paramsTextField);
-		$I->createField($this->paramsEmailField);
+		$I->createField($this->paramsTextField, 'save');
+		$I->createField($this->paramsTextField, 'save&close');
+		$I->createField($this->paramsEmailField, 'save&new');
+		$I->createField($this->paramsEmailField, 'cancel');
 	}
 }

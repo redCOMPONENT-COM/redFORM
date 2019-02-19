@@ -21,7 +21,7 @@ class AddAFieldSteps extends Adminredform
 	 *
 	 * @throws \Exception
 	 */
-	public function createField($params)
+	public function createField($params = array(), $function = array())
 	{
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
@@ -50,6 +50,30 @@ class AddAFieldSteps extends Adminredform
 			$I->fillField(AddAFieldPage::$defaultValueId, $params['default']);
 		}
 
-		$I->click(AddAFieldPage::$saveButton);
+		switch ($function)
+		{
+			case 'save':
+				$I->click(AddAFieldPage::$saveButton);
+				$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+				break;
+
+			case 'save&close':
+				$I->click(AddAFieldPage::$saveCloseButton);
+				$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+				$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+				break;
+
+			case 'save&new':
+				$I->click(AddAFieldPage::$saveNewButton);
+				$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+				$I->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
+				break;
+
+			case 'cancel':
+				$I->click(AddAFieldPage::$cancelButton);
+				$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+				break;
+		}
 	}
+
 }
