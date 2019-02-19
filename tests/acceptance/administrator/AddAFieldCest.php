@@ -21,11 +21,32 @@ class AddAFieldCest
 			'tooltip' => $this->faker->bothify('Test text #####')
 		);
 
+		$this->paramsTextFieldSaveClose = array(
+			'name' => $this->faker->bothify('Text save close ?##?'),
+			'field_header' => $this->faker->bothify('Text save close ?##?'),
+			'fieldtype' => 'Date',
+			'tooltip' => $this->faker->bothify('Test text save close #####')
+		);
+
+		$this->paramsTextFieldEdit = array(
+			'name' => $this->faker->bothify('Edit Text ?##?'),
+			'field_header' => $this->faker->bothify('Edit Text ?##?'),
+			'fieldtype' => 'Date',
+			'tooltip' => $this->faker->bothify('Edit Test text #####')
+		);
+
 		$this->paramsEmailField = array(
 			'name' => $this->faker->bothify('Email ?##?'),
 			'field_header' => $this->faker->bothify('Email ?##?'),
 			'fieldtype' => 'E-mail',
 			'tooltip' => $this->faker->bothify('Test mail #####')
+		);
+
+		$this->paramsEmailFieldEdit = array(
+			'name' => $this->faker->bothify('Edit Email ?##?'),
+			'field_header' => $this->faker->bothify('Edit Email ?##?'),
+			'fieldtype' => 'E-mail',
+			'tooltip' => $this->faker->bothify('Edit Test mail #####')
 		);
 	}
 	/**
@@ -44,8 +65,42 @@ class AddAFieldCest
 	{
 		$I->wantToTest('Add fields in redFORM');
 		$I->createField($this->paramsTextField, 'save');
-		$I->createField($this->paramsTextField, 'save&close');
+		$I->createField($this->paramsTextFieldSaveClose, 'save&close');
 		$I->createField($this->paramsEmailField, 'save&new');
 		$I->createField($this->paramsEmailField, 'cancel');
+	}
+
+	/**
+	 * @param AddAFieldSteps $I
+	 * @throws Exception
+	 */
+	public function editField(AddAFieldSteps $I)
+	{
+		$I->wantToTest('Edit fields in redFORM');
+		$I->editField($this->paramsTextField['name'], $this->paramsTextFieldEdit, 'save');
+		$I->editField($this->paramsEmailField['name'], $this->paramsEmailFieldEdit, 'save&close');
+	}
+
+	/**
+	 * @param AddAFieldSteps $I
+	 * @throws Exception
+	 */
+	public function copyField(AddAFieldSteps $I)
+	{
+		$I->wantToTest('Copy fields in redFORM');
+		$I->copyField($this->paramsTextFieldEdit['name']);
+	}
+
+	/**
+	 * @param AddAFieldSteps $I
+	 * @throws Exception
+	 */
+	public function deleteField(AddAFieldSteps $I)
+	{
+		$I->wantToTest('Delete fields in redFORM');
+		$I->deleteField('Copy of '.$this->paramsTextFieldEdit['name']);
+		$I->deleteField($this->paramsTextFieldEdit['name']);
+		$I->deleteField($this->paramsTextFieldSaveClose['name']);
+		$I->deleteField($this->paramsEmailFieldEdit['name']);
 	}
 }

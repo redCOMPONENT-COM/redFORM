@@ -113,6 +113,12 @@ class RedFormAdminPage
 	 * @var string
 	 */
 	public static $searchForm = "#filter_search_forms";
+
+	/**
+	 * @var string
+	 */
+	public static $searchField = "#filter_search_fields";
+
 	/**
 	 * @var string
 	 */
