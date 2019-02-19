@@ -86,7 +86,7 @@ class RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $saveItem = 'Item saved';
+	public static $saveItem = 'Item saved.';
 	/**
 	 * @var string
 	 */
@@ -118,6 +118,11 @@ class RedFormAdminPage
 	 * @var string
 	 */
 	public static $searchField = "#filter_search_fields";
+
+	/**
+	 * @var string
+	 */
+	public static $searchSection = "#filter_search_sections";
 
 	/**
 	 * @var string
