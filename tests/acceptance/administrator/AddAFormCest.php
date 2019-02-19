@@ -66,10 +66,10 @@ class AddAFormCest
 		$I->wantToTest('Add forms in redFORM');
 
 		$I = new AddAFieldSteps($scenario);
-		$I->createField($this->paramsTextField1);
+		$I->createField($this->paramsTextField1, 'save&close');
 
 		$I = new AddAFieldSteps($scenario);
-		$I->createField($this->paramsTextField2);
+		$I->createField($this->paramsTextField2, 'save&close');
 
 		$I = new AddASectionSteps($scenario);
 		$I->createSection($this->paramsSection1);
