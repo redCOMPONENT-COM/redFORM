@@ -40,16 +40,28 @@ class AddAFormCest
 			'class' => $this->faker->bothify('section-css ?##?')
 		);
 
-		$this->paramsForm = array(
-			'name' => $this->faker->bothify('Form ?##?'),
+		$this->paramsFormSave = array(
+			'name' => $this->faker->bothify('FormSave ?##?'),
 			'fields_1' => $this->paramsTextField1['name'],
 			'section_1' => $this->paramsSection1['name'],
 			'fields_2' => $this->paramsTextField2['name'],
 			'section_2' => $this->paramsSection2['name']
 		);
+
+		$this->paramsFormSaveClose = array(
+			'name' => $this->faker->bothify('FormSaveClose ?##?'),
+			'fields_1' => $this->paramsTextField1['name'],
+			'section_1' => $this->paramsSection1['name'],
+			'fields_2' => $this->paramsTextField2['name'],
+			'section_2' => $this->paramsSection2['name']
+		);
+
+		$this->paramsFormSaveEdit = $this->faker->bothify('Edit FormSave ?##?');
+		$this->paramsFormSaveCloseEdit = $this->faker->bothify('Edit FormSaveClose ?##?');
 	}
 	/**
 	 * @param AcceptanceTester $I
+	 * @throws Exception
 	 */
 	public function _before(AcceptanceTester $I)
 	{
@@ -67,17 +79,58 @@ class AddAFormCest
 
 		$I = new AddAFieldSteps($scenario);
 		$I->createField($this->paramsTextField1, 'save&close');
-
-		$I = new AddAFieldSteps($scenario);
 		$I->createField($this->paramsTextField2, 'save&close');
 
 		$I = new AddASectionSteps($scenario);
 		$I->createSection($this->paramsSection1, 'save&close');
-
-		$I = new AddASectionSteps($scenario);
 		$I->createSection($this->paramsSection2, 'save&close');
 
 		$I = new AddAFormSteps($scenario);
-		$I->createForm($this->paramsForm);
+		$I->createForm($this->paramsFormSave, 'save');
+		$I->createForm($this->paramsFormSaveClose, 'save&close');
+	}
+
+	/**
+	 * @param AddAFormSteps $I
+	 * @throws Exception
+	 */
+	public function editForm(AddAFormSteps $I)
+	{
+		$I->wantToTest('Edit forms in redFORM');
+		$I->editForm($this->paramsFormSave['name'], $this->paramsFormSaveEdit, 'save');
+		$I->editForm($this->paramsFormSaveClose['name'], $this->paramsFormSaveCloseEdit, 'save&close');
+	}
+
+	/**
+	 * @param AddAFormSteps $I
+	 * @throws Exception
+	 */
+	public function publishForm(AddAFormSteps $I)
+	{
+		$I->wantToTest('Publish forms in redFORM');
+		$I->publishForm($this->paramsFormSaveEdit);
+		$I->publishForm($this->paramsFormSaveCloseEdit);
+	}
+
+	/**
+	 * @param AddAFormSteps $I
+	 * @throws Exception
+	 */
+	public function unpublishForm(AddAFormSteps $I)
+	{
+		$I->wantToTest('Unpublish forms in redFORM');
+		$I->unpublishForm($this->paramsFormSaveEdit);
+		$I->unpublishForm($this->paramsFormSaveCloseEdit);
+	}
+
+	/**
+	 * @param AddAFormSteps $I
+	 * @throws Exception
+	 */
+	public function deleteForm(AddAFormSteps $I)
+	{
+		$I->wantToTest('Delete forms in redFORM');
+		$I->deleteForm($this->paramsFormSaveEdit);
+		$I->deleteForm($this->paramsFormSaveCloseEdit);
 	}
 }
