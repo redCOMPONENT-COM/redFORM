@@ -72,10 +72,10 @@ class AddAFormCest
 		$I->createField($this->paramsTextField2, 'save&close');
 
 		$I = new AddASectionSteps($scenario);
-		$I->createSection($this->paramsSection1);
+		$I->createSection($this->paramsSection1, 'save&close');
 
 		$I = new AddASectionSteps($scenario);
-		$I->createSection($this->paramsSection2);
+		$I->createSection($this->paramsSection2, 'save&close');
 
 		$I = new AddAFormSteps($scenario);
 		$I->createForm($this->paramsForm);
