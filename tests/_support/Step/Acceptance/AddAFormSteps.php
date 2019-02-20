@@ -8,7 +8,6 @@
 
 namespace Step\Acceptance;
 
-use Page\Acceptance\AddAFieldPage;
 use Page\Acceptance\AddAFormPage as AddAFormPage;
 
 class AddAFormSteps extends Adminredform
