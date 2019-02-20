@@ -52,7 +52,6 @@ class AddAFormSteps extends Adminredform
 				$I->click(AddAFormPage::$saveCloseButton);
 				$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
 				$I->searchForm($params['name']);
-				$I->wait(0.5);
 				$I->checkAllResults();
 				$I->click(AddAFormPage::$editButton);
 				$I->click(AddAFormPage::$fields);
@@ -80,23 +79,21 @@ class AddAFormSteps extends Adminredform
 	 * @param array $function
 	 * @throws \Exception
 	 */
-	public function editForm($name, $params = array(), $function = array())
+	public function editForm($name, $nameEdit, $function = array())
 	{
 		$I = $this;
 		$I->amOnPage(AddAFormPage::$url);
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 		$I->searchForm($name);
-		$I->wait(0.5);
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$editButton);
 		$I->waitForText(AddAFormPage::$formName, 30, AddAFormPage::$formNameLbl);
-		$I->fillField(AddAFormPage::$formNameId, $params['name']);
+		$I->fillField(AddAFormPage::$formNameId, $nameEdit);
 		switch ($function)
 		{
 			case 'save':
 				$I->click(AddAFormPage::$saveButton);
 				$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
-				$I->waitForText($params['name'], 30, AddAFormPage::$formNameId);
 				break;
 
 			case 'save&close':
@@ -118,7 +115,6 @@ class AddAFormSteps extends Adminredform
 		$I->amOnPage(AddAFormPage::$url);
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 		$I->searchForm($nameForm);
-		$I->wait(0.5);
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$publishButton);
 		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
@@ -134,7 +130,6 @@ class AddAFormSteps extends Adminredform
 		$I->amOnPage(AddAFormPage::$url);
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 		$I->searchForm($nameForm);
-		$I->wait(0.5);
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$unpublishButton);
 		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
@@ -150,7 +145,6 @@ class AddAFormSteps extends Adminredform
 		$I->amOnPage(AddAFormPage::$url);
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 		$I->searchForm($nameForm);
-		$I->wait(0.5);
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$deleteButton);
 		$I->acceptPopup();
