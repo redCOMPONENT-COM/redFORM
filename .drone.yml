@@ -13,8 +13,8 @@ pipeline:
     - touch tests/.cache.npm.tmp
 
     # Joomla CMS
-    - mv /opt/cache/joomla-cms tests
-    - touch tests/.cache.joomla-cms.tmp
+    # - mv /opt/cache/joomla-cms tests
+    # - touch tests/.cache.joomla-cms.tmp
 
   00-setup:
     group: 00-setup
@@ -46,7 +46,7 @@ pipeline:
     # Codeception setup
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
     # Test setup
-    - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done          # Comment if not using Joomla CMS cache
+    # - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done          # Comment if not using Joomla CMS cache
     - cd tests
     - vendor/bin/robo tests:site-preparation 1 1
     - cd ..
@@ -60,7 +60,7 @@ pipeline:
     # Execution under uid 82 (www / www-data)
     # - while [ ! -f tests/.cache.aesir-core.tmp ]; do sleep 1; done        # Comment if not using redFORM Core cache
     - cd tests
-    - su www-data -c 'vendor/bin/robo tests:setup 1 1'
+    - su www-data -c 'vendor/bin/robo tests:setup 0 0'
 
   00-setup-stages:
     group: tests
@@ -96,7 +96,7 @@ pipeline:
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
     # Performs test
     - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator 1 1'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator 0 0'
 
   slack:
     image: plugins/slack
