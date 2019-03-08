@@ -9,6 +9,7 @@
 namespace Step\Acceptance;
 
 use Page\Acceptance\AddAFormPage as AddAFormPage;
+use Page\Acceptance\DisplayFormOnFrontendPage;
 
 class AddAFormSteps extends Adminredform
 {
@@ -35,12 +36,14 @@ class AddAFormSteps extends Adminredform
 				$I->waitForText(AddAFormPage::$formField, 30, AddAFormPage::$headPage);
 				$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$fieldId, $params['fields_1']);
 				$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$sectionId, $params['section_1']);
+				$I->selectOptionInRadioField(AddAFormPage::$required, $params['required']);
 				$I->click(AddAFormPage::$saveCloseButton);
 				$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
 				$I->click(AddAFormPage::$newButton);
 				$I->waitForText(AddAFormPage::$formField, 30, AddAFormPage::$headPage);
 				$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$fieldId, $params['fields_2']);
 				$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$sectionId, $params['section_2']);
+				$I->selectOptionInRadioField(AddAFormPage::$required, $params['required']);
 				$I->click(AddAFormPage::$saveCloseButton);
 				$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
 				$I->click(AddAFormPage::$saveButton);
@@ -58,12 +61,14 @@ class AddAFormSteps extends Adminredform
 				$I->waitForText(AddAFormPage::$formField, 30, AddAFormPage::$headPage);
 				$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$fieldId, $params['fields_1']);
 				$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$sectionId, $params['section_1']);
+				$I->selectOptionInRadioField(AddAFormPage::$required, $params['required']);
 				$I->click(AddAFormPage::$saveCloseButton);
 				$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
 				$I->click(AddAFormPage::$newButton);
 				$I->waitForText(AddAFormPage::$formField, 30, AddAFormPage::$headPage);
 				$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$fieldId, $params['fields_2']);
 				$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$sectionId, $params['section_2']);
+				$I->selectOptionInRadioField(AddAFormPage::$required, $params['required']);
 				$I->click(AddAFormPage::$saveCloseButton);
 				$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
 				$I->click(AddAFormPage::$saveButton);
@@ -102,6 +107,35 @@ class AddAFormSteps extends Adminredform
 				break;
 		}
 
+	}
+
+	/**
+	 * @param       $name
+	 * @param array $params
+	 * @throws \Exception
+	 */
+	public function editAndAddFieldForForm($name, $params = array())
+	{
+		$I = $this;
+		$I->amOnPage(AddAFormPage::$url);
+		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+		$I->searchForm($name);
+		$I->checkAllResults();
+		$I->click(AddAFormPage::$editButton);
+		$I->waitForText(AddAFormPage::$formName, 30, AddAFormPage::$formNameLbl);
+		$I->selectOptionInRadioField(AddAFormPage::$formExpires, $params['formExpires']);
+		$I->click(AddAFormPage::$saveButton);
+		$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
+		$I->click(AddAFormPage::$fields);
+		$I->click(AddAFormPage::$newButton);
+		$I->waitForText(AddAFormPage::$formField, 30, AddAFormPage::$headPage);
+		$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$fieldId, $params['fields']);
+		$I->selectOptionInChosenByIdUsingJs(AddAFormPage::$sectionId, $params['section']);
+		$I->selectOptionInRadioField(AddAFormPage::$required, $params['required']);
+		$I->click(AddAFormPage::$saveCloseButton);
+		$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
+		$I->click(AddAFormPage::$saveCloseButton);
+		$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
 	}
 
 	/**

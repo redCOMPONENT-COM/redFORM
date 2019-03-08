@@ -79,6 +79,7 @@ pipeline:
     - mysqldump -u root -proot -h db $tests_db > tests/dbdump.sql.tmp
     # Stages setup
     - sh tests/drone/setup-stages.sh "administrator"    "01-administrator"
+    - sh tests/drone/setup-stages.sh "frontend"         "02-frontend"
 
   01-administrator:
     group: tests
@@ -97,6 +98,24 @@ pipeline:
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator 0 0'
+
+  02-frontend:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=02-frontend
+    - tests_db=frontend
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-02-frontend
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend 0 0'
 
   slack:
     image: plugins/slack
