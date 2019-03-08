@@ -55,7 +55,8 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I = $this;
 		$I->amOnPage(DisplayFormOnFrontendPage::$urlAdminMenu);
 		$I->wantTo('Create menu items and add articles for display in frontend');
-		$I->click(DisplayFormOnFrontendPage::$menuItems);
+		$usePage = new DisplayFormOnFrontendPage();
+		$I->click($usePage->returnMenuItem('Main Menu'));
 		$I->click(DisplayFormOnFrontendPage::$newButton);
 		$I->waitForElement(DisplayFormOnFrontendPage::$titleLbl, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$title, $menuTitle);
@@ -63,7 +64,6 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->click(DisplayFormOnFrontendPage::$selectMenuItemType);
 		$I->switchToIFrame(DisplayFormOnFrontendPage::$menuItemType);
 		$I->click($menuItemType);
-		$usePage = new DisplayFormOnFrontendPage();
 		$I->wait(0.5);
 		$I->click($usePage->returnMenuItem($articles));
 		$I->waitForElement(DisplayFormOnFrontendPage::$selectArticleLbl, 30);

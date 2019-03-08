@@ -25,10 +25,6 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $menuItems = "//a[@href='/redform/administrator/index.php?option=com_menus&view=items&menutype=mainmenu']";
-	/**
-	 * @var string
-	 */
 	public static $titleLbl = "#jform_title-lbl";
 	/**
 	 * @var string
@@ -111,7 +107,6 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 		$path = "//a[contains(text()[normalize-space()], '$menuItem')]";
 		return $path;
 	}
-
 	/**
 	 * @param $value
 	 * @return string

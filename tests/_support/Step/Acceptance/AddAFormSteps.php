@@ -9,7 +9,6 @@
 namespace Step\Acceptance;
 
 use Page\Acceptance\AddAFormPage as AddAFormPage;
-use Page\Acceptance\DisplayFormOnFrontendPage;
 
 class AddAFormSteps extends Adminredform
 {

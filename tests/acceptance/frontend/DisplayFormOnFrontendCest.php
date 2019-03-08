@@ -44,41 +44,41 @@ class DisplayFormOnFrontendCest
 
 		$this->paramsForm =
 			[
-				'name' => $this->faker->bothify('FormSave ?##?'),
-				'fields_1' => $this->nameField['name'],
-				'section_1' => 'general',
-				'fields_2' => $this->emailField['name'],
-				'section_2' => 'general',
-				'required'  => 'Yes'
+				'name'              => $this->faker->bothify('FormSave ?##?'),
+				'fields_1'          => $this->nameField['name'],
+				'section_1'         => 'general',
+				'fields_2'          => $this->emailField['name'],
+				'section_2'         => 'general',
+				'required'          => 'Yes'
 			];
 
 		$this->telephoneForm =
 			[
-				'fields' => $this->telephoneField['name'],
-				'section' => 'general',
-				'required'  => 'No',
-				'formExpires' => 'No'
+				'fields'            => $this->telephoneField['name'],
+				'section'           => 'general',
+				'required'          => 'No',
+				'formExpires'       => 'No'
 			];
 
 		$this->noteForm =
 			[
-				'fields' => $this->noteField['name'],
-				'section' => 'general',
-				'required'  => 'No',
-				'formExpires' => 'No'
+				'fields'            => $this->noteField['name'],
+				'section'           => 'general',
+				'required'          => 'No',
+				'formExpires'       => 'No'
 			];
 
-		$this->articlesTitle = $this->faker->bothify('Article ?##?');
-		$this->articles = 'Single Article';
-		$this->menuTitle = $this->faker->bothify('Menu ?##?');
-		$this->menuItemType = 'Articles';
+		$this->articlesTitle        = $this->faker->bothify('Article ?##?');
+		$this->articles             = 'Single Article';
+		$this->menuTitle            = $this->faker->bothify('Menu ?##?');
+		$this->menuItemType         = 'Articles';
 
 		$this->fillForm =
 			[
-				'name'          => $this->faker->bothify('Name ?##?'),
-				'email'         => $this->faker->email,
-				'telephone'     => $this->faker->phoneNumber,
-				'note'          => $this->faker->bothify('Name ????????????????'),
+				'name'              => $this->faker->bothify('Name ?##?'),
+				'email'             => $this->faker->email,
+				'telephone'         => $this->faker->phoneNumber,
+				'note'              => $this->faker->bothify('Name ????????????????'),
 			];
 	}
 	/**

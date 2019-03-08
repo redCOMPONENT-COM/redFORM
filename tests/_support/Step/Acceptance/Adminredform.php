@@ -104,13 +104,4 @@ class Adminredform extends \AcceptanceTester
 
 		return true;
 	}
-
-	/**
-	 * @param $value
-	 */
-	public function fillCodeMirror($value)
-	{
-		$i = $this;
-		$i->executeJS("var editor = $('.CodeMirror')[0].CodeMirror; editor.getDoc().setValue('$value');");
-	}
 }
