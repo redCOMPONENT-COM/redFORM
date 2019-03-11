@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     redCORE
+ * @package     redFORM
  * @subpackage  Cept
  * @copyright   Copyright (C) 2008 - 2019 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,6 +11,62 @@ use Step\Acceptance\AddAFieldSteps as AddAFieldSteps;
 use Step\Acceptance\DisplayFormOnFrontendSteps as DisplayFormOnFrontendSteps;
 class DisplayFormOnFrontendCest
 {
+    /**
+     * @var   string
+     */
+    protected $faker;
+    /**
+     * @var array
+     */
+    protected $nameField;
+    /**
+     * @var array
+     */
+    protected $emailField;
+    /**
+     * @var array
+     */
+    protected $telephoneField;
+    /**
+     * @var array
+     */
+    protected $noteField;
+    /**
+     * @var array
+     */
+    protected $paramsForm;
+    /**
+     * @var array
+     */
+    protected $telephoneForm;
+    /**
+     * @var array
+     */
+    protected $noteForm;
+    /**
+     * @var string
+     */
+    protected $articlesTitle;
+    /**
+     * @var string
+     */
+    protected $articles;
+    /**
+     * @var string
+     */
+    protected $menuTitle;
+    /**
+     * @var string
+     */
+    protected $menuItemType;
+    /**
+     * @var array
+     */
+    protected $fillForm;
+
+    /**
+     * DisplayFormOnFrontendCest constructor.
+     */
 	public function __construct()
 	{
 		$this->faker   = Faker\Factory::create();
