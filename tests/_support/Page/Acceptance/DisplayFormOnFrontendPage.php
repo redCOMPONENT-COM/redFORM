@@ -74,7 +74,7 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $selectMenuItemType = "//button[@title='Select']";
+	public static $selectMenuItemType = "Select";
 	/**
 	 * @var string
 	 */
