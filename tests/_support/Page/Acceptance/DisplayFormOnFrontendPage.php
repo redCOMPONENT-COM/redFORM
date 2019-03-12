@@ -13,15 +13,36 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $urlFrontend = "index.php";
+	public static $frontendURL = "index.php";
 	/**
 	 * @var string
 	 */
-	public static $urlAdminArticles = "administrator/index.php?option=com_content&view=articles";
+	public static $adminArticlesURL = "administrator/index.php?option=com_content&view=articles";
 	/**
 	 * @var string
 	 */
-	public static $urlAdminMenu = "administrator/index.php?option=com_menus&view=menus";
+	public static $menuItemURL = '/administrator/index.php?option=com_menus&view=menus';
+	/**
+	 * @var string
+	 */
+	public static $h1 =  array('css' => 'h1');
+	/**
+	 * @var string
+	 */
+	public static $menuTitle   = 'Menus';
+	/**
+	 * @var string
+	 */
+	public static $menuItemsTitle   = 'Menus: Items';
+	/**
+	 * @var string
+	 */
+	public static $menuNewItemTitle   = 'Menus: New Item';
+	/**
+	 * Menu item title
+	 * @var string
+	 */
+	public static $menItemTitle = "#jform_title";
 	/**
 	 * @var string
 	 */

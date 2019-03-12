@@ -30,7 +30,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForElement(DisplayFormOnFrontendPage::$tagForm, 30);
 		$tag = $I->grabTextFrom(DisplayFormOnFrontendPage::$tagForm);
 		$I->see($tag);
-		$I->amOnPage(DisplayFormOnFrontendPage::$urlAdminArticles);
+		$I->amOnPage(DisplayFormOnFrontendPage::$adminArticlesURL);
 		$I->wantTo('Create new article use form');
 		$I->click(DisplayFormOnFrontendPage::$newButton);
 		$I->waitForElement(DisplayFormOnFrontendPage::$titleLbl, 30);
@@ -50,13 +50,20 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	 * @param $menuItemType
 	 * @throws \Exception
 	 */
-	public function createNewMenuItem($articlesTitle, $articles, $menuTitle, $menuItemType)
+	public function createNewMenuItem($articlesTitle, $articles, $menuTitle, $menuItemType, $menu)
 	{
 		$I = $this;
-		$I->amOnPage(DisplayFormOnFrontendPage::$urlAdminMenu);
-		$I->wantTo('Create menu items and add articles for display in frontend');
-		$usePage = new DisplayFormOnFrontendPage();
-		$I->click($usePage->returnMenuItem('Main Menu'));
+		$I->wantTo('I open the menu page');
+		$I->amOnPage(DisplayFormOnFrontendPage::$menuItemURL);
+		$I->waitForText(DisplayFormOnFrontendPage::$menuTitle, 30, DisplayFormOnFrontendPage::$h1);
+		$I->checkForPhpNoticesOrWarnings();
+
+		$I->wantTo("I click in the menu: $menu");
+		$I->click(array('link' => $menu));
+		$I->waitForText(DisplayFormOnFrontendPage::$menuItemsTitle, 30, DisplayFormOnFrontendPage::$h1);
+		$I->checkForPhpNoticesOrWarnings();
+
+		$I->wantTo("I click new button");
 		$I->click(DisplayFormOnFrontendPage::$newButton);
 		$I->waitForElement(DisplayFormOnFrontendPage::$titleLbl, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$title, $menuTitle);
@@ -65,6 +72,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->switchToIFrame(DisplayFormOnFrontendPage::$menuItemType);
 		$I->click($menuItemType);
 		$I->wait(0.5);
+		$usePage = new DisplayFormOnFrontendPage();
 		$I->click($usePage->returnMenuItem($articles));
 		$I->waitForElement(DisplayFormOnFrontendPage::$selectArticleLbl, 30);
 		$I->waitForElement(DisplayFormOnFrontendPage::$selectArticle, 30);
@@ -89,7 +97,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	public function checkFormInFrontend($menu, $fillForm = array())
 	{
 		$I = $this;
-		$I->amOnPage(DisplayFormOnFrontendPage::$urlFrontend);
+		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
 		$usepage = new DisplayFormOnFrontendPage();
 		$I->seeElement($usepage->xPathMenu($menu));
 		$I->click($usepage->xPathMenu($menu));

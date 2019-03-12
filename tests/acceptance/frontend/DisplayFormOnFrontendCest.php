@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     redCORE
+ * @package     redFORM
  * @subpackage  Cept
  * @copyright   Copyright (C) 2008 - 2019 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,6 +11,62 @@ use Step\Acceptance\AddAFieldSteps as AddAFieldSteps;
 use Step\Acceptance\DisplayFormOnFrontendSteps as DisplayFormOnFrontendSteps;
 class DisplayFormOnFrontendCest
 {
+	/**
+	 * @var   string
+	 */
+	protected $faker;
+	/**
+	 * @var array
+	 */
+	protected $nameField;
+	/**
+	 * @var array
+	 */
+	protected $emailField;
+	/**
+	 * @var array
+	 */
+	protected $telephoneField;
+	/**
+	 * @var array
+	 */
+	protected $noteField;
+	/**
+	 * @var array
+	 */
+	protected $paramsForm;
+	/**
+	 * @var array
+	 */
+	protected $telephoneForm;
+	/**
+	 * @var array
+	 */
+	protected $noteForm;
+	/**
+	 * @var string
+	 */
+	protected $articlesTitle;
+	/**
+	 * @var string
+	 */
+	protected $articles;
+	/**
+	 * @var string
+	 */
+	protected $menuTitle;
+	/**
+	 * @var string
+	 */
+	protected $menuItemType;
+	/**
+	 * @var array
+	 */
+	protected $fillForm;
+
+	/**
+	 * DisplayFormOnFrontendCest constructor.
+	 */
 	public function __construct()
 	{
 		$this->faker   = Faker\Factory::create();
@@ -98,7 +154,6 @@ class DisplayFormOnFrontendCest
 	public function createForm(AddAFormSteps $I, $scenario)
 	{
 		$I = new AddAFieldSteps($scenario);
-		$I->wantToTest('Create field for check.');
 		$I->createField($this->nameField, 'save&close');
 		$I->createField($this->emailField, 'save&close');
 		$I->createField($this->telephoneField, 'save&close');
@@ -120,7 +175,7 @@ class DisplayFormOnFrontendCest
 	{
 		$I = new DisplayFormOnFrontendSteps($scenario);
 		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
-		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType);
+		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
 		$I->checkFormInFrontend($this->menuTitle, $this->fillForm);
 	}
 }
