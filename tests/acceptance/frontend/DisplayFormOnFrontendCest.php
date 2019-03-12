@@ -174,11 +174,11 @@ class DisplayFormOnFrontendCest
 	public function checkDisplayForm(DisplayFormOnFrontendSteps $I, $scenario)
 	{
 		$I = new DisplayFormOnFrontendSteps($scenario);
-		$I->wantToTest('Create new article');
+		$I->wantTo('Create new article');
 		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
-		$I->wantToTest('Create new menu items');
+		$I->wantTo('Create new menu items');
 		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
-		$I->wantToTest('Check form display in frontend');
+		$I->wantTo('Check form display in frontend');
 		$I->checkFormInFrontend($this->menuTitle, $this->fillForm);
 	}
 }
