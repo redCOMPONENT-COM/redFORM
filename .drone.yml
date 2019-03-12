@@ -61,7 +61,7 @@ pipeline:
     # - while [ ! -f tests/.cache.aesir-core.tmp ]; do sleep 1; done        # Comment if not using redFORM Core cache
     - cd tests
     - su www-data -c 'vendor/bin/robo tests:setup 0 0'
-    - sh tests/drone/setup-stages.sh "frontend"         "02-frontend"
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend 0 0'
 
 #  00-setup-stages:
 #    group: tests
