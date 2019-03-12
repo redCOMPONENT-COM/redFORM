@@ -86,7 +86,7 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $selectArticle = "//button[@id='jform_request_id_select']";
+	public static $selectArticle = "#jform_request_id_select";
 	/**
 	 * @var string
 	 */

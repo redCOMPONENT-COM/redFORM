@@ -53,17 +53,14 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	public function createNewMenuItem($articlesTitle, $articles, $menuTitle, $menuItemType, $menu)
 	{
 		$I = $this;
-		$I->wantTo('I open the menu page');
 		$I->amOnPage(DisplayFormOnFrontendPage::$menuItemURL);
 		$I->waitForText(DisplayFormOnFrontendPage::$menuTitle, 30, DisplayFormOnFrontendPage::$h1);
 		$I->checkForPhpNoticesOrWarnings();
 
-		$I->wantTo("I click in the menu: $menu");
 		$I->click(array('link' => $menu));
 		$I->waitForText(DisplayFormOnFrontendPage::$menuItemsTitle, 30, DisplayFormOnFrontendPage::$h1);
 		$I->checkForPhpNoticesOrWarnings();
 
-		$I->wantTo("I click new button");
 		$I->click(DisplayFormOnFrontendPage::$newButton);
 		$I->waitForElement(DisplayFormOnFrontendPage::$titleLbl, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$title, $menuTitle);
