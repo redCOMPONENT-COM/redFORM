@@ -15,50 +15,62 @@ class DisplayFormOnFrontendCest
 	 * @var   string
 	 */
 	protected $faker;
+
 	/**
 	 * @var array
 	 */
 	protected $nameField;
+
 	/**
 	 * @var array
 	 */
 	protected $emailField;
+
 	/**
 	 * @var array
 	 */
 	protected $telephoneField;
+
 	/**
 	 * @var array
 	 */
 	protected $noteField;
+
 	/**
 	 * @var array
 	 */
 	protected $paramsForm;
+
 	/**
 	 * @var array
 	 */
 	protected $telephoneForm;
+
 	/**
 	 * @var array
 	 */
 	protected $noteForm;
+
 	/**
 	 * @var string
 	 */
 	protected $articlesTitle;
+
 	/**
 	 * @var string
 	 */
 	protected $articles;
+
 	/**
 	 * @var string
 	 */
 	protected $menuTitle;
+
 	/**
 	 * @var string
 	 */
 	protected $menuItemType;
+	
 	/**
 	 * @var array
 	 */
