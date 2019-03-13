@@ -29,7 +29,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->searchForm($formName);
 		$I->waitForElement(DisplayFormOnFrontendPage::$tagForm, 30);
 		$tag = $I->grabTextFrom(DisplayFormOnFrontendPage::$tagForm);
-		$I->see($tag);
+		$I->waitForText($tag, 30);
 		$I->amOnPage(DisplayFormOnFrontendPage::$adminArticlesURL);
 		$I->wantTo('Create new article use form');
 		$I->click(DisplayFormOnFrontendPage::$newButton);
@@ -68,8 +68,8 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->click(DisplayFormOnFrontendPage::$selectMenuItemType);
 		$I->switchToIFrame(DisplayFormOnFrontendPage::$menuItemType);
 		$I->click($menuItemType);
-		$I->wait(0.5);
 		$usePage = new DisplayFormOnFrontendPage();
+		$I->waitForElement($usePage->returnMenuItem($articles), 30);
 		$I->click($usePage->returnMenuItem($articles));
 		$I->waitForElement(DisplayFormOnFrontendPage::$selectArticleLbl, 30);
 		$I->waitForElement(DisplayFormOnFrontendPage::$selectArticle, 30);
@@ -96,7 +96,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I = $this;
 		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
 		$usepage = new DisplayFormOnFrontendPage();
-		$I->seeElement($usepage->xPathMenu($menu));
+		$I->waitForElement($usepage->xPathMenu($menu), 30);
 		$I->click($usepage->xPathMenu($menu));
 		$I->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
