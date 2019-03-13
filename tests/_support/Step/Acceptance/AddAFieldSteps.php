@@ -83,6 +83,7 @@ class AddAFieldSteps extends Adminredform
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
 		$I->checkAllResults();
+		$I->waitForElement(AddAFieldPage::$editButton, 30);
 		$I->click(AddAFieldPage::$editButton);
 		$I->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
 		$I->fillField(AddAFieldPage::$nameId, $params['name']);
@@ -160,6 +161,7 @@ class AddAFieldSteps extends Adminredform
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
 		$I->checkAllResults();
+		$I->waitForElement(AddAFieldPage::$deleteButton, 30);
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
 		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
