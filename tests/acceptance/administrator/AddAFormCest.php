@@ -45,7 +45,8 @@ class AddAFormCest
 			'fields_1' => $this->paramsTextField1['name'],
 			'section_1' => $this->paramsSection1['name'],
 			'fields_2' => $this->paramsTextField2['name'],
-			'section_2' => $this->paramsSection2['name']
+			'section_2' => $this->paramsSection2['name'],
+			'required' => 'Yes'
 		);
 
 		$this->paramsFormSaveClose = array(
@@ -53,7 +54,8 @@ class AddAFormCest
 			'fields_1' => $this->paramsTextField1['name'],
 			'section_1' => $this->paramsSection1['name'],
 			'fields_2' => $this->paramsTextField2['name'],
-			'section_2' => $this->paramsSection2['name']
+			'section_2' => $this->paramsSection2['name'],
+			'required' => 'Yes'
 		);
 
 		$this->paramsFormSaveEdit = $this->faker->bothify('Edit FormSave ?##?');

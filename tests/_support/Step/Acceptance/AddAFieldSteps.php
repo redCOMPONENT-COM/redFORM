@@ -45,6 +45,12 @@ class AddAFieldSteps extends Adminredform
 			$I->waitForText(AddAFieldPage::$defaultValue, 30, AddAFieldPage::$defaultValueLbl);
 			$I->fillField(AddAFieldPage::$defaultValueId, $params['default']);
 		}
+		
+		if (isset($params['placeholder']))
+		{
+			$I->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
+			$I->fillField(AddAFieldPage::$placeholderId, $params['placeholder']);
+		}
 
 		switch ($function)
 		{

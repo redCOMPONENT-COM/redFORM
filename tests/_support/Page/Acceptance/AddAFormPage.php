@@ -48,6 +48,14 @@ class AddAFormPage extends RedFormAdminPage
 	 */
 	public static $sectionId = "jform_section_id";
 	/**
+	 * @var string
+	 */
+	public static $formExpires = "Form Expires";
+	/**
+	 * @var string
+	 */
+	public static $required = 'Required';
+	/**
 	 * @param $value
 	 * @return string
 	 */

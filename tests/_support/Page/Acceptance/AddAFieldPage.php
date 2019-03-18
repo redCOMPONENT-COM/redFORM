@@ -75,6 +75,18 @@ class AddAFieldPage extends RedFormAdminPage
 	 */
 	public static $defaultValueId = "#jform_default";
 	/**
+	 * @var string
+	 */
+	public static $placeholder = "Placeholder";
+	/**
+	 * @var string
+	 */
+	public static $placeholderLbl = "#jform_params_placeholder-lbl";
+	/**
+	 * @var string
+	 */
+	public static $placeholderId = "#jform_params_placeholder";
+	/**
 	 * @param $value
 	 * @return string
 	 */
