@@ -63,7 +63,7 @@ class AddAFieldCest
 	 */
 	public function addField(AddAFieldSteps $I)
 	{
-		$I->wantToTest('Add fields in redform');
+		$I->wantToTest('Add fields in redFORM');
 		$I->createField($this->paramsTextField, 'save');
 		$I->createField($this->paramsTextFieldSaveClose, 'save&close');
 		$I->createField($this->paramsEmailField, 'save&new');
@@ -76,7 +76,7 @@ class AddAFieldCest
 	 */
 	public function addFieldMissingName(AddAFieldSteps $I)
 	{
-		$I->wantToTest('Add fields in redform with missing name');
+		$I->wantToTest('Add fields in redFORM with missing name');
 		$I->createFieldMissingName($this->paramsTextField);
 	}
 
@@ -86,7 +86,7 @@ class AddAFieldCest
 	 */
 	public function editField(AddAFieldSteps $I)
 	{
-		$I->wantToTest('Edit fields in redform');
+		$I->wantToTest('Edit fields in redFORM');
 		$I->editField($this->paramsTextField['name'], $this->paramsTextFieldEdit, 'save');
 		$I->editField($this->paramsEmailField['name'], $this->paramsEmailFieldEdit, 'save&close');
 	}
@@ -97,7 +97,7 @@ class AddAFieldCest
 	 */
 	public function copyField(AddAFieldSteps $I)
 	{
-		$I->wantToTest('Copy fields in redform');
+		$I->wantToTest('Copy fields in redFORM');
 		$I->copyField($this->paramsTextFieldEdit['name']);
 	}
 
@@ -107,7 +107,7 @@ class AddAFieldCest
 	 */
 	public function deleteField(AddAFieldSteps $I)
 	{
-		$I->wantToTest('Delete fields in redform');
+		$I->wantToTest('Delete fields in redFORM');
 		$I->deleteField('Copy of '.$this->paramsTextFieldEdit['name']);
 		$I->deleteField($this->paramsTextFieldEdit['name']);
 		$I->deleteField($this->paramsTextFieldSaveClose['name']);
