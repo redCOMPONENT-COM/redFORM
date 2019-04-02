@@ -193,4 +193,51 @@ class DisplayFormOnFrontendCest
 		$I->wantTo('Check form display in frontend');
 		$I->checkFormInFrontend($this->menuTitle, $this->fillForm);
 	}
+
+	/**
+	 * @param DisplayFormOnFrontendSteps $I
+	 * @param                            $scenario
+	 * @throws Exception
+	 */
+	public function submitFormMissingEmail(DisplayFormOnFrontendSteps $I, $scenario)
+	{
+		$I = new DisplayFormOnFrontendSteps($scenario);
+		$I->wantTo('Create new article');
+		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
+		$I->wantTo('Create new menu items');
+		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
+		$I->wantToTest('Submit form with missing email');
+		$I->submitFormMissingEmail($this->menuTitle, $this->fillForm);
+	}
+
+	/**
+	 * @param DisplayFormOnFrontendSteps $I
+	 * @param                            $scenario
+	 * @throws Exception
+	 */
+	public function submitFormMissingName(DisplayFormOnFrontendSteps $I, $scenario)
+	{
+		$I = new DisplayFormOnFrontendSteps($scenario);
+		$I->wantTo('Create new article');
+		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
+		$I->wantTo('Create new menu items');
+		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
+		$I->wantToTest('Submit form with missing name');
+		$I->submitFormMissingName($this->menuTitle, $this->fillForm);
+	}
+
+	/**
+	 * @param DisplayFormOnFrontendSteps $I
+	 * @param                            $scenario
+	 * @throws Exception
+	 */
+	public function clearAll(DisplayFormOnFrontendSteps $I, $scenario)
+	{
+		$I->wantTo('Clear up');
+		$I = new AddAFormSteps($scenario);
+		$I->deleteForm($this->paramsForm['name']);
+
+		$I = new AddAFieldSteps($scenario);
+		$I->deleteAllField();
+	}
 }
