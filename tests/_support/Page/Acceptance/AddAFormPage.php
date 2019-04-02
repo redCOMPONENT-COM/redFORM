@@ -83,6 +83,11 @@ class AddAFormPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
+	public static $messageMissingFormName = "Field required: Form name";
+
+	/**
+	 * @var string
+	 */
 	public static $required = 'Required';
 
 	/**

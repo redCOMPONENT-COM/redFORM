@@ -76,7 +76,6 @@ class RedFormAdminPage
 	 */
 	public static $searchToolsButton = "//button[@data-original-title=\"Filter the list items\"]";
 
-
 	//general system
 	/**
 	 * @var string
@@ -96,8 +95,12 @@ class RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $headPage = "//h1";
+	public static $alertError = ".alert-error";
 
+	/**
+	 * @var string
+	 */
+	public static $headPage = "//h1";
 
 	//general message
 	/**
@@ -130,11 +133,6 @@ class RedFormAdminPage
 	 */
 	public static $deleteSuccess = "1 items deleted";
 
-	/**
-	 * @var string
-	 */
-	public static $messageMissingFormName = "Field required: Form name";
-
 	//general located
 	/**
 	 * @var string
@@ -155,6 +153,4 @@ class RedFormAdminPage
 	 * @var string
 	 */
 	public static $searchIcon = "//button[@data-original-title=\"Search\"]";
-
-
 }

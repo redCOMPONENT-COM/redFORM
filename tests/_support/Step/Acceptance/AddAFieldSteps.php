@@ -83,6 +83,48 @@ class AddAFieldSteps extends Adminredform
 	 * @param array $function
 	 * @throws \Exception
 	 */
+	public function createFieldMissingName($params = array())
+	{
+		$I = $this;
+		$I->amOnPage(AddAFieldPage::$URL);
+		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+		$I->click(AddAFieldPage::$newButton);
+		$I->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
+		$I->selectOptionInChosen(AddAFieldPage::$fieldType, $params['fieldtype']);
+
+		if (isset($params['field_header']))
+		{
+			$I->waitForText(AddAFieldPage::$fieldHeader, 30, AddAFieldPage::$fieldHeaderLbl);
+			$I->fillField(AddAFieldPage::$fieldHeaderId, $params['field_header']);
+		}
+
+		if (isset($params['tooltip']))
+		{
+			$I->waitForText(AddAFieldPage::$tooltip, 30, AddAFieldPage::$tooltipLbl);
+			$I->fillField(AddAFieldPage::$tooltipId, $params['tooltip']);
+		}
+
+		if (isset($params['default']))
+		{
+			$I->waitForText(AddAFieldPage::$defaultValue, 30, AddAFieldPage::$defaultValueLbl);
+			$I->fillField(AddAFieldPage::$defaultValueId, $params['default']);
+		}
+
+		if (isset($params['placeholder']))
+		{
+			$I->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
+			$I->fillField(AddAFieldPage::$placeholderId, $params['placeholder']);
+		}
+
+		$I->click(AddAFieldPage::$saveButton);
+		$I->waitForText(AddAFieldPage::$messageMissingName, 30, AddAFieldPage::$alertError);
+	}
+
+	/**
+	 * @param array $params
+	 * @param array $function
+	 * @throws \Exception
+	 */
 	public function editField($name, $params = array(), $function = array())
 	{
 		$I = $this;

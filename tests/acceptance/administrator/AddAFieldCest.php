@@ -74,6 +74,16 @@ class AddAFieldCest
 	 * @param AddAFieldSteps $I
 	 * @throws Exception
 	 */
+	public function addFieldMissingName(AddAFieldSteps $I)
+	{
+		$I->wantToTest('Add fields in redFORM with missing name');
+		$I->createFieldMissingName($this->paramsTextField);
+	}
+
+	/**
+	 * @param AddAFieldSteps $I
+	 * @throws Exception
+	 */
 	public function editField(AddAFieldSteps $I)
 	{
 		$I->wantToTest('Edit fields in redFORM');
