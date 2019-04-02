@@ -133,4 +133,27 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->click(DisplayFormOnFrontendPage::$regularSubmit);
 		$I->waitForText(DisplayFormOnFrontendPage::$messageError, 30, DisplayFormOnFrontendPage::$errorXpath);
 	}
+
+	/**
+	 * @param       $menu
+	 * @param array $fillForm
+	 * @throws \Exception
+	 */
+	public function submitFormMissingName($menu, $fillForm = array())
+	{
+		$I = $this;
+		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
+		$usepage = new DisplayFormOnFrontendPage();
+		$I->waitForElement($usepage->xPathMenu($menu), 30);
+		$I->click($usepage->xPathMenu($menu));
+		$I->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
+		$I->fillField(DisplayFormOnFrontendPage::$emailInput, $fillForm['email']);
+		$I->waitForElement(DisplayFormOnFrontendPage::$telephoneInput, 30);
+		$I->fillField(DisplayFormOnFrontendPage::$telephoneInput, $fillForm['telephone']);
+		$I->waitForElement(DisplayFormOnFrontendPage::$noteTextarea, 30);
+		$I->fillField(DisplayFormOnFrontendPage::$noteTextarea, $fillForm['note']);
+		$I->waitForElement(DisplayFormOnFrontendPage::$regularSubmit, 30);
+		$I->click(DisplayFormOnFrontendPage::$regularSubmit);
+		$I->waitForText(DisplayFormOnFrontendPage::$messageError, 30, DisplayFormOnFrontendPage::$errorXpath);
+	}
 }
