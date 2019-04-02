@@ -176,6 +176,19 @@ class AddAFieldSteps extends Adminredform
 	}
 
 	/**
+	 * @throws \Exception
+	 */
+	public function deleteAllField()
+	{
+		$I = $this;
+		$I->amOnPage(AddAFieldPage::$URL);
+		$I->checkAllResults();
+		$I->click(AddAFieldPage::$deleteButton);
+		$I->acceptPopup();
+		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+	}
+
+	/**
 	 * @param $nameField
 	 * @throws \Exception
 	 */

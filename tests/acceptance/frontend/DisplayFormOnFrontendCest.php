@@ -222,10 +222,6 @@ class DisplayFormOnFrontendCest
 		$I->deleteForm($this->paramsForm['name']);
 
 		$I = new AddAFieldSteps($scenario);
-		$I->deleteField($this->nameField['name']);
-		$I->deleteField($this->emailField['name']);
-		$I->deleteField($this->telephoneField['name']);
-		$I->deleteField($this->noteField['name']);
+		$I->deleteAllField();
 	}
-
 }
