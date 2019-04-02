@@ -58,6 +58,10 @@ class AddAFormCest
 			'required' => 'Yes'
 		);
 
+		$this->paramsFormMissingName = array();
+		$this->paramsFormMissingName['startDate']   = '2019-04-02';
+		$this->paramsFormMissingName['endDate']	    = '2020-04-02';
+
 		$this->paramsFormSaveEdit = $this->faker->bothify('Edit FormSave ?##?');
 		$this->paramsFormSaveCloseEdit = $this->faker->bothify('Edit FormSaveClose ?##?');
 	}
@@ -90,6 +94,19 @@ class AddAFormCest
 		$I = new AddAFormSteps($scenario);
 		$I->createForm($this->paramsFormSave, 'save');
 		$I->createForm($this->paramsFormSaveClose, 'save&close');
+
+	}
+
+	/**
+	 * @param AddAFieldSteps $I
+	 * @param                $scenario
+	 * @throws Exception
+	 */
+	public function createFormMissingName(AddAFieldSteps $I, $scenario)
+	{
+		$I->wantToTest('Add form in redFORM with missing name');
+		$I = new AddAFormSteps($scenario);
+		$I->createFormMissingName($this->paramsFormMissingName);
 	}
 
 	/**
