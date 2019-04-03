@@ -63,6 +63,11 @@ class AddAFormPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
+	public static $formExpiresLbl = "//label[@id='jform_formexpires-lbl']";
+
+	/**
+	 * @var string
+	 */
 	public static $startDateLbl = "//label[@id='jform_startdate-lbl']";
 
 	/**

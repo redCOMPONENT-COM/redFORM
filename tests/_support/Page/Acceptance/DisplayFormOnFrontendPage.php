@@ -154,6 +154,11 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
+	public static $messageHasExpired = "This form has expired";
+
+	/**
+	 * @var string
+	 */
 	public static $errorXpath = "//div[@class='field-inline-error']";
 
 	/**
