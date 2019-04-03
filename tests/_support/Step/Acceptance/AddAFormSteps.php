@@ -77,6 +77,24 @@ class AddAFormSteps extends Adminredform
 	}
 
 	/**
+	 * @param array $params
+	 * @throws \Exception
+	 */
+	public function createFormMissingName($params = array())
+	{
+		$I = $this;
+		$I->amOnPage(AddAFormPage::$url);
+		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+		$I->click(AddAFormPage::$newButton);
+		$I->waitForElement(AddAFormPage::$startDateLbl, 30);
+		$I->fillField(AddAFormPage::$startDate, $params['startDate']);
+		$I->waitForElement(AddAFormPage::$endDateLbl, 30);
+		$I->fillField(AddAFormPage::$endDate, $params['endDate']);
+		$I->click(AddAFormPage::$saveButton);
+		$I->waitForText(AddAFormPage::$messageMissingFormName, 30, AddAFormPage::$alertMessage);
+	}
+
+	/**
 	 * @param       $name
 	 * @param array $params
 	 * @param array $function

@@ -14,26 +14,32 @@ class AddAFormPage extends RedFormAdminPage
 	 * @var string
 	 */
 	public static $url = "administrator/index.php?option=com_redform&view=forms";
+
 	/**
 	 * @var string
 	 */
 	public static $form = "Forms";
+
 	/**
 	 * @var string
 	 */
 	public static $formField = "Form field";
+
 	/**
 	 * @var string
 	 */
 	public static $formName = "Form name";
+
 	/**
 	 * @var string
 	 */
 	public static $formNameLbl = "#jform_formname-lbl";
+
 	/**
 	 * @var string
 	 */
 	public static $formNameId = "#jform_formname";
+
 	/**
 	 * @var string
 	 */
@@ -43,18 +49,47 @@ class AddAFormPage extends RedFormAdminPage
 	 * @var string
 	 */
 	public static $fieldId = "jform_field_id";
+
 	/**
 	 * @var string
 	 */
 	public static $sectionId = "jform_section_id";
+
 	/**
 	 * @var string
 	 */
 	public static $formExpires = "Form Expires";
+
+	/**
+	 * @var string
+	 */
+	public static $startDateLbl = "//label[@id='jform_startdate-lbl']";
+
+	/**
+	 * @var string
+	 */
+	public static $startDate = "//input[@id='jform_startdate']";
+
+	/**
+	 * @var string
+	 */
+	public static $endDateLbl = "//label[@id='jform_enddate-lbl']";
+
+	/**
+	 * @var string
+	 */
+	public static $endDate = "//input[@id='jform_enddate']";
+
+	/**
+	 * @var string
+	 */
+	public static $messageMissingFormName = "Field required: Form name";
+
 	/**
 	 * @var string
 	 */
 	public static $required = 'Required';
+
 	/**
 	 * @param $value
 	 * @return string

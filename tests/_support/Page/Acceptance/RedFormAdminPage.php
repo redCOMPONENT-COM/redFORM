@@ -76,7 +76,6 @@ class RedFormAdminPage
 	 */
 	public static $searchToolsButton = "//button[@data-original-title=\"Filter the list items\"]";
 
-
 	//general system
 	/**
 	 * @var string
@@ -102,7 +101,6 @@ class RedFormAdminPage
 	 * @var string
 	 */
 	public static $headPage = "//h1";
-
 
 	//general message
 	/**
@@ -135,11 +133,6 @@ class RedFormAdminPage
 	 */
 	public static $deleteSuccess = "1 items deleted";
 
-	/**
-	 * @var string
-	 */
-	public static $messageMissingName = "Invalid field:  Name";
-
 	//general located
 	/**
 	 * @var string
@@ -150,7 +143,6 @@ class RedFormAdminPage
 	 * @var string
 	 */
 	public static $searchField = "#filter_search_fields";
-
 
 	/**
 	 * @var string
