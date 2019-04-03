@@ -60,8 +60,8 @@ class AddAFormCest
 
 		$this->paramsFormMissingName = array();
 		$this->paramsFormMissingName['startDate']   = '2019-04-02';
-		$this->paramsFormMissingName['endDate']	    = '2020-04-02';
-		$this->paramsFormMissingName['formExpires']	= 'Yes';
+		$this->paramsFormMissingName['endDate']     = '2020-04-02';
+		$this->paramsFormMissingName['formExpires'] = 'Yes';
 
 		$this->paramsFormSaveEdit = $this->faker->bothify('Edit FormSave ?##?');
 		$this->paramsFormSaveCloseEdit = $this->faker->bothify('Edit FormSaveClose ?##?');

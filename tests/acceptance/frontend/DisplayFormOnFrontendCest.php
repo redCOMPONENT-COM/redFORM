@@ -151,13 +151,13 @@ class DisplayFormOnFrontendCest
 
 		$this->paramsFormExpires = array();
 		$this->paramsFormExpires['startDate']   = '2019-04-02';
-		$this->paramsFormExpires['endDate']	    = '2022-04-02';
-		$this->paramsFormExpires['formExpires']	= 'Yes';
+		$this->paramsFormExpires['endDate']     = '2022-04-02';
+		$this->paramsFormExpires['formExpires'] = 'Yes';
 
 		$this->paramsFormHasExpires = array();
 		$this->paramsFormHasExpires['startDate']    = '2019-03-02';
-		$this->paramsFormHasExpires['endDate']	    = '2019-04-02';
-		$this->paramsFormHasExpires['formExpires']	= 'Yes';
+		$this->paramsFormHasExpires['endDate']      = '2019-04-02';
+		$this->paramsFormHasExpires['formExpires']  = 'Yes';
 	}
 	/**
 	 * @param AcceptanceTester $I
