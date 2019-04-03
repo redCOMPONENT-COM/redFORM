@@ -90,6 +90,8 @@ class AddAFormSteps extends Adminredform
 		$I->fillField(AddAFormPage::$startDate, $params['startDate']);
 		$I->waitForElement(AddAFormPage::$endDateLbl, 30);
 		$I->fillField(AddAFormPage::$endDate, $params['endDate']);
+		$I->waitForElement(AddAFormPage::$formExpiresLbl, 30);
+		$I->selectOptionInRadioField(AddAFormPage::$formExpires, $params['formExpires']);
 		$I->click(AddAFormPage::$saveButton);
 		$I->waitForText(AddAFormPage::$messageMissingFormName, 30, AddAFormPage::$alertMessage);
 	}
@@ -124,6 +126,30 @@ class AddAFormSteps extends Adminredform
 				break;
 		}
 
+	}
+
+	/**
+	 * @param       $name
+	 * @param array $params
+	 * @throws \Exception
+	 */
+	public function editFormWithExpires($name, $params = array())
+	{
+		$I = $this;
+		$I->amOnPage(AddAFormPage::$url);
+		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+		$I->searchForm($name);
+		$I->checkAllResults();
+		$I->click(AddAFormPage::$editButton);
+		$I->waitForText(AddAFormPage::$formName, 30, AddAFormPage::$formNameLbl);
+		$I->waitForElement(AddAFormPage::$startDateLbl, 30);
+		$I->fillField(AddAFormPage::$startDate, $params['startDate']);
+		$I->waitForElement(AddAFormPage::$endDateLbl, 30);
+		$I->fillField(AddAFormPage::$endDate, $params['endDate']);
+		$I->waitForElement(AddAFormPage::$formExpiresLbl, 30);
+		$I->selectOptionInRadioField(AddAFormPage::$formExpires, $params['formExpires']);
+		$I->click(AddAFormPage::$saveButton);
+		$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
 	}
 
 	/**

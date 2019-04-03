@@ -148,6 +148,16 @@ class DisplayFormOnFrontendCest
 				'telephone'         => $this->faker->phoneNumber,
 				'note'              => $this->faker->bothify('Name ????????????????'),
 			];
+
+		$this->paramsFormExpires = array();
+		$this->paramsFormExpires['startDate']   = '2019-04-02';
+		$this->paramsFormExpires['endDate']	    = '2022-04-02';
+		$this->paramsFormExpires['formExpires']	= 'Yes';
+
+		$this->paramsFormHasExpires = array();
+		$this->paramsFormHasExpires['startDate']    = '2019-03-02';
+		$this->paramsFormHasExpires['endDate']	    = '2019-04-02';
+		$this->paramsFormHasExpires['formExpires']	= 'Yes';
 	}
 	/**
 	 * @param AcceptanceTester $I
@@ -224,6 +234,46 @@ class DisplayFormOnFrontendCest
 		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
 		$I->wantToTest('Submit form with missing name');
 		$I->submitFormMissingName($this->menuTitle, $this->fillForm);
+	}
+
+	/**
+	 * @param DisplayFormOnFrontendSteps $I
+	 * @param                            $scenario
+	 * @throws Exception
+	 */
+	public function checkFormWithHasExpired(DisplayFormOnFrontendSteps $I, $scenario)
+	{
+		$I->wantTo('Edit form with expires');
+		$I = new AddAFormSteps($scenario);
+		$I->editFormWithExpires($this->paramsForm['name'], $this->paramsFormHasExpires);
+
+		$I = new DisplayFormOnFrontendSteps($scenario);
+		$I->wantTo('Create new article');
+		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
+		$I->wantTo('Create new menu items');
+		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
+		$I->wantToTest('Check form check form display in frontend with has expired');
+		$I->checkFormWithHasExpired($this->menuTitle);
+	}
+
+	/**
+	 * @param DisplayFormOnFrontendSteps $I
+	 * @param                            $scenario
+	 * @throws Exception
+	 */
+	public function checkFormWithExpires(DisplayFormOnFrontendSteps $I, $scenario)
+	{
+		$I->wantTo('Edit form with expires');
+		$I = new AddAFormSteps($scenario);
+		$I->editFormWithExpires($this->paramsForm['name'], $this->paramsFormExpires);
+
+		$I = new DisplayFormOnFrontendSteps($scenario);
+		$I->wantTo('Create new article');
+		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
+		$I->wantTo('Create new menu items');
+		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
+		$I->wantTo('Check form display in frontend with expires');
+		$I->checkFormInFrontend($this->menuTitle, $this->fillForm);
 	}
 
 	/**

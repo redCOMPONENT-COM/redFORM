@@ -156,4 +156,18 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->click(DisplayFormOnFrontendPage::$regularSubmit);
 		$I->waitForText(DisplayFormOnFrontendPage::$messageError, 30, DisplayFormOnFrontendPage::$errorXpath);
 	}
+
+	/**
+	 * @param $menu
+	 * @throws \Exception
+	 */
+	public function checkFormWithHasExpired($menu)
+	{
+		$I = $this;
+		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
+		$usepage = new DisplayFormOnFrontendPage();
+		$I->waitForElement($usepage->xPathMenu($menu), 30);
+		$I->click($usepage->xPathMenu($menu));
+		$I->waitForText(DisplayFormOnFrontendPage::$messageHasExpired, 30);
+	}
 }
