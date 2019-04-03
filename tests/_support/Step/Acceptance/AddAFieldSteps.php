@@ -130,6 +130,7 @@ class AddAFieldSteps extends Adminredform
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
+		$I->wait(0.5);
 		$I->checkAllResults();
 		$I->click(AddAFieldPage::$editButton);
 		$I->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
