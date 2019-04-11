@@ -104,4 +104,23 @@ class Adminredform extends \AcceptanceTester
 
 		return true;
 	}
+
+	/**
+	 * @param $id
+	 * @param $value
+	 * @throws \Exception
+	 */
+	public function selectOptionInChosenXpath($id, $value)
+	{
+		$I = $this;
+		$I->waitForElement("//div[@id='$id']/a", 30);
+		$I->scrollTo("//div[@id='$id']/a");
+		$I->wait(0.2);
+		$I->click("//div[@id='$id']/a");
+		$I->wait(0.2);
+		$I->waitForElement("//div[@id='$id']/div/ul/li[contains(normalize-space(),'$value')]", 30);
+		$I->scrollTo("//div[@id='$id']/div/ul/li[contains(normalize-space(),'$value')]");
+		$I->wait(0.2);
+		$I->click("//div[@id='$id']/div/ul/li[contains(normalize-space(),'$value')]");
+	}
 }
