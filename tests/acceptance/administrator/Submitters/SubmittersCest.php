@@ -31,27 +31,7 @@ class SubmittersCest
 	/**
 	 * @var array
 	 */
-	protected $telephoneField;
-
-	/**
-	 * @var array
-	 */
-	protected $noteField;
-
-	/**
-	 * @var array
-	 */
 	protected $paramsForm;
-
-	/**
-	 * @var array
-	 */
-	protected $telephoneForm;
-
-	/**
-	 * @var array
-	 */
-	protected $noteForm;
 
 	/**
 	 * @var string
@@ -98,6 +78,20 @@ class SubmittersCest
 				'placeholder'       => 'Please enter your email'
 			];
 
+		$this->telephoneField =
+			[
+				'name'              => 'Telephone',
+				'fieldtype'         => 'Textfield',
+				'placeholder'       => 'Please enter your telephone'
+			];
+
+		$this->noteField =
+			[
+				'name'              => 'Note',
+				'fieldtype'         => 'Textarea',
+				'placeholder'       => 'Please enter your note'
+			];
+
 		$this->paramsForm =
 			[
 				'name'              => $this->faker->bothify('FormSave ?##?'),
@@ -106,6 +100,22 @@ class SubmittersCest
 				'fields_2'          => $this->emailField['name'],
 				'section_2'         => 'general',
 				'required'          => 'Yes'
+			];
+
+		$this->telephoneForm =
+			[
+				'fields'            => $this->telephoneField['name'],
+				'section'           => 'general',
+				'required'          => 'No',
+				'formExpires'       => 'No'
+			];
+
+		$this->noteForm =
+			[
+				'fields'            => $this->noteField['name'],
+				'section'           => 'general',
+				'required'          => 'No',
+				'formExpires'       => 'No'
 			];
 
 		$this->articlesTitle        = $this->faker->bothify('Article ?##?');
@@ -117,13 +127,14 @@ class SubmittersCest
 			[
 				'name'              => $this->faker->bothify('Name ?##?'),
 				'email'             => $this->faker->email,
+				'telephone'         => $this->faker->phoneNumber,
+				'note'              => $this->faker->bothify('Name ????????????????'),
 			];
 
 		$this->paramsFormExpires = array();
 		$this->paramsFormExpires['startDate']   = '2019-04-02';
 		$this->paramsFormExpires['endDate']     = '2022-04-02';
 		$this->paramsFormExpires['formExpires'] = 'Yes';
-
 	}
 	/**
 	 * @param AcceptanceTester $I
@@ -144,11 +155,14 @@ class SubmittersCest
 		$I = new AddAFieldSteps($scenario);
 		$I->createField($this->nameField, 'save&close');
 		$I->createField($this->emailField, 'save&close');
+		$I->createField($this->telephoneField, 'save&close');
+		$I->createField($this->noteField, 'save&close');
 
 		$I = new AddAFormSteps($scenario);
 		$I->wantToTest('Create form for check.');
 		$I->createForm($this->paramsForm, 'save');
-		$I->editFormWithExpires($this->paramsForm['name'], $this->paramsFormExpires);
+		$I->editAndAddFieldForForm($this->paramsForm['name'], $this->telephoneForm);
+		$I->editAndAddFieldForForm($this->paramsForm['name'], $this->noteForm);
 	}
 
 	/**
