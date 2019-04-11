@@ -130,11 +130,6 @@ class SubmittersCest
 				'telephone'         => $this->faker->phoneNumber,
 				'note'              => $this->faker->bothify('Name ????????????????'),
 			];
-
-		$this->paramsFormExpires = array();
-		$this->paramsFormExpires['startDate']   = '2019-04-02';
-		$this->paramsFormExpires['endDate']     = '2022-04-02';
-		$this->paramsFormExpires['formExpires'] = 'Yes';
 	}
 	/**
 	 * @param AcceptanceTester $I
@@ -191,5 +186,17 @@ class SubmittersCest
 		$I = new AddASubmittersSteps($scenario);
 		$I->wantTo('Check create new submitters');
 		$I->checkCreateSubmitters($this->paramsForm['name'], $this->fillForm['name'], $this->fillForm['email']);
+	}
+
+	/**
+	 * @param AddASubmittersSteps $I
+	 * @param                     $scenario
+	 * @throws Exception
+	 */
+	public function deleteAllSubmittersSteps(AddASubmittersSteps $I, $scenario)
+	{
+		$I = new AddASubmittersSteps($scenario);
+		$I->wantTo('Check create new submitters');
+		$I->deleteAllSubmitters($this->paramsForm['name']);
 	}
 }
