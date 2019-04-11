@@ -148,6 +148,7 @@ class SubmittersCest
 		$I = new AddAFormSteps($scenario);
 		$I->wantToTest('Create form for check.');
 		$I->createForm($this->paramsForm, 'save');
+		$I->editFormWithExpires($this->paramsForm['name'], $this->paramsFormExpires);
 	}
 
 	/**

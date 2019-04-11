@@ -23,9 +23,8 @@ class AddASubmittersSteps extends Adminredform
 		$I->waitForText(AddASubmittersPage::$submitters, 30, AddASubmittersPage::$headPage);
 		$I->waitForElement(AddASubmittersPage::$selectFormId, 30);
 		$I->selectOptionInChosenXpath(AddASubmittersPage::$selectForm, $formName);
-		$I->see($name);
-		$I->see($email);
-
+		$I->waitForText($name, 30);
+		$I->waitForText($email, 30);
 	}
 
 	/**
