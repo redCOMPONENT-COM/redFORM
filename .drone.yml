@@ -78,18 +78,22 @@ pipeline:
     - sed -i "s,$tests_suite/joomla-cms/,joomla-cms/,g" tests/$tests_suite/joomla-cms/configuration.php
     - mysqldump -u root -proot -h db $tests_db > tests/dbdump.sql.tmp
     # Stages setup
-    - sh tests/drone/setup-stages.sh "administrator"    "01-administrator"
-    - sh tests/drone/setup-stages.sh "frontend"         "02-frontend"
+    - sh tests/drone/setup-stages.sh "administrator"    "01-checkForWarningsAndNotices"
+    - sh tests/drone/setup-stages.sh "frontend"         "02-field"
+    - sh tests/drone/setup-stages.sh "frontend"         "03-form"
+    - sh tests/drone/setup-stages.sh "frontend"         "04-section"
+    - sh tests/drone/setup-stages.sh "frontend"         "05-submitters"
+    - sh tests/drone/setup-stages.sh "frontend"         "06-displayFormOnFrontend"
 
-  01-administrator:
+  01-checkForWarningsAndNotices:
     group: tests
     image: redwebaps/testbox-chromedriver:2.38
     environment:
     - tests_user=admin
-    - tests_suite=01-administrator
-    - tests_db=administrator
+    - tests_suite=01-checkForWarningsAndNotices
+    - tests_db=checkForWarningsAndNotices
     - build_path=/drone/src/github.com/${DRONE_REPO}
-    - output_append=-01-administrator
+    - output_append=-01-checkForWarningsAndNotices
     commands:
     # Regular entry point
     - /entrypoint.sh &
@@ -97,17 +101,17 @@ pipeline:
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
     # Performs test
     - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/CheckForWarningsAndNotices 0 0'
 
-  02-frontend:
+  02-field:
     group: tests
     image: redwebaps/testbox-chromedriver:2.38
     environment:
     - tests_user=admin
-    - tests_suite=02-frontend
-    - tests_db=frontend
+    - tests_suite=02-field
+    - tests_db=field
     - build_path=/drone/src/github.com/${DRONE_REPO}
-    - output_append=-02-frontend
+    - output_append=-02-field
     commands:
     # Regular entry point
     - /entrypoint.sh &
@@ -115,7 +119,79 @@ pipeline:
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
     # Performs test
     - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Field 0 0'
+
+  03-form:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=03-form
+    - tests_db=form
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-03-form
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Form 0 0'
+
+  04-section:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=04-section
+    - tests_db=section
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-04-section
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Section 0 0'
+
+  05-submitters:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=05-submitters
+    - tests_db=submitters
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-05-submitters
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Submitters 0 0'
+
+  06-displayFormOnFrontend:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=06-displayFormOnFrontend
+    - tests_db=displayFormOnFrontend
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-06-displayFormOnFrontend
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DisplayFormOnFrontend 0 0'
 
   slack:
     image: plugins/slack

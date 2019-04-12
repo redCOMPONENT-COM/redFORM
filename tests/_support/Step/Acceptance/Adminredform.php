@@ -4,6 +4,7 @@ namespace Step\Acceptance;
 use Page\Acceptance\AddAFieldPage;
 use Page\Acceptance\AddAFormPage;
 use Page\Acceptance\AddASectionPage;
+use Page\Acceptance\RedFormAdminPage;
 
 class Adminredform extends \AcceptanceTester
 {
@@ -103,5 +104,25 @@ class Adminredform extends \AcceptanceTester
 		}
 
 		return true;
+	}
+
+	/**
+	 * @param string $id
+	 * @param string $value
+	 * @throws \Exception
+	 */
+	public function selectOptionInChosenXpath($id, $value)
+	{
+		$I = $this;
+		$user = new RedFormAdminPage();
+		$I->waitForElement($user->selectXpath($id), 30);
+		$I->scrollTo($user->selectXpath($id));
+		$I->wait(0.2);
+		$I->click($user->selectXpath($id));
+		$I->wait(0.2);
+		$I->waitForElement($user->selectXpathValue($id, $value), 30);
+		$I->scrollTo($user->selectXpathValue($id, $value));
+		$I->wait(0.2);
+		$I->click($user->selectXpathValue($id, $value));
 	}
 }

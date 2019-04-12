@@ -153,4 +153,26 @@ class RedFormAdminPage
 	 * @var string
 	 */
 	public static $searchIcon = "//button[@data-original-title=\"Search\"]";
+
+	/**
+	 * @param $id
+	 * @return string
+	 */
+	public function selectXpath($id)
+	{
+		$xpath = "//div[@id='$id']/a";
+		return $xpath;
+	}
+
+	/**
+	 * @param $id
+	 * @param $value
+	 * @return string
+	 */
+	public function selectXpathValue($id, $value)
+	{
+		$xpath = "//div[@id='$id']/div/ul/li[contains(normalize-space(),'$value')]";
+		return $xpath;
+	}
+
 }
