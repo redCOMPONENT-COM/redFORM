@@ -196,7 +196,7 @@ class SubmittersCest
 	public function deleteAllSubmittersSteps(AddASubmittersSteps $I, $scenario)
 	{
 		$I = new AddASubmittersSteps($scenario);
-		$I->wantTo('Check create new submitters');
+		$I->wantTo('Delete all submitters');
 		$I->deleteAllSubmitters($this->paramsForm['name']);
 	}
 }
