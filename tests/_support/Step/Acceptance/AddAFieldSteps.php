@@ -225,6 +225,7 @@ class AddAFieldSteps extends Adminredform
 	{
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
+		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 		$I->checkAllResults();
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
