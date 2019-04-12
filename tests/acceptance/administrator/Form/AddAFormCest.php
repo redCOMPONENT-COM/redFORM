@@ -144,6 +144,16 @@ class AddAFormCest
 	}
 
 	/**
+	 * @param AddAFieldSteps $I
+	 * @throws Exception
+	 */
+	public function deleteFieldUsedInForm(AddAFieldSteps $I)
+	{
+		$I->wantToTest('Delete field used in form');
+		$I->deleteFieldUsedInForm($this->paramsTextField1['name']);
+		$I->deleteFieldUsedInForm($this->paramsTextField2['name']);
+	}
+	/**
 	 * @param AddAFormSteps $I
 	 * @throws Exception
 	 */

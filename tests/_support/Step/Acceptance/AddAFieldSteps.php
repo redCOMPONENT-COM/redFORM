@@ -234,6 +234,24 @@ class AddAFieldSteps extends Adminredform
 	}
 
 	/**
+	 * @param $name
+	 * @throws \Exception
+	 */
+	public function deleteFieldUsedInForm($name)
+	{
+		$I = $this;
+		$I->amOnPage(AddAFieldPage::$URL);
+		$I->searchField($name);
+		$I->waitForText($name, 30);
+		$I->checkAllResults();
+		$I->click(AddAFieldPage::$deleteButton);
+		$I->acceptPopup();
+		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+		$I->searchField($name);
+		$I->waitForText($name, 30);
+	}
+
+	/**
 	 * @param $nameField
 	 * @throws \Exception
 	 */
@@ -248,4 +266,5 @@ class AddAFieldSteps extends Adminredform
 		$I->click(AddAFieldPage::$searchIcon);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 	}
+
 }
