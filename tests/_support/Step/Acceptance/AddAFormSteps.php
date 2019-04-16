@@ -9,6 +9,7 @@
 namespace Step\Acceptance;
 
 use Page\Acceptance\AddAFormPage as AddAFormPage;
+use Page\Acceptance\AddASubmittersPage as AddASubmittersPage;
 
 class AddAFormSteps extends Adminredform
 {
@@ -215,7 +216,7 @@ class AddAFormSteps extends Adminredform
 	 * @param $nameForm
 	 * @throws \Exception
 	 */
-	public function deleteForm($nameForm)
+	public function deleteFormHasSubmitters($nameForm)
 	{
 		$I = $this;
 		$I->amOnPage(AddAFormPage::$url);
@@ -224,6 +225,50 @@ class AddAFormSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$deleteButton);
 		$I->acceptPopup();
+		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
+		$I = $this;
+		$I->amOnPage(AddASubmittersPage::$URL);
+		$I->waitForText(AddASubmittersPage::$submitters, 30, AddASubmittersPage::$headPage);
+		$I->waitForElement(AddASubmittersPage::$selectFormId, 30);
+		$I->selectOptionInChosenXpath(AddASubmittersPage::$selectForm, $nameForm);
+		$I->waitForText($nameForm, 30);
+		$I->checkAllResults();
+		$I->click(AddASubmittersPage::$deleteButton);
+		$I->acceptPopup();
+		$I->waitForElement(AddASubmittersPage::$alertMessage, 30, AddASubmittersPage::$alertHead);
+		$I->amOnPage(AddAFormPage::$url);
+		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+		$I->searchForm($nameForm);
+		$I->checkAllResults();
+		$I->click(AddAFormPage::$deleteButton);
+		$I->acceptPopup();
+		$I->waitForText(AddAFormPage::$deleteSuccess, 30, AddAFormPage::$alertMessage);
+		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
+	}
+
+	/**
+	 * @param $nameForm
+	 * @throws \Exception
+	 */
+	public function deleteForm($nameForm)
+	{
+		$I = $this;
+		$I->amOnPage(AddASubmittersPage::$URL);
+		$I->waitForText(AddASubmittersPage::$submitters, 30, AddASubmittersPage::$headPage);
+		$I->waitForElement(AddASubmittersPage::$selectFormId, 30);
+		$I->selectOptionInChosenXpath(AddASubmittersPage::$selectForm, $nameForm);
+		$I->waitForText($nameForm, 30);
+		$I->checkAllResults();
+		$I->click(AddASubmittersPage::$deleteButton);
+		$I->acceptPopup();
+		$I->waitForElement(AddASubmittersPage::$alertMessage, 30, AddASubmittersPage::$alertHead);
+		$I->amOnPage(AddAFormPage::$url);
+		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+		$I->searchForm($nameForm);
+		$I->checkAllResults();
+		$I->click(AddAFormPage::$deleteButton);
+		$I->acceptPopup();
+		$I->waitForText(AddAFormPage::$deleteSuccess, 30, AddAFormPage::$alertMessage);
 		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
 	}
 
