@@ -31,5 +31,14 @@ class AddASubmittersPage extends RedFormAdminPage
 	 */
 	public static $selectFormId = "//div[@id='filter_form_id_chzn']/a";
 
+	/**
+	 * @var string
+	 */
+	public static $selectConfirmed = "filter_confirmed_chzn";
+
+	/**
+	 * @var string
+	 */
+	public static $selectConfirmedId = "//div[@id='filter_confirmed_chzn']/a";
 
 }

@@ -59,6 +59,11 @@ class SubmittersCest
 	protected $fillForm;
 
 	/**
+	 * @var string
+	 */
+	protected $confirmed;
+
+	/**
 	 * DisplayFormOnFrontendCest constructor.
 	 */
 	public function __construct()
@@ -130,6 +135,8 @@ class SubmittersCest
 				'telephone'         => $this->faker->phoneNumber,
 				'note'              => $this->faker->bothify('Name ????????????????'),
 			];
+
+		$this->confirmed = 'Not confirmed';
 	}
 	/**
 	 * @param AcceptanceTester $I
@@ -186,6 +193,30 @@ class SubmittersCest
 		$I = new AddASubmittersSteps($scenario);
 		$I->wantTo('Check create new submitters');
 		$I->checkCreateSubmitters($this->paramsForm['name'], $this->fillForm['name'], $this->fillForm['email']);
+	}
+
+	/**
+	 * @param AddASubmittersSteps $I
+	 * @param                     $scenario
+	 * @throws Exception
+	 */
+	public function checkSelectForm(AddASubmittersSteps $I, $scenario)
+	{
+		$I = new AddASubmittersSteps($scenario);
+		$I->wantTo('Check create new submitters');
+		$I->checkSelectForm($this->paramsForm['name']);
+	}
+
+	/**
+	 * @param AddASubmittersSteps $I
+	 * @param                     $scenario
+	 * @throws Exception
+	 */
+	public function checkSelectConfirmed(AddASubmittersSteps $I, $scenario)
+	{
+		$I = new AddASubmittersSteps($scenario);
+		$I->wantTo('Check create new submitters');
+		$I->checkSearchConfirmed($this->confirmed);
 	}
 
 	/**
