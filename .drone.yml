@@ -78,13 +78,13 @@ pipeline:
     - sed -i "s,$tests_suite/joomla-cms/,joomla-cms/,g" tests/$tests_suite/joomla-cms/configuration.php
     - mysqldump -u root -proot -h db $tests_db > tests/dbdump.sql.tmp
     # Stages setup
-    - sh tests/drone/setup-stages.sh "administrator"    "01-checkForWarningsAndNotices"
-    - sh tests/drone/setup-stages.sh "frontend"         "02-field"
-    - sh tests/drone/setup-stages.sh "frontend"         "03-form"
-    - sh tests/drone/setup-stages.sh "frontend"         "04-section"
-    - sh tests/drone/setup-stages.sh "frontend"         "05-submitters"
-    - sh tests/drone/setup-stages.sh "frontend"         "06-displayFormOnFrontend"
-    - sh tests/drone/setup-stages.sh "frontend"         "07-deleteFormHasSubmitters"
+    - sh tests/drone/setup-stages.sh "checkForWarningsAndNotices"    "01-checkForWarningsAndNotices"
+    - sh tests/drone/setup-stages.sh "field"                         "02-field"
+    - sh tests/drone/setup-stages.sh "form"                          "03-form"
+    - sh tests/drone/setup-stages.sh "section"                       "04-section"
+    - sh tests/drone/setup-stages.sh "submitters"                    "05-submitters"
+    - sh tests/drone/setup-stages.sh "displayFormOnFrontend"         "06-displayFormOnFrontend"
+    - sh tests/drone/setup-stages.sh "deleteFormHasSubmitters"       "07-deleteFormHasSubmitters"
 
   01-checkForWarningsAndNotices:
     group: tests

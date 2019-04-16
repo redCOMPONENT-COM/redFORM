@@ -285,7 +285,7 @@ class DisplayFormOnFrontendCest
 	{
 		$I->wantTo('Clear up');
 		$I = new AddAFormSteps($scenario);
-		$I->deleteForm($this->paramsForm['name']);
+		$I->deleteFormHasSubmitters($this->paramsForm['name']);
 
 		$I = new AddAFieldSteps($scenario);
 		$I->deleteAllField();
