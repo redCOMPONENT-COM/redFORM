@@ -10,6 +10,7 @@ use Step\Acceptance\AddAFormSteps as AddAFormSteps;
 use Step\Acceptance\AddAFieldSteps as AddAFieldSteps;
 use Step\Acceptance\DisplayFormOnFrontendSteps as DisplayFormOnFrontendSteps;
 use Step\Acceptance\AddASubmittersSteps as AddASubmittersSteps;
+use Step\Acceptance\Adminredform as Adminredform;
 
 class SubmittersCest
 {
@@ -62,6 +63,16 @@ class SubmittersCest
 	 * @var string
 	 */
 	protected $confirmed;
+
+	/**
+	 * @var array
+	 */
+	protected $configNotification;
+
+	/**
+	 * @var string
+	 */
+	protected $sendMailOption;
 
 	/**
 	 * DisplayFormOnFrontendCest constructor.
@@ -137,6 +148,14 @@ class SubmittersCest
 			];
 
 		$this->confirmed = 'Not confirmed';
+
+		$this->configNotification =
+			[
+				'submissionConfirmSubject'    => $this->faker->bothify('submissionConfirmSubject ?????????????????'),
+				'submissionConfirmBody'       => $this->faker->bothify('submissionConfirmBody ?????????????????')
+			];
+
+		$this->sendMailOption = 'Yes';
 	}
 	/**
 	 * @param AcceptanceTester $I
@@ -217,6 +236,26 @@ class SubmittersCest
 		$I = new AddASubmittersSteps($scenario);
 		$I->wantTo('Check create new submitters');
 		$I->checkSearchConfirmed($this->confirmed);
+	}
+
+	/**
+	 * @param AddAFormSteps $I
+	 * @param               $scenario
+	 * @throws Exception
+	 */
+	public function checkResendNotificationEmail(AddASubmittersSteps $I, $scenario)
+	{
+		$I = new AddAFormSteps($scenario);
+		$I->wantTo('Edit form with config notification');
+		$I->editFormWithConfigNotification($this->paramsForm['name'], $this->configNotification);
+
+		$I = new Adminredform($scenario);
+		$I->wantTo('Config send email system');
+		$I->configurationEmailSystem($this->sendMailOption);
+
+		$I = new AddASubmittersSteps($scenario);
+		$I->wantTo('Check resend notification email');
+		$I->resendNotificationEmail($this->paramsForm['name']);
 	}
 
 	/**

@@ -125,4 +125,19 @@ class Adminredform extends \AcceptanceTester
 		$I->wait(0.2);
 		$I->click($user->selectXpathValue($id, $value));
 	}
+
+	/**
+	 * @throws \Exception
+	 */
+	public function configurationEmailSystem($option)
+	{
+		$I = $this;
+		$I->amOnPage(RedFormAdminPage::$urlSystem);
+		$I->waitForElement(RedFormAdminPage::$server, 30);
+		$I->click(RedFormAdminPage::$server);
+		$I->scrollTo(RedFormAdminPage::$mailSetting);
+		$I->selectOptionInRadioField(RedFormAdminPage::$sendMail, $option);
+		$I->click(RedFormAdminPage::$saveButton);
+		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+	}
 }

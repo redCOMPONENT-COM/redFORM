@@ -41,4 +41,9 @@ class AddASubmittersPage extends RedFormAdminPage
 	 */
 	public static $selectConfirmedId = "//div[@id='filter_confirmed_chzn']/a";
 
+	/**
+	 * @var string
+	 */
+	public static $resendNotificationEmail = "Resend notification email";
+
 }

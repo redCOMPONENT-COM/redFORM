@@ -11,6 +11,27 @@ namespace Page\Acceptance;
 class RedFormAdminPage
 {
 	//general button
+
+	/**
+	 * @var string
+	 */
+	public static $urlSystem = "administrator/index.php?option=com_config";
+
+	/**
+	 * @var string
+	 */
+	public static $server = "//a[contains(text(),'Server')]";
+
+	/**
+	 * @var string
+	 */
+	public static $mailSetting = "//legend[contains(text(),'Mail Settings')]";
+
+	/**
+	 * @var string
+	 */
+	public static $sendMail = "Send Mail";
+
 	/**
 	 * @var string
 	 */

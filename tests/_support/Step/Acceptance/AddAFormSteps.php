@@ -158,6 +158,34 @@ class AddAFormSteps extends Adminredform
 	 * @param array $params
 	 * @throws \Exception
 	 */
+	public function editFormWithConfigNotification($name, $params = array())
+	{
+		$I = $this;
+		$I->amOnPage(AddAFormPage::$url);
+		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+		$I->searchForm($name);
+		$I->checkAllResults();
+		$I->click(AddAFormPage::$editButton);
+		$I->waitForText(AddAFormPage::$formName, 30, AddAFormPage::$formNameLbl);
+		$I->click(AddAFormPage::$notification);
+		$I->scrollTo(AddAFormPage::$submissionConfirmSubjectLbl);
+		$I->waitForElement(AddAFormPage::$submissionConfirmSubject, 30);
+		$I->fillField(AddAFormPage::$submissionConfirmSubject, $params['submissionConfirmSubject']);
+		$I->scrollTo(AddAFormPage::$toggleEditor);
+		$I->click(AddAFormPage::$toggleEditor);
+		$I->scrollTo(AddAFormPage::$submissionConfirmBodyLbl);
+		$I->waitForElement(AddAFormPage::$submissionConfirmBody, 30);
+		$I->fillField(AddAFormPage::$submissionConfirmBody, $params['submissionConfirmBody']);
+		$I->scrollTo(AddAFormPage::$formEdit);
+		$I->click(AddAFormPage::$saveCloseButton);
+		$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
+	}
+
+	/**
+	 * @param       $name
+	 * @param array $params
+	 * @throws \Exception
+	 */
 	public function editAndAddFieldForForm($name, $params = array())
 	{
 		$I = $this;

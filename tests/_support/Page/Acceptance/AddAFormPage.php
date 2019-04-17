@@ -23,6 +23,11 @@ class AddAFormPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
+	public static $formEdit = "//h1[contains(text(),'Form - test form')]";
+
+	/**
+	 * @var string
+	 */
 	public static $formField = "Form field";
 
 	/**
@@ -44,6 +49,11 @@ class AddAFormPage extends RedFormAdminPage
 	 * @var string
 	 */
 	public static $fields = "//li/a[normalize-space(text()) = \"Fields\"]";
+
+	/**
+	 * @var string
+	 */
+	public static $notification = "//li/a[normalize-space(text()) = \"Notification\"]";
 
 	/**
 	 * @var string
@@ -94,6 +104,31 @@ class AddAFormPage extends RedFormAdminPage
 	 * @var string
 	 */
 	public static $required = 'Required';
+
+	/**
+	 * @var string
+	 */
+	public static $submissionConfirmSubjectLbl = "//label[@id='jform_admin_notification_email_subject-lbl']";
+
+	/**
+	 * @var string
+	 */
+	public static $submissionConfirmSubject = "//input[@id='jform_submissionsubject']";
+
+	/**
+	 * @var string
+	 */
+	public static $submissionConfirmBodyLbl = "//label[@id='jform_admin_notification_email_body-lbl']";
+
+	/**
+	 * @var string
+	 */
+	public static $submissionConfirmBody = "//textarea[@id='jform_submissionbody']";
+
+	/**
+	 * @var string
+	 */
+	public static $toggleEditor = "//a[@onclick=\"tinyMCE.execCommand('mceToggleEditor', false, 'jform_submissionbody');return false;\"]";
 
 	/**
 	 * @param $value
