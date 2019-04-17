@@ -236,7 +236,7 @@ class SubmittersCest
 	 * @param                     $scenario
 	 * @throws Exception
 	 */
-	public function checkConfirm(AddASubmittersSteps $I, $scenario)
+	public function checkConfirmSubmitters(AddASubmittersSteps $I, $scenario)
 	{
 		$I = new AddAFormSteps($scenario);
 		$I->wantTo('Edit form with config confirmation');
