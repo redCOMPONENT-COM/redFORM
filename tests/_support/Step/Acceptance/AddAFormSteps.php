@@ -176,7 +176,8 @@ class AddAFormSteps extends Adminredform
 		$I->scrollTo(AddAFormPage::$submissionConfirmBodyLbl);
 		$I->waitForElement(AddAFormPage::$submissionConfirmBody, 30);
 		$I->fillField(AddAFormPage::$submissionConfirmBody, $params['submissionConfirmBody']);
-		$I->scrollTo(AddAFormPage::$formEdit);
+		$usePage = new AddAFormPage();
+		$I->scrollTo($usePage->formEdit($name));
 		$I->click(AddAFormPage::$saveCloseButton);
 		$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
 	}

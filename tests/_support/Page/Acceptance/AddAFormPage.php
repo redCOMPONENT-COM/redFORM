@@ -23,11 +23,6 @@ class AddAFormPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $formEdit = "//h1[contains(text(),'Form - test form')]";
-
-	/**
-	 * @var string
-	 */
 	public static $formField = "Form field";
 
 	/**
@@ -134,10 +129,20 @@ class AddAFormPage extends RedFormAdminPage
 	 * @param $value
 	 * @return string
 	 */
-	public static function formList($value)
+	public function formList($value)
 	{
 		$formList = "//a[normalize-space(text()) = \"' . $value . '\"]";
 
 		return $formList;
+	}
+
+	/**
+	 * @param $value
+	 * @return string
+	 */
+	public function formEdit($value)
+	{
+		$formEdit = "//h1[contains(text(),'Form - $value')]";
+		return $formEdit;
 	}
 }
