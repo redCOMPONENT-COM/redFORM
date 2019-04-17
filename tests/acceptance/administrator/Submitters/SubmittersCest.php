@@ -247,7 +247,6 @@ class SubmittersCest
 		$I->confirmation($this->paramsForm['name']);
 	}
 
-
 	/**
 	 * @param AddASubmittersSteps $I
 	 * @param                     $scenario
