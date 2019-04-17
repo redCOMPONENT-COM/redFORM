@@ -183,6 +183,37 @@ class AddAFormSteps extends Adminredform
 	}
 
 	/**
+	 * @param       $name
+	 * @param array $params
+	 * @throws \Exception
+	 */
+	public function editFormWithConfigConfirmation($name, $params = array(), $option = array())
+	{
+		$I = $this;
+		$I->amOnPage(AddAFormPage::$url);
+		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+		$I->searchForm($name);
+		$I->checkAllResults();
+		$I->click(AddAFormPage::$editButton);
+		$I->waitForText(AddAFormPage::$formName, 30, AddAFormPage::$formNameLbl);
+		$I->click(AddAFormPage::$confirmation);
+		$I->selectOptionInRadioField(AddAFormPage::$enableConfirmation, $option['enableConfirmation']);
+		$I->selectOptionInRadioField(AddAFormPage::$enableConfirmationNotification, $option['enableConfirmationNotification']);
+		$I->scrollTo(AddAFormPage::$confirmationNotificationEmailSubjectLbl);
+		$I->waitForElement(AddAFormPage::$confirmationNotificationEmailSubject, 30);
+		$I->fillField(AddAFormPage::$confirmationNotificationEmailSubject, $params['confirmationNotificationEmailSubject']);
+		$I->scrollTo(AddAFormPage::$toggleEditorConfirmation);
+		$I->click(AddAFormPage::$toggleEditorConfirmation);
+		$I->scrollTo(AddAFormPage::$confirmationNotificationEmailBodyLbl);
+		$I->waitForElement(AddAFormPage::$confirmationNotificationEmailBody, 30);
+		$I->fillField(AddAFormPage::$confirmationNotificationEmailBody, $params['confirmationNotificationEmailBody']);
+		$usePage = new AddAFormPage();
+		$I->scrollTo($usePage->formEdit($name));
+		$I->click(AddAFormPage::$saveCloseButton);
+		$I->waitForText(AddAFormPage::$saveItem, 30, AddAFormPage::$messageSuccess);
+	}
+
+	/**
 	 * @param $nameForm
 	 * @throws \Exception
 	 */

@@ -137,6 +137,18 @@ class SubmittersCest
 			];
 
 		$this->confirmed = 'Not confirmed';
+
+		$this->configConfirm =
+			[
+				'confirmationNotificationEmailSubject'      => $this->faker->bothify('confirmationNotificationEmailSubject ??????????????????'),
+				'confirmationNotificationEmailBody'         => $this->faker->bothify('confirmationNotificationEmailBody ??????????????????')
+			];
+
+		$this->enableConfirmOption =
+			[
+				'enableConfirmation'                => 'Yes',
+				'enableConfirmationNotification'    => 'Yes'
+			];
 	}
 	/**
 	 * @param AcceptanceTester $I
@@ -218,6 +230,23 @@ class SubmittersCest
 		$I->wantTo('Check create new submitters');
 		$I->checkSearchConfirmed($this->confirmed);
 	}
+
+	/**
+	 * @param AddASubmittersSteps $I
+	 * @param                     $scenario
+	 * @throws Exception
+	 */
+	public function checkConfirm(AddASubmittersSteps $I, $scenario)
+	{
+		$I = new AddAFormSteps($scenario);
+		$I->wantTo('Edit form with config confirmation');
+		$I->editFormWithConfigConfirmation($this->paramsForm['name'], $this->configConfirm, $this->enableConfirmOption);
+
+		$I = new AddASubmittersSteps($scenario);
+		$I->wantTo('Check Confirm submitters');
+		$I->confirmation($this->paramsForm['name']);
+	}
+
 
 	/**
 	 * @param AddASubmittersSteps $I
