@@ -48,6 +48,11 @@ class AddAFormPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
+	public static $notification = "//li/a[normalize-space(text()) = \"Notification\"]";
+
+	/**
+	 * @var string
+	 */
 	public static $fieldId = "jform_field_id";
 
 	/**
@@ -96,13 +101,48 @@ class AddAFormPage extends RedFormAdminPage
 	public static $required = 'Required';
 
 	/**
+	 * @var string
+	 */
+	public static $submissionConfirmSubjectLbl = "//label[@id='jform_admin_notification_email_subject-lbl']";
+
+	/**
+	 * @var string
+	 */
+	public static $submissionConfirmSubject = "//input[@id='jform_submissionsubject']";
+
+	/**
+	 * @var string
+	 */
+	public static $submissionConfirmBodyLbl = "//label[@id='jform_admin_notification_email_body-lbl']";
+
+	/**
+	 * @var string
+	 */
+	public static $submissionConfirmBody = "//textarea[@id='jform_submissionbody']";
+
+	/**
+	 * @var string
+	 */
+	public static $toggleEditor = "//a[@onclick=\"tinyMCE.execCommand('mceToggleEditor', false, 'jform_submissionbody');return false;\"]";
+
+	/**
 	 * @param $value
 	 * @return string
 	 */
-	public static function formList($value)
+	public function formList($value)
 	{
 		$formList = "//a[normalize-space(text()) = \"' . $value . '\"]";
 
 		return $formList;
+	}
+
+	/**
+	 * @param $value
+	 * @return string
+	 */
+	public function formEdit($value)
+	{
+		$formEdit = "//h1[contains(text(),'Form - $value')]";
+		return $formEdit;
 	}
 }

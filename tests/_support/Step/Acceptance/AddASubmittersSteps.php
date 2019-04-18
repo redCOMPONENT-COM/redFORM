@@ -8,6 +8,7 @@
 
 namespace Step\Acceptance;
 
+use Page\Acceptance\AddAFormPage;
 use Page\Acceptance\AddASubmittersPage as AddASubmittersPage;
 
 class AddASubmittersSteps extends Adminredform
@@ -60,6 +61,23 @@ class AddASubmittersSteps extends Adminredform
 		$I->waitForText($confirm, 30);
 		$I->waitForElement(AddASubmittersPage::$clearButton, 30);
 		$I->click(AddASubmittersPage::$clearButton);
+	}
+
+	/**
+	 * @param $formName
+	 * @throws \Exception
+	 */
+	public function resendNotificationEmail($formName)
+	{
+		$I = $this;
+		$I->amOnPage(AddASubmittersPage::$URL);
+		$I->waitForText(AddASubmittersPage::$submitters, 30, AddASubmittersPage::$headPage);
+		$I->waitForElement(AddASubmittersPage::$selectFormId, 30);
+		$I->selectOptionInChosenXpath(AddASubmittersPage::$selectForm, $formName);
+		$I->waitForText($formName, 30);
+		$I->checkAllResults();
+		$I->click(AddASubmittersPage::$resendNotificationEmail);
+		$I->waitForElement(AddASubmittersPage::$alertMessage, 30, AddASubmittersPage::$alertHead);
 	}
 
 	/**
