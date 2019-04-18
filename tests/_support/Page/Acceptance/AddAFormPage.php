@@ -48,6 +48,11 @@ class AddAFormPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
+	public static $confirmation = "//li/a[normalize-space(text()) = \"Confirmation\"]";
+
+	/**
+	 * @var string
+	 */
 	public static $notification = "//li/a[normalize-space(text()) = \"Notification\"]";
 
 	/**
@@ -89,6 +94,41 @@ class AddAFormPage extends RedFormAdminPage
 	 * @var string
 	 */
 	public static $endDate = "//input[@id='jform_enddate']";
+
+	/**
+	 * @var string
+	 */
+	public static $confirmationNotificationEmailSubjectLbl = "//label[@id='jform_confirmation_contactperson_subject-lbl']";
+
+	/**
+	 * @var string
+	 */
+	public static $confirmationNotificationEmailSubject = "//input[@id='jform_confirmation_contactperson_subject']";
+
+	/**
+	 * @var string
+	 */
+	public static $confirmationNotificationEmailBodyLbl = "//label[@id='jform_confirmation_contactperson_body-lbl']";
+
+	/**
+	 * @var string
+	 */
+	public static $confirmationNotificationEmailBody = "//textarea[@id='jform_confirmation_contactperson_body']";
+
+	/**
+	 * @var string
+	 */
+	public static $toggleEditorConfirmation = "//a[@onclick=\"tinyMCE.execCommand('mceToggleEditor', false, 'jform_confirmation_contactperson_body');return false;\"]";
+
+	/**
+	 * @var string
+	 */
+	public static $enableConfirmation = "Enable confirmation";
+
+	/**
+	 * @var string
+	 */
+	public static $enableConfirmationNotification = "Enable confirmation notification";
 
 	/**
 	 * @var string

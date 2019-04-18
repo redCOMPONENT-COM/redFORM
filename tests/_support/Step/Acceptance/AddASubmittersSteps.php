@@ -84,6 +84,23 @@ class AddASubmittersSteps extends Adminredform
 	 * @param $formName
 	 * @throws \Exception
 	 */
+	public function confirmation($formName)
+	{
+		$I = $this;
+		$I->amOnPage(AddASubmittersPage::$URL);
+		$I->waitForText(AddASubmittersPage::$submitters, 30, AddASubmittersPage::$headPage);
+		$I->waitForElement(AddASubmittersPage::$selectFormId, 30);
+		$I->selectOptionInChosenXpath(AddASubmittersPage::$selectForm, $formName);
+		$I->waitForText($formName, 30);
+		$I->checkAllResults();
+		$I->click(AddASubmittersPage::$confirm);
+		$I->waitForElement(AddASubmittersPage::$alertMessage, 30, AddASubmittersPage::$alertHead);
+	}
+
+	/**
+	 * @param $formName
+	 * @throws \Exception
+	 */
 	public function deleteAllSubmitters($formName)
 	{
 		$I = $this;

@@ -44,6 +44,10 @@ class AddASubmittersPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $resendNotificationEmail = "Resend notification email";
+	public static $confirm = "Confirm";
 
+	/**
+	 * @var string
+	 */
+	public static $resendNotificationEmail = "Resend notification email";
 }

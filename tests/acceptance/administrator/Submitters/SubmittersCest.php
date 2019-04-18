@@ -75,6 +75,16 @@ class SubmittersCest
 	protected $sendMailOption;
 
 	/**
+	 * @var array
+	 */
+	protected $configConfirm;
+
+	/**
+	 * @var array 
+	 */
+	protected $enableConfirmOption;
+
+	/**
 	 * DisplayFormOnFrontendCest constructor.
 	 */
 	public function __construct()
@@ -156,6 +166,18 @@ class SubmittersCest
 			];
 
 		$this->sendMailOption = 'Yes';
+
+		$this->configConfirm =
+			[
+				'confirmationNotificationEmailSubject'      => $this->faker->bothify('confirmationNotificationEmailSubject ??????????????????'),
+				'confirmationNotificationEmailBody'         => $this->faker->bothify('confirmationNotificationEmailBody ??????????????????')
+			];
+
+		$this->enableConfirmOption =
+			[
+				'enableConfirmation'                => 'Yes',
+				'enableConfirmationNotification'    => 'Yes'
+			];
 	}
 	/**
 	 * @param AcceptanceTester $I
@@ -256,6 +278,22 @@ class SubmittersCest
 		$I = new AddASubmittersSteps($scenario);
 		$I->wantTo('Check resend notification email');
 		$I->resendNotificationEmail($this->paramsForm['name']);
+	}
+
+	/**
+	 * @param AddASubmittersSteps $I
+	 * @param                     $scenario
+	 * @throws Exception
+	 */
+	public function checkConfirmSubmitters(AddASubmittersSteps $I, $scenario)
+	{
+		$I = new AddAFormSteps($scenario);
+		$I->wantTo('Edit form with config confirmation');
+		$I->editFormWithConfigConfirmation($this->paramsForm['name'], $this->configConfirm, $this->enableConfirmOption);
+
+		$I = new AddASubmittersSteps($scenario);
+		$I->wantTo('Check Confirm submitters');
+		$I->confirmation($this->paramsForm['name']);
 	}
 
 	/**
