@@ -142,6 +142,14 @@ class RedformViewSubmitters extends RdfView
 					'icon-ok'
 				);
 				$firstGroup->addButton($button);
+
+				$button = RToolbarBuilder::createStandardButton(
+					'submitters.unconfirm',
+					JText::_('COM_REDFORM_SUBMITTER_BUTTON_UNCONFIRM'),
+					'',
+					'icon-remove'
+				);
+				$firstGroup->addButton($button);
 			}
 		}
 
