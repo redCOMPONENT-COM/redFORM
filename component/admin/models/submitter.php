@@ -56,4 +56,42 @@ class RedformModelSubmitter extends RModelAdmin
 
 		return true;
 	}
+	/**
+	 * Method to unconfirm one or more records.
+	 *
+	 * @param   array  $pks  An array of record primary keys.
+	 *
+	 * @return  boolean  True if successful, false if an error occurs.
+	 *
+	 * @since   3.3.19
+	 */
+	public function unconfirm(&$pks)
+	{
+		$pks = (array) $pks;
+		$table = $this->getTable();
+
+		// Iterate the items to delete each one.
+		foreach ($pks as $i => $pk)
+		{
+			if ($table->load($pk))
+			{
+				$table->confirmed_date = '';
+				$table->confirmed_type = '';
+
+				$table->store();
+			}
+			else
+			{
+				$this->setError($table->getError());
+
+				return false;
+			}
+		}
+
+		JPluginHelper::importPlugin('redform');
+		$dispatcher = RFactory::getDispatcher();
+		$dispatcher->trigger('onSubmissionUnconfirmed', array($pks));
+
+		return true;
+	}
 }

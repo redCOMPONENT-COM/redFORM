@@ -50,6 +50,43 @@ class RedformControllerSubmitters extends RControllerAdmin
 		if ($model->confirm($cid))
 		{
 			$this->setMessage(JText::plural($this->text_prefix . '_N_SUBMITTERS_CONFIRMED', count($cid)));
+
+			JPluginHelper::importPlugin('redform');
+			$dispatcher = JDispatcher::getInstance();
+			$dispatcher->trigger('onConfirm', array('admin', &$cid));
+		}
+		else
+		{
+			$this->setMessage($model->getError(), 'error');
+		}
+
+		// Set redirect
+		$this->setRedirect($this->getRedirectToListRoute());
+	}
+
+	/**
+	 * unconfirm a submission
+	 *
+	 * @return void
+	 */
+	public function unconfirm()
+	{
+		// Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+
+		$model = $this->getModel();
+
+		// Confirm the items.
+		if ($model->unconfirm($cid))
+		{
+			$this->setMessage(JText::plural($this->text_prefix . '_N_SUBMITTERS_UNCONFIRMED', count($cid)));
+
+			JPluginHelper::importPlugin('redform');
+			$dispatcher = JDispatcher::getInstance();
+			$dispatcher->trigger('onUnconfirm', array('admin', &$cid));
 		}
 		else
 		{
