@@ -18,4 +18,40 @@ defined('_JEXEC') or die;
  */
 class RedformModelSection extends RModelAdmin
 {
+
+	/**
+	 * copy section(s)
+	 *
+	 * @param   array  $field_ids  field ids
+	 *
+	 * @return boolean true on success
+	 */
+	public function copy($ids)
+	{
+		foreach ($ids as $id)
+		{
+			$row = $this->getTable('Section', 'RedformTable');
+			$row->load($id);
+			$row->id = null;
+			$row->name = Jtext::_('COM_REDFORM_COPY_OF') . ' ' . $row->name;
+
+			// Pre-save checks
+			if (!$row->check())
+			{
+				$this->setError(JText::_('COM_REDFORM_THERE_WAS_A_PROBLEM_CHECKING_THE_FIELD_DATA'), 'error');
+
+				return false;
+			}
+
+			// Save the changes
+			if (!$row->store())
+			{
+				$this->setError(JText::_('COM_REDFORM_THERE_WAS_A_PROBLEM_STORING_THE_FIELD_DATA'), 'error');
+
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
