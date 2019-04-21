@@ -109,6 +109,13 @@ class RdfRfieldFileupload extends RdfRfield
 					if (typeof element[0].setCustomValidity === 'function') {
 						element[0].setCustomValidity(result ? '' : "{$message}");
 					}
+					
+					if (!result) {
+						document.redformvalidator.setElementError(element[0], '{$message}');
+					}
+					else {
+						document.redformvalidator.setElementError(element[0], '');
+					}
 
 					return result;
 				}
