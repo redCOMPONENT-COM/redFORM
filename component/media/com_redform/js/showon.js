@@ -17,24 +17,37 @@
 
 		$('[rel=\"rfshowon_' + target + '\"]').each(function(i, element){
 			var visible = false;
+			var $dependantElement = $(element);
 
 			targetEl.each(function(i, conditionElement){
 				if (conditionElementType == 'checkbox' || conditionElementType == 'radio') {
-					visible |= $(conditionElement).is(':checked') && $(element).hasClass('rfshowon_' + $(conditionElement).val());
+					visible |= $(conditionElement).is(':checked') && $dependantElement.hasClass('rfshowon_' + $(conditionElement).val());
 				}
 
 				if ($(conditionElement).prop('tagName') == 'SELECT') {
-					visible |= $(element).hasClass('rfshowon_' + $(conditionElement).val());
+					var value = $(conditionElement).val();
+
+					if (value == null) {
+						return;
+					}
+
+					if (!$.isArray(value)) {
+						value = [value];
+					}
+
+					value.forEach(function (val) {
+						visible |= $dependantElement.hasClass('rfshowon_' + val);
+					});
 				}
 			});
 
 			if (visible) {
-				$(element).slideDown();
-				$(element).find('.showon-required').attr('required', 'required');
+				$dependantElement.slideDown();
+				$dependantElement.find('.showon-required').attr('required', 'required');
 			}
 			else {
-				$(element).slideUp();
-                $(element).find('.required, [required]').removeAttr('required').removeClass('required')
+				$dependantElement.slideUp();
+                $dependantElement.find('.required, [required]').removeAttr('required').removeClass('required')
 					.each(function(index, el) {
                         if (typeof el.setCustomValidity === "function") {
                             el.setCustomValidity('');
