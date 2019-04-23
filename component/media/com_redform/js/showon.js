@@ -15,7 +15,7 @@
 
 		var conditionElementType = $(targetEl).attr('type');
 
-		$('[rel=\"rfshowon_' + targetEl.attr('name') + '\"]').each(function(i, element){
+		$('[rel=\"rfshowon_' + target + '\"]').each(function(i, element){
 			var visible = false;
 
 			targetEl.each(function(i, conditionElement){
