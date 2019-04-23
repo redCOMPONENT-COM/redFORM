@@ -283,7 +283,7 @@ class DisplayFormOnFrontendCest
 	 */
 	public function clearAll(DisplayFormOnFrontendSteps $I, $scenario)
 	{
-		$I->wantTo('Clear up');
+		$I->wantTo('Cleans up');
 		$I = new AddAFormSteps($scenario);
 		$I->deleteFormHasSubmitters($this->paramsForm['name']);
 
