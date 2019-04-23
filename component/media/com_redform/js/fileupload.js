@@ -12,7 +12,7 @@
 			if (isRequired) {
 				var prev = $(element).find('.current_file input');
 
-				if (prev.val().length > 0) {
+				if (prev.length > 0) {
 					fileInput.removeClass('required');
 				}
 			}
