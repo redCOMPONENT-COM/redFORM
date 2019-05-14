@@ -113,10 +113,12 @@ foreach ($this->items as $item)
 				</th>
 			<?php endif; ?>
 
-			<?php foreach ($this->fields as $key => $value): ?>
+			<?php foreach ($this->fields as $key => $field): ?>
+				<?php if ($field->getParam('show_in_list', 1)): ?>
 				<th class="nowrap hidden-phone">
-					<?php echo $value->field_header; ?>
+					<?php echo $field->field_header; ?>
 				</th>
+				<?php endif; ?>
 			<?php endforeach; ?>
 
 			<?php if ($this->formInfo->activatepayment): ?>
@@ -186,6 +188,11 @@ foreach ($this->items as $item)
 				<?php
 				foreach ($this->fields as $key => $field)
 				{
+				 	if (!$field->getParam('show_in_list', 1))
+					{
+						continue;
+					}
+
 					$fieldname = 'field_'. $field->field_id;
 
 					if (isset($item->{$fieldname}))

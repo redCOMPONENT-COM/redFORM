@@ -10,6 +10,18 @@
 				   description="COM_REDFORM_FIELD_PARAMS_BILLINGFIELD_DESC">
 				<option value="">JSelect</option>
 			</field>
+			<field name="export" type="radio" default="1" label="COM_REDFORM_FIELD_PARAMS_EXPORT"
+				   description="COM_REDFORM_FIELD_PARAMS_EXPORT_DESC"
+				   class="btn-group btn-group-yesno">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			<field name="show_in_list" type="radio" default="1" label="COM_REDFORM_FIELD_PARAMS_SHOW_IN_LIST"
+				   description="COM_REDFORM_FIELD_PARAMS_SHOW_IN_LIST_DESC"
+				   class="btn-group btn-group-yesno">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
 		</fieldset>
 	</fields>
 </form>
