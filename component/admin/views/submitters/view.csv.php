@@ -50,7 +50,7 @@ class RedformViewSubmitters extends RViewCsv
 
 		foreach ($fields as $field)
 		{
-			if (!$field->getParam('show_in_list', 1))
+			if (!$field->getParam('export', 1))
 			{
 				continue;
 			}
