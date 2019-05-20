@@ -252,7 +252,11 @@ foreach ($this->items as $item)
 	<div>
 		<input type="hidden" name="task" value="">
 		<input type="hidden" name="boxchecked" value="0">
-		<input type="hidden" name="integration" value="<?php echo $this->integration; ?>" />
+
+		<?php if (!empty($this->integration)): ?>
+			<input type="hidden" name="integration" value="<?php echo $this->integration; ?>" />
+		<?php endif; ?>
+
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>
