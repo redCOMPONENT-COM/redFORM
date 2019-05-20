@@ -111,17 +111,37 @@ class RedformControllerSubmitters extends RControllerAdmin
 		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
 		$rfcore = new RdfCore;
+		$sent = 0;
 
 		foreach ($cid as $sid)
 		{
 			$answers = $rfcore->getSidAnswers($sid);
-			$answers->sendSubmitterNotification();
+
+			if ($answers->sendSubmitterNotification())
+			{
+				$sent++;
+			}
 		}
 
-		$msg = JText::sprintf('COM_REDFORM_D_CONFIRMATION_EMAIL_RESENT', count($cid));
+		if ($sent == count($cid))
+		{
+			$msg = JText::sprintf('COM_REDFORM_D_CONFIRMATION_EMAIL_RESENT', count($cid));
 
-		// Set redirect
-		$this->setRedirect($this->getRedirectToListRoute(), $msg, 'success');
+			// Set redirect
+			$this->setRedirect($this->getRedirectToListRoute(), $msg, 'success');
+		}
+		elseif ($sent)
+		{
+			$msg = JText::sprintf('COM_REDFORM_D_CONFIRMATION_EMAIL_RESENT_NOTICE', count($cid));
+
+			// Set redirect
+			$this->setRedirect($this->getRedirectToListRoute(), $msg, 'notice');
+		}
+		else
+		{
+			// Set redirect
+			$this->setRedirect($this->getRedirectToListRoute());
+		}
 	}
 
 	/**
