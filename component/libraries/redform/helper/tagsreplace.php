@@ -350,4 +350,14 @@ class RdfHelperTagsreplace
 	{
 		return $this->answers->sid;
 	}
+
+	/**
+	 * replaces [base_url]
+	 *
+	 * @return string
+	 */
+	private function getTagBase_url()
+	{
+		return JURI::root();
+	}
 }
