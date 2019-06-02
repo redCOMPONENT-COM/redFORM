@@ -358,6 +358,6 @@ class RdfHelperTagsreplace
 	 */
 	private function getTagBase_url()
 	{
-		return JURI::root();
+		return rtrim(JURI::root(), '/');
 	}
 }
