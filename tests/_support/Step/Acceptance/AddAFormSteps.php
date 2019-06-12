@@ -87,11 +87,11 @@ class AddAFormSteps extends Adminredform
 		$I->amOnPage(AddAFormPage::$url);
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 		$I->click(AddAFormPage::$newButton);
-		$I->waitForElement(AddAFormPage::$startDateLbl, 30);
+		$I->waitForElementVisible(AddAFormPage::$startDateLbl, 30);
 		$I->fillField(AddAFormPage::$startDate, $params['startDate']);
-		$I->waitForElement(AddAFormPage::$endDateLbl, 30);
+		$I->waitForElementVisible(AddAFormPage::$endDateLbl, 30);
 		$I->fillField(AddAFormPage::$endDate, $params['endDate']);
-		$I->waitForElement(AddAFormPage::$formExpiresLbl, 30);
+		$I->waitForElementVisible(AddAFormPage::$formExpiresLbl, 30);
 		$I->selectOptionInRadioField(AddAFormPage::$formExpires, $params['formExpires']);
 		$I->click(AddAFormPage::$saveButton);
 		$I->waitForText(AddAFormPage::$messageMissingFormName, 30, AddAFormPage::$alertMessage);
