@@ -176,10 +176,10 @@ class DisplayFormOnFrontendCest
 	public function createForm(AddAFormSteps $I, $scenario)
 	{
 		$I = new AddAFieldSteps($scenario);
-		$I->createField($this->nameField, 'save');
-		$I->createField($this->emailField, 'save');
-		$I->createField($this->telephoneField, 'save');
-		$I->createField($this->noteField, 'save');
+		$I->createField($this->nameField, 'save&close');
+		$I->createField($this->emailField, 'save&close');
+		$I->createField($this->telephoneField, 'save&close');
+		$I->createField($this->noteField, 'save&close');
 
 		$I = new AddAFormSteps($scenario);
 		$I->wantToTest('Create form for check.');
