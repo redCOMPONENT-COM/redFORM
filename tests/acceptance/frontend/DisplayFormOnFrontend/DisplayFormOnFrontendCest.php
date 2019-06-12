@@ -173,20 +173,20 @@ class DisplayFormOnFrontendCest
 	 * @param               $scenario
 	 * @throws Exception
 	 */
-	public function createForm(AddAFormSteps $I, $scenario)
-	{
-		$I = new AddAFieldSteps($scenario);
-		$I->createField($this->nameField, 'save&close');
-		$I->createField($this->emailField, 'save&close');
-		$I->createField($this->telephoneField, 'save&close');
-		$I->createField($this->noteField, 'save&close');
-
-		$I = new AddAFormSteps($scenario);
-		$I->wantToTest('Create form for check.');
-		$I->createForm($this->paramsForm, 'save');
-		$I->editAndAddFieldForForm($this->paramsForm['name'], $this->telephoneForm);
-		$I->editAndAddFieldForForm($this->paramsForm['name'], $this->noteForm);
-	}
+//	public function createForm(AddAFormSteps $I, $scenario)
+//	{
+//		$I = new AddAFieldSteps($scenario);
+//		$I->createField($this->nameField, 'save');
+//		$I->createField($this->emailField, 'save');
+//		$I->createField($this->telephoneField, 'save');
+//		$I->createField($this->noteField, 'save');
+//
+//		$I = new AddAFormSteps($scenario);
+//		$I->wantToTest('Create form for check.');
+//		$I->createForm($this->paramsForm, 'save');
+//		$I->editAndAddFieldForForm($this->paramsForm['name'], $this->telephoneForm);
+//		$I->editAndAddFieldForForm($this->paramsForm['name'], $this->noteForm);
+//	}
 
 	/**
 	 * @param DisplayFormOnFrontendSteps $I
@@ -209,85 +209,85 @@ class DisplayFormOnFrontendCest
 	 * @param                            $scenario
 	 * @throws Exception
 	 */
-	public function submitFormMissingEmail(DisplayFormOnFrontendSteps $I, $scenario)
-	{
-		$I = new DisplayFormOnFrontendSteps($scenario);
-		$I->wantTo('Create new article');
-		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
-		$I->wantTo('Create new menu items');
-		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
-		$I->wantToTest('Submit form with missing email');
-		$I->submitFormMissingEmail($this->menuTitle, $this->fillForm);
-	}
-
-	/**
-	 * @param DisplayFormOnFrontendSteps $I
-	 * @param                            $scenario
-	 * @throws Exception
-	 */
-	public function submitFormMissingName(DisplayFormOnFrontendSteps $I, $scenario)
-	{
-		$I = new DisplayFormOnFrontendSteps($scenario);
-		$I->wantTo('Create new article');
-		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
-		$I->wantTo('Create new menu items');
-		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
-		$I->wantToTest('Submit form with missing name');
-		$I->submitFormMissingName($this->menuTitle, $this->fillForm);
-	}
-
-	/**
-	 * @param DisplayFormOnFrontendSteps $I
-	 * @param                            $scenario
-	 * @throws Exception
-	 */
-	public function checkFormWithHasExpired(DisplayFormOnFrontendSteps $I, $scenario)
-	{
-		$I->wantTo('Edit form with expires');
-		$I = new AddAFormSteps($scenario);
-		$I->editFormWithExpires($this->paramsForm['name'], $this->paramsFormHasExpires);
-
-		$I = new DisplayFormOnFrontendSteps($scenario);
-		$I->wantTo('Create new article');
-		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
-		$I->wantTo('Create new menu items');
-		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
-		$I->wantTo('Check form display in frontend with has expired');
-		$I->checkFormWithHasExpired($this->menuTitle);
-	}
-
-	/**
-	 * @param DisplayFormOnFrontendSteps $I
-	 * @param                            $scenario
-	 * @throws Exception
-	 */
-	public function checkFormWithExpires(DisplayFormOnFrontendSteps $I, $scenario)
-	{
-		$I->wantTo('Edit form with expires');
-		$I = new AddAFormSteps($scenario);
-		$I->editFormWithExpires($this->paramsForm['name'], $this->paramsFormExpires);
-
-		$I = new DisplayFormOnFrontendSteps($scenario);
-		$I->wantTo('Create new article');
-		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
-		$I->wantTo('Create new menu items');
-		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
-		$I->wantTo('Check form display in frontend with expires');
-		$I->checkFormInFrontend($this->menuTitle, $this->fillForm);
-	}
-
-	/**
-	 * @param DisplayFormOnFrontendSteps $I
-	 * @param                            $scenario
-	 * @throws Exception
-	 */
-	public function clearAll(DisplayFormOnFrontendSteps $I, $scenario)
-	{
-		$I->wantTo('Clear up');
-		$I = new AddAFormSteps($scenario);
-		$I->deleteFormHasSubmitters($this->paramsForm['name']);
-
-		$I = new AddAFieldSteps($scenario);
-		$I->deleteAllField();
-	}
+//	public function submitFormMissingEmail(DisplayFormOnFrontendSteps $I, $scenario)
+//	{
+//		$I = new DisplayFormOnFrontendSteps($scenario);
+//		$I->wantTo('Create new article');
+//		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
+//		$I->wantTo('Create new menu items');
+//		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
+//		$I->wantToTest('Submit form with missing email');
+//		$I->submitFormMissingEmail($this->menuTitle, $this->fillForm);
+//	}
+//
+//	/**
+//	 * @param DisplayFormOnFrontendSteps $I
+//	 * @param                            $scenario
+//	 * @throws Exception
+//	 */
+//	public function submitFormMissingName(DisplayFormOnFrontendSteps $I, $scenario)
+//	{
+//		$I = new DisplayFormOnFrontendSteps($scenario);
+//		$I->wantTo('Create new article');
+//		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
+//		$I->wantTo('Create new menu items');
+//		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
+//		$I->wantToTest('Submit form with missing name');
+//		$I->submitFormMissingName($this->menuTitle, $this->fillForm);
+//	}
+//
+//	/**
+//	 * @param DisplayFormOnFrontendSteps $I
+//	 * @param                            $scenario
+//	 * @throws Exception
+//	 */
+//	public function checkFormWithHasExpired(DisplayFormOnFrontendSteps $I, $scenario)
+//	{
+//		$I->wantTo('Edit form with expires');
+//		$I = new AddAFormSteps($scenario);
+//		$I->editFormWithExpires($this->paramsForm['name'], $this->paramsFormHasExpires);
+//
+//		$I = new DisplayFormOnFrontendSteps($scenario);
+//		$I->wantTo('Create new article');
+//		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
+//		$I->wantTo('Create new menu items');
+//		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
+//		$I->wantTo('Check form display in frontend with has expired');
+//		$I->checkFormWithHasExpired($this->menuTitle);
+//	}
+//
+//	/**
+//	 * @param DisplayFormOnFrontendSteps $I
+//	 * @param                            $scenario
+//	 * @throws Exception
+//	 */
+//	public function checkFormWithExpires(DisplayFormOnFrontendSteps $I, $scenario)
+//	{
+//		$I->wantTo('Edit form with expires');
+//		$I = new AddAFormSteps($scenario);
+//		$I->editFormWithExpires($this->paramsForm['name'], $this->paramsFormExpires);
+//
+//		$I = new DisplayFormOnFrontendSteps($scenario);
+//		$I->wantTo('Create new article');
+//		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
+//		$I->wantTo('Create new menu items');
+//		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
+//		$I->wantTo('Check form display in frontend with expires');
+//		$I->checkFormInFrontend($this->menuTitle, $this->fillForm);
+//	}
+//
+//	/**
+//	 * @param DisplayFormOnFrontendSteps $I
+//	 * @param                            $scenario
+//	 * @throws Exception
+//	 */
+//	public function clearAll(DisplayFormOnFrontendSteps $I, $scenario)
+//	{
+//		$I->wantTo('Clear up');
+//		$I = new AddAFormSteps($scenario);
+//		$I->deleteFormHasSubmitters($this->paramsForm['name']);
+//
+//		$I = new AddAFieldSteps($scenario);
+//		$I->deleteAllField();
+//	}
 }
