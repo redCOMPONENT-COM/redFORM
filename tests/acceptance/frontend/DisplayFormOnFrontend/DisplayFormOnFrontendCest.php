@@ -257,8 +257,8 @@ class DisplayFormOnFrontendCest
 	}
 
 	/**
-	 * @param DisplayFormOnFrontendSteps $I
-	 * @param                            $scenario
+	 * @param DisplayFormOnFrontendSteps  $I
+	 * @param                             $scenario
 	 * @throws Exception
 	 */
 	public function checkFormWithExpires(DisplayFormOnFrontendSteps $I, $scenario)
