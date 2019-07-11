@@ -61,7 +61,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForText(DisplayFormOnFrontendPage::$menuItemsTitle, 30, DisplayFormOnFrontendPage::$h1);
 		$I->checkForPhpNoticesOrWarnings();
 
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$newButton, 30);
+		$I->waitForElement(DisplayFormOnFrontendPage::$newButton, 30);
 		$I->click(DisplayFormOnFrontendPage::$newButton);
 		$I->waitForElementVisible(DisplayFormOnFrontendPage::$titleLbl, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$title, $menuTitle);
@@ -84,7 +84,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->click($articlesTitle);
 		$I->wait(0.5);
 		$I->switchToIFrame();
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$saveCloseButton, 30);
+		$I->waitForElement(DisplayFormOnFrontendPage::$saveCloseButton, 30);
 		$I->click(DisplayFormOnFrontendPage::$saveCloseButton);
 		$I->waitForElementVisible(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
 	}
