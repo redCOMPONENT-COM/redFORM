@@ -61,11 +61,10 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForText(DisplayFormOnFrontendPage::$menuItemsTitle, 30, DisplayFormOnFrontendPage::$h1);
 		$I->checkForPhpNoticesOrWarnings();
 
-		$I->waitForElement(DisplayFormOnFrontendPage::$newButton, 30);
 		$I->click(DisplayFormOnFrontendPage::$newButton);
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$titleLbl, 30);
+		$I->waitForElement(DisplayFormOnFrontendPage::$titleLbl, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$title, $menuTitle);
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$menuItemTypeLbl, 30);
+		$I->waitForElement(DisplayFormOnFrontendPage::$menuItemTypeLbl, 30);
 		$I->click(DisplayFormOnFrontendPage::$selectMenuItemType);
 		$I->switchToIFrame(DisplayFormOnFrontendPage::$menuItemType);
 		$I->click($menuItemType);
@@ -73,20 +72,19 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForElement($usePage->returnMenuItem($articles), 60);
 		$I->wait(1);
 		$I->click($usePage->returnMenuItem($articles));
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$selectArticleLbl, 30);
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$selectArticle, 30);
+		$I->waitForElement(DisplayFormOnFrontendPage::$selectArticleLbl, 30);
+		$I->waitForElement(DisplayFormOnFrontendPage::$selectArticle, 30);
 		$I->click(DisplayFormOnFrontendPage::$selectArticle);
 		$I->switchToIFrame(DisplayFormOnFrontendPage::$selectChangeArticle);
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$searchArticleId, 30);
+		$I->waitForElement(DisplayFormOnFrontendPage::$searchArticleId, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$searchArticleId, $articlesTitle);
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$searchIcon);
+		$I->waitForElement(DisplayFormOnFrontendPage::$searchIcon);
 		$I->click(DisplayFormOnFrontendPage::$searchIcon);
 		$I->click($articlesTitle);
 		$I->wait(0.5);
 		$I->switchToIFrame();
-		$I->waitForElement(DisplayFormOnFrontendPage::$saveCloseButton, 30);
 		$I->click(DisplayFormOnFrontendPage::$saveCloseButton);
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
+		$I->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
 	}
 
 	/**
