@@ -215,7 +215,7 @@ class DeleteFormHasSubmittersCest
 		$I = new AddAFormSteps($scenario);
 		$I->deleteFormHasSubmitters($this->paramsForm['name']);
 	}
-	
+
 	/**
 	 * @param DisplayFormOnFrontendSteps $I
 	 * @param                            $scenario
@@ -223,7 +223,7 @@ class DeleteFormHasSubmittersCest
 	 */
 	public function clearAll(DisplayFormOnFrontendSteps $I, $scenario)
 	{
-		$I->wantTo('Cleans up');
+		$I->wantTo('Clear up');
 		$I = new AddAFieldSteps($scenario);
 		$I->deleteAllField();
 	}
