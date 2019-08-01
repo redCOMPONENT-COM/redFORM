@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 /**
@@ -74,7 +76,7 @@ class RedformModelForm extends RModelAdmin
 
 		if ($res)
 		{
-			$this->setError('COM_REDFORM_FORM_DELETE_ERROR_FORM_HAS_SUBMITTERS');
+			$this->setError(Text::_('COM_REDFORM_FORM_DELETE_ERROR_FORM_HAS_SUBMITTERS'));
 
 			return false;
 		}

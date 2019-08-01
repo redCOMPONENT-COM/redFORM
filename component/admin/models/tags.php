@@ -67,8 +67,10 @@ class RedformModelTags extends RModel
 		$tags[] = new Info('totalvat', JText::_('LIB_REDFORM_TAG_DESCRIPTION_TOTALVAT'));
 		$tags[] = new Info('totalpricevatexcluded', JText::_('LIB_REDFORM_TAG_DESCRIPTION_TOTALPRICEVATEXCLUDED'));
 		$tags[] = new Info('confirmlink', JText::_('LIB_REDFORM_TAG_DESCRIPTION_CONFIRMLINK'));
+		$tags[] = new Info('confirmlink_relative', JText::_('LIB_REDFORM_TAG_DESCRIPTION_CONFIRMLINK_RELATIVE'));
 		$tags[] = new Info('paymentlink', JText::_('LIB_REDFORM_TAG_DESCRIPTION_PAYMENTLINK'));
 		$tags[] = new Info('submitter_id', JText::_('LIB_REDFORM_TAG_DESCRIPTION_SUBMITTER_ID'));
+		$tags[] = new Info('base_url', JText::_('LIB_REDFORM_TAG_DESCRIPTION_BASE_URL'));
 
 		return $tags;
 	}

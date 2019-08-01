@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 /**
@@ -61,7 +63,7 @@ class RedformTableField extends RTable
 
 		if ($res)
 		{
-			$this->setError('COM_REDFORM_FIELD_DELETE_ERROR_USED_IN_FORMS');
+			$this->setError(Text::_('COM_REDFORM_FIELD_DELETE_ERROR_USED_IN_FORMS'));
 
 			return false;
 		}

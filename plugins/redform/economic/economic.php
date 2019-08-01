@@ -613,15 +613,16 @@ class plgRedformEconomic extends JPlugin
 	 * Book an invoice
 	 *
 	 * @param   string  $invoiceNumber  invoice number
+	 * @param   float   $amount         amount to book
 	 *
 	 * @return object invoice handle
 	 */
-	private function bookInvoice($invoiceNumber)
+	private function bookInvoice($invoiceNumber, $amount = null)
 	{
 		$cart = $this->getCart();
 
 		$bookingData = array();
-		$bookingData['amount'] = $cart->price + $cart->vat;
+		$bookingData['amount'] = is_null($amount) ? $cart->price + $cart->vat : $amount;
 		$bookingData['invoiceHandle'] = $invoiceNumber;
 		$bookingData['currency_code'] = $cart->currency;
 		$bookingData['vat'] = $cart->vat;
@@ -706,7 +707,7 @@ class plgRedformEconomic extends JPlugin
 		$table->store();
 
 		// Book it
-		$bookedHandle = $this->bookInvoice($currentInvoiceHandle->Id);
+		$bookedHandle = $this->bookInvoice($currentInvoiceHandle->Id, -((float) $data->NetAmount));
 
 		if ($bookedHandle)
 		{

@@ -921,7 +921,7 @@ class RedformeconomicSoapClient
 		if ($invoiceHandle)
 		{
 			// Cashbook entry
-			if (isset($d['amount']) && $d['amount'] > 0)
+			if (isset($d['amount']) && $d['amount'] != 0)
 			{
 				$this->createCashbookEntry($d, $invoiceHandle);
 			}

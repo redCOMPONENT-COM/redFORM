@@ -320,6 +320,16 @@ class RdfHelperTagsreplace
 	}
 
 	/**
+	 * replaces [confirmlink]
+	 *
+	 * @return string
+	 */
+	private function getTagConfirmlink_Relative()
+	{
+		return 'index.php?option=com_redform&task=redform.confirm&key=' . $this->answers->getSubmitKey();
+	}
+
+	/**
 	 * replaces [paymentlink]
 	 *
 	 * @return string
@@ -339,5 +349,15 @@ class RdfHelperTagsreplace
 	private function getTagSubmitter_id()
 	{
 		return $this->answers->sid;
+	}
+
+	/**
+	 * replaces [base_url]
+	 *
+	 * @return string
+	 */
+	private function getTagBase_url()
+	{
+		return rtrim(JURI::root(), '/');
 	}
 }

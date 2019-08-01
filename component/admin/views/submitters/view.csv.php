@@ -50,6 +50,11 @@ class RedformViewSubmitters extends RViewCsv
 
 		foreach ($fields as $field)
 		{
+			if (!$field->getParam('export', 1))
+			{
+				continue;
+			}
+
 			$columns['field_' . $field->field_id] = $field->field_header;
 		}
 

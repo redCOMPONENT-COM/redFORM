@@ -13,8 +13,8 @@ pipeline:
     - touch tests/.cache.npm.tmp
 
     # Joomla CMS
-    - mv /opt/cache/joomla-cms tests
-    - touch tests/.cache.joomla-cms.tmp
+    # - mv /opt/cache/joomla-cms tests
+    # - touch tests/.cache.joomla-cms.tmp
 
   00-setup:
     group: 00-setup
@@ -46,7 +46,7 @@ pipeline:
     # Codeception setup
     - cp tests/acceptance.suite.yml.dist.drone tests/acceptance.suite.yml
     # Test setup
-    - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done          # Comment if not using Joomla CMS cache
+    # - while [ ! -f tests/.cache.joomla-cms.tmp ]; do sleep 1; done          # Comment if not using Joomla CMS cache
     - cd tests
     - vendor/bin/robo tests:site-preparation 1 1
     - cd ..
@@ -60,7 +60,7 @@ pipeline:
     # Execution under uid 82 (www / www-data)
     # - while [ ! -f tests/.cache.aesir-core.tmp ]; do sleep 1; done        # Comment if not using redFORM Core cache
     - cd tests
-    - su www-data -c 'vendor/bin/robo tests:setup 1 1'
+    - su www-data -c 'vendor/bin/robo tests:setup 0 0'
 
   00-setup-stages:
     group: tests
@@ -78,17 +78,23 @@ pipeline:
     - sed -i "s,$tests_suite/joomla-cms/,joomla-cms/,g" tests/$tests_suite/joomla-cms/configuration.php
     - mysqldump -u root -proot -h db $tests_db > tests/dbdump.sql.tmp
     # Stages setup
-    - sh tests/drone/setup-stages.sh "administrator"    "01-administrator"
+    - sh tests/drone/setup-stages.sh "checkForWarningsAndNotices"    "01-checkForWarningsAndNotices"
+    - sh tests/drone/setup-stages.sh "field"                         "02-field"
+    - sh tests/drone/setup-stages.sh "form"                          "03-form"
+    - sh tests/drone/setup-stages.sh "section"                       "04-section"
+    - sh tests/drone/setup-stages.sh "submitters"                    "05-submitters"
+    - sh tests/drone/setup-stages.sh "displayFormOnFrontend"         "06-displayFormOnFrontend"
+    - sh tests/drone/setup-stages.sh "deleteFormHasSubmitters"       "07-deleteFormHasSubmitters"
 
-  01-administrator:
+  01-checkForWarningsAndNotices:
     group: tests
     image: redwebaps/testbox-chromedriver:2.38
     environment:
     - tests_user=admin
-    - tests_suite=01-administrator
-    - tests_db=administrator
+    - tests_suite=01-checkForWarningsAndNotices
+    - tests_db=checkForWarningsAndNotices
     - build_path=/drone/src/github.com/${DRONE_REPO}
-    - output_append=-01-administrator
+    - output_append=-01-checkForWarningsAndNotices
     commands:
     # Regular entry point
     - /entrypoint.sh &
@@ -96,7 +102,115 @@ pipeline:
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
     # Performs test
     - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator 1 1'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/CheckForWarningsAndNotices 0 0'
+
+  02-field:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=02-field
+    - tests_db=field
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-02-field
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Field 0 0'
+
+  03-form:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=03-form
+    - tests_db=form
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-03-form
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Form 0 0'
+
+  04-section:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=04-section
+    - tests_db=section
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-04-section
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Section 0 0'
+
+  05-submitters:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=05-submitters
+    - tests_db=submitters
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-05-submitters
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Submitters 0 0'
+
+  06-displayFormOnFrontend:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=06-displayFormOnFrontend
+    - tests_db=displayFormOnFrontend
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-06-displayFormOnFrontend
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DisplayFormOnFrontend 0 0'
+
+  07-deleteFormHasSubmitters:
+    group: tests
+    image: redwebaps/testbox-chromedriver:2.38
+    environment:
+    - tests_user=admin
+    - tests_suite=07-deleteFormHasSubmitters
+    - tests_db=deleteFormHasSubmitters
+    - build_path=/drone/src/github.com/${DRONE_REPO}
+    - output_append=-07-deleteFormHasSubmitters
+    commands:
+    # Regular entry point
+    - /entrypoint.sh &
+    # Performs test after ensuring that the scenario has been fully set up
+    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Performs test
+    - cd tests
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DeleteFormHasSubmitters 0 0'
 
   slack:
     image: plugins/slack
@@ -127,8 +241,8 @@ services:
     - MYSQL_ROOT_PASSWORD=root
     - MYSQL_ROOT_HOST=%
   php:
-    image: redwebaps/php-apache:7.0
-    # pull: true
+    image: redwebaps/php-apache:7.3
+    pull: true
     environment:
     - WEB_DOCUMENT_ROOT=/drone/src/github.com/${DRONE_REPO}
     - JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK=1

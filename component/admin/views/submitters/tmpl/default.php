@@ -113,10 +113,12 @@ foreach ($this->items as $item)
 				</th>
 			<?php endif; ?>
 
-			<?php foreach ($this->fields as $key => $value): ?>
+			<?php foreach ($this->fields as $key => $field): ?>
+				<?php if ($field->getParam('show_in_list', 1)): ?>
 				<th class="nowrap hidden-phone">
-					<?php echo $value->field_header; ?>
+					<?php echo $field->field_header; ?>
 				</th>
+				<?php endif; ?>
 			<?php endforeach; ?>
 
 			<?php if ($this->formInfo->activatepayment): ?>
@@ -186,6 +188,11 @@ foreach ($this->items as $item)
 				<?php
 				foreach ($this->fields as $key => $field)
 				{
+				 	if (!$field->getParam('show_in_list', 1))
+					{
+						continue;
+					}
+
 					$fieldname = 'field_'. $field->field_id;
 
 					if (isset($item->{$fieldname}))
@@ -245,7 +252,11 @@ foreach ($this->items as $item)
 	<div>
 		<input type="hidden" name="task" value="">
 		<input type="hidden" name="boxchecked" value="0">
-		<input type="hidden" name="integration" value="<?php echo $this->integration; ?>" />
+
+		<?php if (!empty($this->integration)): ?>
+			<input type="hidden" name="integration" value="<?php echo $this->integration; ?>" />
+		<?php endif; ?>
+
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>
