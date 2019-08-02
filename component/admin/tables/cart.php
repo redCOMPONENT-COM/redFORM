@@ -87,7 +87,7 @@ class RedformTableCart extends RTable
 	 *
 	 * @return integer
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.26
 	 */
 	public function getNextId($prefix)
 	{

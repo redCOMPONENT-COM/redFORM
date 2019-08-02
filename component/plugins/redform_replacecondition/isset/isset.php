@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
  * redFORM Isset Replace condition plugin
  *
  * @package  Redform.plugins
- * @since    __deploy_version__
+ * @since    3.3.26
  */
 class PlgRedform_ReplaceconditionIsset extends AbstractReplaceconditionPlugin
 {
