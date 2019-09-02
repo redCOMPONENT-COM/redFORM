@@ -26,7 +26,6 @@
 				placeholder="COM_REDCORE_SUBMITTERS_FILTER_FROM"
 				label="COM_REDCORE_SUBMITTERS_FILTER_FROM"
 				description="COM_REDCORE_SUBMITTERS_FILTER_FROM_DESC"
-				onchange="this.form.submit();"
 				/>
 		<field
 				name="to"
@@ -35,7 +34,6 @@
 				placeholder="COM_REDCORE_SUBMITTERS_FILTER_TO"
 				label="COM_REDCORE_SUBMITTERS_FILTER_TO"
 				description="COM_REDCORE_SUBMITTERS_FILTER_TO_DESC"
-				onchange="this.form.submit();"
 				/>
 		<field
 				name="confirmed"
