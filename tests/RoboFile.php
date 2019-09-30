@@ -358,7 +358,6 @@
 				* Use as $version value the latest tagged stable version at: https://github.com/joomla/joomla-cms/releases
 				*/
 				$version = '3.9.12';
-				
 				$this->_exec("git clone -b $version --single-branch --depth 1 https://github.com/joomla/joomla-cms.git joomla-cms");
 				$this->say("Joomla CMS ($version) site created at joomla-cms");
 
