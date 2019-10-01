@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 /**
@@ -137,6 +139,21 @@ JS;
 		if ($value && $regex && !preg_match("/" . $regex . "/", $value))
 		{
 			$this->setError($this->name . ': ' . $this->getParam('regexformat_desc'));
+
+			return false;
+		}
+
+		$limit = (int) $this->getParam('maxlength');
+
+		if ($limit && strlen($value) > $limit)
+		{
+			$this->setError(
+				Text::sprintf(
+					'LIB_REDFORM_VALIDATE_FIELD_ERROR_TOO_LONG',
+					$this->name,
+					$limit
+				)
+			);
 
 			return false;
 		}
