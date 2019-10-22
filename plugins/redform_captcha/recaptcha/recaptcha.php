@@ -12,7 +12,7 @@ defined('_JEXEC') or die('Restricted access');
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
-include_once 'vendor/autoload.php';
+include_once __DIR__. '/vendor/autoload.php';
 
 /**
  * Class plgRedform_captchaRecaptcha
@@ -133,7 +133,7 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	 */
 	public function onCheckCaptcha(&$result)
 	{
-		require_once 'vendor/autoload.php';
+		require_once __DIR__. '/vendor/autoload.php';
 
 		$gRecaptchaResponse = JFactory::getApplication()->input->get($this->responseElementId);
 
