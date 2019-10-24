@@ -596,31 +596,37 @@ class RdfAnswers
 				$mailer->addReplyTo($cond_recipients[0]);
 			}
 
-			if (JMailHelper::isEmailAddress($submitter_email))
+			if (!JMailHelper::isEmailAddress($submitter_email))
 			{
-				// Add the email address
-				$mailer->AddAddress($submitter_email);
+				JError::raiseWarning(0, JText::_('COM_REDFORM_MISSING_OR_INVALID_EMAIL'));
 
-				$subject = $this->replaceTags($form->submissionsubject);
-				$mailer->setSubject($subject);
+				return false;
+			}
 
-				// Mail submitter
-				$submission_body = $form->submissionbody;
-				$submission_body = $this->replaceTags($submission_body);
-				$htmlmsg = RdfHelper::wrapMailHtmlBody($submission_body, $subject);
-				$mailer->MsgHTML($htmlmsg);
+			// Add the email address
+			$mailer->AddAddress($submitter_email);
 
-				// Send the mail
-				if (!$mailer->Send())
-				{
-					JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter)');
-					RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter):' . $mailer->error);
-				}
+			$subject = $this->replaceTags($form->submissionsubject);
+			$mailer->setSubject($subject);
 
-				if (RdfHelper::getConfig()->get('debug_email', 0))
-				{
-					RdfHelperLog::simpleLog('Sent submitter notification to ' . $submitter_email);
-				}
+			// Mail submitter
+			$submission_body = $form->submissionbody;
+			$submission_body = $this->replaceTags($submission_body);
+			$htmlmsg = RdfHelper::wrapMailHtmlBody($submission_body, $subject);
+			$mailer->MsgHTML($htmlmsg);
+
+			// Send the mail
+			if (!$mailer->Send())
+			{
+				JError::raiseWarning(0, JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter)');
+				RdfHelperLog::simpleLog(JText::_('COM_REDFORM_NO_MAIL_SEND') . ' (to submitter):' . $mailer->error);
+
+				return false;
+			}
+
+			if (RdfHelper::getConfig()->get('debug_email', 0))
+			{
+				RdfHelperLog::simpleLog('Sent submitter notification to ' . $submitter_email);
 			}
 		}
 
