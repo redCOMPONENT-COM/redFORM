@@ -12,7 +12,7 @@ defined('JPATH_BASE') or die;
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
-jimport('redevent.bootstrap');
+jimport('redform.bootstrap');
 
 RLoader::registerPrefix('PlgRedform_FieldDawa', __DIR__);
 
@@ -23,6 +23,9 @@ RLoader::registerPrefix('PlgRedform_FieldDawa', __DIR__);
  */
 class PlgRedform_FieldDawa extends JPlugin
 {
+	/**
+	 * @var booleab
+	 */
 	protected $autoloadLanguage = true;
 
 	/**
@@ -45,13 +48,13 @@ class PlgRedform_FieldDawa extends JPlugin
 	{
 		parent::__construct($subject, $config);
 
-		RedeventBootstrap::bootstrap();
+		RdfBootstrap::bootstrap();
 	}
 
 	/**
 	 * Add supported field type(s)
 	 *
-	 * @param   string[]  &$types  types
+	 * @param   string[]  $types  types
 	 *
 	 * @return void
 	 */
@@ -65,7 +68,7 @@ class PlgRedform_FieldDawa extends JPlugin
 	/**
 	 * Add supported field type(s) as option(s)
 	 *
-	 * @param   object[]  &$options  options
+	 * @param   object[]  $options  options
 	 *
 	 * @return void
 	 */
@@ -79,8 +82,8 @@ class PlgRedform_FieldDawa extends JPlugin
 	/**
 	 * Return an instance of supported types, if matches.
 	 *
-	 * @param   string     $type       type of field
-	 * @param   RdfRfield  &$instance  instance of field
+	 * @param   string     $type      type of field
+	 * @param   RdfRfield  $instance  instance of field
 	 *
 	 * @return void
 	 */
