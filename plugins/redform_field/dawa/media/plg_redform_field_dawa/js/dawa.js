@@ -9,8 +9,8 @@
 	};
 
 	$(function(){
-		$('.redform-form .formbox').each(function(index, formbox){
-			form = $(formbox);
+		$('.redform-form .formbox').each(function(){
+			form = $(this);
 			form.find('.type-dawa_zip input').autocomplete({
 				serviceUrl: "https://dawa.aws.dk/postnumre/autocomplete",
 				dataType: 'jsonp',

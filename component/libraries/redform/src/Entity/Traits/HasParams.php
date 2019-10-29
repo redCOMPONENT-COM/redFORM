@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * HasParams trait
  *
  * @package  Redform.Library
- * @since    __deploy_version__
+ * @since    3.3.26
  */
 Trait HasParams
 {

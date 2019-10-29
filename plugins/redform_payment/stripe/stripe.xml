@@ -12,12 +12,13 @@
     <description>PLG_REDFORM_PAYMENT_STRIPE_XML_DESCRIPTION</description>
 
     <files>
+        <filename>128.png</filename>
+        <filename>index.html</filename>
         <filename plugin="stripe">stripe.php</filename>
         <folder>helpers</folder>
-        <filename>index.html</filename>
         <folder>language</folder>
-		<folder>layouts</folder>
-		<folder>lib</folder>
+        <folder>layouts</folder>
+        <folder>vendor</folder>
     </files>
 
     <config>

@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
  * redFORM Contains Replace condition plugin
  *
  * @package  Redform.plugins
- * @since    __deploy_version__
+ * @since    3.3.26
  */
 class PlgRedform_ReplaceconditionContains extends AbstractReplaceconditionPlugin
 {

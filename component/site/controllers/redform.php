@@ -149,7 +149,7 @@ class RedformControllerRedform extends RedformController
 	 *
 	 * @return void
 	 *
-	 * @since    __deploy_version__
+	 * @since    3.3.26
 	 */
 	public function autodelete()
 	{

@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * Tag container
  *
  * @package  Redform.Library
- * @since    __deploy_version__
+ * @since    3.3.26
  */
 abstract class AbstractReplaceconditionPlugin extends \JPlugin
 {

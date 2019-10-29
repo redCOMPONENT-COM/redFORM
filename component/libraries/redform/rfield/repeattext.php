@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  *
  * @package     Redform.Libraries
  * @subpackage  Rfield
- * @since       __deploy_version__
+ * @since       3.3.26
  */
 class RdfRfieldRepeattext extends RdfRfieldTextfield
 {

@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * Autodelete helper
  *
  * @package  Redform.Library
- * @since    __deploy_version__
+ * @since    3.3.26
  */
 class Autodelete
 {
@@ -28,7 +28,7 @@ class Autodelete
 	 * @var   integer[]   $formIds  form ids
 	 *
 	 * @return void
-	 * @since  __deploy_version__
+	 * @since  3.3.26
 	 */
 	public function process($formIds = null)
 	{

@@ -16,7 +16,7 @@ JFormHelper::loadFieldClass('list');
  *
  * @package     Redform.Library
  * @subpackage  Fields
- * @since       __deploy_version__
+ * @since       3.3.26
  */
 class RedformFormFieldTimeinterval extends JFormFieldText
 {
@@ -32,7 +32,7 @@ class RedformFormFieldTimeinterval extends JFormFieldText
 	 *
 	 * @return  string  The field input markup.
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.26
 	 */
 	protected function getInput()
 	{
@@ -54,7 +54,7 @@ JS;
 	 *
 	 * @return  array
 	 *
-	 * @since __deploy_version__
+	 * @since 3.3.26
 	 */
 	protected function getLayoutData()
 	{

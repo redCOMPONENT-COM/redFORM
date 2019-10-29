@@ -9,7 +9,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 // Load stripe library
-require_once dirname(__DIR__) . '/lib/init.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 /**
  * Handles Stripe payments

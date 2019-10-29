@@ -48,6 +48,7 @@ tests/unit/phpunit.xml
 
 # composer
 composer.phar
+**/vendor/*
 tests/vendor/*
 
 # Robo
