@@ -14,6 +14,7 @@ var fs          = require('fs');
 var xml2js      = require('xml2js');
 var parser      = new xml2js.Parser();
 var path       	= require('path');
+var composer    = require('gulp-composer');
 
 module.exports.addPlugin = function (group, name) {
 	var baseTask  = 'plugins.' + group + '.' + name;
@@ -68,7 +69,7 @@ module.exports.addPlugin = function (group, name) {
 	});
 
 	// Release: plugin
-	gulp.task('release:' + baseTask, function (cb) {
+	gulp.task('release:' + baseTask, ['composer:' + baseTask], function (cb) {
 		fs.readFile(extPath + '/' + name + '.xml', function(err, data) {
 			parser.parseString(data, function (err, result)	 {
 				var version = result.extension.version[0];
@@ -91,7 +92,7 @@ module.exports.addPlugin = function (group, name) {
 	gulp.task('update-sites:' + baseTask, function(){
 		fs.readFile( extPath + '/' + name + '.xml', function(err, data) {
 			parser.parseString(data, function (err, result) {
-				const version = result.extension.version[0];
+				var version = result.extension.version[0];
 
 				fs.readFile('plg_update_site_template.xml', 'utf-8', function(err, content){
 					if (err)
@@ -110,5 +111,11 @@ module.exports.addPlugin = function (group, name) {
 				});
 			});
 		});
+	});
+
+	gulp.task('composer:' + baseTask, function() {
+		if (fs.existsSync(extPath + '/composer.json')) {
+			return composer({"working-dir": extPath});
+		}
 	});
 };
