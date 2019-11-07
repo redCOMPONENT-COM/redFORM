@@ -105,12 +105,104 @@ class plgRedformEconomic extends JPlugin
 			$this->db->setQuery($query);
 			$cartId = $this->db->loadResult();
 
-			return $this->rfCreateInvoice($cartId, $force);
+			if (!$cartId)
+			{
+				throw new \http\Exception\InvalidArgumentException('cart not found');
+			}
+
+			$invoice = $this->rfCreateInvoice($cartId, $force);
+
+			echo 'Created invoice/n';
+			echo print_r($invoice, true);
 		}
 		catch (Exception $e)
 		{
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 			RdfHelperLog::simpleLog(sprintf('E-conomic error for payment request id %s: %s', $paymentrequestId, $e->getMessage()));
+		}
+	}
+
+	/**
+	 * Create invoice from payment request
+	 *
+	 * use: index.php?option=com_ajax&group=redform&plugin=Createinvoice&format=raw&id=<prid>
+	 *
+	 * @return void
+	 */
+	public function onAjaxGetCurrentinvoice()
+	{
+		$paymentrequestId = JFactory::getApplication()->input->getInt('id', 0);
+
+		try
+		{
+			$query = $this->db->getQuery(true);
+
+			$query->select('c.id')
+				->from('#__rwf_cart AS c')
+				->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = c.id')
+				->where('ci.payment_request_id = ' . $paymentrequestId);
+
+			$this->db->setQuery($query);
+			$cartId = $this->db->loadResult();
+
+			if (!$cartId)
+			{
+				throw new InvalidArgumentException('cart not found');
+			}
+
+			$cart = $this->getCart($cartId);
+
+			$invoice = $this->getClient()->CurrentInvoice_FindByOtherReference($cart->invoice_id) ?: 'not found other reference ' . $cart->invoice_id;
+
+			echo '<pre>'; echo print_r($invoice, true); echo '</pre>'; exit;
+		}
+		catch (Exception $e)
+		{
+			echo $e->getMessage();
+
+			return;
+		}
+	}
+
+	/**
+	 * Create invoice from payment request
+	 *
+	 * use: index.php?option=com_ajax&group=redform&plugin=Createinvoice&format=raw&id=<prid>
+	 *
+	 * @return void
+	 */
+	public function onAjaxGetInvoice()
+	{
+		$paymentrequestId = JFactory::getApplication()->input->getInt('id', 0);
+
+		try
+		{
+			$query = $this->db->getQuery(true);
+
+			$query->select('c.id')
+				->from('#__rwf_cart AS c')
+				->join('INNER', '#__rwf_cart_item AS ci ON ci.cart_id = c.id')
+				->where('ci.payment_request_id = ' . $paymentrequestId);
+
+			$this->db->setQuery($query);
+			$cartId = $this->db->loadResult();
+
+			if (!$cartId)
+			{
+				throw new InvalidArgumentException('cart not found');
+			}
+
+			$cart = $this->getCart($cartId);
+
+			$invoice = $this->getClient()->Invoice_FindByOtherReference($cart->invoice_id) ?: 'not found other reference ' . $cart->invoice_id;
+
+			echo '<pre>'; echo print_r($invoice, true); echo '</pre>'; exit;
+		}
+		catch (Exception $e)
+		{
+			echo $e->getMessage();
+
+			return;
 		}
 	}
 
@@ -220,14 +312,16 @@ class plgRedformEconomic extends JPlugin
 	public function onAjaxBook()
 	{
 		$app = JFactory::getApplication();
-		$invoiceId = $app->input->getInt('id', 0);
-		$reference = $app->input->get('reference');
+		$invoiceId = $app->input->getInt('id');
 		$return = $app->input->get('return');
 
-		$invoice = $this->confirmReference($invoiceId, $reference);
-		$this->getCart($invoice->cart_id);
+		$this->getInvoiceCart($invoiceId);
+		$references = $this->getPaymentRequestCurrentInvoiceReference($invoiceId);
 
-		$this->bookInvoice($reference);
+		foreach ($references as $reference)
+		{
+			$this->bookInvoice($reference);
+		}
 
 		if ($return)
 		{
@@ -285,6 +379,22 @@ class plgRedformEconomic extends JPlugin
 		{
 			$app->redirect('index.php?option=com_redform&view=submitters');
 		}
+	}
+
+	/**
+	 * Handle onAjaxGetpdf event
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 */
+	public function onAjaxDeleteInvoice()
+	{
+		$app = JFactory::getApplication();
+		$reference = $app->input->get('reference');
+		$resp = $this->getClient()->CurrentInvoice_Delete(['Id' => $reference]);
+
+		echo '<pre>'; echo print_r($resp, true); echo '</pre>'; exit;
 	}
 
 	/**
@@ -460,6 +570,7 @@ class plgRedformEconomic extends JPlugin
 		if (!$invoice)
 		{
 			JError::raiseWarning(0, JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_CREATING_INVOICE'));
+			RdfHelperLog::simpleLog(JText::_('PLG_REDFORM_INTEGRATION_ECONOMIC_ERROR_CREATING_INVOICE'));
 
 			return false;
 		}
@@ -894,5 +1005,64 @@ class plgRedformEconomic extends JPlugin
 				$this->db->execute();
 			}
 		}
+	}
+
+	/**
+	 * Get CurrentInvoice reference associated to invoice id from e-conomic
+	 *
+	 * @param   int  $invoiceId  invoice id
+	 *
+	 * @return string[]
+	 */
+	private function getPaymentRequestCurrentInvoiceReference($invoiceId)
+	{
+		$cart = $this->getInvoiceCart($invoiceId);
+		$invoices = $this->getClient()->CurrentInvoice_FindByOtherReference($cart->invoice_id);
+
+		if (!$invoices)
+		{
+			throw new RuntimeException('not found other reference ' . $cart->invoice_id);
+		}
+
+		$ids = array_map(
+			function ($res)
+			{
+				return $res->Id;
+			},
+			$invoices
+		);
+
+		return $ids;
+	}
+
+	/**
+	 * Get cart associated to invoice id
+	 *
+	 * @param   int  $invoiceId  invoice id
+	 *
+	 * @return RdfEntityCart
+	 */
+	private function getInvoiceCart($invoiceId)
+	{
+		if (!$invoiceId)
+		{
+			throw new InvalidArgumentException("missing invoiceid");
+		}
+
+		$query = $this->db->getQuery(true);
+
+		$query->select('cart_id')
+			->from('#__rwf_invoice AS i')
+			->where('i.id = ' . ((int) $invoiceId));
+
+		$this->db->setQuery($query);
+		$cartId = $this->db->loadResult();
+
+		if (!$cartId)
+		{
+			throw new InvalidArgumentException('cart not found');
+		}
+
+		return $this->getCart($cartId);
 	}
 }
