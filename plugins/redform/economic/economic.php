@@ -62,22 +62,22 @@ class plgRedformEconomic extends JPlugin
 	}
 
 	/**
-	 * Handle onAfterPaymentVerified event
+	 * Handle onAfterRedformCartPaymentAccepted event
 	 *
-	 * @param   string  $cartId  cart id
+	 * @param   RdfEntityCart  $cart  cart
 	 *
 	 * @return array|bool
 	 */
-	public function onAfterPaymentVerified($cartId)
+	public function onAfterRedformCartPaymentAccepted($cart)
 	{
 		try
 		{
-			return $this->rfCreateInvoice($cartId);
+			return $this->rfCreateInvoice($cart->id);
 		}
 		catch (Exception $e)
 		{
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-			RdfHelperLog::simpleLog(sprintf('E-conomic error for cart id %s: %s', $cartId, $e->getMessage()));
+			RdfHelperLog::simpleLog(sprintf('E-conomic error for cart id %s: %s', $cart->id, $e->getMessage()));
 		}
 	}
 
@@ -234,7 +234,9 @@ class plgRedformEconomic extends JPlugin
 	{
 		try
 		{
-			if (strstr($context, 'com_redform') && $table->paid && $isNew)
+			$app = \Joomla\CMS\Factory::getApplication();
+
+			if (strstr($context, 'com_redform') && $table->paid && $isNew && $app->isClient('administrator'))
 			{
 				return $this->rfCreateInvoice($table->cart_id);
 			}
