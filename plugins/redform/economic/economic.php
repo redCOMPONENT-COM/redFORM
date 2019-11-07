@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('JPATH_BASE') or die;
 
 // Import library dependencies
@@ -117,8 +119,7 @@ class plgRedformEconomic extends JPlugin
 		}
 		catch (Exception $e)
 		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-			RdfHelperLog::simpleLog(sprintf('E-conomic error for payment request id %s: %s', $paymentrequestId, $e->getMessage()));
+			print_r($e);
 		}
 	}
 
@@ -315,14 +316,26 @@ class plgRedformEconomic extends JPlugin
 	{
 		$app = JFactory::getApplication();
 		$invoiceId = $app->input->getInt('id');
-		$return = $app->input->get('return');
+		$return = $app->input->get('return', null, 'base64');
 
-		$this->getInvoiceCart($invoiceId);
-		$references = $this->getPaymentRequestCurrentInvoiceReference($invoiceId);
-
-		foreach ($references as $reference)
+		try
 		{
-			$this->bookInvoice($reference);
+			$this->getInvoiceCart($invoiceId);
+			$references = $this->getPaymentRequestCurrentInvoiceReference($invoiceId);
+
+			foreach ($references as $reference)
+			{
+				$booked = $this->bookInvoice($reference);
+				$app->enqueueMessage(
+					Text::sprintf('PLG_REDFORM_ECONOMIC_BOOKED_INVOICE_REFERENCE', $booked->Number),
+					'success'
+				);
+			}
+		}
+		catch (Exception $e)
+		{
+			$app->enqueueMessage($e->getMessage(), 'error');
+			RdfHelperLog::simpleLog($e->getMessage());
 		}
 
 		if ($return)
@@ -347,7 +360,7 @@ class plgRedformEconomic extends JPlugin
 		$app = JFactory::getApplication();
 		$invoiceId = $app->input->getInt('id', 0);
 		$reference = $app->input->get('reference');
-		$return = $app->input->get('return');
+		$return = $app->input->get('return', null, 'base64');
 
 		$invoice = $this->confirmReference($invoiceId, $reference);
 		$this->getCart($invoice->cart_id);
