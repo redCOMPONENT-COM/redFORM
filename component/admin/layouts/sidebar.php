@@ -18,14 +18,6 @@ if (isset($data['active']))
 	$active = $data['active'];
 }
 
-$dashboardClass = ($active === 'dashboard' || !$active) ? 'active' : '';
-$formsClass = ($active === 'forms') ? 'active' : '';
-$fieldsClass = ($active === 'fields') ? 'active' : '';
-$sectionsClass = ($active === 'sections') ? 'active' : '';
-$submittersClass = ($active === 'submitters') ? 'active' : '';
-$logsClass = ($active === 'logs') ? 'active' : '';
-$optionsClass = ($active === 'config') ? 'active' : '';
-
 $user = JFactory::getUser();
 
 $uri = JUri::getInstance();
@@ -36,42 +28,49 @@ RHelperAsset::load('redformbackend.css', 'com_redform');
 
 <ul class="nav nav-tabs nav-stacked">
 	<li>
-		<a class="<?php echo $dashboardClass; ?>"
+		<a class="<?php echo ($active === 'dashboard' || !$active) ? 'active' : ''; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform') ?>">
 			<i class="icon-th"></i>
 			<?php echo JText::_('COM_REDFORM_VIEW_TITLE_DASHBOARD') ?>
 		</a>
 	</li>
 	<li>
-		<a class="<?php echo $formsClass; ?>"
+		<a class="<?php echo $active === 'forms' ? 'active' : ''; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=forms') ?>">
 			<i class="icon-list"></i>
 			<?php echo JText::_('COM_REDFORM_FORM_LIST_TITLE') ?>
 		</a>
 	</li>
 	<li>
-		<a class="<?php echo $fieldsClass; ?>"
+		<a class="<?php echo $active === 'fields' ? 'active' : ''; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=fields') ?>">
 			<i class="icon-check"></i>
 			<?php echo JText::_('COM_REDFORM_FIELD_LIST_TITLE') ?>
 		</a>
 	</li>
 	<li>
-		<a class="<?php echo $sectionsClass; ?>"
+		<a class="<?php echo $active === 'sections' ? 'active' : ''; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=sections') ?>">
 			<i class="icon-list"></i>
 			<?php echo JText::_('COM_REDFORM_SECTION_LIST_TITLE') ?>
 		</a>
 	</li>
 	<li>
-		<a class="<?php echo $submittersClass; ?>"
+		<a class="<?php echo $active === 'submitters' ? 'active' : ''; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=submitters') ?>">
 			<i class="icon-user"></i>
 			<?php echo JText::_('COM_REDFORM_SUBMITTER_LIST_TITLE') ?>
 		</a>
 	</li>
 	<li>
-		<a class="<?php echo $logsClass; ?>"
+		<a class="<?php echo $active === 'carts' ? 'active' : ''; ?>"
+		   href="<?php echo JRoute::_('index.php?option=com_redform&view=carts') ?>">
+			<i class="icon-shopping-cart"></i>
+			<?php echo JText::_('COM_REDFORM_CART_LIST_TITLE') ?>
+		</a>
+	</li>
+	<li>
+		<a class="<?php echo $active === 'logs' ? 'active' : ''; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redform&view=logs') ?>">
 			<i class="icon-comments"></i>
 			<?php echo JText::_('COM_REDFORM_LOG_LIST_TITLE') ?>
@@ -79,7 +78,7 @@ RHelperAsset::load('redformbackend.css', 'com_redform');
 	</li>
 	<?php if ($user->authorise('core.admin', 'com_redform')): ?>
 	<li>
-		<a class="<?php echo $optionsClass; ?>"
+		<a class="<?php echo $active === 'config' ? 'active' : ''; ?>"
 		   href="<?php echo JRoute::_('index.php?option=com_redcore&view=config&layout=edit&component=com_redform&return=' . $return); ?>">
 			<i class="icon-cogs"></i>
 			<?php echo JText::_('JToolbar_Options') ?>

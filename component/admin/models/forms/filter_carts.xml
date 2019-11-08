@@ -2,16 +2,28 @@
 <form>
     <fields name="filter" addfieldpath="/libraries/redform/form/fields">
         <field
-                name="search_sections"
+                name="search_carts"
                 type="text"
                 label="COM_REDCORE_FILTER_SEARCH_DESC"
                 placeholder="JSEARCH_FILTER"
                 class="js-enter-submits"
                 />
+        <field
+                name="paid"
+                type="list"
+                label="COM_REDFORM_FILTER_PAID"
+                description="COM_REDFORM_FILTER_PAID"
+                class="chosen"
+                onchange="this.form.submit();"
+        >
+            <option value="">COM_REDFORM_FILTER_PAID</option>
+            <option value="0">COM_REDFORM_FILTER_PAID_OPTION_UNPAID</option>
+            <option value="1">COM_REDFORM_FILTER_PAID_OPTION_PAID</option>
+        </field>
     </fields>
     <fields name="list">
         <field
-                name="section_limit"
+                name="cart_limit"
                 type="rlimitbox"
                 class="inputbox input-mini chzn"
                 default="25"

@@ -10,27 +10,27 @@
 defined('_JEXEC') or die;
 
 /**
- * Sections Model
+ * Carts Model
  *
  * @package     Redform.Backend
  * @subpackage  Models
  * @since       3.3.8
  */
-class RedformModelSections extends RModelList
+class RedformModelCarts extends RModelList
 {
 	/**
 	 * Name of the filter form to load
 	 *
 	 * @var  string
 	 */
-	protected $filterFormName = 'filter_sections';
+	protected $filterFormName = 'filter_carts';
 
 	/**
 	 * Limitstart field used by the pagination
 	 *
 	 * @var  string
 	 */
-	protected $limitField = 'section_limit';
+	protected $limitField = 'cart_limit';
 
 	/**
 	 * Limitstart field used by the pagination
@@ -49,7 +49,8 @@ class RedformModelSections extends RModelList
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
-				's.id', 's.name', 's.ordering'
+				'obj.id', 'obj.date',
+				'paid', 'obj.paid'
 			);
 		}
 
@@ -72,7 +73,7 @@ class RedformModelSections extends RModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		parent::populateState($ordering ?: 'obj.ordering', $direction ?: 'asc');
+		parent::populateState($ordering ?: 'obj.id', $direction ?: 'desc');
 	}
 
 	/**
@@ -86,23 +87,28 @@ class RedformModelSections extends RModelList
 
 		$query = $db->getQuery(true)
 			->select('obj.*')
-			->from('#__rwf_section as obj');
+			->from('#__rwf_cart as obj');
 
 		// Filter search
-		$search = $this->getState('filter.search_sections');
+		$search = $this->getState('filter.search_carts');
 
 		if (!empty($search))
 		{
 			$search = $db->quote('%' . $db->escape($search, true) . '%');
-			$query->where('(obj.name LIKE ' . $search . ')');
+			$query->where('(obj.invoice_id LIKE ' . $search . ')');
+		}
+
+		if (is_numeric($this->getState('filter.paid')))
+		{
+			$query->where('obj.paid = ' . $this->getState('filter.paid'));
 		}
 
 		// Ordering
 		$orderList = $this->getState('list.ordering');
 		$directionList = $this->getState('list.direction');
 
-		$order = !empty($orderList) ? $orderList : 'obj.ordering';
-		$direction = !empty($directionList) ? $directionList : 'ASC';
+		$order = !empty($orderList) ? $orderList : 'obj.id';
+		$direction = !empty($directionList) ? $directionList : 'desc';
 		$query->order($db->escape($order) . ' ' . $db->escape($direction));
 
 		return $query;

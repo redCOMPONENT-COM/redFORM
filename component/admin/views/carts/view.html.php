@@ -10,13 +10,13 @@
 defined('_JEXEC') or die;
 
 /**
- * Sections View
+ * Carts View
  *
  * @package     Redform.Backend
  * @subpackage  Views
  * @since       2.5
  */
-class RedformViewSections extends RdfView
+class RedformViewCarts extends RdfView
 {
 	/**
 	 * @var  array
@@ -58,33 +58,14 @@ class RedformViewSections extends RdfView
 	public function display($tpl = null)
 	{
 		$user = JFactory::getUser();
-		$model = $this->getModel('sections');
+		$model = $this->getModel('carts');
 
 		$this->items = $model->getItems();
 		$this->state = $model->getState();
 		$this->pagination = $model->getPagination();
 		$this->filterForm = $model->getForm();
 		$this->activeFilters = $model->getActiveFilters();
-		$this->stoolsOptions['searchField'] = 'search_sections';
-
-		// Items ordering
-		$this->ordering = array();
-
-		if ($this->items)
-		{
-			foreach ($this->items as &$item)
-			{
-				$this->ordering[0][] = $item->id;
-			}
-		}
-
-		// Edit state permission
-		$this->canEditState = false;
-
-		if ($user->authorise('core.edit.state', 'com_redevent'))
-		{
-			$this->canEditState = true;
-		}
+		$this->stoolsOptions['searchField'] = 'search_carts';
 
 		parent::display($tpl);
 	}
@@ -96,7 +77,7 @@ class RedformViewSections extends RdfView
 	 */
 	public function getTitle()
 	{
-		return JText::_('COM_REDFORM_SECTION_LIST_TITLE');
+		return JText::_('COM_REDFORM_CART_LIST_TITLE');
 	}
 
 	/**
@@ -113,33 +94,15 @@ class RedformViewSections extends RdfView
 		$secondGroup = new RToolbarButtonGroup;
 		$thirdGroup = new RToolbarButtonGroup;
 
-		// Add / edit
-		if ($canDoCore->get('core.create'))
-		{
-			$new = RToolbarBuilder::createNewButton('section.add');
-			$firstGroup->addButton($new);
-
-			$copy = RToolbarBuilder::createCopyButton('sections.copy');
-			$firstGroup->addButton($copy);
-		}
-
-		if ($canDoCore->get('core.edit'))
-		{
-			$edit = RToolbarBuilder::createEditButton('section.edit');
-			$firstGroup->addButton($edit);
-		}
-
 		// Delete / Trash
 		if ($canDoCore->get('core.delete'))
 		{
-			$delete = RToolbarBuilder::createDeleteButton('sections.delete');
-			$secondGroup->addButton($delete);
+			$delete = RToolbarBuilder::createDeleteButton('carts.delete');
+			$firstGroup->addButton($delete);
 		}
 
 		$toolbar = new RToolbar;
-		$toolbar->addGroup($firstGroup)
-			->addGroup($secondGroup)
-			->addGroup($thirdGroup);
+		$toolbar->addGroup($firstGroup);
 
 		return $toolbar;
 	}
