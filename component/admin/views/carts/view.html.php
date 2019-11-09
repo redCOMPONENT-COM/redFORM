@@ -87,23 +87,6 @@ class RedformViewCarts extends RdfView
 	 */
 	public function getToolbar()
 	{
-		$canDoCore = RedformHelpersAcl::getActions();
-		$user = JFactory::getUser();
-
-		$firstGroup = new RToolbarButtonGroup;
-		$secondGroup = new RToolbarButtonGroup;
-		$thirdGroup = new RToolbarButtonGroup;
-
-		// Delete / Trash
-		if ($canDoCore->get('core.delete'))
-		{
-			$delete = RToolbarBuilder::createDeleteButton('carts.delete');
-			$firstGroup->addButton($delete);
-		}
-
-		$toolbar = new RToolbar;
-		$toolbar->addGroup($firstGroup);
-
-		return $toolbar;
+		return new RToolbar;;
 	}
 }

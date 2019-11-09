@@ -86,8 +86,11 @@ class RedformModelCarts extends RModelList
 		$db	= $this->getDbo();
 
 		$query = $db->getQuery(true)
-			->select('obj.*')
-			->from('#__rwf_cart as obj');
+			->select('obj.*, CASE WHEN pr_paid.id THEN 1 ELSE 0 END AS paid')
+			->from('#__rwf_cart as obj')
+			->leftJoin('#__rwf_cart_item as item ON item.cart_id = obj.id')
+			->leftJoin('#__rwf_payment_request as pr_paid ON pr_paid.id = item.payment_request_id AND pr_paid.paid = 1')
+			->group('obj.id');
 
 		// Filter search
 		$search = $this->getState('filter.search_carts');
@@ -100,7 +103,8 @@ class RedformModelCarts extends RModelList
 
 		if (is_numeric($this->getState('filter.paid')))
 		{
-			$query->where('obj.paid = ' . $this->getState('filter.paid'));
+			$query->leftJoin('#__rwf_payment_request as pr ON pr.id = item.payment_request_id')
+				->where('pr.paid = ' . $this->getState('filter.paid'));
 		}
 
 		// Ordering
