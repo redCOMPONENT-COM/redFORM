@@ -30,4 +30,27 @@ class RedformControllerPayments extends RControllerAdmin
 			$this->getRedirectToListRoute()
 		);
 	}
+
+	/**
+	 * Get the JRoute object for a redirect to list.
+	 *
+	 * @param   string  $append  An optional string to append to the route
+	 *
+	 * @return  JRoute  The JRoute object
+	 */
+	protected function getRedirectToListRoute($append = null)
+	{
+		$returnUrl = $this->input->get('return', '', 'Base64');
+
+		if ($returnUrl)
+		{
+			$returnUrl = base64_decode($returnUrl);
+
+			return JRoute::_($returnUrl . $append, false);
+		}
+		else
+		{
+			return JRoute::_('index.php?option=' . $this->option . '&view=submitters' . $append, false);
+		}
+	}
 }

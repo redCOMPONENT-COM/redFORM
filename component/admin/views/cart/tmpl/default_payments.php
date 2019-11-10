@@ -35,9 +35,6 @@ $payments = $cart->getPayments();
 			<th class="nowrap hidden-phone">
 				<?php echo JText::_('COM_REDFORM_PAYMENT_DATA'); ?>
 			</th>
-			<th class="nowrap hidden-phone">
-				<?php echo JText::_('COM_REDFORM_PAYMENT_CART_ID'); ?>
-			</th>
 			<th width="15%" class="nowrap">
 				<?php echo JText::_('COM_REDFORM_Paid'); ?>
 			</th>
@@ -60,9 +57,6 @@ $payments = $cart->getPayments();
 						<?php echo str_replace("\n", "<br />",$item->data); ?>
 					</td>
 					<td>
-						<?php echo $item->cart_id; ?>
-					</td>
-					<td>
 						<?php echo $item->paid; ?>
 					</td>
 				</tr>
@@ -70,4 +64,10 @@ $payments = $cart->getPayments();
 			</tbody>
 		<?php endif; ?>
 	</table>
+	<div class="cart__payments__button">
+		<a href="index.php?option=com_redform&view=payment&layout=edit&cart_id=<?= $this->cart->id
+		?>&return=<?= base64_encode('index.php?option=com_redform&view=cart&id=' . $this->cart->id) ?>"
+			class="btn btn-primary"
+		><?= Text::_('JNEW') ?></a>
+	</div>
 </div>
