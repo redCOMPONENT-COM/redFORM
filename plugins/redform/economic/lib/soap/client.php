@@ -371,9 +371,7 @@ class RedformeconomicSoapClient
 	 */
 	public function CurrentInvoice_Delete($invoiceHandle)
 	{
-		$this->client->CurrentInvoice_Delete(array('currentInvoiceHandle' => $invoiceHandle));
-
-		return true;
+		return $this->client->CurrentInvoice_Delete(array('currentInvoiceHandle' => $invoiceHandle));
 	}
 
 	/**
