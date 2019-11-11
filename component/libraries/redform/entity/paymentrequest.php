@@ -7,10 +7,17 @@
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die;
 
 /**
  * Paymentrequest entity.
+ *
+ * @property   float   price
+ * @property   float   vat
+ * @property   string  currency
+ * @property   int     paid
  *
  * @since  3.0
  */
@@ -40,7 +47,7 @@ class RdfEntityPaymentrequest extends RdfEntityBase
 			return false;
 		}
 
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		$query = $db->getQuery(true)
 			->select('pri.*')
 			->from('#__rwf_payment_request_item AS pri')
@@ -74,7 +81,7 @@ class RdfEntityPaymentrequest extends RdfEntityBase
 	 */
 	public function getPayment()
 	{
-		$db    = JFactory::getDbo();
+		$db    = Factory::getDbo();
 		$query = $db->getQuery(true)
 			->select('p.*')
 			->from('#__rwf_payment AS p')

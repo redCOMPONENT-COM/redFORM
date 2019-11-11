@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Router\Route;
+
 defined('_JEXEC') or die;
 
 /**
@@ -46,11 +48,11 @@ class RedformControllerPayments extends RControllerAdmin
 		{
 			$returnUrl = base64_decode($returnUrl);
 
-			return JRoute::_($returnUrl . $append, false);
+			return Route::_($returnUrl . $append, false);
 		}
 		else
 		{
-			return JRoute::_('index.php?option=' . $this->option . '&view=submitters' . $append, false);
+			return Route::_('index.php?option=' . $this->option . '&view=submitters' . $append, false);
 		}
 	}
 }

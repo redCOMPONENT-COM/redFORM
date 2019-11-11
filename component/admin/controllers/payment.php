@@ -7,6 +7,9 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 /**
@@ -27,14 +30,14 @@ class RedformControllerPayment extends RdfControllerForm
 	 */
 	public function add()
 	{
-		$app     = JFactory::getApplication();
+		$app     = Factory::getApplication();
 		$context = "$this->option.edit.$this->context";
 
 		// Access check.
 		if (!$this->allowAdd())
 		{
 			// Set the internal error and also the redirect error.
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
 			$this->setMessage($this->getError(), 'error');
 
 			// Redirect to the list screen
@@ -52,7 +55,7 @@ class RedformControllerPayment extends RdfControllerForm
 		if ($paymentRequest->paid)
 		{
 			// Set the internal error and also the redirect error.
-			$this->setError(JText::_('COM_REDFORM_PAYMENT_ALREADY_PAID'));
+			$this->setError(Text::_('COM_REDFORM_PAYMENT_ALREADY_PAID'));
 			$this->setMessage($this->getError(), 'error');
 
 			// Redirect to the list screen

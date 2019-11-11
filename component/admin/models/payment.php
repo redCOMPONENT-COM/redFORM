@@ -7,6 +7,9 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -27,7 +30,7 @@ class RedformModelPayment extends RModelAdmin
 	{
 		parent::__construct($config);
 
-		JPluginHelper::importPlugin('redform');
+		PluginHelper::importPlugin('redform');
 		$this->event_after_save = 'onPaymentAfterSave';
 	}
 
@@ -81,7 +84,7 @@ class RedformModelPayment extends RModelAdmin
 	{
 		$paymentRequest = RdfEntityPaymentrequest::load($paymentRequestId);
 
-		if (!$paymentRequest)
+		if (!$paymentRequest->isValid())
 		{
 			throw new Exception('Payment request not found');
 		}
@@ -102,7 +105,7 @@ class RedformModelPayment extends RModelAdmin
 		$entity = RdfEntityCart::getInstance($cart->id);
 		$entity->loadFromTable($cart);
 
-		JPluginHelper::importPlugin('redform');
+		PluginHelper::importPlugin('redform');
 		RFactory::getDispatcher()->trigger('onAfterRedformCartCreated', array(&$entity));
 
 		return $entity;
@@ -169,7 +172,7 @@ class RedformModelPayment extends RModelAdmin
 	 *
 	 * @param   integer  $pk  The id of the primary key.
 	 *
-	 * @return  \JObject|boolean  Object on success, false on failure.
+	 * @return  object|boolean  Object on success, false on failure.
 	 */
 	public function getItem($pk = null)
 	{
@@ -192,7 +195,7 @@ class RedformModelPayment extends RModelAdmin
 	{
 		parent::populateState();
 
-		$this->setState('payment_request', JFactory::getApplication()->input->getInt('pr', 0));
-		$this->setState('cart_id', JFactory::getApplication()->input->getInt('cart_id', 0));
+		$this->setState('payment_request', Factory::getApplication()->input->getInt('pr', 0));
+		$this->setState('cart_id', Factory::getApplication()->input->getInt('cart_id', 0));
 	}
 }
