@@ -35,7 +35,12 @@ class RedformViewPayments extends RdfView
 		$this->state = $model->getState();
 
 		$billingModel = RModel::getAdminInstance('billing', ['ignore_request' => true]);
-		$billingModel->setState('billing.id', $this->billing->id);
+
+		if ($this->billing)
+		{
+			$billingModel->setState('billing.id', $this->billing->id);
+		}
+
 		$this->billingForm = $billingModel->getForm();
 
 		$this->pagination = $model->getPagination();
