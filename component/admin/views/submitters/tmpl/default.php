@@ -71,7 +71,7 @@ foreach ($this->items as $item)
 	?>
 
 	<hr/>
-	<?php if (empty($this->items) || !$this->formInfo) : ?>
+	<?php if (empty($this->items)) : ?>
 		<div class="alert alert-info">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			<div class="pagination-centered">
@@ -95,7 +95,7 @@ foreach ($this->items as $item)
 			<th class="nowrap hidden-phone">
 				<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_Submission_date', 's.submission_date', $listDirn, $listOrder); ?>
 			</th>
-			<?php if ($this->formInfo->enable_confirmation): ?>
+			<?php if ($this->formInfo && $this->formInfo->enable_confirmation): ?>
 				<th class="nowrap hidden-phone">
 					<?php echo JHtml::_('rsearchtools.sort', 'COM_REDFORM_confirmed_HEADER', 's.confirmed_date', $listDirn, $listOrder); ?>
 				</th>
@@ -121,7 +121,7 @@ foreach ($this->items as $item)
 				<?php endif; ?>
 			<?php endforeach; ?>
 
-			<?php if ($this->formInfo->activatepayment): ?>
+			<?php if (!$this->formInfo || $this->formInfo->activatepayment): ?>
 				<th class="nowrap hidden-phone">
 					<?php echo JText::_('COM_REDFORM_Price'); ?>
 				</th>
@@ -157,7 +157,7 @@ foreach ($this->items as $item)
 					</a>
 				</td>
 
-				<?php if ($this->formInfo->enable_confirmation): ?>
+				<?php if ($this->formInfo && $this->formInfo->enable_confirmation): ?>
 				<td>
 					<?php if (RdfHelper::isNonNullDate($item->confirmed_date)): ?>
 						<i class="icon-ok hasToolTip" title="<?php
@@ -216,7 +216,7 @@ foreach ($this->items as $item)
 				}
 				?>
 
-				<?php if ($this->formInfo->activatepayment): ?>
+				<?php if (!$this->formInfo || $this->formInfo->activatepayment): ?>
 					<td class="submitters-price"><?php echo $item->price ? RdfHelper::formatPrice($item->price + $item->vat, $item->currency) : ''; ?></td>
 					<td class="paymentrequests" width="auto">
 						<?php if ($item->paymentrequests): ?>
