@@ -1137,21 +1137,28 @@ class RdfCore extends JObject
 			->join('LEFT', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
 			->join('LEFT', '#__rwf_cart AS c ON c.id = ci.cart_id')
 			->where('pr.submission_id IN (' . implode(', ', $sids) . ')')
-			->order('pr.id DESC');
+			->order('pr.id DESC, c.id DESC');
 
 		$db->setQuery($query);
 		$paymentRequests = $db->loadObjectList();
 
 		$res = array();
+		$addedPr = array();
 
 		foreach ($paymentRequests as $paymentRequest)
 		{
 			if (!isset($res[$paymentRequest->submission_id]))
 			{
 				$res[$paymentRequest->submission_id] = array();
+				$added[$paymentRequest->submission_id] = array();
 			}
 
-			$res[$paymentRequest->submission_id][] = $paymentRequest;
+			// Only add most recent associated cart for pr
+			if (!in_array($paymentRequest->id, $addedPr))
+			{
+				$res[$paymentRequest->submission_id][] = $paymentRequest;
+				$addedPr[] = $paymentRequest->id;
+			}
 		}
 
 		return $res;
