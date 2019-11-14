@@ -8,6 +8,7 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die;
@@ -60,6 +61,24 @@ class RedformModelPayment extends RModelAdmin
 	 */
 	public function save($data)
 	{
+		$cart = RdfEntityCart::load($data['cart_id']);
+
+		$requireBilling = array_reduce(
+			$cart->getSubmitters(),
+			function ($isRequired, RdfEntitySubmitter $submitter)
+			{
+				return $submitter->getForm()->requirebilling || $isRequired;
+			},
+			false
+		);
+
+		if (!$cart->billing_id && $requireBilling)
+		{
+			$this->setError(Text::_('COM_REDFORM_ERROR_BILLING_IS_REQUIRED'));
+
+			return false;
+		}
+
 		if (!parent::save($data))
 		{
 			return false;
