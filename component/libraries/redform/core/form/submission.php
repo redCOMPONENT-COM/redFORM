@@ -244,7 +244,7 @@ class RdfCoreFormSubmission
 			throw new RdfExceptionSubmission('Form integrity check failed');
 		}
 
-		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $data[$token], 0);
+		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $token, 0);
 
 		if ($check_captcha)
 		{
