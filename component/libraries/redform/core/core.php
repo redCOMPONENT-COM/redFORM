@@ -400,7 +400,7 @@ class RdfCore extends JObject
 		}
 
 		// Get an unique id just for the submission
-		$uniq = uniqid();
+		$token = self::getToken();
 
 		// Add the captcha, only if initial submit
 		if ($form->captchaactive && empty($submit_key))
@@ -421,7 +421,7 @@ class RdfCore extends JObject
 					array('component' => 'com_redform')
 				);
 
-				JFactory::getSession()->set('checkcaptcha' . $uniq, 1);
+				JFactory::getSession()->set('checkcaptcha' . $token, 1);
 			}
 		}
 
@@ -439,7 +439,7 @@ class RdfCore extends JObject
 		$html .= '<input type="hidden" name="nbactive" value="' . $initialActive . '" />';
 		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
 		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';
-		$html .= '<input type="hidden" name="' . self::getToken() . '" value="' . $uniq . '" />';
+		$html .= '<input type="hidden" name="' . self::getToken() . '" value="1" />';
 		$html .= '<input type="hidden" name="submissionurl" value="' . base64_encode(JFactory::getURI()->toString()) . '" />';
 
 		if ($currency)
