@@ -90,7 +90,7 @@
 
 				var preserveValue = ['hidden', 'radio', 'checkbox'];
 
-				if (resetValue && preserveValue.indexOf(el.attr('type')) == -1) {
+				if (resetValue && preserveValue.indexOf(el.attr('type')) == -1 && el.prop('tagName').toLowerCase() != 'select') {
 					el.val(null);
 				}
 			});
