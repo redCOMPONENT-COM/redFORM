@@ -612,6 +612,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -793,12 +794,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FlowCommunications/JSONPath.git",
-                "reference": "2909fcad962cd933dfe392febda53eee54e81235"
+                "reference": "abbc17d1696bbda16698e82775fb506cc5b6b5e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FlowCommunications/JSONPath/zipball/2909fcad962cd933dfe392febda53eee54e81235",
-                "reference": "2909fcad962cd933dfe392febda53eee54e81235",
+                "url": "https://api.github.com/repos/FlowCommunications/JSONPath/zipball/abbc17d1696bbda16698e82775fb506cc5b6b5e8",
+                "reference": "abbc17d1696bbda16698e82775fb506cc5b6b5e8",
                 "shasum": ""
             },
             "require": {
@@ -806,7 +807,7 @@
             },
             "require-dev": {
                 "peekmo/jsonpath": "dev-master",
-                "phpunit/phpunit": "^4.0"
+                "phpunit/phpunit": "^7.0"
             },
             "type": "library",
             "autoload": {
@@ -826,7 +827,7 @@
                 }
             ],
             "description": "JSONPath implementation for parsing, searching and flattening arrays",
-            "time": "2018-03-04T16:41:37+00:00"
+            "time": "2019-07-16T09:33:50+00:00"
         },
         {
             "name": "fzaninotto/faker",
@@ -1305,12 +1306,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/joomla-projects/joomla-browser.git",
-                "reference": "b3099f181ce79b0dedd92dc14cf03388bb6c6c67"
+                "reference": "a17dae89abb1b21f6d914f0dd1381f9e72e3f854"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joomla-projects/joomla-browser/zipball/b3099f181ce79b0dedd92dc14cf03388bb6c6c67",
-                "reference": "b3099f181ce79b0dedd92dc14cf03388bb6c6c67",
+                "url": "https://api.github.com/repos/joomla-projects/joomla-browser/zipball/a17dae89abb1b21f6d914f0dd1381f9e72e3f854",
+                "reference": "a17dae89abb1b21f6d914f0dd1381f9e72e3f854",
                 "shasum": ""
             },
             "require": {
@@ -1334,7 +1335,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -1354,7 +1355,7 @@
                 "acceptance testing",
                 "joomla"
             ],
-            "time": "2018-11-01T13:11:06+00:00"
+            "time": "2019-09-10T09:54:35+00:00"
         },
         {
             "name": "joomla-projects/joomla-testing",
@@ -1509,12 +1510,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/joomla/coding-standards.git",
-                "reference": "c2bed76b0a90d1986ef11b6f12d33a21facf017e"
+                "reference": "c6970aa6c17d422cee9bc18fab0fd7fbb204e4ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joomla/coding-standards/zipball/c2bed76b0a90d1986ef11b6f12d33a21facf017e",
-                "reference": "c2bed76b0a90d1986ef11b6f12d33a21facf017e",
+                "url": "https://api.github.com/repos/joomla/coding-standards/zipball/c6970aa6c17d422cee9bc18fab0fd7fbb204e4ef",
+                "reference": "c6970aa6c17d422cee9bc18fab0fd7fbb204e4ef",
                 "shasum": ""
             },
             "require": {
@@ -1559,7 +1560,7 @@
                 "source": "https://github.com/joomla/coding-standards/tree/master",
                 "issues": "https://github.com/joomla/coding-standards/issues"
             },
-            "time": "2018-10-23T14:52:49+00:00"
+            "time": "2019-10-31T21:10:59+00:00"
         },
         {
             "name": "knplabs/github-api",
@@ -1856,7 +1857,7 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "🔍 Nette Finder: find files and directories with an intuitive API.",
+            "description": "? Nette Finder: find files and directories with an intuitive API.",
             "homepage": "https://nette.org",
             "keywords": [
                 "filesystem",
@@ -1992,7 +1993,7 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "🛠 Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.",
+            "description": "? Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.",
             "homepage": "https://nette.org",
             "keywords": [
                 "array",
@@ -2914,6 +2915,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2017-08-03T14:08:16+00:00"
         },
         {
@@ -3942,16 +3944,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v4.1.7",
+            "version": "v4.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "e72ee2c23d952e4c368ee98610fa22b79b89b483"
+                "reference": "919a245e0642afa353a333d8bf3352320af85969"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/e72ee2c23d952e4c368ee98610fa22b79b89b483",
-                "reference": "e72ee2c23d952e4c368ee98610fa22b79b89b483",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/919a245e0642afa353a333d8bf3352320af85969",
+                "reference": "919a245e0642afa353a333d8bf3352320af85969",
                 "shasum": ""
             },
             "require": {
@@ -4009,7 +4011,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2018-10-31T10:54:16+00:00"
+            "time": "2019-04-16T11:21:55+00:00"
         },
         {
             "name": "symfony/dom-crawler",
