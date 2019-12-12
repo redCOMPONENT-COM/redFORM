@@ -22,6 +22,11 @@ require_once __DIR__ . '/form/field/acymailinglist.php';
 class plgRedform_fieldAcymailing extends AbstractFieldPlugin
 {
 	/**
+	 * @var boolean
+	 */
+	private $isLegacyLibrary = false;
+
+	/**
 	 * Add to integration names
 	 *
 	 * @param   array  &$names  names to add to
@@ -101,11 +106,10 @@ class plgRedform_fieldAcymailing extends AbstractFieldPlugin
 				continue;
 			}
 
-			include_once JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php';
-
 			$emailFieldId = $field->getParam('email_field');
+			$email        = $answers->getFieldAnswer($emailFieldId);
 
-			if (!$email = $answers->getFieldAnswer($emailFieldId))
+			if (!$email)
 			{
 				continue;
 			}
@@ -117,20 +121,30 @@ class plgRedform_fieldAcymailing extends AbstractFieldPlugin
 				continue;
 			}
 
-			$fullname  = $answers->getFullname() ?: ($answers->getUsername() ?: $email);
+			$fullname = $answers->getFullname() ?: ($answers->getUsername() ?: $email);
+
+			$this->loadLibrary();
+
 			$subid = $this->getSubId($email, $fullname);
 
-			$subscriberClass = acymailing_get('class.subscriber');
-
-			$newSubscription = array();
-
-			foreach ($lists as $listId)
+			if ($this->isLegacyLibrary)
 			{
-				// Add to the mailing list
-				$newSubscription[$listId] = array('status' => 1);
-			}
+				$subscriberClass = acymailing_get('class.subscriber');
+				$newSubscription = array();
 
-			$subscriberClass->saveSubscription($subid, $newSubscription);
+				foreach ($lists as $listId)
+				{
+					// Add to the mailing list
+					$newSubscription[$listId] = array('status' => 1);
+				}
+
+				$subscriberClass->saveSubscription($subid, $newSubscription);
+			}
+			else
+			{
+				$userClass = acym_get('class.user');
+				$userClass->subscribe($subid, $lists);
+			}
 		}
 	}
 
@@ -141,9 +155,11 @@ class plgRedform_fieldAcymailing extends AbstractFieldPlugin
 	 * @param   JUser   $subscriber   subscriber
 	 * @param   object  $listname     list name
 	 *
-	 * @return bool
+	 * @return boolean
 	 *
 	 * @deprecated it's better to use the acymailing field than integration directly in email field
+	 *
+	 * @throws Exception
 	 */
 	public function subscribe($integration, $subscriber, $listname)
 	{
@@ -154,20 +170,18 @@ class plgRedform_fieldAcymailing extends AbstractFieldPlugin
 			return true;
 		}
 
-		$db = \JFactory::getDBO();
-		$fullname        = $subscriber->name;
-		$submitter_email = $subscriber->email;
-
 		$lists = $this->getLists();
 
 		$listid = 0;
 
 		foreach ($lists as $l)
 		{
-			if ((is_numeric($listname) && $listname == $l->listid)
+			$lId = !empty($l->id) ? $l->id : $l->listid;
+
+			if ((is_numeric($listname) && $listname == $lId)
 				|| $l->name == $listname)
 			{
-				$listid = $l->listid;
+				$listid = $lId;
 				break;
 			}
 		}
@@ -179,31 +193,20 @@ class plgRedform_fieldAcymailing extends AbstractFieldPlugin
 			return false;
 		}
 
+		$this->loadLibrary();
+
 		$subid = $this->getSubId($subscriber->email, $subscriber->name);
 
-		// Then add to the mailing list
-		$subscribe = array($listid);
-
-		$newSubscription = array();
-
-		if (!empty($subscribe))
+		if ($this->isLegacyLibrary)
 		{
-			foreach ($subscribe as $listId)
-			{
-				$newList = null;
-				$newList['status'] = 1;
-				$newSubscription[$listId] = $newList;
-			}
+			$subscriberClass = acymailing_get('class.subscriber');
+			$subscriberClass->saveSubscription($subid, [$listid => ['status' => 1]]);
 		}
-
-		if (empty($newSubscription))
+		else
 		{
-			// There is nothing to do...
-			return;
+			$userClass = acym_get('class.user');
+			$userClass->subscribe($subid, [$listid]);
 		}
-
-		$subscriberClass = acymailing_get('class.subscriber');
-		$subscriberClass->saveSubscription($subid, $newSubscription);
 
 		return true;
 	}
@@ -215,28 +218,69 @@ class plgRedform_fieldAcymailing extends AbstractFieldPlugin
 	 */
 	public function getLists()
 	{
-		$app = \JFactory::getApplication();
+		$this->loadLibrary();
 
-		include_once JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php';
+		if ($this->isLegacyLibrary)
+		{
+			$listClass = acymailing_get('class.list');
 
-		$listClass = acymailing_get('class.list');
+			return $listClass->getLists();
+		}
 
-		$allLists = $listClass->getLists();
+		$listClass = acym_get('class.list');
 
-		return $allLists;
+		return $listClass->getAll();
 	}
 
+	/**
+	 * Get Id of acymailing user
+	 *
+	 * @param   string  $email  email
+	 * @param   string  $name   name
+	 *
+	 * @return integer
+	 */
 	private function getSubId($email, $name)
 	{
 		$myUser = new \Stdclass;
 		$myUser->email = $email;
 		$myUser->name  = $name;
 
-		$subscriberClass = acymailing_get('class.subscriber');
+		if ($this->isLegacyLibrary)
+		{
+			$userClass = acymailing_get('class.subscriber');
+		}
+		else
+		{
+			$userClass = acym_get('class.user');
+		}
 
 		// This function will return you the ID of the user inserted in the AcyMailing table
-		$subid = $subscriberClass->save($myUser);
+		$subid = $userClass->save($myUser);
 
 		return $subid;
+	}
+
+	/**
+	 * Load acymailing library
+	 *
+	 * @return void
+	 *
+	 * @throws RuntimeException
+	 */
+	private function loadLibrary()
+	{
+		if (include_once(JPATH_ADMINISTRATOR . '/components/com_acym/helpers/helper.php'))
+		{
+			$this->isLegacyLibrary = false;
+		}
+		elseif (include_once(JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php'))
+		{
+			$this->isLegacyLibrary = true;
+		}
+		else
+		{
+			throw new RuntimeException('Acymailing not installed, or incompatible version');
+		}
 	}
 }
