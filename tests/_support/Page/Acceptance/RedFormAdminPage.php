@@ -46,6 +46,12 @@ class RedFormAdminPage
 	 * @var string
 	 * @since 3.3.28
 	 */
+	public static $checkAll = "//input[@name='checkall-toggle']";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
 	public static $copyButtonXpath = "//i[@class='icon-copy']";
 
 	/**

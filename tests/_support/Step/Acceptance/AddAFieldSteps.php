@@ -191,6 +191,8 @@ class AddAFieldSteps extends Adminredform
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
+		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
+		$I->click(AddAFieldPage::$checkAll);
 		$I->checkAllResults();
 		$I->waitForElementVisible(AddAFieldPage::$copyButtonXpath, 30);
 		$I->click(AddAFieldPage::$copyButton);
