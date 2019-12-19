@@ -100,6 +100,8 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/CheckForWarningsAndNotices 0 0'
@@ -118,6 +120,8 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Field 0 0'
@@ -154,6 +158,8 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Section 0 0'
@@ -172,6 +178,8 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Submitters 0 0'
@@ -190,6 +198,8 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DisplayFormOnFrontend 0 0'
@@ -208,6 +218,8 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DeleteFormHasSubmitters 0 0'
