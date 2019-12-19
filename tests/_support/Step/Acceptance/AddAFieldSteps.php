@@ -193,7 +193,6 @@ class AddAFieldSteps extends Adminredform
 		$I->searchField($name);
 		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
 		$I->click(AddAFieldPage::$checkAll);
-		$I->checkAllResults();
 		$I->waitForElementVisible(AddAFieldPage::$copyButtonXpath, 30);
 		$I->click(AddAFieldPage::$copyButton);
 		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
@@ -230,7 +229,8 @@ class AddAFieldSteps extends Adminredform
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
-		$I->checkAllResults();
+		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
+		$I->click(AddAFieldPage::$checkAll);
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
 		$I->waitForElementVisible(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
