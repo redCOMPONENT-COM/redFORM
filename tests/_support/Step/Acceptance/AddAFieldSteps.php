@@ -45,7 +45,7 @@ class AddAFieldSteps extends Adminredform
 			$I->waitForText(AddAFieldPage::$defaultValue, 30, AddAFieldPage::$defaultValueLbl);
 			$I->fillField(AddAFieldPage::$defaultValueId, $params['default']);
 		}
-		
+
 		if (isset($params['placeholder']))
 		{
 			$I->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
@@ -192,6 +192,7 @@ class AddAFieldSteps extends Adminredform
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
 		$I->checkAllResults();
+		$I->waitForElementVisible(AddAFieldPage::$copyButtonXpath, 30);
 		$I->click(AddAFieldPage::$copyButton);
 		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
 		$nameCopy = 'Copy of ' . $name;
