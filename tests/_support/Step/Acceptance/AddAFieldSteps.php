@@ -45,7 +45,7 @@ class AddAFieldSteps extends Adminredform
 			$I->waitForText(AddAFieldPage::$defaultValue, 30, AddAFieldPage::$defaultValueLbl);
 			$I->fillField(AddAFieldPage::$defaultValueId, $params['default']);
 		}
-		
+
 		if (isset($params['placeholder']))
 		{
 			$I->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
@@ -191,7 +191,10 @@ class AddAFieldSteps extends Adminredform
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
-		$I->checkAllResults();
+		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
+		$I->wait(0.5);
+		$I->click(AddAFieldPage::$checkAll);
+		$I->waitForElementVisible(AddAFieldPage::$copyButtonXpath, 30);
 		$I->click(AddAFieldPage::$copyButton);
 		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
 		$nameCopy = 'Copy of ' . $name;
@@ -227,7 +230,10 @@ class AddAFieldSteps extends Adminredform
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
-		$I->checkAllResults();
+		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
+		$I->wait(0.5);
+		$I->click(AddAFieldPage::$checkAll);
+		$I->wait(0.5);
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
 		$I->waitForElementVisible(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
