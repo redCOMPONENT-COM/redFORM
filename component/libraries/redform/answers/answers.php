@@ -275,7 +275,10 @@ class RdfAnswers
 			{
 				if ($field->fieldtype == 'email' && ($field->getParam('notify', 1) || !$filterIsNotNotified))
 				{
-					$this->submitter_email[] = $field->value;
+					if (\Joomla\CMS\Mail\MailHelper::isEmailAddress($field->value))
+					{
+						$this->submitter_email[] = $field->value;
+					}
 				}
 			}
 		}
