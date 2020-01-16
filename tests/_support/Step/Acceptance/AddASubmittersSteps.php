@@ -111,7 +111,8 @@ class AddASubmittersSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddASubmittersPage::$deleteButton);
 		$I->acceptPopup();
-		$I->waitForElement(AddASubmittersPage::$alertMessage, 30, AddASubmittersPage::$alertHead);
+		$I->wait(1);
+		$I->waitForElement(AddASubmittersPage::$alertMessage, 60, AddASubmittersPage::$alertHead);
 	}
 
 }

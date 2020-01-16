@@ -215,8 +215,8 @@ class AddAFieldSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
-		$I->wait(0.5);
-		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+		$I->wait(1);
+		$I->waitForElement(AddAFieldPage::$alertMessage, 60, AddAFieldPage::$alertHead);
 		$I->searchField($name);
 		$I->dontSee($name);
 		$I->waitForElement(AddAFieldPage::$clearButton, 30);
