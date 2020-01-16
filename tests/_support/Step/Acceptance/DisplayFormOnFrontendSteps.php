@@ -47,10 +47,11 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	 * @param $articlesTitle
 	 * @param $articles
 	 * @param $menuTitle
-	 * @param $menuItemType
+	 * @param $menuItems
+	 * @param $menu
 	 * @throws \Exception
 	 */
-	public function createNewMenuItem($articlesTitle, $articles, $menuTitle, $menuItemType, $menu)
+	public function createNewMenuItem($articlesTitle, $articles, $menuTitle, $menuItems, $menu)
 	{
 		$I = $this;
 		$I->amOnPage(DisplayFormOnFrontendPage::$menuItemURL);
@@ -67,9 +68,9 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForElement(DisplayFormOnFrontendPage::$menuItemTypeLbl, 30);
 		$I->click(DisplayFormOnFrontendPage::$selectMenuItemType);
 		$I->switchToIFrame(DisplayFormOnFrontendPage::$menuItemType);
-		$I->waitForElementVisible(['link' => $menuItemType], 30);
+		$I->waitForElementVisible(['link' => $menuItems], 30);
 		$I->wait(0.5);
-		$I->click(['link' => $menuItemType]);
+		$I->click(['link' => $menuItems]);
 		$usePage = new DisplayFormOnFrontendPage();
 		$I->waitForElementVisible($usePage->returnMenuItem($articles), 60);
 		$I->wait(0.5);
