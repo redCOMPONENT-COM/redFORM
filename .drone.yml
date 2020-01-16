@@ -18,7 +18,7 @@ pipeline:
 
   00-setup:
     group: 00-setup
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     # pull: true
     environment:
     - tests_user=admin
@@ -64,7 +64,7 @@ pipeline:
 
   00-setup-stages:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=00-setup
@@ -88,7 +88,7 @@ pipeline:
 
   01-checkForWarningsAndNotices:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=01-checkForWarningsAndNotices
@@ -108,7 +108,7 @@ pipeline:
 
   02-field:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=02-field
@@ -128,7 +128,7 @@ pipeline:
 
   03-form:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=03-form
@@ -146,7 +146,7 @@ pipeline:
 
   04-section:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=04-section
@@ -166,7 +166,7 @@ pipeline:
 
   05-submitters:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=05-submitters
@@ -186,7 +186,7 @@ pipeline:
 
   06-displayFormOnFrontend:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=06-displayFormOnFrontend
@@ -206,7 +206,7 @@ pipeline:
 
   07-deleteFormHasSubmitters:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=07-deleteFormHasSubmitters
@@ -237,7 +237,7 @@ pipeline:
         {{repo.name}} PR #{{build.pull}} failed in {{since build.started}}. Fix me please {{build.author}}!  Here is the build log: {{build.link}}.  Link to the PR: https://github.com/{{repo.owner}}/{{repo.name}}/pull/{{build.pull}}
       {{/success}}
   error-report:
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     commands:
     - if [ -z "${CI_PULL_REQUEST}" ]; then export CI_PULL_REQUEST=1; fi
     - cd tests
