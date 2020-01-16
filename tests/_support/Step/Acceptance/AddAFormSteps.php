@@ -319,7 +319,8 @@ class AddAFormSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$deleteButton);
 		$I->acceptPopup();
-		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
+		$I->wait(1);
+		$I->waitForElement(AddAFormPage::$alertMessage, 60, AddAFormPage::$alertHead);
 	}
 
 	/**
