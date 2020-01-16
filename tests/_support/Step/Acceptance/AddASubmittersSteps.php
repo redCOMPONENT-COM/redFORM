@@ -109,6 +109,7 @@ class AddASubmittersSteps extends Adminredform
 		$I->waitForElement(AddASubmittersPage::$selectFormId, 30);
 		$I->selectOptionInChosenXpath(AddASubmittersPage::$selectForm, $formName);
 		$I->checkAllResults();
+		$I->wait(0.5);
 		$I->click(AddASubmittersPage::$deleteButton);
 		$I->acceptPopup();
 		$I->wait(1);
