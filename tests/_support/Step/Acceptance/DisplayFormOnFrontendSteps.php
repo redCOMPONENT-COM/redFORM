@@ -68,6 +68,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForElement(DisplayFormOnFrontendPage::$menuItemTypeLbl, 30);
 		$I->click(DisplayFormOnFrontendPage::$selectMenuItemType);
 		$I->switchToIFrame(DisplayFormOnFrontendPage::$menuItemType);
+		$I->wait(2);
 		$I->waitForElementVisible(['link' => $menuItemType], 60);
 		$I->wait(1);
 		$I->click(['link' => $menuItemType]);
