@@ -85,6 +85,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->fillField(DisplayFormOnFrontendPage::$searchArticleId, $articlesTitle);
 		$I->waitForElement(DisplayFormOnFrontendPage::$searchIcon);
 		$I->click(DisplayFormOnFrontendPage::$searchIcon);
+		$I->wait(1);
 		$I->click($articlesTitle);
 		$I->wait(0.5);
 		$I->switchToIFrame();

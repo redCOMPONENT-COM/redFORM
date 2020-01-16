@@ -215,6 +215,7 @@ class AddAFieldSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
+		$I->wait(0.5);
 		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
 		$I->searchField($name);
 		$I->dontSee($name);
@@ -236,6 +237,7 @@ class AddAFieldSteps extends Adminredform
 		$I->wait(0.5);
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
+		$I->wait(0.5);
 		$I->waitForElementVisible(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
 	}
 
@@ -252,6 +254,7 @@ class AddAFieldSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
+		$I->wait(0.5);
 		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
 		$I->searchField($name);
 		$I->waitForText($name, 30);
@@ -272,5 +275,4 @@ class AddAFieldSteps extends Adminredform
 		$I->click(AddAFieldPage::$searchIcon);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 	}
-
 }
