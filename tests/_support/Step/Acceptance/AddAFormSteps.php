@@ -285,7 +285,8 @@ class AddAFormSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$deleteButton);
 		$I->acceptPopup();
-		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
+		$I->wait(1);
+		$I->waitForElement(AddAFormPage::$alertMessage, 60);
 		$I = $this;
 		$I->amOnPage(AddASubmittersPage::$URL);
 		$I->waitForText(AddASubmittersPage::$submitters, 30, AddASubmittersPage::$headPage);
@@ -295,15 +296,17 @@ class AddAFormSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddASubmittersPage::$deleteButton);
 		$I->acceptPopup();
-		$I->waitForElement(AddASubmittersPage::$alertMessage, 30, AddASubmittersPage::$alertHead);
+		$I->wait(2);
+		$I->waitForElement(AddASubmittersPage::$alertMessage, 60);
 		$I->amOnPage(AddAFormPage::$url);
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 		$I->searchForm($nameForm);
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$deleteButton);
 		$I->acceptPopup();
-		$I->waitForText(AddAFormPage::$deleteSuccess, 30, AddAFormPage::$alertMessage);
-		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
+		$I->wait(1);
+		$I->waitForText(AddAFormPage::$deleteSuccess, 60, AddAFormPage::$alertMessage);
+		$I->waitForElement(AddAFormPage::$alertMessage, 60, AddAFormPage::$alertHead);
 	}
 
 	/**
@@ -319,7 +322,7 @@ class AddAFormSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$deleteButton);
 		$I->acceptPopup();
-		$I->wait(1);
+		$I->wait(2);
 		$I->waitForElement(AddAFormPage::$alertMessage, 60);
 	}
 
