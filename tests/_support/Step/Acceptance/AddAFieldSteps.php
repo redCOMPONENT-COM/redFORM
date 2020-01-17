@@ -215,7 +215,8 @@ class AddAFieldSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
-		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+		$I->wait(2);
+		$I->waitForElement(AddAFieldPage::$alertMessage, 60, AddAFieldPage::$alertHead);
 		$I->searchField($name);
 		$I->dontSee($name);
 		$I->waitForElement(AddAFieldPage::$clearButton, 30);
@@ -236,6 +237,7 @@ class AddAFieldSteps extends Adminredform
 		$I->wait(0.5);
 		$I->click(AddAFieldPage::$deleteButton);
 		$I->acceptPopup();
+		$I->wait(0.5);
 		$I->waitForElementVisible(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
 	}
 
@@ -251,10 +253,23 @@ class AddAFieldSteps extends Adminredform
 		$I->waitForText($name, 30);
 		$I->checkAllResults();
 		$I->click(AddAFieldPage::$deleteButton);
+		$I->wait(1);
 		$I->acceptPopup();
-		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
-		$I->searchField($name);
-		$I->waitForText($name, 30);
+		$I->wait(2);
+
+		try
+		{
+			$I->waitForElement(AddAFieldPage::$alertMessage, 60);
+			$I->searchField($name);
+			$I->waitForText($name, 30);
+		} catch (\Exception $exception)
+		{
+			$I->acceptPopup();
+			$I->wait(2);
+			$I->waitForElement(AddAFieldPage::$alertMessage, 60);
+			$I->searchField($name);
+			$I->waitForText($name, 30);
+		}
 	}
 
 	/**
@@ -272,5 +287,4 @@ class AddAFieldSteps extends Adminredform
 		$I->click(AddAFieldPage::$searchIcon);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 	}
-
 }

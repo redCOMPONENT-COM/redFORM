@@ -40,7 +40,7 @@ class AddASectionCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->doAdministratorLogin();
+		$I->doAdministratorLogin("admin", "admin", null);
 	}
 	/**
 	 * @param AddASectionSteps $I

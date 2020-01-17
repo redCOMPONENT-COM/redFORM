@@ -48,6 +48,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	 * @param $articles
 	 * @param $menuTitle
 	 * @param $menuItemType
+	 * @param $menu
 	 * @throws \Exception
 	 */
 	public function createNewMenuItem($articlesTitle, $articles, $menuTitle, $menuItemType, $menu)
@@ -67,8 +68,9 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForElement(DisplayFormOnFrontendPage::$menuItemTypeLbl, 30);
 		$I->click(DisplayFormOnFrontendPage::$selectMenuItemType);
 		$I->switchToIFrame(DisplayFormOnFrontendPage::$menuItemType);
-		$I->waitForElementVisible(['link' => $menuItemType], 30);
-		$I->wait(0.5);
+		$I->wait(2);
+		$I->waitForElementVisible(['link' => $menuItemType], 60);
+		$I->wait(1);
 		$I->click(['link' => $menuItemType]);
 		$usePage = new DisplayFormOnFrontendPage();
 		$I->waitForElementVisible($usePage->returnMenuItem($articles), 60);
@@ -78,13 +80,16 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForElement(DisplayFormOnFrontendPage::$selectArticle, 30);
 		$I->click(DisplayFormOnFrontendPage::$selectArticle);
 		$I->switchToIFrame(DisplayFormOnFrontendPage::$selectChangeArticle);
-		$I->waitForElement(DisplayFormOnFrontendPage::$searchArticleId, 30);
+		$I->wait(2);
+		$I->waitForElement(DisplayFormOnFrontendPage::$searchArticleId, 60);
 		$I->fillField(DisplayFormOnFrontendPage::$searchArticleId, $articlesTitle);
 		$I->waitForElement(DisplayFormOnFrontendPage::$searchIcon);
 		$I->click(DisplayFormOnFrontendPage::$searchIcon);
+		$I->wait(1);
 		$I->click($articlesTitle);
 		$I->wait(0.5);
 		$I->switchToIFrame();
+		$I->wait(2);
 		$I->click(DisplayFormOnFrontendPage::$saveCloseButton);
 		$I->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
 	}
