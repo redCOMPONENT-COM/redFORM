@@ -108,8 +108,8 @@ class AddASubmittersSteps extends Adminredform
 		$I->waitForText(AddASubmittersPage::$submitters, 30, AddASubmittersPage::$headPage);
 		$I->waitForElement(AddASubmittersPage::$selectFormId, 30);
 		$I->selectOptionInChosenXpath(AddASubmittersPage::$selectForm, $formName);
-		$I->checkAllResults();
 		$I->wait(1);
+		$I->checkAllResults();
 
 		try
 		{
@@ -119,6 +119,7 @@ class AddASubmittersSteps extends Adminredform
 			$I->waitForElement(AddASubmittersPage::$alertMessage, 60);
 		} catch (\Exception $exception)
 		{
+			$I->checkAllResults();
 			$I->wait(1);
 			$I->click(AddASubmittersPage::$deleteButton);
 			$I->acceptPopup();
