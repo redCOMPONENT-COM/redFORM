@@ -117,12 +117,12 @@ class Adminredform extends \AcceptanceTester
 		$user = new RedFormAdminPage();
 		$I->waitForElement($user->selectXpath($id), 30);
 		$I->scrollTo($user->selectXpath($id));
-		$I->wait(0.2);
+		$I->wait(0.5);
 		$I->click($user->selectXpath($id));
-		$I->wait(0.2);
+		$I->wait(0.5);
 		$I->waitForElement($user->selectXpathValue($id, $value), 30);
 		$I->scrollTo($user->selectXpathValue($id, $value));
-		$I->wait(0.2);
+		$I->wait(0.5);
 		$I->click($user->selectXpathValue($id, $value));
 	}
 
