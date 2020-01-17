@@ -256,9 +256,20 @@ class AddAFieldSteps extends Adminredform
 		$I->wait(1);
 		$I->acceptPopup();
 		$I->wait(2);
-		$I->waitForElement(AddAFieldPage::$alertMessage, 60);
-		$I->searchField($name);
-		$I->waitForText($name, 30);
+
+		try
+		{
+			$I->waitForElement(AddAFieldPage::$alertMessage, 60);
+			$I->searchField($name);
+			$I->waitForText($name, 30);
+		} catch (\Exception $exception)
+		{
+			$I->acceptPopup();
+			$I->wait(2);
+			$I->waitForElement(AddAFieldPage::$alertMessage, 60);
+			$I->searchField($name);
+			$I->waitForText($name, 30);
+		}
 	}
 
 	/**

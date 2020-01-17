@@ -320,10 +320,22 @@ class AddAFormSteps extends Adminredform
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 		$I->searchForm($nameForm);
 		$I->checkAllResults();
-		$I->click(AddAFormPage::$deleteButton);
-		$I->acceptPopup();
-		$I->wait(2);
-		$I->waitForElement(AddAFormPage::$alertMessage, 60);
+
+		try
+		{
+			$I->click(AddAFormPage::$deleteButton);
+			$I->acceptPopup();
+			$I->wait(2);
+			$I->waitForElement(AddAFormPage::$alertMessage, 60);
+		} catch (\Exception $exception)
+		{
+			$I->checkAllResults();
+			$I->wait(1);
+			$I->click(AddAFormPage::$deleteButton);
+			$I->acceptPopup();
+			$I->wait(2);
+			$I->waitForElement(AddAFormPage::$alertMessage, 60);
+		}
 	}
 
 	/**

@@ -107,9 +107,20 @@ class AddASectionSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddASectionPage::$deleteButton);
 		$I->wait(1);
-		$I->waitForElement(AddASectionPage::$alertMessage, 60);
-		$I->searchSection($name);
-		$I->dontSee($name);
+
+		try
+		{
+			$I->waitForElement(AddASectionPage::$alertMessage, 60);
+			$I->searchSection($name);
+			$I->dontSee($name);
+		} catch (\Exception $exception)
+		{
+			$I->click(AddASectionPage::$deleteButton);
+			$I->wait(1);
+			$I->waitForElement(AddASectionPage::$alertMessage, 60);
+			$I->searchSection($name);
+			$I->dontSee($name);
+		}
 	}
 
 	/**
