@@ -25,8 +25,16 @@ class AddAFieldSteps extends Adminredform
 		$I->click(AddAFieldPage::$newButton);
 		$I->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
 		$I->fillField(AddAFieldPage::$nameId, $params['name']);
-		$I->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
-		$I->selectOptionInChosen(AddAFieldPage::$fieldType, $params['fieldtype']);
+
+		if (isset($params['fieldtype']))
+		{
+			$I->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
+			$I->waitForElementVisible(AddAFieldPage::$fieldTypeID, 30);
+			$I->click(AddAFieldPage::$fieldTypeID);
+			$I->waitForElementVisible(AddAFieldPage::$fieldTypeInput, 30);
+			$I->fillField(AddAFieldPage::$fieldTypeInput, $params['fieldtype']);
+			$I->pressKey(AddAFieldPage::$fieldTypeInput, \Facebook\WebDriver\WebDriverKeys::ENTER);
+		}
 
 		if (isset($params['field_header']))
 		{
@@ -46,11 +54,20 @@ class AddAFieldSteps extends Adminredform
 			$I->fillField(AddAFieldPage::$defaultValueId, $params['default']);
 		}
 
+		if (isset($params['showon']))
+		{
+			$I->waitForText(AddAFieldPage::$ShowOnValueLb, 30);
+			$I->fillField(AddAFieldPage::$ShowOnValueID, $params['showon']);
+		}
+
+
 		if (isset($params['placeholder']))
 		{
 			$I->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
 			$I->fillField(AddAFieldPage::$placeholderId, $params['placeholder']);
 		}
+
+		$I->executeJS('window.scrollTo(0,0);');
 
 		switch ($function)
 		{
@@ -301,5 +318,61 @@ class AddAFieldSteps extends Adminredform
 		$I->waitForElement(AddAFieldPage::$searchIcon, 30);
 		$I->click(AddAFieldPage::$searchIcon);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+	}
+
+	/**
+	 * @param $nameField
+	 * @return mixed
+	 * @throws \Exception
+	 *  @since 3.3.28
+	 */
+	public function getFieldID($nameField)
+	{
+		$I = $this;
+		$I->amOnPage(AddAFieldPage::$URL);
+		$I->searchField($nameField);
+		$I->waitForElementVisible("//td[7]");
+		$ID = $this->grabTextFrom("//td[7]");
+		$I->waitForText($ID);
+		return $ID;
+	}
+
+	/**
+	 * @param $nameField
+	 * @param $options
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
+	public function addOptionFieldCheckbox($nameField, $options)
+	{
+		$I = $this;
+		$I->amOnPage(AddAFieldPage::$URL);
+		$I->searchField($nameField);
+		$I->waitForElementVisible(["link" => $nameField], 30);
+		$I->click(["link" => $nameField]);
+		$I->waitForElementVisible("//a[contains(text(),'Options')]", 30);
+		$I->click("//a[contains(text(),'Options')]");
+		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+
+		$length = count($options);
+		 for($x = 0; $x <$length; $x ++)
+		 {
+			 $y = $x +1;
+			 $option = $options[$x];
+
+			 $I->waitForElementVisible("(//input[@placeholder='Enter value'])[$y]", 30);
+			 $I->fillField("(//input[@placeholder='Enter value'])[$y]",$option['value'] );
+			 $I->wait(1);
+			 $I->waitForElementVisible("(//input[@placeholder='Enter label'])[$y]", 30);
+			 $I->fillField("(//input[@placeholder='Enter label'])[$y]",$option['label'] );
+
+			 $I->waitForElementVisible("//button[contains(text(),'Add')]", 30);
+			 $I->click("//button[contains(text(),'Add')]");
+		 }
+
+		$I->click(AddAFieldPage::$saveCloseButton);
+		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+
 	}
 }

@@ -162,6 +162,12 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	public static $errorXpath = "//div[@class='field-inline-error']";
 
 	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $showOnTextAre = "//textarea[@placeholder='Please enter your show on']";
+
+	/**
 	 * @param $menuItem
 	 * @return string
 	 */
@@ -178,6 +184,17 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	public static function xPathMenu($value)
 	{
 		$xpath = "//a[contains(text(), '$value')]";
+		return $xpath;
+	}
+
+	/**
+	 * @param $value
+	 * @return string
+	 * @since 3.3.28
+	 */
+	public static function xPathCheckbox($value)
+	{
+		$xpath = "//input[@value='$value']";
 		return $xpath;
 	}
 }

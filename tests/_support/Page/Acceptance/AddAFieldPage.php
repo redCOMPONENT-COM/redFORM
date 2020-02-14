@@ -62,6 +62,18 @@ class AddAFieldPage extends RedFormAdminPage
 
 	/**
 	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $fieldTypeID = "#jform_fieldtype_chzn";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $fieldTypeInput = "//div[@id='jform_fieldtype_chzn']//input";
+
+	/**
+	 * @var string
 	 */
 	public static $tooltip = "Tooltip";
 
@@ -89,6 +101,18 @@ class AddAFieldPage extends RedFormAdminPage
 	 * @var string
 	 */
 	public static $defaultValueId = "#jform_default";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $ShowOnValueLb = "Show on";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $ShowOnValueID = "#jform_params_showon";
 
 	/**
 	 * @var string
