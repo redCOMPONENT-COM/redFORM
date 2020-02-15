@@ -135,12 +135,53 @@ class AddAFieldPage extends RedFormAdminPage
 	public static $messageMissingName = "Invalid field:  Name";
 
 	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $optionTab = "//a[contains(text(),'Options')]";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $addButton = "//button[contains(text(),'Add')]";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $idColumn = "//td[7]";
+
+	/**
 	 * @param $value
 	 * @return string
 	 */
 	public static function fieldList($value)
 	{
-		$fieldList = "//a[normalize-space(text()) = \"' . $value . '\"]";;
+		$fieldList = "//a[normalize-space(text()) = \"' . $value . '\"]";
+
 		return $fieldList;
+	}
+
+	/**
+	 * @param   string $position position row
+	 * @return string
+	 */
+	public static function xpathValueInput($position)
+	{
+		$xpath = "(//input[@placeholder='Enter value'])[$position]";
+
+		return $xpath;
+	}
+
+	/**
+	 * @param   string $position position row
+	 * @return  string
+	 */
+	public static function xpathLabelInput($position)
+	{
+		$xpath = "(//input[@placeholder='Enter label'])[$position]";
+
+		return $xpath;
 	}
 }

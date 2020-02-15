@@ -60,7 +60,6 @@ class AddAFieldSteps extends Adminredform
 			$I->fillField(AddAFieldPage::$ShowOnValueID, $params['showon']);
 		}
 
-
 		if (isset($params['placeholder']))
 		{
 			$I->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
@@ -327,51 +326,48 @@ class AddAFieldSteps extends Adminredform
 	 */
 	public function getFieldID($nameField)
 	{
-		$I = $this;
-		$I->amOnPage(AddAFieldPage::$URL);
-		$I->searchField($nameField);
-		$I->waitForElementVisible("//td[7]");
-		$ID = $this->grabTextFrom("//td[7]");
-		$I->waitForText($ID);
-		return $ID;
+		$i = $this;
+		$i->amOnPage(AddAFieldPage::$URL);
+		$i->searchField($nameField);
+		$i->waitForElementVisible(AddAFieldPage::$idColumn);
+		$id = $this->grabTextFrom(AddAFieldPage::$idColumn);
+
+		return $id;
 	}
 
 	/**
-	 * @param $nameField
-	 * @param $options
+	 * @param   string $nameField name field
+	 * @param   array  $options   option checkbox
 	 * @throws \Exception
 	 * @since 3.3.28
 	 */
 	public function addOptionFieldCheckbox($nameField, $options)
 	{
-		$I = $this;
-		$I->amOnPage(AddAFieldPage::$URL);
-		$I->searchField($nameField);
-		$I->waitForElementVisible(["link" => $nameField], 30);
-		$I->click(["link" => $nameField]);
-		$I->waitForElementVisible("//a[contains(text(),'Options')]", 30);
-		$I->click("//a[contains(text(),'Options')]");
-		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+		$i = $this;
+		$i->amOnPage(AddAFieldPage::$URL);
+		$i->searchField($nameField);
+		$i->waitForElementVisible(["link" => $nameField], 30);
+		$i->click(["link" => $nameField]);
+		$i->waitForElementVisible(AddAFieldPage::$optionTab, 30);
+		$i->click(AddAFieldPage::$optionTab);
+		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 
 		$length = count($options);
-		 for($x = 0; $x <$length; $x ++)
-		 {
-			 $y = $x +1;
+
+		for ($x = 0; $x < $length; $x++)
+		{
+			 $y = $x + 1;
 			 $option = $options[$x];
+			 $i->waitForElementVisible(AddAFieldPage::xpathValueInput($y), 30);
+			 $i->fillField(AddAFieldPage::xpathValueInput($y), $option['value']);
+			 $i->wait(0.5);
+			 $i->waitForElementVisible(AddAFieldPage::xpathLabelInput($y), 30);
+			 $i->fillField(AddAFieldPage::xpathLabelInput($y), $option['label']);
+			 $i->waitForElementVisible(AddAFieldPage::$addButton, 30);
+			 $i->click(AddAFieldPage::$addButton);
+		}
 
-			 $I->waitForElementVisible("(//input[@placeholder='Enter value'])[$y]", 30);
-			 $I->fillField("(//input[@placeholder='Enter value'])[$y]",$option['value'] );
-			 $I->wait(1);
-			 $I->waitForElementVisible("(//input[@placeholder='Enter label'])[$y]", 30);
-			 $I->fillField("(//input[@placeholder='Enter label'])[$y]",$option['label'] );
-
-			 $I->waitForElementVisible("//button[contains(text(),'Add')]", 30);
-			 $I->click("//button[contains(text(),'Add')]");
-		 }
-
-		$I->click(AddAFieldPage::$saveCloseButton);
-		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
-		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
-
+		$i->click(AddAFieldPage::$saveCloseButton);
+		$i->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 	}
 }
