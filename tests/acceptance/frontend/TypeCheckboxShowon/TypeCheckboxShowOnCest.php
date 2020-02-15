@@ -142,7 +142,6 @@ class TypeCheckboxShowOnCest
 			)
 		);
 
-
 		$this->articlesTitle = $this->faker->bothify('Article ?##?');
 		$this->articles      = 'Single Article';
 		$this->menuTitle     = $this->faker->bothify('Menu ?##?');
@@ -166,7 +165,6 @@ class TypeCheckboxShowOnCest
 				'required'          => 'No',
 				'formExpires'       => 'No'
 			];
-
 	}
 
 	/**

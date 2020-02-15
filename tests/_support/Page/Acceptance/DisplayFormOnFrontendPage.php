@@ -195,6 +195,7 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	public static function xPathCheckbox($value)
 	{
 		$xpath = "//input[@value='$value']";
+
 		return $xpath;
 	}
 }

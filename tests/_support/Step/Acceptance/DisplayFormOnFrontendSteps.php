@@ -202,7 +202,6 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForElementVisible(DisplayFormOnFrontendPage::$showOnTextAre, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$showOnTextAre, $fillForm['showon']);
 		$I->waitForElement(DisplayFormOnFrontendPage::$regularSubmit, 30);
-
 		$I->click(DisplayFormOnFrontendPage::$regularSubmit);
 		$I->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
 	}
