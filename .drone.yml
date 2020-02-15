@@ -78,111 +78,111 @@ pipeline:
     - sed -i "s,$tests_suite/joomla-cms/,joomla-cms/,g" tests/$tests_suite/joomla-cms/configuration.php
     - mysqldump -u root -proot -h db $tests_db > tests/dbdump.sql.tmp
     # Stages setup
-    - sh tests/drone/setup-stages.sh "checkForWarningsAndNotices"    "01-checkForWarningsAndNotices"
-    - sh tests/drone/setup-stages.sh "field"                         "02-field"
-    - sh tests/drone/setup-stages.sh "form"                          "03-form"
-    - sh tests/drone/setup-stages.sh "section"                       "04-section"
-    - sh tests/drone/setup-stages.sh "submitters"                    "05-submitters"
+#    - sh tests/drone/setup-stages.sh "checkForWarningsAndNotices"    "01-checkForWarningsAndNotices"
+#    - sh tests/drone/setup-stages.sh "field"                         "02-field"
+#    - sh tests/drone/setup-stages.sh "form"                          "03-form"
+#    - sh tests/drone/setup-stages.sh "section"                       "04-section"
+#    - sh tests/drone/setup-stages.sh "submitters"                    "05-submitters"
     - sh tests/drone/setup-stages.sh "displayFormOnFrontend"         "06-displayFormOnFrontend"
     - sh tests/drone/setup-stages.sh "deleteFormHasSubmitters"       "07-deleteFormHasSubmitters"
 
-  01-checkForWarningsAndNotices:
-    group: tests
-    image: redwebaps/testbox-chromedriver:79.0
-    environment:
-    - tests_user=admin
-    - tests_suite=01-checkForWarningsAndNotices
-    - tests_db=checkForWarningsAndNotices
-    - build_path=/drone/src/github.com/${DRONE_REPO}
-    - output_append=-01-checkForWarningsAndNotices
-    commands:
-    # Regular entry point
-    - /entrypoint.sh &
-    # Performs test after ensuring that the scenario has been fully set up
-    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
-    # Waits until Chromedriver is up and running
-    - while ! nc -z localhost 9515; do sleep 1; done
-    # Performs test
-    - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/CheckForWarningsAndNotices 0 0'
-
-  02-field:
-    group: tests
-    image: redwebaps/testbox-chromedriver:79.0
-    environment:
-    - tests_user=admin
-    - tests_suite=02-field
-    - tests_db=field
-    - build_path=/drone/src/github.com/${DRONE_REPO}
-    - output_append=-02-field
-    commands:
-    # Regular entry point
-    - /entrypoint.sh &
-    # Performs test after ensuring that the scenario has been fully set up
-    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
-    # Waits until Chromedriver is up and running
-    - while ! nc -z localhost 9515; do sleep 1; done
-    # Performs test
-    - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Field 0 0'
-
-  03-form:
-    group: tests
-    image: redwebaps/testbox-chromedriver:79.0
-    environment:
-    - tests_user=admin
-    - tests_suite=03-form
-    - tests_db=form
-    - build_path=/drone/src/github.com/${DRONE_REPO}
-    - output_append=-03-form
-    commands:
-    # Regular entry point
-    - /entrypoint.sh &
-    # Performs test after ensuring that the scenario has been fully set up
-    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
-    # Performs test
-    - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Form 0 0'
-
-  04-section:
-    group: tests
-    image: redwebaps/testbox-chromedriver:79.0
-    environment:
-    - tests_user=admin
-    - tests_suite=04-section
-    - tests_db=section
-    - build_path=/drone/src/github.com/${DRONE_REPO}
-    - output_append=-04-section
-    commands:
-    # Regular entry point
-    - /entrypoint.sh &
-    # Performs test after ensuring that the scenario has been fully set up
-    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
-    # Waits until Chromedriver is up and running
-    - while ! nc -z localhost 9515; do sleep 1; done
-    # Performs test
-    - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Section 0 0'
-
-  05-submitters:
-    group: tests
-    image: redwebaps/testbox-chromedriver:79.0
-    environment:
-    - tests_user=admin
-    - tests_suite=05-submitters
-    - tests_db=submitters
-    - build_path=/drone/src/github.com/${DRONE_REPO}
-    - output_append=-05-submitters
-    commands:
-    # Regular entry point
-    - /entrypoint.sh &
-    # Performs test after ensuring that the scenario has been fully set up
-    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
-    # Waits until Chromedriver is up and running
-    - while ! nc -z localhost 9515; do sleep 1; done
-    # Performs test
-    - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Submitters 0 0'
+#  01-checkForWarningsAndNotices:
+#    group: tests
+#    image: redwebaps/testbox-chromedriver:79.0
+#    environment:
+#    - tests_user=admin
+#    - tests_suite=01-checkForWarningsAndNotices
+#    - tests_db=checkForWarningsAndNotices
+#    - build_path=/drone/src/github.com/${DRONE_REPO}
+#    - output_append=-01-checkForWarningsAndNotices
+#    commands:
+#    # Regular entry point
+#    - /entrypoint.sh &
+#    # Performs test after ensuring that the scenario has been fully set up
+#    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+#    # Waits until Chromedriver is up and running
+#    - while ! nc -z localhost 9515; do sleep 1; done
+#    # Performs test
+#    - cd tests
+#    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/CheckForWarningsAndNotices 0 0'
+#
+#  02-field:
+#    group: tests
+#    image: redwebaps/testbox-chromedriver:79.0
+#    environment:
+#    - tests_user=admin
+#    - tests_suite=02-field
+#    - tests_db=field
+#    - build_path=/drone/src/github.com/${DRONE_REPO}
+#    - output_append=-02-field
+#    commands:
+#    # Regular entry point
+#    - /entrypoint.sh &
+#    # Performs test after ensuring that the scenario has been fully set up
+#    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+#    # Waits until Chromedriver is up and running
+#    - while ! nc -z localhost 9515; do sleep 1; done
+#    # Performs test
+#    - cd tests
+#    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Field 0 0'
+#
+#  03-form:
+#    group: tests
+#    image: redwebaps/testbox-chromedriver:79.0
+#    environment:
+#    - tests_user=admin
+#    - tests_suite=03-form
+#    - tests_db=form
+#    - build_path=/drone/src/github.com/${DRONE_REPO}
+#    - output_append=-03-form
+#    commands:
+#    # Regular entry point
+#    - /entrypoint.sh &
+#    # Performs test after ensuring that the scenario has been fully set up
+#    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+#    # Performs test
+#    - cd tests
+#    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Form 0 0'
+#
+#  04-section:
+#    group: tests
+#    image: redwebaps/testbox-chromedriver:79.0
+#    environment:
+#    - tests_user=admin
+#    - tests_suite=04-section
+#    - tests_db=section
+#    - build_path=/drone/src/github.com/${DRONE_REPO}
+#    - output_append=-04-section
+#    commands:
+#    # Regular entry point
+#    - /entrypoint.sh &
+#    # Performs test after ensuring that the scenario has been fully set up
+#    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+#    # Waits until Chromedriver is up and running
+#    - while ! nc -z localhost 9515; do sleep 1; done
+#    # Performs test
+#    - cd tests
+#    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Section 0 0'
+#
+#  05-submitters:
+#    group: tests
+#    image: redwebaps/testbox-chromedriver:79.0
+#    environment:
+#    - tests_user=admin
+#    - tests_suite=05-submitters
+#    - tests_db=submitters
+#    - build_path=/drone/src/github.com/${DRONE_REPO}
+#    - output_append=-05-submitters
+#    commands:
+#    # Regular entry point
+#    - /entrypoint.sh &
+#    # Performs test after ensuring that the scenario has been fully set up
+#    - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+#    # Waits until Chromedriver is up and running
+#    - while ! nc -z localhost 9515; do sleep 1; done
+#    # Performs test
+#    - cd tests
+#    - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Submitters 0 0'
 
   06-displayFormOnFrontend:
     group: tests
@@ -202,8 +202,8 @@ pipeline:
     - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DisplayFormOnFrontend 0 0'
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/FieldTypeRepeatEmail 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DisplayFormOnFrontend 1 1'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/FieldTypeRepeatEmail 1 1'
 
   07-deleteFormHasSubmitters:
     group: tests
@@ -223,8 +223,8 @@ pipeline:
     - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DeleteFormHasSubmitters 0 0'
-    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/TypeCheckboxShowon 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DeleteFormHasSubmitters 1 1'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/TypeCheckboxShowon 1 1'
 
   slack:
     image: plugins/slack

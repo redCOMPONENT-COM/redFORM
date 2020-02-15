@@ -225,7 +225,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$i->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
 		$i->fillField(DisplayFormOnFrontendPage::$emailInput, $fillForm['email']);
 		$i->waitForElement(DisplayFormOnFrontendPage::$repeatEmailInput, 30);
-		$i->fillField(DisplayFormOnFrontendPage::$repeatEmailInput, $fillForm['repeatEmail']);
+		$i->fillField(DisplayFormOnFrontendPage::$repeatEmailInput, $fillForm['email']);
 		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$i->waitForElementVisible(DisplayFormOnFrontendPage::$regularSubmit, 30);
 		$i->click(DisplayFormOnFrontendPage::$regularSubmit);
