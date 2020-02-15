@@ -188,6 +188,12 @@ class RedFormAdminPage
 	public static $searchIcon = "//button[@data-original-title=\"Search\"]";
 
 	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $messageNothingData = "Nothing to display";
+
+	/**
 	 * @param $id
 	 * @return string
 	 */
