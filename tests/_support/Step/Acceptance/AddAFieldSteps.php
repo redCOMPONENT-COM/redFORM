@@ -390,6 +390,7 @@ class AddAFieldSteps extends Adminredform
 	 * @param array $params
 	 * @param array $function
 	 * @throws \Exception
+	 * @since 3.3.28
 	 */
 	public function createFieldRepeat($params = array())
 	{
@@ -428,4 +429,3 @@ class AddAFieldSteps extends Adminredform
 		$i->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 	}
 }
-

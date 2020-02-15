@@ -150,7 +150,7 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $regularSubmit = "#regularsubmit";
+	public static $regularSubmit = "//input[@id='regularsubmit']";
 
 	/**
 	 * @var string
