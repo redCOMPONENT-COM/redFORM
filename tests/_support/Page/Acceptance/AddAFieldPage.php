@@ -153,6 +153,12 @@ class AddAFieldPage extends RedFormAdminPage
 	public static $idColumn = "//td[7]";
 
 	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $repeatFields = "jform_params_field_chzn";
+
+	/**
 	 * @param $value
 	 * @return string
 	 */

@@ -133,6 +133,12 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 
 	/**
 	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $repeatEmailInput = "//input[@placeholder='Please enter your email again']";
+
+	/**
+	 * @var string
 	 */
 	public static $telephoneInput = "//input[@placeholder='Please enter your telephone']";
 
@@ -144,7 +150,7 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $regularSubmit = "//input[@id='regularsubmit']";
+	public static $regularSubmit = "#regularsubmit";
 
 	/**
 	 * @var string
