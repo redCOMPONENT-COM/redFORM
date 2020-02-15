@@ -98,40 +98,40 @@ class TypeCheckboxShowOnCest
 
 		$this->nameField =
 			[
-				'name'       => 'Name',
-				'fieldtype'  => 'Full name',
-				'placeholder'=> 'Please enter your name'
+				'name'        => 'Name',
+				'fieldtype'   => 'Full name',
+				'placeholder' => 'Please enter your name'
 			];
 
 		$this->emailField =
 			[
-				'name'              => 'Email',
-				'fieldtype'         => 'E-mail',
-				'placeholder'       => 'Please enter your email'
+				'name'        => 'Email',
+				'fieldtype'   => 'E-mail',
+				'placeholder' => 'Please enter your email'
 			];
 
 		$this->genderField =
 			[
-				'name'              => 'gender',
-				'fields'              => 'gender',
-				'fieldtype'         => 'Checkbox',
-				'required'          => 'No',
-				'formExpires'       => 'No',
-				'section'           => 'general',
+				'name'        => 'gender',
+				'fields'      => 'gender',
+				'fieldtype'   => 'Checkbox',
+				'required'    => 'No',
+				'formExpires' => 'No',
+				'section'     => 'general',
 			];
 
 		$this->showOnField =
 			[
-				'name'              => 'Show on',
-				'fields'            => 'Show on',
-				'fieldtype'         => 'Textarea',
-				'placeholder'       => 'Please enter your show on',
-				'required'          => 'No',
-				'formExpires'       => 'No',
-				'section'           => 'general',
+				'name'        => 'Show on',
+				'fields'      => 'Show on',
+				'fieldtype'   => 'Textarea',
+				'placeholder' => 'Please enter your show on',
+				'required'    => 'No',
+				'formExpires' => 'No',
+				'section'     => 'general',
 			];
 
-		$this->optionValue =  array(
+		$this->optionValue = array(
 			array(
 				"value" => "male",
 				"label" => "male"
@@ -170,70 +170,70 @@ class TypeCheckboxShowOnCest
 	}
 
 	/**
-	 * @param AcceptanceTester $I
+	 * @param AcceptanceTester $i
 	 * @throws Exception
 	 * @since 3.3.28
 	 */
-	public function _before(AcceptanceTester $I)
+	public function _before(AcceptanceTester $i)
 	{
-		$I->doAdministratorLogin("admin", "admin", null);
+		$i->doAdministratorLogin("admin", "admin", null);
 	}
 
 	/**
-	 * @param AddAFormSteps $I
+	 * @param AddAFormSteps $i
 	 * @param $scenario
 	 * @throws Exception
 	 * @since 3.3.28
 	 */
-	public function createForm(AddAFormSteps $I, $scenario)
+	public function createForm(AddAFormSteps $i, $scenario)
 	{
-		$I = new AddAFieldSteps($scenario);
-		$I->createField($this->nameField, 'save&close');
-		$I->createField($this->emailField, 'save&close');
-		$I->createField($this->genderField, 'save&close');
+		$i = new AddAFieldSteps($scenario);
+		$i->createField($this->nameField, 'save&close');
+		$i->createField($this->emailField, 'save&close');
+		$i->createField($this->genderField, 'save&close');
 
-		$IDFieldGender = $I->getFieldID($this->genderField['name']);
-		$this->showOnField['showon'] = $IDFieldGender.":".$this->optionValue[0]['value'].",".$this->optionValue[1]['value'];
+		$iDFieldGender = $i->getFieldID($this->genderField['name']);
+		$this->showOnField['showon'] = $iDFieldGender.":".$this->optionValue[0]['value'].",".$this->optionValue[1]['value'];
 
-		$I->createField($this->showOnField, 'save&close');
-		$I->addOptionFieldCheckbox("gender",$this->optionValue );
+		$i->createField($this->showOnField, 'save&close');
+		$i->addOptionFieldCheckbox("gender",$this->optionValue );
 
-		$I = new AddAFormSteps($scenario);
-		$I->wantToTest('Create form for check.');
-		$I->createForm($this->paramsForm, 'save');
-		$I->editAndAddFieldForForm($this->paramsForm['name'], $this->genderField);
-		$I->editAndAddFieldForForm($this->paramsForm['name'], $this->showOnField);
+		$i = new AddAFormSteps($scenario);
+		$i->wantToTest('Create form for check.');
+		$i->createForm($this->paramsForm, 'save');
+		$i->editAndAddFieldForForm($this->paramsForm['name'], $this->genderField);
+		$i->editAndAddFieldForForm($this->paramsForm['name'], $this->showOnField);
 	}
 
 	/**
-	 * @param DisplayFormOnFrontendSteps $I
+	 * @param DisplayFormOnFrontendSteps $i
 	 * @param $scenario
 	 * @throws Exception
 	 * @since 3.3.28
 	 */
-	public function checkFormCheckboxAndShowOnInFrontend(DisplayFormOnFrontendSteps $I, $scenario)
+	public function checkFormCheckboxAndShowOnInFrontend(DisplayFormOnFrontendSteps $i, $scenario)
 	{
-		$I->wantTo('Create new article');
-		$I->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
-		$I->wantTo('Create new menu items');
-		$I->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
-		$I->wantTo('Check form display in frontend');
-		$I->checkFormCheckboxAndShowOnInFrontend($this->menuTitle, $this->fillForm);
+		$i->wantTo('Create new article');
+		$i->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
+		$i->wantTo('Create new menu items');
+		$i->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
+		$i->wantTo('Check form display in frontend');
+		$i->checkFormCheckboxAndShowOnInFrontend($this->menuTitle, $this->fillForm);
 	}
 
 	/**
-	 * @param DisplayFormOnFrontendSteps $I
+	 * @param DisplayFormOnFrontendSteps $i
 	 * @param                            $scenario
 	 * @throws Exception
 	 * @since 3.3.28
 	 */
-	public function clearAll(DisplayFormOnFrontendSteps $I, $scenario)
+	public function clearAll(DisplayFormOnFrontendSteps $i, $scenario)
 	{
-		$I->wantTo('Clear up');
-		$I = new AddAFormSteps($scenario);
-		$I->deleteFormHasSubmitters($this->paramsForm['name']);
+		$i->wantTo('Clear up');
+		$i = new AddAFormSteps($scenario);
+		$i->deleteFormHasSubmitters($this->paramsForm['name']);
 
-		$I = new AddAFieldSteps($scenario);
-		$I->deleteAllField();
+		$i = new AddAFieldSteps($scenario);
+		$i->deleteAllField();
 	}
 }

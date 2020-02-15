@@ -56,8 +56,8 @@ class AddAFieldSteps extends Adminredform
 
 		if (isset($params['showon']))
 		{
-			$I->waitForText(AddAFieldPage::$ShowOnValueLb, 30);
-			$I->fillField(AddAFieldPage::$ShowOnValueID, $params['showon']);
+			$I->waitForText(AddAFieldPage::$showOnValueLb, 30);
+			$I->fillField(AddAFieldPage::$showOnValueID, $params['showon']);
 		}
 
 		if (isset($params['placeholder']))

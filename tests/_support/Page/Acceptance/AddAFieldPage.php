@@ -106,13 +106,13 @@ class AddAFieldPage extends RedFormAdminPage
 	 * @var string
 	 * @since 3.3.28
 	 */
-	public static $ShowOnValueLb = "Show on";
+	public static $showOnValueLb = "Show on";
 
 	/**
 	 * @var string
 	 * @since 3.3.28
 	 */
-	public static $ShowOnValueID = "#jform_params_showon";
+	public static $showOnValueID = "#jform_params_showon";
 
 	/**
 	 * @var string
