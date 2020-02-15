@@ -186,7 +186,6 @@ class FieldTypeRepeatEmailCest
 		$i->wantTo('Create new menu items');
 		$i->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
 		$i->wantTo('Check form display in frontend');
-		$this->fillForm['repeatEmail'] = $this->fillForm['email'];
 		$i->checkFormRepeatEmail($this->menuTitle, $this->fillForm);
 	}
 
