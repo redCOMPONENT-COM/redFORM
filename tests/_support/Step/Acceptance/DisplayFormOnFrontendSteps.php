@@ -178,4 +178,31 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->click($usepage->xPathMenu($menu));
 		$I->waitForText(DisplayFormOnFrontendPage::$messageHasExpired, 30);
 	}
+
+	/**
+	 * @param   string $menu
+	 * @param   array $fillForm
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
+	public function checkFormCheckboxAndShowOnInFrontend($menu, $fillForm = array())
+	{
+		$I = $this;
+		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
+		$usepage = new DisplayFormOnFrontendPage();
+		$I->waitForElement($usepage->xPathMenu($menu), 30);
+		$I->click($usepage->xPathMenu($menu));
+		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+		$I->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
+		$I->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
+		$I->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
+		$I->fillField(DisplayFormOnFrontendPage::$emailInput, $fillForm['email']);
+		$I->waitForElementVisible($usepage->xPathCheckbox($fillForm['gender']), 30);
+		$I->click($usepage->xPathCheckbox($fillForm['gender']));
+		$I->waitForElementVisible(DisplayFormOnFrontendPage::$showOnTextAre, 30);
+		$I->fillField(DisplayFormOnFrontendPage::$showOnTextAre, $fillForm['showon']);
+		$I->waitForElement(DisplayFormOnFrontendPage::$regularSubmit, 30);
+		$I->click(DisplayFormOnFrontendPage::$regularSubmit);
+		$I->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
+	}
 }

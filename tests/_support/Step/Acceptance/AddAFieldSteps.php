@@ -25,8 +25,16 @@ class AddAFieldSteps extends Adminredform
 		$I->click(AddAFieldPage::$newButton);
 		$I->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
 		$I->fillField(AddAFieldPage::$nameId, $params['name']);
-		$I->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
-		$I->selectOptionInChosen(AddAFieldPage::$fieldType, $params['fieldtype']);
+
+		if (isset($params['fieldtype']))
+		{
+			$I->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
+			$I->waitForElementVisible(AddAFieldPage::$fieldTypeID, 30);
+			$I->click(AddAFieldPage::$fieldTypeID);
+			$I->waitForElementVisible(AddAFieldPage::$fieldTypeInput, 30);
+			$I->fillField(AddAFieldPage::$fieldTypeInput, $params['fieldtype']);
+			$I->pressKey(AddAFieldPage::$fieldTypeInput, \Facebook\WebDriver\WebDriverKeys::ENTER);
+		}
 
 		if (isset($params['field_header']))
 		{
@@ -46,11 +54,19 @@ class AddAFieldSteps extends Adminredform
 			$I->fillField(AddAFieldPage::$defaultValueId, $params['default']);
 		}
 
+		if (isset($params['showon']))
+		{
+			$I->waitForText(AddAFieldPage::$showOnValueLb, 30);
+			$I->fillField(AddAFieldPage::$showOnValueID, $params['showon']);
+		}
+
 		if (isset($params['placeholder']))
 		{
 			$I->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
 			$I->fillField(AddAFieldPage::$placeholderId, $params['placeholder']);
 		}
+
+		$I->executeJS('window.scrollTo(0,0);');
 
 		switch ($function)
 		{
@@ -227,8 +243,7 @@ class AddAFieldSteps extends Adminredform
 			$I->click(AddAFieldPage::$deleteButton);
 			$I->acceptPopup();
 			$I->wait(2);
-			$I->waitForElement(AddAFieldPage::$alertMessage, 60, AddAFieldPage::$alertHead);
-			$I->waitForElementVisible(AddAFieldPage::$alertMessage, 60, AddAFieldPage::$alertHead);
+			$I->waitForText(AddAFieldPage::$messageNothingData, 30);
 		}
 
 		$I->amOnPage(AddAFieldPage::$URL);
@@ -246,6 +261,7 @@ class AddAFieldSteps extends Adminredform
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
 		$I->wait(0.5);
 		$I->click(AddAFieldPage::$checkAll);
@@ -301,5 +317,58 @@ class AddAFieldSteps extends Adminredform
 		$I->waitForElement(AddAFieldPage::$searchIcon, 30);
 		$I->click(AddAFieldPage::$searchIcon);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+	}
+
+	/**
+	 * @param $nameField
+	 * @return mixed
+	 * @throws \Exception
+	 *  @since 3.3.28
+	 */
+	public function getFieldID($nameField)
+	{
+		$i = $this;
+		$i->amOnPage(AddAFieldPage::$URL);
+		$i->searchField($nameField);
+		$i->waitForElementVisible(AddAFieldPage::$idColumn);
+		$id = $this->grabTextFrom(AddAFieldPage::$idColumn);
+
+		return $id;
+	}
+
+	/**
+	 * @param   string $nameField name field
+	 * @param   array  $options   option checkbox
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
+	public function addOptionFieldCheckbox($nameField, $options)
+	{
+		$i = $this;
+		$i->amOnPage(AddAFieldPage::$URL);
+		$i->searchField($nameField);
+		$i->waitForElementVisible(["link" => $nameField], 30);
+		$i->click(["link" => $nameField]);
+		$i->waitForElementVisible(AddAFieldPage::$optionTab, 30);
+		$i->click(AddAFieldPage::$optionTab);
+		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+
+		$length = count($options);
+
+		for ($x = 0; $x < $length; $x++)
+		{
+			 $y = $x + 1;
+			 $option = $options[$x];
+			 $i->waitForElementVisible(AddAFieldPage::xpathValueInput($y), 30);
+			 $i->fillField(AddAFieldPage::xpathValueInput($y), $option['value']);
+			 $i->wait(0.5);
+			 $i->waitForElementVisible(AddAFieldPage::xpathLabelInput($y), 30);
+			 $i->fillField(AddAFieldPage::xpathLabelInput($y), $option['label']);
+			 $i->waitForElementVisible(AddAFieldPage::$addButton, 30);
+			 $i->click(AddAFieldPage::$addButton);
+		}
+
+		$i->click(AddAFieldPage::$saveCloseButton);
+		$i->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 	}
 }

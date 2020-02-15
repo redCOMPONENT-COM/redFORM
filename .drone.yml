@@ -223,6 +223,7 @@ pipeline:
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DeleteFormHasSubmitters 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/TypeCheckboxShowon 0 0'
 
   slack:
     image: plugins/slack
