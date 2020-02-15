@@ -261,6 +261,7 @@ class AddAFieldSteps extends Adminredform
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
 		$I->wait(0.5);
 		$I->click(AddAFieldPage::$checkAll);
