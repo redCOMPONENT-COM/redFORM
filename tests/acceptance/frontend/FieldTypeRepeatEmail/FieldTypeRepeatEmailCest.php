@@ -38,19 +38,7 @@ class FieldTypeRepeatEmailCest
 	 * @var array
 	 * @since 3.3.28
 	 */
-	protected $genderField;
-
-	/**
-	 * @var array
-	 * @since 3.3.28
-	 */
-	protected $showOnField;
-
-	/**
-	 * @var array
-	 * @since 3.3.28
-	 */
-	protected $optionValue;
+	protected $repeatField;
 
 	/**
 	 * @var string
@@ -129,19 +117,19 @@ class FieldTypeRepeatEmailCest
 
 		$this->fillForm =
 			[
-				'name'              => $this->faker->bothify('Name ?##?'),
-				'email'             => $this->faker->email,
+				'name'  => $this->faker->bothify('Name ?##?'),
+				'email' => $this->faker->email,
 			];
 
 		$this->paramsForm =
 			[
-				'name'              => $this->faker->bothify('FormSave ?##?'),
-				'fields_1'          => $this->nameField['name'],
-				'section_1'         => 'general',
-				'fields_2'          => $this->emailField['name'],
-				'section_2'         => 'general',
-				'required'          => 'No',
-				'formExpires'       => 'No'
+				'name'        => $this->faker->bothify('FormSave ?##?'),
+				'fields_1'    => $this->nameField['name'],
+				'section_1'   => 'general',
+				'fields_2'    => $this->emailField['name'],
+				'section_2'   => 'general',
+				'required'    => 'No',
+				'formExpires' => 'No'
 			];
 	}
 
@@ -179,7 +167,7 @@ class FieldTypeRepeatEmailCest
 	 * @throws Exception
 	 * @since 3.3.28
 	 */
-	public function checkFormCheckboxAndShowOnInFrontend(DisplayFormOnFrontendSteps $i, $scenario)
+	public function checkFormCheckRepeatEmailInFrontend(DisplayFormOnFrontendSteps $i, $scenario)
 	{
 		$i->wantTo('Create new article');
 		$i->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
