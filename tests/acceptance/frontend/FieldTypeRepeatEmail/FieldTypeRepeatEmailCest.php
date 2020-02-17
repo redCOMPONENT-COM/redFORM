@@ -102,7 +102,7 @@ class FieldTypeRepeatEmailCest
 			[
 				'name'        => 'Repeat Email',
 				'fields'      => 'Repeat Email',
-				'fieldtype'   => 'Repeat text',
+				'fieldType'   => 'Repeat text',
 				'placeholder' => 'Please enter your email again',
 				'targetField' => 'Email',
 				'required'    => 'No',

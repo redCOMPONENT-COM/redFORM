@@ -380,8 +380,7 @@ class AddAFieldSteps extends Adminredform
 	}
 
 	/**
-	 * @param array $params
-	 * @param array $function
+	 * @param   array $params
 	 * @throws \Exception
 	 * @since 3.3.28
 	 */
@@ -394,13 +393,13 @@ class AddAFieldSteps extends Adminredform
 		$i->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
 		$i->fillField(AddAFieldPage::$nameId, $params['name']);
 
-		if (isset($params['fieldtype']))
+		if (isset($params['fieldType']))
 		{
 			$i->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
 			$i->waitForElementVisible(AddAFieldPage::$fieldTypeID, 30);
 			$i->click(AddAFieldPage::$fieldTypeID);
 			$i->waitForElementVisible(AddAFieldPage::$fieldTypeInput, 30);
-			$i->fillField(AddAFieldPage::$fieldTypeInput, $params['fieldtype']);
+			$i->fillField(AddAFieldPage::$fieldTypeInput, $params['fieldType']);
 			$i->pressKey(AddAFieldPage::$fieldTypeInput, \Facebook\WebDriver\WebDriverKeys::ENTER);
 		}
 
