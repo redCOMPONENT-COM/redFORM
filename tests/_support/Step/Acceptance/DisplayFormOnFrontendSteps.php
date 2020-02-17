@@ -268,4 +268,29 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$i->click(DisplayFormOnFrontendPage::$regularSubmit);
 		$i->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
 	}
+
+	/**
+	 * @param $menu
+	 * @param $notificationMessage
+	 * @param array $fillForm
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
+	public function checkFormWithNotificatioInFrontend($menu, $notificationMessage, $fillForm = array())
+	{
+		$i = $this;
+		$i->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
+		$usepage = new DisplayFormOnFrontendPage();
+		$i->waitForElement($usepage->xPathMenu($menu), 30);
+		$i->click($usepage->xPathMenu($menu));
+		$i->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
+		$i->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
+		$i->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
+		$i->fillField(DisplayFormOnFrontendPage::$emailInput, $fillForm['email']);
+		$i->waitForElement(DisplayFormOnFrontendPage::$telephoneInput, 30);
+		$i->fillField(DisplayFormOnFrontendPage::$telephoneInput, $fillForm['telephone']);
+		$i->waitForElement(DisplayFormOnFrontendPage::$regularSubmit, 30);
+		$i->click(DisplayFormOnFrontendPage::$regularSubmit);
+		$i->waitForText($notificationMessage, 30);
+	}
 }
