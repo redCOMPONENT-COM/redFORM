@@ -1,20 +1,11 @@
 <?php
-/**
- * @package     redFORM
- * @subpackage  Cest
- * @copyright   Copyright (C) 2008 - 2019 redCOMPONENT.com. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
+
 
 use Step\Acceptance\AddAFieldSteps as AddAFieldSteps;
 use Step\Acceptance\AddAFormSteps as AddAFormSteps;
 use Step\Acceptance\DisplayFormOnFrontendSteps as DisplayFormOnFrontendSteps;
 
-/**
- * Class TypeCheckboxShowOnCest
- * @since 3.3.28
- */
-class TypeCheckboxShowOnCest
+class FieldTypeMultiSelectAndShowonCest
 {
 	/**
 	 * @var \Faker\Generator
@@ -38,7 +29,7 @@ class TypeCheckboxShowOnCest
 	 * @var array
 	 * @since 3.3.28
 	 */
-	protected $genderField;
+	protected $provinceField;
 
 	/**
 	 * @var array
@@ -110,11 +101,11 @@ class TypeCheckboxShowOnCest
 				'placeholder' => 'Please enter your email'
 			];
 
-		$this->genderField =
+		$this->provinceField =
 			[
-				'name'        => 'gender',
-				'fields'      => 'gender',
-				'fieldtype'   => 'Checkbox',
+				'name'        => 'province',
+				'fields'      => 'province',
+				'fieldtype'   => 'Multi select',
 				'required'    => 'No',
 				'formExpires' => 'No',
 				'section'     => 'general',
@@ -133,12 +124,16 @@ class TypeCheckboxShowOnCest
 
 		$this->optionValue = array(
 			array(
-				"value" => "male",
-				"label" => "male"
+				"value" => "daklak",
+				"label" => "daklak"
 			),
 			array(
-				"value" => "female",
-				"label" => "female"
+				"value" => "daknong",
+				"label" => "daknong"
+			),
+			array(
+				"value" => "dalat",
+				"label" => "dalat"
 			)
 		);
 
@@ -151,7 +146,7 @@ class TypeCheckboxShowOnCest
 			[
 				'name'              => $this->faker->bothify('Name ?##?'),
 				'email'             => $this->faker->email,
-				'gender'            => $this->optionValue[0][value],
+				'province'            => $this->optionValue[0][value],
 				'showon'            => $this->faker->bothify('Name ????????????????'),
 			];
 
@@ -174,7 +169,8 @@ class TypeCheckboxShowOnCest
 	 */
 	public function _before(AcceptanceTester $i)
 	{
-		$i->doAdministratorLogin("admin", "admin", null);
+		$i->doAdministratorLogin();
+//		$i->doAdministratorLogin("admin", "admin", null);
 	}
 
 	/**
@@ -188,18 +184,18 @@ class TypeCheckboxShowOnCest
 		$i = new AddAFieldSteps($scenario);
 		$i->createField($this->nameField, 'save&close');
 		$i->createField($this->emailField, 'save&close');
-		$i->createField($this->genderField, 'save&close');
+		$i->createField($this->provinceField, 'save&close');
 
-		$iDFieldGender = $i->getFieldID($this->genderField['name']);
-		$this->showOnField['showon'] = $iDFieldGender . ":" . $this->optionValue[0]['value'] . "," . $this->optionValue[1]['value'];
+		$iDFieldProvince = $i->getFieldID($this->provinceField['name']);
+		$this->showOnField['showon'] = $iDFieldProvince . ":" . $this->optionValue[0]['value'];
 
 		$i->createField($this->showOnField, 'save&close');
-		$i->addOptionFieldCheckbox($this->genderField['name'], $this->optionValue);
+		$i->addOptionFieldCheckbox($this->provinceField['name'], $this->optionValue);
 
 		$i = new AddAFormSteps($scenario);
 		$i->wantToTest('Create form for check.');
 		$i->createForm($this->paramsForm, 'save');
-		$i->editAndAddFieldForForm($this->paramsForm['name'], $this->genderField);
+		$i->editAndAddFieldForForm($this->paramsForm['name'], $this->provinceField);
 		$i->editAndAddFieldForForm($this->paramsForm['name'], $this->showOnField);
 	}
 
@@ -216,7 +212,8 @@ class TypeCheckboxShowOnCest
 		$i->wantTo('Create new menu items');
 		$i->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
 		$i->wantTo('Check form display in frontend');
-		$i->checkFormCheckboxAndShowOnInFrontend($this->menuTitle, $this->fillForm);
+
+		$i->checkFormMultiSelectAndShowOnInFrontend($this->menuTitle, $this->fillForm);
 	}
 
 	/**
