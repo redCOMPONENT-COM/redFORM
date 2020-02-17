@@ -1,10 +1,19 @@
 <?php
-
+/**
+ * @package     redFORM
+ * @subpackage  Cest
+ * @copyright   Copyright (C) 2008 - 2020 redCOMPONENT.com. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
 
 use Step\Acceptance\AddAFieldSteps as AddAFieldSteps;
 use Step\Acceptance\AddAFormSteps as AddAFormSteps;
 use Step\Acceptance\DisplayFormOnFrontendSteps as DisplayFormOnFrontendSteps;
 
+/**
+ * Class FieldTypeMultiSelectAndShowonCest
+ * @since 3.3.28
+ */
 class FieldTypeMultiSelectAndShowonCest
 {
 	/**
@@ -80,7 +89,7 @@ class FieldTypeMultiSelectAndShowonCest
 	protected $paramsForm;
 
 	/**
-	 * TypeCheckboxShowOnCest constructor.
+	 * FieldTypeMultiSelectAndShowonCest constructor.
 	 * @since 3.3.28
 	 */
 	public function __construct()
@@ -169,8 +178,7 @@ class FieldTypeMultiSelectAndShowonCest
 	 */
 	public function _before(AcceptanceTester $i)
 	{
-		$i->doAdministratorLogin();
-//		$i->doAdministratorLogin("admin", "admin", null);
+		$i->doAdministratorLogin("admin", "admin", null);
 	}
 
 	/**
@@ -205,14 +213,13 @@ class FieldTypeMultiSelectAndShowonCest
 	 * @throws Exception
 	 * @since 3.3.28
 	 */
-	public function checkFormCheckboxAndShowOnInFrontend(DisplayFormOnFrontendSteps $i, $scenario)
+	public function checkFormMultiSelectAndShowOnInFrontend(DisplayFormOnFrontendSteps $i, $scenario)
 	{
 		$i->wantTo('Create new article');
 		$i->createNewArticle($this->paramsForm['name'], $this->articlesTitle, $scenario);
 		$i->wantTo('Create new menu items');
 		$i->createNewMenuItem($this->articlesTitle, $this->articles, $this->menuTitle, $this->menuItemType, 'Main Menu');
-		$i->wantTo('Check form display in frontend');
-
+		$i->wantTo('Check form have multi select and show on display in frontend');
 		$i->checkFormMultiSelectAndShowOnInFrontend($this->menuTitle, $this->fillForm);
 	}
 
