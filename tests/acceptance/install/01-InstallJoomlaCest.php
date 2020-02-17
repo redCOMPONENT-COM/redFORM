@@ -15,5 +15,6 @@ class InstallJoomlaCest
 		$I->doAdministratorLogin();
 		$I->disableStatistics();
 		$I->setErrorReportingToDevelopment();
+		$I->doAdministratorLogout();
 	}
 }

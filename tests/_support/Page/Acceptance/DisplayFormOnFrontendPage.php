@@ -204,4 +204,16 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 
 		return $xpath;
 	}
+
+	/**
+	 * @param $value
+	 * @return string
+	 * @since 3.3.28
+	 */
+	public static function xpathMultiSelect($value)
+	{
+		$xpath = "//select[@multiple='multiple']/option[@value ='" . $value . "']";
+
+		return $xpath;
+	}
 }

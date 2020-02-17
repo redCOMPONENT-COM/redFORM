@@ -227,6 +227,7 @@ class AddAFieldSteps extends Adminredform
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
+		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$I->waitForText($name, 30);
 		$I->checkAllResults();
 
@@ -236,7 +237,7 @@ class AddAFieldSteps extends Adminredform
 			$I->acceptPopup();
 			$I->wait(2);
 			$I->waitForElement(AddAFieldPage::$alertMessage, 60, AddAFieldPage::$alertHead);
-			$I->waitForElementVisible(AddAFieldPage::$alertMessage, 60, AddAFieldPage::$alertHead);
+			$I->waitForElementVisible(AddAFieldPage::$alertMessage, 5, AddAFieldPage::$alertHead);
 		} catch (\Exception $exception)
 		{
 			$I->wait(1);
@@ -261,6 +262,8 @@ class AddAFieldSteps extends Adminredform
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+		$I->waitForElementVisible(AddAFieldPage::$clearButton, 30);
+		$I->click(AddAFieldPage::$clearButton);
 		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
 		$I->wait(0.5);
@@ -369,6 +372,7 @@ class AddAFieldSteps extends Adminredform
 		$i = $this;
 		$i->amOnPage(AddAFieldPage::$URL);
 		$i->searchField($nameField);
+		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$i->waitForElementVisible(["link" => $nameField], 30);
 		$i->click(["link" => $nameField]);
 		$i->waitForElementVisible(AddAFieldPage::$optionTab, 30);

@@ -204,6 +204,7 @@ pipeline:
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DisplayFormOnFrontend 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/MultiSelectAndShowon 0 0'
 
   07-deleteFormHasSubmitters:
     group: tests
