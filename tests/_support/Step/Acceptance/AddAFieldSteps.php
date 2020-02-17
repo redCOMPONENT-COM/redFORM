@@ -267,9 +267,31 @@ class AddAFieldSteps extends Adminredform
 		$I->click(AddAFieldPage::$checkAll);
 		$I->wait(0.5);
 		$I->click(AddAFieldPage::$deleteButton);
-		$I->acceptPopup();
 		$I->wait(0.5);
-		$I->waitForElementVisible(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+		$I->acceptPopup();
+
+		try
+		{
+			$I->waitForElementVisible(AddAFieldPage::$alertMessage, 5, AddAFieldPage::$alertHead);
+		} catch (\Exception $e)
+		{
+			try
+			{
+				$I->waitForText(AddAFieldPage::$messageNothingData, 5);
+			}
+			catch (\Exception $e)
+			{
+				$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
+				$I->wait(0.5);
+				$I->click(AddAFieldPage::$checkAll);
+				$I->wait(0.5);
+				$I->click(AddAFieldPage::$deleteButton);
+				$I->wait(0.5);
+				$I->acceptPopup();
+				$I->waitForText(AddAFieldPage::$messageNothingData, 30);
+			}
+
+		}
 	}
 
 	/**
@@ -369,6 +391,48 @@ class AddAFieldSteps extends Adminredform
 		}
 
 		$i->click(AddAFieldPage::$saveCloseButton);
+		$i->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+	}
+
+	/**
+	 * @param   array $params
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
+	public function createFieldRepeat($params = array())
+	{
+		$i = $this;
+		$i->amOnPage(AddAFieldPage::$URL);
+		$i->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+		$i->click(AddAFieldPage::$newButton);
+		$i->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
+		$i->fillField(AddAFieldPage::$nameId, $params['name']);
+
+		if (isset($params['fieldType']))
+		{
+			$i->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
+			$i->waitForElementVisible(AddAFieldPage::$fieldTypeID, 30);
+			$i->click(AddAFieldPage::$fieldTypeID);
+			$i->waitForElementVisible(AddAFieldPage::$fieldTypeInput, 30);
+			$i->fillField(AddAFieldPage::$fieldTypeInput, $params['fieldType']);
+			$i->pressKey(AddAFieldPage::$fieldTypeInput, \Facebook\WebDriver\WebDriverKeys::ENTER);
+		}
+
+		if (isset($params['placeholder']))
+		{
+			$i->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
+			$i->fillField(AddAFieldPage::$placeholderId, $params['placeholder']);
+		}
+
+		if (isset($params['targetField']))
+		{
+			$i->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
+			$i->selectOptionInChosenXpath(AddAFieldPage::$repeatFields, $params['targetField']);
+		}
+
+		$i->executeJS('window.scrollTo(0,0);');
+		$i->click(AddAFieldPage::$saveCloseButton);
+		$i->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
 		$i->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 	}
 }

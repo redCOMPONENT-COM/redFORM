@@ -205,4 +205,40 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->click(DisplayFormOnFrontendPage::$regularSubmit);
 		$I->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
 	}
+
+	/**
+	 * @param   string $menu
+	 * @param   array $fillForm
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
+	public function checkFormRepeatEmail($menu, $fillForm = array())
+	{
+		$i = $this;
+		$i->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
+		$usepage = new DisplayFormOnFrontendPage();
+		$i->waitForElement($usepage->xPathMenu($menu), 30);
+		$i->click($usepage->xPathMenu($menu));
+		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+		$i->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
+		$i->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
+		$i->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
+		$i->fillField(DisplayFormOnFrontendPage::$emailInput, $fillForm['email']);
+		$i->waitForElement(DisplayFormOnFrontendPage::$repeatEmailInput, 30);
+		$i->fillField(DisplayFormOnFrontendPage::$repeatEmailInput, $fillForm['email']);
+		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+		$i->waitForElementVisible(DisplayFormOnFrontendPage::$regularSubmit, 30);
+		$i->click(DisplayFormOnFrontendPage::$regularSubmit);
+
+		try
+		{
+			$i->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 5, DisplayFormOnFrontendPage::$alertHead);
+		}
+		catch (\Exception $e)
+		{
+			$i->waitForElementVisible(DisplayFormOnFrontendPage::$regularSubmit, 30);
+			$i->click(DisplayFormOnFrontendPage::$regularSubmit);
+			$i->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
+		}
+	}
 }
