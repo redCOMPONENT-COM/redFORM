@@ -267,21 +267,14 @@ class AddAFieldSteps extends Adminredform
 		$I->click(AddAFieldPage::$checkAll);
 		$I->wait(0.5);
 		$I->click(AddAFieldPage::$deleteButton);
-		$I->acceptPopup();
 		$I->wait(0.5);
+		$I->acceptPopup();
 
 		try
 		{
 			$I->waitForElementVisible(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
 		} catch (\Exception $e)
 		{
-			$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
-			$I->click(AddAFieldPage::$checkAll);
-			$I->wait(0.5);
-			$I->click(AddAFieldPage::$deleteButton);
-			$I->wait(0.5);
-			$I->acceptPopup();
-			$I->wait(0.5);
 			$I->waitForText(AddAFieldPage::$messageNothingData, 30);
 		}
 	}
