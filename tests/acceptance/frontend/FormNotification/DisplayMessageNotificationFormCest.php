@@ -24,56 +24,67 @@ class DisplayMessageNotificationFormCest
 
 	/**
 	 * @var array
+	 * @since 3.3.28
 	 */
 	protected $nameField;
 
 	/**
 	 * @var array
+	 * @since 3.3.28
 	 */
 	protected $emailField;
 
 	/**
 	 * @var array
+	 * @since 3.3.28
 	 */
 	protected $telephoneField;
 
 	/**
 	 * @var array
+	 * @since 3.3.28
 	 */
 	protected $noteField;
 
 	/**
 	 * @var array
+	 * @since 3.3.28
 	 */
 	protected $paramsForm;
 
 	/**
 	 * @var array
+	 * @since 3.3.28
 	 */
 	protected $telephoneForm;
 
 	/**
 	 * @var string
+	 * @since 3.3.28
 	 */
 	protected $articlesTitle;
 
 	/**
 	 * @var string
+	 * @since 3.3.28
 	 */
 	protected $articles;
 
 	/**
 	 * @var string
+	 * @since 3.3.28
 	 */
 	protected $menuTitle;
 
 	/**
 	 * @var string
+	 * @since 3.3.28
 	 */
 	protected $menuItemType;
 
 	/**
 	 * @var array
+	 * @since 3.3.28
 	 */
 	protected $fillForm;
 
@@ -143,7 +154,6 @@ class DisplayMessageNotificationFormCest
 				'email'               => $this->faker->email,
 				'telephone'           => $this->faker->phoneNumber,
 			];
-
 	}
 	/**
 	 * @param AcceptanceTester $i
