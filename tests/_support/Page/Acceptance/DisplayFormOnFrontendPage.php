@@ -147,6 +147,11 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	 */
 	public static $noteTextarea = "//textarea[@placeholder='Please enter your note']";
 
+    /**
+     * @var string
+     */
+    public static $dateInput = "//input[@placeholder='Please enter your birth day']";
+
 	/**
 	 * @var string
 	 */
