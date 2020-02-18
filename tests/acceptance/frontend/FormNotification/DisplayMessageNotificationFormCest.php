@@ -155,6 +155,7 @@ class DisplayMessageNotificationFormCest
 				'telephone'           => $this->faker->phoneNumber,
 			];
 	}
+
 	/**
 	 * @param AcceptanceTester $i
 	 * @throws Exception
