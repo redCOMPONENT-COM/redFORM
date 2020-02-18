@@ -184,6 +184,7 @@ pipeline:
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Submitters 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/FormNotification 0 0'
 
   06-displayFormOnFrontend:
     group: tests

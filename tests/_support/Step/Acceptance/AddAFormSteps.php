@@ -26,6 +26,27 @@ class AddAFormSteps extends Adminredform
 		$I->click(AddAFormPage::$newButton);
 		$I->waitForText(AddAFormPage::$formName, 30, AddAFormPage::$formNameLbl);
 		$I->fillField(AddAFormPage::$formNameId, $params['name']);
+
+		if (isset($params['displayNotification']))
+		{
+			$I->waitForElementVisible(AddAFormPage::$notificationTab, 30);
+			$I->click(AddAFormPage::$notificationTab);
+
+			switch ($params['displayNotification'])
+			{
+				case 'yes':
+					$I->waitForElementVisible(AddAFormPage::$displayNotificationYes, 30);
+					$I->click(AddAFormPage::$displayNotificationYes);
+					$I->fillTinyMceEditorById(AddAFormPage::$notificationTextID, $params['notificationMessage']);
+					break;
+
+				case 'no':
+					$I->waitForElementVisible(AddAFormPage::$displayNotificationNo, 30);
+					$I->click(AddAFormPage::$displayNotificationNo);
+					break;
+			}
+		}
+
 		switch ($function)
 		{
 			case 'save':
