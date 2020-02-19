@@ -374,6 +374,7 @@ class AddAFieldSteps extends Adminredform
 		$i->searchField($nameField);
 		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$i->waitForElementVisible(["link" => $nameField], 30);
+		$i->wait(0.5);
 		$i->click(["link" => $nameField]);
 		$i->waitForElementVisible(AddAFieldPage::$optionTab, 30);
 		$i->click(AddAFieldPage::$optionTab);

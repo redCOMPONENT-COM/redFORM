@@ -164,6 +164,7 @@ pipeline:
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Section 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/FieldTypeDate 0 0'
 
   05-submitters:
     group: tests

@@ -150,6 +150,11 @@ class DisplayFormOnFrontendPage extends RedFormAdminPage
 	/**
 	 * @var string
 	 */
+	public static $dateInput = "//input[@placeholder='Please enter your birth day']";
+
+	/**
+	 * @var string
+	 */
 	public static $regularSubmit = "//input[@id='regularsubmit']";
 
 	/**
