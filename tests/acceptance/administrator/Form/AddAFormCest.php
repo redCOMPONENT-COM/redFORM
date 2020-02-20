@@ -53,9 +53,11 @@ class AddAFormCest
 			'name' => $this->faker->bothify('FormSaveClose ?##?'),
 			'fields_1' => $this->paramsTextField1['name'],
 			'section_1' => $this->paramsSection1['name'],
+			'status_1'  => "Publish",
 			'fields_2' => $this->paramsTextField2['name'],
 			'section_2' => $this->paramsSection2['name'],
-			'required' => 'Yes'
+			'required' => 'Yes',
+			'status_2'  => "Unpublish",
 		);
 
 		$this->paramsFormMissingName = array();
@@ -72,7 +74,8 @@ class AddAFormCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->doAdministratorLogin("admin", "admin", null);
+		$I->doAdministratorLogin();
+//		$I->doAdministratorLogin("admin", "admin", null);
 	}
 
 	/**
@@ -95,7 +98,19 @@ class AddAFormCest
 		$I = new AddAFormSteps($scenario);
 		$I->createForm($this->paramsFormSave, 'save');
 		$I->createForm($this->paramsFormSaveClose, 'save&close');
+	}
 
+	/**
+	 * @param AddAFormSteps $I
+	 * @throws Exception
+	 * @since 3.3.28
+	 */
+	public function changeStatusFieldOnForm(AddAFormSteps $I)
+	{
+		$I->wantToTest('Change Status Field on Form');
+		$I->changeStatusFormField($this->paramsFormSaveClose);
+		$I->wantToTest('Check Status Field on Form');
+		$I->selectStatusFormField($this->paramsFormSaveClose);
 	}
 
 	/**
