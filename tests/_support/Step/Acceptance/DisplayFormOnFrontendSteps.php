@@ -202,7 +202,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->click($usepage->xPathCheckbox($fillForm['gender']));
 		$I->waitForElementVisible(DisplayFormOnFrontendPage::$showOnTextAre, 60);
 		$I->fillField(DisplayFormOnFrontendPage::$showOnTextAre, $fillForm['showon']);
-		$I->waitForElement(DisplayFormOnFrontendPage::$regularSubmit, 30);
+		$I->waitForElementVisible(DisplayFormOnFrontendPage::$regularSubmit, 30);
 		$I->click(DisplayFormOnFrontendPage::$regularSubmit);
 		$I->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
 	}
