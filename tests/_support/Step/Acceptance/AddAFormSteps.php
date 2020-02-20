@@ -381,8 +381,9 @@ class AddAFormSteps extends Adminredform
 	/**
 	 * @param $nameField
 	 * @throws \Exception
+	 * @since 3.3.28
 	 */
-	public function searchFormfields($nameField)
+	public function searchFormFields($nameField)
 	{
 		$i = $this;
 		$i->waitForElementVisible(AddAFormPage::$searchField, 30);
@@ -392,10 +393,11 @@ class AddAFormSteps extends Adminredform
 		$i->waitForText("Form fields", 30, "//h2");
 	}
 
-    /**
-     * @param array $params
-     * @throws \Exception
-     */
+	/**
+	 * @param array $params
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
 	public function changeStatusFormField($params = array())
 	{
 		$i = $this;
@@ -407,12 +409,12 @@ class AddAFormSteps extends Adminredform
 		$i->waitForElementVisible(AddAFormPage::$fields, 30);
 		$i->click(AddAFormPage::$fields);
 
-		$i->searchFormfields($params['fields_1']);
+		$i->searchFormFields($params['fields_1']);
 		$i->checkAllResults();
 		$i->waitForText($params['status_1'], 30);
 		$i->click($params['status_1']);
 
-		$i->searchFormfields($params['fields_2']);
+		$i->searchFormFields($params['fields_2']);
 		$i->checkAllResults();
 		$i->waitForText($params['status_2'], 30);
 		$i->click($params['status_2']);
@@ -420,10 +422,11 @@ class AddAFormSteps extends Adminredform
 		$i->click(AddAFormPage::$saveCloseButton);
 	}
 
-    /**
-     * @param array $params
-     * @throws \Exception
-     */
+	/**
+	 * @param array $params
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
 	public function selectStatusFormField($params = array())
 	{
 		$i = $this;
