@@ -190,6 +190,24 @@ class AddAFormPage extends RedFormAdminPage
 	public static $notificationTextID = 'jform_notificationtext';
 
 	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $statusSelectInput = "#filter_field_state_chzn";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $formFieldTitle = "Form fields";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $statusSelectId = 'filter_field_state';
+
+	/**
 	 * @param $value
 	 * @return string
 	 */

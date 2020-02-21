@@ -198,10 +198,11 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		$I->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$emailInput, $fillForm['email']);
 		$I->waitForElementVisible($usepage->xPathCheckbox($fillForm['gender']), 30);
+		$I->wait(0.5);
 		$I->click($usepage->xPathCheckbox($fillForm['gender']));
-		$I->waitForElementVisible(DisplayFormOnFrontendPage::$showOnTextAre, 30);
+		$I->waitForElementVisible(DisplayFormOnFrontendPage::$showOnTextAre, 60);
 		$I->fillField(DisplayFormOnFrontendPage::$showOnTextAre, $fillForm['showon']);
-		$I->waitForElement(DisplayFormOnFrontendPage::$regularSubmit, 30);
+		$I->waitForElementVisible(DisplayFormOnFrontendPage::$regularSubmit, 30);
 		$I->click(DisplayFormOnFrontendPage::$regularSubmit);
 		$I->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 30, DisplayFormOnFrontendPage::$alertHead);
 	}
