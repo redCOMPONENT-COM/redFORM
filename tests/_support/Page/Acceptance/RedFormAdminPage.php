@@ -135,6 +135,12 @@ class RedFormAdminPage
 	 */
 	public static $headPage = "//h1";
 
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $h2 = "//h2";
+
 	//general message
 	/**
 	 * @var string

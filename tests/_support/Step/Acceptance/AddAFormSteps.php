@@ -390,7 +390,7 @@ class AddAFormSteps extends Adminredform
 		$i->fillField(AddAFormPage::$searchField, $nameField);
 		$i->waitForElement(AddAFormPage::$searchIcon, 30);
 		$i->click(AddAFormPage::$searchIcon);
-		$i->waitForText("Form fields", 30, "//h2");
+		$i->waitForText(AddAFormPage::$formFieldTitle, 30, AddAFormPage::$h2);
 	}
 
 	/**

@@ -199,6 +199,12 @@ class AddAFormPage extends RedFormAdminPage
 	 * @var string
 	 * @since 3.3.28
 	 */
+	public static $formFieldTitle = "Form fields";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
 	public static $statusSelectId = 'filter_field_state';
 
 	/**
