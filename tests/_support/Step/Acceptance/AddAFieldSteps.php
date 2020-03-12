@@ -228,8 +228,17 @@ class AddAFieldSteps extends Adminredform
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
 		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
-		$I->waitForText($name, 30);
-		$I->checkAllResults();
+		try
+		{
+			$I->waitForText($name, 10);
+			$I->checkAllResults();
+		} catch (\Exception $exception)
+		{
+			$I->searchField($name);
+			$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+			$I->waitForText($name, 10);
+			$I->checkAllResults();
+		}
 
 		try
 		{
