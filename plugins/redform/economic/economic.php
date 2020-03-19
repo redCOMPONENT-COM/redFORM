@@ -656,7 +656,7 @@ class plgRedformEconomic extends JPlugin
 
 		if ($debtorids)
 		{
-			$eco['Number'] = $debtorids[0];
+			$eco['Number'] = max($debtorids);
 		}
 		else
 		{
