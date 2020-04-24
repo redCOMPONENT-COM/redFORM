@@ -1,14 +1,14 @@
 <?php
 /**
  * @package     redFORM
- * @subpackage  Cest
+ * @subpackage  Cest TypeCheckboxShowOn
  * @copyright   Copyright (C) 2008 - 2020 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-use Step\Acceptance\AddAFieldSteps as AddAFieldSteps;
-use Step\Acceptance\AddAFormSteps as AddAFormSteps;
-use Step\Acceptance\DisplayFormOnFrontendSteps as DisplayFormOnFrontendSteps;
+use Step\Acceptance\AddAFieldSteps;
+use Step\Acceptance\AddAFormSteps;
+use Step\Acceptance\DisplayFormOnFrontendSteps;
 
 /**
  * Class TypeCheckboxShowOnCest
@@ -97,31 +97,31 @@ class TypeCheckboxShowOnCest
 		$this->faker   = Faker\Factory::create();
 
 		$this->nameField =
-			[
+			array(
 				'name'        => 'Name',
 				'fieldtype'   => 'Full name',
 				'placeholder' => 'Please enter your name'
-			];
+			);
 
 		$this->emailField =
-			[
+			array(
 				'name'        => 'Email',
 				'fieldtype'   => 'E-mail',
 				'placeholder' => 'Please enter your email'
-			];
+			);
 
 		$this->genderField =
-			[
+			array(
 				'name'        => 'gender',
 				'fields'      => 'gender',
 				'fieldtype'   => 'Checkbox',
 				'required'    => 'No',
 				'formExpires' => 'No',
 				'section'     => 'general',
-			];
+			);
 
 		$this->showOnField =
-			[
+			array(
 				'name'        => 'Show on',
 				'fields'      => 'Show on',
 				'fieldtype'   => 'Textarea',
@@ -129,7 +129,7 @@ class TypeCheckboxShowOnCest
 				'required'    => 'No',
 				'formExpires' => 'No',
 				'section'     => 'general',
-			];
+			);
 
 		$this->optionValue = array(
 			array(
@@ -148,15 +148,15 @@ class TypeCheckboxShowOnCest
 		$this->menuItemType  = 'Articles';
 
 		$this->fillForm =
-			[
+			array(
 				'name'              => $this->faker->bothify('Name ?##?'),
 				'email'             => $this->faker->email,
 				'gender'            => $this->optionValue[0][value],
 				'showon'            => $this->faker->bothify('Name ????????????????'),
-			];
+			);
 
 		$this->paramsForm =
-			[
+			array(
 				'name'              => $this->faker->bothify('FormSave ?##?'),
 				'fields_1'          => $this->nameField['name'],
 				'section_1'         => 'general',
@@ -164,7 +164,7 @@ class TypeCheckboxShowOnCest
 				'section_2'         => 'general',
 				'required'          => 'No',
 				'formExpires'       => 'No'
-			];
+			);
 	}
 
 	/**
@@ -178,14 +178,13 @@ class TypeCheckboxShowOnCest
 	}
 
 	/**
-	 * @param AddAFormSteps $i
+	 * @param AddAFieldSteps $i
 	 * @param $scenario
 	 * @throws Exception
 	 * @since 3.3.28
 	 */
-	public function createForm(AddAFormSteps $i, $scenario)
+	public function createForm(AddAFieldSteps $i, $scenario)
 	{
-		$i = new AddAFieldSteps($scenario);
 		$i->createField($this->nameField, 'save&close');
 		$i->createField($this->emailField, 'save&close');
 		$i->createField($this->genderField, 'save&close');
@@ -225,7 +224,7 @@ class TypeCheckboxShowOnCest
 	 * @throws Exception
 	 * @since 3.3.28
 	 */
-	public function clearAll(DisplayFormOnFrontendSteps $i, $scenario)
+	public function cleanUp(DisplayFormOnFrontendSteps $i, $scenario)
 	{
 		$i->wantTo('Clear up');
 		$i = new AddAFormSteps($scenario);

@@ -1,25 +1,27 @@
 <?php
 /**
- * @package     redCORE
- * @subpackage  Cept
- * @copyright   Copyright (C) 2008 - 2019 redCOMPONENT.com. All rights reserved.
+ * @package     redFORM
+ * @subpackage  Steps DisplayFormOnFrontend
+ * @copyright   Copyright (C) 2008 - 2020 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 namespace Step\Acceptance;
 
-use Page\Acceptance\DisplayFormOnFrontendPage as DisplayFormOnFrontendPage;
-use Page\Acceptance\AddAFormPage as AddAFormPage;
+use Exception;
+use Codeception\Scenario;
+use Page\Acceptance\DisplayFormOnFrontendPage;
+use Page\Acceptance\AddAFormPage;
 
 class DisplayFormOnFrontendSteps  extends Adminredform
 {
 	/**
 	 * @param                       $formName
 	 * @param                       $articlesTitle
-	 * @param \Codeception\Scenario $scenario
-	 * @throws \Exception
+	 * @param Scenario $scenario
+	 * @throws Exception
 	 */
-	public function createNewArticle($formName, $articlesTitle, \Codeception\Scenario $scenario)
+	public function createNewArticle($formName, $articlesTitle, Scenario $scenario)
 	{
 		$I = $this;
 		$I->amOnPage(AddAFormPage::$url);
@@ -49,7 +51,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	 * @param $menuTitle
 	 * @param $menuItemType
 	 * @param $menu
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function createNewMenuItem($articlesTitle, $articles, $menuTitle, $menuItemType, $menu)
 	{
@@ -97,15 +99,15 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	/**
 	 * @param       $menu
 	 * @param array $fillForm
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function checkFormInFrontend($menu, $fillForm = array())
 	{
 		$I = $this;
 		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
-		$usepage = new DisplayFormOnFrontendPage();
-		$I->waitForElement($usepage->xPathMenu($menu), 30);
-		$I->click($usepage->xPathMenu($menu));
+		$usePage = new DisplayFormOnFrontendPage();
+		$I->waitForElement($usePage->xPathMenu($menu), 30);
+		$I->click($usePage->xPathMenu($menu));
 		$I->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
 		$I->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
@@ -122,15 +124,15 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	/**
 	 * @param       $menu
 	 * @param array $fillForm
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function submitFormMissingEmail($menu, $fillForm = array())
 	{
 		$I = $this;
 		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
-		$usepage = new DisplayFormOnFrontendPage();
-		$I->waitForElement($usepage->xPathMenu($menu), 30);
-		$I->click($usepage->xPathMenu($menu));
+		$usePage = new DisplayFormOnFrontendPage();
+		$I->waitForElement($usePage->xPathMenu($menu), 30);
+		$I->click($usePage->xPathMenu($menu));
 		$I->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
 		$I->waitForElement(DisplayFormOnFrontendPage::$telephoneInput, 30);
@@ -145,15 +147,15 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	/**
 	 * @param       $menu
 	 * @param array $fillForm
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function submitFormMissingName($menu, $fillForm = array())
 	{
 		$I = $this;
 		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
-		$usepage = new DisplayFormOnFrontendPage();
-		$I->waitForElement($usepage->xPathMenu($menu), 30);
-		$I->click($usepage->xPathMenu($menu));
+		$usePage = new DisplayFormOnFrontendPage();
+		$I->waitForElement($usePage->xPathMenu($menu), 30);
+		$I->click($usePage->xPathMenu($menu));
 		$I->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$emailInput, $fillForm['email']);
 		$I->waitForElement(DisplayFormOnFrontendPage::$telephoneInput, 30);
@@ -167,39 +169,39 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 
 	/**
 	 * @param $menu
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function checkFormWithHasExpired($menu)
 	{
 		$I = $this;
 		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
-		$usepage = new DisplayFormOnFrontendPage();
-		$I->waitForElement($usepage->xPathMenu($menu), 30);
-		$I->click($usepage->xPathMenu($menu));
+		$usePage = new DisplayFormOnFrontendPage();
+		$I->waitForElement($usePage->xPathMenu($menu), 30);
+		$I->click($usePage->xPathMenu($menu));
 		$I->waitForText(DisplayFormOnFrontendPage::$messageHasExpired, 30);
 	}
 
 	/**
 	 * @param   string $menu
 	 * @param   array $fillForm
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 3.3.28
 	 */
 	public function checkFormCheckboxAndShowOnInFrontend($menu, $fillForm = array())
 	{
 		$I = $this;
 		$I->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
-		$usepage = new DisplayFormOnFrontendPage();
-		$I->waitForElement($usepage->xPathMenu($menu), 30);
-		$I->click($usepage->xPathMenu($menu));
+		$usePage = new DisplayFormOnFrontendPage();
+		$I->waitForElement($usePage->xPathMenu($menu), 30);
+		$I->click($usePage->xPathMenu($menu));
 		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$I->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
 		$I->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
 		$I->fillField(DisplayFormOnFrontendPage::$emailInput, $fillForm['email']);
-		$I->waitForElementVisible($usepage->xPathCheckbox($fillForm['gender']), 30);
+		$I->waitForElementVisible($usePage->xPathCheckbox($fillForm['gender']), 30);
 		$I->wait(0.5);
-		$I->click($usepage->xPathCheckbox($fillForm['gender']));
+		$I->click($usePage->xPathCheckbox($fillForm['gender']));
 		$I->waitForElementVisible(DisplayFormOnFrontendPage::$showOnTextAre, 60);
 		$I->fillField(DisplayFormOnFrontendPage::$showOnTextAre, $fillForm['showon']);
 		$I->waitForElementVisible(DisplayFormOnFrontendPage::$regularSubmit, 30);
@@ -210,16 +212,16 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	/**
 	 * @param   string $menu
 	 * @param   array $fillForm
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 3.3.28
 	 */
 	public function checkFormRepeatEmail($menu, $fillForm = array())
 	{
 		$i = $this;
 		$i->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
-		$usepage = new DisplayFormOnFrontendPage();
-		$i->waitForElement($usepage->xPathMenu($menu), 30);
-		$i->click($usepage->xPathMenu($menu));
+		$usePage = new DisplayFormOnFrontendPage();
+		$i->waitForElement($usePage->xPathMenu($menu), 30);
+		$i->click($usePage->xPathMenu($menu));
 		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$i->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
 		$i->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
@@ -235,7 +237,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		{
 			$i->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 5, DisplayFormOnFrontendPage::$alertHead);
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$i->waitForElementVisible(DisplayFormOnFrontendPage::$regularSubmit, 30);
 			$i->click(DisplayFormOnFrontendPage::$regularSubmit);
@@ -246,23 +248,23 @@ class DisplayFormOnFrontendSteps  extends Adminredform
  /**
 	 * @param   string $menu
 	 * @param   array $fillForm
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 3.3.28
 	 */
 	public function checkFormMultiSelectAndShowOnInFrontend($menu, $fillForm = array())
 	{
 		$i = $this;
 		$i->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
-		$usepage = new DisplayFormOnFrontendPage();
-		$i->waitForElement($usepage->xPathMenu($menu), 30);
-		$i->click($usepage->xPathMenu($menu));
+		$usePage = new DisplayFormOnFrontendPage();
+		$i->waitForElement($usePage->xPathMenu($menu), 30);
+		$i->click($usePage->xPathMenu($menu));
 		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$i->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
 		$i->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
 		$i->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
 		$i->fillField(DisplayFormOnFrontendPage::$emailInput, $fillForm['email']);
-		$i->waitForElementVisible($usepage->xpathMultiSelect($fillForm['province']), 30);
-		$i->click($usepage->xpathMultiSelect($fillForm['province']));
+		$i->waitForElementVisible($usePage->xpathMultiSelect($fillForm['province']), 30);
+		$i->click($usePage->xpathMultiSelect($fillForm['province']));
 		$i->waitForElementVisible(DisplayFormOnFrontendPage::$showOnTextAre, 30);
 		$i->fillField(DisplayFormOnFrontendPage::$showOnTextAre, $fillForm['showon']);
 		$i->waitForElement(DisplayFormOnFrontendPage::$regularSubmit, 30);
@@ -272,7 +274,7 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 		{
 			$i->waitForElement(DisplayFormOnFrontendPage::$alertMessage, 5, DisplayFormOnFrontendPage::$alertHead);
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$i->waitForElementVisible(DisplayFormOnFrontendPage::$regularSubmit, 30);
 			$i->click(DisplayFormOnFrontendPage::$regularSubmit);
@@ -284,16 +286,16 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	 * @param $menu
 	 * @param $notificationMessage
 	 * @param array $fillForm
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 3.3.28
 	 */
 	public function checkFormWithNotificationInFrontend($menu, $notificationMessage, $fillForm = array())
 	{
 		$i = $this;
 		$i->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
-		$usepage = new DisplayFormOnFrontendPage();
-		$i->waitForElement($usepage->xPathMenu($menu), 30);
-		$i->click($usepage->xPathMenu($menu));
+		$usePage = new DisplayFormOnFrontendPage();
+		$i->waitForElement($usePage->xPathMenu($menu), 30);
+		$i->click($usePage->xPathMenu($menu));
 		$i->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
 		$i->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
 		$i->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
@@ -308,16 +310,16 @@ class DisplayFormOnFrontendSteps  extends Adminredform
 	/**
 	 * @param $menu
 	 * @param array $fillForm
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 3.3.28
 	 */
 	public function checkFormWithDateInFrontend($menu, $fillForm = array())
 	{
 		$i = $this;
 		$i->amOnPage(DisplayFormOnFrontendPage::$frontendURL);
-		$usepage = new DisplayFormOnFrontendPage();
-		$i->waitForElement($usepage->xPathMenu($menu), 30);
-		$i->click($usepage->xPathMenu($menu));
+		$usePage = new DisplayFormOnFrontendPage();
+		$i->waitForElement($usePage->xPathMenu($menu), 30);
+		$i->click($usePage->xPathMenu($menu));
 		$i->waitForElement(DisplayFormOnFrontendPage::$nameInput, 30);
 		$i->fillField(DisplayFormOnFrontendPage::$nameInput, $fillForm['name']);
 		$i->waitForElement(DisplayFormOnFrontendPage::$emailInput, 30);
