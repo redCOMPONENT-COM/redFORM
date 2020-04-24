@@ -1,13 +1,15 @@
 <?php
 /**
- * @package     redCORE
- * @subpackage  Cept
- * @copyright   Copyright (C) 2008 - 2018 redCOMPONENT.com. All rights reserved.
+ * @package     redFORM
+ * @subpackage  Steps AddAField
+ * @copyright   Copyright (C) 2008 - 2020 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 namespace Step\Acceptance;
 
+use Exception;
+use Facebook\WebDriver\WebDriverKeys;
 use Page\Acceptance\AddAFieldPage;
 
 class AddAFieldSteps extends Adminredform
@@ -15,7 +17,7 @@ class AddAFieldSteps extends Adminredform
 	/**
 	 * @param array $params
 	 * @param array $function
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function createField($params = array(), $function = array())
 	{
@@ -33,7 +35,7 @@ class AddAFieldSteps extends Adminredform
 			$I->click(AddAFieldPage::$fieldTypeID);
 			$I->waitForElementVisible(AddAFieldPage::$fieldTypeInput, 30);
 			$I->fillField(AddAFieldPage::$fieldTypeInput, $params['fieldtype']);
-			$I->pressKey(AddAFieldPage::$fieldTypeInput, \Facebook\WebDriver\WebDriverKeys::ENTER);
+			$I->pressKey(AddAFieldPage::$fieldTypeInput, WebDriverKeys::ENTER);
 		}
 
 		if (isset($params['field_header']))
@@ -96,8 +98,7 @@ class AddAFieldSteps extends Adminredform
 
 	/**
 	 * @param array $params
-	 * @param array $function
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function createFieldMissingName($params = array())
 	{
@@ -139,7 +140,7 @@ class AddAFieldSteps extends Adminredform
 	/**
 	 * @param array $params
 	 * @param array $function
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function editField($name, $params = array(), $function = array())
 	{
@@ -200,7 +201,7 @@ class AddAFieldSteps extends Adminredform
 
 	/**
 	 * @param $name
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function copyField($name)
 	{
@@ -220,7 +221,7 @@ class AddAFieldSteps extends Adminredform
 
 	/**
 	 * @param $name
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function deleteField($name)
 	{
@@ -238,7 +239,7 @@ class AddAFieldSteps extends Adminredform
 			$I->wait(2);
 			$I->waitForElement(AddAFieldPage::$alertMessage, 60, AddAFieldPage::$alertHead);
 			$I->waitForElementVisible(AddAFieldPage::$alertMessage, 5, AddAFieldPage::$alertHead);
-		} catch (\Exception $exception)
+		} catch (Exception $exception)
 		{
 			$I->wait(1);
 			$I->click(AddAFieldPage::$deleteButton);
@@ -255,7 +256,7 @@ class AddAFieldSteps extends Adminredform
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function deleteAllField()
 	{
@@ -276,13 +277,13 @@ class AddAFieldSteps extends Adminredform
 		try
 		{
 			$I->waitForElementVisible(AddAFieldPage::$alertMessage, 5, AddAFieldPage::$alertHead);
-		} catch (\Exception $e)
+		} catch (Exception $e)
 		{
 			try
 			{
 				$I->waitForText(AddAFieldPage::$messageNothingData, 5);
 			}
-			catch (\Exception $e)
+			catch (Exception $e)
 			{
 				$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
 				$I->wait(0.5);
@@ -299,7 +300,7 @@ class AddAFieldSteps extends Adminredform
 
 	/**
 	 * @param $name
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function deleteFieldUsedInForm($name)
 	{
@@ -318,7 +319,7 @@ class AddAFieldSteps extends Adminredform
 			$I->waitForElement(AddAFieldPage::$alertMessage, 60);
 			$I->searchField($name);
 			$I->waitForText($name, 30);
-		} catch (\Exception $exception)
+		} catch (Exception $exception)
 		{
 			$I->acceptPopup();
 			$I->wait(2);
@@ -330,7 +331,7 @@ class AddAFieldSteps extends Adminredform
 
 	/**
 	 * @param $nameField
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function searchField($nameField)
 	{
@@ -347,7 +348,7 @@ class AddAFieldSteps extends Adminredform
 	/**
 	 * @param $nameField
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws Exception
 	 *  @since 3.3.28
 	 */
 	public function getFieldID($nameField)
@@ -364,7 +365,7 @@ class AddAFieldSteps extends Adminredform
 	/**
 	 * @param   string $nameField name field
 	 * @param   array  $options   option checkbox
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 3.3.28
 	 */
 	public function addOptionFieldCheckbox($nameField, $options)
@@ -401,7 +402,7 @@ class AddAFieldSteps extends Adminredform
 
 	/**
 	 * @param   array $params
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 3.3.28
 	 */
 	public function createFieldRepeat($params = array())
@@ -420,7 +421,7 @@ class AddAFieldSteps extends Adminredform
 			$i->click(AddAFieldPage::$fieldTypeID);
 			$i->waitForElementVisible(AddAFieldPage::$fieldTypeInput, 30);
 			$i->fillField(AddAFieldPage::$fieldTypeInput, $params['fieldType']);
-			$i->pressKey(AddAFieldPage::$fieldTypeInput, \Facebook\WebDriver\WebDriverKeys::ENTER);
+			$i->pressKey(AddAFieldPage::$fieldTypeInput, WebDriverKeys::ENTER);
 		}
 
 		if (isset($params['placeholder']))
