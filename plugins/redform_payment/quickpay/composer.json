@@ -1,0 +1,5 @@
+{
+    "require": {
+        "quickpay/quickpay-php-client": "^1.1"
+    }
+}

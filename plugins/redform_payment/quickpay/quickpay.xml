@@ -17,6 +17,7 @@
 		<filename>index.html</filename>
 		<folder>language</folder>
 		<folder>layouts</folder>
+		<folder>vendor</folder>
 	</files>
 
 	<config>
@@ -49,6 +50,13 @@
 				<field type="radio" name="testmode" default="0"
 					   label="PLG_REDFORM_QUICKPAY_TESTMODE_LABEL"
 					   description="PLG_REDFORM_QUICKPAY_TESTMODE_DESC">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+
+				<field type="radio" name="auto_capture" default="0"
+					   label="PLG_REDFORM_QUICKPAY_AUTOCAPTURE_LABEL"
+					   description="PLG_REDFORM_QUICKPAY_AUTOCAPTURE_DESC">
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>
 				</field>

@@ -5,6 +5,9 @@
  * @copyright   Copyright (C) 2008-2014 redCOMPONENT.com. All rights reserved.
  * @license     GNU/GPL, see LICENSE
  */
+
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die('Restricted access');
 
 /**
@@ -22,6 +25,9 @@ class PaymentQuickpay extends  RdfPaymentHelper
 	 */
 	protected $gateway = 'quickpay';
 
+	/**
+	 * @var \Joomla\Registry\Registry
+	 */
 	protected $params;
 
 	/**
@@ -50,34 +56,69 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		$language = JFactory::getLanguage();
 		$quickpayLang = substr($language->getTag(), 0, 2);
 
-		$req_params = array(
-			'version' => 'v10',
-			'merchant_id' => $this->params->get('merchant_id'),
-			'agreement_id' => $this->params->get('agreement_id'),
-			'order_id' => $orderId,
-			'amount' => round($this->getPrice($cart) * 100),
-			'currency' => $currency,
-			'continueurl' => $this->getUrl('processing', $reference),
-			'cancelurl' => $this->getUrl('paymentcancelled', $reference),
-			'callbackurl' => $this->getUrl('notify', $reference),
-			'autocapture' => 0,
-			'payment_methods' => $this->params->get('payment_methods', '3d-creditcard'),
-			'description' => $request->title,
-			'language' => $quickpayLang
-		);
-
-		if ($this->params->get('branding_id'))
+		try
 		{
-			$req_params['branding_id'] = (int) $this->params->get('branding_id');
+			$client  = $this->getClient();
+			$payment = $client->request->post(
+				'/payments',
+				[
+					'order_id'          => $orderId,
+					'currency'          => $currency,
+					'text_on_statement' => substr($request->title, 0, 22),
+				]
+			);
+
+			$status = $payment->httpStatus();
+
+			if ($status !== 201)
+			{
+				throw new RuntimeException('Failed creating payment');
+			}
+
+			$paymentObject = $payment->asObject();
+
+			$reqParams = array(
+				'amount'       => round($this->getPrice($cart) * 100),
+				'continueurl'  => $this->getUrl('processing', $reference),
+				'cancelurl'    => $this->getUrl('cancel', $reference),
+				'callbackurl'  => $this->getUrl('notify', $reference),
+				'auto_capture' => $this->params->get('auto_capture', 0),
+				'payment_methods' => $this->params->get('payment_methods', '3d-creditcard'),
+				'description'  => $request->title,
+				'language'     => $quickpayLang
+			);
+
+			if ($this->params->get('branding_id'))
+			{
+				$reqParams['branding_id'] = (int) $this->params->get('branding_id');
+			}
+
+			// Construct url to create payment link
+			$endpoint = sprintf("/payments/%s/link", $paymentObject->id);
+
+			// Issue a put request to create payment link
+			$link = $client->request->put($endpoint, $reqParams);
+
+			// Determine if payment link was created succesfully
+			if ($link->httpStatus() !== 200)
+			{
+				throw new RuntimeException('Failed getting payment link');
+			}
+
+			// Get payment link url
+			$paymentLink = $link->asObject()->url;
 		}
+		catch (Exception $e)
+		{
+			Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			RdfHelperLog::simpleLog($e->getMessage());
 
-		$req_params['checksum'] = $this->checksum($req_params);
-
-		$action = "https://payment.quickpay.net";
+			return false;
+		}
 
 		echo RdfLayoutHelper::render(
 			'redform_payment.quickpay',
-			compact('params', 'request', 'intro', 'req_params', 'return_url', 'action', 'cart'),
+			compact('params', 'intro', 'paymentLink', 'return_url', 'cart'),
 			'',
 			array('defaultLayoutsPath' => dirname(__DIR__) . '/layouts')
 		);
@@ -138,8 +179,8 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			return false;
 		}
 
-		// Get operation
-		$operation = reset($operations);
+		// Get last operation
+		$operation = end($operations);
 
 		$resp = array();
 		$resp[] = 'tid:' . $callBackData->order_id;
@@ -265,5 +306,22 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get client
+	 *
+	 * @return \QuickPay\QuickPay
+	 */
+	private function getClient()
+	{
+		static $client;
+
+		if (is_null($client))
+		{
+			$client = new QuickPay\QuickPay(":" . $this->params->get('api_key'));
+		}
+
+		return $client;
 	}
 }
