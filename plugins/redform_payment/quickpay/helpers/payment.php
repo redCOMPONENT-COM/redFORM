@@ -41,10 +41,10 @@ class PaymentQuickpay extends  RdfPaymentHelper
 	 */
 	public function process($request, $return_url = null, $cancel_url = null)
 	{
-		$cart = $this->getDetails($request->key);
+		$cart      = $this->getDetails($request->key);
 		$reference = $request->key;
-		$currency = $cart->currency;
-		$params = $this->params;
+		$currency  = $cart->currency;
+		$params    = $this->params;
 
 		if (!$this->checkParameters())
 		{
@@ -53,26 +53,36 @@ class PaymentQuickpay extends  RdfPaymentHelper
 
 		$orderId = $cart->id . strftime("%H%M%S");
 
-		$language = JFactory::getLanguage();
+		$language     = JFactory::getLanguage();
 		$quickpayLang = substr($language->getTag(), 0, 2);
 
 		try
 		{
-			$client  = $this->getClient();
-			$payment = $client->request->post(
-				'/payments',
-				[
+			$client = $this->getClient();
+
+			$paymentParams = [
 					'order_id'          => $orderId,
 					'currency'          => $currency,
 					'text_on_statement' => substr($request->title, 0, 22),
-				]
+					'variables'         => ['title' => $request->title]
+			];
+
+			$billing = $cart->getBillingInfo();
+
+			if ($billing->isValid())
+			{
+				$paymentParams['invoice_address'] = $this->getInvoiceAddress($billing);
+			}
+
+			$payment = $client->request->post(
+				'/payments', $paymentParams
 			);
 
 			$status = $payment->httpStatus();
 
 			if ($status !== 201)
 			{
-				throw new RuntimeException('Failed creating payment');
+				throw new RuntimeException('Failed creating payment:' . $payment->asObject());
 			}
 
 			$paymentObject = $payment->asObject();
@@ -102,7 +112,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			// Determine if payment link was created succesfully
 			if ($link->httpStatus() !== 200)
 			{
-				throw new RuntimeException('Failed getting payment link');
+				throw new RuntimeException('Failed getting payment link' . $payment->asObject());
 			}
 
 			// Get payment link url
@@ -110,7 +120,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		}
 		catch (Exception $e)
 		{
-			Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			Factory::getApplication()->enqueueMessage('CREATING PAYMENT FAILED', 'error');
 			RdfHelperLog::simpleLog($e->getMessage());
 
 			return false;
@@ -323,5 +333,59 @@ class PaymentQuickpay extends  RdfPaymentHelper
 		}
 
 		return $client;
+	}
+
+	/**
+	 * Get invoice address from billing
+	 *
+	 * @param   RdfEntityBilling  $billing  billing
+	 *
+	 * @return array
+	 */
+	private function getInvoiceAddress($billing)
+	{
+		$invoiceAdress = ['email'        => $billing->email];
+
+		if ($billing->iscompany)
+		{
+			$invoiceAdress['name'] = $billing->company;
+			$invoiceAdress['att']  = $billing->fullname;
+		}
+		else
+		{
+			$invoiceAdress['name'] = $billing->fullname;
+		}
+
+		if (!empty($billing->address))
+		{
+			$invoiceAdress['street'] = $billing->address;
+		}
+
+		if (!empty($billing->city))
+		{
+			$invoiceAdress['city'] = $billing->city;
+		}
+
+		if (!empty($billing->zipcode))
+		{
+			$invoiceAdress['zip_code'] = $billing->zipcode;
+		}
+
+		if (!empty($billing->country) && RHelperCountry::getCountry($billing->country))
+		{
+			$invoiceAdress['country_code'] = RHelperCountry::getCountry($billing->country)->alpha3;
+		}
+
+		if (!empty($billing->vatnumber))
+		{
+			$invoiceAdress['vat_no'] = $billing->vatnumber;
+		}
+
+		if (!empty($billing->phone))
+		{
+			$invoiceAdress['phone_number'] = $billing->phone;
+		}
+
+		return $invoiceAdress;
 	}
 }

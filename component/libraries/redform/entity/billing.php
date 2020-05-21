@@ -12,6 +12,22 @@ defined('_JEXEC') or die;
 /**
  * Billing entity.
  *
+ * @property  integer $id
+ * @property  integer $cart_id
+ * @property  integer $user_id
+ * @property  string  $title
+ * @property  string  $uniqueid
+ * @property  string  $fullname
+ * @property  string  $company
+ * @property  integer $iscompany
+ * @property  string  $vatnumber
+ * @property  string  $address
+ * @property  string  $city
+ * @property  string  $zipcode
+ * @property  string  $phone
+ * @property  string  $email
+ * @property  string  $country
+ *
  * @since  3.0
  */
 class RdfEntityBilling extends RdfEntityBase
