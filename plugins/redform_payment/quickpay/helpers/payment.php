@@ -112,7 +112,7 @@ class PaymentQuickpay extends  RdfPaymentHelper
 			// Determine if payment link was created succesfully
 			if ($link->httpStatus() !== 200)
 			{
-				throw new RuntimeException('Failed getting payment link' . $payment->asObject());
+				throw new RuntimeException('Failed getting payment link' . print_r($payment->asObject(), true));
 			}
 
 			// Get payment link url
