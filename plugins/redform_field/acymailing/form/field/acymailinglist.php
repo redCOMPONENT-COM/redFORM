@@ -39,24 +39,36 @@ class RedformFormFieldAcymailinglist extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		if (!file_exists(JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php'))
+		if (include_once(JPATH_ADMINISTRATOR . '/components/com_acym/helpers/helper.php'))
+		{
+			$listClass = acym_get('class.list');
+
+			$options = array_map(
+				function ($list)
+				{
+					return JHtml::_('select.option', $list->id, $list->name);
+				},
+				$listClass->getAll()
+			);
+		}
+		elseif (include_once(JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php'))
+		{
+			$listClass = acymailing_get('class.list');
+
+			$options = array_map(
+				function ($list)
+				{
+					return JHtml::_('select.option', $list->listid, $list->name);
+				},
+				$listClass->getLists()
+			);
+		}
+		else
 		{
 			JFactory::getApplication()->enqueueMessage('Acymailing not installed, or incompatible version');
 
 			return parent::getOptions();
 		}
-
-		require_once JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php';
-
-		$listClass = acymailing_get('class.list');
-
-		$options = array_map(
-			function ($list)
-			{
-				return JHtml::_('select.option', $list->listid, $list->name);
-			},
-			$listClass->getLists()
-		);
 
 		return array_merge(parent::getOptions(), $options);
 	}

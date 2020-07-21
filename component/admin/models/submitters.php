@@ -85,18 +85,6 @@ class RedformModelSubmitters extends RModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		parent::populateState('s.id', 'desc');
-
-		// Receive & set filters
-		if ($filters = JFactory::getApplication()->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array'))
-		{
-			foreach ($filters as $name => $value)
-			{
-				if ($name == 'form_id')
-				{
-					$this->setState('filter.' . $name, $value ? $value : $this->getDefaultFormId());
-				}
-			}
-		}
 	}
 
 	/**
@@ -116,6 +104,7 @@ class RedformModelSubmitters extends RModelList
 		$id .= ':' . $this->getState('filter.form_id');
 		$id .= ':' . $this->getState('filter.from');
 		$id .= ':' . $this->getState('filter.to');
+		$id .= ':' . $this->getState('filter.search_submitters');
 
 		return parent::getStoreId($id);
 	}
@@ -208,22 +197,27 @@ class RedformModelSubmitters extends RModelList
 
 		if (!empty($search))
 		{
-			$search = $db->quote('%' . $db->escape($search, true) . '%');
 
-			$lookup = array();
-			$lookup[] = 's.submit_key LIKE ' . $search;
-
-			if ($fields = $this->getFields())
+			if (strpos($search, "id:") === 0)
 			{
+				$query->where('s.id = ' . $db->quote(substr($search, strlen("id:"))));
+			}
+			else
+			{
+				$searchLike = $db->quote('%' . $db->escape($search, true) . '%');
+
+				$lookup = array();
+				$lookup[] = 's.submit_key LIKE ' . $searchLike;
+
 				foreach ($this->getFields() as $field)
 				{
-					$lookup[] = 'a.field_' . $field->field_id . ' LIKE ' . $search;
+					$lookup[] = 'a.field_' . $field->field_id . ' LIKE ' . $searchLike;
 				}
+
+				$lookup[] = 'u.username LIKE ' . $searchLike;
+
+				$query->where('(' . implode(' OR ', $lookup) . ')');
 			}
-
-			$lookup[] = 'u.username LIKE ' . $search;
-
-			$query->where('(' . implode(' OR ', $lookup) . ')');
 		}
 
 		// Add the list ordering clause.
@@ -235,26 +229,6 @@ class RedformModelSubmitters extends RModelList
 		$query->select('s.id');
 
 		return $query;
-	}
-
-	/**
-	 * Get a default form id
-	 *
-	 * @return integer
-	 */
-	protected function getDefaultFormId()
-	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select('id');
-		$query->from('#__rwf_forms');
-		$query->order('id');
-
-		$db->setQuery($query);
-		$res = $db->loadResult();
-
-		return $res ? $res : 0;
 	}
 
 	/**
@@ -305,7 +279,7 @@ class RedformModelSubmitters extends RModelList
 			{
 				$this->fields = array();
 
-				return;
+				return $this->fields;
 			}
 
 			$this->fields = $form->getFormFields();

@@ -111,11 +111,16 @@ class RedformControllerPayment extends JControllerLegacy
 		$key    = $app->input->get('reference');
 
 		$model->setCartReference($key);
-		$cart = $model->getCart();
 
-		if ($model->isRequiredBilling())
+		/**
+		 * @var   RdfEntityCart  $cart
+		 */
+		$cart = $model->getCart();
+		$data = $this->input->post->get('jform', array(), 'array');
+
+		// Check if billing data was posted
+		if (!empty($data))
 		{
-			$data  = $this->input->post->get('jform', array(), 'array');
 			$data['cart_id'] = $cart->id;
 
 			$billingModel = $this->getModel('billing');
@@ -164,6 +169,16 @@ class RedformControllerPayment extends JControllerLegacy
 				return;
 			}
 		}
+
+		if ($model->isRequiredBilling())
+		{
+			// Redirect back to the edit screen.
+			$this->setRedirect(
+				'index.php?option=com_redform&view=payment&layout=billing&reference=' . $cart->reference
+			);
+
+			return;
+		}
 		else
 		{
 			// Try to auto bill
@@ -174,7 +189,10 @@ class RedformControllerPayment extends JControllerLegacy
 
 		$details = $model->getPaymentDetails();
 
-		if (!$res = $helper->process($details))
+		// Call Gateway helper for form display
+		$res = $helper->process($details);
+
+		if (!$res)
 		{
 			throw new Exception('Error displaying gateway');
 		}

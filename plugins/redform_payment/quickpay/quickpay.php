@@ -11,6 +11,8 @@ defined('_JEXEC') or die('Restricted access');
 // Register library prefix
 RLoader::registerPrefix('Rdf', JPATH_LIBRARIES . '/redform');
 
+require_once 'vendor/autoload.php';
+
 /**
  * Quickpay payment plugin
  *

@@ -7,6 +7,10 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -27,9 +31,7 @@ class RedformModelPayment extends RModelAdmin
 	{
 		parent::__construct($config);
 
-		$this->setState('payment_request', JFactory::getApplication()->input->getInt('pr', 0));
-
-		JPluginHelper::importPlugin('redform');
+		PluginHelper::importPlugin('redform');
 		$this->event_after_save = 'onPaymentAfterSave';
 	}
 
@@ -59,6 +61,24 @@ class RedformModelPayment extends RModelAdmin
 	 */
 	public function save($data)
 	{
+		$cart = RdfEntityCart::load($data['cart_id']);
+
+		$requireBilling = array_reduce(
+			$cart->getSubmitters(),
+			function ($isRequired, RdfEntitySubmitter $submitter)
+			{
+				return $submitter->getForm()->requirebilling || $isRequired;
+			},
+			false
+		);
+
+		if (!$cart->billing_id && $requireBilling)
+		{
+			$this->setError(Text::_('COM_REDFORM_ERROR_BILLING_IS_REQUIRED'));
+
+			return false;
+		}
+
 		if (!parent::save($data))
 		{
 			return false;
@@ -70,6 +90,44 @@ class RedformModelPayment extends RModelAdmin
 		}
 
 		return true;
+	}
+
+	/**
+	 * Create a new cart for a payment request
+	 *
+	 * @param   int  $paymentRequestId  payment request id
+	 *
+	 * @return RdfEntityCart
+	 */
+	public function createCart($paymentRequestId)
+	{
+		$paymentRequest = RdfEntityPaymentrequest::load($paymentRequestId);
+
+		if (!$paymentRequest->isValid())
+		{
+			throw new Exception('Payment request not found');
+		}
+
+		$cart = RTable::getAdminInstance('Cart', array(), 'com_redform');
+		$cart->reference = uniqid();
+		$cart->created = JFactory::getDate()->toSql();
+		$cart->price = $paymentRequest->price;
+		$cart->vat = $paymentRequest->vat;
+		$cart->currency = $paymentRequest->currency;
+		$cart->store();
+
+		$cartItem = RTable::getAdminInstance('Cartitem', array(), 'com_redform');
+		$cartItem->cart_id = $cart->id;
+		$cartItem->payment_request_id = $paymentRequestId;
+		$cartItem->store();
+
+		$entity = RdfEntityCart::getInstance($cart->id);
+		$entity->loadFromTable($cart);
+
+		PluginHelper::importPlugin('redform');
+		RFactory::getDispatcher()->trigger('onAfterRedformCartCreated', array(&$entity));
+
+		return $entity;
 	}
 
 	/**
@@ -126,5 +184,37 @@ class RedformModelPayment extends RModelAdmin
 
 		$this->_db->setQuery($query);
 		$this->_db->execute();
+	}
+
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param   integer  $pk  The id of the primary key.
+	 *
+	 * @return  object|boolean  Object on success, false on failure.
+	 */
+	public function getItem($pk = null)
+	{
+		$item = parent::getItem($pk);
+
+		if (empty($item->id))
+		{
+			$item->cart_id = $this->getState('cart_id');
+		}
+
+		return $item;
+	}
+
+	/**
+	 * Stock method to auto-populate the model state.
+	 *
+	 * @return  void
+	 */
+	protected function populateState()
+	{
+		parent::populateState();
+
+		$this->setState('payment_request', Factory::getApplication()->input->getInt('pr', 0));
+		$this->setState('cart_id', Factory::getApplication()->input->getInt('cart_id', 0));
 	}
 }

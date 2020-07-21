@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 $action = JRoute::_('index.php?option=com_redform&view=payment');
+$return = \Joomla\CMS\Factory::getApplication()->input->getBase64('return');
 ?>
 <form action="<?php echo $action; ?>" method="post" name="adminForm" id="adminForm"
       class="form-validate form-horizontal">
@@ -65,5 +66,6 @@ $action = JRoute::_('index.php?option=com_redform&view=payment');
 	<?php echo $this->form->getInput('cart_id'); ?>
 	<?php echo $this->form->getInput('id'); ?>
 	<input type="hidden" name="task" value="">
+	<input type="hidden" name="return" value="<?= $return ?>">
 	<?php echo JHTML::_('form.token'); ?>
 </form>

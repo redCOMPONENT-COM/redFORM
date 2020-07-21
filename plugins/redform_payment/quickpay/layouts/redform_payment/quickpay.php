@@ -30,7 +30,6 @@ if ($params->get('auto_open', 0))
 	}, 1000);
 });
 JS;
-
 	JFactory::getDocument()->addScriptDeclaration($js);
 }
 ?>
@@ -43,13 +42,7 @@ JS;
 	</div>
 	<?php endif; ?>
 
-	<form action="<?= $action ?>" method="post" id="quickpayform">
-		<p><?= $request->title; ?></p>
-		<?php foreach ($req_params as $key => $val): ?>
-			<input type="hidden" name="<?php echo $key; ?>" value="<?php echo $val; ?>"/>
-		<?php endforeach; ?>
-		<input type="submit" value="<?= JText::_('PLG_REDFORM_QUICKPAY_OPEN_PAYMENT_WINDOW') ?>"/>
-	</form>
+	<a href="<?= $paymentLink ?>" class="btn btn-primary"><?= JText::_('PLG_REDFORM_QUICKPAY_OPEN_PAYMENT_WINDOW') ?></a>
 
 	<?php if ($return_url): ?>
 		<div class="return"><?= JHTML::link($return_url, JText::_('JCancel')) ?></div>

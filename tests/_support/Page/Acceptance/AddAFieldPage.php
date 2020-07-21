@@ -62,6 +62,18 @@ class AddAFieldPage extends RedFormAdminPage
 
 	/**
 	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $fieldTypeID = "#jform_fieldtype_chzn";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $fieldTypeInput = "//div[@id='jform_fieldtype_chzn']//input";
+
+	/**
+	 * @var string
 	 */
 	public static $tooltip = "Tooltip";
 
@@ -92,6 +104,18 @@ class AddAFieldPage extends RedFormAdminPage
 
 	/**
 	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $showOnValueLb = "Show on";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $showOnValueID = "#jform_params_showon";
+
+	/**
+	 * @var string
 	 */
 	public static $placeholder = "Placeholder";
 
@@ -111,12 +135,59 @@ class AddAFieldPage extends RedFormAdminPage
 	public static $messageMissingName = "Invalid field:  Name";
 
 	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $optionTab = "//a[contains(text(),'Options')]";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $addButton = "//button[contains(text(),'Add')]";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $idColumn = "//td[7]";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $repeatFields = "jform_params_field_chzn";
+
+	/**
 	 * @param $value
 	 * @return string
 	 */
 	public static function fieldList($value)
 	{
-		$fieldList = "//a[normalize-space(text()) = \"' . $value . '\"]";;
+		$fieldList = "//a[normalize-space(text()) = \"' . $value . '\"]";
+
 		return $fieldList;
+	}
+
+	/**
+	 * @param   string $position position row
+	 * @return string
+	 */
+	public static function xpathValueInput($position)
+	{
+		$xpath = "(//input[@placeholder='Enter value'])[$position]";
+
+		return $xpath;
+	}
+
+	/**
+	 * @param   string $position position row
+	 * @return  string
+	 */
+	public static function xpathLabelInput($position)
+	{
+		$xpath = "(//input[@placeholder='Enter label'])[$position]";
+
+		return $xpath;
 	}
 }

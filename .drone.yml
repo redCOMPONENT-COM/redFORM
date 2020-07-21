@@ -18,7 +18,7 @@ pipeline:
 
   00-setup:
     group: 00-setup
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     # pull: true
     environment:
     - tests_user=admin
@@ -31,7 +31,7 @@ pipeline:
     - /entrypoint.sh &
     # Composer setup
     - while [ ! -f tests/.cache.composer.tmp ]; do sleep 1; done            # Comment if not using composer cache
-    - composer config -g github-oauth.github.com 6f8f19c330a0f899458e4b0670824deb8cdfe391
+    - composer config -g github-oauth.github.com 00bb614ad66c2ebadc70e6284e02f8034d514624
     #- composer install --prefer-dist                                       # Uncomment if not using composer cache
     # NPM setup
     - while [ ! -f tests/.cache.npm.tmp ]; do sleep 1; done                 # Comment if not using npm cache
@@ -61,10 +61,11 @@ pipeline:
     # - while [ ! -f tests/.cache.aesir-core.tmp ]; do sleep 1; done        # Comment if not using redFORM Core cache
     - cd tests
     - su www-data -c 'vendor/bin/robo tests:setup 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/FieldTypeRepeatEmail 0 0'
 
   00-setup-stages:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=00-setup
@@ -88,7 +89,7 @@ pipeline:
 
   01-checkForWarningsAndNotices:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=01-checkForWarningsAndNotices
@@ -100,13 +101,15 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/CheckForWarningsAndNotices 0 0'
 
   02-field:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=02-field
@@ -118,13 +121,15 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Field 0 0'
 
   03-form:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=03-form
@@ -142,7 +147,7 @@ pipeline:
 
   04-section:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=04-section
@@ -154,13 +159,16 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Section 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/FieldTypeDate 0 0'
 
   05-submitters:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=05-submitters
@@ -172,13 +180,16 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/administrator/Submitters 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/FormNotification 0 0'
 
   06-displayFormOnFrontend:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=06-displayFormOnFrontend
@@ -190,13 +201,16 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DisplayFormOnFrontend 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/MultiSelectAndShowon 0 0'
 
   07-deleteFormHasSubmitters:
     group: tests
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     environment:
     - tests_user=admin
     - tests_suite=07-deleteFormHasSubmitters
@@ -208,13 +222,16 @@ pipeline:
     - /entrypoint.sh &
     # Performs test after ensuring that the scenario has been fully set up
     - while [ ! -f tests/.cache.setup.$tests_suite.tmp ]; do sleep 1; done
+    # Waits until Chromedriver is up and running
+    - while ! nc -z localhost 9515; do sleep 1; done
     # Performs test
     - cd tests
     - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/DeleteFormHasSubmitters 0 0'
+    - su www-data -c 'vendor/bin/robo run:drone acceptance/frontend/TypeCheckboxShowon 0 0'
 
   slack:
     image: plugins/slack
-    webhook: https://hooks.slack.com/services/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
+    webhook: https://hooks.slack.com/services/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
     channel: redform
     when:
       status: [ success, failure ]
@@ -225,11 +242,11 @@ pipeline:
         {{repo.name}} PR #{{build.pull}} failed in {{since build.started}}. Fix me please {{build.author}}!  Here is the build log: {{build.link}}.  Link to the PR: https://github.com/{{repo.owner}}/{{repo.name}}/pull/{{build.pull}}
       {{/success}}
   error-report:
-    image: redwebaps/testbox-chromedriver:2.38
+    image: redwebaps/testbox-chromedriver:79.0
     commands:
     - if [ -z "${CI_PULL_REQUEST}" ]; then export CI_PULL_REQUEST=1; fi
     - cd tests
-    - vendor/bin/robo send:build-report-error-slack redcomponent 365447364384436 Q94UM5kjZkZIrau8MIL93m0dN6U "$CI_REPO" "$CI_PULL_REQUEST" "https://hooks.slack.com/services/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" "#redform" "$CI_BUILD_URL"
+    - vendor/bin/robo send:build-report-error-slack redcomponent 365447364384436 Q94UM5kjZkZIrau8MIL93m0dN6U "$CI_REPO" "$CI_PULL_REQUEST" "https://hooks.slack.com/services/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" "#redform" "$CI_BUILD_URL"
     when:
       status: [ failure ]
 
