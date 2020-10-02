@@ -76,10 +76,11 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	public function onGetCaptchaField(&$text)
 	{
 		$document = JFactory::getDocument();
-
+		$languages = explode('-', JFactory::getLanguage()->getTag());
+		
 		if ($this->version == 2)
 		{
-			$document->addScript($this->apiScript);
+			$document->addScript($this->apiScript.'?hl='.$languages[0]);
 		}
 
 		if ($this->version == 3)
