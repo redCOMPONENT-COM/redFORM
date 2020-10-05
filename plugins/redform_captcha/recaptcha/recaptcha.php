@@ -75,12 +75,12 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	 */
 	public function onGetCaptchaField(&$text)
 	{
-		$document = JFactory::getDocument();
-		
-		if ($this->version == 2)
-		{
-			$document->addScript($this->apiScript.'?hl='.JFactory::getLanguage()->getTag());
-		}
+        $document = JFactory::getDocument();
+
+        if ($this->version == 2)
+        {
+            $document->addScript($this->apiScript.'?hl='.JFactory::getLanguage()->getTag());
+        }
 
 		if ($this->version == 3)
 		{
