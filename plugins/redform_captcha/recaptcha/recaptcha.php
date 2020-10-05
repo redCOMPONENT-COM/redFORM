@@ -12,7 +12,7 @@ defined('_JEXEC') or die('Restricted access');
 // Import library dependencies
 jimport('joomla.plugin.plugin');
 
-include_once __DIR__. '/vendor/autoload.php';
+include_once __DIR__ . '/vendor/autoload.php';
 
 /**
  * Class plgRedform_captchaRecaptcha
@@ -39,8 +39,8 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	/**
 	 * Constructor
 	 *
-	 * @param   object  &$subject  The object to observe
-	 * @param   array   $config    An optional associative array of configuration settings.
+	 * @param   object  $subject  The object to observe
+	 * @param   array   $config   An optional associative array of configuration settings.
 	 *                             Recognized key values include 'name', 'group', 'params', 'language'
 	 *                             (this list is not meant to be comprehensive).
 	 */
@@ -69,24 +69,25 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	/**
 	 * onGetCaptchaField trigger
 	 *
-	 * @param   string  &$text  text to modify
+	 * @param   string  $text  text to modify
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function onGetCaptchaField(&$text)
 	{
-        $document = JFactory::getDocument();
+		$document = JFactory::getDocument();
 
-        if ($this->version == 2)
-        {
-            $document->addScript($this->apiScript.'?hl='.JFactory::getLanguage()->getTag());
-        }
+		if ($this->version == 2)
+		{
+			$document->addScript($this->apiScript . '?hl=' . JFactory::getLanguage()->getTag());
+		}
 
 		if ($this->version == 3)
 		{
 			$document->addScript($this->apiScript . '?render=' . $this->publicKey);
 
-			$document->addScriptDeclaration('
+			$document->addScriptDeclaration(
+				'
 				grecaptcha.ready(function() 
 				{
 					grecaptcha.execute("' . $this->publicKey . '", {action: "' . $this->expectedAction . '"}).then(function(token)
@@ -94,7 +95,8 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 						document.getElementById("' . $this->responseElementId . '").value = token;
 					});
 				});
-			');
+			'
+			);
 		}
 
 		$attributes = array();
@@ -127,13 +129,13 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	/**
 	 * onCheckCaptcha trigger
 	 *
-	 * @param   bool  &$result  result
+	 * @param   boolean  $result  result
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function onCheckCaptcha(&$result)
 	{
-		require_once __DIR__. '/vendor/autoload.php';
+		require_once __DIR__ . '/vendor/autoload.php';
 
 		$gRecaptchaResponse = JFactory::getApplication()->input->get($this->responseElementId);
 
