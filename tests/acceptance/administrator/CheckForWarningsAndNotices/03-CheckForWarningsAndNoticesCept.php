@@ -8,7 +8,7 @@
 // Load the Step Object Page
 $I = new \AcceptanceTester($scenario);
 $I->wantToTest(' that there are no Warnings or Notices in redFORM');
-$I->doAdministratorLogin();
+$I->doAdministratorLogin("admin", "admin", null);
 $I->checkForPhpNoticesOrWarnings('administrator/index.php?option=com_redform');
 $I->checkForPhpNoticesOrWarnings('administrator/index.php?option=com_redform&view=fields');
 $I->checkForPhpNoticesOrWarnings('administrator/index.php?option=com_redform&view=forms');

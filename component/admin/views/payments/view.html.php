@@ -33,6 +33,16 @@ class RedformViewPayments extends RdfView
 		$this->items = $model->getItems();
 		$this->billing = $model->getBilling();
 		$this->state = $model->getState();
+
+		$billingModel = RModel::getAdminInstance('billing', ['ignore_request' => true]);
+
+		if ($this->billing)
+		{
+			$billingModel->setState('billing.id', $this->billing->id);
+		}
+
+		$this->billingForm = $billingModel->getForm();
+
 		$this->pagination = $model->getPagination();
 
 		return parent::display($tpl);
@@ -81,7 +91,7 @@ class RedformViewPayments extends RdfView
 			$secondGroup->addButton($delete);
 		}
 
-		$back = RToolbarBuilder::createStandardButton('payments.back', JText::_('COM_REDFORM_BACK'), 'btn btn-default', 'icon-eject', false);
+		$back = RToolbarBuilder::createStandardButton('payments.back', JText::_('COM_REDFORM_BACK'), 'btn btn-default', 'icon-hand-left', false);
 		$thirdGroup->addButton($back);
 
 		$toolbar = new RToolbar;

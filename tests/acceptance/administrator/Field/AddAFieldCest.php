@@ -1,13 +1,51 @@
 <?php
 /**
- * @package     redCORE
- * @subpackage  Cept
- * @copyright   Copyright (C) 2008 - 2018 redCOMPONENT.com. All rights reserved.
+ * @package     redFORM
+ * @subpackage  Cest AddAField
+ * @copyright   Copyright (C) 2008 - 2020 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
+
 use Step\Acceptance\AddAFieldSteps as AddAFieldSteps;
+
 class AddAFieldCest
 {
+	/**
+	 * @var \Faker\Generator
+	 * @since 3.3.27
+	 */
+	protected $faker;
+
+	/**
+	 * @var array
+	 * @since 3.3.27
+	 */
+	protected $paramsTextField;
+
+	/**
+	 * @var array
+	 * @since 3.3.27
+	 */
+	protected $paramsTextFieldSaveClose;
+
+	/**
+	 * @var array
+	 * @since 3.3.27
+	 */
+	protected $paramsTextFieldEdit;
+
+	/**
+	 * @var array
+	 * @since 3.3.27
+	 */
+	protected $paramsEmailField;
+
+	/**
+	 * @var array
+	 * @since 3.3.27
+	 */
+	protected $paramsEmailFieldEdit;
+
 	/**
 	 * AddAFieldCest constructor.
 	 */
@@ -15,38 +53,38 @@ class AddAFieldCest
 	{
 		$this->faker   = Faker\Factory::create();
 		$this->paramsTextField = array(
-			'name' => $this->faker->bothify('Text ?##?'),
-			'field_header' => $this->faker->bothify('Text ?##?'),
+			'name' => $this->faker->bothify('Text name ?##?'),
+			'field_header' => $this->faker->bothify('Text field_header ?##?'),
 			'fieldtype' => 'Date',
-			'tooltip' => $this->faker->bothify('Test text #####')
+			'tooltip' => $this->faker->bothify('Test text tooltip #####')
 		);
 
 		$this->paramsTextFieldSaveClose = array(
-			'name' => $this->faker->bothify('Text save close ?##?'),
-			'field_header' => $this->faker->bothify('Text save close ?##?'),
+			'name' => $this->faker->bothify('Text name save close ?##?'),
+			'field_header' => $this->faker->bothify('Text field_header save close ?##?'),
 			'fieldtype' => 'Date',
-			'tooltip' => $this->faker->bothify('Test text save close #####')
+			'tooltip' => $this->faker->bothify('Test text tooltip save close #####')
 		);
 
 		$this->paramsTextFieldEdit = array(
-			'name' => $this->faker->bothify('Edit Text ?##?'),
-			'field_header' => $this->faker->bothify('Edit Text ?##?'),
+			'name' => $this->faker->bothify('Text name edit ?##?'),
+			'field_header' => $this->faker->bothify('Text field_header edit ?##?'),
 			'fieldtype' => 'Date',
-			'tooltip' => $this->faker->bothify('Edit Test text #####')
+			'tooltip' => $this->faker->bothify('Test text tooltip edit #####')
 		);
 
 		$this->paramsEmailField = array(
-			'name' => $this->faker->bothify('Email ?##?'),
-			'field_header' => $this->faker->bothify('Email ?##?'),
+			'name' => $this->faker->bothify('Email name ?##?'),
+			'field_header' => $this->faker->bothify('Email field_header ?##?'),
 			'fieldtype' => 'E-mail',
-			'tooltip' => $this->faker->bothify('Test mail #####')
+			'tooltip' => $this->faker->bothify('Test email tooltip #####')
 		);
 
 		$this->paramsEmailFieldEdit = array(
-			'name' => $this->faker->bothify('Edit Email ?##?'),
-			'field_header' => $this->faker->bothify('Edit Email ?##?'),
+			'name' => $this->faker->bothify('Email name edit ?##?'),
+			'field_header' => $this->faker->bothify('Email field_header edit ?##?'),
 			'fieldtype' => 'E-mail',
-			'tooltip' => $this->faker->bothify('Edit Test mail #####')
+			'tooltip' => $this->faker->bothify('Test email tooltip edit #####')
 		);
 	}
 	/**
@@ -55,7 +93,7 @@ class AddAFieldCest
 	 */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->doAdministratorLogin();
+		$I->doAdministratorLogin("admin", "admin", null);
 	}
 	/**
 	 * @param AddAFieldSteps $I

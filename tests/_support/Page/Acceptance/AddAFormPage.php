@@ -166,6 +166,48 @@ class AddAFormPage extends RedFormAdminPage
 	public static $toggleEditor = "//a[@onclick=\"tinyMCE.execCommand('mceToggleEditor', false, 'jform_submissionbody');return false;\"]";
 
 	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $notificationTab = "//a[contains(text(),'Notification')]";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $displayNotificationYes = "//label[@for='jform_submitnotification1']";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $displayNotificationNo = "//label[@for='jform_submitnotification0']";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $notificationTextID = 'jform_notificationtext';
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $statusSelectInput = "#filter_field_state_chzn";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $formFieldTitle = "Form fields";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $statusSelectId = 'filter_field_state';
+
+	/**
 	 * @param $value
 	 * @return string
 	 */

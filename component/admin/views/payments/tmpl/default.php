@@ -17,51 +17,9 @@ $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 
 $payment_request_id = $this->state->get('payment_request');
-?>
-<?php if ($this->billing): ?>
-	<h3><?php echo JText::_('COM_REDFORM_BILLING_INFO_TITLE'); ?></h3>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_FULLNAME'); ?></dt>
-		<dd><?php echo $this->billing->fullname; ?></dd>
-	</dl>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_COMPANY'); ?></dt>
-		<dd><?php echo $this->billing->company; ?></dd>
-	</dl>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_ISCOMPANY'); ?></dt>
-		<dd><?php echo $this->billing->iscompany ? JText::_('JYES') : JText::_('JNO'); ?></dd>
-	</dl>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_VATNUMBER'); ?></dt>
-		<dd><?php echo $this->billing->vatnumber; ?></dd>
-	</dl>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_ADDRESS'); ?></dt>
-		<dd><?php echo $this->billing->address; ?></dd>
-	</dl>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_CITY'); ?></dt>
-		<dd><?php echo $this->billing->city; ?></dd>
-	</dl>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_ZIPCODE'); ?></dt>
-		<dd><?php echo $this->billing->zipcode; ?></dd>
-	</dl>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_PHONE'); ?></dt>
-		<dd><?php echo $this->billing->phone; ?></dd>
-	</dl>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_EMAIL'); ?></dt>
-		<dd><?php echo $this->billing->email; ?></dd>
-	</dl>
-	<dl class="dl-horizontal">
-		<dt><?php echo JText::_('COM_REDFORM_FORMS_XML_BILLING_COUNTRY'); ?></dt>
-		<dd><?php echo $this->billing->country; ?></dd>
-	</dl>
-<?php endif;?>
 
+$return = \Joomla\CMS\Factory::getApplication()->input->getBase64('return');
+?>
 <form action="<?php echo $action; ?>" name="adminForm" class="adminForm" id="adminForm" method="post">
 	<?php if (empty($this->items)) : ?>
 		<div class="alert alert-info">
@@ -125,7 +83,7 @@ $payment_request_id = $this->state->get('payment_request');
 							<?php echo str_replace("\n", "<br />",$item->data); ?>
 						</td>
 						<td>
-							<?php echo $item->cart_id; ?>
+							<a href="index.php?option=com_redform&view=cart&id=<?= $item->cart_id ?>"><?= $item->cart_id ?></a>
 						</td>
 						<td>
 							<?php echo $item->paid; ?>
@@ -142,7 +100,7 @@ $payment_request_id = $this->state->get('payment_request');
 		<input type="hidden" name="task" value="">
 		<input type="hidden" name="boxchecked" value="0">
 		<input type="hidden" name="pr" value="<?php echo $payment_request_id; ?>" />
-		<input type="hidden" name="return" value="<?php echo base64_encode('index.php?option=com_redform&view=submitters'); ?>" />
+		<input type="hidden" name="return" value="<?= $return ?>" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>

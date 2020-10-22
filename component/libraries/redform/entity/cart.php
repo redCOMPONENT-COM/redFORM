@@ -256,6 +256,40 @@ class RdfEntityCart extends RdfEntityBase
 	}
 
 	/**
+	 * Get payments
+	 *
+	 * @return RdfEntityPayment[]
+	 */
+	public function getPayments()
+	{
+		if (!$this->hasId())
+		{
+			return false;
+		}
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from('#__rwf_payment')
+			->where('cart_id = ' . $this->id)
+			->order('id', 'desc');
+
+		$db->setQuery($query);
+		$res = $db->loadObjectList();
+
+		return !$res ? false : array_map(
+			function ($row)
+			{
+				$entity = RdfEntityPayment::getInstance($row->id);
+				$entity->bind($row);
+
+				return $entity;
+			},
+			$res
+		);
+	}
+
+	/**
 	 * return submitters
 	 *
 	 * @return RdfEntityPaymentrequest[]

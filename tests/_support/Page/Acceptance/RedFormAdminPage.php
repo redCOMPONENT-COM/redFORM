@@ -44,6 +44,18 @@ class RedFormAdminPage
 
 	/**
 	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $checkAll = "//input[@name='checkall-toggle']";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $copyButtonXpath = "//i[@class='icon-copy']";
+
+	/**
+	 * @var string
 	 */
 	public static $editButton = "Edit";
 
@@ -123,6 +135,12 @@ class RedFormAdminPage
 	 */
 	public static $headPage = "//h1";
 
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $h2 = "//h2";
+
 	//general message
 	/**
 	 * @var string
@@ -174,6 +192,12 @@ class RedFormAdminPage
 	 * @var string
 	 */
 	public static $searchIcon = "//button[@data-original-title=\"Search\"]";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $messageNothingData = "Nothing to display";
 
 	/**
 	 * @param $id

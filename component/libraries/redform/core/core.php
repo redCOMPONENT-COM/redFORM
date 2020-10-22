@@ -400,7 +400,7 @@ class RdfCore extends JObject
 		}
 
 		// Get an unique id just for the submission
-		$uniq = uniqid();
+		$token = self::getToken();
 
 		// Add the captcha, only if initial submit
 		if ($form->captchaactive && empty($submit_key))
@@ -421,7 +421,7 @@ class RdfCore extends JObject
 					array('component' => 'com_redform')
 				);
 
-				JFactory::getSession()->set('checkcaptcha' . $uniq, 1);
+				JFactory::getSession()->set('checkcaptcha' . $token, 1);
 			}
 		}
 
@@ -439,7 +439,7 @@ class RdfCore extends JObject
 		$html .= '<input type="hidden" name="nbactive" value="' . $initialActive . '" />';
 		$html .= '<input type="hidden" name="form_id" value="' . $form_id . '" />';
 		$html .= '<input type="hidden" name="multi" value="' . $multi . '" />';
-		$html .= '<input type="hidden" name="' . self::getToken() . '" value="' . $uniq . '" />';
+		$html .= '<input type="hidden" name="' . self::getToken() . '" value="1" />';
 		$html .= '<input type="hidden" name="submissionurl" value="' . base64_encode(JFactory::getURI()->toString()) . '" />';
 
 		if ($currency)
@@ -1137,21 +1137,28 @@ class RdfCore extends JObject
 			->join('LEFT', '#__rwf_cart_item AS ci ON ci.payment_request_id = pr.id')
 			->join('LEFT', '#__rwf_cart AS c ON c.id = ci.cart_id')
 			->where('pr.submission_id IN (' . implode(', ', $sids) . ')')
-			->order('pr.id DESC');
+			->order('pr.id DESC, c.id DESC');
 
 		$db->setQuery($query);
 		$paymentRequests = $db->loadObjectList();
 
 		$res = array();
+		$addedPr = array();
 
 		foreach ($paymentRequests as $paymentRequest)
 		{
 			if (!isset($res[$paymentRequest->submission_id]))
 			{
 				$res[$paymentRequest->submission_id] = array();
+				$added[$paymentRequest->submission_id] = array();
 			}
 
-			$res[$paymentRequest->submission_id][] = $paymentRequest;
+			// Only add most recent associated cart for pr
+			if (!in_array($paymentRequest->id, $addedPr))
+			{
+				$res[$paymentRequest->submission_id][] = $paymentRequest;
+				$addedPr[] = $paymentRequest->id;
+			}
 		}
 
 		return $res;

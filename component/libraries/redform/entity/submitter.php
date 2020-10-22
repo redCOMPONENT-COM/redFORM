@@ -23,9 +23,9 @@ class RdfEntitySubmitter extends RdfEntityBase
 	 */
 	public function getAnswers()
 	{
-		if (!$this->hasId())
+		if (!$this->isLoaded())
 		{
-			return false;
+			return new RdfAnswers;
 		}
 
 		$answers = RdfCore::getInstance()->getSidAnswers($this->id);

@@ -26,6 +26,27 @@ class AddAFormSteps extends Adminredform
 		$I->click(AddAFormPage::$newButton);
 		$I->waitForText(AddAFormPage::$formName, 30, AddAFormPage::$formNameLbl);
 		$I->fillField(AddAFormPage::$formNameId, $params['name']);
+
+		if (isset($params['displayNotification']))
+		{
+			$I->waitForElementVisible(AddAFormPage::$notificationTab, 30);
+			$I->click(AddAFormPage::$notificationTab);
+
+			switch ($params['displayNotification'])
+			{
+				case 'yes':
+					$I->waitForElementVisible(AddAFormPage::$displayNotificationYes, 30);
+					$I->click(AddAFormPage::$displayNotificationYes);
+					$I->fillTinyMceEditorById(AddAFormPage::$notificationTextID, $params['notificationMessage']);
+					break;
+
+				case 'no':
+					$I->waitForElementVisible(AddAFormPage::$displayNotificationNo, 30);
+					$I->click(AddAFormPage::$displayNotificationNo);
+					break;
+			}
+		}
+
 		switch ($function)
 		{
 			case 'save':
@@ -285,25 +306,36 @@ class AddAFormSteps extends Adminredform
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$deleteButton);
 		$I->acceptPopup();
-		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
+		$I->wait(1);
+		$I->waitForElement(AddAFormPage::$alertMessage, 60);
 		$I = $this;
 		$I->amOnPage(AddASubmittersPage::$URL);
 		$I->waitForText(AddASubmittersPage::$submitters, 30, AddASubmittersPage::$headPage);
+		$I->waitForElementVisible(AddASubmittersPage::$selectFormId, 30);
 		$I->waitForElement(AddASubmittersPage::$selectFormId, 30);
 		$I->selectOptionInChosenXpath(AddASubmittersPage::$selectForm, $nameForm);
 		$I->waitForText($nameForm, 30);
 		$I->checkAllResults();
+		$I->wait(0.5);
 		$I->click(AddASubmittersPage::$deleteButton);
 		$I->acceptPopup();
-		$I->waitForElement(AddASubmittersPage::$alertMessage, 30, AddASubmittersPage::$alertHead);
+		$I->wait(2);
+		$I->waitForText(AddASubmittersPage::$messageNothingData, 60);
 		$I->amOnPage(AddAFormPage::$url);
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 		$I->searchForm($nameForm);
 		$I->checkAllResults();
 		$I->click(AddAFormPage::$deleteButton);
 		$I->acceptPopup();
-		$I->waitForText(AddAFormPage::$deleteSuccess, 30, AddAFormPage::$alertMessage);
-		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
+		$I->wait(1);
+
+		try
+		{
+			$I->waitForText(AddAFormPage::$deleteSuccess, 60, AddAFormPage::$alertMessage);
+		}catch (\Exception $e)
+		{
+			$I->waitForText(AddAFormPage::$messageNothingData, 30);
+		}
 	}
 
 	/**
@@ -317,9 +349,17 @@ class AddAFormSteps extends Adminredform
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
 		$I->searchForm($nameForm);
 		$I->checkAllResults();
-		$I->click(AddAFormPage::$deleteButton);
-		$I->acceptPopup();
-		$I->waitForElement(AddAFormPage::$alertMessage, 30, AddAFormPage::$alertHead);
+
+		try
+		{
+			$I->click(AddAFormPage::$deleteButton);
+			$I->acceptPopup();
+			$I->wait(2);
+			$I->waitForElement(AddAFormPage::$alertMessage, 60);
+		} catch (\Exception $exception)
+		{
+			$I->waitForText(AddAFormPage::$messageNothingData, 30);
+		}
 	}
 
 	/**
@@ -336,5 +376,105 @@ class AddAFormSteps extends Adminredform
 		$I->waitForElement(AddAFormPage::$searchIcon, 30);
 		$I->click(AddAFormPage::$searchIcon);
 		$I->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+	}
+
+	/**
+	 * @param $nameField
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
+	public function searchFormFields($nameField)
+	{
+		$i = $this;
+		$i->waitForElementVisible(AddAFormPage::$searchField, 30);
+		$i->fillField(AddAFormPage::$searchField, $nameField);
+		$i->waitForElement(AddAFormPage::$searchIcon, 30);
+		$i->click(AddAFormPage::$searchIcon);
+		$i->waitForText(AddAFormPage::$formFieldTitle, 30, AddAFormPage::$h2);
+	}
+
+	/**
+	 * @param array $params
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
+	public function changeStatusFormField($params = array())
+	{
+		$i = $this;
+		$i->amOnPage(AddAFormPage::$url);
+		$i->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+		$i->searchForm($params['name']);
+		$i->checkAllResults();
+		$i->click(AddAFormPage::$editButton);
+		$i->waitForElementVisible(AddAFormPage::$fields, 30);
+		$i->click(AddAFormPage::$fields);
+
+		$i->searchFormFields($params['fields_1']);
+		$i->checkAllResults();
+		$i->waitForText($params['status_1'], 30);
+		$i->click($params['status_1']);
+
+		$i->searchFormFields($params['fields_2']);
+		$i->checkAllResults();
+		$i->waitForText($params['status_2'], 30);
+		$i->click($params['status_2']);
+
+		$i->click(AddAFormPage::$saveCloseButton);
+	}
+
+	/**
+	 * @param array $params
+	 * @throws \Exception
+	 * @since 3.3.28
+	 */
+	public function selectStatusFormField($params = array())
+	{
+		$i = $this;
+		$i->amOnPage(AddAFormPage::$url);
+		$i->waitForText(AddAFormPage::$form, 30, AddAFormPage::$headPage);
+		$i->searchForm($params['name']);
+		$i->checkAllResults();
+		$i->click(AddAFormPage::$editButton);
+		$i->waitForElementVisible(AddAFormPage::$fields, 30);
+		$i->click(AddAFormPage::$fields);
+
+		$i->waitForElementVisible(AddAFormPage::$clearButton, 30);
+		$i->click(AddAFormPage::$clearButton);
+
+		if ($params['status_1'] == "Publish")
+		{
+			$i->waitForElementVisible(AddAFormPage::$searchToolsButton, 30);
+			$i->click(AddAFormPage::$searchToolsButton);
+			$i->waitForElementVisible(AddAFormPage::$statusSelectInput, 30);
+			$i->selectOptionInChosenById(AddAFormPage::$statusSelectId, "Published");
+			$i->waitForText($params['fields_1'], 10);
+		}
+		else
+		{
+			$i->waitForElementVisible(AddAFormPage::$searchToolsButton, 30);
+			$i->click(AddAFormPage::$searchToolsButton);
+			$i->waitForElementVisible(AddAFormPage::$statusSelectInput, 30);
+			$i->selectOptionInChosenById(AddAFormPage::$statusSelectId, "Unpublished");
+			$i->waitForText($params['fields_1'], 10);
+		}
+
+		if ($params['status_2'] == "Publish")
+		{
+			$i->waitForElementVisible(AddAFormPage::$searchToolsButton, 30);
+			$i->click(AddAFormPage::$searchToolsButton);
+			$i->waitForElementVisible(AddAFormPage::$statusSelectInput, 30);
+			$i->selectOptionInChosenById(AddAFormPage::$statusSelectId, "Published");
+			$i->waitForText($params['fields_2'], 10);
+		}
+		else
+		{
+			$i->waitForElementVisible(AddAFormPage::$searchToolsButton, 30);
+			$i->click(AddAFormPage::$searchToolsButton);
+			$i->waitForElementVisible(AddAFormPage::$statusSelectInput, 30);
+			$i->selectOptionInChosenById(AddAFormPage::$statusSelectId, "Unpublished");
+			$i->waitForText($params['fields_2'], 10);
+		}
+
+		$i->click(AddAFormPage::$saveCloseButton);
 	}
 }

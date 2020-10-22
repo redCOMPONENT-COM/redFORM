@@ -1,13 +1,15 @@
 <?php
 /**
- * @package     redCORE
- * @subpackage  Cept
- * @copyright   Copyright (C) 2008 - 2018 redCOMPONENT.com. All rights reserved.
+ * @package     redFORM
+ * @subpackage  Steps AddAField
+ * @copyright   Copyright (C) 2008 - 2020 redCOMPONENT.com. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 namespace Step\Acceptance;
 
+use Exception;
+use Facebook\WebDriver\WebDriverKeys;
 use Page\Acceptance\AddAFieldPage;
 
 class AddAFieldSteps extends Adminredform
@@ -15,7 +17,7 @@ class AddAFieldSteps extends Adminredform
 	/**
 	 * @param array $params
 	 * @param array $function
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function createField($params = array(), $function = array())
 	{
@@ -25,8 +27,16 @@ class AddAFieldSteps extends Adminredform
 		$I->click(AddAFieldPage::$newButton);
 		$I->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
 		$I->fillField(AddAFieldPage::$nameId, $params['name']);
-		$I->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
-		$I->selectOptionInChosen(AddAFieldPage::$fieldType, $params['fieldtype']);
+
+		if (isset($params['fieldtype']))
+		{
+			$I->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
+			$I->waitForElementVisible(AddAFieldPage::$fieldTypeID, 30);
+			$I->click(AddAFieldPage::$fieldTypeID);
+			$I->waitForElementVisible(AddAFieldPage::$fieldTypeInput, 30);
+			$I->fillField(AddAFieldPage::$fieldTypeInput, $params['fieldtype']);
+			$I->pressKey(AddAFieldPage::$fieldTypeInput, WebDriverKeys::ENTER);
+		}
 
 		if (isset($params['field_header']))
 		{
@@ -45,12 +55,20 @@ class AddAFieldSteps extends Adminredform
 			$I->waitForText(AddAFieldPage::$defaultValue, 30, AddAFieldPage::$defaultValueLbl);
 			$I->fillField(AddAFieldPage::$defaultValueId, $params['default']);
 		}
-		
+
+		if (isset($params['showon']))
+		{
+			$I->waitForText(AddAFieldPage::$showOnValueLb, 30);
+			$I->fillField(AddAFieldPage::$showOnValueID, $params['showon']);
+		}
+
 		if (isset($params['placeholder']))
 		{
 			$I->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
 			$I->fillField(AddAFieldPage::$placeholderId, $params['placeholder']);
 		}
+
+		$I->executeJS('window.scrollTo(0,0);');
 
 		switch ($function)
 		{
@@ -80,8 +98,7 @@ class AddAFieldSteps extends Adminredform
 
 	/**
 	 * @param array $params
-	 * @param array $function
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function createFieldMissingName($params = array())
 	{
@@ -123,7 +140,7 @@ class AddAFieldSteps extends Adminredform
 	/**
 	 * @param array $params
 	 * @param array $function
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function editField($name, $params = array(), $function = array())
 	{
@@ -184,14 +201,17 @@ class AddAFieldSteps extends Adminredform
 
 	/**
 	 * @param $name
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function copyField($name)
 	{
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
-		$I->checkAllResults();
+		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
+		$I->wait(0.5);
+		$I->click(AddAFieldPage::$checkAll);
+		$I->waitForElementVisible(AddAFieldPage::$copyButtonXpath, 30);
 		$I->click(AddAFieldPage::$copyButton);
 		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
 		$nameCopy = 'Copy of ' . $name;
@@ -201,18 +221,34 @@ class AddAFieldSteps extends Adminredform
 
 	/**
 	 * @param $name
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function deleteField($name)
 	{
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
+		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
 		$I->waitForText($name, 30);
 		$I->checkAllResults();
-		$I->click(AddAFieldPage::$deleteButton);
-		$I->acceptPopup();
-		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+
+		try
+		{
+			$I->click(AddAFieldPage::$deleteButton);
+			$I->acceptPopup();
+			$I->wait(2);
+			$I->waitForElement(AddAFieldPage::$alertMessage, 60, AddAFieldPage::$alertHead);
+			$I->waitForElementVisible(AddAFieldPage::$alertMessage, 5, AddAFieldPage::$alertHead);
+		} catch (Exception $exception)
+		{
+			$I->wait(1);
+			$I->click(AddAFieldPage::$deleteButton);
+			$I->acceptPopup();
+			$I->wait(2);
+			$I->waitForText(AddAFieldPage::$messageNothingData, 30);
+		}
+
+		$I->amOnPage(AddAFieldPage::$URL);
 		$I->searchField($name);
 		$I->dontSee($name);
 		$I->waitForElement(AddAFieldPage::$clearButton, 30);
@@ -220,22 +256,51 @@ class AddAFieldSteps extends Adminredform
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function deleteAllField()
 	{
 		$I = $this;
 		$I->amOnPage(AddAFieldPage::$URL);
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
-		$I->checkAllResults();
+		$I->waitForElementVisible(AddAFieldPage::$clearButton, 30);
+		$I->click(AddAFieldPage::$clearButton);
+		$I->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+		$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
+		$I->wait(0.5);
+		$I->click(AddAFieldPage::$checkAll);
+		$I->wait(0.5);
 		$I->click(AddAFieldPage::$deleteButton);
+		$I->wait(0.5);
 		$I->acceptPopup();
-		$I->waitForElementVisible(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+
+		try
+		{
+			$I->waitForElementVisible(AddAFieldPage::$alertMessage, 5, AddAFieldPage::$alertHead);
+		} catch (Exception $e)
+		{
+			try
+			{
+				$I->waitForText(AddAFieldPage::$messageNothingData, 5);
+			}
+			catch (Exception $e)
+			{
+				$I->waitForElementVisible(AddAFieldPage::$checkAll, 30);
+				$I->wait(0.5);
+				$I->click(AddAFieldPage::$checkAll);
+				$I->wait(0.5);
+				$I->click(AddAFieldPage::$deleteButton);
+				$I->wait(0.5);
+				$I->acceptPopup();
+				$I->waitForText(AddAFieldPage::$messageNothingData, 30);
+			}
+
+		}
 	}
 
 	/**
 	 * @param $name
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function deleteFieldUsedInForm($name)
 	{
@@ -245,15 +310,28 @@ class AddAFieldSteps extends Adminredform
 		$I->waitForText($name, 30);
 		$I->checkAllResults();
 		$I->click(AddAFieldPage::$deleteButton);
+		$I->wait(1);
 		$I->acceptPopup();
-		$I->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
-		$I->searchField($name);
-		$I->waitForText($name, 30);
+		$I->wait(2);
+
+		try
+		{
+			$I->waitForElement(AddAFieldPage::$alertMessage, 60);
+			$I->searchField($name);
+			$I->waitForText($name, 30);
+		} catch (Exception $exception)
+		{
+			$I->acceptPopup();
+			$I->wait(2);
+			$I->waitForElement(AddAFieldPage::$alertMessage, 60);
+			$I->searchField($name);
+			$I->waitForText($name, 30);
+		}
 	}
 
 	/**
 	 * @param $nameField
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function searchField($nameField)
 	{
@@ -267,4 +345,100 @@ class AddAFieldSteps extends Adminredform
 		$I->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
 	}
 
+	/**
+	 * @param $nameField
+	 * @return mixed
+	 * @throws Exception
+	 *  @since 3.3.28
+	 */
+	public function getFieldID($nameField)
+	{
+		$i = $this;
+		$i->amOnPage(AddAFieldPage::$URL);
+		$i->searchField($nameField);
+		$i->waitForElementVisible(AddAFieldPage::$idColumn);
+		$id = $this->grabTextFrom(AddAFieldPage::$idColumn);
+
+		return $id;
+	}
+
+	/**
+	 * @param   string $nameField name field
+	 * @param   array  $options   option checkbox
+	 * @throws Exception
+	 * @since 3.3.28
+	 */
+	public function addOptionFieldCheckbox($nameField, $options)
+	{
+		$i = $this;
+		$i->amOnPage(AddAFieldPage::$URL);
+		$i->searchField($nameField);
+		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+		$i->waitForElementVisible(["link" => $nameField], 30);
+		$i->wait(0.5);
+		$i->click(["link" => $nameField]);
+		$i->waitForElementVisible(AddAFieldPage::$optionTab, 30);
+		$i->click(AddAFieldPage::$optionTab);
+		$i->waitForJS("return window.jQuery && jQuery.active == 0;", 30);
+
+		$length = count($options);
+
+		for ($x = 0; $x < $length; $x++)
+		{
+			 $y = $x + 1;
+			 $option = $options[$x];
+			 $i->waitForElementVisible(AddAFieldPage::xpathValueInput($y), 30);
+			 $i->fillField(AddAFieldPage::xpathValueInput($y), $option['value']);
+			 $i->wait(0.5);
+			 $i->waitForElementVisible(AddAFieldPage::xpathLabelInput($y), 30);
+			 $i->fillField(AddAFieldPage::xpathLabelInput($y), $option['label']);
+			 $i->waitForElementVisible(AddAFieldPage::$addButton, 30);
+			 $i->click(AddAFieldPage::$addButton);
+		}
+
+		$i->click(AddAFieldPage::$saveCloseButton);
+		$i->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+	}
+
+	/**
+	 * @param   array $params
+	 * @throws Exception
+	 * @since 3.3.28
+	 */
+	public function createFieldRepeat($params = array())
+	{
+		$i = $this;
+		$i->amOnPage(AddAFieldPage::$URL);
+		$i->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+		$i->click(AddAFieldPage::$newButton);
+		$i->waitForText(AddAFieldPage::$name, 30, AddAFieldPage::$nameLbl);
+		$i->fillField(AddAFieldPage::$nameId, $params['name']);
+
+		if (isset($params['fieldType']))
+		{
+			$i->waitForText(AddAFieldPage::$fieldType, 30, AddAFieldPage::$fieldTypeLbl);
+			$i->waitForElementVisible(AddAFieldPage::$fieldTypeID, 30);
+			$i->click(AddAFieldPage::$fieldTypeID);
+			$i->waitForElementVisible(AddAFieldPage::$fieldTypeInput, 30);
+			$i->fillField(AddAFieldPage::$fieldTypeInput, $params['fieldType']);
+			$i->pressKey(AddAFieldPage::$fieldTypeInput, WebDriverKeys::ENTER);
+		}
+
+		if (isset($params['placeholder']))
+		{
+			$i->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
+			$i->fillField(AddAFieldPage::$placeholderId, $params['placeholder']);
+		}
+
+		if (isset($params['targetField']))
+		{
+			$i->waitForText(AddAFieldPage::$placeholder, 30, AddAFieldPage::$placeholderLbl);
+			$i->selectOptionInChosenXpath(AddAFieldPage::$repeatFields, $params['targetField']);
+		}
+
+		$i->executeJS('window.scrollTo(0,0);');
+		$i->click(AddAFieldPage::$saveCloseButton);
+		$i->waitForElement(AddAFieldPage::$alertMessage, 30, AddAFieldPage::$alertHead);
+		$i->waitForText(AddAFieldPage::$field, 30, AddAFieldPage::$headPage);
+	}
 }
