@@ -75,7 +75,9 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	 */
 	public function onGetCaptchaField(&$text)
 	{
-		$document = JFactory::getDocument();
+		$document                = JFactory::getDocument();
+		$differentiator          = rand();
+		$responseElementIdUnique = $this->responseElementId . $differentiator;
 
 		if ($this->version == 2)
 		{
@@ -92,7 +94,7 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 				{
 					grecaptcha.execute("' . $this->publicKey . '", {action: "' . $this->expectedAction . '"}).then(function(token)
 					{
-						document.getElementById("' . $this->responseElementId . '").value = token;
+						document.getElementById("' . $responseElementIdUnique . '").value = token;
 					});
 				});
 			'
@@ -120,7 +122,9 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 
 		if ($this->version == 3)
 		{
-			$text = '<input type="hidden" id="' . $this->responseElementId . '" name="' . $this->responseElementId . '">';
+			$text = '<input type="hidden" id="' . $responseElementIdUnique . '" name="' . $responseElementIdUnique . '">';
+
+			$text .= '<input type="hidden" name="differentiator" value="' . $differentiator . '">';
 		}
 
 		return true;
@@ -137,7 +141,9 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 	{
 		require_once __DIR__ . '/vendor/autoload.php';
 
-		$gRecaptchaResponse = JFactory::getApplication()->input->get($this->responseElementId);
+		$app                = JFactory::getApplication();
+		$differentiator     = $app->input->get('differentiator');
+		$gRecaptchaResponse = $app->input->get($this->responseElementId . $differentiator);
 
 		$recaptcha = new \ReCaptcha\ReCaptcha($this->privateKey);
 

@@ -7,6 +7,7 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
 defined('JPATH_BASE') or die;
@@ -172,6 +173,122 @@ class plgRedformEconomic extends JPlugin
 	 *
 	 * @return void
 	 */
+	public function onAjaxGetCurrentinvoiceById()
+	{
+		$invoiceId = JFactory::getApplication()->input->getInt('id', 0);
+
+		try
+		{
+			$invoice = $this->getClient()->CurrentInvoice_GetData(['Id' => $invoiceId]) ?: 'not found current invoice id ' . $invoiceId;
+
+			echo '<pre>'; echo print_r($invoice, true); echo '</pre>'; exit;
+		}
+		catch (Exception $e)
+		{
+			echo $e->getMessage();
+
+			return;
+		}
+	}
+
+	/**
+	 * Create invoice from payment request
+	 *
+	 * use: index.php?option=com_ajax&group=redform&plugin=Createinvoice&format=raw&id=<prid>
+	 *
+	 * @return void
+	 */
+	public function onAjaxGetAllCurrentinvoice()
+	{
+		$user = Factory::getUser();
+
+		if (!$user->authorise('core.admin'))
+		{
+			throw new Exception('Not allowed', '403');
+		}
+
+		try
+		{
+			$invoices = $this->getClient()->CurrentInvoice_GetAll();
+
+			echo '<pre>'; echo print_r($invoices, true); echo '</pre>'; exit;
+		}
+		catch (Exception $e)
+		{
+			echo $e->getMessage();
+
+			return;
+		}
+	}
+
+	/**
+	 * Create invoice from payment request
+	 *
+	 * use: index.php?option=com_ajax&group=redform&plugin=Createinvoice&format=raw&id=<prid>
+	 *
+	 * @return void
+	 */
+	public function onAjaxGetCurrentinvoiceByDateInterval()
+	{
+		$user = Factory::getUser();
+
+		if (!$user->authorise('core.admin'))
+		{
+			throw new Exception('Not allowed', '403');
+		}
+
+		$first = Factory::getApplication()->input->get('first');
+		$last = Factory::getApplication()->input->get('last');
+
+		try
+		{
+			$invoices = $this->getClient()->CurrentInvoice_FindByDateInterval($first, $last);
+
+			echo '<pre>'; echo print_r($invoices, true); echo '</pre>'; exit;
+		}
+		catch (Exception $e)
+		{
+			echo $e->getMessage();
+
+			return;
+		}
+	}
+
+	/**
+	 * Cashbook
+	 *
+	 * use: index.php?option=com_ajax&group=redform&plugin=Createinvoice&format=raw&id=<prid>
+	 *
+	 * @return void
+	 */
+	public function onAjaxCashbookBook()
+	{
+		$cashBookHandle = new stdclass;
+		$cashBookHandle->Number = $this->params->get('economic_payment_cashbook_id', 2);
+
+		try
+		{
+			$this->getClient()->client->CashBook_Book(array('cashBookHandle' => $cashBookHandle));
+
+			echo 'done';
+
+			return;
+		}
+		catch (Exception $e)
+		{
+			echo $e->getMessage();
+
+			return;
+		}
+	}
+
+	/**
+	 * Create invoice from payment request
+	 *
+	 * use: index.php?option=com_ajax&group=redform&plugin=Createinvoice&format=raw&id=<prid>
+	 *
+	 * @return void
+	 */
 	public function onAjaxGetInvoice()
 	{
 		$paymentrequestId = JFactory::getApplication()->input->getInt('id', 0);
@@ -235,7 +352,7 @@ class plgRedformEconomic extends JPlugin
 	{
 		try
 		{
-			$app = \Joomla\CMS\Factory::getApplication();
+			$app = Factory::getApplication();
 
 			if (strstr($context, 'com_redform') && $table->paid && $isNew && $app->isClient('administrator'))
 			{
