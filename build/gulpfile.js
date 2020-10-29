@@ -10,7 +10,7 @@ const fs         	= require('fs');
 const path       	= require('path');
 const ghPages     = require('gulp-gh-pages');
 const del         = require('del');
-const exec        = require('child_process').exec
+const exec        = require('child_process').exec;
 const replace     = require('gulp-replace');
 const filter      = require('gulp-filter');
 const merge       = require('merge-stream');
@@ -25,17 +25,8 @@ const update_sites = require('./update-sites.js');
 const bump_version = require('./bump-version.js');
 const crowdin_conf = require('./crowdin-conf.js');
 
-var gitshort = '';
-
-gulp.task('clean:release', ['git_version'], function(){
+gulp.task('clean:release', function(){
 	return del(config.release_dir, {force: true});
-});
-
-gulp.task('git_version', function(cb){
-	gitDescribe(function(str) {
-		gitshort = str;
-		cb();
-	});
 });
 
 // Override of the release script
@@ -47,7 +38,13 @@ gulp.task('release',
 	], function() {
 		fs.readFile( '../component/redform.xml', function(err, data) {
 			parser.parseString(data, function (err, result) {
-				const version = gitshort;
+				let version = result.extension.version[0];
+
+				if (result.extension.releaseName[0])
+				{
+					version = version + '-' + result.extension.releaseName[0].toLowerCase();
+				}
+
 				const fileName = config.skipVersion ? extension.name + '_ALL_UNZIP_FIRST.zip' : extension.name + '-v' + version + '_ALL_UNZIP_FIRST.zip';
 				del.sync(path.join(config.release_dir, fileName), {force: true});
 
@@ -67,7 +64,13 @@ gulp.task('release',
 gulp.task('release:redform', ['clean:release', 'release:prepare-redform', 'release:prepare-redcore'], function (cb) {
 	fs.readFile( '../component/redform.xml', function(err, data) {
 		parser.parseString(data, function (err, result) {
-			const version = gitshort;
+			let version = result.extension.version[0];
+
+			if (result.extension.releaseName[0])
+			{
+				version = version + '-' + result.extension.releaseName[0].toLowerCase();
+			}
+
 			const fileName = config.skipVersion ? extension.name + '.zip' : extension.name + '-v' + version + '.zip';
 			const fileNameNoRedcore = config.skipVersion ? extension.name + '_no_redCORE.zip' : extension.name + '-v' + version + '_no_redCORE.zip';
 
@@ -89,14 +92,12 @@ gulp.task('release:redform', ['clean:release', 'release:prepare-redform', 'relea
 	});
 });
 
-gulp.task('release:prepare-redform', ['git_version'], function () {
+gulp.task('release:prepare-redform', function () {
 	const xmlFilter = filter('../**/redform.xml', {restore: true});
-	const version = gitshort;
 	return gulp.src([
 			'../component/**/*'
 		])
 		.pipe(xmlFilter)
-		.pipe(replace(/(##VERSION##)/g, version))
 		.pipe(xmlFilter.restore)
 		.pipe(gulp.dest('tmp'));
 });
@@ -160,18 +161,3 @@ gulp.task('release:languages', ['clean:release'], function() {
 		})
 	);
 });
-
-function gitDescribe (cb) {
-	exec('git describe', function (err, stdout, stderr) {
-		cb(stdout.split('\n').join(''))
-	})
-}
-
-function getVersion(xml) {
-	if (config.gitVersion && gitshort) {
-		return gitshort;
-	}
-	else {
-		return xml.extension.version[0];
-	}
-}
