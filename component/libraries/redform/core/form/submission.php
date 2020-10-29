@@ -244,9 +244,7 @@ class RdfCoreFormSubmission
 			throw new RdfExceptionSubmission('Form integrity check failed');
 		}
 
-		$check_captcha = JFactory::getSession()->get('checkcaptcha' . $token, 0);
-
-		if ($check_captcha)
+		if (RdfEntityForm::load($this->formId)->get('captchaactive'))
 		{
 			JPluginHelper::importPlugin('redform_captcha');
 			$res = true;
