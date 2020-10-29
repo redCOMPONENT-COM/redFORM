@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  *
  * @package     Redform.Backend
  * @subpackage  Models
- * @since       __deploy_version__
+ * @since       3.4.0
  */
 class RedformModelCart extends RModelAdmin
 {
