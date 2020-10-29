@@ -334,6 +334,29 @@ class RedformeconomicSoapClient
 	}
 
 	/**
+	 * Method to get all current invoice in economic
+	 *
+	 * @param   string  $start  start
+	 * @param   string  $end    end
+	 *
+	 * @return array
+	 */
+	public function CurrentInvoice_FindByDateInterval($first, $last)
+	{
+		$dateFirst = new DateTime($first);
+		$first = $dateFirst->format('Y-m-d') . "T00:00:00";
+		$dateLast = new DateTime($last);
+		$last = $dateLast->format('Y-m-d') . "T00:00:00";
+
+		echo '<pre>'; echo print_r($first, true); echo '</pre>'; //exit;
+		echo '<pre>'; echo print_r($last, true); echo '</pre>'; //exit;
+
+		$Handle = $this->client->CurrentInvoice_FindByDateInterval(['first' => $first, 'last' => $last])->CurrentInvoice_FindByDateIntervalResult;
+
+		echo '<pre>'; echo print_r($Handle, true); echo '</pre>'; exit;
+	}
+
+	/**
 	 * Method to get current invoice lines in economic
 	 *
 	 * @param   array  $d  handle

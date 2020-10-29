@@ -1,7 +1,1 @@
-redFORM2.5
-==========
-
-status at master: 
-
-status at develop: [![Build Status](https://magnum.travis-ci.com/redCOMPONENT-COM/redFORM2.5.svg?token=vxVVpxnq2ZPuMp3yebRz&branch=develop)](https://magnum.travis-ci.com/redCOMPONENT-COM/redFORM2.5)
-
+# redFORM [![Download latest](https://img.shields.io/badge/Download-stable-brightgreen.svg)](https://github.com/redCOMPONENT-COM/redFORM/releases/latest) [![Drone Build Status](http://qa.redweb.dk/api/badges/redCOMPONENT-COM/redFORM/status.svg?branch=master)](http://qa.redweb.dk/redCOMPONENT-COM/redFORM) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/redCOMPONENT-COM/redFORM/badges/quality-score.png?b=master&s=50257534da9c62dead13cbba077ad054f7cbbc81)](https://scrutinizer-ci.com/g/redCOMPONENT-COM/redFORM/?branch=master)
