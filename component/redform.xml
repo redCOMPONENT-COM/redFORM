@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.56789" method="upgrade">
+<extension type="component" version="3.9" method="upgrade">
 	<name>COM_REDFORM</name>
 	<creationDate>October 2020</creationDate>
 	<author>redWEB</author>
