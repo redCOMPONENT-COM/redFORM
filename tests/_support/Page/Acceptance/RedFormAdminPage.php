@@ -199,6 +199,12 @@ class RedFormAdminPage
 	 */
 	public static $messageNothingData = "Nothing to display";
 
+    /**
+     * @var string
+     * @since 3.3.28
+     */
+    public static $messageSubmit = "Thanks for your submission.";
+
 	/**
 	 * @param $id
 	 * @return string
