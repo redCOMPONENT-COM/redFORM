@@ -123,7 +123,7 @@ class RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $alertHead = "//h4";
+	public static $alertHead = ".alert-message";
 
 	/**
 	 * @var string
