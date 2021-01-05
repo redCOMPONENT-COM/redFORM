@@ -123,7 +123,7 @@ class RedFormAdminPage
 	/**
 	 * @var string
 	 */
-	public static $alertHead = "//h4[@class='alert-heading']";
+	public static $alertHead = ".alert-message";
 
 	/**
 	 * @var string
@@ -198,6 +198,12 @@ class RedFormAdminPage
 	 * @since 3.3.28
 	 */
 	public static $messageNothingData = "Nothing to display";
+
+	/**
+	 * @var string
+	 * @since 3.3.28
+	 */
+	public static $messageSubmit = "Thanks for your submission.";
 
 	/**
 	 * @param $id
