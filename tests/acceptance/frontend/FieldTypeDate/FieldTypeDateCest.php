@@ -205,7 +205,7 @@ class FieldTypeDateCest
 	 */
 	public function clearAll(DisplayFormOnFrontendSteps $i, $scenario)
 	{
-		$i->wantTo('Clear up');
+		$i->wantTo('Clean up');
 		$i = new AddAFormSteps($scenario);
 		$i->deleteFormHasSubmitters($this->paramsForm['name']);
 
