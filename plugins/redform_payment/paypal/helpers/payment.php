@@ -67,12 +67,12 @@ class PaymentPaypal extends  RdfPaymentHelper
 			"item_name" => $request->title,
 			"no_shipping" => '1',
 			"invoice" => $request->uniqueid,
-			"amount" => $this->getPrice($res),
+			"amount" => RedshopHelperCurrency::convert($this->getPrice($res), '', $this->params->get('currency')),
 			"return" => $return_url,
 			"notify_url" => $this->getUrl('notify', $reference),
 			"cancel_return" => $cancel_url,
 			"undefined_quantity" => "0",
-			"currency_code" => $res->currency,
+			"currency_code" => $this->params->get('currency'),
 			"no_note" => "1"
 		);
 
