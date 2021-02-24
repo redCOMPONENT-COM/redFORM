@@ -24,6 +24,9 @@ $tab = $input->getString('tab');
 $isNew = (int) $this->item->id <= 0;
 $showEmailNotice = false;
 
+/** @var RForm $form */
+$form = $this->form;
+
 if (!$isNew)
 {
 	$formEntity = RdfEntityForm::load($this->item->id);
@@ -131,7 +134,19 @@ if (!$isNew)
 			<?php echo JText::_('COM_REDFORM_FIELDS'); ?>
 		</a>
 	</li>
-	<?php endif; ?>
+	<?php endif;
+	foreach ($form->getFieldsets('params') as $fieldset):
+		if (in_array($fieldset->name, ['extra', 'gdpr']))
+		{
+			continue;
+		}
+		?>
+		<li>
+			<a href="#<?php echo $fieldset->name; ?>" data-toggle="tab">
+				<?php echo $fieldset->label ?: $fieldset->name; ?>
+			</a>
+		</li>
+		<?php endforeach; ?>
 </ul>
 
 <?php if ($showEmailNotice): ?>
@@ -530,6 +545,27 @@ if (!$isNew)
 				</div>
 			</div>
 		</div>
+
+	<?php
+	foreach ($form->getFieldsets('params') as $fieldset):
+		if (in_array($fieldset->name, ['extra', 'gdpr']))
+		{
+			continue;
+		}
+	?>
+	<div class="tab-pane" id="<?php echo $fieldset->name ?>">
+		<?php foreach ($form->getFieldset($fieldset->name) as $field): ?>
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo $field->label ?>
+			</div>
+			<div class="controls">
+				<?php echo $field->input ?>
+			</div>
+		</div>
+		<?php endforeach; ?>
+	</div>
+	<?php endforeach; ?>
 
 		<!-- hidden fields -->
 		<input type="hidden" name="option" value="com_redform">
