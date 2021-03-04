@@ -2,7 +2,7 @@
 /**
  * @package     redFORM
  * @subpackage  Steps DisplayFormOnFrontend
- * @copyright   Copyright (C) 2008 - 2020 redCOMPONENT.com. All rights reserved.
+ * @copyright   Copyright (c) 2008 - 2021 redweb.dk. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 

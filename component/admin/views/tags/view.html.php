@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Redform.admin
- * @copyright  redform (C) 2008 redCOMPONENT.com / EventList (C) 2005 - 2008 Christoph Lukes
+ * @copyright  redform (C) 2008 redCOMPONENT.com / EventList (C) 2008 - 2021 redweb.dk - 2008 Christoph Lukes
  * @license    GNU/GPL, see LICENSE.php
  */
 
