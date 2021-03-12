@@ -9,7 +9,7 @@
 	<license>GNU/GPL</license>
 	<version>3.5.1</version>
 	<redcore version="2.2.0" />
-	<releaseName>beta1</releaseName>
+	<releaseName />
 	<description>COM_REDFORM_XML_INSTALL_DESC</description>
 
 	<!-- Runs on install/uninstall/update -->
