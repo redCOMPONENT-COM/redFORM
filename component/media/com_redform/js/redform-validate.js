@@ -181,39 +181,31 @@ var RedFormValidator = function($) {
  	 	}
 
 		if ($form.find('.checkboxes.required').length) {
-
-			$form.find('.checkboxes.required input').change(function(){
-				var fieldset = $(this).parents('fieldset').first();
-				fieldset.removeClass('invalid');
-				$(fieldset).find('input').get().each(function(input){
-					input.setCustomValidity('');
-				});
+			$form.find('.checkboxes.required input').change(function() {
+				setElementError(this, '');
 			});
 		}
 
-	    $form.submit(function(){
+	    $form.submit(function() {
 		    var valid = true;
-		    if ($form.find('.checkboxes.required').length) {
-			    $form.find('.checkboxes.required').get().each(function (fieldset) {
-				    var $fieldset = $(fieldset);
-				    if ($fieldset.find(':checked').length === 0) {
-					    $fieldset.addClass('invalid');
-					    var boxes = $fieldset.find('input').get();
+			if ($form.find('.checkboxes.required').length) {
+				$form.find('.checkboxes.required').each(function () {
+					var $fieldset = $(this);
+					setElementError(this, '');
+					if ($fieldset.find(':checked').length === 0) {
+						$fieldset.addClass('invalid');
+						var boxes = $fieldset.find('input').get();
 
-					    if (boxes.length == 1) {
-						    boxes[0].setCustomValidity(Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED'));
-					    } else {
-						    boxes[0].setCustomValidity(Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED'));
-					    }
+						if (boxes.length === 1) {
+							setElementError(boxes[0], Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED'));
+						} else {
+							setElementError(boxes[0], Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED'));
+						}
 
-					    if (typeof boxes[0].reportValidity === 'function') {
-						    boxes[0].reportValidity();
-					    }
-
-					    valid = false;
-				    }
-			    });
-		    }
+						valid = false;
+					}
+				});
+			}
 
 		    if (valid) {
 			    foundButtons.map(function($el) {
@@ -230,15 +222,26 @@ var RedFormValidator = function($) {
  	 	$form.data('inputfields', inputFields);
  	};
 
- 	var setElementError = function (el, msg) {
-		if (typeof el.setCustomValidity === "function") {
+	var canFocus = function ($el) {
+		if ($el.is(":hidden") || $el.is(":disabled")) {
+			return false;
+		}
+
+		var tabIndex = +$el.attr("tabindex");
+		tabIndex = isNaN(tabIndex) ? -1 : tabIndex;
+		return $el.is(":input, a[href], area[href], iframe") || tabIndex > -1;
+	};
+
+	var setElementError = function (el, msg) {
+		var $el = $(el);
+		if (canFocus($el) && typeof el.setCustomValidity === "function") {
 			el.setCustomValidity(msg);
 		}
 
-		$(el).closest('.field').find('.field-inline-error').remove();
+		$el.closest('.field').find('.field-inline-error').remove();
 
 		if (msg) {
-			$(el).closest('.field').append('<div class="field-inline-error">' + msg + '</div>');
+			$el.closest('.field').append('<div class="field-inline-error">' + msg + '</div>');
 		}
 	};
 
@@ -348,6 +351,7 @@ var RedFormValidator = function($) {
 		validate : validate,
 		setHandler : setHandler,
 		setElementError : setElementError,
+		canFocus : canFocus,
 		attachToForm : attachToForm,
 		custom: custom
 	};
