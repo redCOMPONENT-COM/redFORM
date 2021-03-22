@@ -3,7 +3,7 @@
  * @package     Redform.Plugin
  * @subpackage  Redform.aesirmember
  *
- * @copyright   Copyright (C) 2017 redCOMPONENT.com. All rights reserved.
+ * @copyright   Copyright Copyright (c) 2008 - 2021 redweb.dk. All rights reserved.
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 

@@ -2,14 +2,19 @@
 /**
  * @package    Redform.Admin
  *
- * @copyright  Copyright (C) 2008 - 2013 redCOMPONENT.com. All rights reserved.
+ * @copyright  Copyright (c) 2008 - 2021 redweb.dk. All rights reserved.
  * @license    GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 defined('_JEXEC') or die;
 
+$app = Factory::getApplication();
+
 // Check access.
-if (!JFactory::getUser()->authorise('core.manage', 'com_redform'))
+if (!Factory::getUser()->authorise('core.manage', 'com_redform'))
 {
 	$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 
@@ -45,7 +50,7 @@ JFormHelper::addRulePath(JPATH_LIBRARIES . '/redform/form/rules');
 // Add the include path for html
 JHtml::addIncludePath(JPATH_LIBRARIES . '/redform/html');
 
-$app = JFactory::getApplication();
+PluginHelper::importPlugin('redform');
 
 // Instantiate and execute the front controller.
 $controller = JControllerLegacy::getInstance('Redform');

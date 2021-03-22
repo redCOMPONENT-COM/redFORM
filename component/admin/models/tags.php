@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Redform.admin
- * @copyright  redform (C) 2017 redCOMPONENT.com
+ * @copyright  redform Copyright (c) 2008 - 2021 redweb.dk
  * @license    GNU/GPL, see LICENSE.php
  */
 

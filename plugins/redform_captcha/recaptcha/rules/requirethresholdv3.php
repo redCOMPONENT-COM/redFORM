@@ -3,7 +3,7 @@
  * @package     Aesir.E-Commerce
  * @subpackage  Rules
  *
- * @copyright   Copyright (C) 2012 - 2018 Aesir. All rights reserved.
+ * @copyright   Copyright (c) 2008 - 2021 redweb.dk. All rights reserved.
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 

@@ -2,7 +2,7 @@
 /**
  * @package     Redform
  * @subpackage  Payment.stripe
- * @copyright   Copyright (C) 2008-2015 redCOMPONENT.com. All rights reserved.
+ * @copyright   Copyright (C) 2008 - 2021 redweb.dk. All rights reserved.
  * @license     GNU/GPL, see LICENSE
  */
 
