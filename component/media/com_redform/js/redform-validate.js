@@ -147,7 +147,7 @@ var RedFormValidator = function($) {
  	};
 
  	var attachToForm = function(form) {
- 	 	var inputFields = [], elements,
+ 	 	var inputFields = [], foundButtons = [], elements,
  	 		$form = $(form);
  	 	// Iterate through the form object and attach the validate method to all input fields.
  	 	elements = $form.find('input, textarea, select, fieldset, button');
@@ -156,6 +156,7 @@ var RedFormValidator = function($) {
  	 	 	// Attach isValid method to submit button
  	 	 	if ((tagName === 'input' || tagName === 'button') && ($el.attr('type') === 'submit' || $el.attr('type') === 'image')) {
  	 	 	 	if ($el.hasClass('validate')) {
+ 	 	 	 		foundButtons.push($el);
  	 	 	 	 	$el.on('click', function() {
  	 	 	 	 	 	return isValid(form);
  	 	 	 	 	});
@@ -188,34 +189,43 @@ var RedFormValidator = function($) {
 					input.setCustomValidity('');
 				});
 			});
-
-			$form.submit(function(){
-				var valid = true;
-
-				$form.find('.checkboxes.required').get().each(function(fieldset){
-					var $fieldset = $(fieldset);
-					if ($fieldset.find(':checked').length === 0) {
-						$fieldset.addClass('invalid');
-						var boxes = $fieldset.find('input').get();
-
-						if (boxes.length == 1) {
-							boxes[0].setCustomValidity(Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED'));
-						}
-						else {
-							boxes[0].setCustomValidity(Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED'));
-						}
-
-						if (typeof boxes[0].reportValidity === 'function') {
-							boxes[0].reportValidity();
-						}
-
-						valid = false;
-					}
-				});
-
-				return valid;
-			});
 		}
+
+	    $form.submit(function(){
+		    var valid = true;
+		    if ($form.find('.checkboxes.required').length) {
+			    $form.find('.checkboxes.required').get().each(function (fieldset) {
+				    var $fieldset = $(fieldset);
+				    if ($fieldset.find(':checked').length === 0) {
+					    $fieldset.addClass('invalid');
+					    var boxes = $fieldset.find('input').get();
+
+					    if (boxes.length == 1) {
+						    boxes[0].setCustomValidity(Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOX_IS_REQUIRED'));
+					    } else {
+						    boxes[0].setCustomValidity(Joomla.JText._('COM_REDFORM_VALIDATION_CHECKBOXES_ONE_IS_REQUIRED'));
+					    }
+
+					    if (typeof boxes[0].reportValidity === 'function') {
+						    boxes[0].reportValidity();
+					    }
+
+					    valid = false;
+				    }
+			    });
+		    }
+
+		    if (valid) {
+			    foundButtons.map(function($el) {
+				    $el.prop('disabled', true);
+				    $el.off('click');
+				    $el.val(Joomla.JText._('LIB_REDFORM_VALIDATION_IS_SENDING', 'Sending'));
+				    $el.addClass('isSending');
+			    });
+		    }
+
+		    return valid;
+	    });
 
  	 	$form.data('inputfields', inputFields);
  	};
