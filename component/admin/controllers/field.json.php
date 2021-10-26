@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -48,18 +50,18 @@ class RedformControllerField extends RdfControllerForm
 		$app = JFactory::getApplication();
 
 		$cid = $app->input->get('option-id', array(0), 'array');
-		JArrayHelper::toInteger($cid);
+		ArrayHelper::toInteger($cid);
 
 		$values = $app->input->get('option-value', array(0), 'array');
-		JArrayHelper::toString($values);
+		ArrayHelper::toString($values);
 
 		$labels = $app->input->get('option-label', array(0), 'array');
-		JArrayHelper::toString($labels);
+		ArrayHelper::toString($labels);
 
 		$prices = $app->input->get('option-price', array(0), 'array');
 
 		$sku = $app->input->get('option-sku', array(0), 'array');
-		JArrayHelper::toString($sku);
+		ArrayHelper::toString($sku);
 
 		$fieldId = $app->input->getInt('id', 0);
 

@@ -181,7 +181,7 @@ class RdfRfieldCheckbox extends RdfRfield
 			}
 		}
 
-		if ($this->load()->readonly && !$app->isAdmin())
+		if ($this->load()->readonly && !$app->isClient('administrator'))
 		{
 			$properties['readonly'] = 'readonly';
 		}

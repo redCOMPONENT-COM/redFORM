@@ -12,7 +12,7 @@ use Joomla\CMS\Language\Text;
 defined('_JEXEC') or die;
 
 JHtml::_('behavior.keepalive');
-JHTML::_('behavior.formvalidation');
+JHTML::_('behavior.formvalidator');
 
 $action = JRoute::_('index.php?option=com_redform&view=cart');
 

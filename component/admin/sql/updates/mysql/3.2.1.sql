@@ -5,7 +5,7 @@ ALTER TABLE `#__rwf_billinginfo`
 	CHANGE `fullname` `fullname` varchar(150) NOT NULL DEFAULT '',
 	CHANGE `company` `company` varchar(150) NOT NULL DEFAULT '',
 	CHANGE `vatnumber` `vatnumber` varchar(150) NOT NULL DEFAULT '',
-	CHANGE `address` `address` text NOT NULL DEFAULT '',
+	CHANGE `address` `address` text,
 	CHANGE `city` `city` varchar(150) NOT NULL DEFAULT '',
 	CHANGE `zipcode` `zipcode` varchar(150) NOT NULL DEFAULT '',
 	CHANGE `phone` `phone` varchar(150) NOT NULL DEFAULT '',
@@ -17,27 +17,27 @@ ALTER TABLE `#__rwf_fields`
 	CHANGE `redmember_field` `redmember_field` varchar(20) NOT NULL DEFAULT '',
 	CHANGE `default` `default` varchar(255) NOT NULL DEFAULT '',
 	CHANGE `tooltip` `tooltip` varchar(255) NOT NULL DEFAULT '',
-	CHANGE `params` `params` text NOT NULL DEFAULT '';
+	CHANGE `params` `params` text;
 
 ALTER TABLE `#__rwf_forms`
 	CHANGE `checked_out` `checked_out` int(11) NOT NULL default '0',
 	CHANGE `checked_out_time` `checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
-	CHANGE `submissionbody` `submissionbody` text NOT NULL default '',
+	CHANGE `submissionbody` `submissionbody` text,
 	CHANGE `classname` `classname` varchar(45) NOT NULL default '',
 	CHANGE `contactpersonemail` `contactpersonemail` varchar(255) NOT NULL default '',
 	CHANGE `contactpersonemailsubject` `contactpersonemailsubject` varchar(255) NOT NULL default '',
-	CHANGE `confirmation_notification_recipients` `confirmation_notification_recipients` text NOT NULL default '',
+	CHANGE `confirmation_notification_recipients` `confirmation_notification_recipients` text,
 	CHANGE `confirmation_contactperson_subject` `confirmation_contactperson_subject` varchar(255) NOT NULL default '',
-	CHANGE `confirmation_contactperson_body` `confirmation_contactperson_body` text NOT NULL default '',
+	CHANGE `confirmation_contactperson_body` `confirmation_contactperson_body` text,
 	CHANGE `redirect` `redirect` VARCHAR( 300 ) NOT NULL default '',
 	CHANGE `currency` `currency` varchar(3) NOT NULL default '',
-	CHANGE `paymentprocessing` `paymentprocessing` text NOT NULL default '',
-	CHANGE `paymentaccepted` `paymentaccepted` text NOT NULL default '',
-	CHANGE `contactpaymentnotificationsubject` `contactpaymentnotificationsubject` text NOT NULL default '',
-	CHANGE `contactpaymentnotificationbody` `contactpaymentnotificationbody` text NOT NULL default '',
-	CHANGE `submitterpaymentnotificationsubject` `submitterpaymentnotificationsubject` text NOT NULL default '',
-	CHANGE `submitterpaymentnotificationbody` `submitterpaymentnotificationbody` text NOT NULL default '',
-	CHANGE `cond_recipients` `cond_recipients` text NOT NULL default '';
+	CHANGE `paymentprocessing` `paymentprocessing` text,
+	CHANGE `paymentaccepted` `paymentaccepted` text,
+	CHANGE `contactpaymentnotificationsubject` `contactpaymentnotificationsubject` text,
+	CHANGE `contactpaymentnotificationbody` `contactpaymentnotificationbody` text,
+	CHANGE `submitterpaymentnotificationsubject` `submitterpaymentnotificationsubject` text,
+	CHANGE `submitterpaymentnotificationbody` `submitterpaymentnotificationbody` text,
+	CHANGE `cond_recipients` `cond_recipients` text;
 
 ALTER TABLE `#__rwf_form_field`
 	CHANGE `ordering` `ordering` int(11) NOT NULL default '0';
@@ -48,7 +48,7 @@ ALTER TABLE `#__rwf_submitters`
 	CHANGE `confirmed_ip` `confirmed_ip` VARCHAR(50) NOT NULL default '',
 	CHANGE `confirmed_type` `confirmed_type` VARCHAR(50)  NOT NULL default 'email',
 	CHANGE `integration` `integration` VARCHAR(30) NOT NULL default '',
-	CHANGE `rawformdata` `rawformdata` text NOT NULL default '',
+	CHANGE `rawformdata` `rawformdata` text,
 	CHANGE `price` `price` DECIMAL(10, 2) NOT NULL default '0.0',
 	CHANGE `vat` `vat` DECIMAL(10, 2) NOT NULL default '0.0',
 	CHANGE `currency` `currency` varchar(3) NOT NULL default '';
@@ -72,7 +72,7 @@ ALTER TABLE `#__rwf_payment_request`
 	CHANGE `vat` `vat` DECIMAL(10, 2) NOT NULL default '0.0',
 	CHANGE `currency` `currency` varchar(3) NOT NULL default '',
 	CHANGE `paid` `paid` tinyint(2) NOT NULL default '0',
-	CHANGE `note` `note` text NOT NULL default '';
+	CHANGE `note` `note` text;
 
 ALTER TABLE `#__rwf_payment_request_item`
 	CHANGE `sku` `sku` varchar(255) NOT NULL default '',
@@ -86,10 +86,10 @@ ALTER TABLE `#__rwf_cart`
 	CHANGE `vat` `vat` DECIMAL(10, 2) NOT NULL default '0.0',
 	CHANGE `currency` `currency` varchar(3) NOT NULL default '',
 	CHANGE `paid` `paid` tinyint(2) NOT NULL default '0',
-	CHANGE `note` `note` text NOT NULL default '';
+	CHANGE `note` `note` text;
 
 ALTER TABLE `#__rwf_payment`
 	CHANGE `date` `date` datetime NOT NULL default '0000-00-00 00:00:00',
 	CHANGE `status` `status` varchar(100) NOT NULL default '',
-	CHANGE `data` `data` text NOT NULL default '',
+	CHANGE `data` `data` text,
 	CHANGE `paid` `paid` tinyint(2) NOT NULL default '0';

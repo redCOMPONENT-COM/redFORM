@@ -41,7 +41,7 @@ class RdfRfieldTextarea extends RdfRfieldTextfield
 		$properties['cols'] = $this->getParam('cols', 25);
 		$properties['rows'] = $this->getParam('rows', 6);
 
-		if ($this->load()->readonly && !$app->isAdmin())
+		if ($this->load()->readonly && !$app->isClient('administrator'))
 		{
 			$properties['readonly'] = 'readonly';
 		}

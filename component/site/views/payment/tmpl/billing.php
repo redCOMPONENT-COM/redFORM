@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.formvalidator');
 ?>
 <h2 class="redform-billto"><?php echo JText::_('COM_REDFORM_BILLING_TITLE');?></h2>
 <form action="<?php echo $this->action; ?>" method="post" class="form-validate form-horizontal">

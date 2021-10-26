@@ -94,7 +94,7 @@ class RdfRfieldDate extends RdfRfield
 
 		$properties['dateformat'] = $this->getParam('dateformat', '%Y-%m-%d');
 
-		if ($this->load()->readonly && !$app->isAdmin())
+		if ($this->load()->readonly && !$app->isClient('administrator'))
 		{
 			$properties['readonly'] = 'readonly';
 		}

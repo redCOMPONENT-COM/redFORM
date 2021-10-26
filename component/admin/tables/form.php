@@ -247,7 +247,7 @@ class RedformTableForm extends RTable
 
 		$db->setQuery($query);
 
-		if (!$res = $db->query())
+		if (!$res = $db->execute())
 		{
 			$this->setError($db->getErrorMsg());
 
@@ -257,7 +257,7 @@ class RedformTableForm extends RTable
 		$q = "DROP TABLE #__rwf_forms_" . $pk;
 		$db->setQuery($q);
 
-		if (!$res = $db->query())
+		if (!$res = $db->execute())
 		{
 			$this->setError($db->getErrorMsg());
 

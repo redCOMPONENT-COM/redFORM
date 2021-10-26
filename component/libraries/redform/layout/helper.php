@@ -36,7 +36,7 @@ class RdfLayoutHelper extends RLayoutHelper
 			$layoutSuffix = JComponentHelper::getParams('com_redform')->get('form_layout');
 
 			if ($layoutSuffix == 'bootstrap'
-				|| (JFactory::getApplication()->isAdmin() && JFactory::getApplication()->input->get('options') == 'com_redform'))
+				|| (JFactory::getApplication()->isClient('administrator') && JFactory::getApplication()->input->get('options') == 'com_redform'))
 			{
 				$options['suffixes'] = array('bootstrap');
 			}

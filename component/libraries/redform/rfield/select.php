@@ -205,7 +205,7 @@ class RdfRfieldSelect extends RdfRfield
 			$properties['multiple'] = 'multiple';
 		}
 
-		if ($this->load()->readonly && !$app->isAdmin())
+		if ($this->load()->readonly && !$app->isClient('administrator'))
 		{
 			$properties['readonly'] = 'readonly';
 		}

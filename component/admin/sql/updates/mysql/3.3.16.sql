@@ -1,6 +1,6 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 ALTER TABLE `#__rwf_forms`
-	ADD `params` text NOT NULL;
+	ADD `params` text;
 
 SET FOREIGN_KEY_CHECKS=1;

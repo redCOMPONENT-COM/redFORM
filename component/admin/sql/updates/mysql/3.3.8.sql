@@ -3,7 +3,7 @@ SET FOREIGN_KEY_CHECKS=0;
 CREATE TABLE IF NOT EXISTS `#__rwf_section` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
-  `description` text NOT NULL default '',
+  `description` text,
   `class` varchar(100) NOT NULL default '',
   `ordering` int(11) NOT NULL default '0',
   `checked_out` int(11) NOT NULL default '0',

@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die;
 
 jimport('joomla.mail.helper');
@@ -96,7 +98,7 @@ class RdfCore extends JObject
 	 */
 	public function setSids($ids, $resetCache = true)
 	{
-		JArrayHelper::toInteger($ids);
+		ArrayHelper::toInteger($ids);
 
 		if ($ids !== $this->sids)
 		{
@@ -1108,7 +1110,7 @@ class RdfCore extends JObject
 			$pk = array($pk);
 		}
 
-		JArrayHelper::toInteger($pk);
+		ArrayHelper::toInteger($pk);
 
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_redform/tables');
 		$table = JTable::getInstance('Submitter', 'RedformTable');
@@ -1189,7 +1191,7 @@ class RdfCore extends JObject
 
 		foreach ($fields as $fieldOrg)
 		{
-			if (!($app->isAdmin() || $fieldOrg->published))
+			if (!($app->isClient('administrator') || $fieldOrg->published))
 			{
 				// Only display unpublished fields in backend form
 				continue;

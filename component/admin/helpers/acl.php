@@ -30,7 +30,10 @@ final class RedformHelpersAcl
 	{
 		$user = JFactory::getUser();
 		$result	= new JObject;
-		$actions = JAccess::getActions('com_redform', $section);
+		$actions = JAccess::getActionsFromFile(
+			JPATH_ADMINISTRATOR . '/components/com_redform/access.xml',
+			"/access/section[@name='" . $section . "']/"
+		);
 
 		foreach ($actions as $action)
 		{

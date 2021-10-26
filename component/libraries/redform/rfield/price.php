@@ -70,7 +70,7 @@ class RdfRfieldPrice extends RdfRfield
 		$properties['size'] = $this->getParam('size', 25);
 		$properties['maxlength'] = $this->getParam('maxlength', 250);
 
-		if ($this->load()->readonly && !$app->isAdmin())
+		if ($this->load()->readonly && !$app->isClient('administrator'))
 		{
 			$properties['readonly'] = 'readonly';
 		}

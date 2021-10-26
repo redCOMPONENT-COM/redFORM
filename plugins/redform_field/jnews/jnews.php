@@ -287,7 +287,7 @@ class plgRedform_fieldJnews extends AbstractFieldPlugin
 				. ' , subdate = ' . time();
 			$db->setQuery($query);
 
-			if (!$db->query())
+			if (!$db->execute())
 			{
 				$mainframe->enqueueMessage(JText::_('PLG_REDFORM_MAILING_jnews_SUBSCRIBE_ERROR') . ' ' . $db->getErrorMsg(), 'error');
 			}

@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 $action = JRoute::_('index.php?option=com_redform&view=section');
+JHtml::_('behavior.formvalidator');
 ?>
 <form action="<?php echo $action; ?>" method="post" name="adminForm" id="adminForm"
       class="form-validate form-horizontal">
