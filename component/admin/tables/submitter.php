@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -186,7 +188,7 @@ class RedformTableSubmitter extends RTable
 		if (is_array($pk))
 		{
 			// Sanitize input.
-			JArrayHelper::toInteger($pk);
+			ArrayHelper::toInteger($pk);
 			$pk = RHelperArray::quote($pk);
 			$pk = implode(',', $pk);
 		}

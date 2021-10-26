@@ -47,7 +47,7 @@ class RdfHelperTagsCart
 
 		// Plugins integration
 		JPluginHelper::importPlugin('redform_integration');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onRedformTagReplaceCart', array(&$text, $this->cart));
 
 		foreach ($alltags as $tag)

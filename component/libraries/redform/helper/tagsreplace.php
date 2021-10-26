@@ -52,7 +52,7 @@ class RdfHelperTagsreplace
 
 			// Plugins integration
 			JPluginHelper::importPlugin('redform_replacecondition');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 			$dispatcher->trigger('onRedformGetConditions', array(&$conditions));
 		}
 
@@ -92,7 +92,7 @@ class RdfHelperTagsreplace
 
 		// Plugins integration
 		JPluginHelper::importPlugin('redform_integration');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onRedformTagReplace', array(&$text, $this->formdata, $this->answers));
 
 		foreach ($alltags as $tag)
@@ -179,7 +179,7 @@ class RdfHelperTagsreplace
 
 		// Plugins integration
 		JPluginHelper::importPlugin('redform_replacecondition');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onRedformProcessReplaceCondition', array($parts, $this->answers, &$isValid));
 
 		return $isValid;

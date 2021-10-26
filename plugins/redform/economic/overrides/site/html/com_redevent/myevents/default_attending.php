@@ -32,7 +32,7 @@ $sids = array_map(
 );
 
 JPluginHelper::importPlugin('redform');
-$dispatcher = JDispatcher::getInstance();
+$dispatcher = RFactory::getDispatcher();
 $dispatcher->trigger('onGetSubmittersInvoices', array($sids, &$invoices));
 
 $pdfImg = JHtml::image('plugins/redform/economic/images/pdf.png', 'get pdf');

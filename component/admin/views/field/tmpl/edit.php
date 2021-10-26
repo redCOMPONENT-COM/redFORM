@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 // HTML helpers
 JHtml::_('behavior.keepalive');
-JHTML::_('behavior.formvalidation');
+JHTML::_('behavior.formvalidator');
 JHtml::_('rbootstrap.tooltip');
 JHtml::_('rjquery.chosen', 'select');
 JHtml::_('rsearchtools.main');
@@ -36,11 +36,11 @@ if ($this->item->hasOptions && $this->item->id)
 
 		var form = document.adminForm;
 		if (pressbutton == 'field.cancel') {
-			submitform(pressbutton);
+			Joomla.submitform(pressbutton);
 			return true;
 		}
 		if (document.formvalidator.isValid(form)) {
-			submitform(pressbutton);
+			Joomla.submitform(pressbutton);
 			return true;
 		}
 		else {

@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -52,7 +54,7 @@ class RedformControllerSubmitters extends RControllerAdmin
 			$this->setMessage(JText::plural($this->text_prefix . '_N_SUBMITTERS_CONFIRMED', count($cid)));
 
 			JPluginHelper::importPlugin('redform');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 			$dispatcher->trigger('onConfirm', array('admin', &$cid));
 		}
 		else
@@ -85,7 +87,7 @@ class RedformControllerSubmitters extends RControllerAdmin
 			$this->setMessage(JText::plural($this->text_prefix . '_N_SUBMITTERS_UNCONFIRMED', count($cid)));
 
 			JPluginHelper::importPlugin('redform');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 			$dispatcher->trigger('onUnconfirm', array('admin', &$cid));
 		}
 		else
@@ -167,8 +169,7 @@ class RedformControllerSubmitters extends RControllerAdmin
 		else
 		{
 			// Make sure the item ids are integers
-			jimport('joomla.utilities.arrayhelper');
-			JArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 
 			$force = $this->getTask() == 'forcedelete';
 

@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die('Restricted access');
 
 // Import library dependencies
@@ -117,7 +119,7 @@ class PlgRedform_captchaRecaptcha extends JPlugin
 
 		if ($this->version == 2)
 		{
-			$text = '<div class="g-recaptcha"' . JArrayHelper::toString($attributes, '=', ' ') . '></div>';
+			$text = '<div class="g-recaptcha"' . ArrayHelper::toString($attributes, '=', ' ') . '></div>';
 		}
 
 		if ($this->version == 3)

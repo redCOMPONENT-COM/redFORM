@@ -45,7 +45,7 @@ class RdfRfieldDatetimepicker extends RdfRfield
 		$minDate = (string) $this->getParam('minDate');
 		$maxDate = (string) $this->getParam('maxDate');
 
-		$readonly = ($this->load()->readonly && !$app->isAdmin());
+		$readonly = ($this->load()->readonly && !$app->isClient('administrator'));
 
 		switch ($picker)
 		{

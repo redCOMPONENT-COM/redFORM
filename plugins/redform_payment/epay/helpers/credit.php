@@ -100,7 +100,7 @@ class PaymentEpayCredit
 
 			$app = JFactory::getApplication();
 
-			if ($app->isAdmin())
+			if ($app->isClient('administrator'))
 			{
 				$app->enqueueMessage('EPAY CREDIT ERROR:' . $e->getMessage(), 'warning');
 			}

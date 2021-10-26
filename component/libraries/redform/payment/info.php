@@ -145,7 +145,7 @@ class RdfPaymentInfo
 		if (!$this->paymentDetailFields)
 		{
 			JPluginHelper::importPlugin('redform_integration');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 
 			// More fields with integration
 			$paymentDetailFields = new RdfPaymentInfointegration;

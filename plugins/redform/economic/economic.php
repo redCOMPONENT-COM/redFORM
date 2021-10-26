@@ -9,6 +9,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Utilities\ArrayHelper;
 
 defined('JPATH_BASE') or die;
 
@@ -381,7 +382,7 @@ class plgRedformEconomic extends JPlugin
 			return true;
 		}
 
-		JArrayHelper::toInteger($submitterIds);
+		ArrayHelper::toInteger($submitterIds);
 
 		$query = $this->db->getQuery(true)
 			->select('i.*, ci.payment_request_id, pr.submission_id')

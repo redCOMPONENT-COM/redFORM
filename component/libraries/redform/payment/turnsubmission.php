@@ -85,7 +85,7 @@ class RdfPaymentTurnsubmission
 		}
 
 		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onRedformAfterTurnSubmission', array($this->creditRequest));
 
 		return $this->creditRequest->id;
@@ -103,7 +103,7 @@ class RdfPaymentTurnsubmission
 		if ($this->creditRequest->price < 0 && $previousPayment = $this->getPreviousPayment())
 		{
 			JPluginHelper::importPlugin('redform');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 
 			JPluginHelper::importPlugin('redform_payment');
 			$dispatcher->trigger(

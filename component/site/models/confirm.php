@@ -52,7 +52,7 @@ class RedformModelConfirm extends RModel
 		$this->setState('updatedIds', $ids);
 
 		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onSubmissionConfirmed', array($ids));
 
 		return true;

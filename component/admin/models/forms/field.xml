@@ -41,7 +41,7 @@
 				label="COM_REDFORM_FORMS_XML_FIELD_TYPE"
 				description="COM_REDFORM_FORMS_XML_FIELD_TYPE_DESC"
 				required="true"
-                onchange="submitform('field.setType');"
+                onchange="Joomla.submitform('field.setType');"
 				/>
 		<field
 				name="tooltip"

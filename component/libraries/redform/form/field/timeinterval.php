@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 JFormHelper::loadFieldClass('list');
+JHtml::_('behavior.formvalidator');
 
 /**
  * redFORM Field
@@ -38,10 +39,15 @@ class RedformFormFieldTimeinterval extends JFormFieldText
 	{
 		$script = <<<JS
 			jQuery(document).ready(function(){
-			   document.formvalidator.setHandler('timeinterval', function(value) {
-			      regex=/^[0-9]+\s*(day[s]*|week[s]*|month[s]*|year[s]*)$/;
-			      return regex.test(value);
-			   });
+				var checkExist = setInterval(function() {
+					   if (document.formvalidator !== undefined) {
+						   document.formvalidator.setHandler('timeinterval', function(value) {
+							   regex=/^[0-9]+\s*(day[s]*|week[s]*|month[s]*|year[s]*)$/;
+							   return regex.test(value);
+							});
+						  clearInterval(checkExist);
+					   }
+					}, 100);
 			});
 JS;
 		JFactory::getDocument()->addScriptDeclaration($script);

@@ -85,7 +85,7 @@ $search = $this->state->get('filter.search');
 					<tr>
 						<td><?php echo $this->pagination->getRowOffset($i); ?></td>
 						<td>
-							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+							<?php echo JHtml::_('rgrid.id', $i, $item->id); ?>
 						</td>
 						<td>
 							<a href="<?php echo JRoute::_('index.php?option=com_redform&view=cart&id=' . $item->id); ?>">

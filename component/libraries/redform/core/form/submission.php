@@ -248,7 +248,7 @@ class RdfCoreFormSubmission
 		{
 			JPluginHelper::importPlugin('redform_captcha');
 			$res = true;
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 			$results = $dispatcher->trigger('onCheckCaptcha', array(&$res));
 
 			if (count($results) && $res == false)
@@ -672,7 +672,7 @@ class RdfCoreFormSubmission
 		$listnames = $answers->getListNames();
 
 		JPluginHelper::importPlugin('redform_mailing');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 
 		foreach ((array) $listnames as $field_id => $lists)
 		{

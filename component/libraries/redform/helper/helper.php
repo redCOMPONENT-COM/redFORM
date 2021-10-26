@@ -40,7 +40,7 @@ class RdfHelper
 
 			// See if there are any plugins that wish to alter the configuration (client specific demands !)
 			JPluginHelper::importPlugin('redform');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 			$dispatcher->trigger('onGetRedformConfig', array(&$config));
 		}
 

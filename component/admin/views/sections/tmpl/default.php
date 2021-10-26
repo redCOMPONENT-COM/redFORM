@@ -89,7 +89,7 @@ if ($saveOrder)
 					<tr>
 						<td><?php echo $this->pagination->getRowOffset($i); ?></td>
 						<td>
-							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+							<?php echo JHtml::_('rgrid.id', $i, $item->id); ?>
 						</td>
 						<?php if (($search == '') && ($this->canEditState)) : ?>
 							<td class="order nowrap center">

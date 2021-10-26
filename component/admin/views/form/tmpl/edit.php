@@ -16,7 +16,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('rbootstrap.tooltip', '.hasToolTip');
 JHtml::_('rjquery.chosen', 'select');
 JHtml::_('rsearchtools.main');
-JHTML::_('behavior.formvalidation');
+JHTML::_('behavior.formvalidator');
 
 $action = JRoute::_('index.php?option=com_redform&view=form');
 $input = JFactory::getApplication()->input;
@@ -42,12 +42,12 @@ if (!$isNew)
 			var form = document.adminForm;
 
 			if (pressbutton == 'form.cancel') {
-			    submitform(pressbutton);
+				Joomla.submitform(pressbutton);
 			    return true;
 			}
 
 			if (document.formvalidator.isValid(form)) {
-			    submitform(pressbutton);
+				Joomla.submitform(pressbutton);
 			    return true;
 			}
 			else {

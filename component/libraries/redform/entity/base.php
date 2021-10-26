@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -845,7 +847,7 @@ abstract class RdfEntityBase
 			$data = $table->getProperties(1);
 
 			// Item is always an object
-			$this->item = JArrayHelper::toObject($data);
+			$this->item = ArrayHelper::toObject($data);
 			$this->id = $table->id;
 			$this->table = clone $table;
 

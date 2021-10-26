@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_billinginfo` (
   `company` varchar(150) NOT NULL,
   `iscompany` tinyint(1) NOT NULL DEFAULT '0',
   `vatnumber` varchar(150) NOT NULL,
-  `address` text NOT NULL,
+  `address` text NULL,
   `city` varchar(150) NOT NULL,
   `zipcode` varchar(150) NOT NULL,
   `phone` varchar(150) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `vat` DECIMAL(10, 2) NULL DEFAULT NULL,
   `currency` varchar(3) DEFAULT NULL,
   `paid` tinyint(2) NOT NULL,
-  `note` text NULL,
+  `note` text,
   PRIMARY KEY (`id`),
   KEY `submission_id` (`submission_id`)
 ) COMMENT='payment requests';
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_cart` (
   `vat` DECIMAL(10, 2) NULL DEFAULT NULL,
   `currency` varchar(3) DEFAULT NULL,
   `paid` tinyint(2) NOT NULL,
-  `note` text NULL,
+  `note` text,
   PRIMARY KEY (`id`),
   KEY `reference` (`reference`)
 ) COMMENT='payment cart';
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `#__rwf_payment_request` (
   `vat` double NULL DEFAULT NULL,
   `currency` varchar(3) DEFAULT NULL,
   `paid` tinyint(2) NOT NULL,
-  `note` text NULL,
+  `note` text,
   PRIMARY KEY (`id`),
   KEY `submission_id` (`submission_id`)
 ) COMMENT='submissions payment requests';

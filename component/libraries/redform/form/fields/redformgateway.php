@@ -34,7 +34,7 @@ class JFormFieldRedformgateway extends JFormFieldList
 	protected function getOptions()
 	{
 		JPluginHelper::importPlugin('redform_payment');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$gateways = array();
 		$results = $dispatcher->trigger('onGetGateway', array(&$gateways));
 

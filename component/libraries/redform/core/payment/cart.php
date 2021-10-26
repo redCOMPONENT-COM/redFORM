@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later, see LICENSE.
  */
 
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -141,7 +143,7 @@ class RdfCorePaymentCart
 			throw new Exception('Nothing to pay');
 		}
 
-		$ids = JArrayHelper::getColumn($paymentRequests, 'id');
+		$ids = ArrayHelper::getColumn($paymentRequests, 'id');
 
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
@@ -245,7 +247,7 @@ class RdfCorePaymentCart
 
 		// Trigger event for custom handling
 		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onPaymentAfterSave', array('com_redform.payment.helper', $table, true));
 	}
 

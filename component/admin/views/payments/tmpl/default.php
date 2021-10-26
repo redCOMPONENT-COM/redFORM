@@ -66,7 +66,7 @@ $return = \Joomla\CMS\Factory::getApplication()->input->getBase64('return');
 					?>
 					<tr>
 						<td>
-							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+							<?php echo JHtml::_('rgrid.id', $i, $item->id); ?>
 						</td>
 						<td>
 							<a href="<?php echo JRoute::_('index.php?option=com_redform&task=payment.edit&id=' . $item->id . '&pr=' . $payment_request_id); ?>">

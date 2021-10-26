@@ -110,7 +110,7 @@ class RedformModelForm extends RModelAdmin
 			$q .= ") COMMENT = " . $db->Quote('redFORMS Form ' . $formid);
 			$db->setQuery($q);
 
-			if (!$db->query())
+			if (!$db->execute())
 			{
 				throw new Exception($db->getError());
 			}

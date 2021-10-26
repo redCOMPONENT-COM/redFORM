@@ -313,7 +313,7 @@ class RedFormModelPayment extends JModelLegacy
 		$doSend = true;
 
 		JPluginHelper::importPlugin('redform_payment');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onBeforeSendPaymentNotificationSubmitter', array(&$mailer, $this->getCart(), &$doSend));
 
 		if (!$doSend)

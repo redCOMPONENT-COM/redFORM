@@ -764,7 +764,7 @@ class RdfAnswers
 			$row->submission_ip = getenv('REMOTE_ADDR');
 			$row->language = $mainframe->getLanguage()->getTag();
 
-			if (!$mainframe->isAdmin())
+			if (!$mainframe->isClient('administrator'))
 			{
 				$row->user_id = JFactory::getUser()->id;
 			}
