@@ -193,7 +193,7 @@ class RdfEntityCart extends RdfEntityBase
 			$this->integrationDetails = false;
 
 			JPluginHelper::importPlugin('redform_integration');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 
 			foreach ($this->getPaymentRequests() as $pr)
 			{
@@ -396,7 +396,7 @@ class RdfEntityCart extends RdfEntityBase
 		$table->bind($data);
 
 		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onRedformPrefillBilling', array($this->reference, &$table, &$prefilled));
 
 		return $prefilled;

@@ -143,7 +143,7 @@ foreach ($this->items as $item)
 			?>
 			<tr>
 				<td>
-					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+					<?php echo JHtml::_('rgrid.id', $i, $item->id); ?>
 				</td>
 				<td>
 					<?php echo $item->id; ?>

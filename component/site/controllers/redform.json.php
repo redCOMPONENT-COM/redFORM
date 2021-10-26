@@ -42,7 +42,7 @@ class RedformControllerRedform extends RedformController
 			$result = $model->apisaveform();
 
 			JPluginHelper::importPlugin('redform');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 			$dispatcher->trigger('onAfterRedformSavedSubmission', array(&$result));
 
 			$notificationModel = $this->getModel('notification');

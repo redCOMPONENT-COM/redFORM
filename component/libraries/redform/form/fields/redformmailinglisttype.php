@@ -35,7 +35,7 @@ class JFormFieldRedformmailinglisttype extends JFormFieldList
 	{
 		$res = array();
 		JPluginHelper::importPlugin('redform_mailing');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$results = $dispatcher->trigger('getIntegrationName', array(&$res));
 
 		$options = array();

@@ -94,7 +94,7 @@ class RdfPaymentTurnmultiple
 		if ($previousPayment = $this->getPreviousPayment())
 		{
 			JPluginHelper::importPlugin('redform');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 
 			JPluginHelper::importPlugin('redform_payment');
 			$dispatcher->trigger(

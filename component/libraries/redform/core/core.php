@@ -409,7 +409,7 @@ class RdfCore extends JObject
 		{
 			JPluginHelper::importPlugin('redform_captcha');
 			$captcha = '';
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 			$results = $dispatcher->trigger('onGetCaptchaField', array(&$captcha));
 
 			if (count($results))

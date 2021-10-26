@@ -47,7 +47,7 @@ class RedformControllerRedform extends RedformController
 		}
 
 		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onAfterRedformSavedSubmission', array(&$result));
 
 		if ($url = $model->hasActivePayment())
@@ -93,7 +93,7 @@ class RedformControllerRedform extends RedformController
 		$updatedIds = array();
 
 		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onConfirm', array($type, &$updatedIds));
 
 		$input->set('view', 'confirm');

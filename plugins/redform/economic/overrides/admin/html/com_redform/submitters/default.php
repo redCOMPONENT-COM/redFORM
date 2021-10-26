@@ -32,7 +32,7 @@ if (!empty($this->items))
 	$invoices = null;
 
 	JPluginHelper::importPlugin('redform');
-	$dispatcher = JDispatcher::getInstance();
+	$dispatcher = RFactory::getDispatcher();
 	$dispatcher->trigger('onGetSubmittersInvoices', array($sids, &$invoices));
 
 	$pdfImg = JHtml::image('plugins/redform/economic/images/pdf.png', 'get pdf');
@@ -126,7 +126,7 @@ if (!empty($this->items))
 			?>
 			<tr>
 				<td>
-					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+					<?php echo JHtml::_('rgrid.id', $i, $item->id); ?>
 				</td>
 				<td>
 					<?php echo $item->id; ?>

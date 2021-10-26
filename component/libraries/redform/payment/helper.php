@@ -196,7 +196,7 @@ abstract class RdfPaymentHelper extends JObject
 
 		// Trigger event for custom handling
 		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onPaymentAfterSave', array('com_redform.payment.helper', $table, true));
 	}
 
@@ -306,7 +306,7 @@ abstract class RdfPaymentHelper extends JObject
 	protected function convertPrice($price, $currencyFrom, $currencyTo)
 	{
 		JPluginHelper::importPlugin('currencyconverter');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 
 		$result = false;
 		$dispatcher->trigger('onCurrencyConvert', array($price, $currencyFrom, $currencyTo, &$result));

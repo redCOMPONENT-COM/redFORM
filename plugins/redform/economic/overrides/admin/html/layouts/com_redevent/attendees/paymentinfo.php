@@ -21,7 +21,7 @@ $link = JHTML::link(JRoute::_('index.php?option=com_redform&view=payments&submit
 $invoices = null;
 
 JPluginHelper::importPlugin('redform');
-$dispatcher = JDispatcher::getInstance();
+$dispatcher = RFactory::getDispatcher();
 $dispatcher->trigger('onGetSubmittersInvoices', array(array($row->sid), &$invoices));
 
 $pdfImg = JHtml::image('plugins/redform/economic/images/pdf.png', 'get pdf');

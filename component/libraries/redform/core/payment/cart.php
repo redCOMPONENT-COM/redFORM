@@ -247,7 +247,7 @@ class RdfCorePaymentCart
 
 		// Trigger event for custom handling
 		JPluginHelper::importPlugin('redform');
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = RFactory::getDispatcher();
 		$dispatcher->trigger('onPaymentAfterSave', array('com_redform.payment.helper', $table, true));
 	}
 

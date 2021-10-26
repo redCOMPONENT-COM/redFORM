@@ -65,7 +65,7 @@ class RdfCorePaymentGateway
 
 			// Filter gateways through plugins
 			JPluginHelper::importPlugin('redform_payment');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 			$dispatcher->trigger('onFilterGateways', array(&$options, $this->paymentDetails));
 		}
 
@@ -82,7 +82,7 @@ class RdfCorePaymentGateway
 		if (empty($this->gateways))
 		{
 			JPluginHelper::importPlugin('redform_payment');
-			$dispatcher = JDispatcher::getInstance();
+			$dispatcher = RFactory::getDispatcher();
 
 			$gateways = array();
 			$dispatcher->trigger('onGetGateway', array(&$gateways, $this->paymentDetails));
