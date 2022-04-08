@@ -5,10 +5,9 @@
  * @license    GNU General Public License version 2 or later, see LICENSE.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die('Restricted access');
+use Redform\Controller\RedformJsonController;
 
-jimport('joomla.application.component.controller');
+defined('_JEXEC') or die('Restricted access');
 
 /**
  * Redform Controller
@@ -16,7 +15,7 @@ jimport('joomla.application.component.controller');
  * @package  Redform.Front
  * @since    2.5
  */
-class RedformControllerRedform extends RedformController
+class RedformControllerRedform extends RedformJsonController
 {
 	/**
 	 * save the posted form data.

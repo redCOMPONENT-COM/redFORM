@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="params">
+		<fieldset name="extra" label="extra">
+			<field
+					name="maxsize"
+					type="text"
+					default="1000"
+					label="COM_REDFORM_FIELD_FILESUPLOAD_PARAMS_MAXSIZE"
+					description="COM_REDFORM_FIELD_FILESUPLOAD_PARAMS_MAXSIZE_DESC"/>
+			<field name="maxfiles"
+				   type="text"
+				   default="10"
+				   label="COM_REDFORM_FIELD_FILESUPLOAD_PARAMS_MAXFILES"
+				   description="COM_REDFORM_FIELD_FILESUPLOAD_PARAMS_MAXFILES_DESC"/>
+			<field name="accepted_files"
+				   type="text"
+				   default=""
+				   label="COM_REDFORM_FIELD_FILESUPLOAD_PARAMS_ACCEPTED_FILES"
+				   description="COM_REDFORM_FIELD_FILESUPLOAD_PARAMS_ACCEPTED_FILES_DESC"/>
+		</fieldset>
+	</fields>
+</form>
