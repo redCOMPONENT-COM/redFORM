@@ -123,7 +123,7 @@ class RedformJsonController extends \JControllerLegacy
 				Folder::create($tmp);
 			}
 
-			$acceptedFiles = explode(',', $params->get('accepted_files'));
+			$acceptedFiles = explode(',', $params->get('accepted_files', 'image/*'));
 
 			foreach ($files as $key => $file)
 			{

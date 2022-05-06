@@ -46,7 +46,7 @@ if (!empty($data->getValue()))
 			paramName: "file",
 			addRemoveLinks: true,
 			maxFilesize: <?php echo (int) $data->getParam('maxsize', 1000) ?>,
-			acceptedFiles: <?php echo (empty($data->getParam('accepted_files', '')) ? 'null' : '\'' . $data->getParam('accepted_files', '') . '\'') ?>,
+			acceptedFiles: '<?php echo $data->getParam('accepted_files', 'image/*') ?>',
 			params: {
 				'<?php echo Session::getFormToken() ?>': 1,
 				'form_id': '<?php echo $data->form_id ?>',

@@ -15,7 +15,8 @@
 				   description="COM_REDFORM_FIELD_FILESUPLOAD_PARAMS_MAXFILES_DESC"/>
 			<field name="accepted_files"
 				   type="text"
-				   default=""
+				   default="image/*"
+				   required="true"
 				   label="COM_REDFORM_FIELD_FILESUPLOAD_PARAMS_ACCEPTED_FILES"
 				   description="COM_REDFORM_FIELD_FILESUPLOAD_PARAMS_ACCEPTED_FILES_DESC"/>
 		</fieldset>
