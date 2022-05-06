@@ -26,7 +26,7 @@ $sid = $data['sid'];
 $fieldsHtml = $data['fieldsHtml'];
 $referer64 = $data['referer64'];
 ?>
-<form action="<?php echo $action; ?>" method="post" name="redform" class="redform-validate form-horizontal <?php echo $form->classname; ?>" enctype="multipart/form-data">
+<form action="<?php echo $action; ?>" method="post" id="redForm_<?php echo $form->id ?>" name="redform" class="redform-validate form-horizontal <?php echo $form->classname; ?>" enctype="multipart/form-data">
 
 	<?php echo $fieldsHtml; ?>
 
