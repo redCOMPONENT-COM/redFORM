@@ -37,7 +37,7 @@ class RdfCoreFormSubmission
 	{
 		if ($formId)
 		{
-			$formId = (int) $formId;
+			$formId       = (int) $formId;
 			$this->formId = $formId;
 		}
 	}
@@ -104,7 +104,7 @@ class RdfCoreFormSubmission
 		$token = RdfCore::getToken();
 
 		// Get data from post if not specified
-		$data = $formData;
+		$data               = $formData;
 		$data['form_id']    = isset($data['form_id']) ? $data['form_id'] : $app->input->getInt('form_id', 0);
 		$data['module_id']  = isset($data['module_id']) ? $data['module_id'] : $app->input->getInt('module_id', 0);
 		$data['submit_key'] = isset($data['submit_key']) ? $data['submit_key'] : $app->input->getCmd('submit_key', false);
@@ -244,12 +244,12 @@ class RdfCoreFormSubmission
 			throw new RdfExceptionSubmission('Form integrity check failed');
 		}
 
-		if (RdfEntityForm::load($this->formId)->get('captchaactive'))
+		if (RdfEntityForm::load($this->formId)->get('captchaactive') && $form->getParam('captchaactive'))
 		{
 			JPluginHelper::importPlugin('redform_captcha');
-			$res = true;
+			$res        = true;
 			$dispatcher = JDispatcher::getInstance();
-			$results = $dispatcher->trigger('onCheckCaptcha', array(&$res));
+			$results    = $dispatcher->trigger('onCheckCaptcha', array(&$res));
 
 			if (count($results) && $res == false)
 			{
@@ -322,7 +322,7 @@ class RdfCoreFormSubmission
 	 */
 	public function quicksubmit($fields, $integration = null, $options = null)
 	{
-		$submit_key = uniqid();
+		$submit_key       = uniqid();
 		$this->submit_key = $submit_key;
 
 		$form = $this->getForm();
@@ -395,7 +395,7 @@ class RdfCoreFormSubmission
 			$submitKey = $this->submitKey;
 		}
 
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		$query->select('pr.id');
@@ -452,7 +452,7 @@ class RdfCoreFormSubmission
 			throw new RuntimeException('missing submit key');
 		}
 
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('c.reference')
 			->from('#__rwf_cart AS c')
@@ -497,7 +497,7 @@ class RdfCoreFormSubmission
 
 			foreach ($sids as $sid)
 			{
-				$answers = $this->getSidAnswers($sid);
+				$answers         = $this->getSidAnswers($sid);
 				$this->answers[] = $answers;
 			}
 		}
@@ -514,7 +514,7 @@ class RdfCoreFormSubmission
 	 */
 	public function getSids($submitKey)
 	{
-		$db = JFactory::getDbo();
+		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		$query->select('id');
@@ -680,14 +680,14 @@ class RdfCoreFormSubmission
 			if (!$lists['email'])
 			{
 				$emails = $answers->getSubmitterEmails();
-				$email = reset($emails);
+				$email  = reset($emails);
 			}
 			else
 			{
 				$email = $lists['email'];
 			}
 
-			$subscriber = new stdclass;
+			$subscriber        = new stdclass;
 			$subscriber->name  = empty($fullname) ? $email : $fullname;
 			$subscriber->email = $email;
 
