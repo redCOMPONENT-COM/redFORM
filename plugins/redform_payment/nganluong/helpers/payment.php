@@ -104,10 +104,12 @@ class PaymentNganluong extends  RdfPaymentHelper
 		$returnUrl = $input->post->get('return_url');
 		$cancelUrl = urlencode($input->post->get('cancel_url'));
 
-		$buyerFullname = $input->post->get('buyer_fullname');
-		$buyerEmail = $input->post->get('buyer_email');
-		$buyerMobile = $input->post->get('buyer_mobile');
-		$buyerAddress = '';
+		$billingInfo = $this->getBillingInfo($details->id);
+
+		$buyerFullname = $billingInfo->fullname;
+		$buyerEmail = $billingInfo->email;
+		$buyerMobile = $billingInfo->phone;
+		$buyerAddress = $billingInfo->address;
 
 		$resp = array();
 		$resp[] = 'id:' . $orderCode;
@@ -175,5 +177,23 @@ class PaymentNganluong extends  RdfPaymentHelper
 			->where($db->qn('ci.cart_id') . ' = ' . $db->q((int) $cartId));
 
 		return $db->setQuery($query)->loadResult();
+	}
+
+	/**
+	 * get order id
+	 *
+	 * @param   int  $cartId  cart ID
+	 *
+	 * @return object
+	 */
+	protected function getBillingInfo($cartId)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true)
+			->select('b.*')
+			->from($db->qn('#__rwf_billinginfo', 'b'))
+			->where($db->qn('b.cart_id') . ' = ' . $db->q((int) $cartId));
+
+		return $db->setQuery($query)->loadObject();
 	}
 }
